@@ -1,0 +1,27 @@
+{
+  "name": "pathforajs",
+  "version": "1.0.0",
+  "description": "Javascript SDK for displaying messages and providing some widget actions based on Lytics API",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pathfora/pathforajs.git"
+  },
+  "author": "Pathfora Inc.",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/pathfora/pathforajs/issues"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-less": "^3.0.2",
+    "jasmine-core": "^2.2.0",
+    "jquery": "^2.1.3",
+    "jslint": "^0.9.0-pre006",
+    "karma": "^0.12.31",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "^0.2.7",
+    "karma-jasmine": "^0.3.5",
+    "karma-jasmine-ajax": "^0.1.12",
+    "less": "^2.4.0"
+  }
+}
