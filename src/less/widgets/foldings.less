@@ -51,7 +51,8 @@
   .pf-widget-content {
     padding: 20px 20px 20px;
 
-    input[input=text] {
+    input[input=text],
+    input[type=email] {
       width: 200px;
     }
   }
@@ -144,6 +145,7 @@
         }
 
         input[type=text],
+        input[type=email],
         textarea,
         .pf-widget-btn {
           width: 100%;
@@ -182,13 +184,15 @@
   }
 
   &.pf-subscription {
-    input[type=text] {
+    input[type=text],
+    input[type=email] {
       width: 85%;
     }
   }
 
   &.pf-form {
-    input[type=text] {
+    input[type=text],
+    input[type=email] {
       width: 100%;
     }
 
@@ -260,7 +264,9 @@
         max-width: 330px;
       }
 
-      input[type=text], .pf-widget-btn {
+      input[type=text],
+      input[type=email],
+      .pf-widget-btn {
         width: 100%;
       }
 
@@ -275,7 +281,8 @@
       height: 100px;
     }
 
-    input[type=text] {
+    input[type=text],
+    input[type=email] {
       margin-bottom: 5px;
 
       & + .pf-widget-btn {
@@ -285,13 +292,16 @@
       }
     }
 
-    input[type=text], .pf-widget-btn {
+    input[type=text],
+    input[type=email],
+    .pf-widget-btn {
       width: 100%;
       margin-right: 30px;
     }
 
     form + .pf-widget-btn,
-    input[type=text] + .pf-widget-btn {
+    input[type=text] + .pf-widget-btn,
+    input[type=email] + .pf-widget-btn {
       text-align: center;
     }
   }

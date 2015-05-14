@@ -41,7 +41,9 @@ a {
     text-decoration: none;
   }
 
-  input[type=text], textarea {
+  input[type=text],
+  input[type=email],
+  textarea {
     border-radius: 3px;
     border: 0 none;
     font-size: 14px;
@@ -51,7 +53,8 @@ a {
     background: #fff;
   }
 
-  input[type=text] {
+  input[type=text],
+  input[type=email] {
     padding: 0 5px;
     height: 36px;
     clear: both;
@@ -162,7 +165,8 @@ a {
     color: #333;
   }
 
-  input[type=text] textarea {
+  input[type=text] textarea,
+  input[type=email] textarea {
     border: 1px solid @borderLight;
   }
 
@@ -189,7 +193,8 @@ a {
 }
 
 .pf-subscription {
-  input[type=text] {
+  input[type=text],
+  input[type=email] {
     width: 300px;
   }
 }

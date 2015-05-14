@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Widgets presentation</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="../src/css/pathfora.css">
     <style type="text/css">
         @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
 
@@ -187,7 +186,8 @@
 <div id="4" class="presentation"><p>#4</p></div>
 <div id="5" class="presentation"><p>#5</p></div>
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<!--<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>-->
 <script type="text/javascript" src="../src/pathfora.js"></script>
 <script>
     $(document).ready(function() {
@@ -203,7 +203,7 @@
             bar: ['top-fixed', 'top-scrolling', 'bottom-fixed', 'bottom-scrolling'],
             folding: ['left', 'bottom-left', 'bottom-right'],
             button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right']
-        }
+        };
 
         function check(elem, val) {
             for(var i = 0; i < elem.length; i++ ) {
@@ -263,18 +263,11 @@
                 variant: $('input[name=variant]:checked').val(),
                 position: $('input[name=position]:checked').val(),
                 colors: {}
-            }
+            };
 
             if( widget.layout === 'button' ) widget.msg = widget.msg.slice(0, 11);
 
             widget.displayConditions = {};
-            $('#displayConditions p input').each(function(idx, val) {
-                widget.displayConditions[val.name] = val.type === 'checkbox' ? val.checked : val.value;
-            });
-
-
-            console.log(widget.displayConditions);
-
             if( $('#color input[name=color]:checked').val() === 'custom' ) {
                 var inputs = $('.custom input');
                 for( var i = 0; i < inputs.length; i++ ) {
@@ -286,7 +279,11 @@
                 widget.theme = $('#color input[name=color]:checked').val();
             }
 
-            console.log(widget);
+
+            $('#displayConditions p input').each(function(idx, val) {
+                widget.displayConditions[val.name] = val.type === 'checkbox' ? val.checked : val.value;
+            });
+
             widgets.push(widget);
             var elem = $('<li>'
             + $('input[name=type]:checked').val() + ', '
@@ -301,13 +298,14 @@
         $('.clear').click(function() {
             widgets = [];
             $('ul').html('');
-        })
+        });
 
         $('.init').click(function() {
             if( widgets.length ) {
                 assignedWidgets = [];
 
-                widgets.forEach(function(widget) {
+                for (var i =0; i<widgets.length; i++) {
+                    var widget = widgets[i];
                     var assigned;
 
                     if (widget.type === 'message'){
@@ -319,7 +317,7 @@
                     }
 
                     assignedWidgets.push(assigned);
-                });
+                }
 
                 window.pathfora.initializeWidgets(assignedWidgets);
             }

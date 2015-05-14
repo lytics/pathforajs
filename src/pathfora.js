@@ -1,7 +1,15 @@
 // 'use strict';
 // Pathfora API
 
-(function (context) {
+(function (context, document) {
+
+    var link = document.createElement('link');
+
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', '../dist/css/pathfora.css');
+    document.head.appendChild(link);
+
     // helper functions
     // based on jQuery function with modifications
     var rclass = /[\t\r\n\f]/g,
@@ -222,7 +230,11 @@
                         }
                     }
                 };
-                context.addEventListener('scroll', core.scrollListener, false);
+                if (typeof context.addEventListener === 'function') {
+                    context.addEventListener('scroll', core.scrollListener, false);
+                } else {
+                    context.onscroll = core.scrollListener;
+                }
             }
         },
 
@@ -653,7 +665,9 @@
             if (typeof jstag === 'object') {
                 jstag.send(data);
             } else {
-                console.warn('Cannot find Lytics tag, reporting disabled');
+                if (typeof console === 'function') {
+                    console.warn('Cannot find Lytics tag, reporting disabled');
+                }
             }
         },
 
@@ -705,6 +719,11 @@
     // public functions
     var Pathfora = function () {
         this.initializeWidgets = function (widgets, lyticsId, config) {
+            // IE < 10 not supported
+            if (document.all && !context.atob) {
+                return;
+            }
+
             api.initializeCustomAPI();
             core.validateWidgetsObject(widgets);
             core.trackTimeOnPage();
@@ -830,4 +849,4 @@
 
     context.pathfora = new Pathfora();
 
-})(window);
+})(window, document);
