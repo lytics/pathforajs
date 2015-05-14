@@ -28,12 +28,12 @@
     // Lytics Customer ID, use your ID from Lytics account settings here
     var lyticsID = 1234
      
-    var promoWidget = new Pathfora.Message({
+    var promoWidget = new pathfora.Message({
         layout: "modal",
         message: "Welcome to our website"
     });
     
-    var subscribe = new Pathfora.Subscription({
+    var subscribe = new pathfora.Subscription({
         layout: "bar",
         message: "Signup to get updates right into your inbox"
     });
@@ -83,8 +83,27 @@
   pathfora.initalizeWidgets(widgets, lyticsId);
   ```
         
-## Available Widgets
-  All widgets are available in following color themes:
+## Widgets
+  There are 3 types of widgets available - message, form and subscription.
+  
+**Widgets are displayed in one of following layouts:**
+ 
+  - Modal - covering entire screen.
+   
+  - Slideout - sliding from left or right side of a screen.
+    
+  - Folding - stays always on the screen.
+    Not available in message widgets.
+    
+  - Bar - positioned on top or bottom of a page. Scrolling with page, or stays at place.
+    Not available on form widgets.
+    
+  - Button - simple call for action. Allows chaining other widgets for example opening modal.
+    Requires widget type to be message.
+
+  
+**All widgets are available in following color themes:**
+  
   - Default
   - Light
   - Dark
@@ -92,50 +111,26 @@
   
 ### Message/Promo
   Used for displaying messages to user. Optional action button allows running callback function or opening links.
-
-  ```javascript
-  var defaultPromo = new Pathfora.Message({
-          layout: "modal",
-          message: "Welcome to our website"
-      }
-  );
+  
+  **required params:**
+  ```
+  message: [text]
+  layout: [modal | slideout | button | bar]
   ```
   
 
 ### Email form
   Simple contact form for writing email messages. Sent emails are stored on your Lytics stream.
-
-
-  ```javascript
-  var defaultPromo = new Pathfora.Form({
-          layout: "modal",
-      }
-  );
+  
+  **required params:**
+  ```
+  layout: [modal | slideout | folding]
   ```
     
 ### Subscription
-  Subscription widget.
+  Subscription widget. Subscribed emails are available in Lytics stream.
   
-
-  ```javascript
-  var defaultPromo = new Pathfora.Subscription({
-          layout: "modal",
-      }
-  );
+  **required params:**
   ```
-  
-  
-## Available layouts
-
- - Modal - covering entire screen.
- 
- - Slideout - sliding from left or right side of a screen.
-  
- - Folding - stays always on the screen.
-  Not available in message widgets.
-  
- - Bar - positioned on top or bottom of a page. Scrolling with page, or stays at place.
-  Not available on form widgets.
-  
- - Button - simple call for action. Allows chaining other widgets for example opening modal.
-  Requires widget type to be message.
+  layout: [modal | slideout | folding | bar]
+  ```
