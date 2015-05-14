@@ -825,6 +825,14 @@
             return pathforaDataObject;
         };
         this.clearAll = function () {
+            var opened = core.openedWidgets.slice(0);
+
+            opened.forEach(function(widget) {
+                pathfora.closeWidget(widget.id);
+            });
+
+            core.openedWidgets = [];
+
             pathforaDataObject = {
                 pageViews: 0,
                 timeSpentOnPage: 0,
@@ -832,16 +840,7 @@
                 completedActions: [],
                 displayedWidgets: []
             };
-
-            var opened = core.openedWidgets.slice(0);
-
-            opened.forEach(function(widget) {
-                    pathfora.closeWidget(widget.id);
-                });
-
-            core.openedWidgets = [];
         };
-
 
         this.api = api;
         this.utils = utils;

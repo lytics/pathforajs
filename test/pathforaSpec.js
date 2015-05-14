@@ -126,31 +126,6 @@ describe("Pathfora", function () {
         expect(closedWidgets).toBe(1);
     });
 
-    xit("should use localstorage object for updating completed actions", function() {
-        localStorage.setItem('pathforaData', JSON.stringify({completed:5, closed : 5}));
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Welcome to our website",
-            confirmAction: {
-                name: "Test confirm action",
-                callback: function() {console.log("test confirmation")}
-            }
-        });
-        pathfora.initializeWidgets([messageBar], credentials);
-
-        var completedActions = pathfora.getData().completedActions.length;
-        var closedWidgets = pathfora.getData().closedWidgets;
-        expect(completedActions).toBe(5);
-        expect(closedWidgets).toBe(5);
-
-        $(messageBar.element).find('.pf-widget-ok').click();
-        $(messageBar.element).find('.pf-widget-close').click();
-        completedActions = pathfora.getData().completedActions.length;
-        closedWidgets = pathfora.getData().closedWidgets;
-        expect(completedActions).toBe(6);
-        expect(closedWidgets).toBe(6);
-    });
-
     it("should report displaying widgets and it's variants", function () {
         jasmine.Ajax.install();
 
@@ -251,7 +226,6 @@ describe("Pathfora", function () {
         pathfora.initializeWidgets([messageBar], credentials);
 
 
-
         spyOn(jstag, 'send');
         $('.pf-widget-close').click();
 
@@ -286,28 +260,107 @@ describe("Pathfora", function () {
     });
 
 
-    it("should be able to display widget only on specific page scrolling value", function () {
-        throw 'pass'
+    it("should be able to display widget only on specific page scrolling value", function (done) {
+        $(document.body).append("<div id=\"height-element\" style=\"height:10000px\">Test</div>");
+
+        var form = new pathfora.Subscription({
+            msg: 'test',
+            layout: 'modal',
+            displayConditions: {
+                scrollPercentageToDisplay: 20
+            }
+        });
+
+        pathfora.initializeWidgets([form], credentials);
+        var widget = $('#' + form.id);
+
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeFalsy();
+
+            var height = $(document).height();
+            $('body').scrollTop(height/2);
+
+            setTimeout(function() {
+                expect(widget.hasClass('opened')).toBeTruthy();
+                done();
+            }, 200);
+
+        }, 200);
+
+        $('.height-element').remove();
     });
 
     it("should be able to display widget only if user can see specific DOM element", function () {
         throw 'pass'
     });
 
-    it("should be able to clear all widgets and handlers", function () {
-        throw 'pass'
+    it("should be able to clear all widgets and handlers", function (done) {
+        var clearDataObject = {
+            pageViews: 0,
+            timeSpentOnPage: 0,
+            closedWidgets: [],
+            completedActions: [],
+            displayedWidgets: []
+        };
+
+        var form = new pathfora.Subscription({
+            msg: 'test',
+            layout: 'modal',
+        });
+
+        pathfora.initializeWidgets([form], credentials);
+        var widget = $('#' + form.id);
+
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeTruthy();
+            expect(pathfora.getData()).not.toEqual(clearDataObject);
+
+            pathfora.clearAll();
+
+            expect(widget.hasClass('opened')).toBeFalsy();
+            expect(pathfora.getData()).toEqual(clearDataObject);
+
+            done();
+        }, 200);
+
     });
 
     it("should not allow to register 2 widgets with the same id", function () {
         throw 'pass'
     });
 
+    // abandonend
     xit("should keep data in stats data in localstorage", function () {
         throw 'pass'
     });
 
     xit("should properly update existing localstorage data", function () {
         throw 'pass'
+    });
+
+    xit("should use localstorage object for updating completed actions", function() {
+        localStorage.setItem('pathforaData', JSON.stringify({completed:5, closed : 5}));
+        var messageBar = pathfora.Message({
+            layout: "modal",
+            msg: "Welcome to our website",
+            confirmAction: {
+                name: "Test confirm action",
+                callback: function() {console.log("test confirmation")}
+            }
+        });
+        pathfora.initializeWidgets([messageBar], credentials);
+
+        var completedActions = pathfora.getData().completedActions.length;
+        var closedWidgets = pathfora.getData().closedWidgets;
+        expect(completedActions).toBe(5);
+        expect(closedWidgets).toBe(5);
+
+        $(messageBar.element).find('.pf-widget-ok').click();
+        $(messageBar.element).find('.pf-widget-close').click();
+        completedActions = pathfora.getData().completedActions.length;
+        closedWidgets = pathfora.getData().closedWidgets;
+        expect(completedActions).toBe(6);
+        expect(closedWidgets).toBe(6);
     });
 
     xit("should keep number of page visits", function () {
@@ -337,7 +390,7 @@ describe("Pathfora", function () {
 
 describe("Widgets", function () {
 
-    it("should be able to display widget on document", function (done) {
+    it("should be able to be displayed on document", function (done) {
 
         var promoWidget = new pathfora.Message({
             layout: "bar",

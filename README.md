@@ -30,12 +30,12 @@
      
     var promoWidget = new pathfora.Message({
         layout: "modal",
-        message: "Welcome to our website"
+        msg: "Welcome to our website"
     });
     
     var subscribe = new pathfora.Subscription({
         layout: "bar",
-        message: "Signup to get updates right into your inbox"
+        msg: "Signup to get updates right into your inbox"
     });
     
     
@@ -114,8 +114,8 @@
   
   **required params:**
   ```
-  message: [text]
-  layout: [modal | slideout | button | bar]
+  msg: [string]
+  layout: ['modal' | 'slideout' | 'button' | 'bar']
   ```
   
 
@@ -124,7 +124,8 @@
   
   **required params:**
   ```
-  layout: [modal | slideout | folding]
+  msg: [string]
+  layout: ['modal' | 'slideout' | 'folding']
   ```
     
 ### Subscription
@@ -132,5 +133,6 @@
   
   **required params:**
   ```
-  layout: [modal | slideout | folding | bar]
+  msg: [string]
+  layout: ['modal' | 'slideout' | 'folding' | 'bar']
   ```
