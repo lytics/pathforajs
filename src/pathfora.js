@@ -72,9 +72,6 @@
             var doc = context.document.documentElement;
             return (context.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
         },
-        getPercentagePosition: function () {
-
-        },
         getElementPosition: function (DOMnode) {
             var bodyRect = context.document.body.getBoundingClientRect(),
                 elemRect = DOMnode.getBoundingClientRect();
@@ -203,6 +200,7 @@
         // Should be able to handle both displaying and hiding widgets
         delayedWidgets: {},
         openedWidgets: [],
+        initializedWidgets: [],
         watchers: [],
 
         initializeWidget: function (widget) {
@@ -568,9 +566,14 @@
         initializeWidgetArray: function (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var widget = arr[i];
-
                 var defaults = defaultProps[widget.type];
                 var globals = defaultProps.generic;
+
+                if (this.initializedWidgets.indexOf(widget.id) < 0) {
+                    this.initializedWidgets.push(widget.id);
+                } else {
+                    throw new Error('Cannot add two widgets with the same id');
+                }
 
                 this.updateObject(widget, globals);
                 this.updateObject(widget, defaults);
@@ -609,7 +612,7 @@
 
             widget.type = type;
             widget.config = config;
-            widget.id = utils.generateUniqueId();
+            widget.id = config.id || utils.generateUniqueId();
 
             return widget;
         }
@@ -832,6 +835,7 @@
             });
 
             core.openedWidgets = [];
+            core.initializedWidgets = [];
 
             pathforaDataObject = {
                 pageViews: 0,

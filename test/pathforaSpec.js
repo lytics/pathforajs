@@ -40,13 +40,13 @@ describe("Pathfora", function () {
         });
 
         var messageB = pathfora.Message({
-            id: "test-bar-01",
+            id: "test-bar-02",
             msg: "B",
             layout: "modal"
         });
 
         var messageC = pathfora.Message({
-            id: "test-bar-01",
+            id: "test-bar-03",
             msg: "C",
             layout: "modal"
         });
@@ -326,16 +326,28 @@ describe("Pathfora", function () {
     });
 
     it("should not allow to register 2 widgets with the same id", function () {
-        throw 'pass'
+        var w1 = new pathfora.Message({
+            msg: 'test',
+            layout: "modal",
+            id: 'asd'
+        });
+
+        var w2 = new pathfora.Form({
+            msg: 'test2',
+            layout: 'slideout',
+            id: 'asd'
+        });
+
+        expect(function() {
+            pathfora.initializeWidgets([w1, w2], credentials);
+        }).toThrow(new Error('Cannot add two widgets with the same id'));
     });
 
     // abandonend
     xit("should keep data in stats data in localstorage", function () {
-        throw 'pass'
     });
 
     xit("should properly update existing localstorage data", function () {
-        throw 'pass'
     });
 
     xit("should use localstorage object for updating completed actions", function() {

@@ -13,6 +13,14 @@
     var widgets = [];
 
     var messageBar = pathfora.Message({
+        id: 'asd',
+        layout: "bar",
+        msg: "Welcome to our website",
+    });
+    widgets.push(messageBar);
+
+    var modal = pathfora.Message({
+        id: 'asd',
         layout: "modal",
         msg: "Welcome to our website",
         confirmAction: {
@@ -24,7 +32,7 @@
             callback: function() {alert("Cancel button clicked")}
         }
     });
-    widgets.push(messageBar);
+    widgets.push(modal);
 
 
     window.pathfora.initializeWidgets(widgets);
