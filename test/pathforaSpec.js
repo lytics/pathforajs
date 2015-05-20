@@ -9,7 +9,7 @@ pathfora.utils.saveCookie('seerid', 123);
 
 
 describe("Pathfora", function () {
-    afterEach(function() {
+    beforeEach(function() {
         localStorage.clear();
         pathfora.clearAll();
     });
@@ -99,7 +99,7 @@ describe("Pathfora", function () {
         localStorage.clear();
         var messageBar = pathfora.Message({
             layout: "bar",
-            msg: "Welcome to our website",
+            msg: "Message bar  - interest test",
             confirmAction: {
                 name: "Test confirm action",
                 callback: function() {console.log("test confirmation")}
@@ -107,7 +107,7 @@ describe("Pathfora", function () {
         });
         var messageModal = pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
+            msg: "Message modal - interest test"
         });
         pathfora.initializeWidgets([messageBar, messageModal], credentials);
 
@@ -131,8 +131,8 @@ describe("Pathfora", function () {
 
         var messageBar = pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "ABC"
+            msg: "Message bar - reporting test",
+            id: "modal-display-report"
         });
 
         spyOn(jstag, 'send');
@@ -153,17 +153,20 @@ describe("Pathfora", function () {
 
     it("should report closing widgets and it's variants", function () {
         jasmine.Ajax.install();
+        jasmine.clock().install();
 
         var messageBar = pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "ABC"
+            msg: "Message bar - close reporting",
+            id: "bar-close-report"
         });
 
         pathfora.initializeWidgets([messageBar], credentials);
 
         spyOn(jstag, 'send');
         $('.pf-widget-close').click();
+
+        jasmine.clock().tick(1000);
 
         expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
             "pf-widget-id": messageBar.id,
@@ -174,16 +177,16 @@ describe("Pathfora", function () {
         }));
 
         pathfora.clearAll();
+        jasmine.clock().uninstall();
         jasmine.Ajax.uninstall();
     });
 
     it("should report completed actions to Lytics API", function (done) {
         jasmine.Ajax.install();
 
-
         var messageBar = pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
+            msg: "Message modal - action report test",
             confirmAction: {
                 name: "action test",
                 callback: function() {console.log("test confirmation")}
@@ -208,7 +211,6 @@ describe("Pathfora", function () {
                 "pf-widget-action": "action test"
             }));
 
-            pathfora.clearAll();
             jasmine.Ajax.uninstall();
             done();
         }, 200);
@@ -219,14 +221,15 @@ describe("Pathfora", function () {
 
         var messageBar = pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "ABC"
+            msg: "Message modal - form submit reports",
+            id: "ABCa"
         });
 
         pathfora.initializeWidgets([messageBar], credentials);
 
 
         spyOn(jstag, 'send');
+        console.log( $('.pf-widget-close'));
         $('.pf-widget-close').click();
 
         expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -237,7 +240,6 @@ describe("Pathfora", function () {
             "pf-widget-event": "close"
         }));
 
-        pathfora.clearAll();
         jasmine.Ajax.uninstall();
     });
 
@@ -305,7 +307,7 @@ describe("Pathfora", function () {
 
         var form = new pathfora.Subscription({
             msg: 'test',
-            layout: 'modal',
+            layout: 'modal'
         });
 
         pathfora.initializeWidgets([form], credentials);
@@ -322,18 +324,17 @@ describe("Pathfora", function () {
 
             done();
         }, 200);
-
     });
 
     it("should not allow to register 2 widgets with the same id", function () {
         var w1 = new pathfora.Message({
-            msg: 'test',
+            msg: 'Duplicate id test1',
             layout: "modal",
             id: 'asd'
         });
 
         var w2 = new pathfora.Form({
-            msg: 'test2',
+            msg: 'Duplcate id test2',
             layout: 'slideout',
             id: 'asd'
         });
@@ -401,6 +402,10 @@ describe("Pathfora", function () {
 
 
 describe("Widgets", function () {
+    beforeEach(function() {
+        localStorage.clear();
+        pathfora.clearAll();
+    });
 
     it("should be able to be displayed on document", function (done) {
 
@@ -456,26 +461,47 @@ describe("Widgets", function () {
         }, 200);
     });
 
-    it("should not open widget second time if it's already opened", function (done) {
+    it("should be able to be displayed on document 2", function (done) {
+
+        var promoWidget = new pathfora.Message({
+            layout: "bar",
+            msg: "Opening widget",
+            id: "widget-1"
+        });
+        pathfora.initializeWidgets([promoWidget], credentials);
+
+        // should append element to DOM
+        var widget = $('#' + promoWidget.id);
+        expect(widget).toBeDefined();
+
+        // should have class 'opened' after while
+        pathfora.showWidget(promoWidget);
+
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeTruthy();
+            pathfora.clearAll();
+            done();
+        }, 200);
+
+    });
+
+    it("should not append widget second time if it's already opened", function (done) {
         var openedWidget = new pathfora.Message({
             layout: 'modal',
             msg: "test widget",
-            displayConditions: {
-                showOnInit: true
-            }
         });
-        var widget = $('#' + openedWidget.id);
-
         pathfora.initializeWidgets([openedWidget], credentials);
+
+        var widget = $('#' + openedWidget.id);
 
         // timeouts gives some time for appending to DOM
         setTimeout(function() {
             expect(widget.hasClass('opened')).toBeTruthy();
+
             pathfora.showWidget(openedWidget);
 
             setTimeout(function() {
                 expect($('.pf-widget').length).toEqual(1);
-
                 pathfora.clearAll();
                 done();
             }, 200);
@@ -782,4 +808,3 @@ describe("API", function () {
     });
 
 });
-jasmine.clock().uninstall();

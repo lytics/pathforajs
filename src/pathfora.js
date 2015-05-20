@@ -828,11 +828,15 @@
             return pathforaDataObject;
         };
         this.clearAll = function () {
-            var opened = core.openedWidgets.slice(0);
+            var opened = core.openedWidgets;
 
             opened.forEach(function(widget) {
-                pathfora.closeWidget(widget.id);
+                element = document.getElementById(widget.id);
+                utils.removeClass(element, 'opened');
+                element.parentNode.removeChild(element);
             });
+
+            opened.slice(0);
 
             core.openedWidgets = [];
             core.initializedWidgets = [];
