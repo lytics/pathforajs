@@ -262,40 +262,6 @@ describe("Pathfora", function () {
     });
 
 
-    it("should be able to display widget only on specific page scrolling value", function (done) {
-        $(document.body).append("<div id=\"height-element\" style=\"height:10000px\">Test</div>");
-
-        var form = new pathfora.Subscription({
-            msg: 'test',
-            layout: 'modal',
-            displayConditions: {
-                scrollPercentageToDisplay: 20
-            }
-        });
-
-        pathfora.initializeWidgets([form], credentials);
-        var widget = $('#' + form.id);
-
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeFalsy();
-
-            var height = $(document).height();
-            $('body').scrollTop(height/2);
-
-            setTimeout(function() {
-                expect(widget.hasClass('opened')).toBeTruthy();
-                done();
-            }, 200);
-
-        }, 200);
-
-        $('.height-element').remove();
-    });
-
-    it("should be able to display widget only if user can see specific DOM element", function () {
-        throw 'pass'
-    });
-
     it("should be able to clear all widgets and handlers", function (done) {
         var clearDataObject = {
             pageViews: 0,
@@ -344,6 +310,40 @@ describe("Pathfora", function () {
         }).toThrow(new Error('Cannot add two widgets with the same id'));
     });
 
+    xit("should be able to display widget only on specific page scrolling value", function (done) {
+        $(document.body).append("<div id=\"height-element\" style=\"height:10000px\">Test</div>");
+
+        var form = new pathfora.Subscription({
+            msg: 'test',
+            layout: 'modal',
+            displayConditions: {
+                scrollPercentageToDisplay: 20
+            }
+        });
+
+        pathfora.initializeWidgets([form], credentials);
+        var widget = $('#' + form.id);
+
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeFalsy();
+
+            var height = $(document).height();
+            $('body').scrollTop(height/2);
+
+            setTimeout(function() {
+                expect(widget.hasClass('opened')).toBeTruthy();
+                done();
+            }, 200);
+
+        }, 200);
+
+        $('.height-element').remove();
+    });
+
+    xit("should be able to display widget only if user can see specific DOM element", function () {
+        throw 'pass'
+    });
+
     // abandonend
     xit("should keep data in stats data in localstorage", function () {
     });
@@ -376,7 +376,7 @@ describe("Pathfora", function () {
         expect(closedWidgets).toBe(6);
     });
 
-    xit("should keep number of page visits", function () {
+    xit("should keep number of page visits for later use", function () {
         var messageBar = pathfora.Message({
             position: "bottom-fixed",
             msg: "hello new user"
@@ -461,7 +461,7 @@ describe("Widgets", function () {
         }, 200);
     });
 
-    it("should be able to be displayed on document 2", function (done) {
+    it("should be able to be displayed on document", function (done) {
 
         var promoWidget = new pathfora.Message({
             layout: "bar",
@@ -488,7 +488,7 @@ describe("Widgets", function () {
     it("should not append widget second time if it's already opened", function (done) {
         var openedWidget = new pathfora.Message({
             layout: 'modal',
-            msg: "test widget",
+            msg: "test widget"
         });
         pathfora.initializeWidgets([openedWidget], credentials);
 
@@ -508,106 +508,184 @@ describe("Widgets", function () {
         }, 500);
     });
 
-    it("should be able to close", function () {
+    it("should be able to close", function (done) {
         var promoWidget = new pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget"
+            msg: "Close widget test",
+            id: "close-widget"
         });
         pathfora.initializeWidgets([promoWidget], credentials);
         pathfora.showWidget(promoWidget);
 
-        var widget = $("#promo-widget").find(promoWidget.element);
-        expect(nodeType).toBe(1);
+        var widget = $("#" + promoWidget.id);
+        expect(widget).toBeDefined();
 
-        $("#promo-widget").find(promoWidget.element).find(".close");
-
-        var nodeType = $("#promo-widget").find(promoWidget.element).get(0);
-        expect(nodeType).toBe(1);
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeTruthy();
+            widget.find(".pf-widget-close").click();
+            expect(widget.hasClass('opened')).toBeFalsy();
+            done();
+        }, 200);
     });
 
-    it("should not be in DOM when closed", function () {
-        var promoWidget = new pathfora.Message({
+    it("should not be in DOM when closed", function (done) {
+        var testWidget = new pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget"
+            msg: "Close widget test",
+            id: "close-clear-widget"
         });
-        pathfora.initializeWidgets([promoWidget], credentials);
 
-        var nodeType = $("#promo-widget").find(promoWidget.element).get(0).nodeType;
-        expect(nodeType).toBe(1);
+        pathfora.initializeWidgets([testWidget], credentials);
+        pathfora.showWidget(testWidget);
 
-        $("#promo-widget").find(promoWidget.element).find(".close").click();
+        var widget = $("#" + testWidget.id);
+        expect(widget).toBeDefined();
 
-        var closeNode = $("#promo-widget").find(promoWidget.element).get(0);
-        expect(closeNode).toBeUndefined();
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeTruthy();
+            expect( widget[0]).toBeDefined();
+
+            widget.find(".pf-widget-close").click();
+
+            setTimeout(function () {
+                expect( $("#" + testWidget.id)[0]).toBeUndefined();
+                done();
+            }, 600)
+
+        }, 200);
     });
 
-    xit("should have correct theme configuration", function () {
+    it("should have correct theme configuration", function () {
+        var w1 = new pathfora.Message({
+            layout: 'button',
+            position: 'left',
+            msg: 'light button',
+            id: 'light-widget',
+            theme: 'light'
+        });
 
+        var w2 = new pathfora.Message({
+            layout: 'button',
+            position: 'right',
+            msg: 'dark button',
+            id: 'dark-widget',
+            theme: 'dark'
+        });
+
+        var w3 = new pathfora.Message({
+            layout: 'button',
+            position: 'top-left',
+            msg: 'custom color button',
+            id: 'custom-widget',
+            theme: 'custom',
+            colors: {
+                background: "#fff"
+            }
+        });
+
+        var w4 = new pathfora.Message({
+            layout: 'button',
+            position: 'top-right',
+            msg: 'default button',
+            id: 'def-theme-widget'
+        });
+
+        pathfora.initializeWidgets([w1,w2,w3, w4], credentials);
+
+        var light = $("#" + w1.id);
+        var dark = $("#" + w2.id);
+        var custom = $("#" + w3.id);
+        var def = $("#" + w4.id);
+
+        expect(light.hasClass('pf-theme-light')).toBeTruthy();
+        expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
+        expect(custom.hasClass('pf-theme-custom')).toBeTruthy();
+        expect(def.hasClass('pf-theme-default')).toBeTruthy();
+
+        expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
     });
 
-    it("can be hidden by default", function () {
-        var promoWidget = new pathfora.Message({
+    it("can be hidden on initialization", function () {
+        var openedWidget = new pathfora.Message({
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget",
+            msg: "Displayed on init",
+            id: "displayed-on-init"
+        });
+
+        var closedWidget = new pathfora.Message({
+            layout: "modal",
+            msg: "Hidden on init",
+            id: "hidden-on-init",
             displayConditions: {
                 showOnInit: false
             }
         });
-        pathfora.initializeWidgets([promoWidget], credentials);
 
-        var hiddenClass = $("#promo-widget").hasClass("hiden");
-        expect(hiddenClass).toBe(true);
+        pathfora.initializeWidgets([openedWidget, closedWidget], credentials);
+
+        expect( $("#" + openedWidget.id)[0]).toBeDefined();
+        expect( $("#" + closedWidget.id)[0]).toBeUndefined();
+
     });
-
-
 
     it("should be able to configure style of each widget element", function () {
-        var promoWidget = new pathfora.Message({
+        var modal = pathfora.Message({
+            id: "custom-style-test",
             layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget",
-            className: "testNameClass"
+            msg: "Custom style test",
+            header: "Hello",
+            colors: {
+                background: '#eee',
+                header: "#333",
+                text: "#333",
+                close: "#888",
+                actionText: "#ddd",
+                actionBackground: "#111",
+                cancelText: "#333",
+                cancelBackground: "#eee"
+            }
         });
-        pathfora.initializeWidgets([promoWidget], credentials);
 
-        var hiddenClass = $("#promo-widget").hasClass("testNameClass");
-        expect(hiddenClass).toBe(true);
+        pathfora.initializeWidgets([modal], credentials);
+
+        var background = $('#' + modal.id).find(".pf-widget-content");
+        var header = $('#' + modal.id).find(".pf-widget-header");
+        var text = $('#' + modal.id).find(".pf-widget-message");
+        var closeBtn = $('#' + modal.id).find(".pf-widget-close");
+        var actionBtn = $('#' + modal.id).find(".pf-widget-ok");
+        var cancelBtn = $('#' + modal.id).find(".pf-widget-cancel");
+
+        expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
+        expect(header.css('color')).toBe('rgb(51, 51, 51)');
+        expect(text.css('color')).toBe('rgb(51, 51, 51)');
+        expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
+        expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
+        expect(actionBtn.css('background-color')).toBe('rgb(17, 17, 17)');
+        expect(cancelBtn.css('color')).toBe('rgb(51, 51, 51)');
+        expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
     });
 
-    it("should be able to show after specified time", function (done) {
-        var promoWidget = new pathfora.Message({timeOffset: 5000});
-        var _tempNode = promoWidget.element;
-        expect(tempNode).toBeDefined();
-        for(tempNode = _tempNode.parentNode; tempNode; tempNode = tempNode.parentNode) {
-            expect(tempNode).toBeDefined();
-            if(tempNode.isSameNode(document.body)) {
-                throw 'node is on side too early';
+    it("should be able to show after specified time", function () {
+        jasmine.clock().install();
+        var delayedWidget = new pathfora.Message({
+            msg: 'Delayed widget test',
+            id: 'delayed-widget',
+            layout: 'modal',
+            displayConditions: {
+                showDelay: 2
             }
-        }
-        setTimeout(function () {
-            for(tempNode = _tempNode.parentNode; tempNode; tempNode = tempNode.parentNode) {
-                expect(tempNode).toBeDefined();
-                if(tempNode.isSameNode(document.body)) {
-                    done();
-                }
-            }
-            throw 'node isn\'t on side after specified time';
-        }, 5100);
-    }, 6000);
+        });
 
-    xit("should be able to show only to specified type of user (new, common, subscriber)", function () {
+        pathfora.initializeWidgets([delayedWidget], credentials);
+        var widget = $('#' + delayedWidget.id);
 
-    });
+        jasmine.clock().tick(1000);
+        expect(widget[0]).toBeUndefined();
 
-    xit("should be able to show after specific number of visits", function () {
+        jasmine.clock().tick(2000);
+        expect($('#' + delayedWidget.id)[0]).toBeDefined();
 
-    });
-
-    xit("should be able to show only when user is in specified DOM location", function () {
-
+        jasmine.clock().uninstall();
     });
 
     it("should trigger callback function after pressing action button", function () {
@@ -620,15 +698,15 @@ describe("Widgets", function () {
 
         var hiddenClass = $("#promo-widget").hasClass("testNameClass");
         expect(hiddenClass).toBe(true);
+    });
 
+    // Future functionalities
+    xit("should be able to show after specific number of visits", function () {
+        throw 'pass';
     });
 
     xit("should be able to randomly choose one of available variations", function () {
-
-    });
-
-    xit("should not be able to display variation not specified by user", function () {
-
+        throw 'pass';
     });
 });
 
@@ -641,16 +719,6 @@ describe("Message Widget", function () {
     });
 
     it("should not allow to be initialized without default properties", function () {
-        //var messageBar = pathfora.Message({
-        //    position: "bottom-fixed",
-        //    msg: "hello new user"
-        //});
-
-        //pathfora.initializeWidgets([messageBar], credentials);
-        //expect($('#' + messageBar.id).hasClass('pf-theme-default')).toBe(true);
-        //
-        //pathfora.clearAll();
-
         var missingParams = function () {
             var promoWidget = new pathfora.Message();
             pathfora.initializeWidgets([promoWidget], credentials);
@@ -681,58 +749,6 @@ describe("Message Widget", function () {
     });
 
 });
-
-describe("Inline Widget", function () {
-
-    afterEach(function() {
-        localStorage.clear();
-        pathfora.clearAll();
-    });
-
-    it("should insert widget inside specified DOM element", function () {
-        var promoWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget"
-        });
-        pathfora.initializeWidgets([promoWidget], credentials);
-
-        var nodeType = $("#promo-widget").find(promoWidget.element).get(0).nodeType;
-        expect(nodeType).toBe(1);
-    });
-
-    it("should not allow to be closed", function () {
-        var promoWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Welcome to our website",
-            id: "promo-widget"
-        });
-        pathfora.initializeWidgets([promoWidget], credentials);
-
-        var nodeType = $("#promo-widget").find(promoWidget.element).get(0).nodeType;
-        expect(nodeType).toBe(1);
-
-        $("#promo-widget").find(promoWidget.element).find(".close").click();
-
-        var nodeType = $("#promo-widget").find(promoWidget.element).get(0).nodeType;
-        expect(nodeType).toBe(0);
-    });
-});
-
-describe("Bar Widget", function () {
-    xit("should be displayed in place specified by config", function () {
-
-    });
-
-    xit("should be able to stay fixed and scrolled", function () {
-
-    });
-
-    xit("should render with correct template", function () {
-
-    });
-});
-
 
 describe("API", function () {
     beforeEach(function () {

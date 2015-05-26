@@ -205,13 +205,14 @@
 
         initializeWidget: function (widget) {
             var cond = widget.displayConditions;
+            var watcher;
 
             if (cond.displayWhenElementVisible) {
-                var watcher = core.registerElementWatcher(cond.displayWhenElementVisible, widget);
+                watcher = core.registerElementWatcher(cond.displayWhenElementVisible, widget);
                 core.watchers.push(watcher);
                 core.initializeScrollWatchers();
             } else if (cond.scrollPercentageToDisplay) {
-                var watcher = core.registerPositionWatcher(cond.scrollPercentageToDisplay, widget);
+                watcher = core.registerPositionWatcher(cond.scrollPercentageToDisplay, widget);
                 core.watchers.push(watcher);
                 core.initializeScrollWatchers();
             } else if (cond.showOnInit) {
@@ -853,7 +854,6 @@
             };
 
             if (oryginalConf) {
-                console.log(oryginalConf)
                 defaultProps = oryginalConf;
             }
         };
