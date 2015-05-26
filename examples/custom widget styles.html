@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom widget styles</title>
+</head>
+<body>
+
+<h1>Custom widget styles example</h1>
+
+<script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="../src/pathfora.js"></script>
+<script>
+    var modal = pathfora.Message({
+        layout: "modal",
+        msg: "Welcome to our website",
+        header: "Hello",
+        colors: {
+            background: '#eee',
+            header: "#333",
+            text: "#333",
+            close: "#888",
+            actionText: "#ddd",
+            actionBackground: "#111",
+            cancelText: "#333",
+            cancelBackground: "#eee"
+        }
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

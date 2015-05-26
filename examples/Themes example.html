@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom widget styles</title>
+</head>
+<body>
+
+<h1 style="text-align:center">Custom widget styles example</h1>
+
+<script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="../src/pathfora.js"></script>
+<script>
+    var w1 = new pathfora.Message({
+        layout: 'button',
+        position: 'left',
+        msg: 'light button',
+        id: 'light-widget',
+        theme: 'light'
+    });
+
+    var w2 = new pathfora.Message({
+        layout: 'button',
+        position: 'right',
+        msg: 'dark button',
+        id: 'dark-widget',
+        theme: 'dark'
+    });
+
+    var w3 = new pathfora.Message({
+        layout: 'button',
+        position: 'top-left',
+        msg: 'custom color button',
+        id: 'custom-widget',
+        theme: 'custom',
+        colors: {
+            background: "#fff"
+        }
+    });
+
+    var w4 = new pathfora.Message({
+        layout: 'button',
+        position: 'top-right',
+        msg: 'default button',
+        id: 'default-widget'
+    });
+
+    pathfora.initializeWidgets([w1,w2,w3, w4]);
+</script>
+</body>
+</html>
