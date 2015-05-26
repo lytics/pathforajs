@@ -122,7 +122,7 @@
         }
     };
 
-    var defaultProps = {
+    var oryginalConf, defaultProps = {
         generic: {
             className: "pathfora",
             header: "",
@@ -171,7 +171,7 @@
             layout: "modal",
             position: "",
             variant: "1",
-            cancelButton: true,
+            cancelButton: true
         },
         subscription: {
             layout: "modal",
@@ -544,7 +544,7 @@
             this.trackWidgetAction('submit', widget, form);
         },
         trackSubsctiption: function(widget, form) {
-          this.trackWidgetAction('subscribe', widget, form);
+            this.trackWidgetAction('subscribe', widget, form);
         },
         saveDataObject: function () {
 
@@ -559,7 +559,9 @@
                         core.updateObject(obj[prop], config[prop]);
                     }
                 } else {
-                    obj[prop] = config[prop];
+                    if(config.hasOwnProperty(prop)) {
+                        obj[prop] = config[prop];
+                    }
                 }
             }
         },
@@ -637,7 +639,7 @@
         },
         getData: function (url, onSuccess, onError) {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function (args) {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     onSuccess(xhr.responseText);
                 } else if (xhr.readyState == 4) {
@@ -654,7 +656,7 @@
             xhr.setRequestHeader("Accept","application/json");
             xhr.setRequestHeader('Content-type', 'application/json');
 
-            xhr.onreadystatechange = function (args) {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     onSuccess(xhr.responseText);
                 } else if (xhr.readyState == 4) {
@@ -715,7 +717,7 @@
         form: {
             modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div></div></div></div></div>',
             slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>'
         }
     };
 
@@ -732,6 +734,7 @@
             core.trackTimeOnPage();
 
             if (config) {
+                oryginalConf = (JSON.parse(JSON.stringify(defaultProps)));
                 core.updateObject(defaultProps, config);
             }
 
@@ -739,7 +742,7 @@
             if (widgets.constructor === Array) {
                 core.initializeWidgetArray(widgets);
 
-            // Target sensitive widgets
+                // Target sensitive widgets
             } else {
                 if (widgets.common) {
                     core.initializeWidgetArray(widgets.common);
@@ -848,6 +851,11 @@
                 completedActions: [],
                 displayedWidgets: []
             };
+
+            if (oryginalConf) {
+                console.log(oryginalConf)
+                defaultProps = oryginalConf;
+            }
         };
 
         this.api = api;
