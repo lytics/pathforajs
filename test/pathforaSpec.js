@@ -216,6 +216,41 @@ describe("Pathfora", function () {
         }, 200);
     });
 
+    it("should report cancelled actions to Lytics API", function (done) {
+        jasmine.Ajax.install();
+
+        var messageBar = pathfora.Message({
+            layout: "modal",
+            msg: "Message modal - cancel report test",
+            cancelAction: {
+                name: "cancel reporting test",
+                callback: function() {console.log("test confirmation")}
+            }
+        });
+
+        pathfora.initializeWidgets([messageBar], credentials);
+
+        var widget = $('#' + messageBar.id);
+
+        setTimeout(function() {
+            expect(widget.hasClass('opened')).toBeTruthy();
+
+            spyOn(jstag, 'send');
+
+            expect(jstag.send).not.toHaveBeenCalled();
+
+            widget.find('.pf-widget-ok').click();
+            expect(jstag.send).toHaveBeenCalled();
+
+            expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+                "pf-widget-cancel": "cancel reporting test"
+            }));
+
+            jasmine.Ajax.uninstall();
+            done();
+        }, 200);
+    });
+
     it("should report submitting forms, with form data", function () {
         jasmine.Ajax.install();
 
@@ -229,7 +264,6 @@ describe("Pathfora", function () {
 
 
         spyOn(jstag, 'send');
-        console.log( $('.pf-widget-close'));
         $('.pf-widget-close').click();
 
         expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
@@ -257,8 +291,9 @@ describe("Pathfora", function () {
 
         pathfora.initializeWidgets([messageBar], credentials, config);
 
-        expect($('#' + messageBar.id).hasClass('pf-theme-default')).toBe(false);
-        expect($('#' + messageBar.id).hasClass('pf-theme-light')).toBe(true);
+        var bar  = $('#' + messageBar.id);
+        expect(bar.hasClass('pf-theme-default')).toBe(false);
+        expect(bar.hasClass('pf-theme-light')).toBe(true);
     });
 
 
@@ -344,38 +379,8 @@ describe("Pathfora", function () {
         throw 'pass'
     });
 
-    // abandonend
-    xit("should keep data in stats data in localstorage", function () {
-    });
 
-    xit("should properly update existing localstorage data", function () {
-    });
-
-    xit("should use localstorage object for updating completed actions", function() {
-        localStorage.setItem('pathforaData', JSON.stringify({completed:5, closed : 5}));
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Welcome to our website",
-            confirmAction: {
-                name: "Test confirm action",
-                callback: function() {console.log("test confirmation")}
-            }
-        });
-        pathfora.initializeWidgets([messageBar], credentials);
-
-        var completedActions = pathfora.getData().completedActions.length;
-        var closedWidgets = pathfora.getData().closedWidgets;
-        expect(completedActions).toBe(5);
-        expect(closedWidgets).toBe(5);
-
-        $(messageBar.element).find('.pf-widget-ok').click();
-        $(messageBar.element).find('.pf-widget-close').click();
-        completedActions = pathfora.getData().completedActions.length;
-        closedWidgets = pathfora.getData().closedWidgets;
-        expect(completedActions).toBe(6);
-        expect(closedWidgets).toBe(6);
-    });
-
+    // future functionalities
     xit("should keep number of page visits for later use", function () {
         var messageBar = pathfora.Message({
             position: "bottom-fixed",
@@ -408,7 +413,6 @@ describe("Widgets", function () {
     });
 
     it("should be able to be displayed on document", function (done) {
-
         var promoWidget = new pathfora.Message({
             layout: "bar",
             msg: "Opening widget",
@@ -428,7 +432,6 @@ describe("Widgets", function () {
             pathfora.clearAll();
             done();
         }, 200);
-
     });
 
     it("should have proper id when specified, and unique id otherwise", function (done) {
@@ -648,12 +651,13 @@ describe("Widgets", function () {
 
         pathfora.initializeWidgets([modal], credentials);
 
-        var background = $('#' + modal.id).find(".pf-widget-content");
-        var header = $('#' + modal.id).find(".pf-widget-header");
-        var text = $('#' + modal.id).find(".pf-widget-message");
-        var closeBtn = $('#' + modal.id).find(".pf-widget-close");
-        var actionBtn = $('#' + modal.id).find(".pf-widget-ok");
-        var cancelBtn = $('#' + modal.id).find(".pf-widget-cancel");
+        var widget = $('#' + modal.id);
+        var background = widget.find(".pf-widget-content");
+        var header = widget.find(".pf-widget-header");
+        var text = widget.find(".pf-widget-message");
+        var closeBtn = widget.find(".pf-widget-close");
+        var actionBtn = widget.find(".pf-widget-ok");
+        var cancelBtn = widget.find(".pf-widget-cancel");
 
         expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
         expect(header.css('color')).toBe('rgb(51, 51, 51)');
@@ -689,33 +693,58 @@ describe("Widgets", function () {
     });
 
     it("should trigger callback function after pressing action button", function () {
-        var promoWidget = new pathfora.Message({
+        var modal = pathfora.Message({
+            id: 'confirm-action-test',
+            layout: "modal",
+            msg: "Confirm action test modal",
+            confirmAction: {
+                name: "Test confirm action",
+                callback: function () {alert("test confirmation")}
+            },
+        });
+        pathfora.initializeWidgets([modal], credentials);
+
+        var widget = $("#confirm-action-test");
+
+        spyOn(modal.confirmAction, 'callback');
+        expect(modal.confirmAction.callback).not.toHaveBeenCalled();
+
+        widget.find('.pf-widget-ok').click();
+        expect(modal.confirmAction.callback).toHaveBeenCalled();
+    });
+
+
+    it("should be able to trigger action on cancel", function () {
+        var modal = pathfora.Message({
+            id: 'cancel-action-test',
             layout: "modal",
             msg: "Welcome to our website",
-            id: "promo-widget"
+            cancelAction: {
+                name: "Test confirm action",
+                callback: function() {alert("test confirmation")}
+            },
         });
-        pathfora.initializeWidgets([promoWidget], credentials);
 
-        var hiddenClass = $("#promo-widget").hasClass("testNameClass");
-        expect(hiddenClass).toBe(true);
+        pathfora.initializeWidgets([modal], credentials);
+
+        var widget = $("#cancel-action-test");
+
+        spyOn(modal.cancelAction, 'callback');
+
+        widget.find('.pf-widget-cancel').click();
+        expect(modal.cancelAction.callback).toHaveBeenCalled();
     });
 
-    // Future functionalities
-    xit("should be able to show after specific number of visits", function () {
-        throw 'pass';
+    it ("shouldn't fire submit callbacks on cancel, and cancel callbacks on submit", function () {
+        throw pass;
     });
 
-    xit("should be able to randomly choose one of available variations", function () {
-        throw 'pass';
+    it("should allow custom messages on action buttons", function () {
+        throw pass;
     });
-});
 
-
-describe("Message Widget", function () {
-
-    afterEach(function() {
-        localStorage.clear();
-        pathfora.clearAll();
+    it("should display in proper website regions", function () {
+        throw pass;
     });
 
     it("should not allow to be initialized without default properties", function () {
@@ -740,14 +769,15 @@ describe("Message Widget", function () {
         expect(missingLayout).toThrowError("Config object is missing");
     });
 
-    xit("should display in proper website regions", function () {
 
+    // Future functionalities
+    xit("should be able to show after specific number of visits", function () {
+        throw 'pass';
     });
 
-    xit("should allow custom messages on action buttons", function () {
-
+    xit("should be able to randomly choose one of available variations", function () {
+        throw 'pass';
     });
-
 });
 
 describe("API", function () {
