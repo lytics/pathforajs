@@ -121,7 +121,6 @@ describe("Pathfora", function () {
 
         completedActions = pathfora.getData().completedActions.length;
         closedWidgets = pathfora.getData().closedWidgets.length;
-        console.log(pathfora.getData());
         expect(completedActions).toBe(1);
         expect(closedWidgets).toBe(1);
     });
@@ -239,11 +238,12 @@ describe("Pathfora", function () {
 
             expect(jstag.send).not.toHaveBeenCalled();
 
-            widget.find('.pf-widget-ok').click();
+            widget.find('.pf-widget-cancel').click();
             expect(jstag.send).toHaveBeenCalled();
 
             expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-                "pf-widget-cancel": "cancel reporting test"
+                "pf-widget-action": "cancel reporting test",
+                "pf-widget-event": "cancel"
             }));
 
             jasmine.Ajax.uninstall();
@@ -252,8 +252,6 @@ describe("Pathfora", function () {
     });
 
     it("should report submitting forms, with form data", function () {
-        jasmine.Ajax.install();
-
         var messageBar = pathfora.Message({
             layout: "modal",
             msg: "Message modal - form submit reports",
@@ -273,14 +271,22 @@ describe("Pathfora", function () {
             "pf-widget-variant": '1',
             "pf-widget-event": "close"
         }));
-
-        jasmine.Ajax.uninstall();
     });
 
+    xit("should throw error when trying to initialize widget with wrong layout value", function () {
+        var brokenLayoutVal = new pathfora.Message({
+            msg: "Broken layout value test",
+            layout: 'broken'
+        });
+
+        expect(function() {
+            pathfora.initializeWidgets([brokenLayoutVal], credentials)
+        }).toThrow(new Error('Invalid widget layout value'));
+    });
 
     it("should use specified global config for all widgets", function () {
         var messageBar = pathfora.Message({
-            position: "top",
+            layout: "bar",
             msg: "test"
         });
         var config = {
@@ -303,6 +309,7 @@ describe("Pathfora", function () {
             timeSpentOnPage: 0,
             closedWidgets: [],
             completedActions: [],
+            cancelledActions: [],
             displayedWidgets: []
         };
 
@@ -700,7 +707,7 @@ describe("Widgets", function () {
             confirmAction: {
                 name: "Test confirm action",
                 callback: function () {alert("test confirmation")}
-            },
+            }
         });
         pathfora.initializeWidgets([modal], credentials);
 
@@ -720,9 +727,9 @@ describe("Widgets", function () {
             layout: "modal",
             msg: "Welcome to our website",
             cancelAction: {
-                name: "Test confirm action",
-                callback: function() {alert("test confirmation")}
-            },
+                name: "Test cancel action",
+                callback: function() {alert("test cancel")}
+            }
         });
 
         pathfora.initializeWidgets([modal], credentials);
@@ -736,15 +743,53 @@ describe("Widgets", function () {
     });
 
     it ("shouldn't fire submit callbacks on cancel, and cancel callbacks on submit", function () {
-        throw pass;
-    });
+        var w1 = pathfora.Message({
+            id: "widget-with-action-callback",
+            msg: "Cancel action negative test",
+            confirmAction: {
+                name: "Test confirm action",
+                callback: function() {alert("test confirmation")}
+            }
+        });
 
-    it("should allow custom messages on action buttons", function () {
-        throw pass;
+        var w2 = pathfora.Message({
+            id: "widget-with-cancel-callback",
+            msg: "Cancel action negative test",
+            cancelAction: {
+                name: "Test cancel action",
+                callback: function() {alert("test cancel")}
+            }
+        });
+
+        pathfora.initializeWidgets([w1, w2], credentials);
+
+        var widgetA = $("#widget-with-action-callback");
+        var widgetB = $("#widget-with-cancel-callback");
+
+        spyOn(w1.confirmAction, 'callback');
+        spyOn(w2.cancelAction, 'callback');
+
+
+        widgetA.find('.pf-widget-cancel').click();
+        expect(w1.confirmAction.callback).not.toHaveBeenCalled();
+
+
+        widgetB.find('.pf-widget-ok').click();
+        expect(w2.cancelAction.callback).not.toHaveBeenCalled();
     });
 
     it("should display in proper website regions", function () {
-        throw pass;
+        var w1 = new pathfora.Message({
+            msg: "Widget positioning test",
+            layout: "modal",
+            position: "customPos"
+        });
+
+        pathfora.initializeWidgets([w1], credentials);
+
+        var widget = $('#' + w1.id);
+
+        expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
     });
 
     it("should not allow to be initialized without default properties", function () {
@@ -752,25 +797,23 @@ describe("Widgets", function () {
             var promoWidget = new pathfora.Message();
             pathfora.initializeWidgets([promoWidget], credentials);
         };
+
         var missingMessage = function () {
             var promoWidget = new pathfora.Message({layout: "modal"});
             pathfora.initializeWidgets([promoWidget], credentials);
         };
-        var missingLayout = function () {
-            var promoWidget = new pathfora.Message({message: "Welcome to our website"});
-            pathfora.initializeWidgets([promoWidget], credentials);
-        };
-        expect(missingParams).toThrowError("Config object is missing");
-        pathfora.clearAll();
 
-        expect(missingMessage).toThrowError("Config object is missing");
+        expect(missingParams).toThrow(new Error("Config object is missing"));
         pathfora.clearAll();
-
-        expect(missingLayout).toThrowError("Config object is missing");
+        expect(missingMessage).toThrow(new Error("Widget message is missing"));
     });
 
 
     // Future functionalities
+    xit("should allow custom messages on action buttons", function () {
+        throw 'pass';
+    });
+
     xit("should be able to show after specific number of visits", function () {
         throw 'pass';
     });
@@ -780,6 +823,8 @@ describe("Widgets", function () {
     });
 });
 
+
+// Currently not used since all comunnication is made via jstag function
 describe("API", function () {
     beforeEach(function () {
         jasmine.Ajax.install();
@@ -788,7 +833,7 @@ describe("API", function () {
         jasmine.Ajax.uninstall();
     });
 
-    it("should be able call API with credentials", function () {
+    xit("should be able call API with credentials", function () {
         var callback = jasmine.createSpy("success");
         var credentials = {accountId: 'abc123', userId: '123'};
         var subscribe = new pathfora.Subscription({
@@ -809,7 +854,7 @@ describe("API", function () {
         expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
     });
 
-    it("should get data from API and pass it to callback function", function () {
+    xit("should get data from API and pass it to callback function", function () {
         var callback = jasmine.createSpy("success");
         var credentials = {accountId: 'abc123', userId: '123'};
         var subscribe = new pathfora.Subscription({
@@ -830,7 +875,7 @@ describe("API", function () {
         expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
     });
 
-    it("should properly handle errors by running onError function", function () {
+    xit("should properly handle errors by running onError function", function () {
         var callback = jasmine.createSpy("success");
 
         var credentials = {accountId: 'abc123', userId: '123'};
@@ -852,5 +897,4 @@ describe("API", function () {
 
         expect(callback).toHaveBeenCalledWith('{"response":"error"}');
     });
-
 });

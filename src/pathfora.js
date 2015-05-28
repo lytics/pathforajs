@@ -325,6 +325,9 @@
                             widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
                             widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
                             widget.querySelector('textarea').placeholder = config.placeholders.message;
+                            break;
+                        default:
+                            throw new Error('Invalid widget layout value');
                     }
                 case 'subscription':
                     switch (config.layout) {
@@ -341,9 +344,11 @@
                             if(config.type === 'subscription') {
                                 widget.querySelector('input').placeholder = config.placeholder;
                             }
+                            break;
+                        default:
+                            throw new Error('Invalid widget layout value');
                     }
                 case 'message':
-                default:
                     switch (config.layout) {
                         case 'modal':
                         case 'folding':
@@ -363,10 +368,10 @@
                             }
                         case 'button':
                             widget.querySelector('.pf-widget-message').innerHTML = config.msg;
-                        default:
                             break;
+                        default:
+                            throw new Error('Invalid widget layout value');
                     }
-                    break;
             }
 
             switch (config.layout) {
@@ -591,24 +596,24 @@
         },
         validateWidgetsObject: function (widgets) {
             if (!widgets) {
-                throw "Widgets not specified";
+                throw new Error("Widgets not specified");
             }
 
             if (widgets.constructor !== Array && widgets.target) {
                 for (var i = 0; i < widgets.target.length; i++) {
                     if (!widgets.target[i].segment) {
-                        throw "All targeted widgets should have segment specified"
+                        throw new Error("All targeted widgets should have segment specified");
                     }
                 }
             }
         },
         prepareWidget: function(type, config) {
             if (config === undefined) {
-                throw "Config object is missing";
+                throw new Error("Config object is missing");
             }
 
             if (config.msg === undefined) {
-                throw "Widget message is missing";
+                throw new Error("Widget message is missing");
             }
 
             var widget = {};
@@ -680,7 +685,7 @@
         checkUserSegments: function (accountId, cb) {
             var reed = utils.readCookie("seerid");
             if (!reed) {
-                throw "Cannot find SEERID cookie";
+                throw new Error("Cannot find SEERID cookie");
             }
             var apiUrl = "https://api.lytics.io/api/me/" + accountId + "/"
                 + reed + "?segments=true";
@@ -850,6 +855,7 @@
                 timeSpentOnPage: 0,
                 closedWidgets: [],
                 completedActions: [],
+                cancelledActions: [],
                 displayedWidgets: []
             };
 
