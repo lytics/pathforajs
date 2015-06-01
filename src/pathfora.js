@@ -224,7 +224,7 @@
             if (!core.scrollListener) {
                 core.scrollListener = function () {
                     for (var key in core.watchers) {
-                        if (core.watchers[key] !== null) {
+                        if (core.watchers.hasOwnProperty(key) && core.watchers[key] !== null) {
                             core.watchers[key].check();
                         }
                     }
@@ -291,25 +291,12 @@
 
         removeWatcher: function (watcher) {
             for (var key in core.watchers) {
-                if (watcher == core.watchers[key]) {
+                if (core.watchers.hasOwnProperty(key) && watcher == core.watchers[key]) {
                     core.watchers.splice(key, 1);
                 }
             }
         },
-
-        createWidgetHtml: function (config) {
-            var widget = document.createElement('div');
-
-            widget.className = 'pf-widget ' +
-            'pf-' + config.type +
-            ' pf-widget-' + config.layout +
-            ( config.position ? ' pf-position-' + config.position : '' ) +
-            ' pf-widget-variant-' + config.variant +
-            ( config.theme ? ' pf-theme-' + config.theme : '' );
-
-            widget.innerHTML = templates[config.type][config.layout] || '';
-            widget.id = config.id;
-
+        constructWidgetLayout: function (widget, config) {
             switch (config.type) {
                 case 'form':
                     switch (config.layout) {
@@ -318,7 +305,7 @@
                         case 'slideout':
                             widget.querySelector('form').onsubmit = function (e) {
                                 e.preventDefault();
-                                core.trackFormSubmit(config, e.target);
+                                core.trackWidgetAction('submit', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
                             widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
@@ -337,7 +324,7 @@
                         case 'slideout':
                             widget.querySelector('form').onsubmit = function (e) {
                                 e.preventDefault();
-                                core.trackSubsctiption(config, e.target);
+                                core.trackWidgetAction('subscribe', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
 
@@ -373,7 +360,8 @@
                             throw new Error('Invalid widget layout value');
                     }
             }
-
+        },
+        constructWidgetActions: function (widget, config) {
             switch (config.layout) {
                 case 'folding':
                     var captions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
@@ -403,10 +391,13 @@
                     widget.querySelector('.pf-widget-close').onclick = function () {
                         context.pathfora.closeWidget(widget.id);
                     };
+
+                    config.position = config.position ? config.position : 'top-fixed';
+
                     if (cancelBtn) {
                         if (typeof config.cancelAction === 'object') {
                             cancelBtn.onclick = function () {
-                                core.trackCancelling(config);
+                                core.trackWidgetAction('cancel', config);
                                 config.cancelAction.callback();
                                 context.pathfora.closeWidget(widget.id, true);
                             };
@@ -422,7 +413,7 @@
 
             if (typeof config.confirmAction === 'object') {
                 widget.querySelector('.pf-widget-ok').onclick = function () {
-                    core.trackConfirmation(config);
+                    core.trackWidgetAction('confirm', config);
                     config.confirmAction.callback();
                     context.pathfora.closeWidget(widget.id, true);
                 }
@@ -431,7 +422,8 @@
                     context.pathfora.closeWidget(widget.id);
                 }
             }
-
+        },
+        setupWidgetColors: function (widget, config) {
             if (config.theme === undefined) {
                 core.setCustomColors(widget, defaultProps.generic.themes['default']);
             }
@@ -442,6 +434,25 @@
                 core.updateObject(colors, config.colors);
                 core.setCustomColors(widget, colors);
             }
+        },
+        setWidgetClassname: function (widget, config) {
+            widget.className = 'pf-widget ' +
+            'pf-' + config.type +
+            ' pf-widget-' + config.layout +
+            ( config.position ? ' pf-position-' + config.position : '' ) +
+            ' pf-widget-variant-' + config.variant +
+            ( config.theme ? ' pf-theme-' + config.theme : '' );
+        },
+        createWidgetHtml: function (config) {
+            var widget = document.createElement('div');
+
+            widget.innerHTML = templates[config.type][config.layout] || '';
+            widget.id = config.id;
+
+            this.constructWidgetLayout(widget, config);
+            this.constructWidgetActions(widget, config);
+            this.setupWidgetColors(widget, config);
+            this.setWidgetClassname(widget, config);
 
             return widget;
         },
@@ -532,28 +543,6 @@
 
             params['pf-widget-event'] = action;
             api.reportData(params);
-            core.saveDataObject();
-        },
-        trackConfirmation: function(widget) {
-            this.trackWidgetAction('confirm', widget);
-        },
-        trackCancelling: function(widget) {
-            this.trackWidgetAction('cancel', widget);
-        },
-        trackDisplayingWidget: function (widget) {
-            this.trackWidgetAction('show', widget);
-        },
-        trackClosingWidget: function (widget) {
-            this.trackWidgetAction('close', widget);
-        },
-        trackFormSubmit: function (widget, form) {
-            this.trackWidgetAction('submit', widget, form);
-        },
-        trackSubsctiption: function(widget, form) {
-            this.trackWidgetAction('subscribe', widget, form);
-        },
-        saveDataObject: function () {
-
         },
         updateObject: function (obj, config) {
             for (var prop in config) {
@@ -794,7 +783,7 @@
             }
 
             core.openedWidgets.push(widget);
-            core.trackDisplayingWidget(widget);
+            core.trackWidgetAction('show', widget);
 
             var node = core.createWidgetHtml(widget);
             document.body.appendChild(node);
@@ -815,7 +804,7 @@
             for (var i = 0; i < core.openedWidgets.length; i++) {
                 if (core.openedWidgets[i].id === id) {
                     if (!noTrack) {
-                        core.trackClosingWidget(core.openedWidgets[i]);
+                        core.trackWidgetAction('close', core.openedWidgets[i]);
                     }
                     core.openedWidgets.splice(i, 1);
                     break;
