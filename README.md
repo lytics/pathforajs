@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pathfora/pathforajs.svg?branch=master)](https://travis-ci.org/pathfora/pathforajs)
+
 # Pathfora.js
   Lightweight library for displaying widgets on your website. 
   Integrates with your Lytics account for tracking user actions, and conditionally displaying widgets based on user segment. 
