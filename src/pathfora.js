@@ -449,10 +449,10 @@
             widget.innerHTML = templates[config.type][config.layout] || '';
             widget.id = config.id;
 
-            this.constructWidgetLayout(widget, config);
             this.constructWidgetActions(widget, config);
-            this.setupWidgetColors(widget, config);
             this.setWidgetClassname(widget, config);
+            this.constructWidgetLayout(widget, config);
+            this.setupWidgetColors(widget, config);
 
             return widget;
         },
@@ -468,10 +468,6 @@
                 return true;
             }
             return false;
-        },
-
-        // should be able to either pick target variant, or randomly select one
-        setWidgetVariation: function () {
         },
         setCustomColors: function (widget, colors) {
             var close = widget.querySelector('.pf-widget-close');
