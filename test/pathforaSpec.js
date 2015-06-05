@@ -792,6 +792,10 @@ describe("Widgets", function () {
         expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
     });
 
+    it("should use default position if no position is specified", function () {
+        var
+    });
+
     it("should not allow to be initialized without default properties", function () {
         var missingParams = function () {
             var promoWidget = new pathfora.Message();
