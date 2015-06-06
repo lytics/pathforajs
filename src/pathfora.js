@@ -10,19 +10,35 @@
     link.setAttribute('href', '../dist/css/pathfora.css');
     document.head.appendChild(link);
 
-    // helper functions
-    // based on jQuery function with modifications
+
     var rclass = /[\t\r\n\f]/g,
         rnotwhite = (/\S+/g),
         rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
+    /**
+     * Helper utility functions
+     * based on jQuery functions with some modifications
+     */
     var utils = {
+        /**
+         * Checks is DOM node has provided class
+         * @param {object} DOMnode - DOM element
+         * @param {string} value - class name
+         * @returns {boolean}
+         */
         hasClass: function (DOMnode, value) {
             if (DOMnode.nodeType === 1 &&
                 (" " + DOMnode.className + " ").replace(rclass, " ").indexOf(" " + value + " ") >= 0) {
                 return true;
             }
+            return false;
         },
+
+        /**
+         * Adds class to passed DOM node
+         * @param {object} DOMnode - DOM element
+         * @param {string} value - class name
+         */
         addClass: function (DOMnode, value) {
             var classes, cur, clazz, j, finalValue;
             if (typeof value === "string" && value) {
@@ -44,6 +60,12 @@
                 }
             }
         },
+
+        /**
+         * Removes class from DOM elmeent
+         * @param {object} DOMnode - DOM element
+         * @param {string} value - class name
+         */
         removeClass: function (DOMnode, value) {
             var classes, cur, clazz, j, finalValue;
             if ((typeof value === "string" && value) && (DOMnode.nodeType === 1)) {
@@ -65,18 +87,11 @@
                 }
             }
         },
-        getWindowHeight: function () {
-            return context.innerHeight;
-        },
-        getScrollTopPosition: function () {
-            var doc = context.document.documentElement;
-            return (context.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-        },
-        getElementPosition: function (DOMnode) {
-            var bodyRect = context.document.body.getBoundingClientRect(),
-                elemRect = DOMnode.getBoundingClientRect();
-            return elemRect.top - bodyRect.top;
-        },
+
+        /**
+         * Reads browser Cookie value of specified name
+         * @param {string} name - cookie name
+         */
         readCookie: function (name) {
             var nameEQ,
                 ca,
@@ -95,6 +110,13 @@
             }
             return null;
         },
+
+        /**
+         * Saves browser cookie
+         * @param {string} name - cookie name
+         * @param {string} value - cookie value
+         * @param {number} days - number of days until cookie expires
+         */
         saveCookie: function (name, value, days) {
             var expires,
                 date;
@@ -107,6 +129,13 @@
             }
             context.document.cookie = name + "=" + value + expires + "; path=/";
         },
+
+        /**
+         * Generates unique
+         * @param {string} name - cookie name
+         * @param {string} value - cookie value
+         * @param {number} days - number of days until cookie expires
+         */
         generateUniqueId: function () {
             function s4() {
                 return Math.floor((1 + Math.random()) * 0x10000)
@@ -122,7 +151,15 @@
         }
     };
 
-    var oryginalConf, defaultProps = {
+    var oryginalConf,
+        defaultPositions = {
+            modal: '',
+            slideout: 'left',
+            button: 'top-left',
+            bar: 'top-fixed',
+            folding: 'bottom-left'
+        },
+        defaultProps = {
         generic: {
             className: "pathfora",
             header: "",
@@ -392,8 +429,6 @@
                         context.pathfora.closeWidget(widget.id);
                     };
 
-                    config.position = config.position ? config.position : 'top-fixed';
-
                     if (cancelBtn) {
                         if (typeof config.cancelAction === 'object') {
                             cancelBtn.onclick = function () {
@@ -443,12 +478,48 @@
             ' pf-widget-variant-' + config.variant +
             ( config.theme ? ' pf-theme-' + config.theme : '' );
         },
+        validateWidgetPosition: function (widget, config) {
+            var choices;
+            var isValidPos = function (pos, choices) {
+                return choices.indexOf(pos) > -1;
+            };
+
+            switch (config.layout) {
+                case 'modal':
+                    choices = ['', undefined];
+                    break;
+                case 'slideout':
+                    choices = ['left', 'right'];
+                    break;
+                case 'bar':
+                    choices = ['top-fixed', 'top-scrolling', 'bottom-scrolling'];
+                    break;
+                case 'button':
+                    choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+                    break;
+                case 'folding':
+                    choices = ['left', 'bottom-left', 'bottom-right'];
+                    break;
+            }
+
+            if (!isValidPos(config.position, choices)) {
+                console.warn(config.position + " is not valid position for " + config.layout);
+            }
+        },
+        setupWidgetPosition: function (widget, config) {
+            if (config.position) {
+                this.validateWidgetPosition(widget, config);
+            } else {
+                config.position = defaultPositions[config.layout];
+            }
+        },
         createWidgetHtml: function (config) {
             var widget = document.createElement('div');
 
             widget.innerHTML = templates[config.type][config.layout] || '';
             widget.id = config.id;
 
+            this.setupWidgetPosition(widget, config);
             this.constructWidgetActions(widget, config);
             this.setWidgetClassname(widget, config);
             this.constructWidgetLayout(widget, config);
@@ -464,7 +535,7 @@
         checkIfUserJustEntered: function () {
             var userEntered = utils.readCookie('PathforaInit');
             if (!userEntered) {
-                saveCookie('PathforaInit', true, 30);
+                utils.saveCookie('PathforaInit', true, 30);
                 return true;
             }
             return false;
