@@ -481,10 +481,10 @@
         validateWidgetPosition: function (widget, config) {
             var choices;
             var isValidPos = function (pos, choices) {
-                return choices.indexOf(pos) !== -1;
+                return choices.indexOf(pos) > -1;
             };
 
-            switch (widget.layout) {
+            switch (config.layout) {
                 case 'modal':
                     choices = ['', undefined];
                     break;
@@ -502,9 +502,8 @@
                     break;
             }
 
-            console.log(choices, config.position)
-            if (!isValidPos(choices, config.position)) {
-                console.warn(config.position + " is not valid position for " +widget.layout);
+            if (!isValidPos(config.position, choices)) {
+                console.warn(config.position + " is not valid position for " + config.layout);
             }
         },
         setupWidgetPosition: function (widget, config) {

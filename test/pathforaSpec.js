@@ -793,7 +793,56 @@ describe("Widgets", function () {
     });
 
     it("should use default position if no position is specified", function () {
-        var
+        var w1 = new pathfora.Message({
+            msg: "button - default pos test",
+            layout: "button"
+        });
+        var w2 = new pathfora.Message({
+            msg: "bar - default pos test",
+            layout: "bar"
+        });
+        var w3 = new pathfora.Message({
+            msg: "slideout - default pos test",
+            layout: "slideout"
+        });
+        var w4 = new pathfora.Form({
+            msg: "folding - default pos test",
+            layout: "folding"
+        });
+
+        pathfora.initializeWidgets([w1, w2, w3, w4], credentials);
+        var widget1 = $('#' + w1.id);
+        var widget2 = $('#' + w2.id);
+        var widget3 = $('#' + w3.id);
+        var widget4 = $('#' + w4.id);
+
+        expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
+        expect(widget2.hasClass('pf-position-top-fixed')).toBeTruthy();
+        expect(widget3.hasClass('pf-position-left')).toBeTruthy();
+        expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
+    });
+
+    it("should show warning when user tries to use not available widget position", function () {
+        spyOn(console, 'warn');
+
+        var w1 = new pathfora.Message({
+            msg: "test warning display",
+            layout: "bar"
+        });
+
+        var w2 = new pathfora.Message({
+            msg: "invalid position test",
+            layout: "bar",
+            position: 'wrong-position'
+        });
+
+        pathfora.initializeWidgets([w1], credentials);
+        expect(console.warn).not.toHaveBeenCalled();
+
+        pathfora.clearAll();
+
+        pathfora.initializeWidgets([w2], credentials);
+        expect(console.warn).toHaveBeenCalledWith("wrong-position is not valid position for bar");
     });
 
     it("should not allow to be initialized without default properties", function () {
