@@ -3,23 +3,34 @@
 
 (function (context, document) {
 
-    var link = document.createElement('link');
+    /**
+     * Appends pathfora stylesheet to document
+     */
+    var appendPathforaStylesheet = function () {
+        var link = document.createElement('link');
 
-    link.setAttribute('rel', 'stylesheet');
-    link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '../dist/css/pathfora.css');
-    document.head.appendChild(link);
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('type', 'text/css');
+        link.setAttribute('href', '../dist/css/pathfora.css');
+        document.head.appendChild(link);
+    };
 
 
+    /**
+     * Regexp helper variables used by utility functions
+     * @type {RegExp}
+     */
     var rclass = /[\t\r\n\f]/g,
         rnotwhite = (/\S+/g),
         rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+
 
     /**
      * Helper utility functions
      * based on jQuery functions with some modifications
      */
     var utils = {
+
         /**
          * Checks is DOM node has provided class
          * @param {object} DOMnode - DOM element
@@ -33,6 +44,7 @@
             }
             return false;
         },
+
 
         /**
          * Adds class to passed DOM node
@@ -61,6 +73,7 @@
             }
         },
 
+
         /**
          * Removes class from DOM elmeent
          * @param {object} DOMnode - DOM element
@@ -87,6 +100,7 @@
                 }
             }
         },
+
 
         /**
          * Reads browser Cookie value of specified name
@@ -151,6 +165,11 @@
         }
     };
 
+
+    /**
+     * Default configuration object
+     * oryginalConf is used when default data gets overriden
+     */
     var oryginalConf,
         defaultPositions = {
             modal: '',
@@ -232,15 +251,27 @@
     };
 
     /**
-     * Core library functionset
+     * Empty Pathfora data object, containg all data stored by lib
+     * @type {Object}
+     */
+    var pathforaDataObject = {
+        pageViews: 0,
+        timeSpentOnPage: 0,
+        closedWidgets: [],
+        completedActions: [],
+        cancelledActions: [],
+        displayedWidgets: []
+    };
+
+    /**
+     * Core library function set
      */
     var core = {
-        // Array of timed widgets, DOM position watchers
-        // Should be able to handle both displaying and hiding widgets
         delayedWidgets: {},
         openedWidgets: [],
         initializedWidgets: [],
         watchers: [],
+
 
         /**
          * Displays single widget or registers handler for displaying it later
@@ -263,6 +294,7 @@
             }
         },
 
+
         /**
          * Takes array of scroll aware elements and checks if it should display one when user is scrolling page
          * @param {array} watchers - pointer to registered list of watchers
@@ -284,6 +316,7 @@
             }
         },
 
+
         /**
          * Taks array of watchers and clears it
          * @param {array} watchers - pointer to the list of watchers
@@ -297,6 +330,7 @@
             delete core.scrollListener;
         },
 
+
         /**
          * Waits amount of time specified in widget config before initializing it
          * @param {object} widget - element which should be initialized
@@ -306,6 +340,7 @@
                 core.initializeWidget(widget);
             }, widget.displayConditions.showDelay * 1000);
         },
+
 
         /**
          * Prevents delayed widgets from initializing
@@ -319,6 +354,7 @@
                 delete this.delayedWidgets[widget.id];
             }
         },
+
 
         /**
          * Registers watcher for checking if user is on particular scroll position.
@@ -340,6 +376,7 @@
             return watcher;
         },
 
+
         /**
          * Registers watcher for checking if user can see some element
          * @param {string} id - id of triggering element
@@ -360,6 +397,7 @@
             return watcher;
         },
 
+
         /**
          * Unassigns specified watcher
          * @param {string} watcher - name of watcher which should be removed
@@ -371,6 +409,7 @@
                 }
             }
         },
+
 
         /**
          * Creates layout portion of widget's DOM object
@@ -443,6 +482,7 @@
             }
         },
 
+
         /**
          * Appends action logic to widget's DOM object
          * @param {object} widget - related element
@@ -509,6 +549,7 @@
             }
         },
 
+
         /**
          * Builds's widget's color theme
          * @param {object} widget - related element
@@ -527,6 +568,7 @@
             }
         },
 
+
         /**
          * Constructs widget's DOM classes
          * @param {object} widget - related element
@@ -540,6 +582,7 @@
             ' pf-widget-variant-' + config.variant +
             ( config.theme ? ' pf-theme-' + config.theme : '' );
         },
+
 
         /**
          * Checks if user specified valid position for particullar widget type
@@ -575,6 +618,7 @@
             }
         },
 
+
         /**
          * Sets default position for widget type, or validates position passed by user
          * @param {object} widget - related element
@@ -587,6 +631,7 @@
                 config.position = defaultPositions[config.layout];
             }
         },
+
 
         /**
          * Constructs widget's DOM object
@@ -608,6 +653,7 @@
             return widget;
         },
 
+
         /**
          * Tracks how much time user spend on page
          * Needed for future functionalities
@@ -617,6 +663,7 @@
                 pathforaDataObject.timeSpentOnPage += 1;
             }, 1000)
         },
+
 
         /**
          * Checks if user is newcomer or was here before (based on stored cookie)
@@ -631,6 +678,7 @@
             }
             return false;
         },
+
 
         /**
          * Sets custom color theme to passed widget
@@ -669,6 +717,7 @@
 
             widget.querySelector('.pf-widget-message').style.color = colors.text;
         },
+
 
         /**
          * Reports data related to user action with widget (close, show, confirm, cancel, submit or subscribe)
@@ -716,6 +765,7 @@
             api.reportData(params);
         },
 
+
         /**
          * Updates object with new configuration values. Overrides provided values and leaves default one
          * when particullar value was not provided
@@ -738,6 +788,7 @@
                 }
             }
         },
+
 
         /**
          * Updates widget elements, and initiallizes each one.
@@ -767,6 +818,7 @@
             }
         },
 
+
         /**
          * Checks if user provided valid widget configuration
          * @param {array} widgets - list of widgets to be checked
@@ -784,6 +836,7 @@
                 }
             }
         },
+
 
         /**
          * Checks if widget object is valid and appends default props to it
@@ -810,16 +863,15 @@
         }
     };
 
-    var pathforaDataObject = {
-        pageViews: 0,
-        timeSpentOnPage: 0,
-        closedWidgets: [],
-        completedActions: [],
-        cancelledActions: [],
-        displayedWidgets: []
-    };
 
+    /**
+     * Set of functions for communicating data with external sources
+     * @type {object}
+     */
     var api = {
+        /**
+         * Sends data about user to Lytics API (from cookie), using jstag functrion
+         */
         initializeCustomAPI: function () {
             var reed = utils.readCookie("seerid");
 
@@ -827,6 +879,14 @@
                 jstag.send({user_id: reed});
             }
         },
+
+
+        /**
+         * XHR GET request builder
+         * @param {string} url
+         * @param {Function} onSuccess
+         * @param {Function} onError
+         */
         getData: function (url, onSuccess, onError) {
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
@@ -840,6 +900,15 @@
             xhr.open("GET", url);
             xhr.send();
         },
+
+
+        /**
+         * XHR POST request builder
+         * @param {string} url
+         * @param {string} data
+         * @param {Function} onSuccess
+         * @param {Function} onError
+         */
         postData: function (url, data, onSuccess, onError) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", url);
@@ -854,8 +923,15 @@
                 }
             };
 
-            xhr.send('test');
+            xhr.send(data);
         },
+
+
+        /**
+         * Sends data to Lytics API using jstag function
+         * User credentials are took from cookie
+         * @param {object} data
+         */
         reportData: function (data) {
             if (typeof jstag === 'object') {
                 jstag.send(data);
@@ -866,6 +942,12 @@
             }
         },
 
+
+        /**
+         * Get's data on which Lytics segment current user is assigned to
+         * @param {number} accountId - Lytics ID of website owner
+         * @param cb - callback function
+         */
         checkUserSegments: function (accountId, cb) {
             var reed = utils.readCookie("seerid");
             if (!reed) {
@@ -890,6 +972,11 @@
         }
     };
 
+
+    /**
+     * Object containing all html templates used for constructing widgets
+     * @type {Object}
+     */
     var templates = {
         message: {
             modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div></div></div></div></div>',
@@ -911,8 +998,21 @@
         }
     };
 
-    // public functions
+
+
+    /**
+     * Pathfora public functions
+     * @constructor
+     */
     var Pathfora = function () {
+
+
+        /**
+         * Function used for initializing Pathfora widgets array.
+         * @param {array} widgets
+         * @param {number} lyticsId
+         * @param {object} config
+         */
         this.initializeWidgets = function (widgets, lyticsId, config) {
             // IE < 10 not supported
             if (document.all && !context.atob) {
@@ -953,23 +1053,55 @@
             }
         };
 
+        /**
+         * Creates minimal widget for previewing.
+         * Used only by admin panel for generating mocked previews
+         * @param {object} widget
+         * @returns {*|Element}
+         */
         this.previewWidget = function(widget) {
             widget.id = utils.generateUniqueId();
             return core.createWidgetHtml(widget);
         };
 
+
+        /**
+         * Getter used to prepare Message widget for initialization
+         * @param {object} config
+         * @returns {*|{}}
+         * @constructor
+         */
         this.Message = function (config) {
             return core.prepareWidget('message', config);
         };
 
+
+        /**
+         * Getter used to prepare Subscription widget for initialization
+         * @param {object} config
+         * @returns {*|{}}
+         * @constructor
+         */
         this.Subscription = function (config) {
             return core.prepareWidget('subscription', config);
         };
 
+
+        /**
+         * Getter used to prepare Form widget for initialization
+         * @param {object} config
+         * @returns {*|{}}
+         * @constructor
+         */
         this.Form = function (config) {
             return core.prepareWidget('form', config);
         };
 
+
+        /**
+         * Function used for displaying widget, either manually or triggered by PF core
+         * @param {object} widget - related element
+         */
         this.showWidget = function (widget) {
             for (var i = 0; i < core.openedWidgets.length; i++) {
                 if (core.openedWidgets[i] === widget) {
@@ -995,6 +1127,12 @@
             }
         };
 
+
+        /**
+         *
+         * @param {string} id
+         * @param {Boolean} noTrack
+         */
         this.closeWidget = function (id, noTrack) {
             for (var i = 0; i < core.openedWidgets.length; i++) {
                 if (core.openedWidgets[i].id === id) {
@@ -1014,12 +1152,21 @@
                     node.parentNode.removeChild(node);
                 }
             }, 500);
-
         };
 
+
+        /**
+         * Getter for stored data object, used mainly for Unit test purposes
+         * @returns {object}
+         */
         this.getData = function () {
             return pathforaDataObject;
         };
+
+
+        /**
+         * Closes all widgets and clears all library data and functions
+         */
         this.clearAll = function () {
             var opened = core.openedWidgets;
 
@@ -1055,10 +1202,15 @@
             }
         };
 
-        this.api = api;
+
+        /**
+         * Getter for utility functions
+         * @type {object}
+         */
         this.utils = utils;
     };
 
+    appendPathforaStylesheet();
     context.pathfora = new Pathfora();
 
 })(window, document);
