@@ -231,7 +231,9 @@
         }
     };
 
-    // private functions
+    /**
+     * Core library functionset
+     */
     var core = {
         // Array of timed widgets, DOM position watchers
         // Should be able to handle both displaying and hiding widgets
@@ -240,6 +242,10 @@
         initializedWidgets: [],
         watchers: [],
 
+        /**
+         * Displays single widget or registers handler for displaying it later
+         * @param {object} widget - element to initialize
+         */
         initializeWidget: function (widget) {
             var cond = widget.displayConditions;
             var watcher;
@@ -247,22 +253,26 @@
             if (cond.displayWhenElementVisible) {
                 watcher = core.registerElementWatcher(cond.displayWhenElementVisible, widget);
                 core.watchers.push(watcher);
-                core.initializeScrollWatchers();
+                core.initializeScrollWatchers(core.watchers);
             } else if (cond.scrollPercentageToDisplay) {
                 watcher = core.registerPositionWatcher(cond.scrollPercentageToDisplay, widget);
                 core.watchers.push(watcher);
-                core.initializeScrollWatchers();
+                core.initializeScrollWatchers(core.watchers);
             } else if (cond.showOnInit) {
                 pathfora.showWidget(widget);
             }
         },
 
-        initializeScrollWatchers: function () {
+        /**
+         * Takes array of scroll aware elements and checks if it should display one when user is scrolling page
+         * @param {array} watchers - pointer to registered list of watchers
+         */
+        initializeScrollWatchers: function (watchers) {
             if (!core.scrollListener) {
                 core.scrollListener = function () {
-                    for (var key in core.watchers) {
-                        if (core.watchers.hasOwnProperty(key) && core.watchers[key] !== null) {
-                            core.watchers[key].check();
+                    for (var key in watchers) {
+                        if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
+                            watchers[key].check();
                         }
                     }
                 };
@@ -274,21 +284,33 @@
             }
         },
 
-        removeScrollWatchers: function () {
-            core.watchers.forEach(function (watcher) {
+        /**
+         * Taks array of watchers and clears it
+         * @param {array} watchers - pointer to the list of watchers
+         */
+        removeScrollWatchers: function (watchers) {
+            watchers.forEach(function (watcher) {
                 core.removeWatcher(watcher);
             });
 
             context.removeEventListener('scroll', core.scrollListener, false);
-            delete core[scrollListener];
+            delete core.scrollListener;
         },
 
+        /**
+         * Waits amount of time specified in widget config before initializing it
+         * @param {object} widget - element which should be initialized
+         */
         registerDelayedWidget: function (widget) {
             this.delayedWidgets[widget.id] = setTimeout(function () {
                 core.initializeWidget(widget);
             }, widget.displayConditions.showDelay * 1000);
         },
 
+        /**
+         * Prevents delayed widgets from initializing
+         * @param {object} widget - element which should be cancelled
+         */
         cancelDelayedWidget: function (widget) {
             var delayObj = this.delayedWidgets[widget.id];
 
@@ -298,6 +320,12 @@
             }
         },
 
+        /**
+         * Registers watcher for checking if user is on particular scroll position.
+         * @param {number} percent - scroll percentage on which widget should be displayed
+         * @param {object} widget - widget which should be displayed
+         * @returns {{check: Function}} - function fired on scroll for checking if widget should be displayed
+         */
         registerPositionWatcher: function (percent, widget) {
             var watcher = {
                 check: function () {
@@ -312,6 +340,12 @@
             return watcher;
         },
 
+        /**
+         * Registers watcher for checking if user can see some element
+         * @param {string} id - id of triggering element
+         * @param {object} widget - widget which should be displayed
+         * @returns {{elem: Element, check: Function}} - function fired on scroll to check if user can see specified el.
+         */
         registerElementWatcher: function (id, widget) {
             var watcher = {
                 elem: document.getElementById(id),
@@ -326,6 +360,10 @@
             return watcher;
         },
 
+        /**
+         * Unassigns specified watcher
+         * @param {string} watcher - name of watcher which should be removed
+         */
         removeWatcher: function (watcher) {
             for (var key in core.watchers) {
                 if (core.watchers.hasOwnProperty(key) && watcher == core.watchers[key]) {
@@ -333,6 +371,12 @@
                 }
             }
         },
+
+        /**
+         * Creates layout portion of widget's DOM object
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         constructWidgetLayout: function (widget, config) {
             switch (config.type) {
                 case 'form':
@@ -398,6 +442,12 @@
                     }
             }
         },
+
+        /**
+         * Appends action logic to widget's DOM object
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         constructWidgetActions: function (widget, config) {
             switch (config.layout) {
                 case 'folding':
@@ -458,6 +508,12 @@
                 }
             }
         },
+
+        /**
+         * Builds's widget's color theme
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         setupWidgetColors: function (widget, config) {
             if (config.theme === undefined) {
                 core.setCustomColors(widget, defaultProps.generic.themes['default']);
@@ -470,6 +526,12 @@
                 core.setCustomColors(widget, colors);
             }
         },
+
+        /**
+         * Constructs widget's DOM classes
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         setWidgetClassname: function (widget, config) {
             widget.className = 'pf-widget ' +
             'pf-' + config.type +
@@ -478,6 +540,12 @@
             ' pf-widget-variant-' + config.variant +
             ( config.theme ? ' pf-theme-' + config.theme : '' );
         },
+
+        /**
+         * Checks if user specified valid position for particullar widget type
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         validateWidgetPosition: function (widget, config) {
             var choices;
             var isValidPos = function (pos, choices) {
@@ -506,6 +574,12 @@
                 console.warn(config.position + " is not valid position for " + config.layout);
             }
         },
+
+        /**
+         * Sets default position for widget type, or validates position passed by user
+         * @param {object} widget - related element
+         * @param {object} config
+         */
         setupWidgetPosition: function (widget, config) {
             if (config.position) {
                 this.validateWidgetPosition(widget, config);
@@ -513,6 +587,12 @@
                 config.position = defaultPositions[config.layout];
             }
         },
+
+        /**
+         * Constructs widget's DOM object
+         * @param {object} config
+         * @returns {Element} - prepared widget object
+         */
         createWidgetHtml: function (config) {
             var widget = document.createElement('div');
 
@@ -527,11 +607,22 @@
 
             return widget;
         },
+
+        /**
+         * Tracks how much time user spend on page
+         * Needed for future functionalities
+         */
         trackTimeOnPage: function () {
             core.tickHandler = setInterval(function () {
                 pathforaDataObject.timeSpentOnPage += 1;
             }, 1000)
         },
+
+        /**
+         * Checks if user is newcomer or was here before (based on stored cookie)
+         * For future functionalities
+         * @returns {boolean}
+         */
         checkIfUserJustEntered: function () {
             var userEntered = utils.readCookie('PathforaInit');
             if (!userEntered) {
@@ -540,6 +631,12 @@
             }
             return false;
         },
+
+        /**
+         * Sets custom color theme to passed widget
+         * @param {object} widget - related element
+         * @param {object} colors - color configuration
+         */
         setCustomColors: function (widget, colors) {
             var close = widget.querySelector('.pf-widget-close');
             var header = widget.querySelector('.pf-widget-header');
@@ -572,6 +669,13 @@
 
             widget.querySelector('.pf-widget-message').style.color = colors.text;
         },
+
+        /**
+         * Reports data related to user action with widget (close, show, confirm, cancel, submit or subscribe)
+         * @param {string} action - name of action
+         * @param {object} widget - related widget object
+         * @param {element} htmlElement - related DOM element (for getting Forms and Submition data values)
+         */
         trackWidgetAction: function(action, widget, htmlElement) {
             var params = {
                 'pf-widget-id': widget.id,
@@ -611,6 +715,13 @@
             params['pf-widget-event'] = action;
             api.reportData(params);
         },
+
+        /**
+         * Updates object with new configuration values. Overrides provided values and leaves default one
+         * when particullar value was not provided
+         * @param {object} obj - oryginal element
+         * @param {object} config - new configuration
+         */
         updateObject: function (obj, config) {
             for (var prop in config) {
                 if (typeof config[prop] !== null && typeof config[prop] === 'object') {
@@ -627,6 +738,11 @@
                 }
             }
         },
+
+        /**
+         * Updates widget elements, and initiallizes each one.
+         * @param {array} arr - list of widgets which should be initialized
+         */
         initializeWidgetArray: function (arr) {
             for (var i = 0; i < arr.length; i++) {
                 var widget = arr[i];
@@ -650,6 +766,11 @@
                 }
             }
         },
+
+        /**
+         * Checks if user provided valid widget configuration
+         * @param {array} widgets - list of widgets to be checked
+         */
         validateWidgetsObject: function (widgets) {
             if (!widgets) {
                 throw new Error("Widgets not specified");
@@ -663,6 +784,13 @@
                 }
             }
         },
+
+        /**
+         * Checks if widget object is valid and appends default props to it
+         * @param type
+         * @param config
+         * @returns {{}}
+         */
         prepareWidget: function(type, config) {
             if (config === undefined) {
                 throw new Error("Config object is missing");
@@ -903,8 +1031,15 @@
 
             opened.slice(0);
 
+            var delayed = core.delayedWidgets;
+
+            for (var i = delayed.length; i > -1; i--) {
+                core.cancelDelayedWidget(delayed[i]);
+            }
+
             core.openedWidgets = [];
             core.initializedWidgets = [];
+            core.removeScrollWatchers(core.watchers);
 
             pathforaDataObject = {
                 pageViews: 0,
