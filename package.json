@@ -1,13 +1,12 @@
 {
   "name": "pathforajs",
-  "version": "1.0.0",
-  "description": "Javascript SDK for displaying messages and providing some widget actions based on Lytics API",
+  "version": "0.9.1",
+  "description": "Javascript SDK for engagaging and converting prospects into customers on your website with lightweight nurture apps",
   "repository": {
     "type": "git",
     "url": "https://github.com/pathfora/pathforajs.git"
   },
   "author": "Pathfora Inc.",
-  "license": "",
   "bugs": {
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
