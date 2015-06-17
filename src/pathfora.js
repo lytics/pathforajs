@@ -11,7 +11,7 @@
 
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-        link.setAttribute('href', '../dist/pathfora.min.css');
+        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
         document.head.appendChild(link);
     };
 
