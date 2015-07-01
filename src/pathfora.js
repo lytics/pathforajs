@@ -12,7 +12,8 @@
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
         link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
-        document.head.appendChild(link);
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(link);
     };
 
 
