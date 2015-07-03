@@ -524,7 +524,9 @@
                         if (typeof config.cancelAction === 'object') {
                             cancelBtn.onclick = function () {
                                 core.trackWidgetAction('cancel', config);
-                                config.cancelAction.callback();
+                                if (typeof config.cancelAction.callback === 'function') {
+                                    config.cancelAction.callback();
+                                }
                                 context.pathfora.closeWidget(widget.id, true);
                             };
                         } else {
@@ -540,7 +542,9 @@
             if (typeof config.confirmAction === 'object') {
                 widget.querySelector('.pf-widget-ok').onclick = function () {
                     core.trackWidgetAction('confirm', config);
-                    config.confirmAction.callback();
+                    if (typeof config.confirmAction.callback === 'function') {
+                        config.confirmAction.callback();
+                    }
                     context.pathfora.closeWidget(widget.id, true);
                 }
             } else if (config.type === 'message') {
@@ -1213,5 +1217,19 @@
 
     appendPathforaStylesheet();
     context.pathfora = new Pathfora();
+
+    // webadmin generated config
+    if (typeof pfCfg === 'object') {
+        api.getData('https:' == document.location.protocol ? 'https' : 'http' +
+            '://pathfora.parseapp.com/config/'+ pfCfg.uid + '/' + pfCfg.pid, function(data) {
+            console.log(data);
+            var widgets = JSON.parse(data).results;
+            for (var i=0; i < widgets.length; i++) {
+                widgets[i] = core.prepareWidget(widgets[i].type, widgets[i]);
+            }
+
+            pathfora.initializeWidgets(widgets, pfCfg.lid);
+        });
+    };
 
 })(window, document);
