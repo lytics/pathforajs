@@ -1222,13 +1222,25 @@
     if (typeof pfCfg === 'object') {
         api.getData('https:' == document.location.protocol ? 'https' : 'http' +
             '://pathfora.parseapp.com/config/'+ pfCfg.uid + '/' + pfCfg.pid, function(data) {
-            console.log(data);
-            var widgets = JSON.parse(data).results;
-            for (var i=0; i < widgets.length; i++) {
-                widgets[i] = core.prepareWidget(widgets[i].type, widgets[i]);
+
+            var parsed = JSON.parse(data);
+            var widgets = parsed.widgets;
+            var wgCfg = {themes: parsed.themes};
+
+            console.log(parsed);
+            var prepareWidgetArray = function (arr) {
+                for (var i=0; i < arr.length; i++) {
+                    arr[i] = core.prepareWidget(arr[i].type, arr[i]);
+                }
+            };
+
+            prepareWidgetArray(widgets.common);
+
+            for (var i=0; i < widgets.target.length; i++) {
+                prepareWidgetArray(widgets.target[i].widgets);
             }
 
-            pathfora.initializeWidgets(widgets, pfCfg.lid);
+            pathfora.initializeWidgets(widgets, pfCfg.lid, wgCfg);
         });
     };
 
