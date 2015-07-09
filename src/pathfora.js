@@ -422,13 +422,48 @@
                 case 'form':
                     switch (config.layout) {
                         case 'folding':
+                            widget.querySelector('form').onsubmit = function (e) {
+                                e.preventDefault();
+                                core.trackWidgetAction('submit', config, e.target);
+                                context.pathfora.closeWidget(widget.id, true);
+                            };
+                            widget.querySelectorAll('input')[0].style.width = "365px";
+                            widget.querySelectorAll('input')[1].style.width = "365px";
+                            widget.querySelectorAll('input')[2].style.width = "365px";
+                            widget.querySelector('textarea').style.width = "365px";
+                            if(widget.querySelector('.pf-widget-variant-2 input') !== null){
+                                widget.querySelectorAll('.pf-widget-variant-2 input')[0].style.width = "325px";
+                                widget.querySelectorAll('.pf-widget-variant-2 input')[1].style.width = "325px";
+                                widget.querySelectorAll('.pf-widget-variant-2 input')[2].style.width = "325px";
+                                widget.querySelector('.pf-widget-variant-2 textarea').style.width = "325px";
+                            }
+
+                            widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
+                            widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
+                            widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
+                            widget.querySelector('textarea').placeholder = config.placeholders.message;
+                            break;
                         case 'modal':
+                            widget.querySelector('form').onsubmit = function (e) {
+                                e.preventDefault();
+                                core.trackWidgetAction('submit', config, e.target);
+                                context.pathfora.closeWidget(widget.id, true);
+                            };                
+                            widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
+                            widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
+                            widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
+                            widget.querySelector('textarea').placeholder = config.placeholders.message;
+                            break;
                         case 'slideout':
                             widget.querySelector('form').onsubmit = function (e) {
                                 e.preventDefault();
                                 core.trackWidgetAction('submit', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
+                            widget.querySelectorAll('input')[0].style.width = "256px";
+                            widget.querySelectorAll('input')[1].style.width = "256px";
+                            widget.querySelectorAll('input')[2].style.width = "256px";
+                            widget.querySelector('textarea').style.width = "256px";
                             widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
                             widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
                             widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
@@ -1215,7 +1250,7 @@
         this.utils = utils;
     };
 
-    appendPathforaStylesheet();
+    // appendPathforaStylesheet();
     context.pathfora = new Pathfora();
 
     // webadmin generated config
