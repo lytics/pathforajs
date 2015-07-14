@@ -1250,7 +1250,7 @@
         this.utils = utils;
     };
 
-    // appendPathforaStylesheet();
+    appendPathforaStylesheet();
     context.pathfora = new Pathfora();
 
     // webadmin generated config
@@ -1260,7 +1260,7 @@
 
             var parsed = JSON.parse(data);
             var widgets = parsed.widgets;
-            var wgCfg = {themes: parsed.themes};
+            var wgCfg = parsed.config;
 
             console.log(parsed);
             var prepareWidgetArray = function (arr) {
