@@ -228,13 +228,19 @@
             layout: "modal",
             position: "",
             variant: "1",
-            cancelButton: true
+            cancelButton: true,
+            okMessage: 'Confirm',
+            cancelMessage: 'Cancel'
         },
         subscription: {
             layout: "modal",
             position: "",
             variant: "1",
-            placeholder: "Email"
+            placeholders: {
+                email: "Email"
+            },
+            okMessage: 'Confirm',
+            cancelMessage: 'Cancel'
         },
         form: {
             layout: "modal",
@@ -247,7 +253,9 @@
                 title: "Title",
                 email: "Email",
                 message: "Message"
-            }
+            },
+            okMessage: 'Send',
+            cancelMessage: 'Cancel'
         }
     };
 
@@ -418,52 +426,26 @@
          * @param {object} config
          */
         constructWidgetLayout: function (widget, config) {
+            if(widget.querySelector('.pf-widget-cancel') != null)
+                widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
+            if(widget.querySelector('.pf-widget-ok') != null)
+                widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;   
+            if(widget.querySelector('.pf-widget-ok') && widget.querySelector('.pf-widget-ok').value != null)
+                widget.querySelector('.pf-widget-ok').value = config.okMessage; 
+            if(widget.querySelector('.pf-widget-cancel') && widget.querySelector('.pf-widget-cancel').value != null)
+                widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;   
             switch (config.type) {
-                case 'form':
+                case 'form':         
                     switch (config.layout) {
                         case 'folding':
-                            widget.querySelector('form').onsubmit = function (e) {
-                                e.preventDefault();
-                                core.trackWidgetAction('submit', config, e.target);
-                                context.pathfora.closeWidget(widget.id, true);
-                            };
-                            widget.querySelectorAll('input')[0].style.width = "365px";
-                            widget.querySelectorAll('input')[1].style.width = "365px";
-                            widget.querySelectorAll('input')[2].style.width = "365px";
-                            widget.querySelector('textarea').style.width = "365px";
-                            if(widget.querySelector('.pf-widget-variant-2 input') !== null){
-                                widget.querySelectorAll('.pf-widget-variant-2 input')[0].style.width = "325px";
-                                widget.querySelectorAll('.pf-widget-variant-2 input')[1].style.width = "325px";
-                                widget.querySelectorAll('.pf-widget-variant-2 input')[2].style.width = "325px";
-                                widget.querySelector('.pf-widget-variant-2 textarea').style.width = "325px";
-                            }
-
-                            widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
-                            widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
-                            widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
-                            widget.querySelector('textarea').placeholder = config.placeholders.message;
-                            break;
                         case 'modal':
-                            widget.querySelector('form').onsubmit = function (e) {
-                                e.preventDefault();
-                                core.trackWidgetAction('submit', config, e.target);
-                                context.pathfora.closeWidget(widget.id, true);
-                            };                
-                            widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
-                            widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
-                            widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
-                            widget.querySelector('textarea').placeholder = config.placeholders.message;
-                            break;
                         case 'slideout':
+                        case 'random':
                             widget.querySelector('form').onsubmit = function (e) {
                                 e.preventDefault();
                                 core.trackWidgetAction('submit', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
-                            widget.querySelectorAll('input')[0].style.width = "256px";
-                            widget.querySelectorAll('input')[1].style.width = "256px";
-                            widget.querySelectorAll('input')[2].style.width = "256px";
-                            widget.querySelector('textarea').style.width = "256px";
                             widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
                             widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
                             widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
@@ -472,30 +454,29 @@
                         default:
                             throw new Error('Invalid widget layout value');
                     }
-                case 'subscription':
+                case 'subscription':           
                     switch (config.layout) {
                         case 'folding':
                         case 'modal':
                         case 'bar':
                         case 'slideout':
+                        case 'random':
                             widget.querySelector('form').onsubmit = function (e) {
                                 e.preventDefault();
                                 core.trackWidgetAction('subscribe', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
-
-                            if(config.type === 'subscription') {
-                                widget.querySelector('input').placeholder = config.placeholder;
-                            }
+                            widget.querySelector('input').placeholder = config.placeholders.email;
                             break;
                         default:
                             throw new Error('Invalid widget layout value');
                     }
-                case 'message':
+                case 'message':                          
                     switch (config.layout) {
                         case 'modal':
                         case 'folding':
                         case 'slideout':
+                        case 'random':
                             var header = widget.querySelectorAll('.pf-widget-header');
                             for (var i = header.length - 1; i >= 0; i--) {
                                 header[i].innerHTML = config.header;
@@ -600,11 +581,11 @@
                 core.setCustomColors(widget, defaultProps.generic.themes['default']);
             }
 
-            if (config.colors) {
+            if (config.themes) {
                 var colors = {};
                 core.updateObject(colors, defaultProps.generic.colors);
-                core.updateObject(colors, config.colors);
-                core.setCustomColors(widget, colors);
+                core.updateObject(colors, config.themes);
+                core.setCustomColors(widget,defaultProps.generic.themes[config.theme]);
             }
         },
 
@@ -894,6 +875,52 @@
             }
 
             var widget = {};
+    
+            if(config.layout === "random")
+            {
+                var props = {
+                    layout: ["modal","slideout","bar","button","folding"],
+                    variant: ["1","2"],
+                    slideout: ["left","right"],
+                    bar: ["top-fixed","top-scrolling","bottom-scrolling"],
+                    button: ["left","right","top-left","top-right","bottom-left","bottom-right"],
+                    folding: ['left', 'bottom-left', 'bottom-right']
+                }
+                switch(type){
+                    case 'message':
+                        var r = Math.floor((Math.random() * 4));             
+                        config.layout = props.layout[r];
+                        break;
+                    case 'subscription':
+                        var r = Math.floor((Math.random() * 5));
+                        while(r == 3)
+                           r = Math.floor((Math.random() * 5));
+                        config.layout = props.layout[r];
+                        break; 
+                    case 'form':
+                        var r = Math.floor((Math.random() * 5));
+                        while(r == 2 || r == 3)
+                            r = Math.floor((Math.random() * 5));
+                        config.layout = props.layout[r];
+                }
+                switch (config.layout) {
+                            case 'folding':
+                                config.position = props.folding[Math.floor((Math.random() * 3))];
+                                config.variant = props.variant[Math.floor((Math.random() * 2))];
+                                break;
+                            case 'slideout':
+                                config.position = props.slideout[Math.floor((Math.random() * 2))];
+                            case 'modal':
+                                config.variant = props.variant[Math.floor((Math.random() * 2))];
+                                break;
+                            case 'bar':
+                                config.position = props.bar[Math.floor((Math.random() * 3))];
+                                break;
+                            case 'button':
+                                 config.position = props.button[Math.floor((Math.random() * 6))];
+                }
+            }
+            console.log(type, config.layout, config.variant, config.position);
 
             widget.type = type;
             widget.config = config;
@@ -1257,11 +1284,14 @@
     if (typeof pfCfg === 'object') {
         api.getData('https:' == document.location.protocol ? 'https' : 'http' +
             '://pathfora.parseapp.com/config/'+ pfCfg.uid + '/' + pfCfg.pid, function(data) {
-
             var parsed = JSON.parse(data);
             var widgets = parsed.widgets;
-            var wgCfg = parsed.config;
-
+            var themes = {};
+            for (i = 0; i < parsed.config.themes.length; i++) { 
+                themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+            }
+            var wgCfg = {generic:{themes:themes}};
+ 
             console.log(parsed);
             var prepareWidgetArray = function (arr) {
                 for (var i=0; i < arr.length; i++) {
