@@ -1287,12 +1287,15 @@
             var parsed = JSON.parse(data);
             var widgets = parsed.widgets;
             var themes = {};
-            for (i = 0; i < parsed.config.themes.length; i++) { 
-                themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+
+            if (typeof parsed.config.themes !== 'undefined') {
+                for (i = 0; i < parsed.config.themes.length; i++) {
+                    themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+                }
             }
-            var wgCfg = {generic:{themes:themes}};
- 
-            console.log(parsed);
+
+            var wgCfg = {generic: {themes: themes}};
+
             var prepareWidgetArray = function (arr) {
                 for (var i=0; i < arr.length; i++) {
                     arr[i] = core.prepareWidget(arr[i].type, arr[i]);
