@@ -888,7 +888,7 @@
                 }
                 switch(type){
                     case 'message':
-                        var r = Math.floor((Math.random() * 4));             
+                        var r = Math.floor((Math.random() * 4));         
                         config.layout = props.layout[r];
                         break;
                     case 'subscription':
@@ -920,8 +920,6 @@
                                  config.position = props.button[Math.floor((Math.random() * 6))];
                 }
             }
-            console.log(type, config.layout, config.variant, config.position);
-
             widget.type = type;
             widget.config = config;
             widget.id = config.id || utils.generateUniqueId();
