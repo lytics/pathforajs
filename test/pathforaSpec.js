@@ -12,7 +12,7 @@ describe("Pathfora", function () {
     beforeEach(function() {
         localStorage.clear();
         pathfora.clearAll();
-    });
+    });    
 
     it("should track current time spent on page with 1 second accuracy", function () {
         jasmine.clock().install();
@@ -587,11 +587,10 @@ describe("Widgets", function () {
             position: 'top-left',
             msg: 'custom color button',
             id: 'custom-widget',
-            theme: 'custom',
-            colors: {
-                background: "#fff"
-            }
+            theme: 'custom'                  
         });
+
+        var config =  {generic:{ themes: { custom: { background: "#fff" }}}};                
 
         var w4 = new pathfora.Message({
             layout: 'button',
@@ -600,7 +599,7 @@ describe("Widgets", function () {
             id: 'def-theme-widget'
         });
 
-        pathfora.initializeWidgets([w1,w2,w3, w4], credentials);
+        pathfora.initializeWidgets([w1,w2,w3, w4], credentials,config);
 
         var light = $("#" + w1.id);
         var dark = $("#" + w2.id);
@@ -644,19 +643,34 @@ describe("Widgets", function () {
             layout: "modal",
             msg: "Custom style test",
             header: "Hello",
-            colors: {
-                background: '#eee',
-                header: "#333",
-                text: "#333",
-                close: "#888",
-                actionText: "#ddd",
-                actionBackground: "#111",
-                cancelText: "#333",
-                cancelBackground: "#eee"
+            theme: 'custom',
+            themes:{
+                   custom: {
+                    
+                }
             }
+         
         });
 
-        pathfora.initializeWidgets([modal], credentials);
+        var config =  {
+            generic: { 
+                themes: { 
+                    custom: { 
+                        background: '#eee',
+                        header: "#333",
+                        text: "#333",
+                        close: "#888",
+                        actionText: "#ddd",
+                        actionBackground: "#111",
+                        cancelText: "#333",
+                        cancelBackground: "#eee"
+                    }
+                }
+            }
+        };  
+
+
+        pathfora.initializeWidgets([modal], credentials,config);
 
         var widget = $('#' + modal.id);
         var background = widget.find(".pf-widget-content");
@@ -949,5 +963,45 @@ describe("API", function () {
         });
 
         expect(callback).toHaveBeenCalledWith('{"response":"error"}');
+    });
+
+    it("should be able to configure button text each widget element", function () {
+        var modal = pathfora.Message({
+            id: "custom-button-text-test",
+            layout: "modal",
+            msg: "Custom button text test",
+            header: "Hello",            
+            okMessage: "Confirm",
+            cancelMessage: "Cancel"
+        });
+
+        pathfora.initializeWidgets([modal],credentials);
+
+        var widget = $('#' + modal.id);
+        var actionBtn = widget.find(".pf-widget-ok");
+        var cancelBtn = widget.find(".pf-widget-cancel");
+
+        expect(actionBtn.html()).toBe('Confirm');
+        expect(cancelBtn.html()).toBe('Cancel');
+
+    });
+
+    it("should be able to set random layout for each widget element", function () {
+        spyOn(Math, 'floor').and.returnValue(1);
+        var random = pathfora.Message({
+            id: "custom-random-test",
+            layout: "random",
+            msg: "Custom random layout test",
+            header: "Hello"           
+       });
+
+        pathfora.initializeWidgets([random],credentials);
+
+        var widget = $('#' + random.id);
+
+        expect(widget.find(".pf-widget-slideout")).toBeTruthy();
+        expect(widget.find(".pf-position-right")).toBeTruthy();
+        expect(widget.find(".pf-widget-variant-2")).toBeTruthy();       
+
     });
 });
