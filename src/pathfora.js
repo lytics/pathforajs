@@ -6,7 +6,7 @@
     /**
      * Appends pathfora stylesheet to document
      */
-    var appendPathforaStylesheet = function () {
+    var appendPathforaStylesheet = function () {        
         var link = document.createElement('link');
 
         link.setAttribute('rel', 'stylesheet');
@@ -15,7 +15,6 @@
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(link);
     };
-
 
     /**
      * Regexp helper variables used by utility functions
@@ -426,16 +425,22 @@
          * @param {object} config
          */
         constructWidgetLayout: function (widget, config) {
+            var cancelShow =  widget.querySelectorAll('.pf-widget-cancel')[0];
+            var okShow =  widget.querySelectorAll('.pf-widget-ok')[0];
+            if(!config.okShow && okShow)
+               okShow.remove();
+            if(!config.cancelShow && cancelShow)
+               cancelShow.remove();
             if(widget.querySelector('.pf-widget-cancel') != null)
                 widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
             if(widget.querySelector('.pf-widget-ok') != null)
-                widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;   
+                widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;
             if(widget.querySelector('.pf-widget-ok') && widget.querySelector('.pf-widget-ok').value != null)
-                widget.querySelector('.pf-widget-ok').value = config.okMessage; 
+                widget.querySelector('.pf-widget-ok').value = config.okMessage;
             if(widget.querySelector('.pf-widget-cancel') && widget.querySelector('.pf-widget-cancel').value != null)
-                widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;   
+                widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;
             switch (config.type) {
-                case 'form':         
+                case 'form':
                     switch (config.layout) {
                         case 'folding':
                         case 'modal':
@@ -454,7 +459,7 @@
                         default:
                             throw new Error('Invalid widget layout value');
                     }
-                case 'subscription':           
+                case 'subscription':
                     switch (config.layout) {
                         case 'folding':
                         case 'modal':
@@ -471,7 +476,7 @@
                         default:
                             throw new Error('Invalid widget layout value');
                     }
-                case 'message':                          
+                case 'message':
                     switch (config.layout) {
                         case 'modal':
                         case 'folding':
@@ -581,7 +586,12 @@
                 core.setCustomColors(widget, defaultProps.generic.themes['default']);
             }
 
-            if (config.themes) {
+            if(config.config && config.config.theme === null) {
+                var colors = {};
+                core.updateObject(colors, defaultProps.generic.themes['default']);
+                core.updateObject(colors, config.config.colors);
+                core.setCustomColors(widget, colors);
+            } else if (config.themes) {
                 var colors = {};
                 core.updateObject(colors, defaultProps.generic.colors);
                 core.updateObject(colors, config.themes);
@@ -875,7 +885,7 @@
             }
 
             var widget = {};
-    
+
             if(config.layout === "random")
             {
                 var props = {
@@ -888,7 +898,7 @@
                 }
                 switch(type){
                     case 'message':
-                        var r = Math.floor((Math.random() * 4));         
+                        var r = Math.floor((Math.random() * 4));
                         config.layout = props.layout[r];
                         break;
                     case 'subscription':
@@ -896,7 +906,7 @@
                         while(r == 3)
                            r = Math.floor((Math.random() * 5));
                         config.layout = props.layout[r];
-                        break; 
+                        break;
                     case 'form':
                         var r = Math.floor((Math.random() * 5));
                         while(r == 2 || r == 3)
@@ -910,8 +920,11 @@
                                 break;
                             case 'slideout':
                                 config.position = props.slideout[Math.floor((Math.random() * 2))];
+                                config.variant = props.variant[Math.floor((Math.random() * 2))];
+                                break;
                             case 'modal':
                                 config.variant = props.variant[Math.floor((Math.random() * 2))];
+                                config.position = '';
                                 break;
                             case 'bar':
                                 config.position = props.bar[Math.floor((Math.random() * 3))];
@@ -1044,9 +1057,9 @@
      */
     var templates = {
         message: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
-            bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+            bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
             button: '<p class="pf-widget-message pf-widget-ok"></p>',
             inline: ''
         },
@@ -1057,9 +1070,9 @@
             bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
         },
         form: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>'
+            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
         }
     };
 
@@ -1285,15 +1298,12 @@
             var parsed = JSON.parse(data);
             var widgets = parsed.widgets;
             var themes = {};
-
-            if (typeof parsed.config.themes !== 'undefined') {
-                for (i = 0; i < parsed.config.themes.length; i++) {
-                    themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
-                }
+            for (i = 0; i < parsed.config.themes.length; i++) {
+                themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
             }
+            var wgCfg = {generic:{themes:themes}};
 
-            var wgCfg = {generic: {themes: themes}};
-
+            console.log(parsed);
             var prepareWidgetArray = function (arr) {
                 for (var i=0; i < arr.length; i++) {
                     arr[i] = core.prepareWidget(arr[i].type, arr[i]);
