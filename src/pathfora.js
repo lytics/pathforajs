@@ -229,7 +229,9 @@
             variant: "1",
             cancelButton: true,
             okMessage: 'Confirm',
-            cancelMessage: 'Cancel'
+            cancelMessage: 'Cancel',
+            okShow: true,
+            cancelShow: true
         },
         subscription: {
             layout: "modal",
@@ -239,7 +241,9 @@
                 email: "Email"
             },
             okMessage: 'Confirm',
-            cancelMessage: 'Cancel'
+            cancelMessage: 'Cancel',
+            okShow: true,
+            cancelShow: true
         },
         form: {
             layout: "modal",
@@ -254,7 +258,9 @@
                 message: "Message"
             },
             okMessage: 'Send',
-            cancelMessage: 'Cancel'
+            cancelMessage: 'Cancel',
+            okShow: true,
+            cancelShow: true
         }
     };
 
@@ -425,12 +431,23 @@
          * @param {object} config
          */
         constructWidgetLayout: function (widget, config) {
-            var cancelShow =  widget.querySelectorAll('.pf-widget-cancel')[0];
-            var okShow =  widget.querySelectorAll('.pf-widget-ok')[0];
-            if(!config.okShow && okShow)
-               okShow.remove();
-            if(!config.cancelShow && cancelShow)
-               cancelShow.remove();
+            if (widget.querySelector('.pf-widget-cancel') != null) {
+                if(!config.cancelShow){
+                    var node = widget.querySelectorAll('.pf-widget-cancel')[0];
+                    if (node.parentNode) {
+                        node.parentNode.removeChild(node);
+                    }
+                }
+            }
+
+            if (widget.querySelector('.pf-widget-ok') != null) {
+                if(!config.okShow){
+                    var node = widget.querySelectorAll('.pf-widget-ok')[0];
+                    if (node.parentNode) {
+                        node.parentNode.removeChild(node);
+                    }
+                }
+            }
             if(widget.querySelector('.pf-widget-cancel') != null)
                 widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
             if(widget.querySelector('.pf-widget-ok') != null)
@@ -1298,8 +1315,10 @@
             var parsed = JSON.parse(data);
             var widgets = parsed.widgets;
             var themes = {};
-            for (i = 0; i < parsed.config.themes.length; i++) {
-                themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+            if (typeof parsed.config.themes !== 'undefined') {
+                for (i = 0; i < parsed.config.themes.length; i++) {
+                    themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+                }
             }
             var wgCfg = {generic:{themes:themes}};
 
