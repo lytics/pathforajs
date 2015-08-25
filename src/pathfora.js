@@ -6,7 +6,7 @@
     /**
      * Appends pathfora stylesheet to document
      */
-    var appendPathforaStylesheet = function () {        
+    var appendPathforaStylesheet = function () {
         var link = document.createElement('link');
 
         link.setAttribute('rel', 'stylesheet');
@@ -81,7 +81,7 @@
          */
         removeClass: function (DOMnode, value) {
             var classes, cur, clazz, j, finalValue;
-            if ((typeof value === "string" && value) && (DOMnode.nodeType === 1)) {
+            if ((typeof value === "string" && value) && (DOMnode && DOMnode.nodeType === 1)) {
                 classes = (value || "").match(rnotwhite) || [];
                 // This expression is here for better compressibility (see addClass)
                 cur = (DOMnode.className ? (" " + DOMnode.className + " ").replace(rclass, " ") : "");
@@ -379,8 +379,9 @@
         registerPositionWatcher: function (percent, widget) {
             var watcher = {
                 check: function () {
-                    var positionInPixels = document.body.offsetHeight * percent / 100;
-                    if (document.body.scrollTop >= positionInPixels) {
+                    var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
+                    var offset = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (offset >= positionInPixels) {
                         pathfora.showWidget(widget);
                         core.removeWatcher(watcher);
                     }
@@ -401,7 +402,9 @@
             var watcher = {
                 elem: document.getElementById(id),
                 check: function () {
-                    if (watcher.elem.offsetTop - window.innerHeight / 2 <= document.body.scrollTop) {
+                    var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                    var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+                    if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
                         pathfora.showWidget(widget);
                         core.removeWatcher(watcher);
                     }
@@ -1243,7 +1246,7 @@
             utils.removeClass(node, 'opened');
 
             setTimeout(function () {
-                if (node.parentNode){
+                if (node && node.parentNode){
                     node.parentNode.removeChild(node);
                 }
             }, 500);
