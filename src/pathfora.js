@@ -11,7 +11,7 @@
 
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+        link.setAttribute('href', '../dist/pathfora.min.css');
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(link);
     };
@@ -184,7 +184,7 @@
             header: "",
             theme: 'default',
             themes: {
-                "default": {
+                default: {
                     background: '#ddd',
                     header: "#333",
                     text: "#333",
@@ -195,14 +195,14 @@
                     cancelBackground: "#eee"
                 },
                 dark: {
-                    background: '#ddd',
-                    header: "#333",
-                    text: "#333",
-                    close: "#999",
-                    actionText: "#333",
-                    actionBackground: "#eee",
-                    cancelText: "#333",
-                    cancelBackground: "#eee"
+                    background: '#333',
+                    header: "#fff",
+                    text: "#fff",
+                    close: "#888",
+                    actionText: "#fff",
+                    actionBackground: "#597E9B",
+                    cancelText: "#fff",
+                    cancelBackground: "#597E9B"
                 },
                 light: {
                     background: '#ddd',
@@ -451,14 +451,20 @@
                     }
                 }
             }
+
+
             if(widget.querySelector('.pf-widget-cancel') != null)
                 widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
+
             if(widget.querySelector('.pf-widget-ok') != null)
                 widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;
+
             if(widget.querySelector('.pf-widget-ok') && widget.querySelector('.pf-widget-ok').value != null)
                 widget.querySelector('.pf-widget-ok').value = config.okMessage;
+
             if(widget.querySelector('.pf-widget-cancel') && widget.querySelector('.pf-widget-cancel').value != null)
                 widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;
+
             switch (config.type) {
                 case 'form':
                     switch (config.layout) {
@@ -479,6 +485,7 @@
                         default:
                             throw new Error('Invalid widget layout value');
                     }
+                    break;
                 case 'subscription':
                     switch (config.layout) {
                         case 'folding':
@@ -491,37 +498,49 @@
                                 core.trackWidgetAction('subscribe', config, e.target);
                                 context.pathfora.closeWidget(widget.id, true);
                             };
+
                             widget.querySelector('input').placeholder = config.placeholders.email;
                             break;
                         default:
                             throw new Error('Invalid widget layout value');
                     }
+                    break;
                 case 'message':
                     switch (config.layout) {
                         case 'modal':
                         case 'folding':
                         case 'slideout':
                         case 'random':
-                            var header = widget.querySelectorAll('.pf-widget-header');
-                            for (var i = header.length - 1; i >= 0; i--) {
-                                header[i].innerHTML = config.header;
-                            }
                         case 'bar':
-                            if (config.image) {
-                                var image = document.createElement('img');
-                                image.src = config.image;
-                                image.className = 'pf-widget-img';
-                                widget.querySelector('.pf-widget-body').appendChild(image);
-                            } else {
-                                utils.addClass(widget, 'pf-no-img');
-                            }
                         case 'button':
-                            widget.querySelector('.pf-widget-message').innerHTML = config.msg;
                             break;
                         default:
                             throw new Error('Invalid widget layout value');
                     }
             }
+
+            // Set The header
+            var header = widget.querySelectorAll('.pf-widget-header');
+            for (var i = header.length - 1; i >= 0; i--) {
+                header[i].innerHTML = config.header;
+            }
+
+            // Set the Image
+            if (config.image) {
+                if (config.layout === "button") {
+                    console.warn('Images are not compatible with the button layout.');
+                } else {
+                    var image = document.createElement('img');
+                    image.src = config.image;
+                    image.className = 'pf-widget-img';
+                    widget.querySelector('.pf-widget-body').appendChild(image);
+                }
+            } else {
+                utils.addClass(widget, 'pf-no-img');
+            }
+
+            // Set the message
+            widget.querySelector('.pf-widget-message').innerHTML = config.msg;
         },
 
 
@@ -537,7 +556,8 @@
 
                     if (config.position !== 'left') {
                         setTimeout(function () {
-                            widget.style.bottom = -widget.offsetHeight + 'px';
+                            var height = widget.offsetHeight - widget.querySelector('.pf-widget-caption').offsetHeight;
+                            widget.style.bottom = -height + 'px';
                         }, 0);
                     }
 
@@ -613,9 +633,14 @@
                 core.setCustomColors(widget, colors);
             } else if (config.themes) {
                 var colors = {};
-                core.updateObject(colors, defaultProps.generic.colors);
-                core.updateObject(colors, config.themes);
-                core.setCustomColors(widget,defaultProps.generic.themes[config.theme]);
+                // custom colors
+                if (config.theme === "custom")
+                    core.updateObject(colors, config.colors);
+                // a default theme
+                else
+                    core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+
+                core.setCustomColors(widget, colors);
             }
         },
 
@@ -739,8 +764,11 @@
         setCustomColors: function (widget, colors) {
             var close = widget.querySelector('.pf-widget-close');
             var header = widget.querySelector('.pf-widget-header');
+            var headerLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-header');
             var cancelBtn = widget.querySelector('.pf-widget-cancel');
             var okBtn = widget.querySelector('.pf-widget-ok');
+            var arrow = widget.querySelector('.pf-widget-caption span');
+            var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
 
             if (utils.hasClass(widget, 'pf-widget-modal')) {
                 widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
@@ -754,6 +782,18 @@
 
             if (header) {
                 header.style.color = colors.header;
+            }
+
+            if (headerLeft) {
+                headerLeft.style.color = colors.header;
+            }
+
+            if (arrow) {
+                arrow.style.color = colors.close;
+            }
+
+            if (arrowLeft) {
+                arrowLeft.style.color = colors.close;
             }
 
             if (cancelBtn) {
@@ -1087,7 +1127,7 @@
             modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div></div></div></div></div>',
             slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div>',
             folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div>',
-            bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
+            bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
         },
         form: {
             modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
@@ -1139,12 +1179,17 @@
 
                 if (widgets.target) {
                     api.checkUserSegments(lyticsId, function (segments) {
+                        var triggered = false;
                         for (var i = 0; i < widgets.target.length; i++) {
                             var target = widgets.target[i];
                             if (segments.indexOf(target.segment) !== -1) {
                                 core.initializeWidgetArray(target.widgets);
+                                triggered = true;
                                 break;
                             }
+                        }
+                        if (!triggered && widgets.inverse) {
+                            core.initializeWidgetArray(widgets.inverse);
                         }
                     });
                 }
@@ -1201,6 +1246,7 @@
          * @param {object} widget - related element
          */
         this.showWidget = function (widget) {
+
             for (var i = 0; i < core.openedWidgets.length; i++) {
                 if (core.openedWidgets[i] === widget) {
                     return;

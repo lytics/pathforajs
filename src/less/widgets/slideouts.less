@@ -22,7 +22,8 @@
   img {
     height: 50px;
     width: 50px!important;
-    margin-left: 20px;
+    margin: 0 0 0 40px;
+    float: left;
   }
 
   .pf-widget-content {
@@ -140,10 +141,16 @@
   }
 
   &.pf-form {
-    width: 300px;
+    width: 370px;
 
     > div {
       display: block;
+    }
+
+    &.pf-no-img {
+      .pf-widget-body {
+        height: 0;
+      }
     }
 
     .pf-widget-body {
