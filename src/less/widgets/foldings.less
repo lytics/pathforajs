@@ -54,11 +54,6 @@
 
   .pf-widget-content {
     padding: 20px 20px 20px;
-
-    input[input=text],
-    input[type=email] {
-      width: 200px;
-    }
   }
 
   &.pf-position-bottom-left, &.pf-position-bottom-right {
@@ -151,8 +146,7 @@
 
         input[type=text],
         input[type=email],
-        textarea,
-        .pf-widget-btn {
+        textarea {
           width: 100%;
         }
 
@@ -188,20 +182,6 @@
     }
   }
 
-  &.pf-subscription {
-    &.pf-no-img {
-      input[type=text],
-      input[type=email] {
-        width:75%;
-      }
-    }
-
-    input[type=text],
-    input[type=email] {
-      width: 85%;
-    }
-  }
-
   &.pf-form {
     input[type=text],
     input[type=email] {
@@ -234,10 +214,6 @@
 
       .pf-widget-content {
         padding-bottom: 0;
-      }
-
-      .pf-widget-btn {
-        float: none;
       }
 
       textarea {
@@ -276,12 +252,6 @@
         max-width: 330px;
       }
 
-      input[type=text],
-      input[type=email],
-      .pf-widget-btn {
-        width: 100%;
-      }
-
       &.opened {
         left: 0;
       }
@@ -304,12 +274,6 @@
       }
     }
 
-    input[type=text],
-    input[type=email],
-    .pf-widget-btn {
-      width: 100%;
-      margin-right: 30px;
-    }
 
     form + .pf-widget-btn,
     input[type=text] + .pf-widget-btn,

@@ -11,7 +11,7 @@
 
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-        link.setAttribute('href', '../dist/pathfora.min.css');
+        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(link);
     };
@@ -634,11 +634,18 @@
             } else if (config.themes) {
                 var colors = {};
                 // custom colors
-                if (config.theme === "custom")
+                if (config.theme === "custom") {
                     core.updateObject(colors, config.colors);
+                // colors set via the higher config
+                } else if (config.theme === "default" && defaultProps.generic.theme !== "default") {
+                    if (defaultProps.generic.theme === "custom")
+                        core.updateObject(colors, defaultProps.generic.colors);
+                    else
+                        core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
                 // a default theme
-                else
+                } else {
                     core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+                }
 
                 core.setCustomColors(widget, colors);
             }
@@ -1124,9 +1131,9 @@
             inline: ''
         },
         subscription: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div>',
-            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><button type="submit" class="pf-widget-btn pf-widget-ok">X</button></form></div>',
+            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
             bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
         },
         form: {

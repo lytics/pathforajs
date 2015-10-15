@@ -590,7 +590,13 @@ describe("Widgets", function () {
             theme: 'custom'                  
         });
 
-        var config =  {generic:{ themes: { custom: { background: "#fff" }}}};                
+        var config =  {
+            generic: {
+                colors: {
+                    background: "#fff"
+                }
+            }
+        };                
 
         var w4 = new pathfora.Message({
             layout: 'button',
@@ -644,27 +650,20 @@ describe("Widgets", function () {
             msg: "Custom style test",
             header: "Hello",
             theme: 'custom',
-            themes:{
-                   custom: {
-                    
-                }
-            }
          
         });
 
         var config =  {
             generic: { 
-                themes: { 
-                    custom: { 
-                        background: '#eee',
-                        header: "#333",
-                        text: "#333",
-                        close: "#888",
-                        actionText: "#ddd",
-                        actionBackground: "#111",
-                        cancelText: "#333",
-                        cancelBackground: "#eee"
-                    }
+                colors: { 
+                    background: '#eee',
+                    header: "#333",
+                    text: "#333",
+                    close: "#888",
+                    actionText: "#ddd",
+                    actionBackground: "#111",
+                    cancelText: "#333",
+                    cancelBackground: "#eee"
                 }
             }
         };  
