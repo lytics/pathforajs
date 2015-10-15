@@ -21,8 +21,8 @@
 
   img {
     height: 50px;
-    width: 50px!important;
-    margin-left: 20px;
+    margin: 0 0 0 40px;
+    float: left;
   }
 
   .pf-widget-content {
@@ -102,7 +102,6 @@
 
       .pf-widget-btn {
         font-size: 14px;
-        line-height: 32px;
       }
 
       input[type=text],
@@ -124,9 +123,6 @@
         margin-bottom: 0;
       }
 
-      .pf-widget-btn {
-        float: none;
-      }
     }
 
     .pf-widget-img {
@@ -140,10 +136,22 @@
   }
 
   &.pf-form {
-    width: 300px;
+    width: 370px;
 
     > div {
       display: block;
+    }
+
+    &.pf-no-img {
+      .pf-widget-body {
+        height: 0;
+      }
+    }
+
+    &:not(.pf-no-img) {
+      .pf-widget-header {
+        line-height: 50px;
+      }
     }
 
     .pf-widget-body {

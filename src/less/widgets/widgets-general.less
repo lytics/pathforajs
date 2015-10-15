@@ -79,7 +79,7 @@ a {
   }
 
   .pf-widget-message {
-    margin-bottom: 16px;
+    margin: 0 0 16px 0;
   }
 
   .pf-widget-img {
@@ -197,9 +197,32 @@ a {
 }
 
 .pf-subscription {
-  input[type=text],
-  input[type=email] {
-    width: 300px;
+  form {
+    overflow: hidden;
+    width: 100%;
+  
+    input[type=text],
+    input[type=email] {
+      width: 100%;
+    }
+
+    .pf-widget-button, input[type=text], input[type=email] {
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    .pf-widget-btn {
+      float: right;
+      margin-left: 5px;
+      line-height: 36px;
+      padding: 0 16px;
+    }
+
+    span {
+      display: block;
+      overflow: hidden;
+    }
   }
 }
 
