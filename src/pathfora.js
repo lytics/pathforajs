@@ -11,7 +11,9 @@
 
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+        
+        // Need to update the cdn version. For now use local.
+        link.setAttribute('href', '../dist/pathfora.min.css');
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(link);
     };
