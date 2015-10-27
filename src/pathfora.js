@@ -11,7 +11,9 @@
 
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+        
+        // Need to update the cdn version. For now use local.
+        link.setAttribute('href', '../dist/pathfora.min.css');
         var head = document.getElementsByTagName('head')[0];
         head.appendChild(link);
     };
@@ -249,8 +251,6 @@
             layout: "modal",
             position: "",
             variant: "1",
-            nameField: true,
-            titleField: false,
             placeholders: {
                 name: "Name",
                 title: "Title",
@@ -541,6 +541,22 @@
 
             // Set the message
             widget.querySelector('.pf-widget-message').innerHTML = config.msg;
+
+            if (config.type === "form") {
+                var form = widget.querySelector('form');
+                if (config.nameField === false) {
+                    form.removeChild(form.querySelector('input[name="username"]'));
+                }
+                if (config.titleField === false) {
+                    form.removeChild(form.querySelector('input[name="title"]'));
+                }
+                if (config.emailField === false) {
+                    form.removeChild(form.querySelector('input[name="email"]'));
+                }
+                if (config.msgField === false) {
+                    form.removeChild(form.querySelector('texarea[name="message"]'));
+                }
+            }
         },
 
 
@@ -776,11 +792,18 @@
             var okBtn = widget.querySelector('.pf-widget-ok');
             var arrow = widget.querySelector('.pf-widget-caption span');
             var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+            var fields = widget.querySelectorAll('input, textarea');
 
             if (utils.hasClass(widget, 'pf-widget-modal')) {
                 widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
             } else {
                 widget.style.backgroundColor = colors.background;
+            }
+
+            if (fields.length > 0) {
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.backgroundColor = colors.fieldBackground;
+                }
             }
 
             if (close) {
