@@ -1,0 +1,124 @@
+.pf-widget-bar {
+  background: @backgroundDefault;
+  color: @colorDefault;
+  height: auto;
+  padding: 5px 0;
+  left: 0; right: 0;
+  &:extend(.pf-box-shadow);
+
+  .pf-widget-close {
+    line-height: 42px;
+  }
+
+  .pf-widget-body {
+    margin: 5px 20px;
+    float: left;
+
+    img {
+      height: 35px;
+      width: 35px;
+    }
+  }
+
+  .pf-bar-content {
+    text-align: center;
+
+    .pf-widget-message {
+      max-width: 50%;
+      margin-top: 0;
+      margin-bottom: 0;
+      white-space: normal;
+    }
+
+    input[type=text],
+    input[type=email] {
+      margin-left: 16px;
+      width: 200px;
+      background: #fff;
+    }
+
+    > * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+
+  &.opened {
+    &.pf-position-top-fixed {
+      top: 0;
+    }
+
+    &.pf-position-bottom-fixed {
+      bottom: 0;
+    }
+
+    &.pf-position-top-scrolling {
+      top: 0;
+    }
+
+    &.pf-position-bottom-scrolling {
+      bottom: 0;
+    }
+  }
+
+  &.pf-position-top-fixed,
+  &.pf-position-bottom-fixed {
+    position: fixed;
+  }
+
+  &.pf-position-top-fixed,
+  &.pf-position-top-scrolling {
+    top: -50px;
+
+    .pf-bar-content {
+      padding-top: 0px;
+    }
+  }
+
+  &.pf-position-bottom-fixed,
+  &.pf-position-bottom-scrolling {
+    bottom: -50px;
+  }
+
+  &.pf-position-bottom-scrolling,
+  &.pf-position-top-scrolling {
+    position: absolute;
+  }
+
+  &.pf-message {
+    .pf-bar-content {
+      padding-top: 7px;
+    }
+
+    .pf-widget-message {
+      margin-right: 16px;
+    }
+  }
+
+  &.pf-subscription {
+    .pf-bar-content {
+      padding-top: 5px;
+    }
+
+    form {
+      width: auto;
+    }
+
+    &.pf-bottom-fixed,
+    &.pf-bottom-scrolling {
+      .pf-widget-message {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &.pf-theme-dark {
+    background: @backgroundDark;
+    color: @colorDark;
+  }
+
+  &.pf-theme-light {
+    background: @backgroundLight;
+    border-bottom: 1px solid #333;
+  }
+}

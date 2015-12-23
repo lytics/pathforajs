@@ -1,0 +1,226 @@
+.pf-widget-slideout {
+  position: fixed;
+  bottom: 50px;
+  width: 540px;
+  background: @backgroundDefault;
+  color: @colorDefault;
+  border-radius: 4px;
+  &:extend(.pf-box-shadow);
+  display: table;
+
+  > div {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .pf-widget-close {
+    position: absolute;
+    right: 0;
+    top: 20px;
+  }
+
+  img {
+    height: 50px;
+    margin: 0 0 0 40px;
+    float: left;
+  }
+
+  .pf-widget-content {
+    padding: 20px 20px 20px 40px;
+
+  }
+
+  .pf-widget-header {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .pf-widget-message {
+    margin-bottom: 16px;
+  }
+
+  input[type=text],
+  input[type=email] {
+    height: 36px;
+  }
+
+  input[type=text] + .pf-widget-btn,
+  input[type=email] + .pf-widget-btn {
+    padding: 0;
+    width: 20%;
+    text-align: center;
+  }
+
+  .pf-widget-btn {
+    float: right;
+  }
+
+  &.pf-theme-dark {
+    background: @backgroundDark;
+    color: @colorDark;
+  }
+
+  &.pf-theme-light {
+    background: @backgroundLight;
+    border: 1px solid @borderLight;
+  }
+
+  &.opened {
+    &.pf-position-left {
+      left: 50px;
+    }
+
+    &.pf-position-right {
+      right: 50px;
+    }
+  }
+
+  &.pf-position-left,
+  &.pf-position-right {
+    top: auto;
+  }
+
+  &.pf-position-left {
+    left: -540px;
+  }
+
+  &.pf-position-right {
+    right: -540px;
+  }
+
+  &.pf-widget-variant-2 {
+    width: 350px;
+
+    .pf-widget-content {
+      text-align: center;
+      width: 100%;
+      padding: 20px;
+
+      .pf-widget-header {
+        margin-top: 120px;
+      }
+
+      .pf-widget-btn {
+        font-size: 14px;
+      }
+
+      input[type=text],
+      input[type=email] {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      input[type=text] + .pf-widget-btn,
+      input[type=email] + .pf-widget-btn,
+      form + .pf-widget-btn {
+        margin: 0;
+        width: 100%;
+        position: static;
+        box-sizing: border-box;
+      }
+
+      form textarea {
+        margin-bottom: 0;
+      }
+
+    }
+
+    .pf-widget-img {
+      width: 100px;
+      height: 100px;
+      float: none;
+      position: absolute;
+      top: 20px; left: 50%;
+      margin-left: -50px;
+    }
+  }
+
+  &.pf-form {
+    width: 370px;
+
+    > div {
+      display: block;
+    }
+
+    &.pf-no-img {
+      .pf-widget-body {
+        height: 0;
+      }
+    }
+
+    &:not(.pf-no-img) {
+      .pf-widget-header {
+        line-height: 50px;
+      }
+    }
+
+    .pf-widget-body {
+      height: 50px;
+      width: 20%;
+      float: left;
+      padding-top: 20px;
+      padding-left: 20px;
+      margin-right: 20px;
+
+      .pf-widget-img {
+        width: 50px;
+        height: 50px;
+        margin-left: 0;
+      }
+    }
+
+    .pf-widget-content {
+      padding: 20px;
+    }
+
+    input[type=text]
+    input[type=email],
+    textarea {
+      width: 100%;
+    }
+
+    .pf-widget-btn {
+      float: right;
+      margin-bottom: 20px;
+    }
+
+    &.pf-widget-variant-2 {
+      .pf-widget-body {
+        float: none;
+        height: 70px;
+      }
+
+      .pf-widget-img {
+        float: none;
+        width: 100px;
+        height: 100px;
+        margin-left: -50px;
+      }
+
+
+      .pf-widget-header {
+        margin-bottom: 5px;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  &.pf-no-image {
+    .pf-widget-content {
+      width: 100%;
+    }
+
+    .pf-widget-body {
+      margin: 0;
+      padding: 0;
+      height: 0 !important;
+      width: 0 !important;
+    }
+
+    &.pf-widget-variant-2 {
+      .pf-widget-header {
+        margin-top: 0;
+      }
+    }
+  }
+}

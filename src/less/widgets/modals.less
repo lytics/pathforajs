@@ -1,0 +1,164 @@
+.pf-widget-modal {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 9999;
+
+  .pf-va-middle {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .pf-widget-container {
+    display: table;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    top: -100vh;
+    transition: all .3s;
+  }
+
+  .pf-widget-content {
+    position: relative;
+    width: @modalWidth;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 10px;
+    background: @backgroundDefault;
+    &:extend(.pf-box-shadow);
+    transition: all .3s;
+  }
+
+  .pf-widget-img {
+      float: right;
+      margin-right: 0px;
+      width: 100px;
+      height: 100px;
+      margin-left: 20px;
+    }
+
+  .pf-widget-header {
+    font-size: 38px;
+    margin: 0 0 18px 0;
+  }
+
+  .pf-widget-close {
+    position: absolute;
+    float: none;
+    top: 20px; right: 0;
+  }
+
+  .pf-widget-body {
+    display: table;
+    color: @colorDefault;
+    width: 100%;
+
+    > .pf-va-middle {
+      white-space: nowrap;
+    }
+
+    .pf-widget-message {
+      margin: 0 0 18px 0;
+      font-size: 18px;
+      white-space: normal;
+    }
+
+    .pf-widget-btn {
+      padding: 0 15px;
+      min-width: 70px;
+      text-align: center;
+    }
+
+    form {
+      & + .pf-widget-btn {
+        float: right;
+      }
+    }
+  }
+
+  &.opened {
+    .pf-widget-container {
+      top: 0;
+    }
+  }
+
+  &.pf-form {
+    form {
+      white-space: normal;
+
+      input[type=text],
+      input[type=email] {
+        width: 100%;
+      }
+    }
+  }
+
+  &.pf-theme-dark {
+    .pf-widget-content {
+      background: @backgroundDark;
+    }
+  }
+
+  &.pf-theme-light {
+    .pf-widget-content {
+      background: @backgroundLight;
+      border: 1px solid @borderLight;
+    }
+  }
+
+  &.pf-widget-variant-2 {
+    .pf-widget-content {
+      max-width: 70%;
+      width: auto;
+    }
+
+    .pf-widget-header {
+      text-align: center;
+      margin-top: 140px;
+    }
+
+    .pf-widget-body {
+      > * {
+        display: block;
+        text-align: center;
+      }
+
+      > .pf-va-middle {
+        white-space: normal;
+      }
+
+      .pf-widget-img {
+        float: none;
+        position: absolute;
+        top: 20px; left: 50%;
+        margin-left: -70px;
+        width: 140px;
+        height: 140px;
+      }
+
+      .pf-widget-btn {
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        margin-bottom: 5px;
+      }
+
+      input[type=text] + .pf-widget-btn,
+      input[type=email] + .pf-widget-btn {
+        margin: 0;
+        width: 100%;
+        position: static;
+      }
+    }
+  }
+
+  &.pf-no-image {
+    &.pf-widget-variant-2 {
+      .pf-widget-header {
+        margin-top: 0;
+      }
+    }
+  }
+}
