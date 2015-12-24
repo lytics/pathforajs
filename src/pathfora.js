@@ -306,36 +306,32 @@
       }
     },
 
-
     /**
-         * Taks array of watchers and clears it
-         * @param {array} watchers - pointer to the list of watchers
-         */
+     * @description Take array of watchers and clear it
+     * @param {array} watchers
+     */
     removeScrollWatchers: function (watchers) {
       watchers.forEach(function (watcher) {
         core.removeWatcher(watcher);
       });
 
       context.removeEventListener('scroll', core.scrollListener, false);
-      delete core.scrollListener;
     },
 
-
     /**
-         * Waits amount of time specified in widget config before initializing it
-         * @param {object} widget - element which should be initialized
-         */
+     * @description Register a time-tiggered widget
+     * @param {object} widget
+     */
     registerDelayedWidget: function (widget) {
       this.delayedWidgets[widget.id] = setTimeout(function () {
         core.initializeWidget(widget);
       }, widget.displayConditions.showDelay * 1000);
     },
 
-
     /**
-         * Prevents delayed widgets from initializing
-         * @param {object} widget - element which should be cancelled
-         */
+     * @description Prevent timely delayed widget from initialization
+     * @param {object} widget
+     */
     cancelDelayedWidget: function (widget) {
       var delayObj = this.delayedWidgets[widget.id];
 
@@ -345,13 +341,13 @@
       }
     },
 
-
     /**
-         * Registers watcher for checking if user is on particular scroll position.
-         * @param {number} percent - scroll percentage on which widget should be displayed
-         * @param {object} widget - widget which should be displayed
-         * @returns {{check: Function}} - function fired on scroll for checking if widget should be displayed
-         */
+     * @description Register a scroll position-triggered widget
+     * @param   {number} percent scroll percentage at 
+     *                   which the widget should be displayed
+     * @param   {object} widget
+     * @returns {object} object, containing onscroll callback function 'check'
+     */
     registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
@@ -367,13 +363,13 @@
       return watcher;
     },
 
-
     /**
-         * Registers watcher for checking if user can see some element
-         * @param {string} id - id of triggering element
-         * @param {object} widget - widget which should be displayed
-         * @returns {{elem: Element, check: Function}} - function fired on scroll to check if user can see specified el.
-         */
+     * @description Register element visibility-triggered widget
+     * @param   {string} id     trigger element id (DOMElement.id property)
+     * @param   {object} widget
+     * @returns {object} object, containing onscroll callback function 'check', and
+     *                   triggering element reference 'elem'
+     */
     registerElementWatcher: function (id, widget) {
       var watcher = {
         elem: document.getElementById(id),
@@ -390,11 +386,10 @@
       return watcher;
     },
 
-
     /**
-         * Unassigns specified watcher
-         * @param {string} watcher - name of watcher which should be removed
-         */
+     * @description Unassign a watcher
+     * @param {object} watcher
+     */
     removeWatcher: function (watcher) {
       for (var key in core.watchers) {
         if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
@@ -403,44 +398,56 @@
       }
     },
 
-
     /**
-         * Creates layout portion of widget's DOM object
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * @description Construct DOM layout for the widget
+     * @throws {Error} error
+     * @param {object} widget
+     * @param {object} config
+     */
     constructWidgetLayout: function (widget, config) {
-      if (widget.querySelector('.pf-widget-cancel') !== null) {
-        if(!config.cancelShow) {
-          var node = widget.querySelectorAll('.pf-widget-cancel')[0];
-          if (node.parentNode) {
-            node.parentNode.removeChild(node);
-          }
+      var node;
+      var i;
+      var widgetCancel = widget.querySelector('.pf-widget-cancel');
+      var widgetOk = widget.querySelector('.pf-widget-ok');
+      var widgetForm = widget.querySelector('form');
+      var widgetTextArea = widget.querySelector('textarea');
+      var widgetHeader = widget.querySelectorAll('.pf-widget-header');
+      var widgetImage = null;
+      var widgetBody = widget.querySelector('.pf-widget-body');
+      var widgetMessage = widget.querySelector('.pf-widget-message');
+      
+      if (widgetCancel !== null && !config.cancelShow) {
+        node = widgetCancel;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
         }
       }
 
-      if (widget.querySelector('.pf-widget-ok') !== null) {
-        if(!config.okShow) {
-          var node = widget.querySelectorAll('.pf-widget-ok')[0];
-          if (node.parentNode) {
-            node.parentNode.removeChild(node);
-          }
+      if (widgetOk !== null && !config.okShow) {
+        node = widgetOk;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
         }
       }
 
+      if(widgetCancel !== null) {
+        widgetCancel.innerHTML = config.cancelMessage;
+      }
 
-      if(widget.querySelector('.pf-widget-cancel') !== null)
-        widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
+      if(widgetOk !== null) {
+        widgetOk.innerHTML = config.okMessage;
+      }
+      
+      if(widgetOk && widgetOk.value !== null) {
+        widgetOk.value = config.okMessage;
+      }
 
-      if(widget.querySelector('.pf-widget-ok') !== null)
-        widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;
-
-      if(widget.querySelector('.pf-widget-ok') && widget.querySelector('.pf-widget-ok').value !== null)
-        widget.querySelector('.pf-widget-ok').value = config.okMessage;
-
-      if(widget.querySelector('.pf-widget-cancel') && widget.querySelector('.pf-widget-cancel').value !== null)
-        widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;
-
+      if(widgetCancel && widgetCancel.value !== null) {
+        widgetCancel.value = config.cancelMessage;
+      }
+      
       switch (config.type) {
       case 'form':
         switch (config.layout) {
@@ -448,15 +455,18 @@
         case 'modal':
         case 'slideout':
         case 'random':
-          widget.querySelector('form').onsubmit = function (e) {
-            e.preventDefault();
-            core.trackWidgetAction('submit', config, e.target);
+          widgetForm.onsubmit = function (error) {
+            // FIXME Not IE8 compatible
+            error.preventDefault();
+            core.trackWidgetAction('submit', config, error.target);
             context.pathfora.closeWidget(widget.id, true);
           };
+          // FIXME Cache
+          // FIXME (???) Check if can be changed to [input=*] !
           widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
           widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
           widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
-          widget.querySelector('textarea').placeholder = config.placeholders.message;
+          widgetTextArea.placeholder = config.placeholders.message;
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -469,12 +479,13 @@
         case 'bar':
         case 'slideout':
         case 'random':
-          widget.querySelector('form').onsubmit = function (e) {
-            e.preventDefault();
-            core.trackWidgetAction('subscribe', config, e.target);
+          widgetForm.onsubmit = function (error) {
+            // FIXME Not IE8 compatible
+            error.preventDefault();
+            core.trackWidgetAction('subscribe', config, error.target);
             context.pathfora.closeWidget(widget.id, true);
           };
-
+          // FIXME Cache
           widget.querySelector('input').placeholder = config.placeholders.email;
           break;
         default:
@@ -495,46 +506,47 @@
         }
       }
 
-      // Set The header
-      var header = widget.querySelectorAll('.pf-widget-header');
-      for (var i = header.length - 1; i >= 0; i--) {
-        header[i].innerHTML = config.header;
+      // NOTE Set The header
+      for (i = widgetHeader.length - 1; i >= 0; i--) {
+        widgetHeader[i].innerHTML = config.header;
       }
 
-      // Set the Image
+      // NOTE Set the image
       if (config.image) {
         if (config.layout === 'button') {
           console.warn('Images are not compatible with the button layout.');
         } else {
-          var image = document.createElement('img');
-          image.src = config.image;
-          image.className = 'pf-widget-img';
-          widget.querySelector('.pf-widget-body').appendChild(image);
+          widgetImage = document.createElement('img');
+          widgetImage.src = config.image;
+          widgetImage.className = 'pf-widget-img';
+          widgetBody.appendChild(image);
         }
       } else {
         utils.addClass(widget, 'pf-no-img');
       }
 
-      // Set the message
-      widget.querySelector('.pf-widget-message').innerHTML = config.msg;
+      // NOTE Set the message
+      widgetMessage.innerHTML = config.msg;
 
       if (config.type === 'form') {
-        var form = widget.querySelector('form');
         if (config.nameField === false) {
-          form.removeChild(form.querySelector('input[name="username"]'));
+          // FIXME Cache
+          widgetForm.removeChild(form.querySelector('input[name="username"]'));
         }
         if (config.titleField === false) {
-          form.removeChild(form.querySelector('input[name="title"]'));
+          // FIXME Cache
+          widgetForm.removeChild(form.querySelector('input[name="title"]'));
         }
         if (config.emailField === false) {
-          form.removeChild(form.querySelector('input[name="email"]'));
+          // FIXME Cache
+          widgetForm.removeChild(form.querySelector('input[name="email"]'));
         }
         if (config.msgField === false) {
-          form.removeChild(form.querySelector('texarea[name="message"]'));
+          // FIXME Cache
+          widgetForm.removeChild(form.querySelector('texarea[name="message"]'));
         }
       }
     },
-
 
     /**
          * Appends action logic to widget's DOM object
