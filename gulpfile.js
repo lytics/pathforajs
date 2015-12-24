@@ -1,8 +1,4 @@
 var gulp = require('gulp');
-//var browserify = require('gulp-browserify'); // NOTE Unused
-//var concat = require('gulp-concat'); // NOTE Unused
-//var connect = require('gulp-connect'); // NOTE Unused
-//var open = require('gulp-open'); // NOTE Unused
 var less = require('gulp-less');
 var path = require('path');
 var uglify = require('gulp-uglify');
