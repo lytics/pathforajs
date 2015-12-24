@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var gulp = require('gulp');
 //var browserify = require('gulp-browserify'); // NOTE Unused
 //var concat = require('gulp-concat'); // NOTE Unused
