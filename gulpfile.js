@@ -6,7 +6,7 @@ var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var os = require('os');
 
-var tmpDirCss = path.join(os.tmpdir(), 'css');
+var tempDirForCSS = path.join(os.tmpdir(), 'css');
 
 gulp.task('less', function () {
   gulp.src('src/less/*.less')
@@ -15,7 +15,7 @@ gulp.task('less', function () {
         path.join(__dirname, 'less', 'includes')
       ]
     }))
-    .pipe(gulp.dest(tmpDirCss));
+    .pipe(gulp.dest(tempDirForCSS));
 });
 
 gulp.task('styles', ['less'], function () {
