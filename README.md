@@ -4,7 +4,17 @@
   Lightweight library for displaying widgets on your website. 
   Integrates with your Lytics account for tracking user actions, and conditionally displaying widgets based on user segment. 
   For more info, and full configuration examples please check wiki pages.
-  
+
+## Gulp tasks
+
+### gulp.copy
+
+### gulp.less
+
+### gulp.minify
+
+### gulp.default
+
 ## General Usage
   1. Add lytics tracking tag https://activate.getlytics.com/#/documentation/jstag_anon into your website, and import pathfora.js file.
   
