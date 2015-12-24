@@ -1045,32 +1045,30 @@
     }
   };
 
-
-  /**
-     * Set of functions for communicating data with external sources
-     * @type {object}
-     */
+  // NOTE Public API
   var api = {
     /**
-         * Sends data about user to Lytics API (from cookie), using jstag functrion
-         */
+     * @description Send user data to Lytics API
+     */
     initializeCustomAPI: function () {
-      var reed = utils.readCookie('seerid');
+      var seerId = utils.readCookie('seerid');
 
-      if (typeof jstag === 'object' && reed) {
-        jstag.send({user_id: reed});
+      if (typeof jstag === 'object' && seerId) {
+        jstag.send({
+          user_id: seerId
+        });
       }
     },
 
-
     /**
-         * XHR GET request builder
-         * @param {string} url
-         * @param {Function} onSuccess
-         * @param {Function} onError
-         */
+     * @description Prepare GET HTTP request
+     * @param {string}   url       target url
+     * @param {function} onSuccess success callback
+     * @param {function} onError   error callback
+     */
     getData: function (url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
+      
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
           onSuccess(xhr.responseText);
@@ -1083,14 +1081,13 @@
       xhr.send();
     },
 
-
     /**
-         * XHR POST request builder
-         * @param {string} url
-         * @param {string} data
-         * @param {Function} onSuccess
-         * @param {Function} onError
-         */
+     * @description Prepare POST HTTP request
+     * @param {string}   url       target url
+     * @param {object}   data      payload
+     * @param {function} onSuccess success callback
+     * @param {function} onError   error callback
+     */
     postData: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
@@ -1108,44 +1105,48 @@
       xhr.send(data);
     },
 
-
     /**
-         * Sends data to Lytics API using jstag function
-         * User credentials are took from cookie
-         * @param {object} data
-         */
+     * @description Send data to Lytics API
+     * @param {object} data payload
+     */
     reportData: function (data) {
       if (typeof jstag === 'object') {
         jstag.send(data);
       } else {
-        if (typeof console === 'function') {
-          console.warn('Cannot find Lytics tag, reporting disabled');
-        }
+        console.warn('Cannot find Lytics tag, reporting disabled');
       }
     },
 
-
     /**
-         * Get's data on which Lytics segment current user is assigned to
-         * @param {number} accountId - Lytics ID of website owner
-         * @param cb - callback function
-         */
-    checkUserSegments: function (accountId, cb) {
-      var reed = utils.readCookie('seerid');
-      if (!reed) {
+     * @description Retrieve user segment data from Lytics
+     * @throws {Error} error
+     * @param {string} accountId  Lytics user ID
+     * @param {string} callback   universal callback
+     */
+    checkUserSegments: function (accountId, callback) {
+      var seerId = utils.readCookie('seerid');
+      var apiUrl;
+      
+      if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
       }
-      var apiUrl = 'https://api.lytics.io/api/me/' + accountId + '/'
-      + reed + '?segments=true';
+      
+      apiUrl = [
+        'https://api.lytics.io/api/me/',
+        accountId,
+        '/',
+        seerId,
+        '?segments=true'
+      ].join('');
 
-      this.getData(apiUrl, function (resp) {
-        var data = JSON.parse(resp);
-        cb(data.data.segments);
+      this.getData(apiUrl, function (response) {
+        callback(JSON.parse(response).data.segments);
 
-      }, function (err) {
-        console.error(err);
+      }, function (error) {
+        // FIXME Remove in production
+        console.error(error);
 
-        cb({
+        callback({
           data: {
             segments: ['all']
           }
@@ -1155,10 +1156,8 @@
   };
 
 
-  /**
-     * Object containing all html templates used for constructing widgets
-     * @type {Object}
-     */
+  // NOTE HTML templates
+  // FUTURE Move to separate files and concat
   var templates = {
     message: {
       modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
@@ -1179,8 +1178,6 @@
       folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
     }
   };
-
-
 
   /**
      * Pathfora public functions
