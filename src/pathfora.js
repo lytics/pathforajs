@@ -2,10 +2,9 @@
 // Pathfora API
 
 (function (context, document) {
-
   /**
-     * Appends pathfora stylesheet to document
-     */
+   * @description Appends pathfora stylesheet to document
+   */
   var appendPathforaStylesheet = function () {
     var head;
     var link;
@@ -20,154 +19,133 @@
     link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
     head.appendChild(link);
   };
+  
+  // NOTE Regexp helper variables used by utility functions
+  var rclass = /[\t\r\n\f]/g;
+  var rnotwhite = (/\S+/g);
+  var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
-  /**
-     * Regexp helper variables used by utility functions
-     * @type {RegExp}
-     */
-  var rclass = /[\t\r\n\f]/g,
-    rnotwhite = (/\S+/g),
-    rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-
-
-  /**
-     * Helper utility functions
-     * based on jQuery functions with some modifications
-     */
+  // NOTE Helper utility functions
   var utils = {
 
     /**
-         * Checks is DOM node has provided class
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         * @returns {boolean}
-         */
-    hasClass: function (DOMnode, value) {
-      if (DOMnode.nodeType === 1 &&
-          (" " + DOMnode.className + " ").replace(rclass, " ").indexOf(" " + value + " ") >= 0) {
-        return true;
-      }
-      return false;
+     * @description Checks if DOM node has the provided class
+     * @param   {object}  DOMNode   DOM element
+     * @param   {string}  className class name
+     */
+    hasClass: function (DOMNode, className) {
+      return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
     },
 
-
     /**
-         * Adds class to passed DOM node
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         */
-    addClass: function (DOMnode, value) {
-      var classes, cur, clazz, j, finalValue;
-      if (typeof value === "string" && value) {
-        // The disjunction here is for better compressibility (see removeClass)
-        classes = (value || "").match(rnotwhite) || [];
-        cur = DOMnode.nodeType === 1 &&
-          (DOMnode.className ? (" " + DOMnode.className + " ").replace(rclass, " ") : " ");
-        if (cur) {
-          j = 0;
-          while ((clazz = classes[j++])) {
-            if (cur.indexOf(" " + clazz + " ") < 0) {
-              cur += clazz + " ";
-            }
-          }
-          finalValue = cur === null ? "" : (cur + "").replace(rtrim, "");
-          if (DOMnode.className !== finalValue) {
-            DOMnode.className = finalValue;
-          }
-        }
-      }
+     * @description Addes new classes to the DOM node (removed duplicates)
+     * @param   {object} DOMNode   DOM element
+     * @param   {string} className class name(s)
+     */
+    addClass: function (DOMNode, className) {
+      // NOTE Not necessary, but leaves a clean code after mutations
+      this.removeClass(DOMNode, className);
+      
+      DOMNode.className = [
+        DOMNode.className,
+        className
+      ].join(' ');
     },
 
-
     /**
-         * Removes class from DOM elmeent
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         */
-    removeClass: function (DOMnode, value) {
-      var classes, cur, clazz, j, finalValue;
-      if ((typeof value === "string" && value) && (DOMnode && DOMnode.nodeType === 1)) {
-        classes = (value || "").match(rnotwhite) || [];
-        // This expression is here for better compressibility (see addClass)
-        cur = (DOMnode.className ? (" " + DOMnode.className + " ").replace(rclass, " ") : "");
-        if (cur) {
-          j = 0;
-          while ((clazz = classes[j++])) {
-            // Remove *all* instances
-            while (cur.indexOf(" " + clazz + " ") >= 0) {
-              cur = cur.replace(" " + clazz + " ", " ");
-            }
-          }
-          finalValue = value ? (cur === null ? "" : (cur + "").replace(rtrim, "")) : "";
-          if (DOMnode.className !== finalValue) {
-            DOMnode.className = finalValue;
-          }
-        }
-      }
+     * @description Removed classes from the DOM node
+     * @param {object} DOMNode   DOM element
+     * @param {string} className class name(s)
+     */
+    removeClass: function (DOMNode, className) {
+      var findClassRegexp = new RegExp([
+        '(^|\\b)',
+        className.split(' ').join('|'),
+        '(\\b|$)' 
+      ].join(''), 'gi');
+      
+      DOMNode.className.replace(findClassRegexp, ' ');
     },
 
-
     /**
-         * Reads browser Cookie value of specified name
-         * @param {string} name - cookie name
-         */
+     * @description Reads browser Cookie value of specified name
+     * @param   {string} name cookie name
+     * @returns {string} cookie value
+     */
     readCookie: function (name) {
-      var nameEQ,
-        ca,
-        i,
-        c;
-      nameEQ = name + "=";
-      ca = context.document.cookie.split(';');
-      for (i = 0; i < ca.length; i = i + 1) {
-        c = ca[i];
-        while (c.charAt(0) === ' ') {
-          c = c.substring(1, c.length);
-        }
-        if (c.indexOf(nameEQ) === 0) {
-          return c.substring(nameEQ.length, c.length);
-        }
-      }
-      return null;
+      var findCookieRegexp = new RegExp([
+        '(?:(?:^|.*;\s*)',
+        name,
+        '\s*\=\s*([^;]*).*$)|^.*$'
+      ].join(''), 'gi');
+      
+      return document.cookie.replace(findCookieRegexp, '$1');
     },
-
+    
     /**
-         * Saves browser cookie
-         * @param {string} name - cookie name
-         * @param {string} value - cookie value
-         * @param {number} days - number of days until cookie expires
-         */
+     * @description Saves a new cookie
+     * @param {string} name  cookie name
+     * @param {string} value cookie value
+     * @param {number} days  days until the cookie expires
+     */
     saveCookie: function (name, value, days) {
-      var expires,
-        date;
+      var expires;
+      var date;
+      
       if (days) {
         date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toGMTString();
+        date.setDate(date.getDate() + days);
+        expires = '; expires=' + date.toGMTString();
       } else {
-        expires = "";
+        expires = '';
       }
-      context.document.cookie = name + "=" + value + expires + "; path=/";
+      
+      context.document.cookie = [
+        name,
+        '=',
+        value,
+        expires,
+        '; path = /'
+      ].join('');
     },
 
     /**
-         * Generates unique
-         * @param {string} name - cookie name
-         * @param {string} value - cookie value
-         * @param {number} days - number of days until cookie expires
-         */
+     * Generate unique ID
+     * @returns {string} unique id
+     */
     generateUniqueId: function () {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
+      var s4;
+      
+      if (typeof s4 === 'undefined') {
+        s4 = function () {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
       }
 
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
+      return [
+        s4(), s4(),
+        '-',
+        s4(),
+        '-',
+        s4(),
+        '-',
+        s4(),
+        '-',
+        s4(), s4(), s4()
+      ];
     },
-    randomChoice: function (items) {
-      return items[Math.floor(Math.random() * items.length)];
-    }
+    
+    /**
+     * 
+     * @param   {array}  items array of items
+     * @returns {object} random item from the array
+     */
+    // NOTE Unused
+//    randomChoice: function (items) {
+//      return items[Math.floor(Math.random() * items.length)];
+//    }
   };
 
 
