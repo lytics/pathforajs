@@ -13,8 +13,6 @@ var os = require('os');
 var tmpDirCss = path.join(os.tmpdir(), 'css');
 
 gulp.task('less', function () {
-  var tmpdir = os.tmpdir();
-  
   gulp.src('src/less/*.less')
     .pipe(less({
       paths: [
