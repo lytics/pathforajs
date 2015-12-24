@@ -884,38 +884,46 @@
     },
 
     /**
-         * Updates object with new configuration values. Overrides provided values and leaves default one
-         * when particullar value was not provided
-         * @param {object} obj - oryginal element
-         * @param {object} config - new configuration
-         */
-    updateObject: function (obj, config) {
-      for (var prop in config) {
+     * @description Override object with new config parameters
+     * @param {object} object original object
+     * @param {object} config new configuration
+     */
+    updateObject: function (object, config) {
+      var prop;
+      
+      for (prop in config) {
         if (typeof config[prop] !== null && typeof config[prop] === 'object') {
           if(config.hasOwnProperty(prop)) {
-            if(obj[prop] === undefined) {
-              obj[prop] = {};
+            if(object[prop] === undefined) {
+              object[prop] = {};
             }
-            core.updateObject(obj[prop], config[prop]);
+            core.updateObject(object[prop], config[prop]);
           }
         } else {
-          if(config.hasOwnProperty(prop)) {
-            obj[prop] = config[prop];
+          if (config.hasOwnProperty(prop)) {
+            object[prop] = config[prop];
           }
         }
       }
     },
 
-
     /**
-         * Updates widget elements, and initiallizes each one.
-         * @param {array} arr - list of widgets which should be initialized
-         */
-    initializeWidgetArray: function (arr) {
-      for (var i = 0; i < arr.length; i++) {
-        var widget = arr[i];
-        var defaults = defaultProps[widget.type];
-        var globals = defaultProps.generic;
+     * @description Initialize widgets from the given array
+     * @throws {Error} error
+     * @param {array} array list of widgets to initialize
+     */
+    initializeWidgetArray: function (array) {
+      var defaults;
+      var globals;
+      var widget;
+      var i;
+      var j;
+      
+      j = array.length;
+      for (i = 0; i < j; i++) {
+        widget = array[i];
+        defaults = defaultProps[widget.type];
+        globals = defaultProps.generic;
 
         if (this.initializedWidgets.indexOf(widget.id) < 0) {
           this.initializedWidgets.push(widget.id);
@@ -935,18 +943,23 @@
       }
     },
 
-
     /**
-         * Checks if user provided valid widget configuration
-         * @param {array} widgets - list of widgets to be checked
-         */
+     * @description Validate a list of widget elements
+     * @throws {Error} error
+     * @param {object} widgets
+     */
     validateWidgetsObject: function (widgets) {
+      var i;
+      var j;
+      
       if (!widgets) {
         throw new Error('Widgets not specified');
       }
 
       if (widgets.constructor !== Array && widgets.target) {
-        for (var i = 0; i < widgets.target.length; i++) {
+        j = widgets.target.length;
+        
+        for (i = 0; i < j; i++) {
           if (!widgets.target[i].segment) {
             throw new Error('All targeted widgets should have segment specified');
           }
@@ -954,14 +967,18 @@
       }
     },
 
-
     /**
-         * Checks if widget object is valid and appends default props to it
-         * @param type
-         * @param config
-         * @returns {{}}
-         */
+     * @description Generate a new widget object
+     * @throws {Error} error
+     * @param   {string} type   widget type
+     * @param   {object} config
+     * @returns {object} generated widget object
+     */
     prepareWidget: function (type, config) {
+      var widget = {};
+      var props;
+      var random;
+      
       if (config === undefined) {
         throw new Error('Config object is missing');
       }
@@ -970,34 +987,35 @@
         throw new Error('Widget message is missing');
       }
 
-      var widget = {};
-
-      if(config.layout === 'random')
-      {
-        var props = {
-          layout: ['modal','slideout','bar','button','folding'],
-          variant: ['1','2'],
-          slideout: ['left','right'],
-          bar: ['top-fixed','top-scrolling','bottom-scrolling'],
-          button: ['left','right','top-left','top-right','bottom-left','bottom-right'],
+      if(config.layout === 'random') {
+        props = {
+          layout: ['modal', 'slideout', 'bar', 'button', 'folding'],
+          variant: ['1', '2'],
+          slideout: ['left', 'right'],
+          bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
+          button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
+        
+        // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :)) 
         switch(type) {
         case 'message':
-          var r = Math.floor((Math.random() * 4));
-          config.layout = props.layout[r];
+          random = Math.floor((Math.random() * 4));
+          config.layout = props.layout[random];
           break;
         case 'subscription':
-          var r = Math.floor((Math.random() * 5));
-          while(r === 3)
-            r = Math.floor((Math.random() * 5));
-          config.layout = props.layout[r];
+          random = Math.floor((Math.random() * 5));
+          while (random === 3){
+            random = Math.floor((Math.random() * 5));
+          }
+          config.layout = props.layout[random];
           break;
         case 'form':
-          var r = Math.floor((Math.random() * 5));
-          while(r === 2 || r === 3)
-            r = Math.floor((Math.random() * 5));
-          config.layout = props.layout[r];
+          random = Math.floor((Math.random() * 5));
+          while (random === 2 || random === 3) {
+            random = Math.floor((Math.random() * 5));
+          }
+          config.layout = props.layout[random];
         }
         switch (config.layout) {
         case 'folding':
