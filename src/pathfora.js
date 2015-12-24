@@ -676,30 +676,28 @@
     },
 
     /**
-         * Constructs widget's DOM classes
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * @description Generate and set class names for the widget
+     * @param {object} widget
+     * @param {object} config
+     */
     setWidgetClassname: function (widget, config) {
-      widget.className = 'pf-widget ' +
-        'pf-' + config.type +
-        ' pf-widget-' + config.layout +
-        ( config.position ? ' pf-position-' + config.position : '' ) +
-        ' pf-widget-variant-' + config.variant +
-        ( config.theme ? ' pf-theme-' + config.theme : '' );
+      widget.className = [
+        'pf-widget ',
+        'pf-' + config.type,
+        ' pf-widget-' + config.layout,
+        (config.position ? ' pf-position-' + config.position : ''),
+        ' pf-widget-variant-' + config.variant,
+        (config.theme ? ' pf-theme-' + config.theme : '')
+      ].join('');
     },
 
-
     /**
-         * Checks if user specified valid position for particullar widget type
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * Validate position for a widget of specific type
+     * @param   {object}   widget 
+     * @param   {object}   config 
+     */
     validateWidgetPosition: function (widget, config) {
       var choices;
-      var isValidPos = function (pos, choices) {
-        return choices.indexOf(pos) > -1;
-      };
 
       switch (config.layout) {
       case 'modal':
@@ -719,17 +717,16 @@
         break;
       }
 
-      if (!isValidPos(config.position, choices)) {
+      if (choices.indexOf(config.position) === -1) {
         console.warn(config.position + ' is not valid position for ' + config.layout);
       }
     },
 
-
     /**
-         * Sets default position for widget type, or validates position passed by user
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * @description Set default widget position, if current one is invalid
+     * @param {object} widget 
+     * @param {object} config
+     */
     setupWidgetPosition: function (widget, config) {
       if (config.position) {
         this.validateWidgetPosition(widget, config);
@@ -738,12 +735,11 @@
       }
     },
 
-
     /**
-         * Constructs widget's DOM object
-         * @param {object} config
-         * @returns {Element} - prepared widget object
-         */
+     * @description Construct DOM element for the widget
+     * @param   {object} config
+     * @returns {object} widget DOM element
+     */
     createWidgetHtml: function (config) {
       var widget = document.createElement('div');
 
@@ -759,38 +755,35 @@
       return widget;
     },
 
-
+    // FIXME Really inefficient and inaccurate, either cache initial time and subtract
+    //       or calculate delta
     /**
-         * Tracks how much time user spend on page
-         * Needed for future functionalities
-         */
+     * @description Track time spent on page
+     */
     trackTimeOnPage: function () {
       core.tickHandler = setInterval(function () {
         pathforaDataObject.timeSpentOnPage += 1;
       }, 1000);
     },
 
-
+    // FUTURE
     /**
-         * Checks if user is newcomer or was here before (based on stored cookie)
-         * For future functionalities
-         * @returns {boolean}
-         */
+     * @description Determine whether the user visited the site before (set the cookie)
+     * @returns {boolean}
+     */
     checkIfUserJustEntered: function () {
-      var userEntered = utils.readCookie('PathforaInit');
-      if (!userEntered) {
+      if (!utils.readCookie('PathforaInit')) {
         utils.saveCookie('PathforaInit', true, 30);
         return true;
       }
       return false;
     },
 
-
     /**
-         * Sets custom color theme to passed widget
-         * @param {object} widget - related element
-         * @param {object} colors - color configuration
-         */
+     * @description Set custom color theme for the widget
+     * @param {object} widget
+     * @param {object} colors custom theme
+     */
     setCustomColors: function (widget, colors) {
       var close = widget.querySelector('.pf-widget-close');
       var header = widget.querySelector('.pf-widget-header');
@@ -846,13 +839,13 @@
       widget.querySelector('.pf-widget-message').style.color = colors.text;
     },
 
-
     /**
-         * Reports data related to user action with widget (close, show, confirm, cancel, submit or subscribe)
-         * @param {string} action - name of action
-         * @param {object} widget - related widget object
-         * @param {element} htmlElement - related DOM element (for getting Forms and Submition data values)
-         */
+     * @description Report data related to the user action with widget
+     * @list  actions   [close, show, confirm, cancel, submit, subscribe]
+     * @param {string}  action      action name
+     * @param {object}  widget      related widget
+     * @param {Element} htmlElement related DOM element
+     */
     trackWidgetAction: function (action, widget, htmlElement) {
       var params = {
         'pf-widget-id': widget.id,
@@ -877,22 +870,18 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
-        var form = htmlElement;
-
-        params['pf-form-username'] = form.elements['username'].value;
-        params['pf-form-title'] = form.elements['title'].value;
-        params['pf-form-email'] = form.elements['email'].value;
-        params['pf-form-message'] = form.elements['message'].value;
+        params['pf-form-username'] = htmlElement.elements['username'].value;
+        params['pf-form-title'] = htmlElement.elements['title'].value;
+        params['pf-form-email'] = htmlElement.elements['email'].value;
+        params['pf-form-message'] = htmlElement.elements['message'].value;
         break;
       case 'subscribe':
-        form = htmlElement;
-        params['pf-form-email'] = form.elements['email'].value;
+        params['pf-form-email'] = htmlElement.elements['email'].value;
       }
 
       params['pf-widget-event'] = action;
       api.reportData(params);
     },
-
 
     /**
          * Updates object with new configuration values. Overrides provided values and leaves default one
