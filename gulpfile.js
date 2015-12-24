@@ -11,12 +11,6 @@ var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var os = require('os');
 
-// NOTE Unused
-//gulp.task('copy', function () {
-//  gulp.src('src/*')
-//    .pipe(gulp.dest('dist'));
-//});
-
 var tmpDirCss = path.join(os.tmpdir(), 'css');
 
 gulp.task('less', function () {
