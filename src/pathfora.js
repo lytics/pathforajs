@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 // Pathfora API
 
 (function (context, document) {
@@ -29,7 +29,7 @@
   var utils = {
 
     /**
-     * @description Checks if DOM node has the provided class
+     * @description Check if DOM node has the provided class
      * @param   {object}  DOMNode   DOM element
      * @param   {string}  className class name
      */
@@ -38,7 +38,7 @@
     },
 
     /**
-     * @description Addes new classes to the DOM node (removed duplicates)
+     * @description Add new classes to the DOM node (removed duplicates)
      * @param   {object} DOMNode   DOM element
      * @param   {string} className class name(s)
      */
@@ -53,7 +53,7 @@
     },
 
     /**
-     * @description Removed classes from the DOM node
+     * @description Remove classes from the DOM node
      * @param {object} DOMNode   DOM element
      * @param {string} className class name(s)
      */
@@ -64,26 +64,27 @@
         '(\\b|$)' 
       ].join(''), 'gi');
       
-      DOMNode.className.replace(findClassRegexp, ' ');
+      DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
     },
 
     /**
-     * @description Reads browser Cookie value of specified name
+     * @description Read browser Cookie value of specified name
      * @param   {string} name cookie name
      * @returns {string} cookie value
      */
     readCookie: function (name) {
+      var cookies = document.cookie;
       var findCookieRegexp = new RegExp([
         '(?:(?:^|.*;\s*)',
         name,
         '\s*\=\s*([^;]*).*$)|^.*$'
       ].join(''), 'gi');
       
-      return document.cookie.replace(findCookieRegexp, '$1');
+      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
     },
     
     /**
-     * @description Saves a new cookie
+     * @description Save a new cookie
      * @param {string} name  cookie name
      * @param {string} value cookie value
      * @param {number} days  days until the cookie expires
@@ -110,7 +111,7 @@
     },
 
     /**
-     * Generate unique ID
+     * @description Generate unique ID
      * @returns {string} unique id
      */
     generateUniqueId: function () {
@@ -134,7 +135,7 @@
         s4(),
         '-',
         s4(), s4(), s4()
-      ];
+      ].join('');
     },
     
     /**
@@ -142,113 +143,107 @@
      * @param   {array}  items array of items
      * @returns {object} random item from the array
      */
-    // NOTE Unused
-//    randomChoice: function (items) {
-//      return items[Math.floor(Math.random() * items.length)];
-//    }
+    // FIXME Unused
+    //randomChoice: function (items) {
+    //  return items[Math.floor(Math.random() * items.length)];
+    //}
   };
 
 
-  /**
-     * Default configuration object
-     * oryginalConf is used when default data gets overriden
-     */
-  var oryginalConf,
-    defaultPositions = {
-      modal: '',
-      slideout: 'left',
-      button: 'top-left',
-      bar: 'top-fixed',
-      folding: 'bottom-left'
-    },
-    defaultProps = {
-      generic: {
-        className: "pathfora",
-        header: "",
-        theme: 'default',
-        themes: {
-          default: {
-            background: '#ddd',
-            header: "#333",
-            text: "#333",
-            close: "#999",
-            actionText: "#333",
-            actionBackground: "#eee",
-            cancelText: "#333",
-            cancelBackground: "#eee"
-          },
-          dark: {
-            background: '#333',
-            header: "#fff",
-            text: "#fff",
-            close: "#888",
-            actionText: "#fff",
-            actionBackground: "#597E9B",
-            cancelText: "#fff",
-            cancelBackground: "#597E9B"
-          },
-          light: {
-            background: '#ddd',
-            header: "#333",
-            text: "#333",
-            close: "#999",
-            actionText: "#333",
-            actionBackground: "#eee",
-            cancelText: "#333",
-            cancelBackground: "#eee"
-          }
+  // NOTE Default configuration object (oryginalConf is used when default data gets overriden)
+  var oryginalConf; // FIXME 'oryginal' -> 'original' typo
+  var defaultPositions = {
+    modal: '',
+    slideout: 'left',
+    button: 'top-left',
+    bar: 'top-fixed',
+    folding: 'bottom-left'
+  };
+  var defaultProps = {
+    generic: {
+      className: 'pathfora',
+      header: '',
+      theme: 'default',
+      themes: {
+        default: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
         },
-        displayConditions: {
-          showOnInit: true,
-          showDelay: 0,
-          hideAfter: 0,
-          displayWhenElementVisible: '',
-          scrollPercentageToDisplay: 0
+        dark: {
+          background: '#333',
+          header: '#fff',
+          text: '#fff',
+          close: '#888',
+          actionText: '#fff',
+          actionBackground: '#597E9B',
+          cancelText: '#fff',
+          cancelBackground: '#597E9B'
+        },
+        light: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
         }
       },
-      message: {
-        layout: "modal",
-        position: "",
-        variant: "1",
-        cancelButton: true,
-        okMessage: 'Confirm',
-        cancelMessage: 'Cancel',
-        okShow: true,
-        cancelShow: true
-      },
-      subscription: {
-        layout: "modal",
-        position: "",
-        variant: "1",
-        placeholders: {
-          email: "Email"
-        },
-        okMessage: 'Confirm',
-        cancelMessage: 'Cancel',
-        okShow: true,
-        cancelShow: true
-      },
-      form: {
-        layout: "modal",
-        position: "",
-        variant: "1",
-        placeholders: {
-          name: "Name",
-          title: "Title",
-          email: "Email",
-          message: "Message"
-        },
-        okMessage: 'Send',
-        cancelMessage: 'Cancel',
-        okShow: true,
-        cancelShow: true
+      displayConditions: {
+        showOnInit: true,
+        showDelay: 0,
+        hideAfter: 0,
+        displayWhenElementVisible: '',
+        scrollPercentageToDisplay: 0
       }
-    };
+    },
+    message: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      cancelButton: true,
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    subscription: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        email: 'Email'
+      },
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    form: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        name: 'Name',
+        title: 'Title',
+        email: 'Email',
+        message: 'Message'
+      },
+      okMessage: 'Send',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    }
+  };
 
-  /**
-     * Empty Pathfora data object, containg all data stored by lib
-     * @type {Object}
-     */
+  // NOTE Empty Pathfora data object, containg all data stored by lib
   var pathforaDataObject = {
     pageViews: 0,
     timeSpentOnPage: 0,
@@ -258,42 +253,41 @@
     displayedWidgets: []
   };
 
-  /**
-     * Core library function set
-     */
+  // NOTE Core library function set
   var core = {
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
     watchers: [],
 
-
     /**
-         * Displays single widget or registers handler for displaying it later
-         * @param {object} widget - element to initialize
-         */
+     * @description Display a single widget 
+     *              or register a handler for displaying it later
+     * @param {object} widget
+     */
     initializeWidget: function (widget) {
-      var cond = widget.displayConditions;
+      var condition = widget.displayConditions;
       var watcher;
 
-      if (cond.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(cond.displayWhenElementVisible, widget);
+      if (condition.displayWhenElementVisible) {
+        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
-      } else if (cond.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(cond.scrollPercentageToDisplay, widget);
+      } else if (condition.scrollPercentageToDisplay) {
+        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
-      } else if (cond.showOnInit) {
+      } else if (condition.showOnInit) {
         pathfora.showWidget(widget);
       }
     },
 
-
     /**
-         * Takes array of scroll aware elements and checks if it should display one when user is scrolling page
-         * @param {array} watchers - pointer to registered list of watchers
-         */
+     * @description Take array of scroll aware elements 
+     *              and check if it should display any 
+     *              when user is scrolling the page
+     * @param {array} watchers
+     */
     initializeScrollWatchers: function (watchers) {
       if (!core.scrollListener) {
         core.scrollListener = function () {
@@ -303,6 +297,7 @@
             }
           }
         };
+        // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
         if (typeof context.addEventListener === 'function') {
           context.addEventListener('scroll', core.scrollListener, false);
         } else {
@@ -508,7 +503,7 @@
 
       // Set the Image
       if (config.image) {
-        if (config.layout === "button") {
+        if (config.layout === 'button') {
           console.warn('Images are not compatible with the button layout.');
         } else {
           var image = document.createElement('img');
@@ -523,7 +518,7 @@
       // Set the message
       widget.querySelector('.pf-widget-message').innerHTML = config.msg;
 
-      if (config.type === "form") {
+      if (config.type === 'form') {
         var form = widget.querySelector('form');
         if (config.nameField === false) {
           form.removeChild(form.querySelector('input[name="username"]'));
@@ -631,11 +626,11 @@
       } else if (config.themes) {
         var colors = {};
         // custom colors
-        if (config.theme === "custom") {
+        if (config.theme === 'custom') {
           core.updateObject(colors, config.colors);
           // colors set via the higher config
-        } else if (config.theme === "default" && defaultProps.generic.theme !== "default") {
-          if (defaultProps.generic.theme === "custom")
+        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
+          if (defaultProps.generic.theme === 'custom')
             core.updateObject(colors, defaultProps.generic.colors);
           else
             core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
@@ -694,7 +689,7 @@
       }
 
       if (!isValidPos(config.position, choices)) {
-        console.warn(config.position + " is not valid position for " + config.layout);
+        console.warn(config.position + ' is not valid position for ' + config.layout);
       }
     },
 
@@ -927,13 +922,13 @@
          */
     validateWidgetsObject: function (widgets) {
       if (!widgets) {
-        throw new Error("Widgets not specified");
+        throw new Error('Widgets not specified');
       }
 
       if (widgets.constructor !== Array && widgets.target) {
         for (var i = 0; i < widgets.target.length; i++) {
           if (!widgets.target[i].segment) {
-            throw new Error("All targeted widgets should have segment specified");
+            throw new Error('All targeted widgets should have segment specified');
           }
         }
       }
@@ -948,23 +943,23 @@
          */
     prepareWidget: function (type, config) {
       if (config === undefined) {
-        throw new Error("Config object is missing");
+        throw new Error('Config object is missing');
       }
 
       if (config.msg === undefined) {
-        throw new Error("Widget message is missing");
+        throw new Error('Widget message is missing');
       }
 
       var widget = {};
 
-      if(config.layout === "random")
+      if(config.layout === 'random')
       {
         var props = {
-          layout: ["modal","slideout","bar","button","folding"],
-          variant: ["1","2"],
-          slideout: ["left","right"],
-          bar: ["top-fixed","top-scrolling","bottom-scrolling"],
-          button: ["left","right","top-left","top-right","bottom-left","bottom-right"],
+          layout: ['modal','slideout','bar','button','folding'],
+          variant: ['1','2'],
+          slideout: ['left','right'],
+          bar: ['top-fixed','top-scrolling','bottom-scrolling'],
+          button: ['left','right','top-left','top-right','bottom-left','bottom-right'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
         switch(type) {
@@ -1022,7 +1017,7 @@
          * Sends data about user to Lytics API (from cookie), using jstag functrion
          */
     initializeCustomAPI: function () {
-      var reed = utils.readCookie("seerid");
+      var reed = utils.readCookie('seerid');
 
       if (typeof jstag === 'object' && reed) {
         jstag.send({user_id: reed});
@@ -1046,7 +1041,7 @@
         }
       };
 
-      xhr.open("GET", url);
+      xhr.open('GET', url);
       xhr.send();
     },
 
@@ -1060,8 +1055,8 @@
          */
     postData: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", url);
-      xhr.setRequestHeader("Accept","application/json");
+      xhr.open('POST', url);
+      xhr.setRequestHeader('Accept','application/json');
       xhr.setRequestHeader('Content-type', 'application/json');
 
       xhr.onreadystatechange = function () {
@@ -1098,12 +1093,12 @@
          * @param cb - callback function
          */
     checkUserSegments: function (accountId, cb) {
-      var reed = utils.readCookie("seerid");
+      var reed = utils.readCookie('seerid');
       if (!reed) {
-        throw new Error("Cannot find SEERID cookie");
+        throw new Error('Cannot find SEERID cookie');
       }
-      var apiUrl = "https://api.lytics.io/api/me/" + accountId + "/"
-      + reed + "?segments=true";
+      var apiUrl = 'https://api.lytics.io/api/me/' + accountId + '/'
+      + reed + '?segments=true';
 
       this.getData(apiUrl, function (resp) {
         var data = JSON.parse(resp);
@@ -1114,7 +1109,7 @@
 
         cb({
           data: {
-            segments: ["all"]
+            segments: ['all']
           }
         });
       });
