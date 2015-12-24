@@ -11,7 +11,7 @@
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
   "devDependencies": {
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "^2.2.0",
