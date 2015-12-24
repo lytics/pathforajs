@@ -391,7 +391,9 @@
      * @param {object} watcher
      */
     removeWatcher: function (watcher) {
-      for (var key in core.watchers) {
+      var key;
+      
+      for (key in core.watchers) {
         if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
           core.watchers.splice(key, 1);
         }
@@ -405,16 +407,16 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
-      var node;
-      var i;
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
-      var widgetTextArea = widget.querySelector('textarea');
       var widgetHeader = widget.querySelectorAll('.pf-widget-header');
-      var widgetImage = null;
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetTextArea;
+      var widgetImage;
+      var node;
+      var i;
       
       if (widgetCancel !== null && !config.cancelShow) {
         node = widgetCancel;
@@ -455,6 +457,8 @@
         case 'modal':
         case 'slideout':
         case 'random':
+          widgetTextArea = widget.querySelector('textarea');
+            
           widgetForm.onsubmit = function (error) {
             // FIXME Not IE8 compatible
             error.preventDefault();
@@ -549,24 +553,35 @@
     },
 
     /**
-         * Appends action logic to widget's DOM object
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * @description Append event handlers to the widget
+     * @param {object} widget
+     * @param {object} config
+     */
     constructWidgetActions: function (widget, config) {
+      var widgetOk = widget.querySelector('.pf-widget-ok');
+      var widgetAllCaptions;
+      var widgetFirstCaption;
+      var widgetCancel;
+      var widgetClose;
+      var i;
+      var j;
+      
       switch (config.layout) {
       case 'folding':
-        var captions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
-
+        widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
+        widgetFirstCaption = widget.querySelector('.pf-widget-caption');
+          
         if (config.position !== 'left') {
           setTimeout(function () {
-            var height = widget.offsetHeight - widget.querySelector('.pf-widget-caption').offsetHeight;
+            var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
             widget.style.bottom = -height + 'px';
           }, 0);
         }
 
-        for (var i = captions.length - 1; i >= 0; i--) {
-          captions[i].onclick = function () {
+        // FIXME Change to forEach
+        j = widgetAllCaptions.length - 1;
+        for (i = j; i >= 0; i--) {
+          widgetAllCaptions[i].onclick = function () {
             if (utils.hasClass(widget, 'opened')) {
               utils.removeClass(widget, 'opened');
             } else {
@@ -580,14 +595,16 @@
       case 'modal':
       case 'slideout':
       case 'bar':
-        var cancelBtn = widget.querySelector('.pf-widget-cancel');
-        widget.querySelector('.pf-widget-close').onclick = function () {
+        widgetCancel = widget.querySelector('.pf-widget-cancel');
+        widgetClose = widget.querySelector('.pf-widget-close');
+          
+        widgetClose.onclick = function () {
           context.pathfora.closeWidget(widget.id);
         };
 
-        if (cancelBtn) {
+        if (widgetCancel) {
           if (typeof config.cancelAction === 'object') {
-            cancelBtn.onclick = function () {
+            widgetCancel.onclick = function () {
               core.trackWidgetAction('cancel', config);
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
@@ -595,7 +612,7 @@
               context.pathfora.closeWidget(widget.id, true);
             };
           } else {
-            cancelBtn.onclick = function () {
+            widgetCancel.onclick = function () {
               context.pathfora.closeWidget(widget.id);
             };
           }
@@ -605,7 +622,7 @@
       }
 
       if (typeof config.confirmAction === 'object') {
-        widget.querySelector('.pf-widget-ok').onclick = function () {
+        widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
@@ -613,48 +630,50 @@
           context.pathfora.closeWidget(widget.id, true);
         };
       } else if (config.type === 'message') {
-        widget.querySelector('.pf-widget-ok').onclick = function () {
+        widgetOk.onclick = function () {
           context.pathfora.closeWidget(widget.id);
         };
       }
     },
 
-
     /**
-         * Builds's widget's color theme
-         * @param {object} widget - related element
-         * @param {object} config
-         */
+     * @description Build color theme for the widget
+     * @param {object} widget
+     * @param {object} config
+     */
     setupWidgetColors: function (widget, config) {
+      var colors = {};
+      
       if (config.theme === undefined) {
         core.setCustomColors(widget, defaultProps.generic.themes['default']);
       }
 
       if(config.config && config.config.theme === null) {
-        var colors = {};
         core.updateObject(colors, defaultProps.generic.themes['default']);
         core.updateObject(colors, config.config.colors);
         core.setCustomColors(widget, colors);
       } else if (config.themes) {
-        var colors = {};
-        // custom colors
         if (config.theme === 'custom') {
+          
+          // NOTE custom colors
           core.updateObject(colors, config.colors);
-          // colors set via the higher config
         } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-          if (defaultProps.generic.theme === 'custom')
+          
+          // NOTE colors set via the higher config
+          if (defaultProps.generic.theme === 'custom') {
             core.updateObject(colors, defaultProps.generic.colors);
-          else
+          } else {
             core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
-          // a default theme
+          }
         } else {
+          
+          // NOTE default theme
           core.updateObject(colors, defaultProps.generic.themes[config.theme]);
         }
 
         core.setCustomColors(widget, colors);
       }
     },
-
 
     /**
          * Constructs widget's DOM classes
