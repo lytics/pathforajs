@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "eslint": "^1.10.3",
+    "gh-pages": "^0.8.0",
     "gulp": "^3.8.11",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.5.2",
@@ -36,6 +37,7 @@
     "test": "karma start --single-run --browsers PhantomJS",
     "lint": "eslint src/*",
     "lint:fix": "npm run lint -- --fix",
-    "docs": "jsdoc src/pathfora.js -d docs"
+    "docs": "jsdoc src/pathfora.js -d docs",
+    "docs:publish": "npm run docs && gh-pages -d docs"
   }
 }
