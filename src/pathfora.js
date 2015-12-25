@@ -1,7 +1,140 @@
+/* global jstag, pfCfg */
 "use strict";
 // Pathfora API
 
 (function (context, document) {
+  // NOTE Output & processing variables
+  var Pathfora;
+  var utils;
+  var core;
+  var api;
+
+  // NOTE Default configuration object (originalConf is used when default data gets overriden)
+  var originalConf;
+  var defaultPositions = {
+    modal: '',
+    slideout: 'left',
+    button: 'top-left',
+    bar: 'top-fixed',
+    folding: 'bottom-left'
+  };
+  var defaultProps = {
+    generic: {
+      className: 'pathfora',
+      header: '',
+      theme: 'default',
+      themes: {
+        default: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
+        },
+        dark: {
+          background: '#333',
+          header: '#fff',
+          text: '#fff',
+          close: '#888',
+          actionText: '#fff',
+          actionBackground: '#597E9B',
+          cancelText: '#fff',
+          cancelBackground: '#597E9B'
+        },
+        light: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
+        }
+      },
+      displayConditions: {
+        showOnInit: true,
+        showDelay: 0,
+        hideAfter: 0,
+        displayWhenElementVisible: '',
+        scrollPercentageToDisplay: 0
+      }
+    },
+    message: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      cancelButton: true,
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    subscription: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        email: 'Email'
+      },
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    form: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        name: 'Name',
+        title: 'Title',
+        email: 'Email',
+        message: 'Message'
+      },
+      okMessage: 'Send',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    }
+  };
+
+  // NOTE HTML templates
+  // FUTURE Move to separate files and concat
+  var templates = {
+    message: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
+      button: '<p class="pf-widget-message pf-widget-ok"></p>',
+      inline: ''
+    },
+    subscription: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
+    },
+    form: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+    }
+  };
+
+  // NOTE Empty Pathfora data object, containg all data stored by lib
+  var pathforaDataObject = {
+    pageViews: 0,
+    timeSpentOnPage: 0,
+    closedWidgets: [],
+    completedActions: [],
+    cancelledActions: [],
+    displayedWidgets: []
+  };
+
   /**
    * @description Appends pathfora stylesheet to document
    */
@@ -21,7 +154,7 @@
   };
 
   // NOTE Helper utility functions
-  var utils = {
+  utils = {
 
     /**
      * @description Check if DOM node has the provided class
@@ -131,7 +264,7 @@
         '-',
         s4(), s4(), s4()
       ].join('');
-    },
+    }
 
     /**
      *
@@ -144,112 +277,8 @@
     //}
   };
 
-
-  // NOTE Default configuration object (originalConf is used when default data gets overriden)
-  var originalConf;
-  var defaultPositions = {
-    modal: '',
-    slideout: 'left',
-    button: 'top-left',
-    bar: 'top-fixed',
-    folding: 'bottom-left'
-  };
-  var defaultProps = {
-    generic: {
-      className: 'pathfora',
-      header: '',
-      theme: 'default',
-      themes: {
-        default: {
-          background: '#ddd',
-          header: '#333',
-          text: '#333',
-          close: '#999',
-          actionText: '#333',
-          actionBackground: '#eee',
-          cancelText: '#333',
-          cancelBackground: '#eee'
-        },
-        dark: {
-          background: '#333',
-          header: '#fff',
-          text: '#fff',
-          close: '#888',
-          actionText: '#fff',
-          actionBackground: '#597E9B',
-          cancelText: '#fff',
-          cancelBackground: '#597E9B'
-        },
-        light: {
-          background: '#ddd',
-          header: '#333',
-          text: '#333',
-          close: '#999',
-          actionText: '#333',
-          actionBackground: '#eee',
-          cancelText: '#333',
-          cancelBackground: '#eee'
-        }
-      },
-      displayConditions: {
-        showOnInit: true,
-        showDelay: 0,
-        hideAfter: 0,
-        displayWhenElementVisible: '',
-        scrollPercentageToDisplay: 0
-      }
-    },
-    message: {
-      layout: 'modal',
-      position: '',
-      variant: '1',
-      cancelButton: true,
-      okMessage: 'Confirm',
-      cancelMessage: 'Cancel',
-      okShow: true,
-      cancelShow: true
-    },
-    subscription: {
-      layout: 'modal',
-      position: '',
-      variant: '1',
-      placeholders: {
-        email: 'Email'
-      },
-      okMessage: 'Confirm',
-      cancelMessage: 'Cancel',
-      okShow: true,
-      cancelShow: true
-    },
-    form: {
-      layout: 'modal',
-      position: '',
-      variant: '1',
-      placeholders: {
-        name: 'Name',
-        title: 'Title',
-        email: 'Email',
-        message: 'Message'
-      },
-      okMessage: 'Send',
-      cancelMessage: 'Cancel',
-      okShow: true,
-      cancelShow: true
-    }
-  };
-
-  // NOTE Empty Pathfora data object, containg all data stored by lib
-  var pathforaDataObject = {
-    pageViews: 0,
-    timeSpentOnPage: 0,
-    closedWidgets: [],
-    completedActions: [],
-    cancelledActions: [],
-    displayedWidgets: []
-  };
-
   // NOTE Core library function set
-  var core = {
+  core = {
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
@@ -273,7 +302,7 @@
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
       } else if (condition.showOnInit) {
-        pathfora.showWidget(widget);
+        context.pathfora.showWidget(widget);
       }
     },
 
@@ -286,7 +315,9 @@
     initializeScrollWatchers: function (watchers) {
       if (!core.scrollListener) {
         core.scrollListener = function () {
-          for (var key in watchers) {
+          var key;
+
+          for (key in watchers) {
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
               watchers[key].check();
             }
@@ -349,7 +380,7 @@
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
           var offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
-            pathfora.showWidget(widget);
+            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
           }
         }
@@ -372,7 +403,7 @@
           var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
           var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-            pathfora.showWidget(widget);
+            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
           }
         }
@@ -513,12 +544,13 @@
       // NOTE Set the image
       if (config.image) {
         if (config.layout === 'button') {
-          console.warn('Images are not compatible with the button layout.');
+          // FIXME Console in production
+          // console.warn('Images are not compatible with the button layout.');
         } else {
           widgetImage = document.createElement('img');
           widgetImage.src = config.image;
           widgetImage.className = 'pf-widget-img';
-          widgetBody.appendChild(image);
+          widgetBody.appendChild(widgetImage);
         }
       } else {
         utils.addClass(widget, 'pf-no-img');
@@ -530,19 +562,19 @@
       if (config.type === 'form') {
         if (config.nameField === false) {
           // FIXME Cache
-          widgetForm.removeChild(form.querySelector('input[name="username"]'));
+          widgetForm.removeChild(widgetForm.querySelector('input[name="username"]'));
         }
         if (config.titleField === false) {
           // FIXME Cache
-          widgetForm.removeChild(form.querySelector('input[name="title"]'));
+          widgetForm.removeChild(widgetForm.querySelector('input[name="title"]'));
         }
         if (config.emailField === false) {
           // FIXME Cache
-          widgetForm.removeChild(form.querySelector('input[name="email"]'));
+          widgetForm.removeChild(widgetForm.querySelector('input[name="email"]'));
         }
         if (config.msgField === false) {
           // FIXME Cache
-          widgetForm.removeChild(form.querySelector('texarea[name="message"]'));
+          widgetForm.removeChild(widgetForm.querySelector('texarea[name="message"]'));
         }
       }
     },
@@ -639,7 +671,7 @@
     setupWidgetColors: function (widget, config) {
       var colors = {};
 
-      if (config.theme === undefined) {
+      if (typeof config.theme === 'undefined') {
         core.setCustomColors(widget, defaultProps.generic.themes['default']);
       }
 
@@ -680,9 +712,9 @@
         'pf-widget ',
         'pf-' + config.type,
         ' pf-widget-' + config.layout,
-        (config.position ? ' pf-position-' + config.position : ''),
+        config.position ? ' pf-position-' + config.position : '',
         ' pf-widget-variant-' + config.variant,
-        (config.theme ? ' pf-theme-' + config.theme : '')
+        config.theme ? ' pf-theme-' + config.theme : ''
       ].join('');
     },
 
@@ -696,7 +728,7 @@
 
       switch (config.layout) {
       case 'modal':
-        choices = ['', undefined];
+        choices = [''];
         break;
       case 'slideout':
         choices = ['left', 'right'];
@@ -713,7 +745,8 @@
       }
 
       if (choices.indexOf(config.position) === -1) {
-        console.warn(config.position + ' is not valid position for ' + config.layout);
+        // FIXME Console in production
+        // console.warn(config.position + ' is not valid position for ' + config.layout);
       }
     },
 
@@ -788,6 +821,8 @@
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
       var fields = widget.querySelectorAll('input, textarea');
+      var i;
+      var j;
 
       if (utils.hasClass(widget, 'pf-widget-modal')) {
         widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
@@ -796,7 +831,8 @@
       }
 
       if (fields.length > 0) {
-        for (var i = 0; i < fields.length; i++) {
+        j = fields.length;
+        for (i = 0; i < j; i++) {
           fields[i].style.backgroundColor = colors.fieldBackground;
         }
       }
@@ -887,17 +923,15 @@
       var prop;
 
       for (prop in config) {
-        if (typeof config[prop] !== null && typeof config[prop] === 'object') {
+        if (typeof config[prop] === 'object' && config[prop] !== null) {
           if(config.hasOwnProperty(prop)) {
-            if(object[prop] === undefined) {
+            if(typeof object[prop] === 'undefined') {
               object[prop] = {};
             }
             core.updateObject(object[prop], config[prop]);
           }
-        } else {
-          if (config.hasOwnProperty(prop)) {
-            object[prop] = config[prop];
-          }
+        } else if (config.hasOwnProperty(prop)) {
+          object[prop] = config[prop];
         }
       }
     },
@@ -974,11 +1008,11 @@
       var props;
       var random;
 
-      if (config === undefined) {
+      if (!config) {
         throw new Error('Config object is missing');
       }
 
-      if (config.msg === undefined) {
+      if (!config.msg) {
         throw new Error('Widget message is missing');
       }
 
@@ -995,41 +1029,41 @@
         // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
         switch(type) {
         case 'message':
-          random = Math.floor((Math.random() * 4));
+          random = Math.floor(Math.random() * 4);
           config.layout = props.layout[random];
           break;
         case 'subscription':
-          random = Math.floor((Math.random() * 5));
+          random = Math.floor(Math.random() * 5);
           while (random === 3) {
-            random = Math.floor((Math.random() * 5));
+            random = Math.floor(Math.random() * 5);
           }
           config.layout = props.layout[random];
           break;
         case 'form':
-          random = Math.floor((Math.random() * 5));
+          random = Math.floor(Math.random() * 5);
           while (random === 2 || random === 3) {
-            random = Math.floor((Math.random() * 5));
+            random = Math.floor(Math.random() * 5);
           }
           config.layout = props.layout[random];
         }
         switch (config.layout) {
         case 'folding':
-          config.position = props.folding[Math.floor((Math.random() * 3))];
-          config.variant = props.variant[Math.floor((Math.random() * 2))];
+          config.position = props.folding[Math.floor(Math.random() * 3)];
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
           break;
         case 'slideout':
-          config.position = props.slideout[Math.floor((Math.random() * 2))];
-          config.variant = props.variant[Math.floor((Math.random() * 2))];
+          config.position = props.slideout[Math.floor(Math.random() * 2)];
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
           break;
         case 'modal':
-          config.variant = props.variant[Math.floor((Math.random() * 2))];
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
           config.position = '';
           break;
         case 'bar':
-          config.position = props.bar[Math.floor((Math.random() * 3))];
+          config.position = props.bar[Math.floor(Math.random() * 3)];
           break;
         case 'button':
-          config.position = props.button[Math.floor((Math.random() * 6))];
+          config.position = props.button[Math.floor(Math.random() * 6)];
         }
       }
       widget.type = type;
@@ -1041,7 +1075,7 @@
   };
 
   // NOTE Lytics API integration tools
-  var api = {
+  api = {
     /**
      * @description Send user data to Lytics API
      */
@@ -1050,7 +1084,7 @@
 
       if (typeof jstag === 'object' && seerId) {
         jstag.send({
-          user_id: seerId
+          'user_id': seerId
         });
       }
     },
@@ -1108,7 +1142,8 @@
       if (typeof jstag === 'object') {
         jstag.send(data);
       } else {
-        console.warn('Cannot find Lytics tag, reporting disabled');
+        // FIXME Console in production
+        // console.warn('Cannot find Lytics tag, reporting disabled');
       }
     },
 
@@ -1137,9 +1172,9 @@
       this.getData(apiUrl, function (response) {
         callback(JSON.parse(response).data.segments);
 
-      }, function (error) {
-        // FIXME Remove in production
-        console.error(error);
+      }, function () {
+        // FIXME Console in production (if uncommented, add 'error' to args)
+        // console.error(error);
 
         callback({
           data: {
@@ -1150,36 +1185,12 @@
     }
   };
 
-
-  // NOTE HTML templates
-  // FUTURE Move to separate files and concat
-  var templates = {
-    message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
-      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      button: '<p class="pf-widget-message pf-widget-ok"></p>',
-      inline: ''
-    },
-    subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
-    },
-    form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
-    }
-  };
-
   // NOTE Pathfora public API
-  var Pathfora = function () {
+  Pathfora = function () {
 
     /**
      * @public
-     * @description Initialize Pathora widgets from a container
+     * @description Initialize Pathfora widgets from a container
      * @param {object|array}   widgets
      * @param {string}         lyticsId
      * @param {object}         config
@@ -1196,7 +1207,7 @@
       core.trackTimeOnPage();
 
       if (config) {
-        originalConf = (JSON.parse(JSON.stringify(defaultProps)));
+        originalConf = JSON.parse(JSON.stringify(defaultProps));
         core.updateObject(defaultProps, config);
       }
 
@@ -1310,7 +1321,7 @@
 
       if (widget.displayConditions.hideAfter) {
         setTimeout(function () {
-          pathfora.closeWidget(widget.id);
+          context.pathfora.closeWidget(widget.id);
         }, widget.displayConditions.hideAfter * 1000);
       }
     };
@@ -1366,6 +1377,7 @@
     this.clearAll = function () {
       var opened = core.openedWidgets;
       var delayed = core.delayedWidgets;
+      var element;
       var i;
 
       opened.forEach(function (widget) {
@@ -1412,15 +1424,15 @@
 
   // NOTE Webadmin generated config
   if (typeof pfCfg === 'object') {
-    var pathforaUrl = [
-      'https:' === document.location.protocol ? 'https' : 'http',
+
+    api.getData([
+      document.location.protocol === 'https:' ? 'https' : 'http',
       '://pathfora.parseapp.com/config/',
       pfCfg.uid,
       '/',
       pfCfg.pid
-    ].join('');
-
-    api.getData(pathforaUrl, function (data) {
+    ].join(''),
+    function (data) {
       var parsed = JSON.parse(data);
       var widgets = parsed.widgets;
       var themes = {};
@@ -1443,9 +1455,6 @@
       };
 
       prepareWidgetArray = function (array) {
-        var i;
-        var j;
-
         j = array.length;
         for (i = 0; i < j; i++) {
           array[i] = core.prepareWidget(array[i].type, array[i]);
@@ -1458,7 +1467,7 @@
         prepareWidgetArray(widgets.target[i].widgets);
       }
 
-      pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
+      context.pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
     });
   }
 })(window, document);
