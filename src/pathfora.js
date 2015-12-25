@@ -1,4 +1,4 @@
-// "use strict";
+"use strict";
 // Pathfora API
 
 (function (context, document) {
@@ -15,7 +15,7 @@
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
 
-    // Need to update the cdn version. For now use local.
+    // NOTE Need to update the cdn version. For now use local.
     link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
     head.appendChild(link);
   };
@@ -150,8 +150,8 @@
   };
 
 
-  // NOTE Default configuration object (oryginalConf is used when default data gets overriden)
-  var oryginalConf; // FIXME 'oryginal' -> 'original' typo
+  // NOTE Default configuration object (originalConf is used when default data gets overriden)
+  var originalConf;
   var defaultPositions = {
     modal: '',
     slideout: 'left',
@@ -956,7 +956,7 @@
         throw new Error('Widgets not specified');
       }
 
-      if (widgets.constructor !== Array && widgets.target) {
+      if (!(widgets instanceof Array) && widgets.target) {
         j = widgets.target.length;
         
         for (i = 0; i < j; i++) {
@@ -1045,7 +1045,7 @@
     }
   };
 
-  // NOTE Public API
+  // NOTE Lytics API integration tools
   var api = {
     /**
      * @description Send user data to Lytics API
@@ -1179,21 +1179,19 @@
     }
   };
 
-  /**
-     * Pathfora public functions
-     * @constructor
-     */
+  // NOTE Pathfora public API
   var Pathfora = function () {
 
-
     /**
-         * Function used for initializing Pathfora widgets array.
-         * @param {array} widgets
-         * @param {number} lyticsId
-         * @param {object} config
-         */
+     * @public
+     * @description Initialize Pathora widgets from a container
+     * @param {object|array}   widgets
+     * @param {string}         lyticsId
+     * @param {object}         config
+     */
     this.initializeWidgets = function (widgets, lyticsId, config) {
-      // IE < 10 not supported
+      // NOTE IE < 10 not supported
+      // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
         return;
       }
@@ -1203,16 +1201,17 @@
       core.trackTimeOnPage();
 
       if (config) {
-        oryginalConf = (JSON.parse(JSON.stringify(defaultProps)));
+        originalConf = (JSON.parse(JSON.stringify(defaultProps)));
         core.updateObject(defaultProps, config);
       }
 
-      // Simple initialization
-      if (widgets.constructor === Array) {
+      if (widgets instanceof Array) {
+        
+        // NOTE Simple initialization
         core.initializeWidgetArray(widgets);
-
-        // Target sensitive widgets
       } else {
+        
+        // NOTE Target sensitive widgets
         if (widgets.common) {
           core.initializeWidgetArray(widgets.common);
           core.updateObject(defaultProps, widgets.common.config);
@@ -1221,8 +1220,13 @@
         if (widgets.target) {
           api.checkUserSegments(lyticsId, function (segments) {
             var triggered = false;
-            for (var i = 0; i < widgets.target.length; i++) {
-              var target = widgets.target[i];
+            var target;
+            var i;
+            var j;
+            
+            j = widgets.target.length;
+            for (i = 0; i < j; i++) {
+              target = widgets.target[i];
               if (segments.indexOf(target.segment) !== -1) {
                 core.initializeWidgetArray(target.widgets);
                 triggered = true;
@@ -1238,57 +1242,60 @@
     };
 
     /**
-         * Creates minimal widget for previewing.
-         * Used only by admin panel for generating mocked previews
-         * @param {object} widget
-         * @returns {*|Element}
-         */
+     * @public
+     * @description Create a minimal widget for a preview
+     * @param   {object}   widget
+     * @returns {object}   widget DOM element
+     */
     this.previewWidget = function (widget) {
       widget.id = utils.generateUniqueId();
       return core.createWidgetHtml(widget);
     };
 
-
     /**
-         * Getter used to prepare Message widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
+     * @public
+     * @description Create a Message widget
+     * @param   {object}   config
+     * @returns {object}   Message widget
+     */
     this.Message = function (config) {
       return core.prepareWidget('message', config);
     };
 
-
     /**
-         * Getter used to prepare Subscription widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
+     * @public
+     * @description Create a Subscription widget
+     * @param   {object}   config
+     * @returns {object}   Subscription widget
+     */
     this.Subscription = function (config) {
       return core.prepareWidget('subscription', config);
     };
 
 
     /**
-         * Getter used to prepare Form widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
+     * @public
+     * @description Create a Form widget
+     * @param   {object}   config
+     * @returns {object}   Form widget
+     */
     this.Form = function (config) {
       return core.prepareWidget('form', config);
     };
 
-
     /**
-         * Function used for displaying widget, either manually or triggered by PF core
-         * @param {object} widget - related element
-         */
+     * @public
+     * @description Display a widget
+     * @param {object} widget
+     */
     this.showWidget = function (widget) {
-
-      for (var i = 0; i < core.openedWidgets.length; i++) {
+      var i;
+      var j;
+      var node;
+      
+      // FIXME Change to Array#filter and Array#length
+      j = core.openedWidgets.length;
+      for (i = 0; i < j; i++) {
         if (core.openedWidgets[i] === widget) {
           return;
         }
@@ -1297,10 +1304,11 @@
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
 
-      var node = core.createWidgetHtml(widget);
+      node = core.createWidgetHtml(widget);
       document.body.appendChild(node);
 
-      // waits for appending to DOM for so it can trigger animation
+      // NOTE wait for appending to DOM to trigger the animation
+      // FIXME 50 - magical number
       setTimeout(function () {
         utils.addClass(node, 'opened');
       }, 50);
@@ -1312,14 +1320,21 @@
       }
     };
 
-
     /**
-         *
-         * @param {string} id
-         * @param {Boolean} noTrack
-         */
+     * @public
+     * @description Close the widget 
+     *              and remove it from DOM
+     * @param {string}  id      widget it
+     * @param {boolean} noTrack if true, closing action will not be recorded
+     */
     this.closeWidget = function (id, noTrack) {
-      for (var i = 0; i < core.openedWidgets.length; i++) {
+      var i;
+      var j;
+      var node;
+      
+      // FIXME Change to Array#some or Array#filter
+      j = core.openedWidgets.length;
+      for (i = 0; i < j; i++) {
         if (core.openedWidgets[i].id === id) {
           if (!noTrack) {
             core.trackWidgetAction('close', core.openedWidgets[i]);
@@ -1329,9 +1344,10 @@
         }
       }
 
-      var node = document.getElementById(id);
+      node = document.getElementById(id);
       utils.removeClass(node, 'opened');
-
+      
+      // FIXME 500 - magical number
       setTimeout(function () {
         if (node && node.parentNode) {
           node.parentNode.removeChild(node);
@@ -1339,21 +1355,23 @@
       }, 500);
     };
 
-
     /**
-         * Getter for stored data object, used mainly for Unit test purposes
-         * @returns {object}
-         */
+     * @public
+     * @description Get the current Pathfora data store
+     * @returns {object} Pathfora data store
+     */
     this.getData = function () {
       return pathforaDataObject;
     };
 
-
     /**
-         * Closes all widgets and clears all library data and functions
-         */
+     * @public
+     * @description Clean widgets and data state
+     */
     this.clearAll = function () {
       var opened = core.openedWidgets;
+      var delayed = core.delayedWidgets;
+      var i;
 
       opened.forEach(function (widget) {
         element = document.getElementById(widget.id);
@@ -1363,9 +1381,8 @@
 
       opened.slice(0);
 
-      var delayed = core.delayedWidgets;
-
-      for (var i = delayed.length; i > -1; i--) {
+      i = delayed.length;
+      for (i; i > -1; i--) {
         core.cancelDelayedWidget(delayed[i]);
       }
 
@@ -1382,51 +1399,71 @@
         displayedWidgets: []
       };
 
-      if (oryginalConf) {
-        defaultProps = oryginalConf;
+      if (originalConf) {
+        defaultProps = originalConf;
       }
     };
 
-
-    /**
-         * Getter for utility functions
-         * @type {object}
-         */
+    /*
+     * @public
+     * @description Get utils object
+     */
     this.utils = utils;
   };
 
+  // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
 
-  // webadmin generated config
+  // NOTE Webadmin generated config
   if (typeof pfCfg === 'object') {
-    api.getData('https:' === document.location.protocol ? 'https' : 'http' +
-                '://pathfora.parseapp.com/config/' + pfCfg.uid + '/' + pfCfg.pid, function (data) {
+    var pathforaUrl = [
+      'https:' === document.location.protocol ? 'https' : 'http',
+      '://pathfora.parseapp.com/config/',
+      pfCfg.uid,
+      '/',
+      pfCfg.pid
+    ].join('');
+    
+    api.getData(pathforaUrl, function (data) {
       var parsed = JSON.parse(data);
       var widgets = parsed.widgets;
       var themes = {};
+      var widgetsConfig;
+      var prepareWidgetArray;
+      var i;
+      var j;
+      
       if (typeof parsed.config.themes !== 'undefined') {
-        for (i = 0; i < parsed.config.themes.length; i++) {
+        j = parsed.config.themes.length;
+        for (i = 0; i < j; i++) {
           themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
         }
       }
-      var wgCfg = {generic:{themes:themes}};
-
-      console.log(parsed);
-      var prepareWidgetArray = function (arr) {
-        for (var i = 0; i < arr.length; i++) {
-          arr[i] = core.prepareWidget(arr[i].type, arr[i]);
+      
+      widgetsConfig = {
+        generic: {
+          themes: themes
         }
       };
 
+      prepareWidgetArray = function (array) {
+        var i;
+        var j;
+        
+        j = array.length;
+        for (i = 0; i < j; i++) {
+          array[i] = core.prepareWidget(array[i].type, array[i]);
+        }
+      };
       prepareWidgetArray(widgets.common);
 
-      for (var i = 0; i < widgets.target.length; i++) {
+      j = widgets.target.length;
+      for (i = 0; i < j; i++) {
         prepareWidgetArray(widgets.target[i].widgets);
       }
 
-      pathfora.initializeWidgets(widgets, pfCfg.lid, wgCfg);
+      pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
     });
   }
-
 })(window, document);
