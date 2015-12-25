@@ -1,7 +1,9 @@
 /* global jstag, pfCfg */
 "use strict";
-// Pathfora API
 
+/**
+ * @module Pathfora-API
+ */
 (function (context, document) {
   // NOTE Output & processing variables
   var Pathfora;
@@ -10,7 +12,7 @@
   var api;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
-  var originalConf;
+  var originalConf = {};
   var defaultPositions = {
     modal: '',
     slideout: 'left',
@@ -126,6 +128,11 @@
   };
 
   // NOTE Empty Pathfora data object, containg all data stored by lib
+  /*
+   * @global
+   * @property pathforaDataObject
+   * @description Pathfora data state object
+   */
   var pathforaDataObject = {
     pageViews: 0,
     timeSpentOnPage: 0,
@@ -136,6 +143,7 @@
   };
 
   /**
+   * @function appendPathforaStylesheet
    * @description Appends pathfora stylesheet to document
    */
   var appendPathforaStylesheet = function () {
@@ -153,7 +161,11 @@
     head.appendChild(link);
   };
 
-  // NOTE Helper utility functions
+  /**
+   * @namespace
+   * @name utils
+   * @description Helper utility functions
+   */
   utils = {
 
     /**
@@ -166,7 +178,7 @@
     },
 
     /**
-     * @description Add new classes to the DOM node (removed duplicates)
+     * @description Add new classes to the DOM node (removes duplicates)
      * @param   {object} DOMNode   DOM element
      * @param   {string} className class name(s)
      */
@@ -277,7 +289,11 @@
     //}
   };
 
-  // NOTE Core library function set
+  /**
+   * @namespace
+   * @name core
+   * @description Core library function set
+   */
   core = {
     delayedWidgets: {},
     openedWidgets: [],
@@ -1074,7 +1090,11 @@
     }
   };
 
-  // NOTE Lytics API integration tools
+  /**
+   * @namespace
+   * @name api
+   * @description Lytics API integration tools
+   */
   api = {
     /**
      * @description Send user data to Lytics API
@@ -1185,7 +1205,11 @@
     }
   };
 
-  // NOTE Pathfora public API
+  /**
+   * @class
+   * @name Pathfora
+   * @description Pathfora public API class
+   */
   Pathfora = function () {
 
     /**
