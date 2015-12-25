@@ -19,7 +19,7 @@
     link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
     head.appendChild(link);
   };
-  
+
   // NOTE Regexp helper variables used by utility functions
   var rclass = /[\t\r\n\f]/g;
   var rnotwhite = (/\S+/g);
@@ -45,7 +45,7 @@
     addClass: function (DOMNode, className) {
       // NOTE Not necessary, but leaves a clean code after mutations
       this.removeClass(DOMNode, className);
-      
+
       DOMNode.className = [
         DOMNode.className,
         className
@@ -61,9 +61,9 @@
       var findClassRegexp = new RegExp([
         '(^|\\b)',
         className.split(' ').join('|'),
-        '(\\b|$)' 
+        '(\\b|$)'
       ].join(''), 'gi');
-      
+
       DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
     },
 
@@ -79,10 +79,10 @@
         name,
         '\s*\=\s*([^;]*).*$)|^.*$'
       ].join(''), 'gi');
-      
+
       return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
     },
-    
+
     /**
      * @description Save a new cookie
      * @param {string} name  cookie name
@@ -92,7 +92,7 @@
     saveCookie: function (name, value, days) {
       var expires;
       var date;
-      
+
       if (days) {
         date = new Date();
         date.setDate(date.getDate() + days);
@@ -100,7 +100,7 @@
       } else {
         expires = '';
       }
-      
+
       context.document.cookie = [
         name,
         '=',
@@ -116,13 +116,13 @@
      */
     generateUniqueId: function () {
       var s4;
-      
+
       if (typeof s4 === 'undefined') {
         s4 = function () {
           return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
             .substring(1);
-        }
+        };
       }
 
       return [
@@ -137,9 +137,9 @@
         s4(), s4(), s4()
       ].join('');
     },
-    
+
     /**
-     * 
+     *
      * @param   {array}  items array of items
      * @returns {object} random item from the array
      */
@@ -261,7 +261,7 @@
     watchers: [],
 
     /**
-     * @description Display a single widget 
+     * @description Display a single widget
      *              or register a handler for displaying it later
      * @param {object} widget
      */
@@ -283,8 +283,8 @@
     },
 
     /**
-     * @description Take array of scroll aware elements 
-     *              and check if it should display any 
+     * @description Take array of scroll aware elements
+     *              and check if it should display any
      *              when user is scrolling the page
      * @param {array} watchers
      */
@@ -343,7 +343,7 @@
 
     /**
      * @description Register a scroll position-triggered widget
-     * @param   {number} percent scroll percentage at 
+     * @param   {number} percent scroll percentage at
      *                   which the widget should be displayed
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
@@ -392,7 +392,7 @@
      */
     removeWatcher: function (watcher) {
       var key;
-      
+
       for (key in core.watchers) {
         if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
           core.watchers.splice(key, 1);
@@ -417,7 +417,7 @@
       var widgetImage;
       var node;
       var i;
-      
+
       if (widgetCancel !== null && !config.cancelShow) {
         node = widgetCancel;
 
@@ -441,7 +441,7 @@
       if(widgetOk !== null) {
         widgetOk.innerHTML = config.okMessage;
       }
-      
+
       if(widgetOk && widgetOk.value !== null) {
         widgetOk.value = config.okMessage;
       }
@@ -449,7 +449,7 @@
       if(widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
       }
-      
+
       switch (config.type) {
       case 'form':
         switch (config.layout) {
@@ -458,7 +458,7 @@
         case 'slideout':
         case 'random':
           widgetTextArea = widget.querySelector('textarea');
-            
+
           widgetForm.onsubmit = function (error) {
             // FIXME Not IE8 compatible
             error.preventDefault();
@@ -565,12 +565,12 @@
       var widgetClose;
       var i;
       var j;
-      
+
       switch (config.layout) {
       case 'folding':
         widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
         widgetFirstCaption = widget.querySelector('.pf-widget-caption');
-          
+
         if (config.position !== 'left') {
           setTimeout(function () {
             var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
@@ -597,7 +597,7 @@
       case 'bar':
         widgetCancel = widget.querySelector('.pf-widget-cancel');
         widgetClose = widget.querySelector('.pf-widget-close');
-          
+
         widgetClose.onclick = function () {
           context.pathfora.closeWidget(widget.id);
         };
@@ -643,7 +643,7 @@
      */
     setupWidgetColors: function (widget, config) {
       var colors = {};
-      
+
       if (config.theme === undefined) {
         core.setCustomColors(widget, defaultProps.generic.themes['default']);
       }
@@ -654,11 +654,11 @@
         core.setCustomColors(widget, colors);
       } else if (config.themes) {
         if (config.theme === 'custom') {
-          
+
           // NOTE custom colors
           core.updateObject(colors, config.colors);
         } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-          
+
           // NOTE colors set via the higher config
           if (defaultProps.generic.theme === 'custom') {
             core.updateObject(colors, defaultProps.generic.colors);
@@ -666,7 +666,7 @@
             core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
           }
         } else {
-          
+
           // NOTE default theme
           core.updateObject(colors, defaultProps.generic.themes[config.theme]);
         }
@@ -693,8 +693,8 @@
 
     /**
      * Validate position for a widget of specific type
-     * @param   {object}   widget 
-     * @param   {object}   config 
+     * @param   {object}   widget
+     * @param   {object}   config
      */
     validateWidgetPosition: function (widget, config) {
       var choices;
@@ -724,7 +724,7 @@
 
     /**
      * @description Set default widget position, if current one is invalid
-     * @param {object} widget 
+     * @param {object} widget
      * @param {object} config
      */
     setupWidgetPosition: function (widget, config) {
@@ -890,7 +890,7 @@
      */
     updateObject: function (object, config) {
       var prop;
-      
+
       for (prop in config) {
         if (typeof config[prop] !== null && typeof config[prop] === 'object') {
           if(config.hasOwnProperty(prop)) {
@@ -918,7 +918,7 @@
       var widget;
       var i;
       var j;
-      
+
       j = array.length;
       for (i = 0; i < j; i++) {
         widget = array[i];
@@ -951,14 +951,14 @@
     validateWidgetsObject: function (widgets) {
       var i;
       var j;
-      
+
       if (!widgets) {
         throw new Error('Widgets not specified');
       }
 
       if (!(widgets instanceof Array) && widgets.target) {
         j = widgets.target.length;
-        
+
         for (i = 0; i < j; i++) {
           if (!widgets.target[i].segment) {
             throw new Error('All targeted widgets should have segment specified');
@@ -978,7 +978,7 @@
       var widget = {};
       var props;
       var random;
-      
+
       if (config === undefined) {
         throw new Error('Config object is missing');
       }
@@ -996,8 +996,8 @@
           button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
-        
-        // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :)) 
+
+        // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
         switch(type) {
         case 'message':
           random = Math.floor((Math.random() * 4));
@@ -1005,7 +1005,7 @@
           break;
         case 'subscription':
           random = Math.floor((Math.random() * 5));
-          while (random === 3){
+          while (random === 3) {
             random = Math.floor((Math.random() * 5));
           }
           config.layout = props.layout[random];
@@ -1068,7 +1068,7 @@
      */
     getData: function (url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
-      
+
       xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
           onSuccess(xhr.responseText);
@@ -1126,11 +1126,11 @@
     checkUserSegments: function (accountId, callback) {
       var seerId = utils.readCookie('seerid');
       var apiUrl;
-      
+
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
       }
-      
+
       apiUrl = [
         'https://api.lytics.io/api/me/',
         accountId,
@@ -1206,11 +1206,11 @@
       }
 
       if (widgets instanceof Array) {
-        
+
         // NOTE Simple initialization
         core.initializeWidgetArray(widgets);
       } else {
-        
+
         // NOTE Target sensitive widgets
         if (widgets.common) {
           core.initializeWidgetArray(widgets.common);
@@ -1223,7 +1223,7 @@
             var target;
             var i;
             var j;
-            
+
             j = widgets.target.length;
             for (i = 0; i < j; i++) {
               target = widgets.target[i];
@@ -1292,7 +1292,7 @@
       var i;
       var j;
       var node;
-      
+
       // FIXME Change to Array#filter and Array#length
       j = core.openedWidgets.length;
       for (i = 0; i < j; i++) {
@@ -1322,7 +1322,7 @@
 
     /**
      * @public
-     * @description Close the widget 
+     * @description Close the widget
      *              and remove it from DOM
      * @param {string}  id      widget it
      * @param {boolean} noTrack if true, closing action will not be recorded
@@ -1331,7 +1331,7 @@
       var i;
       var j;
       var node;
-      
+
       // FIXME Change to Array#some or Array#filter
       j = core.openedWidgets.length;
       for (i = 0; i < j; i++) {
@@ -1346,7 +1346,7 @@
 
       node = document.getElementById(id);
       utils.removeClass(node, 'opened');
-      
+
       // FIXME 500 - magical number
       setTimeout(function () {
         if (node && node.parentNode) {
@@ -1424,7 +1424,7 @@
       '/',
       pfCfg.pid
     ].join('');
-    
+
     api.getData(pathforaUrl, function (data) {
       var parsed = JSON.parse(data);
       var widgets = parsed.widgets;
@@ -1433,14 +1433,14 @@
       var prepareWidgetArray;
       var i;
       var j;
-      
+
       if (typeof parsed.config.themes !== 'undefined') {
         j = parsed.config.themes.length;
         for (i = 0; i < j; i++) {
           themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
         }
       }
-      
+
       widgetsConfig = {
         generic: {
           themes: themes
@@ -1450,7 +1450,7 @@
       prepareWidgetArray = function (array) {
         var i;
         var j;
-        
+
         j = array.length;
         for (i = 0; i < j; i++) {
           array[i] = core.prepareWidget(array[i].type, array[i]);
