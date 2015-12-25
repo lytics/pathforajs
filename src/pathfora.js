@@ -20,11 +20,6 @@
     head.appendChild(link);
   };
 
-  // NOTE Regexp helper variables used by utility functions
-  var rclass = /[\t\r\n\f]/g;
-  var rnotwhite = (/\S+/g);
-  var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
-
   // NOTE Helper utility functions
   var utils = {
 
