@@ -32,7 +32,7 @@ gulp.task('build:js', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*', ['default']);
+  gulp.watch('src/**/*', ['build']);
 });
 
 gulp.task('preview', function () {
@@ -43,4 +43,6 @@ gulp.task('preview', function () {
   });
 });
 
-gulp.task('default', ['build:styles', 'build:js', 'preview']);
+gulp.task('build', ['build:styles', 'build:js']);
+
+gulp.task('default', ['build', 'preview', 'watch']);
