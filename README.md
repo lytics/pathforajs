@@ -158,3 +158,86 @@ Run all `build:*` tasks.
   msg: [string]
   layout: ['modal' | 'slideout' | 'folding' | 'bar']
   ```
+
+### Event Callbacks
+
+All widget callbacks provide two arguments to the callback functions - `event type` and a `payload`. Event type is always a ***String***, while payload is always an ***Object*** with context-dependent properties.
+
+#### `widget.onInit(event, payload)`
+
+```js
+var modal = pathfora.Message({
+  id: 'modal-ID',
+  layout: 'modal',
+  msg: 'Modal text',
+  onInit: function (event, payload) {
+    // Modal is initialized, but not yet visible
+  }
+});
+```
+
+Event is fired when the widget is added to the Pathforas' widgets list. Payload provides the `widget` data.
+
+#### `widget.onLoad(event, payload)`
+
+```js
+var modal = pathfora.Message({
+  id: 'button-ID',
+  layout: 'button',
+  msg: 'Button text',
+  onLoad: function (event, payload) {
+    // Button has been added to the website and is visible to the user
+  }
+});
+```
+
+Event is fired when the widget is rendered and visible to the user. Payload provides the `widget` data and the rendered `node` element (DOMElement).
+
+#### `widget.onClick(event, payload)`
+
+```js
+var modal = pathfora.Message({
+  id: 'button-ID',
+  layout: 'button',
+  msg: 'Button text',
+  onClick: function (event, payload) {
+    // Button has been clicked
+  }
+});
+```
+
+Only `button` layout widgets.
+Event is fired when the widget button is clicked. Payload provides the `widget` data and the original click `event` payload.
+
+#### `widget.onFormSubmit(event, payload)`
+
+```js
+var modal = pathfora.Form({
+  msg: 'Subscription',
+  header: 'Header',
+  layout: 'slideout',
+  position: 'left',
+  onFormSubmit: function (event, payload) {
+    // Form has been submitted
+    // Payload:
+    // {
+    //   event: ...,
+    //   widget: ...,
+    //   data: [
+    //     { name: 'input1', value: 'value1' },
+    //     { name: 'input2', value: 'value2' },
+    //     ...
+    //   ]
+    // }
+  }
+});
+```
+
+Only `Form` type widgets.
+Event is fired when the form in the widget is submitted. Payload provides the `widget` data,  the original form submit `event` payload and the `data` input values from the form.
+
+#### `widget.onModalOpen(event, payload)` / `widget.onModalClose(event, payload)`
+
+Similar to `onLoad(event, payload)`, only for `modal` layout widgets.
+Event is fired when the widget is opened/closed. Payload provides the `widget` data and the original `event` payload, if available.
+Event is called simultaneously with `onFormSubmit`.
