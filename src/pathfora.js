@@ -1454,7 +1454,7 @@
             node: node
           });
         }
-        if (widget.config.layout === 'modal' && typeof config.onModalOpen === 'function') {
+        if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
           config.onModalOpen(callbackTypes.MODAL_OPEN, {
             widget: widget
           });
