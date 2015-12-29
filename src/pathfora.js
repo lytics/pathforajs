@@ -12,7 +12,7 @@
   var api;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
-  var originalConf = {};
+  var originalConf;
   var defaultPositions = {
     modal: '',
     slideout: 'left',
