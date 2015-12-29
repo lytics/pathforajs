@@ -11,6 +11,8 @@
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
   "devDependencies": {
+    "eslint": "^1.10.3",
+    "gh-pages": "^0.8.0",
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-concat": "^2.5.2",
@@ -31,6 +33,10 @@
     "less": "^2.4.0"
   },
   "scripts": {
-    "test": "./node_modules/.bin/karma start --single-run --browsers PhantomJS"
+    "test": "gulp && karma start --single-run --browsers PhantomJS",
+    "lint": "eslint src/*",
+    "lint:fix": "npm run lint -- --fix",
+    "docs": "jsdoc src/pathfora.js -d docs",
+    "docs:publish": "npm run docs && gh-pages -d docs"
   }
 }
