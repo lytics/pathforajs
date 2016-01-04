@@ -127,6 +127,16 @@
     }
   };
 
+  // NOTE Event callback types
+  var callbackTypes = {
+    INIT: 'widgetInitialized',
+    LOAD: 'widgetLoaded',
+    CLICK: 'buttonClicked',
+    FORM_SUBMIT: 'formSubmitted',
+    MODAL_OPEN: 'modalOpened',
+    MODAL_CLOSE: 'modalClosed'
+  };
+
   // NOTE Empty Pathfora data object, containg all data stored by lib
   /*
    * @global
@@ -308,6 +318,7 @@
     initializeWidget: function (widget) {
       var condition = widget.displayConditions;
       var watcher;
+//      var widgetOnInitCallback = widget.config.onInit;
 
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
@@ -320,6 +331,16 @@
       } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
+
+//    NOTE theoretically onInit should be here, @see comment on initializeWidgetArray
+//    FIXME remove one onInit (here or in initializeWidgetArray)
+//      if (typeof widgetOnInitCallback === 'function') {
+//        widgetOnInitCallback(callbackTypes.INIT, {
+//          widget: widget,
+//          watcher: watcher,
+//          condition: condition
+//        });
+//      }
     },
 
     /**
@@ -500,13 +521,6 @@
         case 'slideout':
         case 'random':
           widgetTextArea = widget.querySelector('textarea');
-
-          widgetForm.onsubmit = function (error) {
-            // FIXME Not IE8 compatible
-            error.preventDefault();
-            core.trackWidgetAction('submit', config, error.target);
-            context.pathfora.closeWidget(widget.id, true);
-          };
           // FIXME Cache
           // FIXME (???) Check if can be changed to [input=*] !
           widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
@@ -525,12 +539,6 @@
         case 'bar':
         case 'slideout':
         case 'random':
-          widgetForm.onsubmit = function (error) {
-            // FIXME Not IE8 compatible
-            error.preventDefault();
-            core.trackWidgetAction('subscribe', config, error.target);
-            context.pathfora.closeWidget(widget.id, true);
-          };
           // FIXME Cache
           widget.querySelector('input').placeholder = config.placeholders.email;
           break;
@@ -606,8 +614,57 @@
       var widgetFirstCaption;
       var widgetCancel;
       var widgetClose;
+      var widgetForm;
+      var widgetOnFormSubmit;
+      var widgetOnButtonClick;
+      var widgetOnModalClose;
       var i;
       var j;
+
+      switch (config.type) {
+      case 'form':
+        widgetForm = widget.querySelector('form');
+        widgetOnFormSubmit = function (event) {
+          var widgetAction;
+          
+          event.preventDefault();
+          
+          switch(config.type) {
+          case 'form':
+            widgetAction = 'submit';
+            break;
+          case 'subscription':
+          widgetAction = 'subscribe';
+            break;
+          }
+          
+          if (widgetAction) {
+            core.trackWidgetAction(widgetAction, config, event.target);
+          }
+          
+          if (typeof config.onSubmit === 'function') {
+            config.onSubmit(callbackTypes.FORM_SUBMIT, {
+              widget: widget,
+              event: event,
+              data: Array.prototype.slice.call(
+                widgetForm.querySelectorAll('input, textarea')
+              ).map(function (element) {
+                return {
+                  name: element.name || element.id,
+                  value: element.value
+                };
+              })
+            });
+          }
+        };
+
+        if (widgetForm.addEventListener) {
+          widgetForm.addEventListener('submit', widgetOnFormSubmit);
+        } else {
+          widgetForm.attachEvent('submit', widgetOnFormSubmit);
+        }
+        break;
+      }
 
       switch (config.layout) {
       case 'folding':
@@ -634,29 +691,48 @@
         }
         break;
       case 'button':
+        if (typeof config.onClick === 'function') {
+          widgetOnButtonClick = function (event) {
+            config.onClick(callbackTypes.CLICK, {
+              widget: widget,
+              event: event
+            });
+          };
+        }
         break;
       case 'modal':
       case 'slideout':
       case 'bar':
         widgetCancel = widget.querySelector('.pf-widget-cancel');
         widgetClose = widget.querySelector('.pf-widget-close');
+        widgetOnModalClose = function (event) {
+          if (typeof config.onModalClose === 'function') {
+            config.onModalClose(callbackTypes.MODAL_CLOSE, {
+              widget: widget,
+              event: event
+            });
+          }
+        };
 
-        widgetClose.onclick = function () {
+        widgetClose.onclick = function (event) {
           context.pathfora.closeWidget(widget.id);
+          widgetOnModalClose(event);
         };
 
         if (widgetCancel) {
           if (typeof config.cancelAction === 'object') {
-            widgetCancel.onclick = function () {
+            widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
               context.pathfora.closeWidget(widget.id, true);
+              widgetOnModalClose(event);
             };
           } else {
-            widgetCancel.onclick = function () {
+            widgetCancel.onclick = function (event) {
               context.pathfora.closeWidget(widget.id);
+              widgetOnModalClose(event);
             };
           }
         }
@@ -670,12 +746,31 @@
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
+          if (typeof widgetOnButtonClick === 'function') {
+            widgetOnButtonClick(event);
+          }
+          if (typeof widgetOnModalClose === 'function') {
+            widgetOnModalClose(event);
+          }
+
           context.pathfora.closeWidget(widget.id, true);
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
+          if (typeof widgetOnButtonClick === 'function') {
+            widgetOnButtonClick(event);
+          }
+
           context.pathfora.closeWidget(widget.id);
         };
+      } else if (config.type === 'form') {
+        widgetOk.onclick = function () {
+          if (typeof widgetOnModalClose === 'function') {
+            widgetOnModalClose(event);
+          }
+          
+          context.pathfora.closeWidget(widget.id);
+        }
       }
     },
 
@@ -958,6 +1053,7 @@
      * @param {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array) {
+      var widgetOnInitCallback;
       var defaults;
       var globals;
       var widget;
@@ -967,6 +1063,7 @@
       j = array.length;
       for (i = 0; i < j; i++) {
         widget = array[i];
+        widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
@@ -984,6 +1081,13 @@
           core.registerDelayedWidget(widget);
         } else {
           core.initializeWidget(widget);
+        }
+
+        // NOTE onInit feels better here
+        if (typeof widgetOnInitCallback === 'function') {
+          widgetOnInitCallback(callbackTypes.INIT, {
+            widget: widget
+          });
         }
       }
     },
@@ -1340,7 +1444,21 @@
       // NOTE wait for appending to DOM to trigger the animation
       // FIXME 50 - magical number
       setTimeout(function () {
+        var widgetLoadCallback = widget.config.onLoad;
+
         utils.addClass(node, 'opened');
+
+        if (typeof widgetLoadCallback === 'function') {
+          widgetLoadCallback(callbackTypes.LOAD, {
+            widget: widget,
+            node: node
+          });
+        }
+        if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+          config.onModalOpen(callbackTypes.MODAL_OPEN, {
+            widget: widget
+          });
+        }
       }, 50);
 
       if (widget.displayConditions.hideAfter) {
