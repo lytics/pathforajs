@@ -136,6 +136,49 @@
     MODAL_OPEN: 'modalOpened',
     MODAL_CLOSE: 'modalClosed'
   };
+  
+  // NOTE AB testing types
+  /**
+   * @function createABTestingMode
+   * @description Create an A/B testing object from groups list
+   * @returns {object} A/B testing object instance
+   */
+  var createABTestingMode = function () {
+    var groups = [];
+    var groupsSum;
+    var groupsSumRatio;
+    var i;
+    var j;
+    
+    j = arguments.length;
+    for (i = 0; i < j; i++) {
+      groups.push(arguments[i]);
+    }
+    
+    groupsSum = groups.reduce(function (sum, element) {
+      return sum + element;
+    });
+    
+    // NOTE If groups collapse into a number greater than 1, normalize
+    if (groupsSum > 1) {
+      groupsSumRatio = 1 / groupsSum;
+      
+      groups = groups.map(function (element) {
+        return element * groupsSumRatio;
+      });
+    }
+    
+    return {
+      groups: groups,
+      groupsNumber: groups.length
+    };
+  };
+  
+  var abHashMD5 = '187ef4436122d1cc2f40dc2b92f0eba0';
+  var abTestingTypes = {
+    '100': createABTestingMode(100),
+    '50/50': createABTestingMode(120, 80)
+  };
 
   // NOTE Empty Pathfora data object, containg all data stored by lib
   /*
@@ -149,12 +192,14 @@
     closedWidgets: [],
     completedActions: [],
     cancelledActions: [],
-    displayedWidgets: []
+    displayedWidgets: [],
+    abTestingMode: null,
+    abTestingGroup: null
   };
 
   /**
    * @function appendPathforaStylesheet
-   * @description Appends pathfora stylesheet to document
+   * @description Append pathfora stylesheet to document
    */
   var appendPathforaStylesheet = function () {
     var head;
@@ -224,13 +269,9 @@
      */
     readCookie: function (name) {
       var cookies = document.cookie;
-      var findCookieRegexp = new RegExp([
-        '(?:(?:^|.*;\s*)',
-        name,
-        '\s*\=\s*([^;]*).*$)|^.*$'
-      ].join(''), 'gi');
+      var findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
-      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
+      return findCookieRegexp ? findCookieRegexp.pop() : null;
     },
 
     /**
@@ -1053,10 +1094,12 @@
      * @param {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array) {
+      var userABGroup = utils.readCookie(abHashMD5) || 0;
       var widgetOnInitCallback;
       var defaults;
       var globals;
       var widget;
+      var widgetABGroup;
       var i;
       var j;
 
@@ -1066,6 +1109,11 @@
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
+        widgetABGroup = Math.min(widget.config.testGroup || 0, pathforaDataObject.abTestingMode.groupsNumber - 1);
+        
+        if (pathforaDataObject.abTestingMode && widgetABGroup !== pathforaDataObject.abTestingGroup) {
+          continue;
+        }
 
         if (this.initializedWidgets.indexOf(widget.id) < 0) {
           this.initializedWidgets.push(widget.id);
@@ -1090,6 +1138,18 @@
           });
         }
       }
+    },
+    
+    initializeABTestingOnWidget: function (widget) {
+      var testGroup = widget.testGroup || 0;
+      
+      if (testGroup >= pathforaDataObject.abTestingMode.groupsNumber) {
+        console.log('Group %d exceeds testing groups limit in the current testing mode.', testGroup);
+        
+        testGroup = 0;
+      }
+      
+      
     },
 
     /**
@@ -1385,6 +1445,42 @@
       widget.id = utils.generateUniqueId();
       return core.createWidgetHtml(widget);
     };
+    
+    /**
+     * @public
+     * @description Set an A/B testing mode for the global Pathfora object
+     * @param {string} mode A/B testing mode
+     */
+    this.setABTestingMode = function (mode) {
+      var abTestingMode = abTestingTypes[mode];
+      var abTestingValue = utils.readCookie(abHashMD5);
+      var abTestingGroup = 0;
+      var i;
+
+      if (abTestingMode) {
+        pathforaDataObject.abTestingMode = abTestingMode;
+      }
+      
+      if (!abTestingValue) {
+        abTestingValue = Math.random();
+        
+        utils.saveCookie(abHashMD5, abTestingValue);
+      }
+      
+      // NOTE Determine visible group for the user
+      i = 0;
+      while (i < 1) {
+        i += abTestingMode.groups[abTestingGroup];
+        
+        if (abTestingValue <= i) {
+          break;
+        }
+        
+        abTestingGroup++;
+      }
+      
+      pathforaDataObject.abTestingGroup = abTestingGroup;
+    };
 
     /**
      * @public
@@ -1545,7 +1641,9 @@
         closedWidgets: [],
         completedActions: [],
         cancelledActions: [],
-        displayedWidgets: []
+        displayedWidgets: [],
+        abTestingMode: null,
+        abTestingGroup: null
       };
 
       if (originalConf) {
