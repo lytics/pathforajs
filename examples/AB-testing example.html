@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Action widget</title>
+  </head>
+  <body>
+
+    <h1>Action widget example</h1>
+
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var widgets = [];
+
+      var messageBar = pathfora.Message({
+        id: 'asd',
+        layout: 'bar',
+        msg: 'Welcome to our website',
+        testGroup: 0
+      });
+
+      var modal = pathfora.Message({
+        id: 'asd2',
+        layout: 'modal',
+        msg: 'Welcome to our website',
+        confirmAction: {
+          name: 'Test confirm action',
+          callback: function() {alert('test confirmation')}
+        },
+        cancelAction: {
+          name: 'Widget cancelled',
+          callback: function() {alert('Cancel button clicked')}
+        },
+        testGroup: 1
+      });
+      
+      
+      widgets.push(messageBar);
+      widgets.push(modal);
+
+      window.pathfora.setABTestingMode('50/50');
+      window.pathfora.initializeWidgets(widgets);
+    </script>
+  </body>
+</html>
