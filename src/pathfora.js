@@ -1109,6 +1109,7 @@
       var globals;
       var widget;
       var widgetABGroup;
+      var abTestingMode = pathforaDataObject.abTestingMode || {};
       var i;
       var j;
 
@@ -1118,7 +1119,7 @@
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
-        widgetABGroup = Math.min(widget.config.testGroup || 0, pathforaDataObject.abTestingMode.groupsNumber - 1);
+        widgetABGroup = Math.min(widget.config.testGroup || 0, abTestingMode.groupsNumber - 1);
 
         if (pathforaDataObject.abTestingMode && widgetABGroup !== pathforaDataObject.abTestingGroup) {
           continue;
@@ -1147,16 +1148,6 @@
           });
         }
       }
-    },
-
-    initializeABTestingOnWidget: function (widget) {
-      var testGroup = widget.testGroup || 0;
-
-      if (testGroup >= pathforaDataObject.abTestingMode.groupsNumber) {
-        testGroup = 0;
-      }
-
-
     },
 
     /**

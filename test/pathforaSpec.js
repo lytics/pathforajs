@@ -310,7 +310,9 @@ describe("Pathfora", function () {
       closedWidgets: [],
       completedActions: [],
       cancelledActions: [],
-      displayedWidgets: []
+      displayedWidgets: [],
+      abTestingMode: null, 
+      abTestingGroup: null
     };
 
     var form = new pathfora.Subscription({
