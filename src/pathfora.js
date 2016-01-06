@@ -174,7 +174,17 @@
     };
   };
 
+  /*
+   * @global
+   * @property abHashMD5
+   * @description Hash used as the AB testing cookie (MD5 'ab')
+   */
   var abHashMD5 = '187ef4436122d1cc2f40dc2b92f0eba0';
+  /*
+   * @global
+   * @property abTestingTypes
+   * @description AB testing groups definitions
+   */
   var abTestingTypes = {
     '100': createABTestingMode(100),
     '50/50': createABTestingMode(120, 80)
