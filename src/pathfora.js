@@ -338,16 +338,6 @@
         s4(), s4(), s4()
       ].join('');
     }
-
-    /**
-     *
-     * @param   {array}  items array of items
-     * @returns {object} random item from the array
-     */
-    // FIXME Unused
-    //randomChoice: function (items) {
-    //  return items[Math.floor(Math.random() * items.length)];
-    //}
   };
 
   /**
@@ -369,7 +359,6 @@
     initializeWidget: function (widget) {
       var condition = widget.displayConditions;
       var watcher;
-//      var widgetOnInitCallback = widget.config.onInit;
 
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
@@ -382,16 +371,6 @@
       } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
-
-//    NOTE theoretically onInit should be here, @see comment on initializeWidgetArray
-//    FIXME remove one onInit (here or in initializeWidgetArray)
-//      if (typeof widgetOnInitCallback === 'function') {
-//        widgetOnInitCallback(callbackTypes.INIT, {
-//          widget: widget,
-//          watcher: watcher,
-//          condition: condition
-//        });
-//      }
     },
 
     /**
@@ -619,8 +598,7 @@
       // NOTE Set the image
       if (config.image) {
         if (config.layout === 'button') {
-          // FIXME Console in production
-          // console.warn('Images are not compatible with the button layout.');
+          // NOTE Images are not compatible with the button layout
         } else {
           widgetImage = document.createElement('img');
           widgetImage.src = config.image;
@@ -631,7 +609,6 @@
         utils.addClass(widget, 'pf-no-img');
       }
 
-      // NOTE Set the message
       widgetMessage.innerHTML = config.msg;
 
       if (config.type === 'form') {
@@ -907,8 +884,7 @@
       }
 
       if (choices.indexOf(config.position) === -1) {
-        // FIXME Console in production
-        // console.warn(config.position + ' is not valid position for ' + config.layout);
+        // NOTE config.position + ' is not valid position for ' + config.layout
       }
     },
 
@@ -945,7 +921,7 @@
       return widget;
     },
 
-    // FIXME Really inefficient and inaccurate, either cache initial time and subtract
+    // FIXME Inefficient and inaccurate, either cache initial time and subtract
     //       or calculate delta
     /**
      * @description Track time spent on page
@@ -1324,8 +1300,7 @@
       if (typeof jstag === 'object') {
         jstag.send(data);
       } else {
-        // FIXME Console in production
-        // console.warn('Cannot find Lytics tag, reporting disabled');
+        // NOTE Cannot find Lytics tag, reporting disabled
       }
     },
 
@@ -1355,9 +1330,6 @@
         callback(JSON.parse(response).data.segments);
 
       }, function () {
-        // FIXME Console in production (if uncommented, add 'error' to args)
-        // console.error(error);
-
         callback({
           data: {
             segments: ['all']
