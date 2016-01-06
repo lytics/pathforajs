@@ -136,7 +136,7 @@
     MODAL_OPEN: 'modalOpened',
     MODAL_CLOSE: 'modalClosed'
   };
-  
+
   // NOTE AB testing types
   /**
    * @function createABTestingMode
@@ -149,31 +149,31 @@
     var groupsSumRatio;
     var i;
     var j;
-    
+
     j = arguments.length;
     for (i = 0; i < j; i++) {
       groups.push(arguments[i]);
     }
-    
+
     groupsSum = groups.reduce(function (sum, element) {
       return sum + element;
     });
-    
+
     // NOTE If groups collapse into a number greater than 1, normalize
     if (groupsSum > 1) {
       groupsSumRatio = 1 / groupsSum;
-      
+
       groups = groups.map(function (element) {
         return element * groupsSumRatio;
       });
     }
-    
+
     return {
       groups: groups,
       groupsNumber: groups.length
     };
   };
-  
+
   var abHashMD5 = '187ef4436122d1cc2f40dc2b92f0eba0';
   var abTestingTypes = {
     '100': createABTestingMode(100),
@@ -667,22 +667,22 @@
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
-          
+
           event.preventDefault();
-          
+
           switch(config.type) {
           case 'form':
             widgetAction = 'submit';
             break;
           case 'subscription':
-          widgetAction = 'subscribe';
+            widgetAction = 'subscribe';
             break;
           }
-          
+
           if (widgetAction) {
             core.trackWidgetAction(widgetAction, config, event.target);
           }
-          
+
           if (typeof config.onSubmit === 'function') {
             config.onSubmit(callbackTypes.FORM_SUBMIT, {
               widget: widget,
@@ -809,9 +809,9 @@
           if (typeof widgetOnModalClose === 'function') {
             widgetOnModalClose(event);
           }
-          
+
           context.pathfora.closeWidget(widget.id);
-        }
+        };
       }
     },
 
@@ -1094,7 +1094,6 @@
      * @param {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array) {
-      var userABGroup = utils.readCookie(abHashMD5) || 0;
       var widgetOnInitCallback;
       var defaults;
       var globals;
@@ -1110,7 +1109,7 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
         widgetABGroup = Math.min(widget.config.testGroup || 0, pathforaDataObject.abTestingMode.groupsNumber - 1);
-        
+
         if (pathforaDataObject.abTestingMode && widgetABGroup !== pathforaDataObject.abTestingGroup) {
           continue;
         }
@@ -1139,17 +1138,15 @@
         }
       }
     },
-    
+
     initializeABTestingOnWidget: function (widget) {
       var testGroup = widget.testGroup || 0;
-      
+
       if (testGroup >= pathforaDataObject.abTestingMode.groupsNumber) {
-        console.log('Group %d exceeds testing groups limit in the current testing mode.', testGroup);
-        
         testGroup = 0;
       }
-      
-      
+
+
     },
 
     /**
@@ -1445,7 +1442,7 @@
       widget.id = utils.generateUniqueId();
       return core.createWidgetHtml(widget);
     };
-    
+
     /**
      * @public
      * @description Set an A/B testing mode for the global Pathfora object
@@ -1460,25 +1457,25 @@
       if (abTestingMode) {
         pathforaDataObject.abTestingMode = abTestingMode;
       }
-      
+
       if (!abTestingValue) {
         abTestingValue = Math.random();
-        
+
         utils.saveCookie(abHashMD5, abTestingValue);
       }
-      
+
       // NOTE Determine visible group for the user
       i = 0;
       while (i < 1) {
         i += abTestingMode.groups[abTestingGroup];
-        
+
         if (abTestingValue <= i) {
           break;
         }
-        
+
         abTestingGroup++;
       }
-      
+
       pathforaDataObject.abTestingGroup = abTestingGroup;
     };
 
@@ -1551,7 +1548,7 @@
           });
         }
         if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
-          config.onModalOpen(callbackTypes.MODAL_OPEN, {
+          widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
             widget: widget
           });
         }
