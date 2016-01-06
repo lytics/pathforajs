@@ -1235,7 +1235,8 @@
     },
 
     /**
-     * @description Send data to Lytics API, optionally to Google Analytics (if 'ga' function is available)
+     * @description Send data to Lytics API
+     *              Optionally to Google Analytics (if 'ga' function is available)
      * @param {object} data payload
      */
     reportData: function (data) {
@@ -1246,9 +1247,18 @@
       }
       
       if (typeof ga === 'function') {
-        ga('send', 'event', 'Lytics', data['pf-widget-event'], '', {nonInteraction: true});
+        ga(
+          'send', 
+          'event', 
+          'Lytics', 
+          data['pf-widget-action'] || data['pf-widget-event'], 
+          '', 
+          {
+            nonInteraction: true
+          }
+        );
       } else {
-        // FUTURE Add exception?
+        // FUTURE Add exception
       }
     },
 
