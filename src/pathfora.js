@@ -1269,6 +1269,12 @@
         // FIXME Console in production
         // console.warn('Cannot find Lytics tag, reporting disabled');
       }
+      
+      if (typeof ga === 'function') {
+        ga('send', 'event', 'Lytics', data['pf-widget-event'], '', {nonInteraction: true});
+      } else {
+        // FUTURE Add exception?
+      }
     },
 
     /**
