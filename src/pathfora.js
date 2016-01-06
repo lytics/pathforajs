@@ -1259,7 +1259,7 @@
     },
 
     /**
-     * @description Send data to Lytics API
+     * @description Send data to Lytics API, optionally to Google Analytics (if 'ga' function is available)
      * @param {object} data payload
      */
     reportData: function (data) {
