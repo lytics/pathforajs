@@ -1257,8 +1257,6 @@
             nonInteraction: true
           }
         );
-      } else {
-        // FUTURE Add exception
       }
     },
 
