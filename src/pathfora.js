@@ -1224,24 +1224,24 @@
 
       return widget;
     },
-    
+
     prepareABTest: function (config) {
       var test = {};
-      
+
       if (!config) {
         throw new Error('Config object is missing');
       }
-      
+
       test.id = config.id;
       test.cookieId = abHashMD5 + config.id;
       test.groups = config.groups;
-      
+
       if (!abTestingTypes[config.type]) {
         throw new Error('Unknown AB testing type: ' + config.type);
       }
-      
+
       test.type = abTestingTypes[config.type];
-      
+
       return test;
     }
   };
@@ -1464,19 +1464,19 @@
 
           userAbTestingGroup++;
         }
-        
+
         // NOTE Notify widgets about their proper AB groups
         abTest.groups.forEach(function (group, index) {
           group.forEach(function (widget) {
             if (typeof widget.abTestingGroup === 'undefined') {
               widget.abTestingGroup = index;
-              widget.hiddenViaABTests = (userAbTestingGroup === index);
+              widget.hiddenViaABTests = userAbTestingGroup === index;
             } else {
               throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
             }
           });
         });
-        
+
         if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
           throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
         }
@@ -1652,7 +1652,7 @@
         defaultProps = originalConf;
       }
     };
-    
+
     /*
      * @public
      */
