@@ -204,7 +204,6 @@
     completedActions: [],
     cancelledActions: [],
     displayedWidgets: [],
-    abTestingModes: [],
     abTestingGroups: []
   };
 
@@ -1644,7 +1643,6 @@
         completedActions: [],
         cancelledActions: [],
         displayedWidgets: [],
-        abTestingModes: [],
         abTestingGroups: []
       };
 

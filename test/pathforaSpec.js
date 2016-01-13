@@ -311,8 +311,7 @@ describe('Pathfora', function () {
       completedActions: [],
       cancelledActions: [],
       displayedWidgets: [],
-      abTestingMode: null, 
-      abTestingGroup: null
+      abTestingGroups: []
     };
 
     var form = new pathfora.Subscription({
