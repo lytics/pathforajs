@@ -139,11 +139,11 @@
 
   // NOTE AB testing types
   /**
-   * @function createABTestingMode
-   * @description Create an A/B testing object from groups list
+   * @function createABTestingModePreset
+   * @description Create an A/B testing object preset from groups list
    * @returns {object} A/B testing object instance
    */
-  var createABTestingMode = function () {
+  var createABTestingModePreset = function () {
     var groups = [];
     var groupsSum;
     var groupsSumRatio;
@@ -186,8 +186,9 @@
    * @description AB testing groups definitions
    */
   var abTestingTypes = {
-    '100': createABTestingMode(100),
-    '50/50': createABTestingMode(120, 80)
+    '100': createABTestingModePreset(100),
+    '50/50': createABTestingModePreset(50, 50),
+    '80/20': createABTestingModePreset(80, 20)
   };
 
   // NOTE Empty Pathfora data object, containg all data stored by lib
@@ -203,8 +204,8 @@
     completedActions: [],
     cancelledActions: [],
     displayedWidgets: [],
-    abTestingMode: null,
-    abTestingGroup: null
+    abTestingModes: [],
+    abTestingGroups: []
   };
 
   /**
@@ -1084,8 +1085,6 @@
       var defaults;
       var globals;
       var widget;
-      var widgetABGroup;
-      var abTestingMode = pathforaDataObject.abTestingMode || {};
       var i;
       var j;
 
@@ -1095,9 +1094,8 @@
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
-        widgetABGroup = Math.min(widget.config.testGroup || 0, abTestingMode.groupsNumber - 1);
 
-        if (pathforaDataObject.abTestingMode && widgetABGroup !== pathforaDataObject.abTestingGroup) {
+        if (widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1225,6 +1223,26 @@
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
+    },
+    
+    prepareABTest: function (config) {
+      var test = {};
+      
+      if (!config) {
+        throw new Error('Config object is missing');
+      }
+      
+      test.id = config.id;
+      test.cookieId = abHashMD5 + config.id;
+      test.groups = config.groups;
+      
+      if (!abTestingTypes[config.type]) {
+        throw new Error('Unknown AB testing type: ' + config.type);
+      }
+      
+      test.type = abTestingTypes[config.type];
+      
+      return test;
     }
   };
 
@@ -1417,39 +1435,54 @@
     };
 
     /**
+     * // FIXME outdated/not completed
      * @public
-     * @description Set an A/B testing mode for the global Pathfora object
-     * @param {string} mode A/B testing mode
+     * @description Set A/B testing modes for the global Pathfora object
+     * @param {string} abTests A/B testing modes array
      */
-    this.setABTestingMode = function (mode) {
-      var abTestingMode = abTestingTypes[mode];
-      var abTestingValue = utils.readCookie(abHashMD5);
-      var abTestingGroup = 0;
-      var i;
+    this.initializeABTesting = function (abTests) {
+      abTests.forEach(function (abTest) {
+        var abTestingType = abTest.type;
+        var userAbTestingValue = utils.readCookie(abTest.cookieId);
+        var userAbTestingGroup = 0;
+        var i;
 
-      if (abTestingMode) {
-        pathforaDataObject.abTestingMode = abTestingMode;
-      }
+        if (!userAbTestingValue) {
+          userAbTestingValue = Math.random();
 
-      if (!abTestingValue) {
-        abTestingValue = Math.random();
-
-        utils.saveCookie(abHashMD5, abTestingValue);
-      }
-
-      // NOTE Determine visible group for the user
-      i = 0;
-      while (i < 1) {
-        i += abTestingMode.groups[abTestingGroup];
-
-        if (abTestingValue <= i) {
-          break;
+          utils.saveCookie(abTest.cookieId, userAbTestingValue);
         }
 
-        abTestingGroup++;
-      }
+        // NOTE Determine visible group for the user
+        i = 0;
+        while (i < 1) {
+          i += abTestingType.groups[userAbTestingGroup];
 
-      pathforaDataObject.abTestingGroup = abTestingGroup;
+          if (userAbTestingValue <= i) {
+            break;
+          }
+
+          userAbTestingGroup++;
+        }
+        
+        // NOTE Notify widgets about their proper AB groups
+        abTest.groups.forEach(function (group, index) {
+          group.forEach(function (widget) {
+            if (typeof widget.abTestingGroup === 'undefined') {
+              widget.abTestingGroup = index;
+              widget.hiddenViaABTests = (userAbTestingGroup === index);
+            } else {
+              throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
+            }
+          });
+        });
+        
+        if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
+          throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
+        }
+
+        pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
+      });
     };
 
     /**
@@ -1471,7 +1504,6 @@
     this.Subscription = function (config) {
       return core.prepareWidget('subscription', config);
     };
-
 
     /**
      * @public
@@ -1612,13 +1644,20 @@
         completedActions: [],
         cancelledActions: [],
         displayedWidgets: [],
-        abTestingMode: null,
-        abTestingGroup: null
+        abTestingModes: [],
+        abTestingGroups: []
       };
 
       if (originalConf) {
         defaultProps = originalConf;
       }
+    };
+    
+    /*
+     * @public
+     */
+    this.ABTest = function (config) {
+      return core.prepareABTest(config);
     };
 
     /*
