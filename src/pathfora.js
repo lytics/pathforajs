@@ -1,4 +1,4 @@
-/* global jstag, pfCfg */
+/* global jstag, ga, pfCfg */
 "use strict";
 
 /**
@@ -1311,6 +1311,7 @@
 
     /**
      * @description Send data to Lytics API
+     *              Optionally to Google Analytics (if 'ga' function is available)
      * @param {object} data payload
      */
     reportData: function (data) {
@@ -1318,6 +1319,19 @@
         jstag.send(data);
       } else {
         // NOTE Cannot find Lytics tag, reporting disabled
+      }
+
+      if (typeof ga === 'function') {
+        ga(
+          'send',
+          'event',
+          'Lytics',
+          data['pf-widget-action'] || data['pf-widget-event'],
+          '',
+          {
+            nonInteraction: true
+          }
+        );
       }
     },
 

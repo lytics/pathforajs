@@ -4,9 +4,9 @@ var credentials = 123;
 var jstag = {
   send: function (data) {}
 };
+var ga = jasmine.createSpy('ga');
 
 pathfora.utils.saveCookie('seerid', 123);
-
 
 describe('Pathfora', function () {
   beforeEach(function() {
@@ -102,7 +102,7 @@ describe('Pathfora', function () {
       msg: 'Message bar  - interest test',
       confirmAction: {
         name: 'Test confirm action',
-        callback: function() {console.log('test confirmation')}
+        callback: function() {}
       }
     });
     var messageModal = pathfora.Message({
@@ -145,6 +145,8 @@ describe('Pathfora', function () {
       'pf-widget-variant': '1',
       'pf-widget-event': 'show'
     }));
+    
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', 'show', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
     jasmine.Ajax.uninstall();
@@ -174,6 +176,8 @@ describe('Pathfora', function () {
       'pf-widget-variant': '1',
       'pf-widget-event': 'close'
     }));
+    
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', 'close', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
     jasmine.clock().uninstall();
@@ -188,7 +192,7 @@ describe('Pathfora', function () {
       msg: 'Message modal - action report test',
       confirmAction: {
         name: 'action test',
-        callback: function() {console.log('test confirmation')}
+        callback: function() {}
       }
     });
 
@@ -223,7 +227,7 @@ describe('Pathfora', function () {
       msg: 'Message modal - cancel report test',
       cancelAction: {
         name: 'cancel reporting test',
-        callback: function() {console.log('test confirmation')}
+        callback: function() {}
       }
     });
 
@@ -1005,5 +1009,36 @@ describe('API', function () {
     expect(widget.find('.pf-position-right')).toBeTruthy();
     expect(widget.find('.pf-widget-variant-2')).toBeTruthy();       
 
+  });
+  
+  it('should report to Google Analytics API, when available', function (done) {
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - ga test',
+      confirmAction: {
+        name: 'action test',
+        callback: function () {}
+      }
+    });
+
+    pathfora.initializeWidgets([messageBar], credentials);
+
+    var widget = $('#' + messageBar.id);
+
+    setTimeout(function () {
+      widget.find('.pf-widget-ok').click();
+
+      expect(ga).toHaveBeenCalled();
+      expect(ga.calls.mostRecent().args).toEqual([
+        'send', 
+        'event', 
+        'Lytics', 
+        messageBar.confirmAction.name,
+        jasmine.any(String), 
+        jasmine.any(Object)
+      ]);
+      
+      done();
+    }, 200);
   });
 });
