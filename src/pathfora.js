@@ -1247,11 +1247,13 @@
       }
 
       if (typeof ga === 'function') {
+        var gaLabel = data['pf-widget-action'] || data['pf-widget-event']
+
         ga(
           'send',
           'event',
           'Lytics',
-          data['pf-widget-action'] || data['pf-widget-event'],
+          data['pf-widget-id'] + ' : ' + gaLabel,
           '',
           {
             nonInteraction: true
