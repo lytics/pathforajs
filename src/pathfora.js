@@ -1090,6 +1090,10 @@
       j = array.length;
       for (i = 0; i < j; i++) {
         widget = array[i];
+        if (!widget || !widget.config) {
+          continue;
+        }
+        
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
