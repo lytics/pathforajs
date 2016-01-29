@@ -121,12 +121,25 @@
       bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
     },
     form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+    },
+    social: {
+      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
+      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
+      googleIcon: '<div class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
     }
   };
 
+  var scripts = {
+    facebook: '<div id="fb-root"></div>',
+    google: ''
+  };
+
+  /*
+  <script type="text/javascript">(function() {var po = document.createElement("script");po.type = "text/javascript"; po.async = true;po.src = "https://plus.google.com/js/client:plusone.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(po, s);})();</script>
+   */
   // NOTE Event callback types
   var callbackTypes = {
     INIT: 'widgetInitialized',
@@ -149,7 +162,8 @@
     closedWidgets: [],
     completedActions: [],
     cancelledActions: [],
-    displayedWidgets: []
+    displayedWidgets: [],
+    socialNetworks: {}
   };
 
   /**
@@ -167,7 +181,8 @@
     link.setAttribute('type', 'text/css');
 
     // NOTE Need to update the cdn version. For now use local.
-    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+//    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    link.setAttribute('href', '../dist/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -499,13 +514,17 @@
         case 'modal':
         case 'slideout':
         case 'random':
-          widgetTextArea = widget.querySelector('textarea');
+          widgetTextArea = widget.querySelector('textarea[name="message"]');
           // FIXME Cache
           // FIXME (???) Check if can be changed to [input=*] !
-          widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
-          widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
-          widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
+          widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
+          widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
+          widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
           widgetTextArea.placeholder = config.placeholders.message;
+
+          // NOTE Autofill from social networks
+          core.autoCompleteFacebookData();
+          core.autoCompleteGoogleData();
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -1167,6 +1186,139 @@
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
+    },
+
+    requestSocialPluginRender: function () {
+      // FIXME Add check whether the rendering is necessary at all
+      var renderWidgets = {
+        facebook: [],
+        google: []
+      };
+      var timeoutInterval = {};
+
+      var attemptRenderingFacebook = function () {
+        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
+          renderWidgets.facebook.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.fb-login-button');
+
+            window.FB.XFBML.parse(widget);
+
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.facebook = [];
+
+          return clearTimeout(timeoutInterval['facebook']);
+        } else {
+          return setTimeout(attemptRenderingFacebook, 1000);
+        }
+      };
+
+      var attemptRenderingGoogle = function () {
+        if (typeof window.gapi !== 'undefined') {
+          renderWidgets.google.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.g-signin2');
+
+            window.gapi.signin2.render(signInBtn, {
+              scope: 'profile',
+              width: 16,
+              height: 16
+            });
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.google = [];
+
+          return clearTimeout(attemptRenderingGoogle);
+        } else {
+          return setTimeout(attemptRenderingGoogle, 1000);
+        }
+      };
+
+      this.requestSocialPluginRender = function (widget) {
+        var widgets = widget instanceof Array ? widget : [widget];
+
+        widgets.forEach(function (element) {
+          var requestFacebook = false;
+          var requestGoogle = false;
+
+          if (typeof element.querySelector === 'undefined') {
+            return false;
+          }
+
+          requestFacebook = element.querySelector('.fb-login-button') !== null;
+          requestGoogle = element.querySelector('.g-signin2') !== null;
+
+          if (requestFacebook) {
+            renderWidgets.facebook = renderWidgets.facebook.concat(element);
+          }
+          if (requestGoogle) {
+            renderWidgets.google = renderWidgets.google.concat(element);
+          }
+        });
+
+        timeoutInterval['facebook'] = attemptRenderingFacebook();
+        timeoutInterval['google'] = attemptRenderingGoogle();
+      };
+
+      this.requestSocialPluginRender(arguments[0]);
+    },
+
+    autoCompleteFacebookData: function () {
+      if (typeof window.FB !== 'undefined') {
+        window.FB.getLoginStatus(function (connection) {
+          if (connection.status === 'connected') {
+            window.FB.api('/me', {
+              fields: 'name,email'
+            }, function (query) {
+              if (query.error) {
+                throw new Error('Facebook API Error: ' + query.error);
+              }
+
+              core.autoCompleteFormFields({
+                username: query.name || '',
+                email: query.email || ''
+              });
+            });
+          } else {
+            throw new Error('Facebook API Error: User not connected');
+          }
+        });
+      }
+    },
+
+    autoCompleteGoogleData: function () {
+      var auth2;
+      var user;
+
+      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
+        auth2 = window.gapi.auth2.getAuthInstance();
+        user = auth2.currentUser.get().getBasicProfile();
+
+        core.autoCompleteFormFields({
+          username: user.getName() || '',
+          email: user.getEmail() || ''
+        });
+      }
+    },
+
+    autoCompleteFormFields: function (data) {
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+      var usernameField;
+      var emailField;
+      var usernameValue = data.username;
+      var emailValue = data.email;
+
+      widgets.forEach(function (widget) {
+        usernameField = widget.querySelector('input[name="username"]');
+        emailField = widget.querySelector('input[name="email"]');
+
+        if (usernameField && !usernameField.value) {
+          usernameField.value = usernameValue;
+        }
+        if (emailField && !emailField.value) {
+          emailField.value = emailValue;
+        }
+      });
     }
   };
 
@@ -1240,6 +1392,8 @@
      * @param {object} data payload
      */
     reportData: function (data) {
+      var gaLabel;
+
       if (typeof jstag === 'object') {
         jstag.send(data);
       } else {
@@ -1247,7 +1401,7 @@
       }
 
       if (typeof ga === 'function') {
-        var gaLabel = data['pf-widget-action'] || data['pf-widget-event']
+        gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
 
         ga(
           'send',
@@ -1447,6 +1601,8 @@
             widget: widget
           });
         }
+
+        core.requestSocialPluginRender(node);
       }, 50);
 
       if (widget.displayConditions.hideAfter) {
@@ -1533,12 +1689,97 @@
         closedWidgets: [],
         completedActions: [],
         cancelledActions: [],
-        displayedWidgets: []
+        displayedWidgets: [],
+        socialNetworks: {}
       };
 
       if (originalConf) {
         defaultProps = originalConf;
       }
+    };
+
+    /**
+     * @public
+     * @description Intergrate with Facebook App API
+     * @param {string} appId
+     */
+    this.integrateWithFacebook = function (appId) {
+      window.fbAsyncInit = function () {
+        window.FB.init({
+          appId: appId,
+          xfbml: true,
+          version: 'v2.5'
+        });
+      };
+
+      // NOTE Api initialization
+      (function (d, s, id) {
+        var js;
+        var fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = '//connect.facebook.net/en_GB/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      // NOTE Google API
+      (function () {
+        var s;
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+      })();
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="fb-login" hidden><\/p>/gm,
+          templates.social.facebookIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.facebookAppId = appId;
+    };
+
+    /**
+     * @public
+     * @description Integrate with Google App API
+     * @param {string} clientId
+     */
+    this.integrateWithGoogle = function (clientId) {
+      var body = document.querySelector('body');
+      var head = document.querySelector('head');
+
+      var appScript = scripts.google;
+      var appMetaTag = templates.social.googleMeta.replace(
+        /(\{){2}google-clientId(\}){2}/gm,
+        clientId
+      );
+
+      head.innerHTML += appMetaTag;
+      body.innerHTML += appScript;
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="google-login" hidden><\/p>/gm,
+          templates.social.googleIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.googleClientID = clientId;
+    };
+
+    this.onFacebookSignIn = function () {
+      core.autoCompleteFacebookData();
+    };
+
+    this.onGoogleSignIn = function () {
+      core.autoCompleteGoogleData();
     };
 
     /*
