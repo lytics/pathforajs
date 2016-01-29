@@ -137,9 +137,6 @@
     google: ''
   };
 
-  /*
-  <script type="text/javascript">(function() {var po = document.createElement("script");po.type = "text/javascript"; po.async = true;po.src = "https://plus.google.com/js/client:plusone.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(po, s);})();</script>
-   */
   // NOTE Event callback types
   var callbackTypes = {
     INIT: 'widgetInitialized',
@@ -181,8 +178,7 @@
     link.setAttribute('type', 'text/css');
 
     // NOTE Need to update the cdn version. For now use local.
-//    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
-    link.setAttribute('href', '../dist/pathfora.min.css');
+    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -515,14 +511,11 @@
         case 'slideout':
         case 'random':
           widgetTextArea = widget.querySelector('textarea[name="message"]');
-          // FIXME Cache
-          // FIXME (???) Check if can be changed to [input=*] !
           widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
           widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
           widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
           widgetTextArea.placeholder = config.placeholders.message;
 
-          // NOTE Autofill from social networks
           core.autoCompleteFacebookData();
           core.autoCompleteGoogleData();
           break;
@@ -537,7 +530,6 @@
         case 'bar':
         case 'slideout':
         case 'random':
-          // FIXME Cache
           widget.querySelector('input').placeholder = config.placeholders.email;
           break;
         default:
@@ -1188,8 +1180,13 @@
       return widget;
     },
 
+    /**
+     * @description Social APIs require certain DOM elements to be redrawn
+     *                  after initialization (ex. buttons). Request a timeout
+     *                  redraw, which executes after all social APIs are initialized.
+     *                  Generates a clojure function inside.
+     */
     requestSocialPluginRender: function () {
-      // FIXME Add check whether the rendering is necessary at all
       var renderWidgets = {
         facebook: [],
         google: []
@@ -1262,6 +1259,10 @@
       this.requestSocialPluginRender(arguments[0]);
     },
 
+    /**
+     * @description Attempt to load forms' data from Facebook API.
+     * @throws {Error} Facebook API Error
+     */
     autoCompleteFacebookData: function () {
       if (typeof window.FB !== 'undefined') {
         window.FB.getLoginStatus(function (connection) {
@@ -1285,6 +1286,9 @@
       }
     },
 
+    /**
+     * @description Attempt to load forms' data from Google+ API.
+     */
     autoCompleteGoogleData: function () {
       var auth2;
       var user;
@@ -1300,6 +1304,10 @@
       }
     },
 
+    /**
+     * @description Fill form DOM objects with user data
+     * @param {object} data user data
+     */
     autoCompleteFormFields: function (data) {
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
@@ -1712,7 +1720,7 @@
         });
       };
 
-      // NOTE Api initialization
+      // NOTE API initialization
       (function (d, s, id) {
         var js;
         var fjs = d.getElementsByTagName(s)[0];
