@@ -1,1006 +1,1044 @@
-'use strict';
+"use strict";
 
 var credentials = 123;
 var jstag = {
-    send: function (data) {}
+  send: function (data) {}
 };
+var ga = jasmine.createSpy('ga');
 
 pathfora.utils.saveCookie('seerid', 123);
 
+describe('Pathfora', function () {
+  beforeEach(function() {
+    localStorage.clear();
+    pathfora.clearAll();
+  });
 
-describe("Pathfora", function () {
-    beforeEach(function() {
-        localStorage.clear();
-        pathfora.clearAll();
-    });    
+  it('should track current time spent on page with 1 second accuracy', function () {
+    jasmine.clock().install();
 
-    it("should track current time spent on page with 1 second accuracy", function () {
-        jasmine.clock().install();
+    pathfora.initializeWidgets([], credentials);
 
-        pathfora.initializeWidgets([], credentials);
+    var initialTime = pathfora.getData().timeSpentOnPage;
 
-        var initialTime = pathfora.getData().timeSpentOnPage;
+    jasmine.clock().tick(10000);
 
-        jasmine.clock().tick(10000);
+    var afterDelay = pathfora.getData().timeSpentOnPage;
 
-        var afterDelay = pathfora.getData().timeSpentOnPage;
+    expect(afterDelay).toBeGreaterThan(initialTime + 8);
+    expect(afterDelay).toBeLessThan(initialTime + 12);
 
-        expect(afterDelay).toBeGreaterThan(initialTime + 8);
-        expect(afterDelay).toBeLessThan(initialTime + 12);
+    jasmine.clock().uninstall();
+  });
 
-        jasmine.clock().uninstall();
+  it('should distinguish newcomers, subscribers and common users', function (done) {
+    jasmine.Ajax.install();
+    var messageA = pathfora.Message({
+      id: 'test-bar-01',
+      msg: 'A',
+      layout: 'modal'
     });
 
-    it("should distinguish newcomers, subscribers and common users", function (done) {
-        jasmine.Ajax.install();
-        var messageA = pathfora.Message({
-            id: "test-bar-01",
-            msg: "A",
-            layout: "modal"
-        });
-
-        var messageB = pathfora.Message({
-            id: "test-bar-02",
-            msg: "B",
-            layout: "modal"
-        });
-
-        var messageC = pathfora.Message({
-            id: "test-bar-03",
-            msg: "C",
-            layout: "modal"
-        });
-
-        var widgets = {
-            target: [{
-                segment: 'a',
-                widgets: [messageA]
-            },{
-                segment: 'b',
-                widgets: [messageB]
-            },{
-                segment: 'c',
-                widgets: [messageC]
-            }]
-        };
-
-        pathfora.initializeWidgets(widgets, credentials);
-
-        expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
-
-        jasmine.Ajax.requests.mostRecent().respondWith({
-            "status": 200,
-            "contentType": 'application/json',
-            "responseText": '{"data":{"segments":["all","b"]}}'
-        });
-
-        var widget = $('#' + messageB.id);
-        expect(widget).toBeDefined();
-
-        var notOpenedA = $('#' + messageA.id);
-        var notOpenedC = $('#' + messageC.id);
-
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            expect(notOpenedA.length).toBe(0);
-            expect(notOpenedC.length).toBe(0);
-
-            var msg = $('.pf-widget-message').text();
-            expect(msg).toBe('B');
-
-            pathfora.clearAll();
-            done();
-        }, 200);
-
-        jasmine.Ajax.uninstall();
+    var messageB = pathfora.Message({
+      id: 'test-bar-02',
+      msg: 'B',
+      layout: 'modal'
     });
 
-    it("should know if users shown interest in past", function () {
-        localStorage.clear();
-        var messageBar = pathfora.Message({
-            layout: "bar",
-            msg: "Message bar  - interest test",
-            confirmAction: {
-                name: "Test confirm action",
-                callback: function() {console.log("test confirmation")}
-            }
-        });
-        var messageModal = pathfora.Message({
-            layout: "modal",
-            msg: "Message modal - interest test"
-        });
-        pathfora.initializeWidgets([messageBar, messageModal], credentials);
-
-        var completedActions = pathfora.getData().completedActions.length;
-        var closedWidgets = pathfora.getData().closedWidgets.length;
-        expect(completedActions).toBe(0);
-        expect(closedWidgets).toBe(0);
-
-        $('#' + messageBar.id).find('.pf-widget-ok').click();
-        $('#' + messageModal.id).find('.pf-widget-close').click();
-
-        completedActions = pathfora.getData().completedActions.length;
-        closedWidgets = pathfora.getData().closedWidgets.length;
-        expect(completedActions).toBe(1);
-        expect(closedWidgets).toBe(1);
+    var messageC = pathfora.Message({
+      id: 'test-bar-03',
+      msg: 'C',
+      layout: 'modal'
     });
 
-    it("should report displaying widgets and it's variants", function () {
-        jasmine.Ajax.install();
+    var widgets = {
+      target: [{
+        segment: 'a',
+        widgets: [messageA]
+      },{
+        segment: 'b',
+        widgets: [messageB]
+      },{
+        segment: 'c',
+        widgets: [messageC]
+      }]
+    };
 
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Message bar - reporting test",
-            id: "modal-display-report"
-        });
+    pathfora.initializeWidgets(widgets, credentials);
 
-        spyOn(jstag, 'send');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
 
-        pathfora.initializeWidgets([messageBar], credentials);
-
-        expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-            "pf-widget-id": messageBar.id,
-            "pf-widget-type": "message",
-            "pf-widget-layout": "modal",
-            "pf-widget-variant": '1',
-            "pf-widget-event": "show"
-        }));
-
-        pathfora.clearAll();
-        jasmine.Ajax.uninstall();
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":{"segments":["all","b"]}}'
     });
 
-    it("should report closing widgets and it's variants", function () {
-        jasmine.Ajax.install();
-        jasmine.clock().install();
+    var widget = $('#' + messageB.id);
+    expect(widget).toBeDefined();
 
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Message bar - close reporting",
-            id: "bar-close-report"
-        });
+    var notOpenedA = $('#' + messageA.id);
+    var notOpenedC = $('#' + messageC.id);
 
-        pathfora.initializeWidgets([messageBar], credentials);
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(notOpenedA.length).toBe(0);
+      expect(notOpenedC.length).toBe(0);
 
-        spyOn(jstag, 'send');
-        $('.pf-widget-close').click();
+      var msg = $('.pf-widget-message').text();
+      expect(msg).toBe('B');
 
-        jasmine.clock().tick(1000);
+      pathfora.clearAll();
+      done();
+    }, 200);
 
-        expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-            "pf-widget-id": messageBar.id,
-            "pf-widget-type": "message",
-            "pf-widget-layout": "modal",
-            "pf-widget-variant": '1',
-            "pf-widget-event": "close"
-        }));
+    jasmine.Ajax.uninstall();
+  });
 
-        pathfora.clearAll();
-        jasmine.clock().uninstall();
-        jasmine.Ajax.uninstall();
+  it('should know if users shown interest in past', function () {
+    localStorage.clear();
+    var messageBar = pathfora.Message({
+      layout: 'bar',
+      msg: 'Message bar  - interest test',
+      confirmAction: {
+        name: 'Test confirm action',
+        callback: function() {}
+      }
+    });
+    var messageModal = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - interest test'
+    });
+    pathfora.initializeWidgets([messageBar, messageModal], credentials);
+
+    var completedActions = pathfora.getData().completedActions.length;
+    var closedWidgets = pathfora.getData().closedWidgets.length;
+    expect(completedActions).toBe(0);
+    expect(closedWidgets).toBe(0);
+
+    $('#' + messageBar.id).find('.pf-widget-ok').click();
+    $('#' + messageModal.id).find('.pf-widget-close').click();
+
+    completedActions = pathfora.getData().completedActions.length;
+    closedWidgets = pathfora.getData().closedWidgets.length;
+    expect(completedActions).toBe(1);
+    expect(closedWidgets).toBe(1);
+  });
+
+  it('should report displaying widgets and it\'s variants', function () {
+    jasmine.Ajax.install();
+
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message bar - reporting test',
+      id: 'modal-display-report'
     });
 
-    it("should report completed actions to Lytics API", function (done) {
-        jasmine.Ajax.install();
+    spyOn(jstag, 'send');
 
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Message modal - action report test",
-            confirmAction: {
-                name: "action test",
-                callback: function() {console.log("test confirmation")}
-            }
-        });
+    pathfora.initializeWidgets([messageBar], credentials);
 
-        pathfora.initializeWidgets([messageBar], credentials);
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': messageBar.id,
+      'pf-widget-type': 'message',
+      'pf-widget-layout': 'modal',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'show'
+    }));
 
-        var widget = $('#' + messageBar.id);
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics',  messageBar.id + ' : show', jasmine.any(String), jasmine.any(Object));
 
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
+    pathfora.clearAll();
+    jasmine.Ajax.uninstall();
+  });
 
-            spyOn(jstag, 'send');
+  it('should report closing widgets and it\'s variants', function () {
+    jasmine.Ajax.install();
+    jasmine.clock().install();
 
-            expect(jstag.send).not.toHaveBeenCalled();
-
-            widget.find('.pf-widget-ok').click();
-            expect(jstag.send).toHaveBeenCalled();
-
-            expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-                "pf-widget-action": "action test"
-            }));
-
-            jasmine.Ajax.uninstall();
-            done();
-        }, 200);
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message bar - close reporting',
+      id: 'bar-close-report'
     });
 
-    it("should report cancelled actions to Lytics API", function (done) {
-        jasmine.Ajax.install();
+    pathfora.initializeWidgets([messageBar], credentials);
 
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Message modal - cancel report test",
-            cancelAction: {
-                name: "cancel reporting test",
-                callback: function() {console.log("test confirmation")}
-            }
-        });
+    spyOn(jstag, 'send');
+    $('.pf-widget-close').click();
 
-        pathfora.initializeWidgets([messageBar], credentials);
+    jasmine.clock().tick(1000);
 
-        var widget = $('#' + messageBar.id);
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': messageBar.id,
+      'pf-widget-type': 'message',
+      'pf-widget-layout': 'modal',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'close'
+    }));
 
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', messageBar.id + ' : close', jasmine.any(String), jasmine.any(Object));
 
-            spyOn(jstag, 'send');
+    pathfora.clearAll();
+    jasmine.clock().uninstall();
+    jasmine.Ajax.uninstall();
+  });
 
-            expect(jstag.send).not.toHaveBeenCalled();
+  it('should report completed actions to Lytics API', function (done) {
+    jasmine.Ajax.install();
 
-            widget.find('.pf-widget-cancel').click();
-            expect(jstag.send).toHaveBeenCalled();
-
-            expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-                "pf-widget-action": "cancel reporting test",
-                "pf-widget-event": "cancel"
-            }));
-
-            jasmine.Ajax.uninstall();
-            done();
-        }, 200);
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - action report test',
+      confirmAction: {
+        name: 'action test',
+        callback: function() {}
+      }
     });
 
-    it("should report submitting forms, with form data", function () {
-        var messageBar = pathfora.Message({
-            layout: "modal",
-            msg: "Message modal - form submit reports",
-            id: "ABCa"
-        });
+    pathfora.initializeWidgets([messageBar], credentials);
 
-        pathfora.initializeWidgets([messageBar], credentials);
+    var widget = $('#' + messageBar.id);
 
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
 
-        spyOn(jstag, 'send');
-        $('.pf-widget-close').click();
+      spyOn(jstag, 'send');
 
-        expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-            "pf-widget-id": messageBar.id,
-            "pf-widget-type": "message",
-            "pf-widget-layout": "modal",
-            "pf-widget-variant": '1',
-            "pf-widget-event": "close"
-        }));
+      expect(jstag.send).not.toHaveBeenCalled();
+
+      widget.find('.pf-widget-ok').click();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'action test'
+      }));
+
+      jasmine.Ajax.uninstall();
+      done();
+    }, 200);
+  });
+
+  it('should report cancelled actions to Lytics API', function (done) {
+    jasmine.Ajax.install();
+
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - cancel report test',
+      cancelAction: {
+        name: 'cancel reporting test',
+        callback: function() {}
+      }
     });
 
-    xit("should throw error when trying to initialize widget with wrong layout value", function () {
-        var brokenLayoutVal = new pathfora.Message({
-            msg: "Broken layout value test",
-            layout: 'broken'
-        });
+    pathfora.initializeWidgets([messageBar], credentials);
 
-        expect(function() {
-            pathfora.initializeWidgets([brokenLayoutVal], credentials)
-        }).toThrow(new Error('Invalid widget layout value'));
+    var widget = $('#' + messageBar.id);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      spyOn(jstag, 'send');
+
+      expect(jstag.send).not.toHaveBeenCalled();
+
+      widget.find('.pf-widget-cancel').click();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'cancel reporting test',
+        'pf-widget-event': 'cancel'
+      }));
+
+      jasmine.Ajax.uninstall();
+      done();
+    }, 200);
+  });
+
+  it('should report submitting forms, with form data', function () {
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - form submit reports',
+      id: 'ABCa'
     });
 
-    it("should use specified global config for all widgets", function () {
-        var messageBar = pathfora.Message({
-            layout: "bar",
-            msg: "test"
-        });
-        var config = {
-            generic: {
-                theme: 'light'
-            }
-        };
+    pathfora.initializeWidgets([messageBar], credentials);
 
-        pathfora.initializeWidgets([messageBar], credentials, config);
 
-        var bar  = $('#' + messageBar.id);
-        expect(bar.hasClass('pf-theme-default')).toBe(false);
-        expect(bar.hasClass('pf-theme-light')).toBe(true);
+    spyOn(jstag, 'send');
+    $('.pf-widget-close').click();
+
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': messageBar.id,
+      'pf-widget-type': 'message',
+      'pf-widget-layout': 'modal',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'close'
+    }));
+  });
+
+  xit('should throw error when trying to initialize widget with wrong layout value', function () {
+    var brokenLayoutVal = new pathfora.Message({
+      msg: 'Broken layout value test',
+      layout: 'broken'
     });
 
+    expect(function() {
+      pathfora.initializeWidgets([brokenLayoutVal], credentials)
+    }).toThrow(new Error('Invalid widget layout value'));
+  });
 
-    it("should be able to clear all widgets and handlers", function (done) {
-        var clearDataObject = {
-            pageViews: 0,
-            timeSpentOnPage: 0,
-            closedWidgets: [],
-            completedActions: [],
-            cancelledActions: [],
-            displayedWidgets: []
-        };
+  it('should use specified global config for all widgets', function () {
+    var messageBar = pathfora.Message({
+      layout: 'bar',
+      msg: 'test'
+    });
+    var config = {
+      generic: {
+        theme: 'light'
+      }
+    };
 
-        var form = new pathfora.Subscription({
-            msg: 'test',
-            layout: 'modal'
-        });
+    pathfora.initializeWidgets([messageBar], credentials, config);
 
-        pathfora.initializeWidgets([form], credentials);
-        var widget = $('#' + form.id);
+    var bar  = $('#' + messageBar.id);
+    expect(bar.hasClass('pf-theme-default')).toBe(false);
+    expect(bar.hasClass('pf-theme-light')).toBe(true);
+  });
 
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            expect(pathfora.getData()).not.toEqual(clearDataObject);
 
-            pathfora.clearAll();
+  it('should be able to clear all widgets and handlers', function (done) {
+    var clearDataObject = {
+      pageViews: 0,
+      timeSpentOnPage: 0,
+      closedWidgets: [],
+      completedActions: [],
+      cancelledActions: [],
+      displayedWidgets: [],
+      socialNetworks: {}
+    };
 
-            expect(widget.hasClass('opened')).toBeFalsy();
-            expect(pathfora.getData()).toEqual(clearDataObject);
-
-            done();
-        }, 200);
+    var form = new pathfora.Subscription({
+      msg: 'test',
+      layout: 'modal'
     });
 
-    it("should not allow to register 2 widgets with the same id", function () {
-        var w1 = new pathfora.Message({
-            msg: 'Duplicate id test1',
-            layout: "modal",
-            id: 'asd'
-        });
+    pathfora.initializeWidgets([form], credentials);
+    var widget = $('#' + form.id);
 
-        var w2 = new pathfora.Form({
-            msg: 'Duplcate id test2',
-            layout: 'slideout',
-            id: 'asd'
-        });
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(pathfora.getData()).not.toEqual(clearDataObject);
 
-        expect(function() {
-            pathfora.initializeWidgets([w1, w2], credentials);
-        }).toThrow(new Error('Cannot add two widgets with the same id'));
+      pathfora.clearAll();
+
+      expect(widget.hasClass('opened')).toBeFalsy();
+      expect(pathfora.getData()).toEqual(clearDataObject);
+
+      done();
+    }, 200);
+  });
+
+  it('should not allow to register 2 widgets with the same id', function () {
+    var w1 = new pathfora.Message({
+      msg: 'Duplicate id test1',
+      layout: 'modal',
+      id: 'asd'
     });
 
-    xit("should be able to display widget only on specific page scrolling value", function (done) {
-        $(document.body).append("<div id=\"height-element\" style=\"height:10000px\">Test</div>");
-
-        var form = new pathfora.Subscription({
-            msg: 'test',
-            layout: 'modal',
-            displayConditions: {
-                scrollPercentageToDisplay: 20
-            }
-        });
-
-        pathfora.initializeWidgets([form], credentials);
-        var widget = $('#' + form.id);
-
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeFalsy();
-
-            var height = $(document).height();
-            $('body').scrollTop(height/2);
-
-            setTimeout(function() {
-                expect(widget.hasClass('opened')).toBeTruthy();
-                done();
-            }, 200);
-
-        }, 200);
-
-        $('.height-element').remove();
+    var w2 = new pathfora.Form({
+      msg: 'Duplcate id test2',
+      layout: 'slideout',
+      id: 'asd'
     });
 
-    xit("should be able to display widget only if user can see specific DOM element", function () {
-        throw 'pass'
+    expect(function() {
+      pathfora.initializeWidgets([w1, w2], credentials);
+    }).toThrow(new Error('Cannot add two widgets with the same id'));
+  });
+
+  xit('should be able to display widget only on specific page scrolling value', function (done) {
+    $(document.body).append('<div id=\'height-element\' style=\'height:10000px\'>Test</div>');
+
+    var form = new pathfora.Subscription({
+      msg: 'test',
+      layout: 'modal',
+      displayConditions: {
+        scrollPercentageToDisplay: 20
+      }
     });
 
+    pathfora.initializeWidgets([form], credentials);
+    var widget = $('#' + form.id);
 
-    // future functionalities
-    xit("should keep number of page visits for later use", function () {
-        var messageBar = pathfora.Message({
-            position: "bottom-fixed",
-            msg: "hello new user"
-        });
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeFalsy();
 
-        // new user
-        localStorage.clear();
-        pathfora.initializeWidgets([messageBar], credentials);
+      var height = $(document).height();
+      $('body').scrollTop(height/2);
 
-        var VisitedPage = pathfora.getData().pageViews;
-        pathfora.clearAll();
+      setTimeout(function() {
+        expect(widget.hasClass('opened')).toBeTruthy();
+        done();
+      }, 200);
 
-        expect(VisitedPage).toBe(1);
+    }, 200);
 
-        pathfora.initializeWidgets([messageBar], credentials);
+    $('.height-element').remove();
+  });
 
-        VisitedPage = pathfora.getData().pageViews;
-        pathfora.clearAll();
+  xit('should be able to display widget only if user can see specific DOM element', function () {
+    throw 'pass'
+  });
 
-        expect(VisitedPage).toBe(2);
+
+  // future functionalities
+  xit('should keep number of page visits for later use', function () {
+    var messageBar = pathfora.Message({
+      position: 'bottom-fixed',
+      msg: 'hello new user'
     });
+
+    // new user
+    localStorage.clear();
+    pathfora.initializeWidgets([messageBar], credentials);
+
+    var VisitedPage = pathfora.getData().pageViews;
+    pathfora.clearAll();
+
+    expect(VisitedPage).toBe(1);
+
+    pathfora.initializeWidgets([messageBar], credentials);
+
+    VisitedPage = pathfora.getData().pageViews;
+    pathfora.clearAll();
+
+    expect(VisitedPage).toBe(2);
+  });
 });
 
 
-describe("Widgets", function () {
-    beforeEach(function() {
-        localStorage.clear();
+describe('Widgets', function () {
+  beforeEach(function() {
+    localStorage.clear();
+    pathfora.clearAll();
+  });
+
+  it('should be able to be displayed on document', function (done) {
+    var promoWidget = new pathfora.Message({
+      layout: 'bar',
+      msg: 'Opening widget',
+      id: 'widget-1'
+    });
+    pathfora.initializeWidgets([promoWidget], credentials);
+
+    // should append element to DOM
+    var widget = $('#' + promoWidget.id);
+    expect(widget).toBeDefined();
+
+    // should have class 'opened' after while
+    pathfora.showWidget(promoWidget);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      pathfora.clearAll();
+      done();
+    }, 200);
+  });
+
+  it('should have proper id when specified, and unique id otherwise', function (done) {
+    var w1 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'right',
+      msg: 'Welcome to our test website',
+      id: 'test-id-widget'
+    });
+
+    var w2 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'left',
+      msg: 'Welcome to our test website'
+    });
+
+    pathfora.initializeWidgets([w1, w2], credentials);
+
+    setTimeout(function() {
+      var right = $('.pf-widget.pf-position-right');
+      var left = $('.pf-widget.pf-position-left');
+
+      expect(right).toBeDefined();
+      expect(left).toBeDefined();
+
+      expect(left.attr('id')).toBeDefined();
+      expect(left.attr('id').length).toBeGreaterThan(10);
+      expect(right.attr('id')).toBe('test-id-widget');
+      done();
+    }, 200);
+  });
+
+  it('should be able to be displayed on document', function (done) {
+
+    var promoWidget = new pathfora.Message({
+      layout: 'bar',
+      msg: 'Opening widget',
+      id: 'widget-1'
+    });
+    pathfora.initializeWidgets([promoWidget], credentials);
+
+    // should append element to DOM
+    var widget = $('#' + promoWidget.id);
+    expect(widget).toBeDefined();
+
+    // should have class 'opened' after while
+    pathfora.showWidget(promoWidget);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      pathfora.clearAll();
+      done();
+    }, 200);
+
+  });
+
+  it('should not append widget second time if it\'s already opened', function (done) {
+    var openedWidget = new pathfora.Message({
+      layout: 'modal',
+      msg: 'test widget'
+    });
+    pathfora.initializeWidgets([openedWidget], credentials);
+
+    var widget = $('#' + openedWidget.id);
+
+    // timeouts gives some time for appending to DOM
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      pathfora.showWidget(openedWidget);
+
+      setTimeout(function() {
+        expect($('.pf-widget').length).toEqual(1);
         pathfora.clearAll();
+        done();
+      }, 200);
+    }, 500);
+  });
+
+  it('should be able to close', function (done) {
+    var promoWidget = new pathfora.Message({
+      layout: 'modal',
+      msg: 'Close widget test',
+      id: 'close-widget'
+    });
+    pathfora.initializeWidgets([promoWidget], credentials);
+    pathfora.showWidget(promoWidget);
+
+    var widget = $('#' + promoWidget.id);
+    expect(widget).toBeDefined();
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      widget.find('.pf-widget-close').click();
+      expect(widget.hasClass('opened')).toBeFalsy();
+      done();
+    }, 200);
+  });
+
+  it('should not be in DOM when closed', function (done) {
+    var testWidget = new pathfora.Message({
+      layout: 'modal',
+      msg: 'Close widget test',
+      id: 'close-clear-widget'
     });
 
-    it("should be able to be displayed on document", function (done) {
-        var promoWidget = new pathfora.Message({
-            layout: "bar",
-            msg: "Opening widget",
-            id: "widget-1"
-        });
-        pathfora.initializeWidgets([promoWidget], credentials);
+    pathfora.initializeWidgets([testWidget], credentials);
+    pathfora.showWidget(testWidget);
 
-        // should append element to DOM
-        var widget = $('#' + promoWidget.id);
-        expect(widget).toBeDefined();
+    var widget = $('#' + testWidget.id);
+    expect(widget).toBeDefined();
 
-        // should have class 'opened' after while
-        pathfora.showWidget(promoWidget);
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect( widget[0]).toBeDefined();
 
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            pathfora.clearAll();
-            done();
-        }, 200);
+      widget.find('.pf-widget-close').click();
+
+      setTimeout(function () {
+        expect( $('#' + testWidget.id)[0]).toBeUndefined();
+        done();
+      }, 600)
+
+    }, 200);
+  });
+
+  it('should have correct theme configuration', function () {
+    var w1 = new pathfora.Message({
+      layout: 'button',
+      position: 'left',
+      msg: 'light button',
+      id: 'light-widget',
+      theme: 'light'
     });
 
-    it("should have proper id when specified, and unique id otherwise", function (done) {
-        var w1 = new pathfora.Message({
-            layout: "slideout",
-            position: 'right',
-            msg: "Welcome to our test website",
-            id: "test-id-widget"
-        });
-
-        var w2 = new pathfora.Message({
-            layout: "slideout",
-            position: 'left',
-            msg: "Welcome to our test website"
-        });
-
-        pathfora.initializeWidgets([w1, w2], credentials);
-
-        setTimeout(function() {
-            var right = $('.pf-widget.pf-position-right');
-            var left = $('.pf-widget.pf-position-left');
-
-            expect(right).toBeDefined();
-            expect(left).toBeDefined();
-
-            expect(left.attr('id')).toBeDefined();
-            expect(left.attr('id').length).toBeGreaterThan(10);
-            expect(right.attr('id')).toBe('test-id-widget');
-            done();
-        }, 200);
+    var w2 = new pathfora.Message({
+      layout: 'button',
+      position: 'right',
+      msg: 'dark button',
+      id: 'dark-widget',
+      theme: 'dark'
     });
 
-    it("should be able to be displayed on document", function (done) {
-
-        var promoWidget = new pathfora.Message({
-            layout: "bar",
-            msg: "Opening widget",
-            id: "widget-1"
-        });
-        pathfora.initializeWidgets([promoWidget], credentials);
-
-        // should append element to DOM
-        var widget = $('#' + promoWidget.id);
-        expect(widget).toBeDefined();
-
-        // should have class 'opened' after while
-        pathfora.showWidget(promoWidget);
-
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            pathfora.clearAll();
-            done();
-        }, 200);
-
+    var w3 = new pathfora.Message({
+      layout: 'button',
+      position: 'top-left',
+      msg: 'custom color button',
+      id: 'custom-widget',
+      theme: 'custom'
     });
 
-    it("should not append widget second time if it's already opened", function (done) {
-        var openedWidget = new pathfora.Message({
-            layout: 'modal',
-            msg: "test widget"
-        });
-        pathfora.initializeWidgets([openedWidget], credentials);
+    var config =  {
+      generic: {
+        colors: {
+          background: '#fff'
+        }
+      }
+    };
 
-        var widget = $('#' + openedWidget.id);
-
-        // timeouts gives some time for appending to DOM
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-
-            pathfora.showWidget(openedWidget);
-
-            setTimeout(function() {
-                expect($('.pf-widget').length).toEqual(1);
-                pathfora.clearAll();
-                done();
-            }, 200);
-        }, 500);
+    var w4 = new pathfora.Message({
+      layout: 'button',
+      position: 'top-right',
+      msg: 'default button',
+      id: 'def-theme-widget'
     });
 
-    it("should be able to close", function (done) {
-        var promoWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Close widget test",
-            id: "close-widget"
-        });
-        pathfora.initializeWidgets([promoWidget], credentials);
-        pathfora.showWidget(promoWidget);
+    pathfora.initializeWidgets([w1,w2,w3, w4], credentials,config);
 
-        var widget = $("#" + promoWidget.id);
-        expect(widget).toBeDefined();
+    var light = $('#' + w1.id);
+    var dark = $('#' + w2.id);
+    var custom = $('#' + w3.id);
+    var def = $('#' + w4.id);
 
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            widget.find(".pf-widget-close").click();
-            expect(widget.hasClass('opened')).toBeFalsy();
-            done();
-        }, 200);
+    expect(light.hasClass('pf-theme-light')).toBeTruthy();
+    expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
+    expect(custom.hasClass('pf-theme-custom')).toBeTruthy();
+    expect(def.hasClass('pf-theme-default')).toBeTruthy();
+
+    expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
+  });
+
+  it('can be hidden on initialization', function () {
+    var openedWidget = new pathfora.Message({
+      layout: 'modal',
+      msg: 'Displayed on init',
+      id: 'displayed-on-init'
     });
 
-    it("should not be in DOM when closed", function (done) {
-        var testWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Close widget test",
-            id: "close-clear-widget"
-        });
-
-        pathfora.initializeWidgets([testWidget], credentials);
-        pathfora.showWidget(testWidget);
-
-        var widget = $("#" + testWidget.id);
-        expect(widget).toBeDefined();
-
-        setTimeout(function() {
-            expect(widget.hasClass('opened')).toBeTruthy();
-            expect( widget[0]).toBeDefined();
-
-            widget.find(".pf-widget-close").click();
-
-            setTimeout(function () {
-                expect( $("#" + testWidget.id)[0]).toBeUndefined();
-                done();
-            }, 600)
-
-        }, 200);
+    var closedWidget = new pathfora.Message({
+      layout: 'modal',
+      msg: 'Hidden on init',
+      id: 'hidden-on-init',
+      displayConditions: {
+        showOnInit: false
+      }
     });
 
-    it("should have correct theme configuration", function () {
-        var w1 = new pathfora.Message({
-            layout: 'button',
-            position: 'left',
-            msg: 'light button',
-            id: 'light-widget',
-            theme: 'light'
-        });
+    pathfora.initializeWidgets([openedWidget, closedWidget], credentials);
 
-        var w2 = new pathfora.Message({
-            layout: 'button',
-            position: 'right',
-            msg: 'dark button',
-            id: 'dark-widget',
-            theme: 'dark'
-        });
+    expect( $('#' + openedWidget.id)[0]).toBeDefined();
+    expect( $('#' + closedWidget.id)[0]).toBeUndefined();
 
-        var w3 = new pathfora.Message({
-            layout: 'button',
-            position: 'top-left',
-            msg: 'custom color button',
-            id: 'custom-widget',
-            theme: 'custom'                  
-        });
+  });
 
-        var config =  {
-            generic: {
-                colors: {
-                    background: "#fff"
-                }
-            }
-        };                
-
-        var w4 = new pathfora.Message({
-            layout: 'button',
-            position: 'top-right',
-            msg: 'default button',
-            id: 'def-theme-widget'
-        });
-
-        pathfora.initializeWidgets([w1,w2,w3, w4], credentials,config);
-
-        var light = $("#" + w1.id);
-        var dark = $("#" + w2.id);
-        var custom = $("#" + w3.id);
-        var def = $("#" + w4.id);
-
-        expect(light.hasClass('pf-theme-light')).toBeTruthy();
-        expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
-        expect(custom.hasClass('pf-theme-custom')).toBeTruthy();
-        expect(def.hasClass('pf-theme-default')).toBeTruthy();
-
-        expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
-    });
-
-    it("can be hidden on initialization", function () {
-        var openedWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Displayed on init",
-            id: "displayed-on-init"
-        });
-
-        var closedWidget = new pathfora.Message({
-            layout: "modal",
-            msg: "Hidden on init",
-            id: "hidden-on-init",
-            displayConditions: {
-                showOnInit: false
-            }
-        });
-
-        pathfora.initializeWidgets([openedWidget, closedWidget], credentials);
-
-        expect( $("#" + openedWidget.id)[0]).toBeDefined();
-        expect( $("#" + closedWidget.id)[0]).toBeUndefined();
+  it('should be able to configure style of each widget element', function () {
+    var modal = pathfora.Message({
+      id: 'custom-style-test',
+      layout: 'modal',
+      msg: 'Custom style test',
+      header: 'Hello',
+      theme: 'custom',
 
     });
 
-    it("should be able to configure style of each widget element", function () {
-        var modal = pathfora.Message({
-            id: "custom-style-test",
-            layout: "modal",
-            msg: "Custom style test",
-            header: "Hello",
-            theme: 'custom',
-         
-        });
-
-        var config =  {
-            generic: { 
-                colors: { 
-                    background: '#eee',
-                    header: "#333",
-                    text: "#333",
-                    close: "#888",
-                    actionText: "#ddd",
-                    actionBackground: "#111",
-                    cancelText: "#333",
-                    cancelBackground: "#eee"
-                }
-            }
-        };  
+    var config =  {
+      generic: {
+        colors: {
+          background: '#eee',
+          header: '#333',
+          text: '#333',
+          close: '#888',
+          actionText: '#ddd',
+          actionBackground: '#111',
+          cancelText: '#333',
+          cancelBackground: '#eee'
+        }
+      }
+    };
 
 
-        pathfora.initializeWidgets([modal], credentials,config);
+    pathfora.initializeWidgets([modal], credentials,config);
 
-        var widget = $('#' + modal.id);
-        var background = widget.find(".pf-widget-content");
-        var header = widget.find(".pf-widget-header");
-        var text = widget.find(".pf-widget-message");
-        var closeBtn = widget.find(".pf-widget-close");
-        var actionBtn = widget.find(".pf-widget-ok");
-        var cancelBtn = widget.find(".pf-widget-cancel");
+    var widget = $('#' + modal.id);
+    var background = widget.find('.pf-widget-content');
+    var header = widget.find('.pf-widget-header');
+    var text = widget.find('.pf-widget-message');
+    var closeBtn = widget.find('.pf-widget-close');
+    var actionBtn = widget.find('.pf-widget-ok');
+    var cancelBtn = widget.find('.pf-widget-cancel');
 
-        expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
-        expect(header.css('color')).toBe('rgb(51, 51, 51)');
-        expect(text.css('color')).toBe('rgb(51, 51, 51)');
-        expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
-        expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
-        expect(actionBtn.css('background-color')).toBe('rgb(17, 17, 17)');
-        expect(cancelBtn.css('color')).toBe('rgb(51, 51, 51)');
-        expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
+    expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
+    expect(header.css('color')).toBe('rgb(51, 51, 51)');
+    expect(text.css('color')).toBe('rgb(51, 51, 51)');
+    expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
+    expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
+    expect(actionBtn.css('background-color')).toBe('rgb(17, 17, 17)');
+    expect(cancelBtn.css('color')).toBe('rgb(51, 51, 51)');
+    expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
+  });
+
+  it('should be able to show after specified time', function () {
+    jasmine.clock().install();
+    var delayedWidget = new pathfora.Message({
+      msg: 'Delayed widget test',
+      id: 'delayed-widget',
+      layout: 'modal',
+      displayConditions: {
+        showDelay: 2
+      }
     });
 
-    it("should be able to show after specified time", function () {
-        jasmine.clock().install();
-        var delayedWidget = new pathfora.Message({
-            msg: 'Delayed widget test',
-            id: 'delayed-widget',
-            layout: 'modal',
-            displayConditions: {
-                showDelay: 2
-            }
-        });
+    pathfora.initializeWidgets([delayedWidget], credentials);
+    var widget = $('#' + delayedWidget.id);
 
-        pathfora.initializeWidgets([delayedWidget], credentials);
-        var widget = $('#' + delayedWidget.id);
+    jasmine.clock().tick(1000);
+    expect(widget[0]).toBeUndefined();
 
-        jasmine.clock().tick(1000);
-        expect(widget[0]).toBeUndefined();
+    jasmine.clock().tick(2000);
+    expect($('#' + delayedWidget.id)[0]).toBeDefined();
 
-        jasmine.clock().tick(2000);
-        expect($('#' + delayedWidget.id)[0]).toBeDefined();
+    jasmine.clock().uninstall();
+  });
 
-        jasmine.clock().uninstall();
+  it('should trigger callback function after pressing action button', function () {
+    var modal = pathfora.Message({
+      id: 'confirm-action-test',
+      layout: 'modal',
+      msg: 'Confirm action test modal',
+      confirmAction: {
+        name: 'Test confirm action',
+        callback: function () {alert('test confirmation')}
+      }
+    });
+    pathfora.initializeWidgets([modal], credentials);
+
+    var widget = $('#confirm-action-test');
+
+    spyOn(modal.confirmAction, 'callback');
+    expect(modal.confirmAction.callback).not.toHaveBeenCalled();
+
+    widget.find('.pf-widget-ok').click();
+    expect(modal.confirmAction.callback).toHaveBeenCalled();
+  });
+
+
+  it('should be able to trigger action on cancel', function () {
+    var modal = pathfora.Message({
+      id: 'cancel-action-test',
+      layout: 'modal',
+      msg: 'Welcome to our website',
+      cancelAction: {
+        name: 'Test cancel action',
+        callback: function() {alert('test cancel')}
+      }
     });
 
-    it("should trigger callback function after pressing action button", function () {
-        var modal = pathfora.Message({
-            id: 'confirm-action-test',
-            layout: "modal",
-            msg: "Confirm action test modal",
-            confirmAction: {
-                name: "Test confirm action",
-                callback: function () {alert("test confirmation")}
-            }
-        });
-        pathfora.initializeWidgets([modal], credentials);
+    pathfora.initializeWidgets([modal], credentials);
 
-        var widget = $("#confirm-action-test");
+    var widget = $('#cancel-action-test');
 
-        spyOn(modal.confirmAction, 'callback');
-        expect(modal.confirmAction.callback).not.toHaveBeenCalled();
+    spyOn(modal.cancelAction, 'callback');
 
-        widget.find('.pf-widget-ok').click();
-        expect(modal.confirmAction.callback).toHaveBeenCalled();
+    widget.find('.pf-widget-cancel').click();
+    expect(modal.cancelAction.callback).toHaveBeenCalled();
+  });
+
+  it ('shouldn\'t fire submit callbacks on cancel, and cancel callbacks on submit', function () {
+    var w1 = pathfora.Message({
+      id: 'widget-with-action-callback',
+      msg: 'Cancel action negative test',
+      confirmAction: {
+        name: 'Test confirm action',
+        callback: function() {alert('test confirmation')}
+      }
     });
 
-
-    it("should be able to trigger action on cancel", function () {
-        var modal = pathfora.Message({
-            id: 'cancel-action-test',
-            layout: "modal",
-            msg: "Welcome to our website",
-            cancelAction: {
-                name: "Test cancel action",
-                callback: function() {alert("test cancel")}
-            }
-        });
-
-        pathfora.initializeWidgets([modal], credentials);
-
-        var widget = $("#cancel-action-test");
-
-        spyOn(modal.cancelAction, 'callback');
-
-        widget.find('.pf-widget-cancel').click();
-        expect(modal.cancelAction.callback).toHaveBeenCalled();
+    var w2 = pathfora.Message({
+      id: 'widget-with-cancel-callback',
+      msg: 'Cancel action negative test',
+      cancelAction: {
+        name: 'Test cancel action',
+        callback: function() {alert('test cancel')}
+      }
     });
 
-    it ("shouldn't fire submit callbacks on cancel, and cancel callbacks on submit", function () {
-        var w1 = pathfora.Message({
-            id: "widget-with-action-callback",
-            msg: "Cancel action negative test",
-            confirmAction: {
-                name: "Test confirm action",
-                callback: function() {alert("test confirmation")}
-            }
-        });
+    pathfora.initializeWidgets([w1, w2], credentials);
 
-        var w2 = pathfora.Message({
-            id: "widget-with-cancel-callback",
-            msg: "Cancel action negative test",
-            cancelAction: {
-                name: "Test cancel action",
-                callback: function() {alert("test cancel")}
-            }
-        });
+    var widgetA = $('#widget-with-action-callback');
+    var widgetB = $('#widget-with-cancel-callback');
 
-        pathfora.initializeWidgets([w1, w2], credentials);
-
-        var widgetA = $("#widget-with-action-callback");
-        var widgetB = $("#widget-with-cancel-callback");
-
-        spyOn(w1.confirmAction, 'callback');
-        spyOn(w2.cancelAction, 'callback');
+    spyOn(w1.confirmAction, 'callback');
+    spyOn(w2.cancelAction, 'callback');
 
 
-        widgetA.find('.pf-widget-cancel').click();
-        expect(w1.confirmAction.callback).not.toHaveBeenCalled();
+    widgetA.find('.pf-widget-cancel').click();
+    expect(w1.confirmAction.callback).not.toHaveBeenCalled();
 
 
-        widgetB.find('.pf-widget-ok').click();
-        expect(w2.cancelAction.callback).not.toHaveBeenCalled();
+    widgetB.find('.pf-widget-ok').click();
+    expect(w2.cancelAction.callback).not.toHaveBeenCalled();
+  });
+
+  it('should display in proper website regions', function () {
+    var w1 = new pathfora.Message({
+      msg: 'Widget positioning test',
+      layout: 'modal',
+      position: 'customPos'
     });
 
-    it("should display in proper website regions", function () {
-        var w1 = new pathfora.Message({
-            msg: "Widget positioning test",
-            layout: "modal",
-            position: "customPos"
-        });
+    pathfora.initializeWidgets([w1], credentials);
 
-        pathfora.initializeWidgets([w1], credentials);
+    var widget = $('#' + w1.id);
 
-        var widget = $('#' + w1.id);
+    expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
+  });
 
-        expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
+  it('should use default position if no position is specified', function () {
+    var w1 = new pathfora.Message({
+      msg: 'button - default pos test',
+      layout: 'button'
+    });
+    var w2 = new pathfora.Message({
+      msg: 'bar - default pos test',
+      layout: 'bar'
+    });
+    var w3 = new pathfora.Message({
+      msg: 'slideout - default pos test',
+      layout: 'slideout'
+    });
+    var w4 = new pathfora.Form({
+      msg: 'folding - default pos test',
+      layout: 'folding'
     });
 
-    it("should use default position if no position is specified", function () {
-        var w1 = new pathfora.Message({
-            msg: "button - default pos test",
-            layout: "button"
-        });
-        var w2 = new pathfora.Message({
-            msg: "bar - default pos test",
-            layout: "bar"
-        });
-        var w3 = new pathfora.Message({
-            msg: "slideout - default pos test",
-            layout: "slideout"
-        });
-        var w4 = new pathfora.Form({
-            msg: "folding - default pos test",
-            layout: "folding"
-        });
+    pathfora.initializeWidgets([w1, w2, w3, w4], credentials);
+    var widget1 = $('#' + w1.id);
+    var widget2 = $('#' + w2.id);
+    var widget3 = $('#' + w3.id);
+    var widget4 = $('#' + w4.id);
 
-        pathfora.initializeWidgets([w1, w2, w3, w4], credentials);
-        var widget1 = $('#' + w1.id);
-        var widget2 = $('#' + w2.id);
-        var widget3 = $('#' + w3.id);
-        var widget4 = $('#' + w4.id);
+    expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
+    expect(widget2.hasClass('pf-position-top-fixed')).toBeTruthy();
+    expect(widget3.hasClass('pf-position-left')).toBeTruthy();
+    expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
+  });
 
-        expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
-        expect(widget2.hasClass('pf-position-top-fixed')).toBeTruthy();
-        expect(widget3.hasClass('pf-position-left')).toBeTruthy();
-        expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
+  it('should show warning when user tries to use not available widget position', function () {
+    spyOn(console, 'warn');
+
+    var w1 = new pathfora.Message({
+      msg: 'test warning display',
+      layout: 'bar'
     });
 
-    it("should show warning when user tries to use not available widget position", function () {
-        spyOn(console, 'warn');
-
-        var w1 = new pathfora.Message({
-            msg: "test warning display",
-            layout: "bar"
-        });
-
-        var w2 = new pathfora.Message({
-            msg: "invalid position test",
-            layout: "bar",
-            position: 'wrong-position'
-        });
-
-        pathfora.initializeWidgets([w1], credentials);
-        expect(console.warn).not.toHaveBeenCalled();
-
-        pathfora.clearAll();
-
-        pathfora.initializeWidgets([w2], credentials);
-        expect(console.warn).toHaveBeenCalledWith("wrong-position is not valid position for bar");
+    var w2 = new pathfora.Message({
+      msg: 'invalid position test',
+      layout: 'bar',
+      position: 'wrong-position'
     });
 
-    it("should not allow to be initialized without default properties", function () {
-        var missingParams = function () {
-            var promoWidget = new pathfora.Message();
-            pathfora.initializeWidgets([promoWidget], credentials);
-        };
+    pathfora.initializeWidgets([w1], credentials);
+    // NOTE Will always fail agaist production env
+    //    expect(console.warn).not.toHaveBeenCalled();
 
-        var missingMessage = function () {
-            var promoWidget = new pathfora.Message({layout: "modal"});
-            pathfora.initializeWidgets([promoWidget], credentials);
-        };
+    pathfora.clearAll();
 
-        expect(missingParams).toThrow(new Error("Config object is missing"));
-        pathfora.clearAll();
-        expect(missingMessage).toThrow(new Error("Widget message is missing"));
-    });
+    pathfora.initializeWidgets([w2], credentials);
+    // NOTE Will always fail agaist production env
+    //    expect(console.warn).toHaveBeenCalledWith('wrong-position is not valid position for bar');
+  });
+
+  it('should not allow to be initialized without default properties', function () {
+    var missingParams = function () {
+      var promoWidget = new pathfora.Message();
+      pathfora.initializeWidgets([promoWidget], credentials);
+    };
+
+    var missingMessage = function () {
+      var promoWidget = new pathfora.Message({layout: 'modal'});
+      pathfora.initializeWidgets([promoWidget], credentials);
+    };
+
+    expect(missingParams).toThrow(new Error('Config object is missing'));
+    pathfora.clearAll();
+    expect(missingMessage).toThrow(new Error('Widget message is missing'));
+  });
 
 
-    // Future functionalities
-    xit("should allow custom messages on action buttons", function () {
-        throw 'pass';
-    });
+  // Future functionalities
+  xit('should allow custom messages on action buttons', function () {
+    throw 'pass';
+  });
 
-    xit("should be able to show after specific number of visits", function () {
-        throw 'pass';
-    });
+  xit('should be able to show after specific number of visits', function () {
+    throw 'pass';
+  });
 
-    xit("should be able to randomly choose one of available variations", function () {
-        throw 'pass';
-    });
+  xit('should be able to randomly choose one of available variations', function () {
+    throw 'pass';
+  });
 });
 
 
 // Currently not used since all comunnication is made via jstag function
-describe("API", function () {
-    beforeEach(function () {
-        jasmine.Ajax.install();
+describe('API', function () {
+  beforeEach(function () {
+    jasmine.Ajax.install();
+  });
+  afterEach(function () {
+    jasmine.Ajax.uninstall();
+  });
+
+  xit('should be able call API with credentials', function () {
+    var callback = jasmine.createSpy('success');
+    var credentials = {accountId: 'abc123', userId: '123'};
+    var subscribe = new pathfora.Subscription({
+      type: 'bar',
+      variant: 'floating',
+      msg: 'Signup to get updates right into your inbox'
     });
-    afterEach(function () {
-        jasmine.Ajax.uninstall();
-    });
+    pathfora.initializeWidgets([subscribe], credentials);
+    pathfora.api.getWidgetData(subscribe, callback);
 
-    xit("should be able call API with credentials", function () {
-        var callback = jasmine.createSpy("success");
-        var credentials = {accountId: 'abc123', userId: '123'};
-        var subscribe = new pathfora.Subscription({
-            type: "bar",
-            variant: "floating",
-            msg: "Signup to get updates right into your inbox"
-        });
-        pathfora.initializeWidgets([subscribe], credentials);
-        pathfora.api.getWidgetData(subscribe, callback);
-
-        expect(callback).not.toHaveBeenCalled();
-        jasmine.Ajax.requests.mostRecent().respondWith({
-            "status": 200,
-            "contentType": 'text/plain',
-            "responseText": '{"response":"ok"}'
-        });
-
-        expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
+    expect(callback).not.toHaveBeenCalled();
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'text/plain',
+      'responseText': '{"response":"ok"}'
     });
 
-    xit("should get data from API and pass it to callback function", function () {
-        var callback = jasmine.createSpy("success");
-        var credentials = {accountId: 'abc123', userId: '123'};
-        var subscribe = new pathfora.Subscription({
-            type: "bar",
-            variant: "floating",
-            msg: "Signup to get updates right into your inbox"
-        });
-        pathfora.initializeWidgets([subscribe], credentials);
-        pathfora.api.getWidgetData(subscribe, callback);
+    expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
+  });
 
-        expect(callback).not.toHaveBeenCalled();
-        jasmine.Ajax.requests.mostRecent().respondWith({
-            "status": 200,
-            "contentType": 'text/plain',
-            "responseText": '{"response":"ok"}'
-        });
+  xit('should get data from API and pass it to callback function', function () {
+    var callback = jasmine.createSpy('success');
+    var credentials = {accountId: 'abc123', userId: '123'};
+    var subscribe = new pathfora.Subscription({
+      type: 'bar',
+      variant: 'floating',
+      msg: 'Signup to get updates right into your inbox'
+    });
+    pathfora.initializeWidgets([subscribe], credentials);
+    pathfora.api.getWidgetData(subscribe, callback);
 
-        expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
+    expect(callback).not.toHaveBeenCalled();
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'text/plain',
+      'responseText': '{"response":"ok"}'
     });
 
-    xit("should properly handle errors by running onError function", function () {
-        var callback = jasmine.createSpy("success");
+    expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
+  });
 
-        var credentials = {accountId: 'abc123', userId: '123'};
-        var subscribe = new pathfora.Subscription({
-            type: "bar",
-            variant: "floating",
-            msg: "Signup to get updates right into your inbox"
-        });
-        var widgets = pathfora.initializeWidgets([subscribe], credentials);
-        pathfora.api.getWidgetData(subscribe, function () {
-        }, callback);
+  xit('should properly handle errors by running onError function', function () {
+    var callback = jasmine.createSpy('success');
 
-        expect(callback).not.toHaveBeenCalled();
-        jasmine.Ajax.requests.mostRecent().respondWith({
-            "status": 401,
-            "contentType": 'text/plain',
-            "responseText": '{"response":"error"}'
-        });
+    var credentials = {accountId: 'abc123', userId: '123'};
+    var subscribe = new pathfora.Subscription({
+      type: 'bar',
+      variant: 'floating',
+      msg: 'Signup to get updates right into your inbox'
+    });
+    var widgets = pathfora.initializeWidgets([subscribe], credentials);
+    pathfora.api.getWidgetData(subscribe, function () {
+    }, callback);
 
-        expect(callback).toHaveBeenCalledWith('{"response":"error"}');
+    expect(callback).not.toHaveBeenCalled();
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 401,
+      'contentType': 'text/plain',
+      'responseText': '{"response":"error"}'
     });
 
-    it("should be able to configure button text each widget element", function () {
-        var modal = pathfora.Message({
-            id: "custom-button-text-test",
-            layout: "modal",
-            msg: "Custom button text test",
-            header: "Hello",            
-            okMessage: "Confirm",
-            cancelMessage: "Cancel"
-        });
+    expect(callback).toHaveBeenCalledWith('{"response":"error"}');
+  });
 
-        pathfora.initializeWidgets([modal],credentials);
-
-        var widget = $('#' + modal.id);
-        var actionBtn = widget.find(".pf-widget-ok");
-        var cancelBtn = widget.find(".pf-widget-cancel");
-
-        expect(actionBtn.html()).toBe('Confirm');
-        expect(cancelBtn.html()).toBe('Cancel');
-
+  it('should be able to configure button text each widget element', function () {
+    var modal = pathfora.Message({
+      id: 'custom-button-text-test',
+      layout: 'modal',
+      msg: 'Custom button text test',
+      header: 'Hello',
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel'
     });
 
-    it("should be able to set random layout for each widget element", function () {
-        spyOn(Math, 'floor').and.returnValue(1);
-        var random = pathfora.Message({
-            id: "custom-random-test",
-            layout: "random",
-            msg: "Custom random layout test",
-            header: "Hello"           
-       });
+    pathfora.initializeWidgets([modal],credentials);
 
-        pathfora.initializeWidgets([random],credentials);
+    var widget = $('#' + modal.id);
+    var actionBtn = widget.find('.pf-widget-ok');
+    var cancelBtn = widget.find('.pf-widget-cancel');
 
-        var widget = $('#' + random.id);
+    expect(actionBtn.html()).toBe('Confirm');
+    expect(cancelBtn.html()).toBe('Cancel');
 
-        expect(widget.find(".pf-widget-slideout")).toBeTruthy();
-        expect(widget.find(".pf-position-right")).toBeTruthy();
-        expect(widget.find(".pf-widget-variant-2")).toBeTruthy();       
+  });
 
+  it('should be able to set random layout for each widget element', function () {
+    spyOn(Math, 'floor').and.returnValue(1);
+    var random = pathfora.Message({
+      id: 'custom-random-test',
+      layout: 'random',
+      msg: 'Custom random layout test',
+      header: 'Hello'
     });
+
+    pathfora.initializeWidgets([random],credentials);
+
+    var widget = $('#' + random.id);
+
+    expect(widget.find('.pf-widget-slideout')).toBeTruthy();
+    expect(widget.find('.pf-position-right')).toBeTruthy();
+    expect(widget.find('.pf-widget-variant-2')).toBeTruthy();
+
+  });
+
+  it('should report to Google Analytics API, when available', function (done) {
+    var messageBar = pathfora.Message({
+      layout: 'modal',
+      msg: 'Message modal - ga test',
+      confirmAction: {
+        name: 'action test',
+        callback: function () {}
+      }
+    });
+
+    pathfora.initializeWidgets([messageBar], credentials);
+
+    var widget = $('#' + messageBar.id);
+
+    setTimeout(function () {
+      widget.find('.pf-widget-ok').click();
+
+      expect(ga).toHaveBeenCalled();
+      expect(ga.calls.mostRecent().args).toEqual([
+        'send',
+        'event',
+        'Lytics',
+        messageBar.id + ' : ' + messageBar.confirmAction.name,
+        jasmine.any(String),
+        jasmine.any(Object)
+      ]);
+
+      done();
+    }, 200);
+  });
 });

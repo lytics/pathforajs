@@ -1,1421 +1,1844 @@
-// 'use strict';
-// Pathfora API
+/* global jstag, ga, pfCfg */
+"use strict";
 
+/**
+ * @module Pathfora-API
+ */
 (function (context, document) {
+  // NOTE Output & processing variables
+  var Pathfora;
+  var utils;
+  var core;
+  var api;
+
+  // NOTE Default configuration object (originalConf is used when default data gets overriden)
+  var originalConf;
+  var defaultPositions = {
+    modal: '',
+    slideout: 'left',
+    button: 'top-left',
+    bar: 'top-fixed',
+    folding: 'bottom-left'
+  };
+  var defaultProps = {
+    generic: {
+      className: 'pathfora',
+      header: '',
+      theme: 'default',
+      themes: {
+        default: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
+        },
+        dark: {
+          background: '#333',
+          header: '#fff',
+          text: '#fff',
+          close: '#888',
+          actionText: '#fff',
+          actionBackground: '#597E9B',
+          cancelText: '#fff',
+          cancelBackground: '#597E9B'
+        },
+        light: {
+          background: '#ddd',
+          header: '#333',
+          text: '#333',
+          close: '#999',
+          actionText: '#333',
+          actionBackground: '#eee',
+          cancelText: '#333',
+          cancelBackground: '#eee'
+        }
+      },
+      displayConditions: {
+        showOnInit: true,
+        showDelay: 0,
+        hideAfter: 0,
+        displayWhenElementVisible: '',
+        scrollPercentageToDisplay: 0
+      }
+    },
+    message: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      cancelButton: true,
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    subscription: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        email: 'Email'
+      },
+      okMessage: 'Confirm',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    },
+    form: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        name: 'Name',
+        title: 'Title',
+        email: 'Email',
+        message: 'Message'
+      },
+      okMessage: 'Send',
+      cancelMessage: 'Cancel',
+      okShow: true,
+      cancelShow: true
+    }
+  };
+
+  // NOTE HTML templates
+  // FUTURE Move to separate files and concat
+  var templates = {
+    message: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
+      button: '<p class="pf-widget-message pf-widget-ok"></p>',
+      inline: ''
+    },
+    subscription: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
+    },
+    form: {
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+    },
+    social: {
+      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
+      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
+      googleIcon: '<div class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
+    }
+  };
+
+  var scripts = {
+    facebook: '<div id="fb-root"></div>',
+    google: ''
+  };
+
+  /*
+  <script type="text/javascript">(function() {var po = document.createElement("script");po.type = "text/javascript"; po.async = true;po.src = "https://plus.google.com/js/client:plusone.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(po, s);})();</script>
+   */
+  // NOTE Event callback types
+  var callbackTypes = {
+    INIT: 'widgetInitialized',
+    LOAD: 'widgetLoaded',
+    CLICK: 'buttonClicked',
+    FORM_SUBMIT: 'formSubmitted',
+    MODAL_OPEN: 'modalOpened',
+    MODAL_CLOSE: 'modalClosed'
+  };
+
+  // NOTE Empty Pathfora data object, containg all data stored by lib
+  /*
+   * @global
+   * @property pathforaDataObject
+   * @description Pathfora data state object
+   */
+  var pathforaDataObject = {
+    pageViews: 0,
+    timeSpentOnPage: 0,
+    closedWidgets: [],
+    completedActions: [],
+    cancelledActions: [],
+    displayedWidgets: [],
+    socialNetworks: {}
+  };
+
+  /**
+   * @function appendPathforaStylesheet
+   * @description Appends pathfora stylesheet to document
+   */
+  var appendPathforaStylesheet = function () {
+    var head;
+    var link;
+
+    head = document.getElementsByTagName('head')[0];
+    link = document.createElement('link');
+
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+
+    // NOTE Need to update the cdn version. For now use local.
+//    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    link.setAttribute('href', '../dist/pathfora.min.css');
+    head.appendChild(link);
+  };
+
+  /**
+   * @namespace
+   * @name utils
+   * @description Helper utility functions
+   */
+  utils = {
 
     /**
-     * Appends pathfora stylesheet to document
+     * @description Check if DOM node has the provided class
+     * @param   {object}  DOMNode   DOM element
+     * @param   {string}  className class name
      */
-    var appendPathforaStylesheet = function () {
-        var link = document.createElement('link');
-
-        link.setAttribute('rel', 'stylesheet');
-        link.setAttribute('type', 'text/css');
-        
-        // Need to update the cdn version. For now use local.
-        link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
-        var head = document.getElementsByTagName('head')[0];
-        head.appendChild(link);
-    };
+    hasClass: function (DOMNode, className) {
+      return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
+    },
 
     /**
-     * Regexp helper variables used by utility functions
-     * @type {RegExp}
+     * @description Add new classes to the DOM node (removes duplicates)
+     * @param   {object} DOMNode   DOM element
+     * @param   {string} className class name(s)
      */
-    var rclass = /[\t\r\n\f]/g,
-        rnotwhite = (/\S+/g),
-        rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+    addClass: function (DOMNode, className) {
+      // NOTE Not necessary, but leaves a clean code after mutations
+      this.removeClass(DOMNode, className);
 
+      DOMNode.className = [
+        DOMNode.className,
+        className
+      ].join(' ');
+    },
 
     /**
-     * Helper utility functions
-     * based on jQuery functions with some modifications
+     * @description Remove classes from the DOM node
+     * @param {object} DOMNode   DOM element
+     * @param {string} className class name(s)
      */
-    var utils = {
+    removeClass: function (DOMNode, className) {
+      var findClassRegexp = new RegExp([
+        '(^|\\b)',
+        className.split(' ').join('|'),
+        '(\\b|$)'
+      ].join(''), 'gi');
 
-        /**
-         * Checks is DOM node has provided class
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         * @returns {boolean}
-         */
-        hasClass: function (DOMnode, value) {
-            if (DOMnode.nodeType === 1 &&
-                (" " + DOMnode.className + " ").replace(rclass, " ").indexOf(" " + value + " ") >= 0) {
-                return true;
+      DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
+    },
+
+    /**
+     * @description Read browser Cookie value of specified name
+     * @param   {string} name cookie name
+     * @returns {string} cookie value
+     */
+    readCookie: function (name) {
+      var cookies = document.cookie;
+      var findCookieRegexp = new RegExp([
+        '(?:(?:^|.*;\s*)',
+        name,
+        '\s*\=\s*([^;]*).*$)|^.*$'
+      ].join(''), 'gi');
+
+      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
+    },
+
+    /**
+     * @description Save a new cookie
+     * @param {string} name  cookie name
+     * @param {string} value cookie value
+     * @param {number} days  days until the cookie expires
+     */
+    saveCookie: function (name, value, days) {
+      var expires;
+      var date;
+
+      if (days) {
+        date = new Date();
+        date.setDate(date.getDate() + days);
+        expires = '; expires=' + date.toGMTString();
+      } else {
+        expires = '';
+      }
+
+      context.document.cookie = [
+        name,
+        '=',
+        value,
+        expires,
+        '; path = /'
+      ].join('');
+    },
+
+    /**
+     * @description Generate unique ID
+     * @returns {string} unique id
+     */
+    generateUniqueId: function () {
+      var s4;
+
+      if (typeof s4 === 'undefined') {
+        s4 = function () {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        };
+      }
+
+      return [
+        s4(), s4(),
+        '-',
+        s4(),
+        '-',
+        s4(),
+        '-',
+        s4(),
+        '-',
+        s4(), s4(), s4()
+      ].join('');
+    }
+  };
+
+  /**
+   * @namespace
+   * @name core
+   * @description Core library function set
+   */
+  core = {
+    delayedWidgets: {},
+    openedWidgets: [],
+    initializedWidgets: [],
+    watchers: [],
+
+    /**
+     * @description Display a single widget
+     *              or register a handler for displaying it later
+     * @param {object} widget
+     */
+    initializeWidget: function (widget) {
+      var condition = widget.displayConditions;
+      var watcher;
+
+      if (condition.displayWhenElementVisible) {
+        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+        core.watchers.push(watcher);
+        core.initializeScrollWatchers(core.watchers);
+      } else if (condition.scrollPercentageToDisplay) {
+        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+        core.watchers.push(watcher);
+        core.initializeScrollWatchers(core.watchers);
+      } else if (condition.showOnInit) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    /**
+     * @description Take array of scroll aware elements
+     *              and check if it should display any
+     *              when user is scrolling the page
+     * @param {array} watchers
+     */
+    initializeScrollWatchers: function (watchers) {
+      if (!core.scrollListener) {
+        core.scrollListener = function () {
+          var key;
+
+          for (key in watchers) {
+            if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
+              watchers[key].check();
             }
-            return false;
-        },
+          }
+        };
+        // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
+        if (typeof context.addEventListener === 'function') {
+          context.addEventListener('scroll', core.scrollListener, false);
+        } else {
+          context.onscroll = core.scrollListener;
+        }
+      }
+    },
 
+    /**
+     * @description Take array of watchers and clear it
+     * @param {array} watchers
+     */
+    removeScrollWatchers: function (watchers) {
+      watchers.forEach(function (watcher) {
+        core.removeWatcher(watcher);
+      });
 
-        /**
-         * Adds class to passed DOM node
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         */
-        addClass: function (DOMnode, value) {
-            var classes, cur, clazz, j, finalValue;
-            if (typeof value === "string" && value) {
-                // The disjunction here is for better compressibility (see removeClass)
-                classes = (value || "").match(rnotwhite) || [];
-                cur = DOMnode.nodeType === 1 &&
-                (DOMnode.className ? (" " + DOMnode.className + " ").replace(rclass, " ") : " ");
-                if (cur) {
-                    j = 0;
-                    while ((clazz = classes[j++])) {
-                        if (cur.indexOf(" " + clazz + " ") < 0) {
-                            cur += clazz + " ";
-                        }
-                    }
-                    finalValue = cur == null ? "" : (cur + "").replace(rtrim, "");
-                    if (DOMnode.className !== finalValue) {
-                        DOMnode.className = finalValue;
-                    }
-                }
-            }
-        },
+      context.removeEventListener('scroll', core.scrollListener, false);
+    },
 
+    /**
+     * @description Register a time-tiggered widget
+     * @param {object} widget
+     */
+    registerDelayedWidget: function (widget) {
+      this.delayedWidgets[widget.id] = setTimeout(function () {
+        core.initializeWidget(widget);
+      }, widget.displayConditions.showDelay * 1000);
+    },
 
-        /**
-         * Removes class from DOM elmeent
-         * @param {object} DOMnode - DOM element
-         * @param {string} value - class name
-         */
-        removeClass: function (DOMnode, value) {
-            var classes, cur, clazz, j, finalValue;
-            if ((typeof value === "string" && value) && (DOMnode && DOMnode.nodeType === 1)) {
-                classes = (value || "").match(rnotwhite) || [];
-                // This expression is here for better compressibility (see addClass)
-                cur = (DOMnode.className ? (" " + DOMnode.className + " ").replace(rclass, " ") : "");
-                if (cur) {
-                    j = 0;
-                    while ((clazz = classes[j++])) {
-                        // Remove *all* instances
-                        while (cur.indexOf(" " + clazz + " ") >= 0) {
-                            cur = cur.replace(" " + clazz + " ", " ");
-                        }
-                    }
-                    finalValue = value ? (cur == null ? "" : (cur + "").replace(rtrim, "")) : "";
-                    if (DOMnode.className !== finalValue) {
-                        DOMnode.className = finalValue;
-                    }
-                }
-            }
-        },
+    /**
+     * @description Prevent timely delayed widget from initialization
+     * @param {object} widget
+     */
+    cancelDelayedWidget: function (widget) {
+      var delayObj = this.delayedWidgets[widget.id];
 
+      if (delayObj) {
+        clearTimeout(delayObj);
+        delete this.delayedWidgets[widget.id];
+      }
+    },
 
-        /**
-         * Reads browser Cookie value of specified name
-         * @param {string} name - cookie name
-         */
-        readCookie: function (name) {
-            var nameEQ,
-                ca,
-                i,
-                c;
-            nameEQ = name + "=";
-            ca = context.document.cookie.split(';');
-            for (i = 0; i < ca.length; i = i + 1) {
-                c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1, c.length);
-                }
-                if (c.indexOf(nameEQ) === 0) {
-                    return c.substring(nameEQ.length, c.length);
-                }
-            }
-            return null;
-        },
+    /**
+     * @description Register a scroll position-triggered widget
+     * @param   {number} percent scroll percentage at
+     *                   which the widget should be displayed
+     * @param   {object} widget
+     * @returns {object} object, containing onscroll callback function 'check'
+     */
+    registerPositionWatcher: function (percent, widget) {
+      var watcher = {
+        check: function () {
+          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
+          var offset = document.documentElement.scrollTop || document.body.scrollTop;
+          if (offset >= positionInPixels) {
+            context.pathfora.showWidget(widget);
+            core.removeWatcher(watcher);
+          }
+        }
+      };
 
-        /**
-         * Saves browser cookie
-         * @param {string} name - cookie name
-         * @param {string} value - cookie value
-         * @param {number} days - number of days until cookie expires
-         */
-        saveCookie: function (name, value, days) {
-            var expires,
-                date;
-            if (days) {
-                date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toGMTString();
+      return watcher;
+    },
+
+    /**
+     * @description Register element visibility-triggered widget
+     * @param   {string} id     trigger element id (DOMElement.id property)
+     * @param   {object} widget
+     * @returns {object} object, containing onscroll callback function 'check', and
+     *                   triggering element reference 'elem'
+     */
+    registerElementWatcher: function (id, widget) {
+      var watcher = {
+        elem: document.getElementById(id),
+        check: function () {
+          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+          var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+          if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
+            context.pathfora.showWidget(widget);
+            core.removeWatcher(watcher);
+          }
+        }
+      };
+
+      return watcher;
+    },
+
+    /**
+     * @description Unassign a watcher
+     * @param {object} watcher
+     */
+    removeWatcher: function (watcher) {
+      var key;
+
+      for (key in core.watchers) {
+        if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
+          core.watchers.splice(key, 1);
+        }
+      }
+    },
+
+    /**
+     * @description Construct DOM layout for the widget
+     * @throws {Error} error
+     * @param {object} widget
+     * @param {object} config
+     */
+    constructWidgetLayout: function (widget, config) {
+      var widgetCancel = widget.querySelector('.pf-widget-cancel');
+      var widgetOk = widget.querySelector('.pf-widget-ok');
+      var widgetForm = widget.querySelector('form');
+      var widgetHeader = widget.querySelectorAll('.pf-widget-header');
+      var widgetBody = widget.querySelector('.pf-widget-body');
+      var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetTextArea;
+      var widgetImage;
+      var node;
+      var i;
+
+      if (widgetCancel !== null && !config.cancelShow) {
+        node = widgetCancel;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }
+
+      if (widgetOk !== null && !config.okShow) {
+        node = widgetOk;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }
+
+      if(widgetCancel !== null) {
+        widgetCancel.innerHTML = config.cancelMessage;
+      }
+
+      if(widgetOk !== null) {
+        widgetOk.innerHTML = config.okMessage;
+      }
+
+      if(widgetOk && widgetOk.value !== null) {
+        widgetOk.value = config.okMessage;
+      }
+
+      if(widgetCancel && widgetCancel.value !== null) {
+        widgetCancel.value = config.cancelMessage;
+      }
+
+      switch (config.type) {
+      case 'form':
+        switch (config.layout) {
+        case 'folding':
+        case 'modal':
+        case 'slideout':
+        case 'random':
+          widgetTextArea = widget.querySelector('textarea[name="message"]');
+          // FIXME Cache
+          // FIXME (???) Check if can be changed to [input=*] !
+          widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
+          widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
+          widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
+          widgetTextArea.placeholder = config.placeholders.message;
+
+          // NOTE Autofill from social networks
+          core.autoCompleteFacebookData();
+          core.autoCompleteGoogleData();
+          break;
+        default:
+          throw new Error('Invalid widget layout value');
+        }
+        break;
+      case 'subscription':
+        switch (config.layout) {
+        case 'folding':
+        case 'modal':
+        case 'bar':
+        case 'slideout':
+        case 'random':
+          // FIXME Cache
+          widget.querySelector('input').placeholder = config.placeholders.email;
+          break;
+        default:
+          throw new Error('Invalid widget layout value');
+        }
+        break;
+      case 'message':
+        switch (config.layout) {
+        case 'modal':
+        case 'folding':
+        case 'slideout':
+        case 'random':
+        case 'bar':
+        case 'button':
+          break;
+        default:
+          throw new Error('Invalid widget layout value');
+        }
+      }
+
+      // NOTE Set The header
+      for (i = widgetHeader.length - 1; i >= 0; i--) {
+        widgetHeader[i].innerHTML = config.header;
+      }
+
+      // NOTE Set the image
+      if (config.image) {
+        if (config.layout === 'button') {
+          // NOTE Images are not compatible with the button layout
+        } else {
+          widgetImage = document.createElement('img');
+          widgetImage.src = config.image;
+          widgetImage.className = 'pf-widget-img';
+          widgetBody.appendChild(widgetImage);
+        }
+      } else {
+        utils.addClass(widget, 'pf-no-img');
+      }
+
+      widgetMessage.innerHTML = config.msg;
+
+      if (config.type === 'form') {
+        if (config.nameField === false) {
+          // FIXME Cache
+          widgetForm.removeChild(widgetForm.querySelector('input[name="username"]'));
+        }
+        if (config.titleField === false) {
+          // FIXME Cache
+          widgetForm.removeChild(widgetForm.querySelector('input[name="title"]'));
+        }
+        if (config.emailField === false) {
+          // FIXME Cache
+          widgetForm.removeChild(widgetForm.querySelector('input[name="email"]'));
+        }
+        if (config.msgField === false) {
+          // FIXME Cache
+          widgetForm.removeChild(widgetForm.querySelector('texarea[name="message"]'));
+        }
+      }
+    },
+
+    /**
+     * @description Append event handlers to the widget
+     * @param {object} widget
+     * @param {object} config
+     */
+    constructWidgetActions: function (widget, config) {
+      var widgetOk = widget.querySelector('.pf-widget-ok');
+      var widgetAllCaptions;
+      var widgetFirstCaption;
+      var widgetCancel;
+      var widgetClose;
+      var widgetForm;
+      var widgetOnFormSubmit;
+      var widgetOnButtonClick;
+      var widgetOnModalClose;
+      var i;
+      var j;
+
+      switch (config.type) {
+      case 'form':
+        widgetForm = widget.querySelector('form');
+        widgetOnFormSubmit = function (event) {
+          var widgetAction;
+
+          event.preventDefault();
+
+          switch(config.type) {
+          case 'form':
+            widgetAction = 'submit';
+            break;
+          case 'subscription':
+            widgetAction = 'subscribe';
+            break;
+          }
+
+          if (widgetAction) {
+            core.trackWidgetAction(widgetAction, config, event.target);
+          }
+
+          if (typeof config.onSubmit === 'function') {
+            config.onSubmit(callbackTypes.FORM_SUBMIT, {
+              widget: widget,
+              event: event,
+              data: Array.prototype.slice.call(
+                widgetForm.querySelectorAll('input, textarea')
+              ).map(function (element) {
+                return {
+                  name: element.name || element.id,
+                  value: element.value
+                };
+              })
+            });
+          }
+        };
+
+        if (widgetForm.addEventListener) {
+          widgetForm.addEventListener('submit', widgetOnFormSubmit);
+        } else {
+          widgetForm.attachEvent('submit', widgetOnFormSubmit);
+        }
+        break;
+      }
+
+      switch (config.layout) {
+      case 'folding':
+        widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
+        widgetFirstCaption = widget.querySelector('.pf-widget-caption');
+
+        if (config.position !== 'left') {
+          setTimeout(function () {
+            var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
+            widget.style.bottom = -height + 'px';
+          }, 0);
+        }
+
+        // FIXME Change to forEach
+        j = widgetAllCaptions.length - 1;
+        for (i = j; i >= 0; i--) {
+          widgetAllCaptions[i].onclick = function () {
+            if (utils.hasClass(widget, 'opened')) {
+              utils.removeClass(widget, 'opened');
             } else {
-                expires = "";
+              utils.addClass(widget, 'opened');
             }
-            context.document.cookie = name + "=" + value + expires + "; path=/";
-        },
-
-        /**
-         * Generates unique
-         * @param {string} name - cookie name
-         * @param {string} value - cookie value
-         * @param {number} days - number of days until cookie expires
-         */
-        generateUniqueId: function () {
-            function s4() {
-                return Math.floor((1 + Math.random()) * 0x10000)
-                    .toString(16)
-                    .substring(1);
-            }
-
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                s4() + '-' + s4() + s4() + s4();
-        },
-        randomChoice: function (items) {
-            return items[Math.floor(Math.random() * items.length)];
+          };
         }
+        break;
+      case 'button':
+        if (typeof config.onClick === 'function') {
+          widgetOnButtonClick = function (event) {
+            config.onClick(callbackTypes.CLICK, {
+              widget: widget,
+              event: event
+            });
+          };
+        }
+        break;
+      case 'modal':
+      case 'slideout':
+      case 'bar':
+        widgetCancel = widget.querySelector('.pf-widget-cancel');
+        widgetClose = widget.querySelector('.pf-widget-close');
+        widgetOnModalClose = function (event) {
+          if (typeof config.onModalClose === 'function') {
+            config.onModalClose(callbackTypes.MODAL_CLOSE, {
+              widget: widget,
+              event: event
+            });
+          }
+        };
+
+        widgetClose.onclick = function (event) {
+          context.pathfora.closeWidget(widget.id);
+          widgetOnModalClose(event);
+        };
+
+        if (widgetCancel) {
+          if (typeof config.cancelAction === 'object') {
+            widgetCancel.onclick = function (event) {
+              core.trackWidgetAction('cancel', config);
+              if (typeof config.cancelAction.callback === 'function') {
+                config.cancelAction.callback();
+              }
+              context.pathfora.closeWidget(widget.id, true);
+              widgetOnModalClose(event);
+            };
+          } else {
+            widgetCancel.onclick = function (event) {
+              context.pathfora.closeWidget(widget.id);
+              widgetOnModalClose(event);
+            };
+          }
+        }
+      default:
+        break;
+      }
+
+      if (typeof config.confirmAction === 'object') {
+        widgetOk.onclick = function () {
+          core.trackWidgetAction('confirm', config);
+          if (typeof config.confirmAction.callback === 'function') {
+            config.confirmAction.callback();
+          }
+          if (typeof widgetOnButtonClick === 'function') {
+            widgetOnButtonClick(event);
+          }
+          if (typeof widgetOnModalClose === 'function') {
+            widgetOnModalClose(event);
+          }
+
+          context.pathfora.closeWidget(widget.id, true);
+        };
+      } else if (config.type === 'message') {
+        widgetOk.onclick = function () {
+          if (typeof widgetOnButtonClick === 'function') {
+            widgetOnButtonClick(event);
+          }
+
+          context.pathfora.closeWidget(widget.id);
+        };
+      } else if (config.type === 'form') {
+        widgetOk.onclick = function () {
+          if (typeof widgetOnModalClose === 'function') {
+            widgetOnModalClose(event);
+          }
+
+          context.pathfora.closeWidget(widget.id);
+        };
+      }
+    },
+
+    /**
+     * @description Build color theme for the widget
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetColors: function (widget, config) {
+      var colors = {};
+
+      if (typeof config.theme === 'undefined') {
+        core.setCustomColors(widget, defaultProps.generic.themes['default']);
+      }
+
+      if(config.config && config.config.theme === null) {
+        core.updateObject(colors, defaultProps.generic.themes['default']);
+        core.updateObject(colors, config.config.colors);
+        core.setCustomColors(widget, colors);
+      } else if (config.themes) {
+        if (config.theme === 'custom') {
+
+          // NOTE custom colors
+          core.updateObject(colors, config.colors);
+        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
+
+          // NOTE colors set via the higher config
+          if (defaultProps.generic.theme === 'custom') {
+            core.updateObject(colors, defaultProps.generic.colors);
+          } else {
+            core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
+          }
+        } else {
+
+          // NOTE default theme
+          core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+        }
+
+        core.setCustomColors(widget, colors);
+      }
+    },
+
+    /**
+     * @description Generate and set class names for the widget
+     * @param {object} widget
+     * @param {object} config
+     */
+    setWidgetClassname: function (widget, config) {
+      widget.className = [
+        'pf-widget ',
+        'pf-' + config.type,
+        ' pf-widget-' + config.layout,
+        config.position ? ' pf-position-' + config.position : '',
+        ' pf-widget-variant-' + config.variant,
+        config.theme ? ' pf-theme-' + config.theme : ''
+      ].join('');
+    },
+
+    /**
+     * Validate position for a widget of specific type
+     * @param   {object}   widget
+     * @param   {object}   config
+     */
+    validateWidgetPosition: function (widget, config) {
+      var choices;
+
+      switch (config.layout) {
+      case 'modal':
+        choices = [''];
+        break;
+      case 'slideout':
+        choices = ['left', 'right'];
+        break;
+      case 'bar':
+        choices = ['top-fixed', 'top-scrolling', 'bottom-scrolling'];
+        break;
+      case 'button':
+        choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+        break;
+      case 'folding':
+        choices = ['left', 'bottom-left', 'bottom-right'];
+        break;
+      }
+
+      if (choices.indexOf(config.position) === -1) {
+        // NOTE config.position + ' is not valid position for ' + config.layout
+      }
+    },
+
+    /**
+     * @description Set default widget position, if current one is invalid
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetPosition: function (widget, config) {
+      if (config.position) {
+        this.validateWidgetPosition(widget, config);
+      } else {
+        config.position = defaultPositions[config.layout];
+      }
+    },
+
+    /**
+     * @description Construct DOM element for the widget
+     * @param   {object} config
+     * @returns {object} widget DOM element
+     */
+    createWidgetHtml: function (config) {
+      var widget = document.createElement('div');
+
+      widget.innerHTML = templates[config.type][config.layout] || '';
+      widget.id = config.id;
+
+      this.setupWidgetPosition(widget, config);
+      this.constructWidgetActions(widget, config);
+      this.setWidgetClassname(widget, config);
+      this.constructWidgetLayout(widget, config);
+      this.setupWidgetColors(widget, config);
+
+      return widget;
+    },
+
+    // FIXME Inefficient and inaccurate, either cache initial time and subtract
+    //       or calculate delta
+    /**
+     * @description Track time spent on page
+     */
+    trackTimeOnPage: function () {
+      core.tickHandler = setInterval(function () {
+        pathforaDataObject.timeSpentOnPage += 1;
+      }, 1000);
+    },
+
+    // FUTURE
+    /**
+     * @description Determine whether the user visited the site before (set the cookie)
+     * @returns {boolean}
+     */
+    checkIfUserJustEntered: function () {
+      if (!utils.readCookie('PathforaInit')) {
+        utils.saveCookie('PathforaInit', true, 30);
+        return true;
+      }
+      return false;
+    },
+
+    /**
+     * @description Set custom color theme for the widget
+     * @param {object} widget
+     * @param {object} colors custom theme
+     */
+    setCustomColors: function (widget, colors) {
+      var close = widget.querySelector('.pf-widget-close');
+      var header = widget.querySelector('.pf-widget-header');
+      var headerLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-header');
+      var cancelBtn = widget.querySelector('.pf-widget-cancel');
+      var okBtn = widget.querySelector('.pf-widget-ok');
+      var arrow = widget.querySelector('.pf-widget-caption span');
+      var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var fields = widget.querySelectorAll('input, textarea');
+      var i;
+      var j;
+
+      if (utils.hasClass(widget, 'pf-widget-modal')) {
+        widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+      } else {
+        widget.style.backgroundColor = colors.background;
+      }
+
+      if (fields.length > 0) {
+        j = fields.length;
+        for (i = 0; i < j; i++) {
+          fields[i].style.backgroundColor = colors.fieldBackground;
+        }
+      }
+
+      if (close) {
+        close.style.color = colors.close;
+      }
+
+      if (header) {
+        header.style.color = colors.header;
+      }
+
+      if (headerLeft) {
+        headerLeft.style.color = colors.header;
+      }
+
+      if (arrow) {
+        arrow.style.color = colors.close;
+      }
+
+      if (arrowLeft) {
+        arrowLeft.style.color = colors.close;
+      }
+
+      if (cancelBtn) {
+        cancelBtn.style.color = colors.cancelText;
+        cancelBtn.style.backgroundColor = colors.cancelBackground;
+      }
+
+      if (okBtn) {
+        okBtn.style.color = colors.actionText;
+        okBtn.style.backgroundColor = colors.actionBackground;
+      }
+
+      widget.querySelector('.pf-widget-message').style.color = colors.text;
+    },
+
+    /**
+     * @description Report data related to the user action with widget
+     * @list  actions   [close, show, confirm, cancel, submit, subscribe]
+     * @param {string}  action      action name
+     * @param {object}  widget      related widget
+     * @param {Element} htmlElement related DOM element
+     */
+    trackWidgetAction: function (action, widget, htmlElement) {
+      var params = {
+        'pf-widget-id': widget.id,
+        'pf-widget-type': widget.type,
+        'pf-widget-layout': widget.layout,
+        'pf-widget-variant': widget.variant
+      };
+
+      switch (action) {
+      case 'show':
+        pathforaDataObject.displayedWidgets.push(params);
+        break;
+      case 'close':
+        pathforaDataObject.closedWidgets.push(params);
+        break;
+      case 'confirm':
+        params['pf-widget-action'] = widget.confirmAction.name;
+        pathforaDataObject.completedActions.push(params);
+        break;
+      case 'cancel':
+        params['pf-widget-action'] = widget.cancelAction.name;
+        pathforaDataObject.cancelledActions.push(params);
+        break;
+      case 'submit':
+        params['pf-form-username'] = htmlElement.elements['username'].value;
+        params['pf-form-title'] = htmlElement.elements['title'].value;
+        params['pf-form-email'] = htmlElement.elements['email'].value;
+        params['pf-form-message'] = htmlElement.elements['message'].value;
+        break;
+      case 'subscribe':
+        params['pf-form-email'] = htmlElement.elements['email'].value;
+      }
+
+      params['pf-widget-event'] = action;
+      api.reportData(params);
+    },
+
+    /**
+     * @description Override object with new config parameters
+     * @param {object} object original object
+     * @param {object} config new configuration
+     */
+    updateObject: function (object, config) {
+      var prop;
+
+      for (prop in config) {
+        if (typeof config[prop] === 'object' && config[prop] !== null) {
+          if(config.hasOwnProperty(prop)) {
+            if(typeof object[prop] === 'undefined') {
+              object[prop] = {};
+            }
+            core.updateObject(object[prop], config[prop]);
+          }
+        } else if (config.hasOwnProperty(prop)) {
+          object[prop] = config[prop];
+        }
+      }
+    },
+
+    /**
+     * @description Initialize widgets from the given array
+     * @throws {Error} error
+     * @param {array} array list of widgets to initialize
+     */
+    initializeWidgetArray: function (array) {
+      var widgetOnInitCallback;
+      var defaults;
+      var globals;
+      var widget;
+      var i;
+      var j;
+
+      j = array.length;
+      for (i = 0; i < j; i++) {
+        widget = array[i];
+        widgetOnInitCallback = widget.config.onInit;
+        defaults = defaultProps[widget.type];
+        globals = defaultProps.generic;
+
+        if (this.initializedWidgets.indexOf(widget.id) < 0) {
+          this.initializedWidgets.push(widget.id);
+        } else {
+          throw new Error('Cannot add two widgets with the same id');
+        }
+
+        this.updateObject(widget, globals);
+        this.updateObject(widget, defaults);
+        this.updateObject(widget, widget.config);
+
+        if (widget.displayConditions.showDelay) {
+          core.registerDelayedWidget(widget);
+        } else {
+          core.initializeWidget(widget);
+        }
+
+        // NOTE onInit feels better here
+        if (typeof widgetOnInitCallback === 'function') {
+          widgetOnInitCallback(callbackTypes.INIT, {
+            widget: widget
+          });
+        }
+      }
+    },
+
+    /**
+     * @description Validate a list of widget elements
+     * @throws {Error} error
+     * @param {object} widgets
+     */
+    validateWidgetsObject: function (widgets) {
+      var i;
+      var j;
+
+      if (!widgets) {
+        throw new Error('Widgets not specified');
+      }
+
+      if (!(widgets instanceof Array) && widgets.target) {
+        j = widgets.target.length;
+
+        for (i = 0; i < j; i++) {
+          if (!widgets.target[i].segment) {
+            throw new Error('All targeted widgets should have segment specified');
+          }
+        }
+      }
+    },
+
+    /**
+     * @description Generate a new widget object
+     * @throws {Error} error
+     * @param   {string} type   widget type
+     * @param   {object} config
+     * @returns {object} generated widget object
+     */
+    prepareWidget: function (type, config) {
+      var widget = {};
+      var props;
+      var random;
+
+      if (!config) {
+        throw new Error('Config object is missing');
+      }
+
+      if (!config.msg) {
+        throw new Error('Widget message is missing');
+      }
+
+      if(config.layout === 'random') {
+        props = {
+          layout: ['modal', 'slideout', 'bar', 'button', 'folding'],
+          variant: ['1', '2'],
+          slideout: ['left', 'right'],
+          bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
+          button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
+          folding: ['left', 'bottom-left', 'bottom-right']
+        };
+
+        // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
+        switch(type) {
+        case 'message':
+          random = Math.floor(Math.random() * 4);
+          config.layout = props.layout[random];
+          break;
+        case 'subscription':
+          random = Math.floor(Math.random() * 5);
+          while (random === 3) {
+            random = Math.floor(Math.random() * 5);
+          }
+          config.layout = props.layout[random];
+          break;
+        case 'form':
+          random = Math.floor(Math.random() * 5);
+          while (random === 2 || random === 3) {
+            random = Math.floor(Math.random() * 5);
+          }
+          config.layout = props.layout[random];
+        }
+        switch (config.layout) {
+        case 'folding':
+          config.position = props.folding[Math.floor(Math.random() * 3)];
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
+          break;
+        case 'slideout':
+          config.position = props.slideout[Math.floor(Math.random() * 2)];
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
+          break;
+        case 'modal':
+          config.variant = props.variant[Math.floor(Math.random() * 2)];
+          config.position = '';
+          break;
+        case 'bar':
+          config.position = props.bar[Math.floor(Math.random() * 3)];
+          break;
+        case 'button':
+          config.position = props.button[Math.floor(Math.random() * 6)];
+        }
+      }
+      widget.type = type;
+      widget.config = config;
+      widget.id = config.id || utils.generateUniqueId();
+
+      return widget;
+    },
+
+    requestSocialPluginRender: function () {
+      // FIXME Add check whether the rendering is necessary at all
+      var renderWidgets = {
+        facebook: [],
+        google: []
+      };
+      var timeoutInterval = {};
+
+      var attemptRenderingFacebook = function () {
+        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
+          renderWidgets.facebook.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.fb-login-button');
+
+            window.FB.XFBML.parse(widget);
+
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.facebook = [];
+
+          return clearTimeout(timeoutInterval['facebook']);
+        } else {
+          return setTimeout(attemptRenderingFacebook, 1000);
+        }
+      };
+
+      var attemptRenderingGoogle = function () {
+        if (typeof window.gapi !== 'undefined') {
+          renderWidgets.google.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.g-signin2');
+
+            window.gapi.signin2.render(signInBtn, {
+              scope: 'profile',
+              width: 16,
+              height: 16
+            });
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.google = [];
+
+          return clearTimeout(attemptRenderingGoogle);
+        } else {
+          return setTimeout(attemptRenderingGoogle, 1000);
+        }
+      };
+
+      this.requestSocialPluginRender = function (widget) {
+        var widgets = widget instanceof Array ? widget : [widget];
+
+        widgets.forEach(function (element) {
+          var requestFacebook = false;
+          var requestGoogle = false;
+
+          if (typeof element.querySelector === 'undefined') {
+            return false;
+          }
+
+          requestFacebook = element.querySelector('.fb-login-button') !== null;
+          requestGoogle = element.querySelector('.g-signin2') !== null;
+
+          if (requestFacebook) {
+            renderWidgets.facebook = renderWidgets.facebook.concat(element);
+          }
+          if (requestGoogle) {
+            renderWidgets.google = renderWidgets.google.concat(element);
+          }
+        });
+
+        timeoutInterval['facebook'] = attemptRenderingFacebook();
+        timeoutInterval['google'] = attemptRenderingGoogle();
+      };
+
+      this.requestSocialPluginRender(arguments[0]);
+    },
+
+    autoCompleteFacebookData: function () {
+      if (typeof window.FB !== 'undefined') {
+        window.FB.getLoginStatus(function (connection) {
+          if (connection.status === 'connected') {
+            window.FB.api('/me', {
+              fields: 'name,email'
+            }, function (query) {
+              if (query.error) {
+                throw new Error('Facebook API Error: ' + query.error);
+              }
+
+              core.autoCompleteFormFields({
+                username: query.name || '',
+                email: query.email || ''
+              });
+            });
+          } else {
+            throw new Error('Facebook API Error: User not connected');
+          }
+        });
+      }
+    },
+
+    autoCompleteGoogleData: function () {
+      var auth2;
+      var user;
+
+      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
+        auth2 = window.gapi.auth2.getAuthInstance();
+        user = auth2.currentUser.get().getBasicProfile();
+
+        core.autoCompleteFormFields({
+          username: user.getName() || '',
+          email: user.getEmail() || ''
+        });
+      }
+    },
+
+    autoCompleteFormFields: function (data) {
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+      var usernameField;
+      var emailField;
+      var usernameValue = data.username;
+      var emailValue = data.email;
+
+      widgets.forEach(function (widget) {
+        usernameField = widget.querySelector('input[name="username"]');
+        emailField = widget.querySelector('input[name="email"]');
+
+        if (usernameField && !usernameField.value) {
+          usernameField.value = usernameValue;
+        }
+        if (emailField && !emailField.value) {
+          emailField.value = emailValue;
+        }
+      });
+    }
+  };
+
+  /**
+   * @namespace
+   * @name api
+   * @description Lytics API integration tools
+   */
+  api = {
+    /**
+     * @description Send user data to Lytics API
+     */
+    initializeCustomAPI: function () {
+      var seerId = utils.readCookie('seerid');
+
+      if (typeof jstag === 'object' && seerId) {
+        jstag.send({
+          'user_id': seerId
+        });
+      }
+    },
+
+    /**
+     * @description Prepare GET HTTP request
+     * @param {string}   url       target url
+     * @param {function} onSuccess success callback
+     * @param {function} onError   error callback
+     */
+    getData: function (url, onSuccess, onError) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          onSuccess(xhr.responseText);
+        } else if (xhr.readyState === 4) {
+          onError(xhr.responseText);
+        }
+      };
+
+      xhr.open('GET', url);
+      xhr.send();
+    },
+
+    /**
+     * @description Prepare POST HTTP request
+     * @param {string}   url       target url
+     * @param {object}   data      payload
+     * @param {function} onSuccess success callback
+     * @param {function} onError   error callback
+     */
+    postData: function (url, data, onSuccess, onError) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url);
+      xhr.setRequestHeader('Accept','application/json');
+      xhr.setRequestHeader('Content-type', 'application/json');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          onSuccess(xhr.responseText);
+        } else if (xhr.readyState === 4) {
+          onError(xhr.responseText);
+        }
+      };
+
+      xhr.send(data);
+    },
+
+    /**
+     * @description Send data to Lytics API
+     *              Optionally to Google Analytics (if 'ga' function is available)
+     * @param {object} data payload
+     */
+    reportData: function (data) {
+      var gaLabel;
+
+      if (typeof jstag === 'object') {
+        jstag.send(data);
+      } else {
+        // NOTE Cannot find Lytics tag, reporting disabled
+      }
+
+      if (typeof ga === 'function') {
+        gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
+
+        ga(
+          'send',
+          'event',
+          'Lytics',
+          data['pf-widget-id'] + ' : ' + gaLabel,
+          '',
+          {
+            nonInteraction: true
+          }
+        );
+      }
+    },
+
+    /**
+     * @description Retrieve user segment data from Lytics
+     * @throws {Error} error
+     * @param {string} accountId  Lytics user ID
+     * @param {string} callback   universal callback
+     */
+    checkUserSegments: function (accountId, callback) {
+      var seerId = utils.readCookie('seerid');
+      var apiUrl;
+
+      if (!seerId) {
+        throw new Error('Cannot find SEERID cookie');
+      }
+
+      apiUrl = [
+        'https://api.lytics.io/api/me/',
+        accountId,
+        '/',
+        seerId,
+        '?segments=true'
+      ].join('');
+
+      this.getData(apiUrl, function (response) {
+        callback(JSON.parse(response).data.segments);
+
+      }, function () {
+        callback({
+          data: {
+            segments: ['all']
+          }
+        });
+      });
+    }
+  };
+
+  /**
+   * @class
+   * @name Pathfora
+   * @description Pathfora public API class
+   */
+  Pathfora = function () {
+
+    /**
+     * @public
+     * @description Initialize Pathfora widgets from a container
+     * @param {object|array}   widgets
+     * @param {string}         lyticsId
+     * @param {object}         config
+     */
+    this.initializeWidgets = function (widgets, lyticsId, config) {
+      // NOTE IE < 10 not supported
+      // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
+      if (document.all && !context.atob) {
+        return;
+      }
+
+      api.initializeCustomAPI();
+      core.validateWidgetsObject(widgets);
+      core.trackTimeOnPage();
+
+      if (config) {
+        originalConf = JSON.parse(JSON.stringify(defaultProps));
+        core.updateObject(defaultProps, config);
+      }
+
+      if (widgets instanceof Array) {
+
+        // NOTE Simple initialization
+        core.initializeWidgetArray(widgets);
+      } else {
+
+        // NOTE Target sensitive widgets
+        if (widgets.common) {
+          core.initializeWidgetArray(widgets.common);
+          core.updateObject(defaultProps, widgets.common.config);
+        }
+
+        if (widgets.target) {
+          api.checkUserSegments(lyticsId, function (segments) {
+            var triggered = false;
+            var target;
+            var i;
+            var j;
+
+            j = widgets.target.length;
+            for (i = 0; i < j; i++) {
+              target = widgets.target[i];
+              if (segments.indexOf(target.segment) !== -1) {
+                core.initializeWidgetArray(target.widgets);
+                triggered = true;
+                break;
+              }
+            }
+            if (!triggered && widgets.inverse) {
+              core.initializeWidgetArray(widgets.inverse);
+            }
+          });
+        }
+      }
+    };
+
+    /**
+     * @public
+     * @description Create a minimal widget for a preview
+     * @param   {object}   widget
+     * @returns {object}   widget DOM element
+     */
+    this.previewWidget = function (widget) {
+      widget.id = utils.generateUniqueId();
+      return core.createWidgetHtml(widget);
+    };
+
+    /**
+     * @public
+     * @description Create a Message widget
+     * @param   {object}   config
+     * @returns {object}   Message widget
+     */
+    this.Message = function (config) {
+      return core.prepareWidget('message', config);
+    };
+
+    /**
+     * @public
+     * @description Create a Subscription widget
+     * @param   {object}   config
+     * @returns {object}   Subscription widget
+     */
+    this.Subscription = function (config) {
+      return core.prepareWidget('subscription', config);
     };
 
 
     /**
-     * Default configuration object
-     * oryginalConf is used when default data gets overriden
+     * @public
+     * @description Create a Form widget
+     * @param   {object}   config
+     * @returns {object}   Form widget
      */
-    var oryginalConf,
-        defaultPositions = {
-            modal: '',
-            slideout: 'left',
-            button: 'top-left',
-            bar: 'top-fixed',
-            folding: 'bottom-left'
-        },
-        defaultProps = {
-        generic: {
-            className: "pathfora",
-            header: "",
-            theme: 'default',
-            themes: {
-                default: {
-                    background: '#ddd',
-                    header: "#333",
-                    text: "#333",
-                    close: "#999",
-                    actionText: "#333",
-                    actionBackground: "#eee",
-                    cancelText: "#333",
-                    cancelBackground: "#eee"
-                },
-                dark: {
-                    background: '#333',
-                    header: "#fff",
-                    text: "#fff",
-                    close: "#888",
-                    actionText: "#fff",
-                    actionBackground: "#597E9B",
-                    cancelText: "#fff",
-                    cancelBackground: "#597E9B"
-                },
-                light: {
-                    background: '#ddd',
-                    header: "#333",
-                    text: "#333",
-                    close: "#999",
-                    actionText: "#333",
-                    actionBackground: "#eee",
-                    cancelText: "#333",
-                    cancelBackground: "#eee"
-                }
-            },
-            displayConditions: {
-                showOnInit: true,
-                showDelay: 0,
-                hideAfter: 0,
-                displayWhenElementVisible: '',
-                scrollPercentageToDisplay: 0
-            }
-        },
-        message: {
-            layout: "modal",
-            position: "",
-            variant: "1",
-            cancelButton: true,
-            okMessage: 'Confirm',
-            cancelMessage: 'Cancel',
-            okShow: true,
-            cancelShow: true
-        },
-        subscription: {
-            layout: "modal",
-            position: "",
-            variant: "1",
-            placeholders: {
-                email: "Email"
-            },
-            okMessage: 'Confirm',
-            cancelMessage: 'Cancel',
-            okShow: true,
-            cancelShow: true
-        },
-        form: {
-            layout: "modal",
-            position: "",
-            variant: "1",
-            placeholders: {
-                name: "Name",
-                title: "Title",
-                email: "Email",
-                message: "Message"
-            },
-            okMessage: 'Send',
-            cancelMessage: 'Cancel',
-            okShow: true,
-            cancelShow: true
-        }
+    this.Form = function (config) {
+      return core.prepareWidget('form', config);
     };
 
     /**
-     * Empty Pathfora data object, containg all data stored by lib
-     * @type {Object}
+     * @public
+     * @description Display a widget
+     * @param {object} widget
      */
-    var pathforaDataObject = {
+    this.showWidget = function (widget) {
+      var i;
+      var j;
+      var node;
+
+      // FIXME Change to Array#filter and Array#length
+      j = core.openedWidgets.length;
+      for (i = 0; i < j; i++) {
+        if (core.openedWidgets[i] === widget) {
+          return;
+        }
+      }
+
+      core.openedWidgets.push(widget);
+      core.trackWidgetAction('show', widget);
+
+      node = core.createWidgetHtml(widget);
+      document.body.appendChild(node);
+
+      // NOTE wait for appending to DOM to trigger the animation
+      // FIXME 50 - magical number
+      setTimeout(function () {
+        var widgetLoadCallback = widget.config.onLoad;
+
+        utils.addClass(node, 'opened');
+
+        if (typeof widgetLoadCallback === 'function') {
+          widgetLoadCallback(callbackTypes.LOAD, {
+            widget: widget,
+            node: node
+          });
+        }
+        if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+          widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
+            widget: widget
+          });
+        }
+
+        core.requestSocialPluginRender(node);
+      }, 50);
+
+      if (widget.displayConditions.hideAfter) {
+        setTimeout(function () {
+          context.pathfora.closeWidget(widget.id);
+        }, widget.displayConditions.hideAfter * 1000);
+      }
+    };
+
+    /**
+     * @public
+     * @description Close the widget
+     *              and remove it from DOM
+     * @param {string}  id      widget it
+     * @param {boolean} noTrack if true, closing action will not be recorded
+     */
+    this.closeWidget = function (id, noTrack) {
+      var i;
+      var j;
+      var node;
+
+      // FIXME Change to Array#some or Array#filter
+      j = core.openedWidgets.length;
+      for (i = 0; i < j; i++) {
+        if (core.openedWidgets[i].id === id) {
+          if (!noTrack) {
+            core.trackWidgetAction('close', core.openedWidgets[i]);
+          }
+          core.openedWidgets.splice(i, 1);
+          break;
+        }
+      }
+
+      node = document.getElementById(id);
+      utils.removeClass(node, 'opened');
+
+      // FIXME 500 - magical number
+      setTimeout(function () {
+        if (node && node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }, 500);
+    };
+
+    /**
+     * @public
+     * @description Get the current Pathfora data store
+     * @returns {object} Pathfora data store
+     */
+    this.getData = function () {
+      return pathforaDataObject;
+    };
+
+    /**
+     * @public
+     * @description Clean widgets and data state
+     */
+    this.clearAll = function () {
+      var opened = core.openedWidgets;
+      var delayed = core.delayedWidgets;
+      var element;
+      var i;
+
+      opened.forEach(function (widget) {
+        element = document.getElementById(widget.id);
+        utils.removeClass(element, 'opened');
+        element.parentNode.removeChild(element);
+      });
+
+      opened.slice(0);
+
+      i = delayed.length;
+      for (i; i > -1; i--) {
+        core.cancelDelayedWidget(delayed[i]);
+      }
+
+      core.openedWidgets = [];
+      core.initializedWidgets = [];
+      core.removeScrollWatchers(core.watchers);
+
+      pathforaDataObject = {
         pageViews: 0,
         timeSpentOnPage: 0,
         closedWidgets: [],
         completedActions: [],
         cancelledActions: [],
-        displayedWidgets: []
+        displayedWidgets: [],
+        socialNetworks: {}
+      };
+
+      if (originalConf) {
+        defaultProps = originalConf;
+      }
     };
 
     /**
-     * Core library function set
+     * @public
+     * @description Intergrate with Facebook App API
+     * @param {string} appId
      */
-    var core = {
-        delayedWidgets: {},
-        openedWidgets: [],
-        initializedWidgets: [],
-        watchers: [],
-
-
-        /**
-         * Displays single widget or registers handler for displaying it later
-         * @param {object} widget - element to initialize
-         */
-        initializeWidget: function (widget) {
-            var cond = widget.displayConditions;
-            var watcher;
-
-            if (cond.displayWhenElementVisible) {
-                watcher = core.registerElementWatcher(cond.displayWhenElementVisible, widget);
-                core.watchers.push(watcher);
-                core.initializeScrollWatchers(core.watchers);
-            } else if (cond.scrollPercentageToDisplay) {
-                watcher = core.registerPositionWatcher(cond.scrollPercentageToDisplay, widget);
-                core.watchers.push(watcher);
-                core.initializeScrollWatchers(core.watchers);
-            } else if (cond.showOnInit) {
-                pathfora.showWidget(widget);
-            }
-        },
-
-
-        /**
-         * Takes array of scroll aware elements and checks if it should display one when user is scrolling page
-         * @param {array} watchers - pointer to registered list of watchers
-         */
-        initializeScrollWatchers: function (watchers) {
-            if (!core.scrollListener) {
-                core.scrollListener = function () {
-                    for (var key in watchers) {
-                        if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-                            watchers[key].check();
-                        }
-                    }
-                };
-                if (typeof context.addEventListener === 'function') {
-                    context.addEventListener('scroll', core.scrollListener, false);
-                } else {
-                    context.onscroll = core.scrollListener;
-                }
-            }
-        },
-
-
-        /**
-         * Taks array of watchers and clears it
-         * @param {array} watchers - pointer to the list of watchers
-         */
-        removeScrollWatchers: function (watchers) {
-            watchers.forEach(function (watcher) {
-                core.removeWatcher(watcher);
-            });
-
-            context.removeEventListener('scroll', core.scrollListener, false);
-            delete core.scrollListener;
-        },
-
-
-        /**
-         * Waits amount of time specified in widget config before initializing it
-         * @param {object} widget - element which should be initialized
-         */
-        registerDelayedWidget: function (widget) {
-            this.delayedWidgets[widget.id] = setTimeout(function () {
-                core.initializeWidget(widget);
-            }, widget.displayConditions.showDelay * 1000);
-        },
-
-
-        /**
-         * Prevents delayed widgets from initializing
-         * @param {object} widget - element which should be cancelled
-         */
-        cancelDelayedWidget: function (widget) {
-            var delayObj = this.delayedWidgets[widget.id];
-
-            if (delayObj) {
-                clearTimeout(delayObj);
-                delete this.delayedWidgets[widget.id];
-            }
-        },
-
-
-        /**
-         * Registers watcher for checking if user is on particular scroll position.
-         * @param {number} percent - scroll percentage on which widget should be displayed
-         * @param {object} widget - widget which should be displayed
-         * @returns {{check: Function}} - function fired on scroll for checking if widget should be displayed
-         */
-        registerPositionWatcher: function (percent, widget) {
-            var watcher = {
-                check: function () {
-                    var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
-                    var offset = document.documentElement.scrollTop || document.body.scrollTop;
-                    if (offset >= positionInPixels) {
-                        pathfora.showWidget(widget);
-                        core.removeWatcher(watcher);
-                    }
-                }
-            };
-
-            return watcher;
-        },
-
-
-        /**
-         * Registers watcher for checking if user can see some element
-         * @param {string} id - id of triggering element
-         * @param {object} widget - widget which should be displayed
-         * @returns {{elem: Element, check: Function}} - function fired on scroll to check if user can see specified el.
-         */
-        registerElementWatcher: function (id, widget) {
-            var watcher = {
-                elem: document.getElementById(id),
-                check: function () {
-                    var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-                    var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
-                    if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-                        pathfora.showWidget(widget);
-                        core.removeWatcher(watcher);
-                    }
-                }
-            };
-
-            return watcher;
-        },
-
-
-        /**
-         * Unassigns specified watcher
-         * @param {string} watcher - name of watcher which should be removed
-         */
-        removeWatcher: function (watcher) {
-            for (var key in core.watchers) {
-                if (core.watchers.hasOwnProperty(key) && watcher == core.watchers[key]) {
-                    core.watchers.splice(key, 1);
-                }
-            }
-        },
-
-
-        /**
-         * Creates layout portion of widget's DOM object
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        constructWidgetLayout: function (widget, config) {
-            if (widget.querySelector('.pf-widget-cancel') != null) {
-                if(!config.cancelShow){
-                    var node = widget.querySelectorAll('.pf-widget-cancel')[0];
-                    if (node.parentNode) {
-                        node.parentNode.removeChild(node);
-                    }
-                }
-            }
-
-            if (widget.querySelector('.pf-widget-ok') != null) {
-                if(!config.okShow){
-                    var node = widget.querySelectorAll('.pf-widget-ok')[0];
-                    if (node.parentNode) {
-                        node.parentNode.removeChild(node);
-                    }
-                }
-            }
-
-
-            if(widget.querySelector('.pf-widget-cancel') != null)
-                widget.querySelector('.pf-widget-cancel').innerHTML = config.cancelMessage;
-
-            if(widget.querySelector('.pf-widget-ok') != null)
-                widget.querySelector('.pf-widget-ok').innerHTML = config.okMessage;
-
-            if(widget.querySelector('.pf-widget-ok') && widget.querySelector('.pf-widget-ok').value != null)
-                widget.querySelector('.pf-widget-ok').value = config.okMessage;
-
-            if(widget.querySelector('.pf-widget-cancel') && widget.querySelector('.pf-widget-cancel').value != null)
-                widget.querySelector('.pf-widget-cancel').value = config.cancelMessage;
-
-            switch (config.type) {
-                case 'form':
-                    switch (config.layout) {
-                        case 'folding':
-                        case 'modal':
-                        case 'slideout':
-                        case 'random':
-                            widget.querySelector('form').onsubmit = function (e) {
-                                e.preventDefault();
-                                core.trackWidgetAction('submit', config, e.target);
-                                context.pathfora.closeWidget(widget.id, true);
-                            };
-                            widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
-                            widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
-                            widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
-                            widget.querySelector('textarea').placeholder = config.placeholders.message;
-                            break;
-                        default:
-                            throw new Error('Invalid widget layout value');
-                    }
-                    break;
-                case 'subscription':
-                    switch (config.layout) {
-                        case 'folding':
-                        case 'modal':
-                        case 'bar':
-                        case 'slideout':
-                        case 'random':
-                            widget.querySelector('form').onsubmit = function (e) {
-                                e.preventDefault();
-                                core.trackWidgetAction('subscribe', config, e.target);
-                                context.pathfora.closeWidget(widget.id, true);
-                            };
-
-                            widget.querySelector('input').placeholder = config.placeholders.email;
-                            break;
-                        default:
-                            throw new Error('Invalid widget layout value');
-                    }
-                    break;
-                case 'message':
-                    switch (config.layout) {
-                        case 'modal':
-                        case 'folding':
-                        case 'slideout':
-                        case 'random':
-                        case 'bar':
-                        case 'button':
-                            break;
-                        default:
-                            throw new Error('Invalid widget layout value');
-                    }
-            }
-
-            // Set The header
-            var header = widget.querySelectorAll('.pf-widget-header');
-            for (var i = header.length - 1; i >= 0; i--) {
-                header[i].innerHTML = config.header;
-            }
-
-            // Set the Image
-            if (config.image) {
-                if (config.layout === "button") {
-                    console.warn('Images are not compatible with the button layout.');
-                } else {
-                    var image = document.createElement('img');
-                    image.src = config.image;
-                    image.className = 'pf-widget-img';
-                    widget.querySelector('.pf-widget-body').appendChild(image);
-                }
-            } else {
-                utils.addClass(widget, 'pf-no-img');
-            }
-
-            // Set the message
-            widget.querySelector('.pf-widget-message').innerHTML = config.msg;
-
-            if (config.type === "form") {
-                var form = widget.querySelector('form');
-                if (config.nameField === false) {
-                    form.removeChild(form.querySelector('input[name="username"]'));
-                }
-                if (config.titleField === false) {
-                    form.removeChild(form.querySelector('input[name="title"]'));
-                }
-                if (config.emailField === false) {
-                    form.removeChild(form.querySelector('input[name="email"]'));
-                }
-                if (config.msgField === false) {
-                    form.removeChild(form.querySelector('texarea[name="message"]'));
-                }
-            }
-        },
-
-
-        /**
-         * Appends action logic to widget's DOM object
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        constructWidgetActions: function (widget, config) {
-            switch (config.layout) {
-                case 'folding':
-                    var captions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
-
-                    if (config.position !== 'left') {
-                        setTimeout(function () {
-                            var height = widget.offsetHeight - widget.querySelector('.pf-widget-caption').offsetHeight;
-                            widget.style.bottom = -height + 'px';
-                        }, 0);
-                    }
-
-                    for (var i = captions.length - 1; i >= 0; i--) {
-                        captions[i].onclick = function () {
-                            if (utils.hasClass(widget, 'opened')) {
-                                utils.removeClass(widget, 'opened');
-                            } else {
-                                utils.addClass(widget, 'opened');
-                            }
-                        }
-                    }
-                    break;
-                case 'button':
-                    break;
-                case 'modal':
-                case 'slideout':
-                case 'bar':
-                    var cancelBtn = widget.querySelector('.pf-widget-cancel');
-                    widget.querySelector('.pf-widget-close').onclick = function () {
-                        context.pathfora.closeWidget(widget.id);
-                    };
-
-                    if (cancelBtn) {
-                        if (typeof config.cancelAction === 'object') {
-                            cancelBtn.onclick = function () {
-                                core.trackWidgetAction('cancel', config);
-                                if (typeof config.cancelAction.callback === 'function') {
-                                    config.cancelAction.callback();
-                                }
-                                context.pathfora.closeWidget(widget.id, true);
-                            };
-                        } else {
-                            cancelBtn.onclick = function () {
-                                context.pathfora.closeWidget(widget.id);
-                            };
-                        }
-                    }
-                default:
-                    break;
-            }
-
-            if (typeof config.confirmAction === 'object') {
-                widget.querySelector('.pf-widget-ok').onclick = function () {
-                    core.trackWidgetAction('confirm', config);
-                    if (typeof config.confirmAction.callback === 'function') {
-                        config.confirmAction.callback();
-                    }
-                    context.pathfora.closeWidget(widget.id, true);
-                }
-            } else if (config.type === 'message') {
-                widget.querySelector('.pf-widget-ok').onclick = function () {
-                    context.pathfora.closeWidget(widget.id);
-                }
-            }
-        },
-
-
-        /**
-         * Builds's widget's color theme
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        setupWidgetColors: function (widget, config) {
-            if (config.theme === undefined) {
-                core.setCustomColors(widget, defaultProps.generic.themes['default']);
-            }
-
-            if(config.config && config.config.theme === null) {
-                var colors = {};
-                core.updateObject(colors, defaultProps.generic.themes['default']);
-                core.updateObject(colors, config.config.colors);
-                core.setCustomColors(widget, colors);
-            } else if (config.themes) {
-                var colors = {};
-                // custom colors
-                if (config.theme === "custom") {
-                    core.updateObject(colors, config.colors);
-                // colors set via the higher config
-                } else if (config.theme === "default" && defaultProps.generic.theme !== "default") {
-                    if (defaultProps.generic.theme === "custom")
-                        core.updateObject(colors, defaultProps.generic.colors);
-                    else
-                        core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
-                // a default theme
-                } else {
-                    core.updateObject(colors, defaultProps.generic.themes[config.theme]);
-                }
-
-                core.setCustomColors(widget, colors);
-            }
-        },
-
-
-        /**
-         * Constructs widget's DOM classes
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        setWidgetClassname: function (widget, config) {
-            widget.className = 'pf-widget ' +
-            'pf-' + config.type +
-            ' pf-widget-' + config.layout +
-            ( config.position ? ' pf-position-' + config.position : '' ) +
-            ' pf-widget-variant-' + config.variant +
-            ( config.theme ? ' pf-theme-' + config.theme : '' );
-        },
-
-
-        /**
-         * Checks if user specified valid position for particullar widget type
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        validateWidgetPosition: function (widget, config) {
-            var choices;
-            var isValidPos = function (pos, choices) {
-                return choices.indexOf(pos) > -1;
-            };
-
-            switch (config.layout) {
-                case 'modal':
-                    choices = ['', undefined];
-                    break;
-                case 'slideout':
-                    choices = ['left', 'right'];
-                    break;
-                case 'bar':
-                    choices = ['top-fixed', 'top-scrolling', 'bottom-scrolling'];
-                    break;
-                case 'button':
-                    choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
-                    break;
-                case 'folding':
-                    choices = ['left', 'bottom-left', 'bottom-right'];
-                    break;
-            }
-
-            if (!isValidPos(config.position, choices)) {
-                console.warn(config.position + " is not valid position for " + config.layout);
-            }
-        },
-
-
-        /**
-         * Sets default position for widget type, or validates position passed by user
-         * @param {object} widget - related element
-         * @param {object} config
-         */
-        setupWidgetPosition: function (widget, config) {
-            if (config.position) {
-                this.validateWidgetPosition(widget, config);
-            } else {
-                config.position = defaultPositions[config.layout];
-            }
-        },
-
-
-        /**
-         * Constructs widget's DOM object
-         * @param {object} config
-         * @returns {Element} - prepared widget object
-         */
-        createWidgetHtml: function (config) {
-            var widget = document.createElement('div');
-
-            widget.innerHTML = templates[config.type][config.layout] || '';
-            widget.id = config.id;
-
-            this.setupWidgetPosition(widget, config);
-            this.constructWidgetActions(widget, config);
-            this.setWidgetClassname(widget, config);
-            this.constructWidgetLayout(widget, config);
-            this.setupWidgetColors(widget, config);
-
-            return widget;
-        },
-
-
-        /**
-         * Tracks how much time user spend on page
-         * Needed for future functionalities
-         */
-        trackTimeOnPage: function () {
-            core.tickHandler = setInterval(function () {
-                pathforaDataObject.timeSpentOnPage += 1;
-            }, 1000)
-        },
-
-
-        /**
-         * Checks if user is newcomer or was here before (based on stored cookie)
-         * For future functionalities
-         * @returns {boolean}
-         */
-        checkIfUserJustEntered: function () {
-            var userEntered = utils.readCookie('PathforaInit');
-            if (!userEntered) {
-                utils.saveCookie('PathforaInit', true, 30);
-                return true;
-            }
-            return false;
-        },
-
-
-        /**
-         * Sets custom color theme to passed widget
-         * @param {object} widget - related element
-         * @param {object} colors - color configuration
-         */
-        setCustomColors: function (widget, colors) {
-            var close = widget.querySelector('.pf-widget-close');
-            var header = widget.querySelector('.pf-widget-header');
-            var headerLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-header');
-            var cancelBtn = widget.querySelector('.pf-widget-cancel');
-            var okBtn = widget.querySelector('.pf-widget-ok');
-            var arrow = widget.querySelector('.pf-widget-caption span');
-            var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
-            var fields = widget.querySelectorAll('input, textarea');
-
-            if (utils.hasClass(widget, 'pf-widget-modal')) {
-                widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
-            } else {
-                widget.style.backgroundColor = colors.background;
-            }
-
-            if (fields.length > 0) {
-                for (var i = 0; i < fields.length; i++) {
-                    fields[i].style.backgroundColor = colors.fieldBackground;
-                }
-            }
-
-            if (close) {
-                close.style.color = colors.close;
-            }
-
-            if (header) {
-                header.style.color = colors.header;
-            }
-
-            if (headerLeft) {
-                headerLeft.style.color = colors.header;
-            }
-
-            if (arrow) {
-                arrow.style.color = colors.close;
-            }
-
-            if (arrowLeft) {
-                arrowLeft.style.color = colors.close;
-            }
-
-            if (cancelBtn) {
-                cancelBtn.style.color = colors.cancelText;
-                cancelBtn.style.backgroundColor = colors.cancelBackground;
-            }
-
-            if (okBtn) {
-                okBtn.style.color = colors.actionText;
-                okBtn.style.backgroundColor = colors.actionBackground;
-            }
-
-            widget.querySelector('.pf-widget-message').style.color = colors.text;
-        },
-
-
-        /**
-         * Reports data related to user action with widget (close, show, confirm, cancel, submit or subscribe)
-         * @param {string} action - name of action
-         * @param {object} widget - related widget object
-         * @param {element} htmlElement - related DOM element (for getting Forms and Submition data values)
-         */
-        trackWidgetAction: function(action, widget, htmlElement) {
-            var params = {
-                'pf-widget-id': widget.id,
-                'pf-widget-type': widget.type,
-                'pf-widget-layout': widget.layout,
-                'pf-widget-variant': widget.variant
-            };
-
-            switch (action) {
-                case 'show':
-                    pathforaDataObject.displayedWidgets.push(params);
-                    break;
-                case 'close':
-                    pathforaDataObject.closedWidgets.push(params);
-                    break;
-                case 'confirm':
-                    params['pf-widget-action'] = widget.confirmAction.name;
-                    pathforaDataObject.completedActions.push(params);
-                    break;
-                case 'cancel':
-                    params['pf-widget-action'] = widget.cancelAction.name;
-                    pathforaDataObject.cancelledActions.push(params);
-                    break;
-                case 'submit':
-                    var form = htmlElement;
-
-                    params['pf-form-username'] = form.elements['username'].value;
-                    params['pf-form-title'] = form.elements['title'].value;
-                    params['pf-form-email'] = form.elements['email'].value;
-                    params['pf-form-message'] = form.elements['message'].value;
-                    break;
-                case 'subscribe':
-                    form = htmlElement;
-                    params['pf-form-email'] = form.elements['email'].value;
-            }
-
-            params['pf-widget-event'] = action;
-            api.reportData(params);
-        },
-
-
-        /**
-         * Updates object with new configuration values. Overrides provided values and leaves default one
-         * when particullar value was not provided
-         * @param {object} obj - oryginal element
-         * @param {object} config - new configuration
-         */
-        updateObject: function (obj, config) {
-            for (var prop in config) {
-                if (typeof config[prop] !== null && typeof config[prop] === 'object') {
-                    if(config.hasOwnProperty(prop)) {
-                        if(obj[prop] === undefined) {
-                            obj[prop] = {};
-                        }
-                        core.updateObject(obj[prop], config[prop]);
-                    }
-                } else {
-                    if(config.hasOwnProperty(prop)) {
-                        obj[prop] = config[prop];
-                    }
-                }
-            }
-        },
-
-
-        /**
-         * Updates widget elements, and initiallizes each one.
-         * @param {array} arr - list of widgets which should be initialized
-         */
-        initializeWidgetArray: function (arr) {
-            for (var i = 0; i < arr.length; i++) {
-                var widget = arr[i];
-                var defaults = defaultProps[widget.type];
-                var globals = defaultProps.generic;
-
-                if (this.initializedWidgets.indexOf(widget.id) < 0) {
-                    this.initializedWidgets.push(widget.id);
-                } else {
-                    throw new Error('Cannot add two widgets with the same id');
-                }
-
-                this.updateObject(widget, globals);
-                this.updateObject(widget, defaults);
-                this.updateObject(widget, widget.config);
-
-                if (widget.displayConditions.showDelay) {
-                    core.registerDelayedWidget(widget);
-                } else {
-                    core.initializeWidget(widget);
-                }
-            }
-        },
-
-
-        /**
-         * Checks if user provided valid widget configuration
-         * @param {array} widgets - list of widgets to be checked
-         */
-        validateWidgetsObject: function (widgets) {
-            if (!widgets) {
-                throw new Error("Widgets not specified");
-            }
-
-            if (widgets.constructor !== Array && widgets.target) {
-                for (var i = 0; i < widgets.target.length; i++) {
-                    if (!widgets.target[i].segment) {
-                        throw new Error("All targeted widgets should have segment specified");
-                    }
-                }
-            }
-        },
-
-
-        /**
-         * Checks if widget object is valid and appends default props to it
-         * @param type
-         * @param config
-         * @returns {{}}
-         */
-        prepareWidget: function(type, config) {
-            if (config === undefined) {
-                throw new Error("Config object is missing");
-            }
-
-            if (config.msg === undefined) {
-                throw new Error("Widget message is missing");
-            }
-
-            var widget = {};
-
-            if(config.layout === "random")
-            {
-                var props = {
-                    layout: ["modal","slideout","bar","button","folding"],
-                    variant: ["1","2"],
-                    slideout: ["left","right"],
-                    bar: ["top-fixed","top-scrolling","bottom-scrolling"],
-                    button: ["left","right","top-left","top-right","bottom-left","bottom-right"],
-                    folding: ['left', 'bottom-left', 'bottom-right']
-                }
-                switch(type){
-                    case 'message':
-                        var r = Math.floor((Math.random() * 4));
-                        config.layout = props.layout[r];
-                        break;
-                    case 'subscription':
-                        var r = Math.floor((Math.random() * 5));
-                        while(r == 3)
-                           r = Math.floor((Math.random() * 5));
-                        config.layout = props.layout[r];
-                        break;
-                    case 'form':
-                        var r = Math.floor((Math.random() * 5));
-                        while(r == 2 || r == 3)
-                            r = Math.floor((Math.random() * 5));
-                        config.layout = props.layout[r];
-                }
-                switch (config.layout) {
-                            case 'folding':
-                                config.position = props.folding[Math.floor((Math.random() * 3))];
-                                config.variant = props.variant[Math.floor((Math.random() * 2))];
-                                break;
-                            case 'slideout':
-                                config.position = props.slideout[Math.floor((Math.random() * 2))];
-                                config.variant = props.variant[Math.floor((Math.random() * 2))];
-                                break;
-                            case 'modal':
-                                config.variant = props.variant[Math.floor((Math.random() * 2))];
-                                config.position = '';
-                                break;
-                            case 'bar':
-                                config.position = props.bar[Math.floor((Math.random() * 3))];
-                                break;
-                            case 'button':
-                                 config.position = props.button[Math.floor((Math.random() * 6))];
-                }
-            }
-            widget.type = type;
-            widget.config = config;
-            widget.id = config.id || utils.generateUniqueId();
-
-            return widget;
-        }
-    };
-
-
-    /**
-     * Set of functions for communicating data with external sources
-     * @type {object}
-     */
-    var api = {
-        /**
-         * Sends data about user to Lytics API (from cookie), using jstag functrion
-         */
-        initializeCustomAPI: function () {
-            var reed = utils.readCookie("seerid");
-
-            if (typeof jstag === 'object' && reed) {
-                jstag.send({user_id: reed});
-            }
-        },
-
-
-        /**
-         * XHR GET request builder
-         * @param {string} url
-         * @param {Function} onSuccess
-         * @param {Function} onError
-         */
-        getData: function (url, onSuccess, onError) {
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    onSuccess(xhr.responseText);
-                } else if (xhr.readyState == 4) {
-                    onError(xhr.responseText);
-                }
-            };
-
-            xhr.open("GET", url);
-            xhr.send();
-        },
-
-
-        /**
-         * XHR POST request builder
-         * @param {string} url
-         * @param {string} data
-         * @param {Function} onSuccess
-         * @param {Function} onError
-         */
-        postData: function (url, data, onSuccess, onError) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", url);
-            xhr.setRequestHeader("Accept","application/json");
-            xhr.setRequestHeader('Content-type', 'application/json');
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    onSuccess(xhr.responseText);
-                } else if (xhr.readyState == 4) {
-                    onError(xhr.responseText);
-                }
-            };
-
-            xhr.send(data);
-        },
-
-
-        /**
-         * Sends data to Lytics API using jstag function
-         * User credentials are took from cookie
-         * @param {object} data
-         */
-        reportData: function (data) {
-            if (typeof jstag === 'object') {
-                jstag.send(data);
-            } else {
-                if (typeof console === 'function') {
-                    console.warn('Cannot find Lytics tag, reporting disabled');
-                }
-            }
-        },
-
-
-        /**
-         * Get's data on which Lytics segment current user is assigned to
-         * @param {number} accountId - Lytics ID of website owner
-         * @param cb - callback function
-         */
-        checkUserSegments: function (accountId, cb) {
-            var reed = utils.readCookie("seerid");
-            if (!reed) {
-                throw new Error("Cannot find SEERID cookie");
-            }
-            var apiUrl = "https://api.lytics.io/api/me/" + accountId + "/"
-                + reed + "?segments=true";
-
-            this.getData(apiUrl, function(resp){
-                var data = JSON.parse(resp);
-                cb(data.data.segments);
-
-            }, function (err) {
-                console.error(err);
-
-                cb({
-                    data: {
-                        segments: ["all"]
-                    }
-                });
-            });
-        }
-    };
-
-
-    /**
-     * Object containing all html templates used for constructing widgets
-     * @type {Object}
-     */
-    var templates = {
-        message: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
-            bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-            button: '<p class="pf-widget-message pf-widget-ok"></p>',
-            inline: ''
-        },
-        subscription: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-            bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
-        },
-        form: {
-            modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-            slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-            folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
-        }
-    };
-
-
-
-    /**
-     * Pathfora public functions
-     * @constructor
-     */
-    var Pathfora = function () {
-
-
-        /**
-         * Function used for initializing Pathfora widgets array.
-         * @param {array} widgets
-         * @param {number} lyticsId
-         * @param {object} config
-         */
-        this.initializeWidgets = function (widgets, lyticsId, config) {
-            // IE < 10 not supported
-            if (document.all && !context.atob) {
-                return;
-            }
-
-            api.initializeCustomAPI();
-            core.validateWidgetsObject(widgets);
-            core.trackTimeOnPage();
-
-            if (config) {
-                oryginalConf = (JSON.parse(JSON.stringify(defaultProps)));
-                core.updateObject(defaultProps, config);
-            }
-
-            // Simple initialization
-            if (widgets.constructor === Array) {
-                core.initializeWidgetArray(widgets);
-
-                // Target sensitive widgets
-            } else {
-                if (widgets.common) {
-                    core.initializeWidgetArray(widgets.common);
-                    core.updateObject(defaultProps, widgets.common.config);
-                }
-
-                if (widgets.target) {
-                    api.checkUserSegments(lyticsId, function (segments) {
-                        var triggered = false;
-                        for (var i = 0; i < widgets.target.length; i++) {
-                            var target = widgets.target[i];
-                            if (segments.indexOf(target.segment) !== -1) {
-                                core.initializeWidgetArray(target.widgets);
-                                triggered = true;
-                                break;
-                            }
-                        }
-                        if (!triggered && widgets.inverse) {
-                            core.initializeWidgetArray(widgets.inverse);
-                        }
-                    });
-                }
-            }
-        };
-
-        /**
-         * Creates minimal widget for previewing.
-         * Used only by admin panel for generating mocked previews
-         * @param {object} widget
-         * @returns {*|Element}
-         */
-        this.previewWidget = function(widget) {
-            widget.id = utils.generateUniqueId();
-            return core.createWidgetHtml(widget);
-        };
-
-
-        /**
-         * Getter used to prepare Message widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
-        this.Message = function (config) {
-            return core.prepareWidget('message', config);
-        };
-
-
-        /**
-         * Getter used to prepare Subscription widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
-        this.Subscription = function (config) {
-            return core.prepareWidget('subscription', config);
-        };
-
-
-        /**
-         * Getter used to prepare Form widget for initialization
-         * @param {object} config
-         * @returns {*|{}}
-         * @constructor
-         */
-        this.Form = function (config) {
-            return core.prepareWidget('form', config);
-        };
-
-
-        /**
-         * Function used for displaying widget, either manually or triggered by PF core
-         * @param {object} widget - related element
-         */
-        this.showWidget = function (widget) {
-
-            for (var i = 0; i < core.openedWidgets.length; i++) {
-                if (core.openedWidgets[i] === widget) {
-                    return;
-                }
-            }
-
-            core.openedWidgets.push(widget);
-            core.trackWidgetAction('show', widget);
-
-            var node = core.createWidgetHtml(widget);
-            document.body.appendChild(node);
-
-            // waits for appending to DOM for so it can trigger animation
-            setTimeout(function () {
-                utils.addClass(node, 'opened')
-            }, 50);
-
-            if (widget.displayConditions.hideAfter) {
-                setTimeout(function () {
-                    pathfora.closeWidget(widget.id);
-                }, widget.displayConditions.hideAfter * 1000);
-            }
-        };
-
-
-        /**
-         *
-         * @param {string} id
-         * @param {Boolean} noTrack
-         */
-        this.closeWidget = function (id, noTrack) {
-            for (var i = 0; i < core.openedWidgets.length; i++) {
-                if (core.openedWidgets[i].id === id) {
-                    if (!noTrack) {
-                        core.trackWidgetAction('close', core.openedWidgets[i]);
-                    }
-                    core.openedWidgets.splice(i, 1);
-                    break;
-                }
-            }
-
-            var node = document.getElementById(id);
-            utils.removeClass(node, 'opened');
-
-            setTimeout(function () {
-                if (node && node.parentNode){
-                    node.parentNode.removeChild(node);
-                }
-            }, 500);
-        };
-
-
-        /**
-         * Getter for stored data object, used mainly for Unit test purposes
-         * @returns {object}
-         */
-        this.getData = function () {
-            return pathforaDataObject;
-        };
-
-
-        /**
-         * Closes all widgets and clears all library data and functions
-         */
-        this.clearAll = function () {
-            var opened = core.openedWidgets;
-
-            opened.forEach(function(widget) {
-                element = document.getElementById(widget.id);
-                utils.removeClass(element, 'opened');
-                element.parentNode.removeChild(element);
-            });
-
-            opened.slice(0);
-
-            var delayed = core.delayedWidgets;
-
-            for (var i = delayed.length; i > -1; i--) {
-                core.cancelDelayedWidget(delayed[i]);
-            }
-
-            core.openedWidgets = [];
-            core.initializedWidgets = [];
-            core.removeScrollWatchers(core.watchers);
-
-            pathforaDataObject = {
-                pageViews: 0,
-                timeSpentOnPage: 0,
-                closedWidgets: [],
-                completedActions: [],
-                cancelledActions: [],
-                displayedWidgets: []
-            };
-
-            if (oryginalConf) {
-                defaultProps = oryginalConf;
-            }
-        };
-
-
-        /**
-         * Getter for utility functions
-         * @type {object}
-         */
-        this.utils = utils;
-    };
-
-    appendPathforaStylesheet();
-    context.pathfora = new Pathfora();
-
-    // webadmin generated config
-    if (typeof pfCfg === 'object') {
-        api.getData('https:' == document.location.protocol ? 'https' : 'http' +
-            '://pathfora.parseapp.com/config/'+ pfCfg.uid + '/' + pfCfg.pid, function(data) {
-            var parsed = JSON.parse(data);
-            var widgets = parsed.widgets;
-            var themes = {};
-            if (typeof parsed.config.themes !== 'undefined') {
-                for (i = 0; i < parsed.config.themes.length; i++) {
-                    themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
-                }
-            }
-            var wgCfg = {generic:{themes:themes}};
-
-            console.log(parsed);
-            var prepareWidgetArray = function (arr) {
-                for (var i=0; i < arr.length; i++) {
-                    arr[i] = core.prepareWidget(arr[i].type, arr[i]);
-                }
-            };
-
-            prepareWidgetArray(widgets.common);
-
-            for (var i=0; i < widgets.target.length; i++) {
-                prepareWidgetArray(widgets.target[i].widgets);
-            }
-
-            pathfora.initializeWidgets(widgets, pfCfg.lid, wgCfg);
+    this.integrateWithFacebook = function (appId) {
+      window.fbAsyncInit = function () {
+        window.FB.init({
+          appId: appId,
+          xfbml: true,
+          version: 'v2.5'
         });
+      };
+
+      // NOTE Api initialization
+      (function (d, s, id) {
+        var js;
+        var fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = '//connect.facebook.net/en_GB/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      // NOTE Google API
+      (function () {
+        var s;
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+      })();
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="fb-login" hidden><\/p>/gm,
+          templates.social.facebookIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.facebookAppId = appId;
     };
 
+    /**
+     * @public
+     * @description Integrate with Google App API
+     * @param {string} clientId
+     */
+    this.integrateWithGoogle = function (clientId) {
+      var body = document.querySelector('body');
+      var head = document.querySelector('head');
+
+      var appScript = scripts.google;
+      var appMetaTag = templates.social.googleMeta.replace(
+        /(\{){2}google-clientId(\}){2}/gm,
+        clientId
+      );
+
+      head.innerHTML += appMetaTag;
+      body.innerHTML += appScript;
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="google-login" hidden><\/p>/gm,
+          templates.social.googleIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.googleClientID = clientId;
+    };
+
+    this.onFacebookSignIn = function () {
+      core.autoCompleteFacebookData();
+    };
+
+    this.onGoogleSignIn = function () {
+      core.autoCompleteGoogleData();
+    };
+
+    /*
+     * @public
+     * @description Get utils object
+     */
+    this.utils = utils;
+  };
+
+  // NOTE Initialize context
+  appendPathforaStylesheet();
+  context.pathfora = new Pathfora();
+
+  // NOTE Webadmin generated config
+  if (typeof pfCfg === 'object') {
+
+    api.getData([
+      document.location.protocol === 'https:' ? 'https' : 'http',
+      '://pathfora.parseapp.com/config/',
+      pfCfg.uid,
+      '/',
+      pfCfg.pid
+    ].join(''),
+    function (data) {
+      var parsed = JSON.parse(data);
+      var widgets = parsed.widgets;
+      var themes = {};
+      var widgetsConfig;
+      var prepareWidgetArray;
+      var i;
+      var j;
+
+      if (typeof parsed.config.themes !== 'undefined') {
+        j = parsed.config.themes.length;
+        for (i = 0; i < j; i++) {
+          themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
+        }
+      }
+
+      widgetsConfig = {
+        generic: {
+          themes: themes
+        }
+      };
+
+      prepareWidgetArray = function (array) {
+        j = array.length;
+        for (i = 0; i < j; i++) {
+          array[i] = core.prepareWidget(array[i].type, array[i]);
+        }
+      };
+      prepareWidgetArray(widgets.common);
+
+      j = widgets.target.length;
+      for (i = 0; i < j; i++) {
+        prepareWidgetArray(widgets.target[i].widgets);
+      }
+
+      context.pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
+    });
+  }
 })(window, document);
