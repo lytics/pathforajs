@@ -1297,10 +1297,12 @@
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
 
-        core.autoCompleteFormFields({
-          username: user.getName() || '',
-          email: user.getEmail() || ''
-        });
+        if (typeof user !== 'undefined') {
+          core.autoCompleteFormFields({
+            username: user.getName() || '',
+            email: user.getEmail() || ''
+          });
+        }
       }
     },
 
