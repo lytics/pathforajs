@@ -1733,17 +1733,6 @@
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-      // NOTE Google API
-      (function () {
-        var s;
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.async = true;
-        po.src = 'https://apis.google.com/js/platform.js';
-        s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(po, s);
-      })();
-
       Object.keys(templates.form).forEach(function (type) {
         templates.form[type] = templates.form[type].replace(
           /<p name="fb-login" hidden><\/p>/gm,
@@ -1772,6 +1761,17 @@
       head.innerHTML += appMetaTag;
       body.innerHTML += appScript;
 
+      // NOTE Google API
+      (function () {
+        var s;
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+      })();
+      
       Object.keys(templates.form).forEach(function (type) {
         templates.form[type] = templates.form[type].replace(
           /<p name="google-login" hidden><\/p>/gm,
