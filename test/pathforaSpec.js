@@ -314,7 +314,8 @@ describe('Pathfora', function () {
       closedWidgets: [],
       completedActions: [],
       cancelledActions: [],
-      displayedWidgets: []
+      displayedWidgets: [],
+      socialNetworks: {}
     };
 
     var form = new pathfora.Subscription({
