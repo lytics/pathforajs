@@ -12,7 +12,7 @@ describe('Pathfora', function () {
   beforeEach(function() {
     localStorage.clear();
     pathfora.clearAll();
-  });    
+  });
 
   it('should track current time spent on page with 1 second accuracy', function () {
     jasmine.clock().install();
@@ -145,8 +145,8 @@ describe('Pathfora', function () {
       'pf-widget-variant': '1',
       'pf-widget-event': 'show'
     }));
-    
-    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', 'show', jasmine.any(String), jasmine.any(Object));
+
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics',  messageBar.id + ' : show', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
     jasmine.Ajax.uninstall();
@@ -176,8 +176,8 @@ describe('Pathfora', function () {
       'pf-widget-variant': '1',
       'pf-widget-event': 'close'
     }));
-    
-    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', 'close', jasmine.any(String), jasmine.any(Object));
+
+    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', messageBar.id + ' : close', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
     jasmine.clock().uninstall();
@@ -315,7 +315,8 @@ describe('Pathfora', function () {
       completedActions: [],
       cancelledActions: [],
       displayedWidgets: [],
-      abTestingGroups: []
+      abTestingGroups: [],
+      socialNetworks: {}
     };
 
     var form = new pathfora.Subscription({
@@ -592,7 +593,7 @@ describe('Widgets', function () {
       position: 'top-left',
       msg: 'custom color button',
       id: 'custom-widget',
-      theme: 'custom'                  
+      theme: 'custom'
     });
 
     var config =  {
@@ -601,7 +602,7 @@ describe('Widgets', function () {
           background: '#fff'
         }
       }
-    };                
+    };
 
     var w4 = new pathfora.Message({
       layout: 'button',
@@ -659,8 +660,8 @@ describe('Widgets', function () {
     });
 
     var config =  {
-      generic: { 
-        colors: { 
+      generic: {
+        colors: {
           background: '#eee',
           header: '#333',
           text: '#333',
@@ -671,7 +672,7 @@ describe('Widgets', function () {
           cancelBackground: '#eee'
         }
       }
-    };  
+    };
 
 
     pathfora.initializeWidgets([modal], credentials,config);
@@ -976,7 +977,7 @@ describe('API', function () {
       id: 'custom-button-text-test',
       layout: 'modal',
       msg: 'Custom button text test',
-      header: 'Hello',            
+      header: 'Hello',
       okMessage: 'Confirm',
       cancelMessage: 'Cancel'
     });
@@ -998,7 +999,7 @@ describe('API', function () {
       id: 'custom-random-test',
       layout: 'random',
       msg: 'Custom random layout test',
-      header: 'Hello'           
+      header: 'Hello'
     });
 
     pathfora.initializeWidgets([random],credentials);
@@ -1007,10 +1008,10 @@ describe('API', function () {
 
     expect(widget.find('.pf-widget-slideout')).toBeTruthy();
     expect(widget.find('.pf-position-right')).toBeTruthy();
-    expect(widget.find('.pf-widget-variant-2')).toBeTruthy();       
+    expect(widget.find('.pf-widget-variant-2')).toBeTruthy();
 
   });
-  
+
   it('should report to Google Analytics API, when available', function (done) {
     var messageBar = pathfora.Message({
       layout: 'modal',
@@ -1030,14 +1031,14 @@ describe('API', function () {
 
       expect(ga).toHaveBeenCalled();
       expect(ga.calls.mostRecent().args).toEqual([
-        'send', 
-        'event', 
-        'Lytics', 
-        messageBar.confirmAction.name,
-        jasmine.any(String), 
+        'send',
+        'event',
+        'Lytics',
+        messageBar.id + ' : ' + messageBar.confirmAction.name,
+        jasmine.any(String),
         jasmine.any(Object)
       ]);
-      
+
       done();
     }, 200);
   });
