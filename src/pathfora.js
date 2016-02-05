@@ -1104,7 +1104,7 @@
         if (!widget || !widget.config) {
           continue;
         }
-        
+
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
@@ -1257,6 +1257,7 @@
       test.type = abTestingTypes[config.type];
 
       return test;
+    },
 
     /**
      * @description Social APIs require certain DOM elements to be redrawn
@@ -1902,7 +1903,7 @@
         s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
       })();
-      
+
       Object.keys(templates.form).forEach(function (type) {
         templates.form[type] = templates.form[type].replace(
           /<p name="google-login" hidden><\/p>/gm,
