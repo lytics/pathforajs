@@ -1042,4 +1042,38 @@ describe('API', function () {
       done();
     }, 200);
   });
+  
+  it('should open site gating widget when the cookie is not set', function (done) {
+    var gate = new window.pathfora.SiteGate({
+      header: 'Blocking Widget',
+      msg: 'Submit this widget to access the website.'
+    });
+
+    pathfora.initializeWidgets([gate], credentials);
+
+    var widget = $('#' + gate.id);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+  });
+  
+  it('should not open site gating widget when the cookie is already set', function (done) {
+    pathfora.utils.saveCookie('PathforaUnlocked', true);
+    
+    var gate = new window.pathfora.SiteGate({
+      header: 'Blocking Widget',
+      msg: 'Submit this widget to access the website.'
+    });
+
+    pathfora.initializeWidgets([gate], credentials);
+
+    var widget = $('#' + gate.id);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeFalsy();
+      done();
+    }, 200);
+  });
 });
