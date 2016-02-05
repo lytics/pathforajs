@@ -98,9 +98,30 @@
         message: 'Message'
       },
       okMessage: 'Send',
-      cancelMessage: 'Cancel',
       okShow: true,
+      cancelMessage: 'Cancel',
       cancelShow: true
+    },
+    sitegate: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        email: 'Email',
+        organization: 'Organization',
+        title: 'Title'
+      },
+      required: [
+        'firstName', 
+        'lastName', 
+        'email' 
+      ],
+      okMessage: 'Submit',
+      okShow: true,
+      showSocialLogin: false,
+      showForm: true
     }
   };
 
@@ -124,6 +145,10 @@
       modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
       slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
       folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+    },
+    sitegate: {
+      // FIXME Remove spaces in the template
+      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins"> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
     }
   };
 
@@ -167,7 +192,8 @@
     link.setAttribute('type', 'text/css');
 
     // NOTE Need to update the cdn version. For now use local.
-    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+//    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    link.setAttribute('href', '../dist/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -224,13 +250,9 @@
      */
     readCookie: function (name) {
       var cookies = document.cookie;
-      var findCookieRegexp = new RegExp([
-        '(?:(?:^|.*;\s*)',
-        name,
-        '\s*\=\s*([^;]*).*$)|^.*$'
-      ].join(''), 'gi');
+      var findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
-      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
+      return findCookieRegexp ? findCookieRegexp.pop() : null;
     },
 
     /**
@@ -455,6 +477,7 @@
       var widgetHeader = widget.querySelectorAll('.pf-widget-header');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
@@ -462,6 +485,14 @@
 
       if (widgetCancel !== null && !config.cancelShow) {
         node = widgetCancel;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }
+      
+      if (widgetClose !== null) {
+        node = widgetClose;
 
         if (node.parentNode) {
           node.parentNode.removeChild(node);
@@ -500,11 +531,9 @@
         case 'slideout':
         case 'random':
           widgetTextArea = widget.querySelector('textarea');
-          // FIXME Cache
-          // FIXME (???) Check if can be changed to [input=*] !
-          widget.querySelectorAll('input')[0].placeholder = config.placeholders.name;
-          widget.querySelectorAll('input')[1].placeholder = config.placeholders.title;
-          widget.querySelectorAll('input')[2].placeholder = config.placeholders.email;
+          widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
+          widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
+          widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
           widgetTextArea.placeholder = config.placeholders.message;
           break;
         default:
@@ -537,6 +566,47 @@
         default:
           throw new Error('Invalid widget layout value');
         }
+        break;
+      case 'sitegate':
+        switch (config.layout) {
+        case 'modal':
+          Object.keys(config.placeholders).forEach(function (inputField) {
+            var element = widget.querySelector('input[name="' + inputField + '"]');
+            
+            if (element) {
+              element.placeholder = config.placeholders[inputField];
+            }
+          });
+
+          Object.keys(config.required).forEach(function (index) {
+            var field = config.required[index];
+            var element = widget.querySelector('input[name="' + field + '"]');
+            
+            if (element) {
+              element.setAttribute('required', '');
+            }
+          });
+          
+          if (config.showSocialLogin === false) {
+            node = widget.querySelector('.pf-sitegate-social-plugins');
+            
+            if (node.parentNode) {
+              node.parentNode.removeChild(node);
+            }
+          }
+            
+          if (config.showForm === false) {
+            node = widget.querySelector('form');
+            
+            if (node) {
+              node.className += ' pf-hidden';
+            }
+          }
+          break;
+        default:
+          throw new Error('Invalid widget layout value');
+        }
+        break;
       }
 
       // NOTE Set The header
@@ -600,6 +670,7 @@
 
       switch (config.type) {
       case 'form':
+      case 'sitegate':
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
@@ -612,6 +683,9 @@
             break;
           case 'subscription':
             widgetAction = 'subscribe';
+            break;
+          case 'sitegate':
+            widgetAction = 'unlock';
             break;
           }
 
@@ -655,7 +729,6 @@
           }, 0);
         }
 
-        // FIXME Change to forEach
         j = widgetAllCaptions.length - 1;
         for (i = j; i >= 0; i--) {
           widgetAllCaptions[i].onclick = function () {
@@ -740,13 +813,25 @@
 
           context.pathfora.closeWidget(widget.id);
         };
-      } else if (config.type === 'form') {
+      } else if (config.type === 'form' || config.type === 'sitegate') {
         widgetOk.onclick = function () {
-          if (typeof widgetOnModalClose === 'function') {
-            widgetOnModalClose(event);
-          }
+          var valid = true;
+          
+          Array.prototype.slice.call(
+            widget.querySelectorAll('input, textarea')
+          ).forEach(function (inputField) {
+            if (inputField.hasAttribute('required') && !inputField.value) {
+              valid = false;
+            }
+          });
+          
+          if (valid) {
+            if (typeof widgetOnModalClose === 'function') {
+              widgetOnModalClose(event);
+            }
 
-          context.pathfora.closeWidget(widget.id);
+            context.pathfora.closeWidget(widget.id); 
+          }
         };
       }
     },
@@ -881,7 +966,6 @@
       }, 1000);
     },
 
-    // FUTURE
     /**
      * @description Determine whether the user visited the site before (set the cookie)
      * @returns {boolean}
@@ -971,6 +1055,7 @@
         'pf-widget-layout': widget.layout,
         'pf-widget-variant': widget.variant
       };
+      var valid = true;
 
       switch (action) {
       case 'show':
@@ -995,10 +1080,25 @@
         break;
       case 'subscribe':
         params['pf-form-email'] = htmlElement.elements['email'].value;
+      case 'unlock': 
+        Object.keys(widget.placeholders).forEach(function (inputField) {
+          params['pf-sitegate-' + inputField] = htmlElement.elements[inputField].value;
+          
+          if (htmlElement.elements[inputField].hasAttribute('required') &&
+             !params['pf-sitegate-' + inputField]) {
+            htmlElement.elements[inputField].setAttribute('invalid', '');
+            
+            valid = false;
+          }
+        });
+        
+        utils.saveCookie('PathforaUnlocked', valid);
       }
-
+      
       params['pf-widget-event'] = action;
-      api.reportData(params);
+      if (valid === true) {
+        api.reportData(params);
+      }
     },
 
     /**
@@ -1026,7 +1126,7 @@
     /**
      * @description Initialize widgets from the given array
      * @throws {Error} error
-     * @param {array} array list of widgets to initialize
+     * @param  {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array) {
       var widgetOnInitCallback;
@@ -1042,6 +1142,11 @@
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
+
+        if (widget.type === 'sitegate' && 
+            utils.readCookie('PathforaUnlocked') === 'true') {
+          continue;
+        }
 
         if (this.initializedWidgets.indexOf(widget.id) < 0) {
           this.initializedWidgets.push(widget.id);
@@ -1394,7 +1499,6 @@
       return core.prepareWidget('subscription', config);
     };
 
-
     /**
      * @public
      * @description Create a Form widget
@@ -1403,6 +1507,16 @@
      */
     this.Form = function (config) {
       return core.prepareWidget('form', config);
+    };
+    
+    /**
+     * @public
+     * @description Create a Site Gate widget
+     * @param   {object}   config
+     * @returns {object}   SiteGate widget
+     */
+    this.SiteGate = function (config) {
+      return core.prepareWidget('sitegate', config);
     };
 
     /**
