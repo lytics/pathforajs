@@ -556,14 +556,6 @@
           node.parentNode.removeChild(node);
         }
       }
-      
-      if (widgetClose !== null) {
-        node = widgetClose;
-
-        if (node.parentNode) {
-          node.parentNode.removeChild(node);
-        }
-      }
 
       if (widgetOk !== null && !config.okShow) {
         node = widgetOk;
