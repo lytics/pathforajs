@@ -653,7 +653,7 @@ describe('Widgets', function () {
       id: 'custom-style-test',
       layout: 'modal',
       msg: 'Custom style test',
-      header: 'Hello',
+      headline: 'Hello',
       theme: 'custom',
 
     });
@@ -662,7 +662,7 @@ describe('Widgets', function () {
       generic: {
         colors: {
           background: '#eee',
-          header: '#333',
+          headline: '#333',
           text: '#333',
           close: '#888',
           actionText: '#ddd',
@@ -678,14 +678,14 @@ describe('Widgets', function () {
 
     var widget = $('#' + modal.id);
     var background = widget.find('.pf-widget-content');
-    var header = widget.find('.pf-widget-header');
+    var headline = widget.find('.pf-widget-headline');
     var text = widget.find('.pf-widget-message');
     var closeBtn = widget.find('.pf-widget-close');
     var actionBtn = widget.find('.pf-widget-ok');
     var cancelBtn = widget.find('.pf-widget-cancel');
 
     expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
-    expect(header.css('color')).toBe('rgb(51, 51, 51)');
+    expect(headline.css('color')).toBe('rgb(51, 51, 51)');
     expect(text.css('color')).toBe('rgb(51, 51, 51)');
     expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
     expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
@@ -976,7 +976,7 @@ describe('API', function () {
       id: 'custom-button-text-test',
       layout: 'modal',
       msg: 'Custom button text test',
-      header: 'Hello',
+      headline: 'Hello',
       okMessage: 'Confirm',
       cancelMessage: 'Cancel'
     });
@@ -998,7 +998,7 @@ describe('API', function () {
       id: 'custom-random-test',
       layout: 'random',
       msg: 'Custom random layout test',
-      header: 'Hello'
+      headline: 'Hello'
     });
 
     pathfora.initializeWidgets([random],credentials);

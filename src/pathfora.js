@@ -23,12 +23,12 @@
   var defaultProps = {
     generic: {
       className: 'pathfora',
-      header: '',
+      headline: '',
       theme: 'default',
       themes: {
         default: {
           background: '#ddd',
-          header: '#333',
+          headline: '#333',
           text: '#333',
           close: '#999',
           actionText: '#333',
@@ -38,7 +38,7 @@
         },
         dark: {
           background: '#333',
-          header: '#fff',
+          headline: '#fff',
           text: '#fff',
           close: '#888',
           actionText: '#fff',
@@ -48,7 +48,7 @@
         },
         light: {
           background: '#ddd',
-          header: '#333',
+          headline: '#333',
           text: '#333',
           close: '#999',
           actionText: '#333',
@@ -108,22 +108,22 @@
   // FUTURE Move to separate files and concat
   var templates = {
     message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
       bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       button: '<p class="pf-widget-message pf-widget-ok"></p>',
       inline: ''
     },
     subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
       bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
     },
     form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
     },
     social: {
       facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
@@ -234,14 +234,12 @@
      * @returns {string} cookie value
      */
     readCookie: function (name) {
-      var cookies = document.cookie;
-      var findCookieRegexp = new RegExp([
-        '(?:(?:^|.*;\s*)',
-        name,
-        '\s*\=\s*([^;]*).*$)|^.*$'
-      ].join(''), 'gi');
+      var cookies = document.cookie,
+          re = new RegExp(name + "=([^;]+)"),
+          value = re.exec(decodeURIComponent(cookies)),
+          output = (value !== null) ? unescape(value[1]) : undefined;
 
-      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
+      return output ;
     },
 
     /**
@@ -297,6 +295,48 @@
         '-',
         s4(), s4(), s4()
       ].join('');
+    },
+
+    /**
+     * @description Return the basic object required for targetting
+     * @returns {obj}
+     */
+    initWidgetScaffold: function () {
+      return {
+          target: []
+      };
+    },
+
+    /**
+     * @description Insert widget into existing scaffold
+     * @param {obj} scaffold
+     * @param {string} segment
+     * @param {obj} widget
+     * @throws {Error} error
+     */
+    insertWidget: function (segment, widget) {
+      // assume that we need to add a new widget until proved otherwise
+      var makeNew = true;
+
+      // make sure our scaffold is valid
+      if(!widgetConfig.target){
+        throw new Error('Invalid scaffold. No target array.');
+      }
+
+      // iterate existing widgets to determine if we need to push or define
+      for (var w in widgetConfig.target) {
+          if (w.segment === segment){
+              w.widgets.push(widget);
+              makeNew  = false;
+          }
+      }
+
+      if(makeNew){
+          widgetConfig.target.push({
+              'segment': segment,
+              'widgets': [widget]
+          });
+      }
     }
   };
 
@@ -463,7 +503,7 @@
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
-      var widgetHeader = widget.querySelectorAll('.pf-widget-header');
+      var widgetHeadline = widget.querySelectorAll('.pf-widget-headline');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
       var widgetTextArea;
@@ -550,9 +590,9 @@
         }
       }
 
-      // NOTE Set The header
-      for (i = widgetHeader.length - 1; i >= 0; i--) {
-        widgetHeader[i].innerHTML = config.header;
+      // NOTE Set The headline
+      for (i = widgetHeadline.length - 1; i >= 0; i--) {
+        widgetHeadline[i].innerHTML = config.headline;
       }
 
       // NOTE Set the image
@@ -912,8 +952,8 @@
      */
     setCustomColors: function (widget, colors) {
       var close = widget.querySelector('.pf-widget-close');
-      var header = widget.querySelector('.pf-widget-header');
-      var headerLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-header');
+      var headline = widget.querySelector('.pf-widget-headline');
+      var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
       var cancelBtn = widget.querySelector('.pf-widget-cancel');
       var okBtn = widget.querySelector('.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
@@ -939,12 +979,12 @@
         close.style.color = colors.close;
       }
 
-      if (header) {
-        header.style.color = colors.header;
+      if (headline) {
+        headline.style.color = colors.headline;
       }
 
-      if (headerLeft) {
-        headerLeft.style.color = colors.header;
+      if (headlineLeft) {
+        headlineLeft.style.color = colors.headline;
       }
 
       if (arrow) {
@@ -1773,7 +1813,7 @@
         s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
       })();
-      
+
       Object.keys(templates.form).forEach(function (type) {
         templates.form[type] = templates.form[type].replace(
           /<p name="google-login" hidden><\/p>/gm,

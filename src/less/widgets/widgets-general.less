@@ -175,7 +175,7 @@ a {
   }
 
   .pf-widget-message,
-  .pf-widget-header {
+  .pf-widget-headline {
     color: @colorLight;
   }
 
@@ -191,7 +191,7 @@ a {
 
 .pf-theme-dark {
   .pf-widget-message,
-  .pf-widget-header {
+  .pf-widget-headline {
     color: @colorDark;
   }
 }
@@ -200,7 +200,7 @@ a {
   form {
     overflow: hidden;
     width: 100%;
-  
+
     input[type=text],
     input[type=email] {
       width: 100%;
@@ -255,27 +255,27 @@ a {
   padding: 4px;
   overflow: hidden;
   float: right;
-  
+
   * {
     max-width: 20px;
   }
-  
+
   p {
     display: inline-block;
     max-width: 16px;
     height: 16px;
   }
-  
+
   & > div:not(:first-of-type) {
     margin-left: 4px;
   }
-  
+
   .social-login-btn {
     display: inline-block;
     margin: 0;
     padding: 0;
     vertical-align: top;
-    
+
     // NOTE Fix for Facebook build-in button (fixable with custom buttons)
     span {
       vertical-align: top !important;
