@@ -148,12 +148,12 @@
     },
     sitegate: {
       // FIXME Remove spaces in the template
-      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins"> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
     },
     social: {
       facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
       googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
+      googleIcon: '<div id="{{google-btnId}}" class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
     }
   };
 
@@ -660,6 +660,12 @@
             
             if (node) {
               node.className += ' pf-hidden';
+            }
+            
+            node = widget.querySelector('.pf-sitegate-centered-label');
+            
+            if (node.parentNode) {
+              node.parentNode.removeChild(node);
             }
           }
           break;
@@ -1447,7 +1453,7 @@
         window.FB.getLoginStatus(function (connection) {
           if (connection.status === 'connected') {
             window.FB.api('/me', {
-              fields: 'name,email'
+              fields: 'name,first_name,last_name,email'
             }, function (query) {
               if (query.error) {
                 throw new Error('Facebook API Error: ' + query.error);
@@ -1455,7 +1461,9 @@
 
               core.autoCompleteFormFields({
                 username: query.name || '',
-                email: query.email || ''
+                email: query.email || '',
+                firstName: query.first_name || '',
+                lastName: query.last_name || ''
               });
             });
           } else {
@@ -1476,10 +1484,14 @@
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
 
+        console.log(user);
+        
         if (typeof user !== 'undefined') {
           core.autoCompleteFormFields({
             username: user.getName() || '',
-            email: user.getEmail() || ''
+            email: user.getEmail() || '',
+            firstName: '',
+            lastName: ''
           });
         }
       }
@@ -1492,21 +1504,14 @@
     autoCompleteFormFields: function (data) {
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
-      var usernameField;
-      var emailField;
-      var usernameValue = data.username;
-      var emailValue = data.email;
-
       widgets.forEach(function (widget) {
-        usernameField = widget.querySelector('input[name="username"]');
-        emailField = widget.querySelector('input[name="email"]');
-
-        if (usernameField && !usernameField.value) {
-          usernameField.value = usernameValue;
-        }
-        if (emailField && !emailField.value) {
-          emailField.value = emailValue;
-        }
+        Object.keys(data).forEach(function (inputField) {
+          var field = widget.querySelector('input[name="' + inputField + '"]');
+          
+          if (field && !field.value) {
+            field.value = data[inputField];
+          }
+        });
       });
     }
   };
@@ -1954,6 +1959,16 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
+      // FUTURE Combine with Google integration and move to utils
+      var parseFBLoginTemplate = function (parentTemplates) {
+        Object.keys(parentTemplates).forEach(function (type) {
+          parentTemplates[type] = parentTemplates[type].replace(
+            /<p name="fb-login" hidden><\/p>/gm,
+            templates.social.facebookIcon
+          );
+        });
+      };
+      
       window.fbAsyncInit = function () {
         window.FB.init({
           appId: appId,
@@ -1975,12 +1990,8 @@
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-      Object.keys(templates.form).forEach(function (type) {
-        templates.form[type] = templates.form[type].replace(
-          /<p name="fb-login" hidden><\/p>/gm,
-          templates.social.facebookIcon
-        );
-      });
+      parseFBLoginTemplate(templates.form);
+      parseFBLoginTemplate(templates.sitegate);
 
       pathforaDataObject.socialNetworks.facebookAppId = appId;
     };
@@ -1999,6 +2010,18 @@
         /(\{){2}google-clientId(\}){2}/gm,
         clientId
       );
+      
+      var parseGoogleLoginTemplate = function (parentTemplates) {
+        Object.keys(parentTemplates).forEach(function (type, index) {
+          parentTemplates[type] = parentTemplates[type].replace(
+            /<p name="google-login" hidden><\/p>/gm,
+            templates.social.googleIcon.replace(
+              /(\{){2}google-btnId(\}){2}/gm,
+              'g-' + index
+            )
+          );
+        });
+      };
 
       head.innerHTML += appMetaTag;
       body.innerHTML += appScript;
@@ -2014,12 +2037,8 @@
         s.parentNode.insertBefore(po, s);
       })();
 
-      Object.keys(templates.form).forEach(function (type) {
-        templates.form[type] = templates.form[type].replace(
-          /<p name="google-login" hidden><\/p>/gm,
-          templates.social.googleIcon
-        );
-      });
+      parseGoogleLoginTemplate(templates.form);
+      parseGoogleLoginTemplate(templates.sitegate);
 
       pathforaDataObject.socialNetworks.googleClientID = clientId;
     };

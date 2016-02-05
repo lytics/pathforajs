@@ -21,9 +21,13 @@
 <script>
     var gate = new window.pathfora.SiteGate({
       header: 'Blocking Widget',
-      msg: 'Submit this widget to access the website.'
+      msg: 'Submit this widget to access the website.',
+      showForm: true,
+      showSocialLogin: true
     });
 
+    window.pathfora.integrateWithFacebook('{{ Facebook API AppID }}');
+  
     window.pathfora.initializeWidgets([ gate ]);
 </script>
 </body>
