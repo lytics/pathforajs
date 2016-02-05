@@ -147,6 +147,60 @@
     MODAL_CLOSE: 'modalClosed'
   };
 
+  // NOTE AB testing types
+  /**
+   * @function createABTestingModePreset
+   * @description Create an A/B testing object preset from groups list
+   * @returns {object} A/B testing object instance
+   */
+  var createABTestingModePreset = function () {
+    var groups = [];
+    var groupsSum;
+    var groupsSumRatio;
+    var i;
+    var j;
+
+    j = arguments.length;
+    for (i = 0; i < j; i++) {
+      groups.push(arguments[i]);
+    }
+
+    groupsSum = groups.reduce(function (sum, element) {
+      return sum + element;
+    });
+
+    // NOTE If groups collapse into a number greater than 1, normalize
+    if (groupsSum > 1) {
+      groupsSumRatio = 1 / groupsSum;
+
+      groups = groups.map(function (element) {
+        return element * groupsSumRatio;
+      });
+    }
+
+    return {
+      groups: groups,
+      groupsNumber: groups.length
+    };
+  };
+
+  /*
+   * @global
+   * @property abHashMD5
+   * @description Hash used as the AB testing cookie (MD5 'ab')
+   */
+  var abHashMD5 = '187ef4436122d1cc2f40dc2b92f0eba0';
+  /*
+   * @global
+   * @property abTestingTypes
+   * @description AB testing groups definitions
+   */
+  var abTestingTypes = {
+    '100': createABTestingModePreset(100),
+    '50/50': createABTestingModePreset(50, 50),
+    '80/20': createABTestingModePreset(80, 20)
+  };
+
   // NOTE Empty Pathfora data object, containg all data stored by lib
   /*
    * @global
@@ -160,12 +214,13 @@
     completedActions: [],
     cancelledActions: [],
     displayedWidgets: [],
+    abTestingGroups: [],
     socialNetworks: {}
   };
 
   /**
    * @function appendPathforaStylesheet
-   * @description Appends pathfora stylesheet to document
+   * @description Append pathfora stylesheet to document
    */
   var appendPathforaStylesheet = function () {
     var head;
@@ -235,13 +290,9 @@
      */
     readCookie: function (name) {
       var cookies = document.cookie;
-      var findCookieRegexp = new RegExp([
-        '(?:(?:^|.*;\s*)',
-        name,
-        '\s*\=\s*([^;]*).*$)|^.*$'
-      ].join(''), 'gi');
+      var findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
-      return cookies.indexOf(name) !== -1 ? cookies.replace(findCookieRegexp, '$1') : null;
+      return findCookieRegexp ? findCookieRegexp.pop() : null;
     },
 
     /**
@@ -1050,9 +1101,17 @@
       j = array.length;
       for (i = 0; i < j; i++) {
         widget = array[i];
+        if (!widget || !widget.config) {
+          continue;
+        }
+
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
+
+        if (widget.hiddenViaABTests === true) {
+          continue;
+        }
 
         if (this.initializedWidgets.indexOf(widget.id) < 0) {
           this.initializedWidgets.push(widget.id);
@@ -1178,6 +1237,26 @@
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
+    },
+
+    prepareABTest: function (config) {
+      var test = {};
+
+      if (!config) {
+        throw new Error('Config object is missing');
+      }
+
+      test.id = config.id;
+      test.cookieId = abHashMD5 + config.id;
+      test.groups = config.groups;
+
+      if (!abTestingTypes[config.type]) {
+        throw new Error('Unknown AB testing type: ' + config.type);
+      }
+
+      test.type = abTestingTypes[config.type];
+
+      return test;
     },
 
     /**
@@ -1539,6 +1618,57 @@
     };
 
     /**
+     * // FIXME outdated/not completed
+     * @public
+     * @description Set A/B testing modes for the global Pathfora object
+     * @param {string} abTests A/B testing modes array
+     */
+    this.initializeABTesting = function (abTests) {
+      abTests.forEach(function (abTest) {
+        var abTestingType = abTest.type;
+        var userAbTestingValue = utils.readCookie(abTest.cookieId);
+        var userAbTestingGroup = 0;
+        var i;
+
+        if (!userAbTestingValue) {
+          userAbTestingValue = Math.random();
+
+          utils.saveCookie(abTest.cookieId, userAbTestingValue);
+        }
+
+        // NOTE Determine visible group for the user
+        i = 0;
+        while (i < 1) {
+          i += abTestingType.groups[userAbTestingGroup];
+
+          if (userAbTestingValue <= i) {
+            break;
+          }
+
+          userAbTestingGroup++;
+        }
+
+        // NOTE Notify widgets about their proper AB groups
+        abTest.groups.forEach(function (group, index) {
+          group.forEach(function (widget) {
+            if (typeof widget.abTestingGroup === 'undefined') {
+              widget.abTestingGroup = index;
+              widget.hiddenViaABTests = userAbTestingGroup === index;
+            } else {
+              throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
+            }
+          });
+        });
+
+        if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
+          throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
+        }
+
+        pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
+      });
+    };
+
+    /**
      * @public
      * @description Create a Message widget
      * @param   {object}   config
@@ -1557,7 +1687,6 @@
     this.Subscription = function (config) {
       return core.prepareWidget('subscription', config);
     };
-
 
     /**
      * @public
@@ -1700,6 +1829,7 @@
         completedActions: [],
         cancelledActions: [],
         displayedWidgets: [],
+        abTestingGroups: [],
         socialNetworks: {}
       };
 
@@ -1773,7 +1903,7 @@
         s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
       })();
-      
+
       Object.keys(templates.form).forEach(function (type) {
         templates.form[type] = templates.form[type].replace(
           /<p name="google-login" hidden><\/p>/gm,
@@ -1790,6 +1920,13 @@
 
     this.onGoogleSignIn = function () {
       core.autoCompleteGoogleData();
+    };
+
+    /*
+     * @public
+     */
+    this.ABTest = function (config) {
+      return core.prepareABTest(config);
     };
 
     /*

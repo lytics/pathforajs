@@ -315,6 +315,7 @@ describe('Pathfora', function () {
       completedActions: [],
       cancelledActions: [],
       displayedWidgets: [],
+      abTestingGroups: [],
       socialNetworks: {}
     };
 
