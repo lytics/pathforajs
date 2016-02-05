@@ -142,14 +142,24 @@
       bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
     },
     form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
     },
     sitegate: {
       // FIXME Remove spaces in the template
       modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins"> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+    },
+    social: {
+      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
+      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
+      googleIcon: '<div class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
     }
+  };
+
+  var scripts = {
+    facebook: '<div id="fb-root"></div>',
+    google: ''
   };
 
   // NOTE Event callback types
@@ -160,6 +170,60 @@
     FORM_SUBMIT: 'formSubmitted',
     MODAL_OPEN: 'modalOpened',
     MODAL_CLOSE: 'modalClosed'
+  };
+
+  // NOTE AB testing types
+  /**
+   * @function createABTestingModePreset
+   * @description Create an A/B testing object preset from groups list
+   * @returns {object} A/B testing object instance
+   */
+  var createABTestingModePreset = function () {
+    var groups = [];
+    var groupsSum;
+    var groupsSumRatio;
+    var i;
+    var j;
+
+    j = arguments.length;
+    for (i = 0; i < j; i++) {
+      groups.push(arguments[i]);
+    }
+
+    groupsSum = groups.reduce(function (sum, element) {
+      return sum + element;
+    });
+
+    // NOTE If groups collapse into a number greater than 1, normalize
+    if (groupsSum > 1) {
+      groupsSumRatio = 1 / groupsSum;
+
+      groups = groups.map(function (element) {
+        return element * groupsSumRatio;
+      });
+    }
+
+    return {
+      groups: groups,
+      groupsNumber: groups.length
+    };
+  };
+
+  /*
+   * @global
+   * @property abHashMD5
+   * @description Hash used as the AB testing cookie (MD5 'ab')
+   */
+  var abHashMD5 = '187ef4436122d1cc2f40dc2b92f0eba0';
+  /*
+   * @global
+   * @property abTestingTypes
+   * @description AB testing groups definitions
+   */
+  var abTestingTypes = {
+    '100': createABTestingModePreset(100),
+    '50/50': createABTestingModePreset(50, 50),
+    '80/20': createABTestingModePreset(80, 20)
   };
 
   // NOTE Empty Pathfora data object, containg all data stored by lib
@@ -174,12 +238,14 @@
     closedWidgets: [],
     completedActions: [],
     cancelledActions: [],
-    displayedWidgets: []
+    displayedWidgets: [],
+    abTestingGroups: [],
+    socialNetworks: {}
   };
 
   /**
    * @function appendPathforaStylesheet
-   * @description Appends pathfora stylesheet to document
+   * @description Append pathfora stylesheet to document
    */
   var appendPathforaStylesheet = function () {
     var head;
@@ -535,6 +601,9 @@
           widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
           widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
           widgetTextArea.placeholder = config.placeholders.message;
+
+          core.autoCompleteFacebookData();
+          core.autoCompleteGoogleData();
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -547,7 +616,6 @@
         case 'bar':
         case 'slideout':
         case 'random':
-          // FIXME Cache
           widget.querySelector('input').placeholder = config.placeholders.email;
           break;
         default:
@@ -1139,12 +1207,17 @@
       j = array.length;
       for (i = 0; i < j; i++) {
         widget = array[i];
+        if (!widget || !widget.config) {
+          continue;
+        }
+
         widgetOnInitCallback = widget.config.onInit;
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && 
-            utils.readCookie('PathforaUnlocked') === 'true') {
+        if ((widget.type === 'sitegate' && 
+            utils.readCookie('PathforaUnlocked') === 'true') ||
+            widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1272,6 +1345,177 @@
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
+    },
+
+    prepareABTest: function (config) {
+      var test = {};
+
+      if (!config) {
+        throw new Error('Config object is missing');
+      }
+
+      test.id = config.id;
+      test.cookieId = abHashMD5 + config.id;
+      test.groups = config.groups;
+
+      if (!abTestingTypes[config.type]) {
+        throw new Error('Unknown AB testing type: ' + config.type);
+      }
+
+      test.type = abTestingTypes[config.type];
+
+      return test;
+    },
+
+    /**
+     * @description Social APIs require certain DOM elements to be redrawn
+     *                  after initialization (ex. buttons). Request a timeout
+     *                  redraw, which executes after all social APIs are initialized.
+     *                  Generates a clojure function inside.
+     */
+    requestSocialPluginRender: function () {
+      var renderWidgets = {
+        facebook: [],
+        google: []
+      };
+      var timeoutInterval = {};
+
+      var attemptRenderingFacebook = function () {
+        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
+          renderWidgets.facebook.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.fb-login-button');
+
+            window.FB.XFBML.parse(widget);
+
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.facebook = [];
+
+          return clearTimeout(timeoutInterval['facebook']);
+        } else {
+          return setTimeout(attemptRenderingFacebook, 1000);
+        }
+      };
+
+      var attemptRenderingGoogle = function () {
+        if (typeof window.gapi !== 'undefined') {
+          renderWidgets.google.forEach(function (widget) {
+            var signInBtn = widget.querySelector('.g-signin2');
+
+            window.gapi.signin2.render(signInBtn, {
+              scope: 'profile',
+              width: 16,
+              height: 16
+            });
+            signInBtn.className += ' social-login-btn';
+          });
+          renderWidgets.google = [];
+
+          return clearTimeout(attemptRenderingGoogle);
+        } else {
+          return setTimeout(attemptRenderingGoogle, 1000);
+        }
+      };
+
+      this.requestSocialPluginRender = function (widget) {
+        var widgets = widget instanceof Array ? widget : [widget];
+
+        widgets.forEach(function (element) {
+          var requestFacebook = false;
+          var requestGoogle = false;
+
+          if (typeof element.querySelector === 'undefined') {
+            return false;
+          }
+
+          requestFacebook = element.querySelector('.fb-login-button') !== null;
+          requestGoogle = element.querySelector('.g-signin2') !== null;
+
+          if (requestFacebook) {
+            renderWidgets.facebook = renderWidgets.facebook.concat(element);
+          }
+          if (requestGoogle) {
+            renderWidgets.google = renderWidgets.google.concat(element);
+          }
+        });
+
+        timeoutInterval['facebook'] = attemptRenderingFacebook();
+        timeoutInterval['google'] = attemptRenderingGoogle();
+      };
+
+      this.requestSocialPluginRender(arguments[0]);
+    },
+
+    /**
+     * @description Attempt to load forms' data from Facebook API.
+     * @throws {Error} Facebook API Error
+     */
+    autoCompleteFacebookData: function () {
+      if (typeof window.FB !== 'undefined') {
+        window.FB.getLoginStatus(function (connection) {
+          if (connection.status === 'connected') {
+            window.FB.api('/me', {
+              fields: 'name,email'
+            }, function (query) {
+              if (query.error) {
+                throw new Error('Facebook API Error: ' + query.error);
+              }
+
+              core.autoCompleteFormFields({
+                username: query.name || '',
+                email: query.email || ''
+              });
+            });
+          } else {
+            throw new Error('Facebook API Error: User not connected');
+          }
+        });
+      }
+    },
+
+    /**
+     * @description Attempt to load forms' data from Google+ API.
+     */
+    autoCompleteGoogleData: function () {
+      var auth2;
+      var user;
+
+      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
+        auth2 = window.gapi.auth2.getAuthInstance();
+        user = auth2.currentUser.get().getBasicProfile();
+
+        if (typeof user !== 'undefined') {
+          core.autoCompleteFormFields({
+            username: user.getName() || '',
+            email: user.getEmail() || ''
+          });
+        }
+      }
+    },
+
+    /**
+     * @description Fill form DOM objects with user data
+     * @param {object} data user data
+     */
+    autoCompleteFormFields: function (data) {
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+      var usernameField;
+      var emailField;
+      var usernameValue = data.username;
+      var emailValue = data.email;
+
+      widgets.forEach(function (widget) {
+        usernameField = widget.querySelector('input[name="username"]');
+        emailField = widget.querySelector('input[name="email"]');
+
+        if (usernameField && !usernameField.value) {
+          usernameField.value = usernameValue;
+        }
+        if (emailField && !emailField.value) {
+          emailField.value = emailValue;
+        }
+      });
     }
   };
 
@@ -1345,6 +1589,8 @@
      * @param {object} data payload
      */
     reportData: function (data) {
+      var gaLabel;
+
       if (typeof jstag === 'object') {
         jstag.send(data);
       } else {
@@ -1352,7 +1598,7 @@
       }
 
       if (typeof ga === 'function') {
-        var gaLabel = data['pf-widget-action'] || data['pf-widget-event']
+        gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
 
         ga(
           'send',
@@ -1480,6 +1726,57 @@
     };
 
     /**
+     * // FIXME outdated/not completed
+     * @public
+     * @description Set A/B testing modes for the global Pathfora object
+     * @param {string} abTests A/B testing modes array
+     */
+    this.initializeABTesting = function (abTests) {
+      abTests.forEach(function (abTest) {
+        var abTestingType = abTest.type;
+        var userAbTestingValue = utils.readCookie(abTest.cookieId);
+        var userAbTestingGroup = 0;
+        var i;
+
+        if (!userAbTestingValue) {
+          userAbTestingValue = Math.random();
+
+          utils.saveCookie(abTest.cookieId, userAbTestingValue);
+        }
+
+        // NOTE Determine visible group for the user
+        i = 0;
+        while (i < 1) {
+          i += abTestingType.groups[userAbTestingGroup];
+
+          if (userAbTestingValue <= i) {
+            break;
+          }
+
+          userAbTestingGroup++;
+        }
+
+        // NOTE Notify widgets about their proper AB groups
+        abTest.groups.forEach(function (group, index) {
+          group.forEach(function (widget) {
+            if (typeof widget.abTestingGroup === 'undefined') {
+              widget.abTestingGroup = index;
+              widget.hiddenViaABTests = userAbTestingGroup === index;
+            } else {
+              throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
+            }
+          });
+        });
+
+        if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
+          throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
+        }
+
+        pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
+      });
+    };
+
+    /**
      * @public
      * @description Create a Message widget
      * @param   {object}   config
@@ -1561,6 +1858,8 @@
             widget: widget
           });
         }
+
+        core.requestSocialPluginRender(node);
       }, 50);
 
       if (widget.displayConditions.hideAfter) {
@@ -1647,12 +1946,105 @@
         closedWidgets: [],
         completedActions: [],
         cancelledActions: [],
-        displayedWidgets: []
+        displayedWidgets: [],
+        abTestingGroups: [],
+        socialNetworks: {}
       };
 
       if (originalConf) {
         defaultProps = originalConf;
       }
+    };
+
+    /**
+     * @public
+     * @description Intergrate with Facebook App API
+     * @param {string} appId
+     */
+    this.integrateWithFacebook = function (appId) {
+      window.fbAsyncInit = function () {
+        window.FB.init({
+          appId: appId,
+          xfbml: true,
+          version: 'v2.5'
+        });
+      };
+
+      // NOTE API initialization
+      (function (d, s, id) {
+        var js;
+        var fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = '//connect.facebook.net/en_GB/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="fb-login" hidden><\/p>/gm,
+          templates.social.facebookIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.facebookAppId = appId;
+    };
+
+    /**
+     * @public
+     * @description Integrate with Google App API
+     * @param {string} clientId
+     */
+    this.integrateWithGoogle = function (clientId) {
+      var body = document.querySelector('body');
+      var head = document.querySelector('head');
+
+      var appScript = scripts.google;
+      var appMetaTag = templates.social.googleMeta.replace(
+        /(\{){2}google-clientId(\}){2}/gm,
+        clientId
+      );
+
+      head.innerHTML += appMetaTag;
+      body.innerHTML += appScript;
+
+      // NOTE Google API
+      (function () {
+        var s;
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/platform.js';
+        s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+      })();
+
+      Object.keys(templates.form).forEach(function (type) {
+        templates.form[type] = templates.form[type].replace(
+          /<p name="google-login" hidden><\/p>/gm,
+          templates.social.googleIcon
+        );
+      });
+
+      pathforaDataObject.socialNetworks.googleClientID = clientId;
+    };
+
+    this.onFacebookSignIn = function () {
+      core.autoCompleteFacebookData();
+    };
+
+    this.onGoogleSignIn = function () {
+      core.autoCompleteGoogleData();
+    };
+
+    /*
+     * @public
+     */
+    this.ABTest = function (config) {
+      return core.prepareABTest(config);
     };
 
     /*
