@@ -990,7 +990,6 @@ describe('API', function () {
 
     expect(actionBtn.html()).toBe('Confirm');
     expect(cancelBtn.html()).toBe('Cancel');
-
   });
 
   it('should be able to set random layout for each widget element', function () {
@@ -1041,5 +1040,37 @@ describe('API', function () {
 
       done();
     }, 200);
+  });
+  
+  it('should not show page-views dependent widget when page views requirement has not been reached', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        pageVisits: 1
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+  
+  it('should show page-views dependent widget when page views requirement has been reached', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        pageVisits: 0
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
   });
 });
