@@ -1153,10 +1153,15 @@
 
       if (!(widgets instanceof Array) && widgets.target) {
         j = widgets.target.length;
+        
+        widgets.common = widgets.common || [];
 
         for (i = 0; i < j; i++) {
           if (!widgets.target[i].segment) {
             throw new Error('All targeted widgets should have segment specified');
+          } else if (widgets.target[i].segment === '*') {
+            widgets.common = widgets.common.concat(widgets.target[i].widgets);
+            widgets.target.splice(i, 1);
           }
         }
       }
