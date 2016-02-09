@@ -69,7 +69,6 @@
       layout: 'modal',
       position: '',
       variant: '1',
-      cancelButton: true,
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
