@@ -17,7 +17,7 @@
     modal: '',
     slideout: 'left',
     button: 'top-left',
-    bar: 'top-fixed',
+    bar: 'top-absolute',
     folding: 'bottom-left'
   };
   var defaultProps = {
@@ -884,7 +884,7 @@
         choices = ['left', 'right'];
         break;
       case 'bar':
-        choices = ['top-fixed', 'top-scrolling', 'bottom-scrolling'];
+        choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
         break;
       case 'button':
         choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
@@ -1187,7 +1187,7 @@
           layout: ['modal', 'slideout', 'bar', 'button', 'folding'],
           variant: ['1', '2'],
           slideout: ['left', 'right'],
-          bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
+          bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
           button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };

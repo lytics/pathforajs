@@ -836,7 +836,7 @@ describe('Widgets', function () {
     var widget4 = $('#' + w4.id);
 
     expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
-    expect(widget2.hasClass('pf-position-top-fixed')).toBeTruthy();
+    expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
     expect(widget3.hasClass('pf-position-left')).toBeTruthy();
     expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
   });
