@@ -38,11 +38,11 @@
         },
         dark: {
           background: '#333',
-          header: '#ddd',
+          header: '#fefefe',
           text: '#aaa',
           close: '#888',
           actionText: '#fff',
-          actionBackground: '#597E9B',
+          actionBackground: '#444',
           cancelText: '#888',
           cancelBackground: '#333'
         },
