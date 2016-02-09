@@ -361,6 +361,7 @@
     openedWidgets: [],
     initializedWidgets: [],
     watchers: [],
+    pageViews: ~~utils.readCookie('PathforaPageView'),
 
     /**
      * @description Display a single widget
@@ -379,6 +380,8 @@
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
+      } else if (condition.pageVisits) {
+        core.registerPageVisitsCounter(condition.pageVisits, widget);
       } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
@@ -407,6 +410,12 @@
         } else {
           context.onscroll = core.scrollListener;
         }
+      }
+    },
+    
+    registerPageVisitsCounter: function (pageVisitsRequired, widget) {
+      if (core.pageViews >= pageVisitsRequired) {
+        context.pathfora.showWidget(widget);
       }
     },
 
@@ -503,7 +512,7 @@
         }
       }
     },
-
+    
     /**
      * @description Construct DOM layout for the widget
      * @throws {Error} error
@@ -1547,6 +1556,12 @@
    */
   Pathfora = function () {
 
+    this.initializePageViews = function () {
+      var cookie = utils.readCookie('PathforaPageView');
+      
+      utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1);
+    };
+    
     /**
      * @public
      * @description Initialize Pathfora widgets from a container
@@ -1939,6 +1954,7 @@
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
+  context.pathfora.initializePageViews();
 
   // NOTE Webadmin generated config
   if (typeof pfCfg === 'object') {
