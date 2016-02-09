@@ -5,7 +5,7 @@
   background: @backgroundDefault;
   color: @colorDefault;
   border-radius: 4px;
-  &:extend(.pf-box-shadow);
+  .pf-box-shadow();
   display: table;
 
   > div {
@@ -16,7 +16,6 @@
   .pf-widget-close {
     position: absolute;
     right: 0;
-    top: 20px;
   }
 
   img {
@@ -26,17 +25,18 @@
   }
 
   .pf-widget-content {
-    padding: 20px 20px 20px 40px;
+    padding:30px;
 
   }
 
   .pf-widget-header {
     font-size: 20px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+    margin-top:0;
   }
 
   .pf-widget-message {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   input[type=text],
@@ -52,7 +52,7 @@
   }
 
   .pf-widget-btn {
-    float: right;
+    // float: right;
   }
 
   &.pf-theme-dark {
@@ -62,7 +62,6 @@
 
   &.pf-theme-light {
     background: @backgroundLight;
-    border: 1px solid @borderLight;
   }
 
   &.opened {
@@ -88,20 +87,26 @@
     right: -540px;
   }
 
+  &.pf-subscription {
+    form {
+      width:100%;
+    }
+  }
+
   &.pf-widget-variant-2 {
     width: 350px;
 
     .pf-widget-content {
       text-align: center;
       width: 100%;
-      padding: 20px;
+      padding: 30px;
 
       .pf-widget-header {
         margin-top: 120px;
       }
 
       .pf-widget-btn {
-        font-size: 14px;
+        font-size: 16px;
       }
 
       input[type=text],
@@ -170,7 +175,7 @@
     }
 
     .pf-widget-content {
-      padding: 20px;
+      padding: 30px;
     }
 
     input[type=text]
@@ -180,8 +185,7 @@
     }
 
     .pf-widget-btn {
-      float: right;
-      margin-bottom: 20px;
+
     }
 
     &.pf-widget-variant-2 {

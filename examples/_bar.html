@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BAR</title>
+  </head>
+  <style type="text/css">
+  @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
+  </style>
+  <body>
+
+    <h1>Action widget example</h1>
+
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var messageBar = pathfora.Message({
+        id: 'asd',
+        layout: 'bar',
+        variant: '2',
+        msg: 'Welcome to our website',
+        image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      });
+
+      window.pathfora.initializeWidgets([ messageBar ]);
+    </script>
+  </body>
+</html>
