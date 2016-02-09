@@ -51,6 +51,12 @@ describe('Pathfora', function () {
       layout: 'modal'
     });
 
+    var messageD = pathfora.Message({
+      id: 'test-bar-04',
+      msg: 'D',
+      layout: 'modal'
+    });
+
     var widgets = {
       target: [{
         segment: 'a',
@@ -61,12 +67,14 @@ describe('Pathfora', function () {
       },{
         segment: 'c',
         widgets: [messageC]
+      },{
+        segment: '*',
+        widgets: [messageD]
       }]
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
@@ -79,14 +87,16 @@ describe('Pathfora', function () {
 
     var notOpenedA = $('#' + messageA.id);
     var notOpenedC = $('#' + messageC.id);
+    var universalWidget = $('#' + messageD.id);
 
     setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(notOpenedA.length).toBe(0);
       expect(notOpenedC.length).toBe(0);
+      expect(universalWidget.hasClass('opened')).toBeTruthy();
 
       var msg = $('.pf-widget-message').text();
-      expect(msg).toBe('B');
+      expect(msg).toBe('DB');
 
       pathfora.clearAll();
       done();
