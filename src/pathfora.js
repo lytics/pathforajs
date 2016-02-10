@@ -17,7 +17,7 @@
     modal: '',
     slideout: 'left',
     button: 'top-left',
-    bar: 'top-fixed',
+    bar: 'top-absolute',
     folding: 'bottom-left'
   };
   var defaultProps = {
@@ -69,7 +69,6 @@
       layout: 'modal',
       position: '',
       variant: '1',
-      cancelButton: true,
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
@@ -98,9 +97,30 @@
         message: 'Message'
       },
       okMessage: 'Send',
-      cancelMessage: 'Cancel',
       okShow: true,
+      cancelMessage: 'Cancel',
       cancelShow: true
+    },
+    sitegate: {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        email: 'Email',
+        organization: 'Organization',
+        title: 'Title'
+      },
+      required: [
+        'firstName', 
+        'lastName', 
+        'email' 
+      ],
+      okMessage: 'Submit',
+      okShow: true,
+      showSocialLogin: false,
+      showForm: true
     }
   };
 
@@ -125,10 +145,14 @@
       slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
       folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
     },
+    sitegate: {
+      // FIXME Remove spaces in the template
+      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+    },
     social: {
       facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
       googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
+      googleIcon: '<div id="{{google-btnId}}" class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
     }
   };
 
@@ -233,7 +257,8 @@
     link.setAttribute('type', 'text/css');
 
     // NOTE Need to update the cdn version. For now use local.
-    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+//    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    link.setAttribute('href', '../dist/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -517,6 +542,7 @@
       var widgetHeader = widget.querySelectorAll('.pf-widget-header');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
@@ -561,7 +587,7 @@
         case 'modal':
         case 'slideout':
         case 'random':
-          widgetTextArea = widget.querySelector('textarea[name="message"]');
+          widgetTextArea = widget.querySelector('textarea');
           widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
           widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
           widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
@@ -599,6 +625,53 @@
         default:
           throw new Error('Invalid widget layout value');
         }
+        break;
+      case 'sitegate':
+        switch (config.layout) {
+        case 'modal':
+          Object.keys(config.placeholders).forEach(function (inputField) {
+            var element = widget.querySelector('input[name="' + inputField + '"]');
+            
+            if (element) {
+              element.placeholder = config.placeholders[inputField];
+            }
+          });
+
+          Object.keys(config.required).forEach(function (index) {
+            var field = config.required[index];
+            var element = widget.querySelector('input[name="' + field + '"]');
+            
+            if (element) {
+              element.setAttribute('required', '');
+            }
+          });
+          
+          if (config.showSocialLogin === false) {
+            node = widget.querySelector('.pf-sitegate-social-plugins');
+            
+            if (node.parentNode) {
+              node.parentNode.removeChild(node);
+            }
+          }
+            
+          if (config.showForm === false) {
+            node = widget.querySelector('form');
+            
+            if (node) {
+              node.className += ' pf-hidden';
+            }
+            
+            node = widget.querySelector('.pf-sitegate-centered-label');
+            
+            if (node.parentNode) {
+              node.parentNode.removeChild(node);
+            }
+          }
+          break;
+        default:
+          throw new Error('Invalid widget layout value');
+        }
+        break;
       }
 
       // NOTE Set The header
@@ -662,6 +735,7 @@
 
       switch (config.type) {
       case 'form':
+      case 'sitegate':
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
@@ -674,6 +748,9 @@
             break;
           case 'subscription':
             widgetAction = 'subscribe';
+            break;
+          case 'sitegate':
+            widgetAction = 'unlock';
             break;
           }
 
@@ -717,7 +794,6 @@
           }, 0);
         }
 
-        // FIXME Change to forEach
         j = widgetAllCaptions.length - 1;
         for (i = j; i >= 0; i--) {
           widgetAllCaptions[i].onclick = function () {
@@ -802,13 +878,25 @@
 
           context.pathfora.closeWidget(widget.id);
         };
-      } else if (config.type === 'form') {
+      } else if (config.type === 'form' || config.type === 'sitegate') {
         widgetOk.onclick = function () {
-          if (typeof widgetOnModalClose === 'function') {
-            widgetOnModalClose(event);
-          }
+          var valid = true;
+          
+          Array.prototype.slice.call(
+            widget.querySelectorAll('input, textarea')
+          ).forEach(function (inputField) {
+            if (inputField.hasAttribute('required') && !inputField.value) {
+              valid = false;
+            }
+          });
+          
+          if (valid) {
+            if (typeof widgetOnModalClose === 'function') {
+              widgetOnModalClose(event);
+            }
 
-          context.pathfora.closeWidget(widget.id);
+            context.pathfora.closeWidget(widget.id); 
+          }
         };
       }
     },
@@ -884,7 +972,7 @@
         choices = ['left', 'right'];
         break;
       case 'bar':
-        choices = ['top-fixed', 'top-scrolling', 'bottom-scrolling'];
+        choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
         break;
       case 'button':
         choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
@@ -943,7 +1031,6 @@
       }, 1000);
     },
 
-    // FUTURE
     /**
      * @description Determine whether the user visited the site before (set the cookie)
      * @returns {boolean}
@@ -1033,6 +1120,7 @@
         'pf-widget-layout': widget.layout,
         'pf-widget-variant': widget.variant
       };
+      var valid = true;
 
       switch (action) {
       case 'show':
@@ -1057,10 +1145,25 @@
         break;
       case 'subscribe':
         params['pf-form-email'] = htmlElement.elements['email'].value;
+      case 'unlock': 
+        Object.keys(widget.placeholders).forEach(function (inputField) {
+          params['pf-sitegate-' + inputField] = htmlElement.elements[inputField].value;
+          
+          if (htmlElement.elements[inputField].hasAttribute('required') &&
+             !params['pf-sitegate-' + inputField]) {
+            htmlElement.elements[inputField].setAttribute('invalid', '');
+            
+            valid = false;
+          }
+        });
+        
+        utils.saveCookie('PathforaUnlocked', valid);
       }
-
+      
       params['pf-widget-event'] = action;
-      api.reportData(params);
+      if (valid === true) {
+        api.reportData(params);
+      }
     },
 
     /**
@@ -1088,7 +1191,7 @@
     /**
      * @description Initialize widgets from the given array
      * @throws {Error} error
-     * @param {array} array list of widgets to initialize
+     * @param  {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array) {
       var widgetOnInitCallback;
@@ -1109,7 +1212,9 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (widget.hiddenViaABTests === true) {
+        if ((widget.type === 'sitegate' && 
+            utils.readCookie('PathforaUnlocked') === 'true') ||
+            widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1153,10 +1258,15 @@
 
       if (!(widgets instanceof Array) && widgets.target) {
         j = widgets.target.length;
+        
+        widgets.common = widgets.common || [];
 
         for (i = 0; i < j; i++) {
           if (!widgets.target[i].segment) {
             throw new Error('All targeted widgets should have segment specified');
+          } else if (widgets.target[i].segment === '*') {
+            widgets.common = widgets.common.concat(widgets.target[i].widgets);
+            widgets.target.splice(i, 1);
           }
         }
       }
@@ -1187,7 +1297,7 @@
           layout: ['modal', 'slideout', 'bar', 'folding'],
           variant: ['1', '2'],
           slideout: ['left', 'right'],
-          bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
+          bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
 
@@ -1344,7 +1454,7 @@
         window.FB.getLoginStatus(function (connection) {
           if (connection.status === 'connected') {
             window.FB.api('/me', {
-              fields: 'name,email'
+              fields: 'name,first_name,last_name,email'
             }, function (query) {
               if (query.error) {
                 throw new Error('Facebook API Error: ' + query.error);
@@ -1352,7 +1462,9 @@
 
               core.autoCompleteFormFields({
                 username: query.name || '',
-                email: query.email || ''
+                email: query.email || '',
+                firstName: query.first_name || '',
+                lastName: query.last_name || ''
               });
             });
           } else {
@@ -1373,10 +1485,14 @@
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
 
+        console.log(user);
+        
         if (typeof user !== 'undefined') {
           core.autoCompleteFormFields({
             username: user.getName() || '',
-            email: user.getEmail() || ''
+            email: user.getEmail() || '',
+            firstName: '',
+            lastName: ''
           });
         }
       }
@@ -1389,21 +1505,14 @@
     autoCompleteFormFields: function (data) {
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
-      var usernameField;
-      var emailField;
-      var usernameValue = data.username;
-      var emailValue = data.email;
-
       widgets.forEach(function (widget) {
-        usernameField = widget.querySelector('input[name="username"]');
-        emailField = widget.querySelector('input[name="email"]');
-
-        if (usernameField && !usernameField.value) {
-          usernameField.value = usernameValue;
-        }
-        if (emailField && !emailField.value) {
-          emailField.value = emailValue;
-        }
+        Object.keys(data).forEach(function (inputField) {
+          var field = widget.querySelector('input[name="' + inputField + '"]');
+          
+          if (field && !field.value) {
+            field.value = data[inputField];
+          }
+        });
       });
     }
   };
@@ -1694,6 +1803,16 @@
     this.Form = function (config) {
       return core.prepareWidget('form', config);
     };
+    
+    /**
+     * @public
+     * @description Create a Site Gate widget
+     * @param   {object}   config
+     * @returns {object}   SiteGate widget
+     */
+    this.SiteGate = function (config) {
+      return core.prepareWidget('sitegate', config);
+    };
 
     /**
      * @public
@@ -1841,6 +1960,16 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
+      // FUTURE Combine with Google integration and move to utils
+      var parseFBLoginTemplate = function (parentTemplates) {
+        Object.keys(parentTemplates).forEach(function (type) {
+          parentTemplates[type] = parentTemplates[type].replace(
+            /<p name="fb-login" hidden><\/p>/gm,
+            templates.social.facebookIcon
+          );
+        });
+      };
+      
       window.fbAsyncInit = function () {
         window.FB.init({
           appId: appId,
@@ -1862,12 +1991,8 @@
         fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
 
-      Object.keys(templates.form).forEach(function (type) {
-        templates.form[type] = templates.form[type].replace(
-          /<p name="fb-login" hidden><\/p>/gm,
-          templates.social.facebookIcon
-        );
-      });
+      parseFBLoginTemplate(templates.form);
+      parseFBLoginTemplate(templates.sitegate);
 
       pathforaDataObject.socialNetworks.facebookAppId = appId;
     };
@@ -1886,6 +2011,18 @@
         /(\{){2}google-clientId(\}){2}/gm,
         clientId
       );
+      
+      var parseGoogleLoginTemplate = function (parentTemplates) {
+        Object.keys(parentTemplates).forEach(function (type, index) {
+          parentTemplates[type] = parentTemplates[type].replace(
+            /<p name="google-login" hidden><\/p>/gm,
+            templates.social.googleIcon.replace(
+              /(\{){2}google-btnId(\}){2}/gm,
+              'g-' + index
+            )
+          );
+        });
+      };
 
       head.innerHTML += appMetaTag;
       body.innerHTML += appScript;
@@ -1901,12 +2038,8 @@
         s.parentNode.insertBefore(po, s);
       })();
 
-      Object.keys(templates.form).forEach(function (type) {
-        templates.form[type] = templates.form[type].replace(
-          /<p name="google-login" hidden><\/p>/gm,
-          templates.social.googleIcon
-        );
-      });
+      parseGoogleLoginTemplate(templates.form);
+      parseGoogleLoginTemplate(templates.sitegate);
 
       pathforaDataObject.socialNetworks.googleClientID = clientId;
     };
