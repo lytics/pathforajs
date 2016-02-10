@@ -1294,11 +1294,10 @@
 
       if(config.layout === 'random') {
         props = {
-          layout: ['modal', 'slideout', 'bar', 'button', 'folding'],
+          layout: ['modal', 'slideout', 'bar', 'folding'],
           variant: ['1', '2'],
           slideout: ['left', 'right'],
           bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
-          button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
 
@@ -1338,8 +1337,6 @@
         case 'bar':
           config.position = props.bar[Math.floor(Math.random() * 3)];
           break;
-        case 'button':
-          config.position = props.button[Math.floor(Math.random() * 6)];
         }
       }
       widget.type = type;
