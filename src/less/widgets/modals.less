@@ -23,29 +23,30 @@
     width: @modalWidth;
     margin: 0 auto;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 5px;
     background: @backgroundDefault;
     &:extend(.pf-box-shadow);
     transition: all .3s;
   }
 
   .pf-widget-img {
-      float: right;
-      margin-right: 0px;
-      width: 100px;
-      height: 100px;
-      margin-left: 20px;
-    }
+    float: right;
+    margin-right: 0px;
+    width: 100px;
+    height: 100px;
+    margin-left: 20px;
+  }
 
   .pf-widget-headline {
-    font-size: 38px;
+    font-size: 28px;
     margin: 0 0 18px 0;
   }
 
   .pf-widget-close {
     position: absolute;
     float: none;
-    top: 20px; right: 0;
+    top: 4px;
+    right: 0;
   }
 
   .pf-widget-body {
@@ -82,14 +83,9 @@
     }
   }
 
-  &.pf-form {
+  &.pf-form, &.pf-sitegate {
     form {
       white-space: normal;
-
-      input[type=text],
-      input[type=email] {
-        width: 100%;
-      }
     }
   }
 
@@ -106,6 +102,21 @@
     }
   }
 
+  &.pf-no-img {
+    text-align: center;
+    .pf-widget-headline {
+      font-weight:400;
+      margin-bottom:10px;
+    }
+    .pf-widget-message {
+      margin-bottom:30px;
+    }
+    .pf-widget-btn {
+      font-size:16px;
+      padding:5px 20px;
+    }
+  }
+
   &.pf-widget-variant-2 {
     .pf-widget-content {
       max-width: 70%;
@@ -115,6 +126,8 @@
     .pf-widget-headline {
       text-align: center;
       margin-top: 140px;
+      margin-bottom:10px;
+      font-weight:100;
     }
 
     .pf-widget-body {
@@ -137,7 +150,12 @@
       }
 
       .pf-widget-btn {
-        font-size: 14px;
+        font-size: 16px;
+        padding:5px 20px;
+      }
+
+      .pf-widget-message {
+        margin-bottom:30px;
       }
 
       input {

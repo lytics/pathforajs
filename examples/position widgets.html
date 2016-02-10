@@ -87,6 +87,17 @@
       }
     });
     widgets.push(sub);
+  
+    var sub = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        pageVisits: 5
+      }
+    });
+    widgets.push(sub);
 
     window.pathfora.initializeWidgets(widgets);
 

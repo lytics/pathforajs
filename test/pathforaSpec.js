@@ -51,6 +51,12 @@ describe('Pathfora', function () {
       layout: 'modal'
     });
 
+    var messageD = pathfora.Message({
+      id: 'test-bar-04',
+      msg: 'D',
+      layout: 'modal'
+    });
+
     var widgets = {
       target: [{
         segment: 'a',
@@ -61,12 +67,14 @@ describe('Pathfora', function () {
       },{
         segment: 'c',
         widgets: [messageC]
+      },{
+        segment: '*',
+        widgets: [messageD]
       }]
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
@@ -79,14 +87,16 @@ describe('Pathfora', function () {
 
     var notOpenedA = $('#' + messageA.id);
     var notOpenedC = $('#' + messageC.id);
+    var universalWidget = $('#' + messageD.id);
 
     setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(notOpenedA.length).toBe(0);
       expect(notOpenedC.length).toBe(0);
+      expect(universalWidget.hasClass('opened')).toBeTruthy();
 
       var msg = $('.pf-widget-message').text();
-      expect(msg).toBe('B');
+      expect(msg).toBe('DB');
 
       pathfora.clearAll();
       done();
@@ -836,7 +846,7 @@ describe('Widgets', function () {
     var widget4 = $('#' + w4.id);
 
     expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
-    expect(widget2.hasClass('pf-position-top-fixed')).toBeTruthy();
+    expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
     expect(widget3.hasClass('pf-position-left')).toBeTruthy();
     expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
   });
@@ -990,7 +1000,6 @@ describe('API', function () {
 
     expect(actionBtn.html()).toBe('Confirm');
     expect(cancelBtn.html()).toBe('Cancel');
-
   });
 
   it('should be able to set random layout for each widget element', function () {
@@ -1039,6 +1048,72 @@ describe('API', function () {
         jasmine.any(Object)
       ]);
 
+      done();
+    }, 200);
+  });
+  
+  it('should not show page-views dependent widget when page views requirement has not been reached', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        pageVisits: 1
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+  
+  it('should show page-views dependent widget when page views requirement has been reached', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        pageVisits: 0
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+  
+  it('should open site gating widget when the cookie is not set', function (done) {
+    var gate = new window.pathfora.SiteGate({
+      header: 'Blocking Widget',
+      msg: 'Submit this widget to access the website.'
+    });
+
+    pathfora.initializeWidgets([gate], credentials);
+
+    var widget = $('#' + gate.id);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+  });
+  
+  it('should not open site gating widget when the cookie is already set', function (done) {
+    pathfora.utils.saveCookie('PathforaUnlocked', true);
+    
+    var gate = new window.pathfora.SiteGate({
+      header: 'Blocking Widget',
+      msg: 'Submit this widget to access the website.'
+    });
+
+    pathfora.initializeWidgets([gate], credentials);
+
+    var widget = $('#' + gate.id);
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeFalsy();
       done();
     }, 200);
   });
