@@ -1,4 +1,5 @@
-@modalWidth: 780px;
+
+modalWidth: 780px;
 // @modalHeight: 390px;
 
 @blue: #597E9B;
@@ -55,7 +56,17 @@ a {
     width: 100%;
     padding:10px 20px;
     background: #fff;
-   box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
+    box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
+
+    &[required] {
+      border: solid 1px #9bb3c7;
+      border-bottom: solid 2px #9bb3c7;
+    }
+
+    &[invalid] {
+      border: solid 1px #f00;
+      border-color: #f00 !important;
+    }
   }
 
   input[type=text],
@@ -251,6 +262,44 @@ a {
 
   &.pf-widget-slideout {
     width: 370px !important;
+  }
+}
+
+
+.pf-sitegate {
+  .pf-sitegate-field {
+    position: relative;
+
+    display: inline-block;
+
+    &.pf-field-half-width {
+      width: 49%;
+    }
+
+    &.pf-field-full-width {
+      width: 99.5%;
+    }
+  }
+
+  .pf-sitegate-clear {
+    display: block;
+    width: 100%;
+    height: 1px;
+  }
+
+  .pf-widget-btn {
+    float: right;
+  }
+
+  .pf-sitegate-social-plugins {
+    width: 100%;
+    padding-bottom: 5px;
+    border: none;
+    text-align: right;
+
+    .pf-sitegate-centered-label {
+      text-align: center;
+    }
   }
 }
 
