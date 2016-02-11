@@ -61,14 +61,14 @@ a {
   input[type=text],
   input[type=email] {
     padding: 0 5px;
-    height: 46px;
+    // height: 46px;
     padding:10px 20px;
     clear: both;
      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
 
     & + .pf-widget-btn {
       line-height: 36px;
-      font-size: 16px;
+      font-size: 14px;
       position: absolute;
       margin-top: 0;
       margin-left: 10px;
@@ -202,12 +202,20 @@ a {
   .pf-widget-header {
     color: @colorDark;
   }
+
+  input[type=text],
+  input[type=email],
+  textarea {
+    width: 100%;
+    color:white;
+  }
+
 }
 
 .pf-subscription {
   form {
     overflow: hidden;
-    width: 80%;
+    width: 100%;
     display:block;
     margin:0 auto;
 
