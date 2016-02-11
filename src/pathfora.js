@@ -48,8 +48,8 @@
         },
         light: {
           background: '#f1f1f1',
-          header: '#888',
-          text: '#444',
+          header: '#444',
+          text: '#888',
           close: '#bbb',
           actionText: '#444',
           actionBackground: '#fff',

@@ -14,17 +14,17 @@
     <script src="../dist/pathfora.min.js"></script>
     <script>
 
-      var messageBar = pathfora.Message({
-        id: 'asd',
-        layout: 'modal',
-        header: 'Aenean leo malesuada',
-        variant: '2',
-        msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
-        image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-        theme:'dark'
-      });
+      // var messageBar = pathfora.Message({
+      //   id: 'asd',
+      //   layout: 'modal',
+      //   header: 'Aenean leo malesuada',
+      //   variant: '2',
+      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
+      //   image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      //   theme:'dark'
+      // });
 
-      window.pathfora.initializeWidgets([ messageBar ]);
+      // window.pathfora.initializeWidgets([ messageBar ]);
 
       // var messageBar = pathfora.Message({
       //   id: 'asd',
@@ -37,20 +37,22 @@
       // window.pathfora.initializeWidgets([ messageBar ]);
 
 
-      // var subscription = pathfora.Subscription({
-      //   layout: "modal",
-      //   msg: "Welcome to our website",
-      //   header: 'Aenean leo malesuada',
-      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
-      //   placeholders: {
-      //     email: "Email",
-      //     title: "Title"
-      //   },
-      //   okMessage: 'Hoop',
-      //   okShow: true,
-      // });
+      var subscription = pathfora.Subscription({
+        layout: "modal",
+        msg: "Welcome to our website",
+        header: 'Aenean leo malesuada',
+        msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
+        placeholders: {
+          email: "Email",
+          title: "Title"
+        },
+        okMessage: 'Hoop',
+        okShow: true,
+        // variant: '2',
+        // image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      });
 
-      // window.pathfora.initializeWidgets([ subscription ]);
+      window.pathfora.initializeWidgets([ subscription ]);
 
 
       // var form = pathfora.Form({
