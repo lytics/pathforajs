@@ -45,7 +45,7 @@
   }
 
   &.opened {
-    &.pf-position-top-fixed {
+    &.pf-position-top-absolute {
       top: 0;
     }
 
@@ -53,22 +53,18 @@
       bottom: 0;
     }
 
-    &.pf-position-top-scrolling {
+    &.pf-position-top-fixed {
       top: 0;
-    }
-
-    &.pf-position-bottom-scrolling {
-      bottom: 0;
     }
   }
 
-  &.pf-position-top-fixed,
+  &.pf-position-top-absolute,
   &.pf-position-bottom-fixed {
     position: fixed;
   }
 
-  &.pf-position-top-fixed,
-  &.pf-position-top-scrolling {
+  &.pf-position-top-absolute,
+  &.pf-position-top-fixed {
     top: -50px;
 
     .pf-bar-content {
@@ -76,13 +72,12 @@
     }
   }
 
-  &.pf-position-bottom-fixed,
-  &.pf-position-bottom-scrolling {
+  &.pf-position-bottom-fixed {
     bottom: -50px;
   }
 
-  &.pf-position-bottom-scrolling,
-  &.pf-position-top-scrolling {
+  &.pf-position-bottom-fixed,
+  &.pf-position-top-fixed {
     position: absolute;
   }
 
@@ -105,8 +100,7 @@
       width: auto;
     }
 
-    &.pf-bottom-fixed,
-    &.pf-bottom-scrolling {
+    &.pf-bottom-fixed {
       .pf-widget-message {
         margin-bottom: 0;
       }
