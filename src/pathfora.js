@@ -62,9 +62,7 @@
         showDelay: 0,
         hideAfter: 0,
         displayWhenElementVisible: '',
-        scrollPercentageToDisplay: 0,
-        pageVisits: 0,
-        urlContains: ['*']
+        scrollPercentageToDisplay: 0
       }
     },
     message: {
