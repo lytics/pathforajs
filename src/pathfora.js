@@ -62,7 +62,9 @@
         showDelay: 0,
         hideAfter: 0,
         displayWhenElementVisible: '',
-        scrollPercentageToDisplay: 0
+        scrollPercentageToDisplay: 0,
+        pageVisits: 0,
+        urlContains: ['*']
       }
     },
     message: {
@@ -407,6 +409,8 @@
         core.initializeScrollWatchers(core.watchers);
       } else if (condition.pageVisits) {
         core.registerPageVisitsCounter(condition.pageVisits, widget);
+      } else if (condition.urlContains) {
+        core.registerUrlWatcher(condition.urlContains, widget);
       } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
@@ -440,6 +444,29 @@
     
     registerPageVisitsCounter: function (pageVisitsRequired, widget) {
       if (core.pageViews >= pageVisitsRequired) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+    
+    registerUrlWatcher: function (phrases, widget) {
+      var url = window.location.href;
+      var valid = true;
+      
+      if (!(phrases instanceof Array)) {
+        phrases = Object.keys(phrases).map(function (key) {
+          return phrases[key];
+        });
+      }
+      
+      if (phrases.indexOf('*') === -1) {
+        phrases.forEach(function (phrase) {
+          if (url.indexOf(phrase) === -1) {
+            valid = false;
+          }
+        });
+      }
+      
+      if (valid) {
         context.pathfora.showWidget(widget);
       }
     },
