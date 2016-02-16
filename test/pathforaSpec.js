@@ -1117,4 +1117,114 @@ describe('API', function () {
       done();
     }, 200);
   });
+  
+  it('should show the date widget for all dates after 15.02.2016', function () {
+    var limitDate = new Date();
+    limitDate.setDate(14);
+    limitDate.setMonth(1);
+    limitDate.setFullYear(2016);
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        date: {
+          'start_at': limitDate.toISOString()
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+  
+  it('should not show the date widget for all dates after 15.02.2016', function () {
+    var limitDate = new Date();
+    limitDate.setDate(14);
+    limitDate.setMonth(1);
+    limitDate.setFullYear(2016);
+    
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        date: {
+          'end_at': limitDate.toISOString()
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+  
+  if('should not show an impression counter widget without an id', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 1,
+          total: 5
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+  
+  it('should show impressions counter widget before limited amount of initializations', function () {
+    var widgetId = 'impressionWidget1';
+    sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
+    
+    var form = new window.pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 1,
+          total: 5
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+  
+  it('should show impressions counter widget after limited amount of initializations', function () {
+    var widgetId = 'impressionWidget2';
+    sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
+    
+    var form = new window.pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 1,
+          total: 5
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
 });
