@@ -1117,4 +1117,53 @@ describe('API', function () {
       done();
     }, 200);
   });
+  
+  it('should show constrained element when the url matches the display conditions', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          'localhost'
+        ]
+      }
+    });
+    var form2 = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          '*'
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form, form2 ]);
+
+    var widget = $('#' + form.id);
+    var widget2 = $('#' + form2.id);
+    expect(widget.length).toBe(1);
+    expect(widget2.length).toBe(1);
+  });
+  
+  it('should not show constrained element when the url doesn\'t match the display conditions', function () {
+    var form = new window.pathfora.Form({
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          'notlocalhost'
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
 });
