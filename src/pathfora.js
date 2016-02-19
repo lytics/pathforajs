@@ -113,9 +113,9 @@
         title: 'Title'
       },
       required: [
-        'firstName', 
-        'lastName', 
-        'email' 
+        'firstName',
+        'lastName',
+        'email'
       ],
       okMessage: 'Submit',
       okShow: true,
@@ -410,6 +410,10 @@
         core.initializeScrollWatchers(core.watchers);
       } else if (condition.pageVisits) {
         core.registerPageVisitsCounter(condition.pageVisits, widget);
+      } else if (condition.date) {
+        core.registerDateWatcher(condition.date, widget);
+      } else if (condition.impressions) {
+        core.registerImpressionsCounter(condition.impressions, widget);
       } else if (condition.urlContains) {
         core.registerUrlWatcher(condition.urlContains, widget);
       } else if (condition.showOnInit) {
@@ -442,7 +446,7 @@
         }
       }
     },
-    
+
     registerPageVisitsCounter: function (pageVisitsRequired, widget) {
       if (core.pageViews >= pageVisitsRequired) {
         context.pathfora.showWidget(widget);
@@ -467,6 +471,48 @@
         });
       }
       
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerDateWatcher: function (date, widget) {
+      var valid = true;
+      var today = Date.now();
+
+      if (date['start_at'] && today < new Date(date['start_at']).getTime()) {
+        valid = false;
+      }
+
+      if (date['end_at'] && today > new Date(date['end_at']).getTime()) {
+        valid = false;
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerImpressionsCounter: function (impressionConstraints, widget) {
+      var valid = true;
+      var id = 'PathforaImpressions_' + widget.id;
+      var sessionImpressions = ~~sessionStorage.getItem(id);
+      var totalImpressions = ~~utils.readCookie(id);
+
+      if (!sessionImpressions) {
+        sessionImpressions = 1;
+      }
+      if (!totalImpressions) {
+        totalImpressions = 1;
+      }
+
+      if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
+        valid = false;
+      }
+
+      sessionStorage.setItem(id, sessionImpressions + 1);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
+
       if (valid) {
         context.pathfora.showWidget(widget);
       }
@@ -565,7 +611,7 @@
         }
       }
     },
-    
+
     /**
      * @description Construct DOM layout for the widget
      * @throws {Error} error
@@ -579,7 +625,6 @@
       var widgetHeader = widget.querySelectorAll('.pf-widget-header');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
-      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
@@ -680,7 +725,7 @@
         case 'inline':
           Object.keys(config.placeholders).forEach(function (inputField) {
             var element = widget.querySelector('input[name="' + inputField + '"]');
-            
+
             if (element) {
               element.placeholder = config.placeholders[inputField];
             }
@@ -689,29 +734,29 @@
           Object.keys(config.required).forEach(function (index) {
             var field = config.required[index];
             var element = widget.querySelector('input[name="' + field + '"]');
-            
+
             if (element) {
               element.setAttribute('required', '');
             }
           });
-          
+
           if (config.showSocialLogin === false) {
             node = widget.querySelector('.pf-sitegate-social-plugins');
-            
+
             if (node.parentNode) {
               node.parentNode.removeChild(node);
             }
           }
-            
+
           if (config.showForm === false) {
             node = widget.querySelector('form');
-            
+
             if (node) {
               node.className += ' pf-hidden';
             }
-            
+
             node = widget.querySelector('.pf-sitegate-centered-label');
-            
+
             if (node.parentNode) {
               node.parentNode.removeChild(node);
             }
@@ -935,7 +980,7 @@
       } else if (config.type === 'form' || config.type === 'sitegate') {
         widgetOk.onclick = function () {
           var valid = true;
-          
+
           Array.prototype.slice.call(
             widget.querySelectorAll('input, textarea')
           ).forEach(function (inputField) {
@@ -943,7 +988,7 @@
               valid = false;
             }
           });
-          
+
           if (valid) {
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
@@ -1204,21 +1249,21 @@
         break;
       case 'subscribe':
         params['pf-form-email'] = htmlElement.elements['email'].value;
-      case 'unlock': 
+      case 'unlock':
         Object.keys(widget.placeholders).forEach(function (inputField) {
           params['pf-sitegate-' + inputField] = htmlElement.elements[inputField].value;
-          
+
           if (htmlElement.elements[inputField].hasAttribute('required') &&
              !params['pf-sitegate-' + inputField]) {
             htmlElement.elements[inputField].setAttribute('invalid', '');
-            
+
             valid = false;
           }
         });
-        
+
         utils.saveCookie('PathforaUnlocked', valid);
       }
-      
+
       params['pf-widget-event'] = action;
       if (valid === true) {
         api.reportData(params);
@@ -1271,9 +1316,7 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if ((widget.type === 'sitegate' && 
-            utils.readCookie('PathforaUnlocked') === 'true') ||
-            widget.hiddenViaABTests === true) {
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1317,7 +1360,7 @@
 
       if (!(widgets instanceof Array) && widgets.target) {
         j = widgets.target.length;
-        
+
         widgets.common = widgets.common || [];
 
         for (i = 0; i < j; i++) {
@@ -1403,6 +1446,14 @@
       }
       widget.type = type;
       widget.config = config;
+
+      if (!config.id &&
+           config.displayConditions &&
+           typeof config.displayConditions.impressions !== 'undefined') {
+        delete config.displayConditions.impressions;
+
+        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      }
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
@@ -1547,8 +1598,6 @@
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
 
-        console.log(user);
-        
         if (typeof user !== 'undefined') {
           core.autoCompleteFormFields({
             username: user.getName() || '',
@@ -1570,7 +1619,7 @@
       widgets.forEach(function (widget) {
         Object.keys(data).forEach(function (inputField) {
           var field = widget.querySelector('input[name="' + inputField + '"]');
-          
+
           if (field && !field.value) {
             field.value = data[inputField];
           }
@@ -1717,10 +1766,10 @@
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
-      
+
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1);
     };
-    
+
     /**
      * @public
      * @description Initialize Pathfora widgets from a container
@@ -1871,7 +1920,7 @@
     this.Form = function (config) {
       return core.prepareWidget('form', config);
     };
-    
+
     /**
      * @public
      * @description Create a Site Gate widget
@@ -2049,7 +2098,7 @@
           );
         });
       };
-      
+
       window.fbAsyncInit = function () {
         window.FB.init({
           appId: appId,
@@ -2091,7 +2140,7 @@
         /(\{){2}google-clientId(\}){2}/gm,
         clientId
       );
-      
+
       var parseGoogleLoginTemplate = function (parentTemplates) {
         Object.keys(parentTemplates).forEach(function (type, index) {
           parentTemplates[type] = parentTemplates[type].replace(
