@@ -452,17 +452,18 @@
         context.pathfora.showWidget(widget);
       }
     },
-    
-    registerUrlWatcher: function (phrases, widget) {
+
+    registerUrlWatcher: function (urlPhrases, widget) {
       var url = window.location.href;
       var valid = true;
-      
-      if (!(phrases instanceof Array)) {
-        phrases = Object.keys(phrases).map(function (key) {
-          return phrases[key];
+      var phrases = [];
+
+      if (typeof urlPhrases !== 'undefined' && !(urlPhrases instanceof Array)) {
+        phrases = Object.keys(urlPhrases).map(function (key) {
+          return urlPhrases[key];
         });
       }
-      
+
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
           if (url.indexOf(phrase) === -1) {
@@ -470,7 +471,7 @@
           }
         });
       }
-      
+
       if (valid) {
         context.pathfora.showWidget(widget);
       }
@@ -625,19 +626,20 @@
       var widgetHeader = widget.querySelectorAll('.pf-widget-header');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
       var i;
 
-      if ((widgetCancel !== null && !config.cancelShow) || config.layout === 'inline') {
+      if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
 
         if (node.parentNode) {
           node.parentNode.removeChild(node);
         }
       }
-      
+
       if (config.layout === 'inline') {
         node = widgetClose;
 
@@ -962,7 +964,7 @@
           if (typeof widgetOnModalClose === 'function') {
             widgetOnModalClose(event);
           }
-          
+
           if (config.layout !== 'inline') {
             context.pathfora.closeWidget(widget.id, true);
           }
@@ -995,7 +997,7 @@
             }
 
             if (config.layout !== 'inline') {
-              context.pathfora.closeWidget(widget.id); 
+              context.pathfora.closeWidget(widget.id);
             }
           }
         };
@@ -1954,7 +1956,7 @@
       core.trackWidgetAction('show', widget);
 
       node = core.createWidgetHtml(widget);
-      
+
       if (widget.config.layout !== 'inline') {
         document.body.appendChild(node);
       } else {
