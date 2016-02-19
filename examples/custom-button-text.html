@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom button text</title>
+  </head>
+  <body>
+    <h1>Custom button text example</h1>
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var modal = new pathfora.Message({
+        layout: 'modal',
+        msg: 'Welcome to our website',
+        header: 'Hello',
+        
+        // Assign custom labels for the buttons in the widget
+        okMessage: 'Ok!',
+        cancelMessage: 'Cancel'
+      });
+      var subscription = new pathfora.Subscription({
+        layout: 'bar',
+        msg: 'Welcome to our website',
+        header: 'Hello',
+        placeholders: {
+          email: 'Email'
+        },
+        
+        // Assign custom labels for the buttons in the widget
+        okMessage: 'Sign Up!'
+      });
+
+      window.pathfora.initializeWidgets([ modal,subscription ]);
+    </script>
+  </body>
+</html>
