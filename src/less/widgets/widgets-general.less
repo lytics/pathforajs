@@ -57,10 +57,13 @@ a {
     background: #fff;
     box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
 
-    // &[required] {
-    //   border: solid 1px #9bb3c7;
-    //   border-bottom: solid 2px #9bb3c7;
-    // }
+    &:focus {
+      outline:none;
+    }
+
+    &:focus:invalid {
+      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 0px 2px rgba(255,0,0,1);
+    }
 
     &[invalid] {
       border: solid 1px #f00;
