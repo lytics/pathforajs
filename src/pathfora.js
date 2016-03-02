@@ -137,22 +137,38 @@
       slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       button: '<p class="pf-widget-message pf-widget-ok"></p>',
-      inline: ''
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
     },
     subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
+    //   modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+    //   slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+    //   folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+    //   bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>'
+    // },
+    // form: {
+    //   modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+    //   slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
+    //   folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+    // },
+    // sitegate: {
+    //   // FIXME Remove spaces in the template
+    //   modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-headline"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
+      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>',
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>'
     },
     form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>'
     },
     sitegate: {
       // FIXME Remove spaces in the template
-      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-headline"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>',
+      inline: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-header"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
     },
     social: {
       facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
@@ -262,7 +278,8 @@
     link.setAttribute('type', 'text/css');
 
     // NOTE Need to update the cdn version. For now use local.
-    //    link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    // link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
+    // link.setAttribute('href', '../dist/pathfora.min.css');
     link.setAttribute('href', 'http://meethodor.com/css/pathfora.min.css');
     head.appendChild(link);
   };
@@ -454,6 +471,12 @@
         core.initializeScrollWatchers(core.watchers);
       } else if (condition.pageVisits) {
         core.registerPageVisitsCounter(condition.pageVisits, widget);
+      } else if (condition.date) {
+        core.registerDateWatcher(condition.date, widget);
+      } else if (condition.impressions) {
+        core.registerImpressionsCounter(condition.impressions, widget);
+      } else if (condition.urlContains) {
+        core.registerUrlWatcher(condition.urlContains, widget);
       } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
@@ -487,6 +510,71 @@
 
     registerPageVisitsCounter: function (pageVisitsRequired, widget) {
       if (core.pageViews >= pageVisitsRequired) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerUrlWatcher: function (phrases, widget) {
+      var url = window.location.href;
+      var valid = true;
+
+      if (!(phrases instanceof Array)) {
+        phrases = Object.keys(phrases).map(function (key) {
+          return phrases[key];
+        });
+      }
+
+      if (phrases.indexOf('*') === -1) {
+        phrases.forEach(function (phrase) {
+          if (url.indexOf(phrase) === -1) {
+            valid = false;
+          }
+        });
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerDateWatcher: function (date, widget) {
+      var valid = true;
+      var today = Date.now();
+
+      if (date['start_at'] && today < new Date(date['start_at']).getTime()) {
+        valid = false;
+      }
+
+      if (date['end_at'] && today > new Date(date['end_at']).getTime()) {
+        valid = false;
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerImpressionsCounter: function (impressionConstraints, widget) {
+      var valid = true;
+      var id = 'PathforaImpressions_' + widget.id;
+      var sessionImpressions = ~~sessionStorage.getItem(id);
+      var totalImpressions = ~~utils.readCookie(id);
+
+      if (!sessionImpressions) {
+        sessionImpressions = 1;
+      }
+      if (!totalImpressions) {
+        totalImpressions = 1;
+      }
+
+      if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
+        valid = false;
+      }
+
+      sessionStorage.setItem(id, sessionImpressions + 1);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
+
+      if (valid) {
         context.pathfora.showWidget(widget);
       }
     },
@@ -598,14 +686,21 @@
       var widgetHeadline = widget.querySelectorAll('.pf-widget-headline');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
-      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
       var i;
 
-      if (widgetCancel !== null && !config.cancelShow) {
+      if ((widgetCancel !== null && !config.cancelShow) || config.layout === 'inline') {
         node = widgetCancel;
+
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }
+
+      if (config.layout === 'inline') {
+        node = widgetClose;
 
         if (node.parentNode) {
           node.parentNode.removeChild(node);
@@ -643,6 +738,7 @@
         case 'modal':
         case 'slideout':
         case 'random':
+        case 'inline':
           widgetTextArea = widget.querySelector('textarea');
           widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
           widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
@@ -663,6 +759,7 @@
         case 'bar':
         case 'slideout':
         case 'random':
+        case 'inline':
           widget.querySelector('input').placeholder = config.placeholders.email;
           break;
         default:
@@ -677,6 +774,7 @@
         case 'random':
         case 'bar':
         case 'button':
+        case 'inline':
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -685,6 +783,7 @@
       case 'sitegate':
         switch (config.layout) {
         case 'modal':
+        case 'inline':
           Object.keys(config.placeholders).forEach(function (inputField) {
             var element = widget.querySelector('input[name="' + inputField + '"]');
 
@@ -874,6 +973,7 @@
       case 'modal':
       case 'slideout':
       case 'bar':
+      case 'inline':
         widgetCancel = widget.querySelector('.pf-widget-cancel');
         widgetClose = widget.querySelector('.pf-widget-close');
         widgetOnModalClose = function (event) {
@@ -924,7 +1024,9 @@
             widgetOnModalClose(event);
           }
 
-          context.pathfora.closeWidget(widget.id, true);
+          if (config.layout !== 'inline') {
+            context.pathfora.closeWidget(widget.id, true);
+          }
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
@@ -932,7 +1034,9 @@
             widgetOnButtonClick(event);
           }
 
-          context.pathfora.closeWidget(widget.id);
+          if (config.layout !== 'inline') {
+            context.pathfora.closeWidget(widget.id);
+          }
         };
       } else if (config.type === 'form' || config.type === 'sitegate') {
         widgetOk.onclick = function () {
@@ -951,7 +1055,9 @@
               widgetOnModalClose(event);
             }
 
-            context.pathfora.closeWidget(widget.id);
+            if (config.layout !== 'inline') {
+              context.pathfora.closeWidget(widget.id);
+            }
           }
         };
       }
@@ -1035,6 +1141,9 @@
         break;
       case 'folding':
         choices = ['left', 'bottom-left', 'bottom-right'];
+        break;
+      case 'inline':
+        choices = [];
         break;
       }
 
@@ -1268,9 +1377,7 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if ((widget.type === 'sitegate' &&
-            utils.readCookie('PathforaUnlocked') === 'true') ||
-            widget.hiddenViaABTests === true) {
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1393,10 +1500,21 @@
         case 'bar':
           config.position = props.bar[Math.floor(Math.random() * 3)];
           break;
+        case 'inline':
+          config.position = 'body';
+          break;
         }
       }
       widget.type = type;
       widget.config = config;
+
+      if (!config.id &&
+           config.displayConditions &&
+           typeof config.displayConditions.impressions !== 'undefined') {
+        delete config.displayConditions.impressions;
+
+        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      }
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
@@ -1540,8 +1658,6 @@
       if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
-
-        console.log(user);
 
         if (typeof user !== 'undefined') {
           core.autoCompleteFormFields({
@@ -1885,6 +2001,7 @@
       var i;
       var j;
       var node;
+      var hostNode;
 
       // FIXME Change to Array#filter and Array#length
       j = core.openedWidgets.length;
@@ -1898,7 +2015,18 @@
       core.trackWidgetAction('show', widget);
 
       node = core.createWidgetHtml(widget);
-      document.body.appendChild(node);
+
+      if (widget.config.layout !== 'inline') {
+        document.body.appendChild(node);
+      } else {
+        hostNode = document.querySelector(widget.config.position);
+
+        if (hostNode) {
+          hostNode.appendChild(node);
+        } else {
+          throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+        }
+      }
 
       // NOTE wait for appending to DOM to trigger the animation
       // FIXME 50 - magical number
