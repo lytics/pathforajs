@@ -414,6 +414,8 @@
         core.registerDateWatcher(condition.date, widget);
       } else if (condition.impressions) {
         core.registerImpressionsCounter(condition.impressions, widget);
+      } else if (condition.hideAfterAction) {
+        core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
       } else if (condition.urlContains) {
         core.registerUrlWatcher(condition.urlContains, widget);
       } else if (condition.showOnInit) {
@@ -452,17 +454,17 @@
         context.pathfora.showWidget(widget);
       }
     },
-    
+
     registerUrlWatcher: function (phrases, widget) {
       var url = window.location.href;
       var valid = true;
-      
+
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
           return phrases[key];
         });
       }
-      
+
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
           if (url.indexOf(phrase) === -1) {
@@ -470,7 +472,7 @@
           }
         });
       }
-      
+
       if (valid) {
         context.pathfora.showWidget(widget);
       }
@@ -499,6 +501,7 @@
       var sessionImpressions = ~~sessionStorage.getItem(id);
       var totalImpressions = ~~utils.readCookie(id);
 
+
       if (!sessionImpressions) {
         sessionImpressions = 1;
       }
@@ -512,6 +515,21 @@
 
       sessionStorage.setItem(id, sessionImpressions + 1);
       utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
+      var valid = true;
+      var confirm = utils.readCookie('PathforaConfirm_' + widget.id);
+      var cancel = utils.readCookie('PathforaCancel_' + widget.id);
+      var closed = utils.readCookie('PathforaClosed_' + widget.id);
+
+      if ((confirm && hideAfterActionConstraints.confirm) || (cancel && hideAfterActionConstraints.cancel) || (closed && hideAfterActionConstraints.closed)) {
+        valid = false;
+      }
 
       if (valid) {
         context.pathfora.showWidget(widget);
@@ -637,7 +655,7 @@
           node.parentNode.removeChild(node);
         }
       }
-      
+
       if (config.layout === 'inline') {
         node = widgetClose;
 
@@ -915,7 +933,7 @@
       case 'inline':
         widgetCancel = widget.querySelector('.pf-widget-cancel');
         widgetClose = widget.querySelector('.pf-widget-close');
-        widgetOnModalClose = function (event) {
+        widgetOnModalClose = function (event, kind) {
           if (typeof config.onModalClose === 'function') {
             config.onModalClose(callbackTypes.MODAL_CLOSE, {
               widget: widget,
@@ -926,6 +944,7 @@
 
         widgetClose.onclick = function (event) {
           context.pathfora.closeWidget(widget.id);
+          utils.saveCookie("PathforaClosed_" + widget.id, true);
           widgetOnModalClose(event);
         };
 
@@ -937,11 +956,13 @@
                 config.cancelAction.callback();
               }
               context.pathfora.closeWidget(widget.id, true);
+              utils.saveCookie("PathforaCancel_" + widget.id, true);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               context.pathfora.closeWidget(widget.id);
+              utils.saveCookie("PathforaCancel_" + widget.id, true);
               widgetOnModalClose(event);
             };
           }
@@ -953,6 +974,7 @@
       if (typeof config.confirmAction === 'object') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
+          utils.saveCookie("PathforaConfirm_" + widget.id, true);
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
@@ -962,13 +984,14 @@
           if (typeof widgetOnModalClose === 'function') {
             widgetOnModalClose(event);
           }
-          
+
           if (config.layout !== 'inline') {
             context.pathfora.closeWidget(widget.id, true);
           }
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
+          utils.saveCookie("PathforaConfirm_" + widget.id, true);
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
@@ -990,12 +1013,13 @@
           });
 
           if (valid) {
+            utils.saveCookie("PathforaConfirm_" + widget.id, true);
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
 
             if (config.layout !== 'inline') {
-              context.pathfora.closeWidget(widget.id); 
+              context.pathfora.closeWidget(widget.id);
             }
           }
         };
@@ -1954,7 +1978,7 @@
       core.trackWidgetAction('show', widget);
 
       node = core.createWidgetHtml(widget);
-      
+
       if (widget.config.layout !== 'inline') {
         document.body.appendChild(node);
       } else {
