@@ -1051,7 +1051,7 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1067,7 +1067,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show page-views dependent widget when page views requirement has been reached', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1083,7 +1083,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should open site gating widget when the cookie is not set', function (done) {
     var gate = new window.pathfora.SiteGate({
       header: 'Blocking Widget',
@@ -1099,10 +1099,10 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not open site gating widget when the cookie is already set', function (done) {
     pathfora.utils.saveCookie('PathforaUnlocked', true);
-    
+
     var gate = new window.pathfora.SiteGate({
       header: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
@@ -1117,7 +1117,7 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
@@ -1139,13 +1139,13 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should not show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
-    
+
     var form = new window.pathfora.Form({
       msg: 'subscription',
       header: 'Header',
@@ -1162,17 +1162,57 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
-  if('should not show an impression counter widget without an id', function () {
+
+  it('should not show a widget with hideAfterAction without an id', function () {
+    expect(function() {
+      var form = new window.pathfora.Form({
+        msg: 'subscription',
+        header: 'Header',
+        layout: 'slideout',
+        position: 'bottom-right',
+        displayConditions: {
+          hideAfterAction: {
+            confirm: true
+          }
+        }
+      });
+    }).toThrow(new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.'));
+  });
+
+  it('should show widget with hideAfterAction after no action', function () {
+    var widgetId = 'hideAfterActionWidget1';
     var form = new window.pathfora.Form({
+      id: widgetId,
       msg: 'subscription',
       header: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
-        impressions: {
-          session: 1,
-          total: 5
+        hideAfterAction: {
+          closed: true,
+          confirm: true,
+          cancel: true
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+
+  it('should not show widget with hideAfterAction after matching action', function () {
+    var widgetId = 'hideAfterActionWidget2';
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, true);
+    var form = new window.pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      header: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          cancel: true
         }
       }
     });
@@ -1181,11 +1221,28 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
+  it('should not show an impression counter widget without an id', function () {
+    expect(function() {
+      var form = new window.pathfora.Form({
+        msg: 'subscription',
+        header: 'Header',
+        layout: 'slideout',
+        position: 'bottom-right',
+        displayConditions: {
+          impressions: {
+            session: 1,
+            total: 5
+          }
+        }
+      });
+    }).toThrow(new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.'));
+  });
+
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
-    
+
     var form = new window.pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1204,11 +1261,11 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should show impressions counter widget after limited amount of initializations', function () {
     var widgetId = 'impressionWidget2';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
-    
+
     var form = new window.pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1227,7 +1284,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1258,7 +1315,7 @@ describe('API', function () {
     expect(widget.length).toBe(1);
     expect(widget2.length).toBe(1);
   });
-  
+
   it('should not show constrained element when the url doesn\'t match the display conditions', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',

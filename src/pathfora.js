@@ -1478,6 +1478,15 @@
 
         throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
       }
+
+      if (!config.id &&
+           config.displayConditions &&
+           typeof config.displayConditions.hideAfterAction !== 'undefined') {
+        delete config.displayConditions.impressions;
+
+        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
+      }
+
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
