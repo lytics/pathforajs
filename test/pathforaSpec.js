@@ -1051,7 +1051,7 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1067,7 +1067,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show page-views dependent widget when page views requirement has been reached', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1083,7 +1083,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should open site gating widget when the cookie is not set', function (done) {
     var gate = new window.pathfora.SiteGate({
       header: 'Blocking Widget',
@@ -1099,10 +1099,10 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not open site gating widget when the cookie is already set', function (done) {
     pathfora.utils.saveCookie('PathforaUnlocked', true);
-    
+
     var gate = new window.pathfora.SiteGate({
       header: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
@@ -1117,7 +1117,7 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
@@ -1139,13 +1139,13 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should not show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
-    
+
     var form = new window.pathfora.Form({
       msg: 'subscription',
       header: 'Header',
@@ -1162,7 +1162,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   if('should not show an impression counter widget without an id', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1181,11 +1181,11 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
-    
+
     var form = new window.pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1204,11 +1204,11 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should show impressions counter widget after limited amount of initializations', function () {
     var widgetId = 'impressionWidget2';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
-    
+
     var form = new window.pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1227,7 +1227,7 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1258,7 +1258,7 @@ describe('API', function () {
     expect(widget.length).toBe(1);
     expect(widget2.length).toBe(1);
   });
-  
+
   it('should not show constrained element when the url doesn\'t match the display conditions', function () {
     var form = new window.pathfora.Form({
       msg: 'subscription',
@@ -1275,5 +1275,78 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
+  });
+
+  it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    expect(scaffold.target.length).toBe(0);
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert widget into config after building and inserting into scaffold', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    var tester = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "cancelShow": true,
+      "theme": "dark",
+      "titleField": false,
+      "nameField": false,
+      "emailField": false,
+      "msgField": false
+    });
+    pathfora.utils.insertWidget("smt_new", tester, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(1);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert multiple widgets into config binding to the same segment', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+
+    var tester1 = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "theme": "dark"
+    });
+    pathfora.utils.insertWidget("smt_new", tester1, scaffold)
+
+    var tester2 = pathfora.Form({
+      "id": "tester456",
+      "headline": "Sample Insert Two",
+      "msg": "Sample insert message two.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "theme": "dark",
+      "titleField": true,
+      "nameField": true,
+      "emailField": true
+    });
+    pathfora.utils.insertWidget("smt_new", tester2, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(2);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.target[0].widgets[1].type).toBe("form");
+    expect(scaffold.target[0].widgets[1].config.headline).toBe("Sample Insert Two");
+    expect(scaffold.target[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.inverse.length).toBe(0);
   });
 });

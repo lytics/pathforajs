@@ -280,7 +280,7 @@
     // NOTE Need to update the cdn version. For now use local.
     // link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
     // link.setAttribute('href', '../dist/pathfora.min.css');
-    link.setAttribute('href', 'http://meethodor.com/css/pathfora.min.css');
+    link.setAttribute('href', 'http://testytestington.ngrok.com/dist/pathfora.min.css ');
     head.appendChild(link);
   };
 
@@ -403,7 +403,8 @@
      */
     initWidgetScaffold: function () {
       return {
-          target: []
+          target: [],
+          inverse: []
       };
     },
 
@@ -414,25 +415,26 @@
      * @param {obj} widget
      * @throws {Error} error
      */
-    insertWidget: function (segment, widget) {
+    insertWidget: function (segment, widget, config) {
       // assume that we need to add a new widget until proved otherwise
       var makeNew = true;
 
       // make sure our scaffold is valid
-      if(!widgetConfig.target){
+      if(!config.target){
         throw new Error('Invalid scaffold. No target array.');
       }
 
-      // iterate existing widgets to determine if we need to push or define
-      for (var w in widgetConfig.target) {
-          if (w.segment === segment){
-              w.widgets.push(widget);
-              makeNew  = false;
-          }
+      for (var i = 0; i < config.target.length; i++) {
+        var wgt = config.target[i];
+
+        if (wgt.segment === segment){
+            wgt.widgets.push(widget);
+            makeNew  = false;
+        }
       }
 
       if(makeNew){
-          widgetConfig.target.push({
+          config.target.push({
               'segment': segment,
               'widgets': [widget]
           });
@@ -516,7 +518,7 @@
 
     registerUrlWatcher: function (phrases, widget) {
       var url = window.location.href;
-      var valid = true;
+      var valid = false;
 
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
@@ -524,12 +526,16 @@
         });
       }
 
+      // array of appearsOn params is an or list, so if any are true
+      // evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
-          if (url.indexOf(phrase) === -1) {
-            valid = false;
+          if (url.indexOf(phrase) !== -1) {
+            valid = true;
           }
         });
+      }else{
+        valid = true;
       }
 
       if (valid) {
@@ -1002,6 +1008,7 @@
             };
           } else {
             widgetCancel.onclick = function (event) {
+              core.trackWidgetAction('cancel', config);
               context.pathfora.closeWidget(widget.id);
               widgetOnModalClose(event);
             };
@@ -1030,10 +1037,10 @@
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
+          core.trackWidgetAction('confirm', config);
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
-
           if (config.layout !== 'inline') {
             context.pathfora.closeWidget(widget.id);
           }
@@ -1295,11 +1302,11 @@
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
-        params['pf-widget-action'] = widget.confirmAction.name;
+        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || "default confirm";
         pathforaDataObject.completedActions.push(params);
         break;
       case 'cancel':
-        params['pf-widget-action'] = widget.cancelAction.name;
+        params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || "default cancel";
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
@@ -1798,7 +1805,8 @@
       }
 
       apiUrl = [
-        'https://api.lytics.io/api/me/',
+        // 'https://api.lytics.io/api/me/',
+        'http://marksthingy.ngrok.io/api/me/',
         accountId,
         '/',
         seerId,
