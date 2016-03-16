@@ -27,34 +27,34 @@
       theme: 'default',
       themes: {
         default: {
-          background: '#ddd',
-          header: '#333',
-          text: '#333',
-          close: '#999',
-          actionText: '#333',
-          actionBackground: '#eee',
-          cancelText: '#333',
-          cancelBackground: '#eee'
+          background: '#f1f1f1',
+          header: '#444',
+          text: '#888',
+          close: '#bbb',
+          actionText: '#444',
+          actionBackground: '#fff',
+          cancelText: '#bbb',
+          cancelBackground: '#f1f1f1'
         },
         dark: {
           background: '#333',
-          header: '#fff',
-          text: '#fff',
+          header: '#fefefe',
+          text: '#aaa',
           close: '#888',
           actionText: '#fff',
-          actionBackground: '#597E9B',
-          cancelText: '#fff',
-          cancelBackground: '#597E9B'
+          actionBackground: '#444',
+          cancelText: '#888',
+          cancelBackground: '#333'
         },
         light: {
-          background: '#ddd',
-          header: '#333',
-          text: '#333',
-          close: '#999',
-          actionText: '#333',
-          actionBackground: '#eee',
-          cancelText: '#333',
-          cancelBackground: '#eee'
+          background: '#f1f1f1',
+          header: '#444',
+          text: '#888',
+          close: '#bbb',
+          actionText: '#444',
+          actionBackground: '#fff',
+          cancelText: '#bbb',
+          cancelBackground: '#f1f1f1'
         }
       },
       displayConditions: {
@@ -73,6 +73,11 @@
       cancelMessage: 'Cancel',
       okShow: true,
       cancelShow: true
+    },
+    welcome: {
+      layout: 'modal',
+      position: '',
+      variant: '1'
     },
     subscription: {
       layout: 'modal',
@@ -129,7 +134,7 @@
   var templates = {
     message: {
       modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-cancel">Cancel</a><a class="pf-widget-btn pf-widget-ok">Confirm</a></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       button: '<p class="pf-widget-message pf-widget-ok"></p>',
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
@@ -143,7 +148,7 @@
     },
     form: {
       modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button></form></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-header"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
       folding: '<a class="pf-widget-caption"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-header"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-header"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>'
     },
@@ -452,17 +457,17 @@
         context.pathfora.showWidget(widget);
       }
     },
-    
+
     registerUrlWatcher: function (phrases, widget) {
       var url = window.location.href;
       var valid = true;
-      
+
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
           return phrases[key];
         });
       }
-      
+
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
           if (url.indexOf(phrase) === -1) {
@@ -470,7 +475,7 @@
           }
         });
       }
-      
+
       if (valid) {
         context.pathfora.showWidget(widget);
       }
@@ -637,7 +642,7 @@
           node.parentNode.removeChild(node);
         }
       }
-      
+
       if (config.layout === 'inline') {
         node = widgetClose;
 
@@ -962,7 +967,7 @@
           if (typeof widgetOnModalClose === 'function') {
             widgetOnModalClose(event);
           }
-          
+
           if (config.layout !== 'inline') {
             context.pathfora.closeWidget(widget.id, true);
           }
@@ -995,7 +1000,7 @@
             }
 
             if (config.layout !== 'inline') {
-              context.pathfora.closeWidget(widget.id); 
+              context.pathfora.closeWidget(widget.id);
             }
           }
         };
@@ -1954,7 +1959,7 @@
       core.trackWidgetAction('show', widget);
 
       node = core.createWidgetHtml(widget);
-      
+
       if (widget.config.layout !== 'inline') {
         document.body.appendChild(node);
       } else {
