@@ -50,16 +50,19 @@ a {
     border-radius: 3px;
     border: 0 none;
     font-size: 14px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     box-sizing: border-box;
     width: 100%;
     padding:10px 20px;
     background: #fff;
     box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
 
-    &[required] {
-      border: solid 1px #9bb3c7;
-      border-bottom: solid 2px #9bb3c7;
+    &:focus {
+      outline:none;
+    }
+
+    &:focus:invalid {
+      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 0px 2px rgba(255,0,0,1);
     }
 
     &[invalid] {
@@ -71,14 +74,14 @@ a {
   input[type=text],
   input[type=email] {
     padding: 0 5px;
-    height: 46px;
+    // height: 46px;
     padding:10px 20px;
     clear: both;
      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
 
     & + .pf-widget-btn {
       line-height: 36px;
-      font-size: 16px;
+      font-size: 14px;
       position: absolute;
       margin-top: 0;
       margin-left: 10px;
@@ -212,12 +215,20 @@ a {
   .pf-widget-headline {
     color: @colorDark;
   }
+
+  input[type=text],
+  input[type=email],
+  textarea {
+    width: 100%;
+    color:white;
+  }
+
 }
 
 .pf-subscription {
   form {
     overflow: hidden;
-    width: 80%;
+    width: 100%;
     display:block;
     margin:0 auto;
 
