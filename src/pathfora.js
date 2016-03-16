@@ -279,8 +279,7 @@
 
     // NOTE Need to update the cdn version. For now use local.
     // link.setAttribute('href', '//cdn.jsdelivr.net/pathforajs/latest/pathfora.min.css');
-    // link.setAttribute('href', '../dist/pathfora.min.css');
-    link.setAttribute('href', 'http://testytestington.ngrok.com/dist/pathfora.min.css ');
+    link.setAttribute('href', '../dist/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -1805,8 +1804,7 @@
       }
 
       apiUrl = [
-        // 'https://api.lytics.io/api/me/',
-        'http://marksthingy.ngrok.io/api/me/',
+        'https://api.lytics.io/api/me/',
         accountId,
         '/',
         seerId,
