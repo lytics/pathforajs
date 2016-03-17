@@ -419,6 +419,8 @@
         core.registerDateWatcher(condition.date, widget);
       } else if (condition.impressions) {
         core.registerImpressionsCounter(condition.impressions, widget);
+      } else if (condition.hideAfterAction) {
+        core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
       } else if (condition.urlContains) {
         core.registerUrlWatcher(condition.urlContains, widget);
       } else if (condition.showOnInit) {
@@ -504,6 +506,7 @@
       var sessionImpressions = ~~sessionStorage.getItem(id);
       var totalImpressions = ~~utils.readCookie(id);
 
+
       if (!sessionImpressions) {
         sessionImpressions = 1;
       }
@@ -517,6 +520,54 @@
 
       sessionStorage.setItem(id, sessionImpressions + 1);
       utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+      }
+    },
+
+    registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
+      var valid = true,
+          now = Date.now(),
+          confirm = utils.readCookie('PathforaConfirm_' + widget.id),
+          cancel = utils.readCookie('PathforaCancel_' + widget.id),
+          closed = utils.readCookie('PathforaClosed_' + widget.id);
+
+      if (hideAfterActionConstraints.confirm && confirm) {
+        var parts = confirm.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.confirm.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+          valid = false;
+        }
+      }
+
+      if (hideAfterActionConstraints.cancel && cancel) {
+        var parts = cancel.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.cancel.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+          valid = false;
+        }
+      }
+
+      if (hideAfterActionConstraints.closed && closed) {
+        var parts = closed.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.closed.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+          valid = false;
+        }
+      }
 
       if (valid) {
         context.pathfora.showWidget(widget);
@@ -829,6 +880,7 @@
       var widgetOnFormSubmit;
       var widgetOnButtonClick;
       var widgetOnModalClose;
+      var updateActionCookie;
       var i;
       var j;
 
@@ -929,8 +981,24 @@
           }
         };
 
+        updateActionCookie = function (name) {
+          var val = utils.readCookie(name),
+              duration = Date.now(),
+              ct;
+
+          if (val) {
+            val = val.split(",");
+            ct = Math.min(parseInt(val[0]), 9998) + 1;
+          } else {
+            ct = 1;
+          }
+
+          utils.saveCookie(name, ct + "," + duration);
+        };
+
         widgetClose.onclick = function (event) {
           context.pathfora.closeWidget(widget.id);
+          updateActionCookie("PathforaClosed_" + widget.id);
           widgetOnModalClose(event);
         };
 
@@ -942,11 +1010,13 @@
                 config.cancelAction.callback();
               }
               context.pathfora.closeWidget(widget.id, true);
+              updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               context.pathfora.closeWidget(widget.id);
+              updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           }
@@ -958,6 +1028,7 @@
       if (typeof config.confirmAction === 'object') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
+          updateActionCookie("PathforaConfirm_" + widget.id);
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
@@ -974,6 +1045,7 @@
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
+          updateActionCookie("PathforaConfirm_" + widget.id);
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
@@ -995,6 +1067,7 @@
           });
 
           if (valid) {
+            updateActionCookie("PathforaConfirm_" + widget.id);
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
@@ -1459,6 +1532,15 @@
 
         throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
       }
+
+      if (!config.id &&
+           config.displayConditions &&
+           typeof config.displayConditions.hideAfterAction !== 'undefined') {
+        delete config.displayConditions.impressions;
+
+        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
+      }
+
       widget.id = config.id || utils.generateUniqueId();
 
       return widget;
