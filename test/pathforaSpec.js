@@ -664,7 +664,7 @@ describe('Widgets', function () {
       id: 'custom-style-test',
       layout: 'modal',
       msg: 'Custom style test',
-      header: 'Hello',
+      headline: 'Hello',
       theme: 'custom',
 
     });
@@ -673,7 +673,7 @@ describe('Widgets', function () {
       generic: {
         colors: {
           background: '#eee',
-          header: '#333',
+          headline: '#333',
           text: '#333',
           close: '#888',
           actionText: '#ddd',
@@ -689,14 +689,14 @@ describe('Widgets', function () {
 
     var widget = $('#' + modal.id);
     var background = widget.find('.pf-widget-content');
-    var header = widget.find('.pf-widget-header');
+    var headline = widget.find('.pf-widget-headline');
     var text = widget.find('.pf-widget-message');
     var closeBtn = widget.find('.pf-widget-close');
     var actionBtn = widget.find('.pf-widget-ok');
     var cancelBtn = widget.find('.pf-widget-cancel');
 
     expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
-    expect(header.css('color')).toBe('rgb(51, 51, 51)');
+    expect(headline.css('color')).toBe('rgb(51, 51, 51)');
     expect(text.css('color')).toBe('rgb(51, 51, 51)');
     expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
     expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
@@ -987,7 +987,7 @@ describe('API', function () {
       id: 'custom-button-text-test',
       layout: 'modal',
       msg: 'Custom button text test',
-      header: 'Hello',
+      headline: 'Hello',
       okMessage: 'Confirm',
       cancelMessage: 'Cancel'
     });
@@ -1008,7 +1008,7 @@ describe('API', function () {
       id: 'custom-random-test',
       layout: 'random',
       msg: 'Custom random layout test',
-      header: 'Hello'
+      headline: 'Hello'
     });
 
     pathfora.initializeWidgets([random],credentials);
@@ -1055,7 +1055,7 @@ describe('API', function () {
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1071,7 +1071,7 @@ describe('API', function () {
   it('should show page-views dependent widget when page views requirement has been reached', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1086,7 +1086,7 @@ describe('API', function () {
 
   it('should open site gating widget when the cookie is not set', function (done) {
     var gate = new pathfora.SiteGate({
-      header: 'Blocking Widget',
+      headline: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
     });
 
@@ -1104,7 +1104,7 @@ describe('API', function () {
     pathfora.utils.saveCookie('PathforaUnlocked', true);
 
     var gate = new pathfora.SiteGate({
-      header: 'Blocking Widget',
+      headline: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
     });
 
@@ -1125,7 +1125,7 @@ describe('API', function () {
     limitDate.setFullYear(2016);
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1148,7 +1148,7 @@ describe('API', function () {
 
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1167,7 +1167,7 @@ describe('API', function () {
     expect(function() {
       var form = new pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'bottom-right',
         displayConditions: {
@@ -1185,7 +1185,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1208,7 +1208,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1234,7 +1234,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1257,7 +1257,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1278,7 +1278,7 @@ describe('API', function () {
     expect(function() {
       var form = new pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'bottom-right',
         displayConditions: {
@@ -1298,7 +1298,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1321,7 +1321,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1340,7 +1340,7 @@ describe('API', function () {
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1351,7 +1351,7 @@ describe('API', function () {
     });
     var form2 = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1371,7 +1371,7 @@ describe('API', function () {
   it('should not show constrained element when the url doesn\'t match the display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1384,5 +1384,78 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
+  });
+
+  it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    expect(scaffold.target.length).toBe(0);
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert widget into config after building and inserting into scaffold', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    var tester = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "cancelShow": true,
+      "theme": "dark",
+      "titleField": false,
+      "nameField": false,
+      "emailField": false,
+      "msgField": false
+    });
+    pathfora.utils.insertWidget("smt_new", tester, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(1);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert multiple widgets into config binding to the same segment', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+
+    var tester1 = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "theme": "dark"
+    });
+    pathfora.utils.insertWidget("smt_new", tester1, scaffold)
+
+    var tester2 = pathfora.Form({
+      "id": "tester456",
+      "headline": "Sample Insert Two",
+      "msg": "Sample insert message two.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "theme": "dark",
+      "titleField": true,
+      "nameField": true,
+      "emailField": true
+    });
+    pathfora.utils.insertWidget("smt_new", tester2, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(2);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.target[0].widgets[1].type).toBe("form");
+    expect(scaffold.target[0].widgets[1].config.headline).toBe("Sample Insert Two");
+    expect(scaffold.target[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.inverse.length).toBe(0);
   });
 });

@@ -4,13 +4,13 @@
     <title>Position widgets example</title>
     <style type="text/css">
       @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
-      
+
       * {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
       }
-      
+
       body {
         font-family: 'Open Sans', sans-serif;
       }
@@ -20,7 +20,7 @@
         margin: 25px;
         background: green;
       }
-      
+
       .presentation p {
         font-size: 100px;
         font-weight: bold;
@@ -44,7 +44,7 @@
 
       var form1 = new window.pathfora.Form({
         msg: 'lipsum',
-        header: 'lipsum',
+        headline: 'lipsum',
         displayConditions: {
           scrollPercentageToDisplay: 30
         }
@@ -54,7 +54,7 @@
       var sub1 = new window.pathfora.Subscription({
         id: 'new widget',
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'folding',
         position: 'bottom-left'
       });
@@ -62,13 +62,13 @@
 
       var form2 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'left',
         theme: 'custom',
         colors: {
           background: '#bb2222',
-          header: '#eee',
+          headline: '#eee',
           text: '#333',
         },
         displayConditions: {
@@ -79,7 +79,7 @@
 
       var form3 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'right',
         displayConditions: {
@@ -90,7 +90,7 @@
       });
       widgets.push(form3);
 
-      // When user logs in, forms will be automatically filled with 
+      // When user logs in, forms will be automatically filled with
       // the data fetched from the social networks.
       window.pathfora.integrateWithFacebook('{{ Facebook API AppID }}');
       window.pathfora.integrateWithGoogle('{{ Google API ClientID }}');
