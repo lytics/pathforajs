@@ -2,21 +2,23 @@
   background: @backgroundDefault;
   color: @colorDefault;
   height: auto;
-  padding: 5px 0;
+  padding: 10px 0;
+  height:35px;
   left: 0; right: 0;
   &:extend(.pf-box-shadow);
 
   .pf-widget-close {
-    line-height: 42px;
+    // line-height: 1;
   }
 
   .pf-widget-body {
-    margin: 5px 20px;
+    margin: 0 20px;
     float: left;
 
     img {
       height: 35px;
       width: 35px;
+      position: absolute;
     }
   }
 
@@ -27,6 +29,7 @@
       max-width: 50%;
       margin-top: 0;
       margin-bottom: 0;
+      // padding-bottom:5px;
       white-space: normal;
     }
 
@@ -34,7 +37,7 @@
     input[type=email] {
       margin-left: 16px;
       width: 200px;
-      background: #fff;
+      // background: #fff;
     }
 
     > * {
@@ -44,7 +47,7 @@
   }
 
   &.opened {
-    &.pf-position-top-fixed {
+    &.pf-position-top-absolute {
       top: 0;
     }
 
@@ -52,22 +55,18 @@
       bottom: 0;
     }
 
-    &.pf-position-top-scrolling {
+    &.pf-position-top-fixed {
       top: 0;
-    }
-
-    &.pf-position-bottom-scrolling {
-      bottom: 0;
     }
   }
 
-  &.pf-position-top-fixed,
+  &.pf-position-top-absolute,
   &.pf-position-bottom-fixed {
     position: fixed;
   }
 
-  &.pf-position-top-fixed,
-  &.pf-position-top-scrolling {
+  &.pf-position-top-absolute,
+  &.pf-position-top-fixed {
     top: -50px;
 
     .pf-bar-content {
@@ -75,39 +74,37 @@
     }
   }
 
-  &.pf-position-bottom-fixed,
-  &.pf-position-bottom-scrolling {
+  &.pf-position-bottom-fixed {
     bottom: -50px;
   }
 
-  &.pf-position-bottom-scrolling,
-  &.pf-position-top-scrolling {
+  &.pf-position-bottom-fixed,
+  &.pf-position-top-fixed {
     position: absolute;
   }
 
   &.pf-message {
     .pf-bar-content {
-      padding-top: 7px;
+      // padding-top: 7px;
     }
 
     .pf-widget-message {
-      margin-right: 16px;
+      margin-right: 40px;
     }
   }
 
   &.pf-subscription {
-    .pf-bar-content {
-      padding-top: 5px;
+    .pf-widget-message {
+      margin-bottom:10px;
     }
 
     form {
       width: auto;
     }
 
-    &.pf-bottom-fixed,
-    &.pf-bottom-scrolling {
+    &.pf-bottom-fixed {
       .pf-widget-message {
-        margin-bottom: 0;
+        // margin-bottom: 0;
       }
     }
   }
@@ -115,6 +112,12 @@
   &.pf-theme-dark {
     background: @backgroundDark;
     color: @colorDark;
+
+    input[type=text],
+    input[type=email],
+    textarea {
+      background-color:#555;
+    }
   }
 
   &.pf-theme-light {
