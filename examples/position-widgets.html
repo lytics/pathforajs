@@ -10,7 +10,7 @@
         margin: 0;
         box-sizing: border-box;
       }
-      
+
       body {
         font-family: 'Open Sans', sans-serif;
       }
@@ -44,7 +44,7 @@
 
       var form1 = new window.pathfora.Form({
         msg: 'lipsum',
-        header: 'lipsum',
+        headline: 'lipsum',
         displayConditions: {
           scrollPercentageToDisplay: 30
         }
@@ -54,7 +54,7 @@
       var sub1 = new window.pathfora.Subscription({
         id: "new widget",
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'folding',
         position: 'bottom-left'
       });
@@ -62,13 +62,13 @@
 
       var form2 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'left',
         theme: 'custom',
         colors: {
           background: '#bb2222',
-          header: "#eee",
+          headline: "#eee",
           text: "#333",
         },
         displayConditions: {
@@ -79,7 +79,7 @@
 
       var form3 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'right',
         displayConditions: {
@@ -92,7 +92,7 @@
 
       var form4 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'bottom-right',
         displayConditions: {
@@ -100,10 +100,10 @@
         }
       });
       widgets.push(form4);
-      
+
       var form5 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'bottom-left',
         displayConditions: {
@@ -111,10 +111,10 @@
         }
       });
       widgets.push(form5);
-      
+
       var form6 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'top-right',
         displayConditions: {
@@ -125,10 +125,10 @@
         }
       });
       widgets.push(form6);
-      
+
       var form7 = new window.pathfora.Form({
         msg: 'subscription',
-        header: 'Header',
+        headline: 'Header',
         layout: 'slideout',
         position: 'top-left',
         displayConditions: {
@@ -139,7 +139,7 @@
         }
       });
       widgets.push(form7);
-      
+
       window.pathfora.initializeWidgets(widgets);
     </script>
   </body>
