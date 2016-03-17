@@ -1163,10 +1163,6 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
-<<<<<<< HEAD
-  if('should not show an impression counter widget without an id', function () {
-    var form = new window.pathfora.Form({
-=======
   it('should not show a widget with hideAfterAction without an id', function () {
     expect(function() {
       var form = new pathfora.Form({
