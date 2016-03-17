@@ -536,9 +536,6 @@
         }
 
         if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
-          console.log(Math.abs(parts[1] - now) / 1000 < hideAfterActionConstraints.confirm.duration);
-          console.log(Math.abs(parts[1] - now) / 1000);
-          console.log(hideAfterActionConstraints.confirm.duration);
           valid = false;
         }
       }
@@ -981,8 +978,8 @@
 
         updateActionCookie = function (name) {
           var val = utils.readCookie(name),
-              duration = Date.now();
-          var ct;
+              duration = Date.now(),
+              ct;
 
           if (val) {
             val = val.split(",");
