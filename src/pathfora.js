@@ -522,13 +522,49 @@
     },
 
     registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
-      var valid = true;
-      var confirm = utils.readCookie('PathforaConfirm_' + widget.id);
-      var cancel = utils.readCookie('PathforaCancel_' + widget.id);
-      var closed = utils.readCookie('PathforaClosed_' + widget.id);
+      var valid = true,
+          now = Date.now(),
+          confirm = utils.readCookie('PathforaConfirm_' + widget.id),
+          cancel = utils.readCookie('PathforaCancel_' + widget.id),
+          closed = utils.readCookie('PathforaClosed_' + widget.id);
 
-      if ((confirm && hideAfterActionConstraints.confirm) || (cancel && hideAfterActionConstraints.cancel) || (closed && hideAfterActionConstraints.closed)) {
-        valid = false;
+      if (hideAfterActionConstraints.confirm && confirm) {
+        var parts = confirm.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.confirm.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+          console.log(Math.abs(parts[1] - now) / 1000 < hideAfterActionConstraints.confirm.duration);
+          console.log(Math.abs(parts[1] - now) / 1000);
+          console.log(hideAfterActionConstraints.confirm.duration);
+          valid = false;
+        }
+      }
+
+      if (hideAfterActionConstraints.cancel && cancel) {
+        var parts = cancel.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.cancel.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+          valid = false;
+        }
+      }
+
+      if (hideAfterActionConstraints.closed && closed) {
+        var parts = closed.split(",");
+
+        if (parseInt(parts[0]) >= hideAfterActionConstraints.closed.hideCount) {
+          valid = false;
+        }
+
+        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+          valid = false;
+        }
       }
 
       if (valid) {
@@ -842,6 +878,7 @@
       var widgetOnFormSubmit;
       var widgetOnButtonClick;
       var widgetOnModalClose;
+      var updateActionCookie;
       var i;
       var j;
 
@@ -933,7 +970,7 @@
       case 'inline':
         widgetCancel = widget.querySelector('.pf-widget-cancel');
         widgetClose = widget.querySelector('.pf-widget-close');
-        widgetOnModalClose = function (event, kind) {
+        widgetOnModalClose = function (event) {
           if (typeof config.onModalClose === 'function') {
             config.onModalClose(callbackTypes.MODAL_CLOSE, {
               widget: widget,
@@ -942,9 +979,24 @@
           }
         };
 
+        updateActionCookie = function (name) {
+          var val = utils.readCookie(name),
+              duration = Date.now();
+          var ct;
+
+          if (val) {
+            val = val.split(",");
+            ct = Math.min(parseInt(val[0]), 9998) + 1;
+          } else {
+            ct = 1;
+          }
+
+          utils.saveCookie(name, ct + "," + duration);
+        };
+
         widgetClose.onclick = function (event) {
           context.pathfora.closeWidget(widget.id);
-          utils.saveCookie("PathforaClosed_" + widget.id, true);
+          updateActionCookie("PathforaClosed_" + widget.id);
           widgetOnModalClose(event);
         };
 
@@ -956,13 +1008,13 @@
                 config.cancelAction.callback();
               }
               context.pathfora.closeWidget(widget.id, true);
-              utils.saveCookie("PathforaCancel_" + widget.id, true);
+              updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               context.pathfora.closeWidget(widget.id);
-              utils.saveCookie("PathforaCancel_" + widget.id, true);
+              updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           }
@@ -974,7 +1026,7 @@
       if (typeof config.confirmAction === 'object') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
-          utils.saveCookie("PathforaConfirm_" + widget.id, true);
+          updateActionCookie("PathforaConfirm_" + widget.id);
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
@@ -991,7 +1043,7 @@
         };
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
-          utils.saveCookie("PathforaConfirm_" + widget.id, true);
+          updateActionCookie("PathforaConfirm_" + widget.id);
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
@@ -1013,7 +1065,7 @@
           });
 
           if (valid) {
-            utils.saveCookie("PathforaConfirm_" + widget.id, true);
+            updateActionCookie("PathforaConfirm_" + widget.id);
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
