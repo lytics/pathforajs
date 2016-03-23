@@ -265,8 +265,7 @@
 
     // production
     link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
-    // testing
-    // link.setAttribute('href', '//pfalocal.ngrok.com/dist/pathfora.min.css');
+
     head.appendChild(link);
   };
 
@@ -1888,8 +1887,7 @@
       apiUrl = [
         // production
         'https://api.lytics.io/api/me/',
-        // testing
-        // 'http://marksthingy.ngrok.io/api/me/',
+
         accountId,
         '/',
         seerId,
