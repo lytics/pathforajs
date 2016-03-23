@@ -263,7 +263,10 @@
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
 
+    // production
     link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
+    // testing
+    // link.setAttribute('href', '//pfalocal.ngrok.com/dist/pathfora.min.css');
     head.appendChild(link);
   };
 
@@ -387,6 +390,7 @@
     initWidgetScaffold: function () {
       return {
           target: [],
+          exclude: [],
           inverse: []
       };
     },
@@ -398,17 +402,29 @@
      * @param {obj} widget
      * @throws {Error} error
      */
-    insertWidget: function (segment, widget, config) {
+    insertWidget: function (method, segment, widget, config) {
       // assume that we need to add a new widget until proved otherwise
       var makeNew = true;
+      var subject;
 
       // make sure our scaffold is valid
       if(!config.target){
         throw new Error('Invalid scaffold. No target array.');
       }
+      if(!config.exclude){
+        throw new Error('Invalid scaffold. No exclude array.');
+      }
 
-      for (var i = 0; i < config.target.length; i++) {
-        var wgt = config.target[i];
+      if (method === "target"){
+        subject = config.target;
+      }else if(method === "exclude"){
+        subject = config.exclude;
+      }else{
+        throw new Error('Invalid method (' + method + ').');
+      }
+
+      for (var i = 0; i < subject.length; i++) {
+        var wgt = subject[i];
 
         if (wgt.segment === segment){
             wgt.widgets.push(widget);
@@ -417,7 +433,7 @@
       }
 
       if(makeNew){
-          config.target.push({
+          subject.push({
               'segment': segment,
               'widgets': [widget]
           });
@@ -1870,7 +1886,10 @@
       }
 
       apiUrl = [
+        // production
         'https://api.lytics.io/api/me/',
+        // testing
+        // 'http://marksthingy.ngrok.io/api/me/',
         accountId,
         '/',
         seerId,
@@ -1938,23 +1957,57 @@
           core.updateObject(defaultProps, widgets.common.config);
         }
 
-        if (widgets.target) {
+        if (widgets.target || widgets.exclude) {
           api.checkUserSegments(lyticsId, function (segments) {
-            var triggered = false;
-            var target;
-            var i;
-            var j;
 
-            j = widgets.target.length;
-            for (i = 0; i < j; i++) {
-              target = widgets.target[i];
-              if (segments.indexOf(target.segment) !== -1) {
-                core.initializeWidgetArray(target.widgets);
-                triggered = true;
-                break;
+            var target,
+              targetmatched = false,
+              targetedwidgets = [],
+              ti,
+              tl,
+              exclude,
+              excludematched = false,
+              confirmedwidgets = [],
+              ei,
+              ex,
+              ey,
+              el;
+
+            // handle inclusions
+            if(widgets.target){
+              tl = widgets.target.length;
+              for (ti = 0; ti < tl; ti++) {
+                target = widgets.target[ti];
+                if (segments && segments.indexOf(target.segment) !== -1) {
+                  targetedwidgets = target.widgets;
+                }
               }
             }
-            if (!triggered && widgets.inverse) {
+
+            // handle exclusions
+            if(widgets.exclude){
+              el = widgets.exclude.length;
+              for (ei = 0; ei < el; ei++) {
+                exclude = widgets.exclude[ei];
+                if (segments && segments.indexOf(exclude.segment) !== -1) {
+                  // we found a match, ensure the corresponding segment(s) are not in the
+                  // targetted widgets array
+                  for (ex = 0; ex < targetedwidgets.length; ex++) {
+                    for (ey = 0; ey < exclude.widgets.length; ey++) {
+                      if (targetedwidgets[ex] === exclude.widgets[ey]) {
+                        targetedwidgets.splice(ex, 1);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            if (targetedwidgets.length) {
+              core.initializeWidgetArray(targetedwidgets);
+            }
+
+            if (!targetedwidgets.length && !excludematched && widgets.inverse) {
               core.initializeWidgetArray(widgets.inverse);
             }
           });
