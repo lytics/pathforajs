@@ -262,9 +262,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-
-    // production
-    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
+    link.setAttribute('href', '{{cssurl}}');
 
     head.appendChild(link);
   };
@@ -1885,9 +1883,7 @@
       }
 
       apiUrl = [
-        // production
-        'https://api.lytics.io/api/me/',
-
+        '{{apiurl}}/api/me/',
         accountId,
         '/',
         seerId,

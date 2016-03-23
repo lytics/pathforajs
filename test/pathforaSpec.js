@@ -74,7 +74,7 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
@@ -131,7 +131,7 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
