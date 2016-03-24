@@ -882,14 +882,8 @@ describe('Widgets', function () {
       pathfora.initializeWidgets([promoWidget], credentials);
     };
 
-    var missingMessage = function () {
-      var promoWidget = new pathfora.Message({layout: 'modal'});
-      pathfora.initializeWidgets([promoWidget], credentials);
-    };
-
     expect(missingParams).toThrow(new Error('Config object is missing'));
     pathfora.clearAll();
-    expect(missingMessage).toThrow(new Error('Widget message is missing'));
   });
 
 
