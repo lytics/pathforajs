@@ -1177,7 +1177,8 @@
         ' pf-widget-' + config.layout,
         config.position ? ' pf-position-' + config.position : '',
         ' pf-widget-variant-' + config.variant,
-        config.theme ? ' pf-theme-' + config.theme : ''
+        config.theme ? ' pf-theme-' + config.theme : '',
+        config.className ? ' ' + config.className : '',
       ].join('');
     },
 
@@ -1514,10 +1515,6 @@
         throw new Error('Config object is missing');
       }
 
-      if (!config.msg) {
-        throw new Error('Widget message is missing');
-      }
-
       if(config.layout === 'random') {
         props = {
           layout: ['modal', 'slideout', 'bar', 'folding'],
@@ -1582,7 +1579,7 @@
       if (!config.id &&
            config.displayConditions &&
            typeof config.displayConditions.hideAfterAction !== 'undefined') {
-        delete config.displayConditions.impressions;
+        delete config.displayConditions.hideAfterAction;
 
         throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
       }
