@@ -7,13 +7,23 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var env = require('gulp-env');
 var connect = require('gulp-connect');
+var APIURL;
+var CSSURL;
 
 // get overrides from .env file
-env({
-    file: '.env.json',
-});
-var APIURL = process.env.APIURL || "//api.lytics.io";
-var CSSURL = process.env.CSSURL || "//c.lytics.io/static/pathfora.min.css";
+try {
+  env({
+      file: '.env.json',
+  });
+  APIURL = process.env.APIURL || "//api.lytics.io";
+  CSSURL = process.env.CSSURL || "//c.lytics.io/static/pathfora.min.css";
+} catch (error) {
+  APIURL = "//api.lytics.io";
+  CSSURL = "//c.lytics.io/static/pathfora.min.css";
+}
+
+console.log(APIURL, CSSURL)
+
 var TESTAPIURL = "//api.lytics.io";
 var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
 
