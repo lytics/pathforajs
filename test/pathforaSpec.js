@@ -105,7 +105,7 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('bonk bnok bonok', function (done) {
+  it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
     jasmine.Ajax.install();
     var messageA = pathfora.Message({
       id: 'test-bar-01',

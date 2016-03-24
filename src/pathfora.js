@@ -411,6 +411,9 @@
       if(!config.exclude){
         throw new Error('Invalid scaffold. No exclude array.');
       }
+      if(!config.inverse){
+        throw new Error('Invalid scaffold. No inverse array.');
+      }
 
       if (method === "target"){
         subject = config.target;
