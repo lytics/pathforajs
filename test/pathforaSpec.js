@@ -74,7 +74,7 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
@@ -97,6 +97,59 @@ describe('Pathfora', function () {
 
       var msg = $('.pf-widget-message').text();
       expect(msg).toBe('DB');
+
+      pathfora.clearAll();
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
+    jasmine.Ajax.install();
+    var messageA = pathfora.Message({
+      id: 'test-bar-01',
+      msg: 'A',
+      layout: 'modal'
+    });
+
+    var messageB = pathfora.Message({
+      id: 'test-bar-02',
+      msg: 'B',
+      layout: 'modal'
+    });
+
+    var widgets = {
+      target: [{
+        segment: 'a',
+        widgets: [messageA, messageB]
+      }],
+      exclude: [{
+        segment: 'b',
+        widgets: [messageA]
+      }]
+    };
+
+    pathfora.initializeWidgets(widgets, credentials);
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":{"segments":["a","b"]}}'
+    });
+
+    var widgetA = $('#' + messageA.id);
+
+    var widgetB = $('#' + messageB.id);
+    expect(widgetB).toBeDefined();
+
+    setTimeout(function() {
+      expect(widgetB.hasClass('opened')).toBeTruthy();
+      expect(widgetA.length).toBe(0);
+
+      var msg = $('.pf-widget-message').text();
+      expect(msg).toBe('B');
 
       pathfora.clearAll();
       done();
@@ -159,6 +212,7 @@ describe('Pathfora', function () {
     expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics',  messageBar.id + ' : show', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
+
     jasmine.Ajax.uninstall();
   });
 
@@ -224,9 +278,10 @@ describe('Pathfora', function () {
         'pf-widget-action': 'action test'
       }));
 
-      jasmine.Ajax.uninstall();
       done();
     }, 200);
+
+    jasmine.Ajax.uninstall();
   });
 
   it('should report cancelled actions to Lytics API', function (done) {
@@ -260,9 +315,10 @@ describe('Pathfora', function () {
         'pf-widget-event': 'cancel'
       }));
 
-      jasmine.Ajax.uninstall();
       done();
     }, 200);
+
+    jasmine.Ajax.uninstall();
   });
 
   it('should report submitting forms, with form data', function () {
@@ -1383,6 +1439,7 @@ describe('API', function () {
   it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
     var scaffold = pathfora.utils.initWidgetScaffold();
     expect(scaffold.target.length).toBe(0);
+    expect(scaffold.exclude.length).toBe(0);
     expect(scaffold.inverse.length).toBe(0);
   });
 
@@ -1403,7 +1460,7 @@ describe('API', function () {
       "emailField": false,
       "msgField": false
     });
-    pathfora.utils.insertWidget("smt_new", tester, scaffold)
+    pathfora.utils.insertWidget("target", "smt_new", tester, scaffold)
 
     expect(scaffold.target.length).toBe(1);
     expect(scaffold.target[0].segment).toBe("smt_new");
@@ -1426,7 +1483,7 @@ describe('API', function () {
       "okShow": true,
       "theme": "dark"
     });
-    pathfora.utils.insertWidget("smt_new", tester1, scaffold)
+    pathfora.utils.insertWidget("target", "smt_new", tester1, scaffold)
 
     var tester2 = pathfora.Form({
       "id": "tester456",
@@ -1440,7 +1497,7 @@ describe('API', function () {
       "nameField": true,
       "emailField": true
     });
-    pathfora.utils.insertWidget("smt_new", tester2, scaffold)
+    pathfora.utils.insertWidget("target", "smt_new", tester2, scaffold)
 
     expect(scaffold.target.length).toBe(1);
     expect(scaffold.target[0].segment).toBe("smt_new");
@@ -1450,6 +1507,47 @@ describe('API', function () {
     expect(scaffold.target[0].widgets[1].type).toBe("form");
     expect(scaffold.target[0].widgets[1].config.headline).toBe("Sample Insert Two");
     expect(scaffold.target[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert multiple widgets into config binding to the same segment but excluding', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+
+    var tester1 = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "theme": "dark"
+    });
+    pathfora.utils.insertWidget("exclude", "smt_new", tester1, scaffold)
+
+    var tester2 = pathfora.Form({
+      "id": "tester456",
+      "headline": "Sample Insert Two",
+      "msg": "Sample insert message two.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "theme": "dark",
+      "titleField": true,
+      "nameField": true,
+      "emailField": true
+    });
+    pathfora.utils.insertWidget("exclude", "smt_new", tester2, scaffold)
+
+    expect(scaffold.exclude.length).toBe(1);
+    expect(scaffold.exclude[0].segment).toBe("smt_new");
+    expect(scaffold.exclude[0].widgets.length).toBe(2);
+    expect(scaffold.exclude[0].widgets[0].type).toBe("message");
+    expect(scaffold.exclude[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.exclude[0].widgets[1].type).toBe("form");
+    expect(scaffold.exclude[0].widgets[1].config.headline).toBe("Sample Insert Two");
+    expect(scaffold.exclude[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.target.length).toBe(0);
     expect(scaffold.inverse.length).toBe(0);
   });
 });
