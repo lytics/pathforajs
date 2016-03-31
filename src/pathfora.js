@@ -562,25 +562,36 @@
     },
 
     registerImpressionsCounter: function (impressionConstraints, widget) {
-      var valid = true;
-      var id = 'PathforaImpressions_' + widget.id;
-      var sessionImpressions = ~~sessionStorage.getItem(id);
-      var totalImpressions = ~~utils.readCookie(id);
-
+      var valid = true,
+          id = 'PathforaImpressions_' + widget.id,
+          sessionImpressions = ~~sessionStorage.getItem(id),
+          total = utils.readCookie(id),
+          now = Date.now(),
+          parts,
+          totalImpressions;
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
       }
-      if (!totalImpressions) {
+
+      if (!total) {
         totalImpressions = 1;
+      } else {
+        parts = total.split(","),
+        totalImpressions = parts[0];
+
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.duration) {
+          valid = false;
+        }
       }
 
       if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
         valid = false;
       }
 
+
       sessionStorage.setItem(id, sessionImpressions + 1);
-      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1 + "," + now);
 
       if (valid) {
         context.pathfora.showWidget(widget);
@@ -601,7 +612,7 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
           valid = false;
         }
       }
@@ -613,7 +624,7 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
           valid = false;
         }
       }
@@ -625,7 +636,7 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
           valid = false;
         }
       }
@@ -1090,7 +1101,9 @@
       if (typeof config.confirmAction === 'object') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
-          updateActionCookie("PathforaConfirm_" + widget.id);
+          if (typeof updateActionCookie === 'function') {
+            updateActionCookie("PathforaConfirm_" + widget.id);
+          }
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
@@ -1108,7 +1121,9 @@
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
-          updateActionCookie("PathforaConfirm_" + widget.id);
+          if (typeof updateActionCookie === 'function') {
+            updateActionCookie("PathforaConfirm_" + widget.id);
+          }
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
@@ -1129,7 +1144,9 @@
           });
 
           if (valid) {
-            updateActionCookie("PathforaConfirm_" + widget.id);
+            if (typeof updateActionCookie === 'function') {
+              updateActionCookie("PathforaConfirm_" + widget.id);
+            }
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
