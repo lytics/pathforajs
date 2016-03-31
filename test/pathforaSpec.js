@@ -1387,6 +1387,53 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should show widget if impression buffer met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 2
+        }
+      }
+    });
+
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
+      var widget = $('#' + form.id);
+      expect(widget.length).toBe(1);
+    }, 3000);
+  });
+
+  it('should not show widget if impression buffer not met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 60
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([ form ]);
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
