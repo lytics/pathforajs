@@ -1387,7 +1387,7 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should show widget if impression duration met', function () {
+  it('should show widget if impression buffer met', function () {
     var widgetId = 'impressionWidget3';
     pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
     var form = new pathfora.Form({
@@ -1399,7 +1399,7 @@ describe('API', function () {
       displayConditions: {
         impressions: {
           session: 3,
-          duration: 2
+          buffer: 2
         }
       }
     });
@@ -1411,7 +1411,7 @@ describe('API', function () {
     }, 3000);
   });
 
-  it('should not show widget if impression duration not met', function () {
+  it('should not show widget if impression buffer not met', function () {
     var widgetId = 'impressionWidget3';
     pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
     var form = new pathfora.Form({
@@ -1423,7 +1423,7 @@ describe('API', function () {
       displayConditions: {
         impressions: {
           session: 3,
-          duration: 60
+          buffer: 60
         }
       }
     });

@@ -580,7 +580,7 @@
         parts = total.split(","),
         totalImpressions = parts[0];
 
-        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
           valid = false;
         }
       }
