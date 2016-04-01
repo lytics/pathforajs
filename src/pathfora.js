@@ -534,6 +534,7 @@
       return (core.pageViews >= pageVisitsRequired);
     },
 
+
     urlChecker: function (phrases, widget) {
       var url = window.location.href;
       var valid = false;

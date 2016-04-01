@@ -262,7 +262,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -533,6 +533,7 @@
     pageVisitsChecker: function (pageVisitsRequired, widget) {
       return (core.pageViews >= pageVisitsRequired);
     },
+
 
     urlChecker: function (phrases, widget) {
       var url = window.location.href;

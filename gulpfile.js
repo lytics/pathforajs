@@ -22,8 +22,6 @@ try {
   CSSURL = "//c.lytics.io/static/pathfora.min.css";
 }
 
-console.log(APIURL, CSSURL)
-
 var TESTAPIURL = "//api.lytics.io";
 var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
 
@@ -43,6 +41,19 @@ gulp.task('build:styles', function () {
 });
 
 gulp.task('build:js', function () {
+  gulp.src('src/*.js')
+    .pipe(replace('{{apiurl}}', '//api.lytics.io'))
+    .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
+    .pipe(gulp.dest('dist'))
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('dist'))
+    .pipe(connect.reload());
+});
+
+gulp.task('local:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', APIURL))
     .pipe(replace('{{cssurl}}', CSSURL))
@@ -81,5 +92,6 @@ gulp.task('preview', function () {
 });
 
 gulp.task('test', ['build:styles', 'build:testjs']);
+gulp.task('local', ['build:styles', 'local:js', 'preview', 'watch']);
 gulp.task('build', ['build:styles', 'build:js']);
 gulp.task('default', ['build', 'preview', 'watch']);
