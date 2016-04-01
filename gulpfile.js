@@ -32,6 +32,7 @@ gulp.task('build:styles', function () {
         path.join(__dirname, 'less', 'includes')
       ]
     }))
+    .pipe(gulp.dest('dist'))
     .pipe(cssmin())
     .pipe(rename({
       suffix: '.min'
