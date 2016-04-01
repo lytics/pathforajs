@@ -1,0 +1,1005 @@
+a {
+  cursor: pointer;
+}
+.pf-box-shadow,
+.pf-widget-modal .pf-widget-content,
+.pf-widget-bar,
+.pf-widget-folding {
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+}
+.pf-hidden {
+  display: none;
+}
+.pf-widget {
+  z-index: 99999;
+  font-family: 'Open Sans', sans-serif;
+  visibility: hidden;
+  opacity: 0;
+  transition: all .3s;
+  text-align: left;
+}
+.pf-widget * {
+  box-sizing: border-box;
+}
+.pf-widget a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.pf-widget input[type=text],
+.pf-widget input[type=email],
+.pf-widget textarea {
+  border-radius: 3px;
+  border: 0 none;
+  font-size: 14px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 20px;
+  background: #fff;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.pf-widget input[type=text]:focus,
+.pf-widget input[type=email]:focus,
+.pf-widget textarea:focus {
+  outline: none;
+}
+.pf-widget input[type=text]:focus:invalid,
+.pf-widget input[type=email]:focus:invalid,
+.pf-widget textarea:focus:invalid {
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px #ff0000;
+}
+.pf-widget input[type=text][invalid],
+.pf-widget input[type=email][invalid],
+.pf-widget textarea[invalid] {
+  border: solid 1px #f00;
+  border-color: #f00 !important;
+}
+.pf-widget input[type=text],
+.pf-widget input[type=email] {
+  padding: 0 5px;
+  padding: 10px 20px;
+  clear: both;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.pf-widget input[type=text] + .pf-widget-btn,
+.pf-widget input[type=email] + .pf-widget-btn {
+  line-height: 36px;
+  font-size: 14px;
+  position: absolute;
+  margin-top: 0;
+  margin-left: 10px;
+  padding: 0 16px;
+}
+.pf-widget textarea {
+  padding: 10px 20px;
+  font-family: 'Open Sans', 'Arial' sans-serif;
+  resize: none;
+}
+.pf-widget .pf-widget-message {
+  margin: 0 0 16px 0;
+}
+.pf-widget .pf-widget-img {
+  border-radius: 50%;
+}
+.pf-widget-btn {
+  display: inline-block;
+  padding: 0 26px;
+  background: #597E9B;
+  color: #fff;
+  line-height: 32px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14px;
+  font-weight: regular;
+  border-radius: 5px;
+  transition: all .3s;
+  cursor: pointer;
+  border: 0;
+}
+.pf-widget-btn.pf-widget-ok {
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.pf-widget-btn:hover {
+  background: #7697b1;
+}
+.pf-widget-btn + .pf-widget-btn {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.pf-widget-close {
+  float: right;
+  margin-right: 12px;
+  color: #888;
+  font-size: 24px;
+  text-decoration: none;
+  transition: all .3s;
+  cursor: pointer;
+}
+.pf-widget-close:hover {
+  color: #fff;
+}
+/*
+ * OPENED SPECIFIC
+ */
+.pf-widget.opened {
+  visibility: visible;
+  opacity: 1;
+}
+/*
+ * POSITION SPECIFIC
+ */
+.pf-position-bottom-left,
+.pf-position-top-left {
+  left: 42px;
+}
+.pf-position-bottom-right,
+.pf-position-top-right {
+  right: 42px;
+}
+.pf-position-bottom-left,
+.pf-position-bottom-right {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+.pf-position-left,
+.pf-position-right {
+  top: 25%;
+}
+/*
+ * THEMES SPECIFIC
+ */
+.pf-theme-light .pf-widget-close:hover {
+  color: #333;
+}
+.pf-theme-light input[type=text] textarea,
+.pf-theme-light input[type=email] textarea {
+  border: 1px solid #333;
+}
+.pf-theme-light .pf-widget-message,
+.pf-theme-light .pf-widget-headline {
+  color: #000;
+}
+.pf-theme-light .pf-widget-btn {
+  background: #FF850E;
+  color: #fff;
+}
+.pf-theme-light .pf-widget-btn:hover {
+  background: #da6c00;
+}
+.pf-theme-dark .pf-widget-message,
+.pf-theme-dark .pf-widget-headline {
+  color: #fff;
+}
+.pf-theme-dark input[type=text],
+.pf-theme-dark input[type=email],
+.pf-theme-dark textarea {
+  width: 100%;
+  color: white;
+}
+.pf-subscription form {
+  overflow: hidden;
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.pf-subscription form input[type=text],
+.pf-subscription form input[type=email] {
+  width: 100%;
+}
+.pf-subscription form .pf-widget-button,
+.pf-subscription form input[type=text],
+.pf-subscription form input[type=email] {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.pf-subscription form .pf-widget-btn {
+  float: right;
+  margin-left: 5px;
+  line-height: 36px;
+  padding: 0 16px;
+}
+.pf-subscription form span {
+  display: block;
+  overflow: hidden;
+}
+.pf-no-img.pf-widget-folding {
+  width: 280px !important;
+}
+.pf-no-img.pf-widget-folding.pf-position-left {
+  padding-right: 30px;
+}
+.pf-no-img.pf-widget-slideout {
+  width: 370px !important;
+}
+.pf-sitegate .pf-sitegate-field {
+  position: relative;
+  display: inline-block;
+}
+.pf-sitegate .pf-sitegate-field.pf-field-half-width {
+  width: 49%;
+}
+.pf-sitegate .pf-sitegate-field.pf-field-full-width {
+  width: 99.5%;
+}
+.pf-sitegate .pf-sitegate-clear {
+  display: block;
+  width: 100%;
+  height: 1px;
+}
+.pf-sitegate .pf-widget-btn {
+  float: right;
+}
+.pf-sitegate .pf-sitegate-social-plugins {
+  width: 100%;
+  padding-bottom: 5px;
+  border: none;
+  text-align: right;
+}
+.pf-sitegate .pf-sitegate-social-plugins .pf-sitegate-centered-label {
+  text-align: center;
+}
+.pf-social-login {
+  display: none;
+  text-align: left;
+  border: solid 1px rgba(0, 0, 0, 0.2);
+  margin-bottom: 5px;
+  max-height: 28px;
+  height: 28px;
+  min-width: 28px;
+  padding: 4px;
+  overflow: hidden;
+  float: right;
+}
+.pf-social-login * {
+  max-width: 20px;
+}
+.pf-social-login p {
+  display: inline-block;
+  max-width: 16px;
+  height: 16px;
+}
+.pf-social-login > div:not(:first-of-type) {
+  margin-left: 4px;
+}
+.pf-social-login .social-login-btn {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+.pf-social-login .social-login-btn span {
+  vertical-align: top !important;
+}
+.pf-widget-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+}
+.pf-widget-modal .pf-va-middle {
+  display: table-cell;
+  vertical-align: middle;
+}
+.pf-widget-modal .pf-widget-container {
+  display: table;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  top: -100vh;
+  transition: all .3s;
+}
+.pf-widget-modal .pf-widget-content {
+  position: relative;
+  width: 780px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 5px;
+  background: #ddd;
+  transition: all .3s;
+}
+.pf-widget-modal .pf-widget-img {
+  float: right;
+  margin-right: 0px;
+  width: 100px;
+  height: 100px;
+  margin-left: 20px;
+}
+.pf-widget-modal .pf-widget-headline {
+  font-size: 28px;
+  margin: 0 0 18px 0;
+}
+.pf-widget-modal .pf-widget-close {
+  position: absolute;
+  float: none;
+  top: 4px;
+  right: 0;
+}
+.pf-widget-modal .pf-widget-body {
+  display: table;
+  color: #333;
+  width: 100%;
+}
+.pf-widget-modal .pf-widget-body > .pf-va-middle {
+  white-space: nowrap;
+}
+.pf-widget-modal .pf-widget-body .pf-widget-message {
+  margin: 0 0 18px 0;
+  font-size: 18px;
+  white-space: normal;
+}
+.pf-widget-modal .pf-widget-body .pf-widget-btn {
+  padding: 0 15px;
+  min-width: 70px;
+  text-align: center;
+}
+.pf-widget-modal .pf-widget-body form {
+  width: 100%;
+}
+.pf-widget-modal .pf-widget-body form input {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-size: 16px;
+}
+.pf-widget-modal .pf-widget-body form + .pf-widget-btn {
+  float: right;
+}
+.pf-widget-modal.opened .pf-widget-container {
+  top: 0;
+}
+.pf-widget-modal.pf-form form,
+.pf-widget-modal.pf-sitegate form {
+  white-space: normal;
+}
+.pf-widget-modal.pf-theme-dark .pf-widget-content {
+  background: #333;
+}
+.pf-widget-modal.pf-theme-light .pf-widget-content {
+  background: #fff;
+  border: 1px solid #333;
+}
+.pf-widget-modal.pf-no-img {
+  text-align: center;
+}
+.pf-widget-modal.pf-no-img .pf-widget-headline {
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+.pf-widget-modal.pf-no-img .pf-widget-message {
+  margin-bottom: 30px;
+}
+.pf-widget-modal.pf-subscription .pf-widget-btn {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-content {
+  max-width: 70%;
+  width: auto;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-headline {
+  text-align: center;
+  margin-top: 140px;
+  margin-bottom: 10px;
+  font-weight: 100;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-body > * {
+  display: block;
+  text-align: center;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-body > .pf-va-middle {
+  white-space: normal;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-body .pf-widget-img {
+  float: none;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  margin-left: -70px;
+  width: 140px;
+  height: 140px;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-body .pf-widget-btn {
+  font-size: 16px;
+  padding: 5px 20px;
+}
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-body .pf-widget-message {
+  margin-bottom: 30px;
+}
+.pf-widget-modal.pf-no-image.pf-widget-variant-2 .pf-widget-headline {
+  margin-top: 0;
+}
+.pf-widget-slideout {
+  position: fixed;
+  bottom: 50px;
+  width: 540px;
+  background: #ddd;
+  color: #333;
+  border-radius: 4px;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  display: table;
+}
+.pf-widget-slideout > div {
+  display: table-cell;
+  vertical-align: middle;
+}
+.pf-widget-slideout .pf-widget-close {
+  position: absolute;
+  right: 0;
+}
+.pf-widget-slideout img {
+  height: 50px;
+  margin: 0 0 0 40px;
+  float: left;
+}
+.pf-widget-slideout .pf-widget-content {
+  padding: 30px;
+}
+.pf-widget-slideout .pf-widget-headline {
+  font-size: 20px;
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+.pf-widget-slideout .pf-widget-message {
+  margin-bottom: 20px;
+}
+.pf-widget-slideout input[type=text],
+.pf-widget-slideout input[type=email] {
+  height: 36px;
+}
+.pf-widget-slideout input[type=text] + .pf-widget-btn,
+.pf-widget-slideout input[type=email] + .pf-widget-btn {
+  padding: 0;
+  width: 20%;
+  text-align: center;
+}
+.pf-widget-slideout.pf-theme-dark {
+  background: #333;
+  color: #fff;
+}
+.pf-widget-slideout.pf-theme-dark input[type=text],
+.pf-widget-slideout.pf-theme-dark input[type=email],
+.pf-widget-slideout.pf-theme-dark textarea {
+  background-color: #555;
+}
+.pf-widget-slideout.pf-theme-light {
+  background: #fff;
+}
+.pf-widget-slideout.opened.pf-position-left {
+  left: 50px;
+}
+.pf-widget-slideout.opened.pf-position-right {
+  right: 50px;
+}
+.pf-widget-slideout.pf-position-left,
+.pf-widget-slideout.pf-position-right {
+  top: auto;
+}
+.pf-widget-slideout.pf-position-left {
+  left: -540px;
+}
+.pf-widget-slideout.pf-position-right {
+  right: -540px;
+}
+.pf-widget-slideout.pf-widget-variant-2 {
+  width: 350px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content {
+  text-align: center;
+  width: 100%;
+  padding: 30px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content .pf-widget-headline {
+  margin-top: 120px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content .pf-widget-btn {
+  font-size: 16px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content input[type=text],
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content input[type=email] {
+  width: 100%;
+  margin-bottom: 5px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content input[type=text] + .pf-widget-btn,
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content input[type=email] + .pf-widget-btn,
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content form + .pf-widget-btn {
+  margin: 0;
+  width: 100%;
+  position: static;
+  box-sizing: border-box;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content form textarea {
+  margin-bottom: 10px;
+}
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-img {
+  width: 100px;
+  height: 100px;
+  float: none;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  margin-left: -50px;
+}
+.pf-widget-slideout.pf-form {
+  width: 370px;
+}
+.pf-widget-slideout.pf-form > div {
+  display: block;
+}
+.pf-widget-slideout.pf-form.pf-no-img .pf-widget-body {
+  height: 0;
+}
+.pf-widget-slideout.pf-form:not(.pf-no-img) .pf-widget-headline {
+  line-height: 50px;
+}
+.pf-widget-slideout.pf-form .pf-widget-body {
+  height: 50px;
+  width: 20%;
+  float: left;
+  padding-top: 20px;
+  padding-left: 20px;
+  margin-right: 20px;
+}
+.pf-widget-slideout.pf-form .pf-widget-body .pf-widget-img {
+  width: 50px;
+  height: 50px;
+  margin-left: 0;
+}
+.pf-widget-slideout.pf-form .pf-widget-content {
+  padding: 30px;
+}
+.pf-widget-slideout.pf-form input[type=text] input[type=email],
+.pf-widget-slideout.pf-form textarea {
+  width: 100%;
+}
+.pf-widget-slideout.pf-form.pf-widget-variant-2 .pf-widget-body {
+  float: none;
+  height: 70px;
+}
+.pf-widget-slideout.pf-form.pf-widget-variant-2 .pf-widget-img {
+  float: none;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+}
+.pf-widget-slideout.pf-form.pf-widget-variant-2 .pf-widget-headline {
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+.pf-widget-slideout.pf-no-image .pf-widget-content {
+  width: 100%;
+}
+.pf-widget-slideout.pf-no-image .pf-widget-body {
+  margin: 0;
+  padding: 0;
+  height: 0 !important;
+  width: 0 !important;
+}
+.pf-widget-slideout.pf-no-image.pf-widget-variant-2 .pf-widget-headline {
+  margin-top: 0;
+}
+.pf-widget-bar {
+  background: #ddd;
+  color: #333;
+  height: auto;
+  padding: 10px 0;
+  left: 0;
+  right: 0;
+}
+.pf-widget-bar .pf-widget-body {
+  margin: 0 20px;
+  float: left;
+}
+.pf-widget-bar .pf-widget-body img {
+  height: 35px;
+  width: 35px;
+  position: absolute;
+}
+.pf-widget-bar .pf-bar-content {
+  text-align: center;
+}
+.pf-widget-bar .pf-bar-content .pf-widget-message {
+  max-width: 50%;
+  margin-top: 0;
+  margin-bottom: 0;
+  white-space: normal;
+}
+.pf-widget-bar .pf-bar-content input[type=text],
+.pf-widget-bar .pf-bar-content input[type=email] {
+  margin-left: 16px;
+  width: 200px;
+}
+.pf-widget-bar .pf-bar-content > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.pf-widget-bar.opened.pf-position-top-absolute {
+  top: 0;
+}
+.pf-widget-bar.opened.pf-position-bottom-fixed {
+  bottom: 0;
+}
+.pf-widget-bar.opened.pf-position-top-fixed {
+  top: 0;
+}
+.pf-widget-bar.pf-position-top-absolute,
+.pf-widget-bar.pf-position-bottom-fixed {
+  position: fixed;
+}
+.pf-widget-bar.pf-position-top-absolute,
+.pf-widget-bar.pf-position-top-fixed {
+  top: -50px;
+}
+.pf-widget-bar.pf-position-top-absolute .pf-bar-content,
+.pf-widget-bar.pf-position-top-fixed .pf-bar-content {
+  padding-top: 0px;
+}
+.pf-widget-bar.pf-position-bottom-fixed {
+  bottom: -50px;
+}
+.pf-widget-bar.pf-position-bottom-fixed,
+.pf-widget-bar.pf-position-top-fixed {
+  position: absolute;
+}
+.pf-widget-bar.pf-message .pf-widget-message {
+  margin-right: 40px;
+}
+.pf-widget-bar.pf-subscription .pf-widget-message {
+  margin-bottom: 10px;
+}
+.pf-widget-bar.pf-subscription form {
+  width: auto;
+}
+.pf-widget-bar.pf-theme-dark {
+  background: #333;
+  color: #fff;
+}
+.pf-widget-bar.pf-theme-dark input[type=text],
+.pf-widget-bar.pf-theme-dark input[type=email],
+.pf-widget-bar.pf-theme-dark textarea {
+  background-color: #555;
+}
+.pf-widget-bar.pf-theme-light {
+  background: #fff;
+  border-bottom: 1px solid #333;
+}
+.pf-widget-button {
+  background: #ddd;
+  position: fixed;
+  box-shadow: 4px 0px 4px -4px rgba(0, 0, 0, 0.5);
+}
+.pf-widget-button .pf-widget-message {
+  color: #333;
+  line-height: 42px;
+  padding: 0 16px 5px 16px;
+  margin: 0;
+  font-weight: 700;
+  display: block;
+  cursor: pointer;
+  overflow: hidden;
+  max-width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pf-widget-button.pf-position-top-left a,
+.pf-widget-button.pf-position-top-right a {
+  padding: 5px 16px 0 16px;
+}
+.pf-widget-button:hover {
+  background: #eaeaea;
+}
+.pf-widget-button.pf-position-left,
+.pf-widget-button.pf-position-right {
+  top: 10%;
+}
+.pf-widget-button.opened.pf-position-left {
+  left: -6px;
+}
+.pf-widget-button.opened.pf-position-left:hover {
+  left: -1px;
+}
+.pf-widget-button.opened.pf-position-right {
+  right: -6px;
+}
+.pf-widget-button.opened.pf-position-right:hover {
+  right: -1px;
+}
+.pf-widget-button.opened.pf-position-bottom-left,
+.pf-widget-button.opened.pf-position-bottom-right {
+  bottom: -6px;
+}
+.pf-widget-button.opened.pf-position-bottom-left:hover,
+.pf-widget-button.opened.pf-position-bottom-right:hover {
+  bottom: -1px;
+}
+.pf-widget-button.opened.pf-position-top-left,
+.pf-widget-button.opened.pf-position-top-right {
+  top: -6px;
+}
+.pf-widget-button.opened.pf-position-top-left:hover,
+.pf-widget-button.opened.pf-position-top-right:hover {
+  top: -1px;
+}
+.pf-widget-button.pf-position-left,
+.pf-widget-button.pf-position-right {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+.pf-widget-button.pf-position-top-left,
+.pf-widget-button.pf-position-top-right {
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+}
+.pf-widget-button.pf-position-left {
+  transform-origin: left bottom;
+  transform: rotate(90deg);
+  left: -50px;
+}
+.pf-widget-button.pf-position-right {
+  transform-origin: right bottom;
+  transform: rotate(-90deg);
+  right: -50px;
+}
+.pf-widget-button.pf-position-bottom-left,
+.pf-widget-button.pf-position-bottom-right {
+  bottom: -50px;
+}
+.pf-widget-button.pf-position-top-left,
+.pf-widget-button.pf-position-top-right {
+  top: -50px;
+}
+.pf-widget-button.pf-position-top-left .pf-widget-message,
+.pf-widget-button.pf-position-top-right .pf-widget-message {
+  padding: 5px 16px 0;
+}
+.pf-widget-button.pf-theme-dark {
+  background: #333;
+}
+.pf-widget-button.pf-theme-dark a,
+.pf-widget-button.pf-theme-dark p {
+  color: #fff;
+}
+.pf-widget-button.pf-theme-dark:hover {
+  background: #404040;
+}
+.pf-widget-button.pf-theme-light {
+  background: #FF850E;
+}
+.pf-widget-button.pf-theme-light a,
+.pf-widget-button.pf-theme-light p {
+  color: #fff;
+}
+.pf-widget-button.pf-theme-light:hover {
+  background: #da6c00;
+}
+.pf-widget-folding {
+  position: fixed;
+  width: 480px;
+  background: #ddd;
+  color: #333;
+  visibility: visible;
+  opacity: 1;
+}
+.pf-widget-folding .pf-widget-caption,
+.pf-widget-folding .pf-widget-caption-left {
+  padding: 0 20px;
+  transition: none;
+  font-weight: 700;
+  line-height: 42px;
+  color: #333;
+}
+.pf-widget-folding .pf-widget-caption span,
+.pf-widget-folding .pf-widget-caption-left span {
+  position: absolute;
+  font-size: 35px;
+  transition: all .3s;
+}
+.pf-widget-folding .pf-widget-caption {
+  height: 42px;
+  font-size: 14px;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+.pf-widget-folding .pf-widget-caption span {
+  top: 0;
+  right: 16px;
+  float: right;
+  transform: rotate(270deg);
+}
+.pf-widget-folding .pf-widget-caption-left {
+  display: none;
+}
+.pf-widget-folding .pf-widget-headline {
+  margin: 0;
+}
+.pf-widget-folding .pf-widget-img {
+  width: 50px;
+  height: 50px;
+  margin: 0 20px;
+}
+.pf-widget-folding .pf-widget-content {
+  padding: 20px 20px 20px;
+}
+.pf-widget-folding.pf-position-bottom-left,
+.pf-widget-folding.pf-position-bottom-right {
+  bottom: 0;
+}
+.pf-widget-folding.pf-position-bottom-left img,
+.pf-widget-folding.pf-position-bottom-right img {
+  float: left;
+  margin: 36px 20px;
+}
+.pf-widget-folding.pf-position-left {
+  left: -470px;
+  width: 510px;
+  padding-top: 20px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.pf-widget-folding.pf-position-left p {
+  max-width: 440px;
+}
+.pf-widget-folding.pf-position-left img {
+  float: left;
+  margin-bottom: 20px;
+}
+.pf-widget-folding.pf-position-left .pf-widget-content {
+  padding-top: 0;
+  width: 90%;
+}
+.pf-widget-folding.pf-position-left .pf-widget-caption {
+  display: none;
+}
+.pf-widget-folding.pf-position-left .pf-widget-caption-left + .pf-widget-content {
+  width: 408px;
+}
+.pf-widget-folding.pf-position-left .pf-widget-caption-left {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 42px;
+  height: 100%;
+  font-size: 14px;
+  border-left: 1px solid #333;
+}
+.pf-widget-folding.pf-position-left .pf-widget-caption-left .pf-widget-headline {
+  transform: rotate(90deg);
+  margin: 0;
+  white-space: nowrap;
+}
+.pf-widget-folding.pf-position-left .pf-widget-caption-left span {
+  bottom: 3px;
+  left: 13px;
+}
+.pf-widget-folding.pf-position-left.opened {
+  left: 0 !important;
+}
+.pf-widget-folding.pf-position-left.opened .pf-widget-caption-left span {
+  bottom: 0;
+  transform: rotate(180deg);
+}
+.pf-widget-folding.pf-position-left.pf-form {
+  width: 450px;
+  left: -410px;
+}
+.pf-widget-folding.pf-position-left.pf-form .pf-widget-content {
+  padding: 0 32px 0 20px;
+}
+.pf-widget-folding.pf-position-left.pf-form.opened {
+  left: 0;
+}
+.pf-widget-folding.pf-position-left.pf-form.pf-widget-variant-2 .pf-widget-img {
+  margin-left: -42px;
+}
+.pf-widget-folding.pf-position-left.pf-form.pf-widget-variant-2 input[type=text],
+.pf-widget-folding.pf-position-left.pf-form.pf-widget-variant-2 input[type=email],
+.pf-widget-folding.pf-position-left.pf-form.pf-widget-variant-2 textarea {
+  width: 100%;
+}
+.pf-widget-folding.pf-position-left.pf-form.pf-widget-variant-2 textarea {
+  margin-right: 30px;
+}
+.pf-widget-folding.pf-position-left.pf-no-img {
+  left: -240px;
+}
+.pf-widget-folding.pf-theme-light {
+  background: #fff;
+  border: 1px solid #333;
+}
+.pf-widget-folding.pf-theme-dark {
+  background: #333;
+}
+.pf-widget-folding.pf-theme-dark .pf-widget-caption,
+.pf-widget-folding.pf-theme-dark .pf-widget-caption-left,
+.pf-widget-folding.pf-theme-dark .pf-widget-headline {
+  color: #fff;
+}
+.pf-widget-folding.pf-theme-dark .pf-widget-caption {
+  border-bottom: 1px solid #5C5C5C;
+}
+.pf-widget-folding.pf-theme-dark .pf-widget-caption-left {
+  border-left: 1px solid #5C5C5C;
+}
+.pf-widget-folding.pf-form input[type=text],
+.pf-widget-folding.pf-form input[type=email] {
+  width: 100%;
+}
+.pf-widget-folding.pf-form .pf-widget-btn {
+  float: right;
+  margin-bottom: 20px;
+}
+.pf-widget-folding.pf-form .pf-widget-body {
+  margin-left: 20px;
+}
+.pf-widget-folding.pf-form img {
+  width: 70px;
+  height: 70px;
+  margin-left: 0;
+}
+.pf-widget-folding.pf-form form {
+  padding-top: 20px;
+}
+.pf-widget-folding.pf-form.pf-widget-variant-2 .pf-widget-img {
+  margin-bottom: 0;
+}
+.pf-widget-folding.pf-form.pf-widget-variant-2 .pf-widget-content {
+  padding-bottom: 0;
+}
+.pf-widget-folding.pf-form.pf-widget-variant-2 textarea {
+  margin-bottom: 0;
+}
+.pf-widget-folding.opened:not(.pf-position-left) {
+  bottom: 0 !important;
+}
+.pf-widget-folding.opened:not(.pf-position-left) .pf-widget-caption span {
+  transform: rotate(90deg);
+}
+.pf-widget-folding.pf-widget-variant-2 {
+  text-align: center;
+  width: 300px;
+}
+.pf-widget-folding.pf-widget-variant-2 .pf-widget-img {
+  margin-bottom: 0;
+}
+.pf-widget-folding.pf-widget-variant-2.pf-position-left {
+  width: 410px;
+  left: -370px;
+}
+.pf-widget-folding.pf-widget-variant-2.pf-position-left .pf-widget-img {
+  margin-left: -10px;
+}
+.pf-widget-folding.pf-widget-variant-2.pf-position-left .pf-widget-message {
+  max-width: 330px;
+}
+.pf-widget-folding.pf-widget-variant-2.pf-position-left.opened {
+  left: 0;
+}
+.pf-widget-folding.pf-widget-variant-2 img {
+  float: none;
+  width: 100px;
+  height: 100px;
+}
+.pf-widget-folding.pf-widget-variant-2 input[type=text],
+.pf-widget-folding.pf-widget-variant-2 input[type=email] {
+  margin-bottom: 5px;
+}
+.pf-widget-folding.pf-widget-variant-2 input[type=text] + .pf-widget-btn,
+.pf-widget-folding.pf-widget-variant-2 input[type=email] + .pf-widget-btn {
+  position: initial;
+  margin-left: 0;
+  margin-bottom: 20px;
+}
+.pf-widget-folding.pf-widget-variant-2 form + .pf-widget-btn,
+.pf-widget-folding.pf-widget-variant-2 input[type=text] + .pf-widget-btn,
+.pf-widget-folding.pf-widget-variant-2 input[type=email] + .pf-widget-btn {
+  text-align: center;
+}
+.pf-widget-inline {
+  padding: 10px;
+}

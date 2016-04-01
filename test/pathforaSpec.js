@@ -1389,6 +1389,53 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should show widget if impression buffer met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 2
+        }
+      }
+    });
+
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
+      var widget = $('#' + form.id);
+      expect(widget.length).toBe(1);
+    }, 3000);
+  });
+
+  it('should not show widget if impression buffer not met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 60
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([ form ]);
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
@@ -1439,9 +1486,6 @@ describe('API', function () {
   });
 
   it('should consider multiple display conditions', function () {
-    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
-    var id = "multiple-conditions";
-
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -1458,6 +1502,43 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
+      displayConditions: {
+        pageVisits: 5,
+        urlContains: [
+          "*"
+        ]
+      }
+    });
+
+    var form3 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        pageVisits: 0,
+        urlContains: [
+          "*"
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([ form, form2, form3 ]);
+
+    expect($('#' + form.id).length).toBe(0);
+    expect($('#' + form2.id).length).toBe(0);
+    expect($('#' + form3.id).length).toBe(1);
+  });
+
+  it('should consider multiple display conditions and watchers', function () {
+    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
+    var id = "multiple-conditions";
+    var id2 = "multiple-conditions-2";
+    var id3 = "multiple-conditions-3";
+
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
       id: id,
       displayConditions: {
         impressions: {
@@ -1466,27 +1547,56 @@ describe('API', function () {
         scrollPercentageToDisplay: 20,
       }
     });
-    sessionStorage.setItem('PathforaImpressions_' + id, 1);
 
-    pathfora.initializeWidgets([ form, form2 ]);
+    var form2 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: id2,
+      displayConditions: {
+        impressions: {
+          session: 1,
+        },
+        scrollPercentageToDisplay: 20,
+      }
+    });
 
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
+    var form3 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: id3,
+      displayConditions: {
+        impressions: {
+          session: 3,
+        },
+        scrollPercentageToDisplay: 75,
+      }
+    });
+    sessionStorage.setItem('PathforaImpressions_' + id, 2);
+    sessionStorage.setItem('PathforaImpressions_' + id2, 2);
+    sessionStorage.setItem('PathforaImpressions_' + id3, 2);
+
+    pathfora.initializeWidgets([ form, form2, form3 ]);
+
 
     setTimeout(function() {
       expect($('#' + id).length).toBe(0);
+      expect($('#' + id2).length).toBe(0);
+      expect($('#' + id3).length).toBe(0);
 
       var height = $(document).height();
       $('body').scrollTop(height/2);
 
       setTimeout(function() {
         expect($('#' + id).length).toBe(1);
+        expect($('#' + id2).length).toBe(0);
+        expect($('#' + id3).length).toBe(0);
         done();
       }, 200);
     }, 200);
 
     $('.height-element').remove();
-
   });
 
   it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
