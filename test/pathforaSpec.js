@@ -74,7 +74,7 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://api.lytics.io/api/me/123/123?segments=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
@@ -97,6 +97,59 @@ describe('Pathfora', function () {
 
       var msg = $('.pf-widget-message').text();
       expect(msg).toBe('DB');
+
+      pathfora.clearAll();
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
+    jasmine.Ajax.install();
+    var messageA = pathfora.Message({
+      id: 'test-bar-01',
+      msg: 'A',
+      layout: 'modal'
+    });
+
+    var messageB = pathfora.Message({
+      id: 'test-bar-02',
+      msg: 'B',
+      layout: 'modal'
+    });
+
+    var widgets = {
+      target: [{
+        segment: 'a',
+        widgets: [messageA, messageB]
+      }],
+      exclude: [{
+        segment: 'b',
+        widgets: [messageA]
+      }]
+    };
+
+    pathfora.initializeWidgets(widgets, credentials);
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":{"segments":["a","b"]}}'
+    });
+
+    var widgetA = $('#' + messageA.id);
+
+    var widgetB = $('#' + messageB.id);
+    expect(widgetB).toBeDefined();
+
+    setTimeout(function() {
+      expect(widgetB.hasClass('opened')).toBeTruthy();
+      expect(widgetA.length).toBe(0);
+
+      var msg = $('.pf-widget-message').text();
+      expect(msg).toBe('B');
 
       pathfora.clearAll();
       done();
@@ -159,6 +212,7 @@ describe('Pathfora', function () {
     expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics',  messageBar.id + ' : show', jasmine.any(String), jasmine.any(Object));
 
     pathfora.clearAll();
+
     jasmine.Ajax.uninstall();
   });
 
@@ -224,9 +278,10 @@ describe('Pathfora', function () {
         'pf-widget-action': 'action test'
       }));
 
-      jasmine.Ajax.uninstall();
       done();
     }, 200);
+
+    jasmine.Ajax.uninstall();
   });
 
   it('should report cancelled actions to Lytics API', function (done) {
@@ -260,9 +315,10 @@ describe('Pathfora', function () {
         'pf-widget-event': 'cancel'
       }));
 
-      jasmine.Ajax.uninstall();
       done();
     }, 200);
+
+    jasmine.Ajax.uninstall();
   });
 
   it('should report submitting forms, with form data', function () {
@@ -664,7 +720,7 @@ describe('Widgets', function () {
       id: 'custom-style-test',
       layout: 'modal',
       msg: 'Custom style test',
-      header: 'Hello',
+      headline: 'Hello',
       theme: 'custom',
 
     });
@@ -673,7 +729,7 @@ describe('Widgets', function () {
       generic: {
         colors: {
           background: '#eee',
-          header: '#333',
+          headline: '#333',
           text: '#333',
           close: '#888',
           actionText: '#ddd',
@@ -689,14 +745,14 @@ describe('Widgets', function () {
 
     var widget = $('#' + modal.id);
     var background = widget.find('.pf-widget-content');
-    var header = widget.find('.pf-widget-header');
+    var headline = widget.find('.pf-widget-headline');
     var text = widget.find('.pf-widget-message');
     var closeBtn = widget.find('.pf-widget-close');
     var actionBtn = widget.find('.pf-widget-ok');
     var cancelBtn = widget.find('.pf-widget-cancel');
 
     expect(background.css('background-color')).toBe('rgb(238, 238, 238)');
-    expect(header.css('color')).toBe('rgb(51, 51, 51)');
+    expect(headline.css('color')).toBe('rgb(51, 51, 51)');
     expect(text.css('color')).toBe('rgb(51, 51, 51)');
     expect(closeBtn.css('color')).toBe('rgb(136, 136, 136)');
     expect(actionBtn.css('color')).toBe('rgb(221, 221, 221)');
@@ -882,14 +938,8 @@ describe('Widgets', function () {
       pathfora.initializeWidgets([promoWidget], credentials);
     };
 
-    var missingMessage = function () {
-      var promoWidget = new pathfora.Message({layout: 'modal'});
-      pathfora.initializeWidgets([promoWidget], credentials);
-    };
-
     expect(missingParams).toThrow(new Error('Config object is missing'));
     pathfora.clearAll();
-    expect(missingMessage).toThrow(new Error('Widget message is missing'));
   });
 
 
@@ -987,7 +1037,7 @@ describe('API', function () {
       id: 'custom-button-text-test',
       layout: 'modal',
       msg: 'Custom button text test',
-      header: 'Hello',
+      headline: 'Hello',
       okMessage: 'Confirm',
       cancelMessage: 'Cancel'
     });
@@ -1008,7 +1058,7 @@ describe('API', function () {
       id: 'custom-random-test',
       layout: 'random',
       msg: 'Custom random layout test',
-      header: 'Hello'
+      headline: 'Hello'
     });
 
     pathfora.initializeWidgets([random],credentials);
@@ -1051,11 +1101,11 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
-    var form = new window.pathfora.Form({
+    var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1067,11 +1117,11 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
   it('should show page-views dependent widget when page views requirement has been reached', function () {
-    var form = new window.pathfora.Form({
+    var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1083,10 +1133,10 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should open site gating widget when the cookie is not set', function (done) {
-    var gate = new window.pathfora.SiteGate({
-      header: 'Blocking Widget',
+    var gate = new pathfora.SiteGate({
+      headline: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
     });
 
@@ -1099,12 +1149,12 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should not open site gating widget when the cookie is already set', function (done) {
     pathfora.utils.saveCookie('PathforaUnlocked', true);
-    
-    var gate = new window.pathfora.SiteGate({
-      header: 'Blocking Widget',
+
+    var gate = new pathfora.SiteGate({
+      headline: 'Blocking Widget',
       msg: 'Submit this widget to access the website.'
     });
 
@@ -1117,15 +1167,15 @@ describe('API', function () {
       done();
     }, 200);
   });
-  
+
   it('should show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
-    var form = new window.pathfora.Form({
+    var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1139,16 +1189,16 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should not show the date widget for all dates after 15.02.2016', function () {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
-    
-    var form = new window.pathfora.Form({
+
+    var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1162,17 +1212,37 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
-  if('should not show an impression counter widget without an id', function () {
-    var form = new window.pathfora.Form({
+
+  it('should not show a widget with hideAfterAction without an id', function () {
+    expect(function() {
+      var form = new pathfora.Form({
+        msg: 'subscription',
+        headline: 'Header',
+        layout: 'slideout',
+        position: 'bottom-right',
+        displayConditions: {
+          hideAfterAction: {
+            confirm: true
+          }
+        }
+      });
+    }).toThrow(new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.'));
+  });
+
+  it('should not show widget if hideAfterAction duration not met', function () {
+    var widgetId = 'hideAfterActionWidget1';
+    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
-        impressions: {
-          session: 1,
-          total: 5
+        hideAfterAction: {
+          closed: {
+            duration: 60
+          }
         }
       }
     });
@@ -1181,15 +1251,104 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
+
+  it('should show widget if hideAfterAction duration met', function () {
+    var widgetId = 'hideAfterActionWidget2';
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "1," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 2,
+            duration: 2
+          }
+        }
+      }
+    });
+
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
+      var widget = $('#' + form.id);
+      expect(widget.length).toBe(1);
+    }, 3000);
+  });
+
+  it('should not show widget if hideAfterAction count not met', function () {
+    var widgetId = 'hideAfterActionWidget3';
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          cancel: {
+            hideCount: 2
+          }
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+  it('should show widget if hideAfterAction count not met', function () {
+    var widgetId = 'hideAfterActionWidget4';
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 5
+          }
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+
+  it('should not show an impression counter widget without an id', function () {
+    expect(function() {
+      var form = new pathfora.Form({
+        msg: 'subscription',
+        headline: 'Header',
+        layout: 'slideout',
+        position: 'bottom-right',
+        displayConditions: {
+          impressions: {
+            session: 1,
+            total: 5
+          }
+        }
+      });
+    }).toThrow(new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.'));
+  });
+
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
-    
-    var form = new window.pathfora.Form({
+
+    var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1204,15 +1363,15 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
-  
+
   it('should show impressions counter widget after limited amount of initializations', function () {
     var widgetId = 'impressionWidget2';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
-    
-    var form = new window.pathfora.Form({
+
+    var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1227,11 +1386,58 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-  
-  it('should show constrained element when the url matches the display conditions', function () {
-    var form = new window.pathfora.Form({
+
+  it('should show widget if impression buffer met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 2
+        }
+      }
+    });
+
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
+      var widget = $('#' + form.id);
+      expect(widget.length).toBe(1);
+    }, 3000);
+  });
+
+  it('should not show widget if impression buffer not met', function () {
+    var widgetId = 'impressionWidget3';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          session: 3,
+          buffer: 60
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([ form ]);
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+
+  it('should show constrained element when the url matches the display conditions', function () {
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1240,9 +1446,9 @@ describe('API', function () {
         ]
       }
     });
-    var form2 = new window.pathfora.Form({
+    var form2 = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1258,11 +1464,11 @@ describe('API', function () {
     expect(widget.length).toBe(1);
     expect(widget2.length).toBe(1);
   });
-  
+
   it('should not show constrained element when the url doesn\'t match the display conditions', function () {
-    var form = new window.pathfora.Form({
+    var form = new pathfora.Form({
       msg: 'subscription',
-      header: 'Header',
+      headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1275,5 +1481,120 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
+  });
+
+  it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    expect(scaffold.target.length).toBe(0);
+    expect(scaffold.exclude.length).toBe(0);
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert widget into config after building and inserting into scaffold', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+    var tester = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "cancelShow": true,
+      "theme": "dark",
+      "titleField": false,
+      "nameField": false,
+      "emailField": false,
+      "msgField": false
+    });
+    pathfora.utils.insertWidget("target", "smt_new", tester, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(1);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert multiple widgets into config binding to the same segment', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+
+    var tester1 = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "theme": "dark"
+    });
+    pathfora.utils.insertWidget("target", "smt_new", tester1, scaffold)
+
+    var tester2 = pathfora.Form({
+      "id": "tester456",
+      "headline": "Sample Insert Two",
+      "msg": "Sample insert message two.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "theme": "dark",
+      "titleField": true,
+      "nameField": true,
+      "emailField": true
+    });
+    pathfora.utils.insertWidget("target", "smt_new", tester2, scaffold)
+
+    expect(scaffold.target.length).toBe(1);
+    expect(scaffold.target[0].segment).toBe("smt_new");
+    expect(scaffold.target[0].widgets.length).toBe(2);
+    expect(scaffold.target[0].widgets[0].type).toBe("message");
+    expect(scaffold.target[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.target[0].widgets[1].type).toBe("form");
+    expect(scaffold.target[0].widgets[1].config.headline).toBe("Sample Insert Two");
+    expect(scaffold.target[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.inverse.length).toBe(0);
+  });
+
+  it('should insert multiple widgets into config binding to the same segment but excluding', function () {
+    var scaffold = pathfora.utils.initWidgetScaffold();
+
+    var tester1 = pathfora.Message({
+      "id": "tester123",
+      "headline": "Sample Insert",
+      "msg": "Sample insert message.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "okShow": true,
+      "theme": "dark"
+    });
+    pathfora.utils.insertWidget("exclude", "smt_new", tester1, scaffold)
+
+    var tester2 = pathfora.Form({
+      "id": "tester456",
+      "headline": "Sample Insert Two",
+      "msg": "Sample insert message two.",
+      "layout": "slideout",
+      "position": "bottom-right",
+      "variant": "1",
+      "theme": "dark",
+      "titleField": true,
+      "nameField": true,
+      "emailField": true
+    });
+    pathfora.utils.insertWidget("exclude", "smt_new", tester2, scaffold)
+
+    expect(scaffold.exclude.length).toBe(1);
+    expect(scaffold.exclude[0].segment).toBe("smt_new");
+    expect(scaffold.exclude[0].widgets.length).toBe(2);
+    expect(scaffold.exclude[0].widgets[0].type).toBe("message");
+    expect(scaffold.exclude[0].widgets[0].config.headline).toBe("Sample Insert");
+    expect(scaffold.exclude[0].widgets[1].type).toBe("form");
+    expect(scaffold.exclude[0].widgets[1].config.headline).toBe("Sample Insert Two");
+    expect(scaffold.exclude[0].widgets[1].config.titleField).toBe(true);
+    expect(scaffold.target.length).toBe(0);
+    expect(scaffold.inverse.length).toBe(0);
   });
 });

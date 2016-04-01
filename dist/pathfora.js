@@ -262,7 +262,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '{{cssurl}}');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -753,13 +753,12 @@
       var widgetHeadline = widget.querySelectorAll('.pf-widget-headline');
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
-      var widgetClose = widget.querySelector('.pf-widget-close');
       var widgetTextArea;
       var widgetImage;
       var node;
       var i;
 
-      if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
+      if ((widgetCancel !== null && !config.cancelShow) || config.layout === 'inline') {
         node = widgetCancel;
 
         if (node.parentNode) {
@@ -1901,7 +1900,7 @@
       }
 
       apiUrl = [
-        '{{apiurl}}/api/me/',
+        '//api.lytics.io/api/me/',
         accountId,
         '/',
         seerId,

@@ -1,183 +1,179 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Widgets presentation</title>
     <meta charset="utf-8">
     <style type="text/css">
-        @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
 
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
+      body {
+        font-family: 'Open Sans', sans-serif;
+      }
 
-        td, th {
-            border: 2px solid #555;
-            padding: 10px 30px;
-        }
+      td, th {
+        border: 2px solid #555;
+        padding: 10px 30px;
+      }
 
-        th {
-            background: #ddd;
-        }
+      th {
+        background: #ddd;
+      }
 
-        td {
-            width: 210px;
-        }
+      td {
+        width: 210px;
+      }
 
-        table {
-            border-collapse: collapse;
-            margin: auto;
-        }
+      table {
+        border-collapse: collapse;
+        margin: auto;
+      }
 
-        .add {
-            cursor: pointer;
-        }
+      .add {
+        cursor: pointer;
+      }
 
-        .images {
-            text-align: center;
-            margin: 50px;
-        }
+      .images {
+        text-align: center;
+        margin: 50px;
+      }
 
-        .presentation {
-            height: 500px;
-            margin: 25px;
-            background: green;
-        }
+      .presentation {
+        height: 500px;
+        margin: 25px;
+        background: green;
+      }
 
-        .blocked {
-            color: #aaa;
-        }
+      .blocked {
+        color: #aaa;
+      }
 
-        .presentation p {
-            font-size: 100px;
-            font-weight: bold;
-            color: #fff;
-            margin: 25px;
-        }
+      .presentation p {
+        font-size: 100px;
+        font-weight: bold;
+        color: #fff;
+        margin: 25px;
+      }
 
-        .center {
-            width: 500px;
-            margin: auto;
-        }
+      .center {
+        width: 500px;
+        margin: auto;
+      }
 
-        .init, .add, .clear {
-            display: inline-block;
-            padding: 10px 25px;
-            background: orange;
-            color: #000;
-            width: 150px;
-            text-align: center;
-            margin: 10px auto;
-        }
+      .init, .add, .clear {
+        display: inline-block;
+        padding: 10px 25px;
+        background: orange;
+        color: #000;
+        width: 150px;
+        text-align: center;
+        margin: 10px auto;
+      }
     </style>
-</head>
-<body>
-
-<form>
-    <table>
+  </head>
+  <body>
+    <form>
+      <table>
         <thead>
-        <th>Type</th>
-        <th>Layout</th>
-        <th>Position</th>
-        <th>Variant</th>
-        <th>Color Scheme</th>
-        <th>Display Contitions</th>
-        <th></th>
+          <th>Type</th>
+          <th>Layout</th>
+          <th>Position</th>
+          <th>Variant</th>
+          <th>Color Scheme</th>
+          <th>Display Contitions</th>
+          <th></th>
         </thead>
         <tbody>
-        <tr>
-
+          <tr>
             <td id="type">
-                <p><input type="radio" name="type" value="message"> Message</p>
-                <p><input type="radio" name="type" value="subscription"> Subscription</p>
-                <p><input type="radio" name="type" value="form"> Form</p>
+              <p><input type="radio" name="type" value="message"> Message</p>
+              <p><input type="radio" name="type" value="subscription"> Subscription</p>
+              <p><input type="radio" name="type" value="form"> Form</p>
+              <p><input type="radio" name="type" value="sitegate"> SiteGate</p>
             </td>
-
             <td id="layout">
-                <p class="modal"><input disabled type="radio" name="layout" value="modal" disabled> Modal</p>
-                <p class="slideout"><input disabled type="radio" name="layout" value="slideout"> Slideout</p>
-                <p class="bar"><input disabled type="radio" name="layout" value="bar"> Bar</p>
-                <p class="button"><input disabled type="radio" name="layout" value="button"> Button</p>
-                <p class="folding"><input disabled type="radio" name="layout" value="folding"> Folding</p>
+              <p class="modal"><input disabled type="radio" name="layout" value="modal" disabled> Modal</p>
+              <p class="slideout"><input disabled type="radio" name="layout" value="slideout"> Slideout</p>
+              <p class="bar"><input disabled type="radio" name="layout" value="bar"> Bar</p>
+              <p class="button"><input disabled type="radio" name="layout" value="button"> Button</p>
+              <p class="folding"><input disabled type="radio" name="layout" value="folding"> Folding</p>
             </td>
-
             <td id="position">
-                <p class="left"><input disabled type="radio" name="position" value="left"> left</p>
-                <p class="right"><input disabled type="radio" name="position" value="right"> right</p>
-                <p class="top-left"><input disabled type="radio" name="position" value="top-left"> top-left</p>
-                <p class="top-right"><input disabled type="radio" name="position" value="top-right"> top-right</p>
-                <p class="top-fixed"><input disabled type="radio" name="position" value="top-fixed"> top-fixed</p>
-                <p class="top-scrolling"><input disabled type="radio" name="position" value="top-scrolling"> top-scrolling</p>
-                <p class="bottom-left"><input disabled type="radio" name="position" value="bottom-left"> bottom-left</p>
-                <p class="bottom-right"><input disabled type="radio" name="position" value="bottom-right"> bottom-right</p>
-                <p class="bottom-fixed"><input disabled type="radio" name="position" value="bottom-fixed"> bottom-fixed</p>
-                <p class="bottom-scrolling"><input disabled type="radio" name="position" value="bottom-scrolling"> bottom-scrolling</p>
+              <p class="left"><input disabled type="radio" name="position" value="left"> left</p>
+              <p class="right"><input disabled type="radio" name="position" value="right"> right</p>
+              <p class="top-left"><input disabled type="radio" name="position" value="top-left"> top-left</p>
+              <p class="top-right"><input disabled type="radio" name="position" value="top-right"> top-right</p>
+              <p class="top-absolute"><input disabled type="radio" name="position" value="top-absolute"> top-absolute</p>
+              <p class="top-fixed"><input disabled type="radio" name="position" value="top-fixed"> top-fixed</p>
+              <p class="bottom-left"><input disabled type="radio" name="position" value="bottom-left"> bottom-left</p>
+              <p class="bottom-right"><input disabled type="radio" name="position" value="bottom-right"> bottom-right</p>
+              <p class="bottom-fixed"><input disabled type="radio" name="position" value="bottom-fixed"> bottom-fixed</p>
+              <p class="bottom-fixed"><input disabled type="radio" name="position" value="bottom-fixed"> bottom-fixed</p>
             </td>
-
             <td id="variant">
-                <p><input disabled type="radio" name="variant" value="1"> Variant 1</p>
-                <p><input disabled type="radio" name="variant" value="2"> Variant 2</p>
+              <p><input disabled type="radio" name="variant" value="1"> Variant 1</p>
+              <p><input disabled type="radio" name="variant" value="2"> Variant 2</p>
             </td>
 
             <td id="color">
-                <p><input type="radio" name="color" value="default" checked> Default</p>
-                <p><input type="radio" name="color" value="light"> Light</p>
-                <p><input type="radio" name="color" value="dark"> Dark</p>
-                <p><input type="radio" name="color" value="custom"> Custom
-                <p class="custom" style="padding: 10px">
-                    Header<input name="header" type="text">
-                    Text<input type="text" name="text">
-                    Background<input type="text" name="background">
-                    Close<input type="text" name="close">
-                    Action Text<input type="text" name="actionText">
-                    Action Background<input type="text" name="actionBackground">
-                    Cancel Text<input type="text" name="cancelText">
-                    Cancel Background<input type="text" name="cancelBackground">
-                </p>
-                </p>
-            </td>
+              <p><input type="radio" name="color" value="default" checked> Default</p>
+              <p><input type="radio" name="color" value="light"> Light</p>
+              <p><input type="radio" name="color" value="dark"> Dark</p>
+              <p><input type="radio" name="color" value="custom"> Custom
+              <p class="custom" style="padding: 10px">
+                Header<input name="header" type="text">
+                Text<input type="text" name="text">
+                Background<input type="text" name="background">
+                Close<input type="text" name="close">
+                Action Text<input type="text" name="actionText">
+                Action Background<input type="text" name="actionBackground">
+                Cancel Text<input type="text" name="cancelText">
+                Cancel Background<input type="text" name="cancelBackground">
+              </p>
+        </p>
+        </td>
 
-            <td id="displayConditions">
-                <p>
-                    <input name="showOnInit" type="checkbox" name="displayConditions" checked="true"> Show on init
-                </p>
-                <p>
-                    Show Delay
-                    <input name="showDelay" type="text">
-                </p>
-                <p>
-                    Hide After
-                    <input name="hideAfter" type="text">
-                </p>
-                <p>
-                    Display When Element Visible
-                    <input name="displayWhenElementVisible" type="text">
-                </p>
-                <p>
-                    Scroll Percentage To Display
-                    <input name="scrollPercentageToDisplay" type="text">
-                </p>
-            </td>
-            <td>
-                <a class="add" data-form="pf-message" href="#!">add</a>
-            </td>
+      <td id="displayConditions">
+        <p>
+          <input name="showOnInit" type="checkbox" name="displayConditions" checked="true"> Show on init
+        </p>
+        <p>
+          Show Delay
+          <input name="showDelay" type="text">
+        </p>
+        <p>
+          Hide After
+          <input name="hideAfter" type="text">
+        </p>
+        <p>
+          Display When Element Visible
+          <input name="displayWhenElementVisible" type="text">
+        </p>
+        <p>
+          Scroll Percentage To Display
+          <input name="scrollPercentageToDisplay" type="text">
+        </p>
+      </td>
+      <td>
+        <a class="add" data-form="pf-message" href="#!">add</a>
+      </td>
 
-        </tr>
-        </tbody>
-    </table>
+      </tr>
+    </tbody>
+  </table>
 </form>
 
 <div class="center">
-    <a class="init" href="#!">Initialize</a>
-    <a class="clear" href="#!">Clear</a>
-    <ul style="margin: 25px; text-align: left">
+  <a class="init" href="#!">Initialize</a>
+  <a class="clear" href="#!">Clear</a>
+  <ul style="margin: 25px; text-align: left">
 
-    </ul>
+  </ul>
 </div>
 
 <div id="1" class="presentation"><p>#1</p></div>
@@ -187,143 +183,146 @@
 <div id="5" class="presentation"><p>#5</p></div>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<!--<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>-->
 <script src="../src/pathfora.js"></script>
 <script>
-    $(document).ready(function() {
-        var image = 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg';
-        var widgets = [];
+  $(document).ready(function() {
+    var image = 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg';
+    var widgets = [];
 
-        var props = {
-            message: ['modal', 'slideout', 'bar', 'button'],
-            subscription: ['modal', 'slideout', 'bar', 'folding'],
-            form: ['modal', 'slideout', 'folding'],
-            modal: [],
-            slideout: ['left', 'right'],
-            bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
-            folding: ['left', 'bottom-left', 'bottom-right'],
-            button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right']
-        };
+    var props = {
+      message: ['modal', 'slideout', 'bar', 'button'],
+      subscription: ['modal', 'slideout', 'bar', 'folding'],
+      form: ['modal', 'slideout', 'folding'],
+      sitegate: ['modal'],
+      modal: [],
+      slideout: ['left', 'right'],
+      bar: ['top-fixed', 'top-scrolling', 'bottom-scrolling'],
+      folding: ['left', 'bottom-left', 'bottom-right'],
+      button: ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right']
+    };
 
-        function check(elem, val) {
-            for(var i = 0; i < elem.length; i++ ) {
-                for(var j = 0; j < val.length; j++) {
-                    if( elem.eq(i).hasClass(val[j]) ) {
-                        elem.eq(i).removeClass('blocked');
-                        elem.eq(i).find('input').removeAttr('disabled');
-                    }
-                }
-            }
+    function check(elem, val) {
+      for(var i = 0; i < elem.length; i++ ) {
+        for(var j = 0; j < val.length; j++) {
+          if( elem.eq(i).hasClass(val[j]) ) {
+            elem.eq(i).removeClass('blocked');
+            elem.eq(i).find('input').removeAttr('disabled');
+          }
         }
+      }
+    }
 
-        function checkVariants(val) {
-            if( val == 'modal' || val == 'folding' || val == 'slideout' ) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+    function checkVariants(val) {
+      if( val == 'modal' || val == 'folding' || val == 'slideout' ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
 
-        $('input[name=type]').click(function() {
-            var val = $(this).val();
-            var lay = $('#layout p');
+    $('input[name=type]').click(function() {
+      var val = $(this).val();
+      var lay = $('#layout p');
 
-            lay.addClass('blocked');
-            lay.find('input').attr('disabled', 'disabled');
+      lay.addClass('blocked');
+      lay.find('input').attr('disabled', 'disabled');
 
-            check(lay, props[val]);
-        });
-
-        $('input[name=layout]').click(function() {
-            var val = $(this).val();
-            var lay = $('#position p');
-
-            lay.addClass('blocked');
-            lay.find('input').attr('disabled', 'disabled').prop('checked', false);
-
-            check(lay, props[val]);
-
-            if( checkVariants(val) ) {
-                $('#variant p').addClass('blocked');
-                $('#variant input').attr('disabled', 'disabled');
-                $("#variant input").prop('checked', false);
-            } else {
-                $('#variant p').removeClass('blocked');
-                $('#variant input').removeAttr('disabled');
-            }
-        });
-
-        $('.add').click(function() {
-            var widget = {
-                msg: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis aliquam deserunt excepturi.",
-                header: 'Lorem ipsum',
-                image: image,
-                type: $('input[name=type]:checked').val(),
-                layout: $('input[name=layout]:checked').val(),
-                variant: $('input[name=variant]:checked').val(),
-                position: $('input[name=position]:checked').val(),
-                colors: {}
-            };
-
-            if( widget.layout === 'button' ) widget.msg = widget.msg.slice(0, 11);
-
-            widget.displayConditions = {};
-            if( $('#color input[name=color]:checked').val() === 'custom' ) {
-                var inputs = $('.custom input');
-                for( var i = 0; i < inputs.length; i++ ) {
-                    if( inputs.val() != "" ) {
-                        widget.colors[inputs.eq(i).attr('name')] = inputs.eq(i).val();
-                    }
-                }
-            } else {
-                widget.theme = $('#color input[name=color]:checked').val();
-            }
-
-
-            $('#displayConditions p input').each(function(idx, val) {
-                widget.displayConditions[val.name] = val.type === 'checkbox' ? val.checked : val.value;
-            });
-
-            widgets.push(widget);
-            var elem = $('<li>'
-            + $('input[name=type]:checked').val() + ', '
-            + $('input[name=layout]:checked').val() + ', '
-            + ($('input[name=position]:checked').val() || '') + ', '
-            + 'variant ' + ($('input[name=variant]:checked').val() || 'default') + ', '
-            + 'color scheme: ' + $('#color input[name=color]:checked').val()
-            + '</li>' );
-            $('ul').append(elem);
-        });
-
-        $('.clear').click(function() {
-            widgets = [];
-            $('ul').html('');
-        });
-
-        $('.init').click(function() {
-            if( widgets.length ) {
-                assignedWidgets = [];
-
-                for (var i =0; i<widgets.length; i++) {
-                    var widget = widgets[i];
-                    var assigned;
-
-                    if (widget.type === 'message'){
-                        assigned = pathfora.Message(widget);
-                    } else if (widget.type === 'subscription'){
-                        assigned = pathfora.Subscription(widget);
-                    } else if (widget.type === 'form'){
-                        assigned = pathfora.Form(widget);
-                    }
-
-                    assignedWidgets.push(assigned);
-                }
-
-                window.pathfora.initializeWidgets(assignedWidgets);
-            }
-        })
-
+      check(lay, props[val]);
     });
+
+    $('input[name=layout]').click(function() {
+      var val = $(this).val();
+      var lay = $('#position p');
+
+      lay.addClass('blocked');
+      lay.find('input').attr('disabled', 'disabled').prop('checked', false);
+
+      check(lay, props[val]);
+
+      if( checkVariants(val) ) {
+        $('#variant p').addClass('blocked');
+        $('#variant input').attr('disabled', 'disabled');
+        $("#variant input").prop('checked', false);
+      } else {
+        $('#variant p').removeClass('blocked');
+        $('#variant input').removeAttr('disabled');
+      }
+    });
+
+    $('.add').click(function() {
+      var widget = {
+        id: Math.random(),
+        msg: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perspiciatis aliquam deserunt excepturi.",
+        headline: 'Lorem ipsum',
+        image: image,
+        type: $('input[name=type]:checked').val(),
+        layout: $('input[name=layout]:checked').val(),
+        variant: $('input[name=variant]:checked').val(),
+        position: $('input[name=position]:checked').val(),
+        colors: {}
+      };
+
+      if( widget.layout === 'button' ) widget.msg = widget.msg.slice(0, 11);
+
+      widget.displayConditions = {};
+      if( $('#color input[name=color]:checked').val() === 'custom' ) {
+        var inputs = $('.custom input');
+        for( var i = 0; i < inputs.length; i++ ) {
+          if( inputs.val() != "" ) {
+            widget.colors[inputs.eq(i).attr('name')] = inputs.eq(i).val();
+          }
+        }
+      } else {
+        widget.theme = $('#color input[name=color]:checked').val();
+      }
+
+
+      $('#displayConditions p input').each(function(idx, val) {
+        widget.displayConditions[val.name] = val.type === 'checkbox' ? val.checked : val.value;
+      });
+
+      widgets.push(widget);
+      var elem = $('<li>'
+                   + $('input[name=type]:checked').val() + ', '
+                   + $('input[name=layout]:checked').val() + ', '
+                   + ($('input[name=position]:checked').val() || '') + ', '
+                   + 'variant ' + ($('input[name=variant]:checked').val() || 'default') + ', '
+                   + 'color scheme: ' + $('#color input[name=color]:checked').val()
+                   + '</li>' );
+      $('ul').append(elem);
+    });
+
+    $('.clear').click(function() {
+      widgets = [];
+      $('ul').html('');
+    });
+
+    $('.init').click(function() {
+      if( widgets.length ) {
+        assignedWidgets = [];
+
+        for (var i =0; i<widgets.length; i++) {
+          var widget = widgets[i];
+          var assigned;
+
+          if (widget.type === 'message'){
+            assigned = pathfora.Message(widget);
+          } else if (widget.type === 'subscription'){
+            assigned = pathfora.Subscription(widget);
+          } else if (widget.type === 'form'){
+            assigned = pathfora.Form(widget);
+          } else if (widget.type === 'sitegate'){
+            assigned = pathfora.SiteGate(widget);
+          }
+
+          assignedWidgets.push(assigned);
+        }
+
+        window.pathfora.initializeWidgets(assignedWidgets);
+      }
+    })
+
+  });
 </script>
 </body>
 </html>
