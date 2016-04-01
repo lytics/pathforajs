@@ -424,28 +424,28 @@ describe('Pathfora', function () {
     }).toThrow(new Error('Cannot add two widgets with the same id'));
   });
 
-  xit('should be able to display widget only on specific page scrolling value', function (done) {
-    $(document.body).append('<div id=\'height-element\' style=\'height:10000px\'>Test</div>');
+  it('should be able to display widget only on specific page scrolling value', function (done) {
+    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
 
     var form = new pathfora.Subscription({
       msg: 'test',
-      layout: 'modal',
+      id: "scroll-test",
+      layout: 'slideout',
       displayConditions: {
         scrollPercentageToDisplay: 20
       }
     });
 
     pathfora.initializeWidgets([form], credentials);
-    var widget = $('#' + form.id);
 
     setTimeout(function() {
-      expect(widget.hasClass('opened')).toBeFalsy();
+      expect($('#' + form.id).length).toBe(0);
 
       var height = $(document).height();
       $('body').scrollTop(height/2);
 
       setTimeout(function() {
-        expect(widget.hasClass('opened')).toBeTruthy();
+        expect($('#' + form.id).length).toBe(1);
         done();
       }, 200);
 
@@ -1102,6 +1102,7 @@ describe('API', function () {
     }, 200);
   });
 
+
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
@@ -1123,11 +1124,12 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
-      position: 'bottom-right',
+      position: 'right',
       displayConditions: {
         pageVisits: 0
       }
     });
+
     pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
@@ -1481,6 +1483,120 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
+  });
+
+  it('should consider multiple display conditions', function () {
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        pageVisits: 0,
+        urlContains: [
+          "google.com"
+        ]
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        pageVisits: 5,
+        urlContains: [
+          "*"
+        ]
+      }
+    });
+
+    var form3 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        pageVisits: 0,
+        urlContains: [
+          "*"
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([ form, form2, form3 ]);
+
+    expect($('#' + form.id).length).toBe(0);
+    expect($('#' + form2.id).length).toBe(0);
+    expect($('#' + form3.id).length).toBe(1);
+  });
+
+  it('should consider multiple display conditions and watchers', function () {
+    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
+    var id = "multiple-conditions";
+    var id2 = "multiple-conditions-2";
+    var id3 = "multiple-conditions-3";
+
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: id,
+      displayConditions: {
+        impressions: {
+          session: 3,
+        },
+        scrollPercentageToDisplay: 20,
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: id2,
+      displayConditions: {
+        impressions: {
+          session: 1,
+        },
+        scrollPercentageToDisplay: 20,
+      }
+    });
+
+    var form3 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: id3,
+      displayConditions: {
+        impressions: {
+          session: 3,
+        },
+        scrollPercentageToDisplay: 75,
+      }
+    });
+    sessionStorage.setItem('PathforaImpressions_' + id, 2);
+    sessionStorage.setItem('PathforaImpressions_' + id2, 2);
+    sessionStorage.setItem('PathforaImpressions_' + id3, 2);
+
+    pathfora.initializeWidgets([ form, form2, form3 ]);
+
+
+    setTimeout(function() {
+      expect($('#' + id).length).toBe(0);
+      expect($('#' + id2).length).toBe(0);
+      expect($('#' + id3).length).toBe(0);
+
+      var height = $(document).height();
+      $('body').scrollTop(height/2);
+
+      setTimeout(function() {
+        expect($('#' + id).length).toBe(1);
+        expect($('#' + id2).length).toBe(0);
+        expect($('#' + id3).length).toBe(0);
+        done();
+      }, 200);
+    }, 200);
+
+    $('.height-element').remove();
   });
 
   it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
