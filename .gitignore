@@ -4,4 +4,5 @@ node_modules
 src/css/
 .DS_Store
 docs/
+docs/
 .env.json

@@ -451,6 +451,7 @@
     openedWidgets: [],
     initializedWidgets: [],
     watchers: [],
+    valid: true,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
     /**
@@ -461,26 +462,38 @@
     initializeWidget: function (widget) {
       var condition = widget.displayConditions;
       var watcher;
+      core.valid = true;
 
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
         core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers);
-      } else if (condition.scrollPercentageToDisplay) {
+        core.initializeScrollWatchers(core.watchers, widget);
+      }
+
+      if (condition.scrollPercentageToDisplay) {
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers);
-      } else if (condition.pageVisits) {
-        core.registerPageVisitsCounter(condition.pageVisits, widget);
-      } else if (condition.date) {
-        core.registerDateWatcher(condition.date, widget);
-      } else if (condition.impressions) {
-        core.registerImpressionsCounter(condition.impressions, widget);
-      } else if (condition.hideAfterAction) {
-        core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
-      } else if (condition.urlContains) {
-        core.registerUrlWatcher(condition.urlContains, widget);
-      } else if (condition.showOnInit) {
+        core.initializeScrollWatchers(core.watchers, widget);
+      }
+
+      if (condition.pageVisits) {
+        core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits, widget);
+      }
+      if (condition.date) {
+        core.valid = core.valid && core.dateChecker(condition.date, widget);
+      }
+      if (condition.impressions) {
+        core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
+      }
+      if (condition.hideAfterAction) {
+        core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
+      }
+      if (condition.urlContains) {
+        core.valid = core.valid && core.urlChecker(condition.urlContains, widget);
+      }
+      core.valid = core.valid && condition.showOnInit;
+
+      if (core.valid && core.watchers.length === 0) {
         context.pathfora.showWidget(widget);
       }
     },
@@ -491,15 +504,20 @@
      *              when user is scrolling the page
      * @param {array} watchers
      */
-    initializeScrollWatchers: function (watchers) {
+    initializeScrollWatchers: function (watchers, widget) {
       if (!core.scrollListener) {
         core.scrollListener = function () {
           var key;
+          var valid;
 
           for (key in watchers) {
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-              watchers[key].check();
+              valid = core.valid && watchers[key].check();
             }
+          }
+
+          if (valid) {
+            context.pathfora.showWidget(widget);
           }
         };
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
@@ -509,15 +527,15 @@
           context.onscroll = core.scrollListener;
         }
       }
+      return true;
     },
 
-    registerPageVisitsCounter: function (pageVisitsRequired, widget) {
-      if (core.pageViews >= pageVisitsRequired) {
-        context.pathfora.showWidget(widget);
-      }
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
-    registerUrlWatcher: function (phrases, widget) {
+
+    urlChecker: function (phrases, widget) {
       var url = window.location.href;
       var valid = false;
 
@@ -539,12 +557,10 @@
         valid = true;
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
-    registerDateWatcher: function (date, widget) {
+    dateChecker: function (date, widget) {
       var valid = true;
       var today = Date.now();
 
@@ -556,12 +572,10 @@
         valid = false;
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
-    registerImpressionsCounter: function (impressionConstraints, widget) {
+    impressionsChecker: function (impressionConstraints, widget) {
       var valid = true,
           id = 'PathforaImpressions_' + widget.id,
           sessionImpressions = ~~sessionStorage.getItem(id),
@@ -593,12 +607,10 @@
       sessionStorage.setItem(id, sessionImpressions + 1);
       utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1 + "," + now);
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
-    registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
+    hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
       var valid = true,
           now = Date.now(),
           confirm = utils.readCookie('PathforaConfirm_' + widget.id),
@@ -641,9 +653,7 @@
         }
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
     /**
@@ -694,9 +704,10 @@
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
           var offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
-            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
+            return true;
           }
+          return false;
         }
       };
 
@@ -717,9 +728,10 @@
           var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
           var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
+            return true;
           }
+          return false;
         }
       };
 
