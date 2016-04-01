@@ -451,6 +451,7 @@
     openedWidgets: [],
     initializedWidgets: [],
     watchers: [],
+    valid: true,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
     /**
@@ -461,36 +462,38 @@
     initializeWidget: function (widget) {
       var condition = widget.displayConditions;
       var watcher;
-      var valid = true;
+      core.valid = true;
 
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
         core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers);
-      } else if (condition.scrollPercentageToDisplay) {
+        core.initializeScrollWatchers(core.watchers, widget);
+      }
+
+      if (condition.scrollPercentageToDisplay) {
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers);
+        core.initializeScrollWatchers(core.watchers, widget);
       }
 
       if (condition.pageVisits) {
-        valid = valid && core.registerPageVisitsCounter(condition.pageVisits, widget);
+        core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits, widget);
       }
       if (condition.date) {
-        valid = valid && core.registerDateWatcher(condition.date, widget);
+        core.valid = core.valid && core.dateChecker(condition.date, widget);
       }
       if (condition.impressions) {
-        valid = valid && core.registerImpressionsCounter(condition.impressions, widget);
+        core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
       }
       if (condition.hideAfterAction) {
-        valid = valid && core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
+        core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
       }
       if (condition.urlContains) {
-        valid = valid && core.registerUrlWatcher(condition.urlContains, widget);
+        core.valid = core.valid && core.urlChecker(condition.urlContains, widget);
       }
-      valid = valid && condition.showOnInit;
+      core.valid = core.valid && condition.showOnInit;
 
-      if (valid) {
+      if (core.valid && core.watchers.length === 0) {
         context.pathfora.showWidget(widget);
       }
     },
@@ -501,15 +504,20 @@
      *              when user is scrolling the page
      * @param {array} watchers
      */
-    initializeScrollWatchers: function (watchers) {
+    initializeScrollWatchers: function (watchers, widget) {
       if (!core.scrollListener) {
         core.scrollListener = function () {
           var key;
+          var valid;
 
           for (key in watchers) {
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-              watchers[key].check();
+              valid = core.valid && watchers[key].check();
             }
+          }
+
+          if (valid) {
+            context.pathfora.showWidget(widget);
           }
         };
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
@@ -519,13 +527,14 @@
           context.onscroll = core.scrollListener;
         }
       }
+      return true;
     },
 
-    registerPageVisitsCounter: function (pageVisitsRequired, widget) {
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
       return (core.pageViews >= pageVisitsRequired);
     },
 
-    registerUrlWatcher: function (phrases, widget) {
+    urlChecker: function (phrases, widget) {
       var url = window.location.href;
       var valid = false;
 
@@ -550,7 +559,7 @@
       return valid;
     },
 
-    registerDateWatcher: function (date, widget) {
+    dateChecker: function (date, widget) {
       var valid = true;
       var today = Date.now();
 
@@ -565,7 +574,7 @@
       return valid;
     },
 
-    registerImpressionsCounter: function (impressionConstraints, widget) {
+    impressionsChecker: function (impressionConstraints, widget) {
       var valid = true,
           id = 'PathforaImpressions_' + widget.id,
           sessionImpressions = ~~sessionStorage.getItem(id),
@@ -600,7 +609,7 @@
       return valid;
     },
 
-    registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
+    hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
       var valid = true,
           now = Date.now(),
           confirm = utils.readCookie('PathforaConfirm_' + widget.id),
@@ -694,9 +703,10 @@
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
           var offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
-            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
+            return true;
           }
+          return false;
         }
       };
 
@@ -717,9 +727,10 @@
           var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
           var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-            context.pathfora.showWidget(widget);
             core.removeWatcher(watcher);
+            return true;
           }
+          return false;
         }
       };
 
