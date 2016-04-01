@@ -262,7 +262,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '{{cssurl}}');
+    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -1912,7 +1912,7 @@
       }
 
       apiUrl = [
-        '{{apiurl}}/api/me/',
+        '//api.lytics.io/api/me/',
         accountId,
         '/',
         seerId,
