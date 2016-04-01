@@ -466,35 +466,21 @@
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
-      }
-
-      if (condition.scrollPercentageToDisplay) {
+      } else if (condition.scrollPercentageToDisplay) {
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
-      }
-
-      if (condition.pageVisits) {
+      } else if (condition.pageVisits) {
         core.registerPageVisitsCounter(condition.pageVisits, widget);
-      }
-
-      if (condition.date) {
+      } else if (condition.date) {
         core.registerDateWatcher(condition.date, widget);
-      }
-
-      if (condition.impressions) {
+      } else if (condition.impressions) {
         core.registerImpressionsCounter(condition.impressions, widget);
-      }
-
-      if (condition.hideAfterAction) {
+      } else if (condition.hideAfterAction) {
         core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
-      }
-
-      if (condition.urlContains) {
+      } else if (condition.urlContains) {
         core.registerUrlWatcher(condition.urlContains, widget);
-      }
-
-      if (condition.showOnInit) {
+      } else if (condition.showOnInit) {
         context.pathfora.showWidget(widget);
       }
     },
