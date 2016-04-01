@@ -262,7 +262,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '{{cssurl}}');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -461,6 +461,7 @@
     initializeWidget: function (widget) {
       var condition = widget.displayConditions;
       var watcher;
+      var valid = true;
 
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
@@ -470,17 +471,26 @@
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers);
-      } else if (condition.pageVisits) {
-        core.registerPageVisitsCounter(condition.pageVisits, widget);
-      } else if (condition.date) {
-        core.registerDateWatcher(condition.date, widget);
-      } else if (condition.impressions) {
-        core.registerImpressionsCounter(condition.impressions, widget);
-      } else if (condition.hideAfterAction) {
-        core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
-      } else if (condition.urlContains) {
-        core.registerUrlWatcher(condition.urlContains, widget);
-      } else if (condition.showOnInit) {
+      }
+
+      if (condition.pageVisits) {
+        valid = valid && core.registerPageVisitsCounter(condition.pageVisits, widget);
+      }
+      if (condition.date) {
+        valid = valid && core.registerDateWatcher(condition.date, widget);
+      }
+      if (condition.impressions) {
+        valid = valid && core.registerImpressionsCounter(condition.impressions, widget);
+      }
+      if (condition.hideAfterAction) {
+        valid = valid && core.registerHideAfterActionWatcher(condition.hideAfterAction, widget);
+      }
+      if (condition.urlContains) {
+        valid = valid && core.registerUrlWatcher(condition.urlContains, widget);
+      }
+      valid = valid && condition.showOnInit;
+
+      if (valid) {
         context.pathfora.showWidget(widget);
       }
     },
@@ -512,9 +522,7 @@
     },
 
     registerPageVisitsCounter: function (pageVisitsRequired, widget) {
-      if (core.pageViews >= pageVisitsRequired) {
-        context.pathfora.showWidget(widget);
-      }
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     registerUrlWatcher: function (phrases, widget) {
@@ -539,9 +547,7 @@
         valid = true;
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
     registerDateWatcher: function (date, widget) {
@@ -556,35 +562,42 @@
         valid = false;
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
     registerImpressionsCounter: function (impressionConstraints, widget) {
-      var valid = true;
-      var id = 'PathforaImpressions_' + widget.id;
-      var sessionImpressions = ~~sessionStorage.getItem(id);
-      var totalImpressions = ~~utils.readCookie(id);
-
+      var valid = true,
+          id = 'PathforaImpressions_' + widget.id,
+          sessionImpressions = ~~sessionStorage.getItem(id),
+          total = utils.readCookie(id),
+          now = Date.now(),
+          parts,
+          totalImpressions;
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
       }
-      if (!totalImpressions) {
+
+      if (!total) {
         totalImpressions = 1;
+      } else {
+        parts = total.split(","),
+        totalImpressions = parts[0];
+
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+          valid = false;
+        }
       }
 
       if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
         valid = false;
       }
 
-      sessionStorage.setItem(id, sessionImpressions + 1);
-      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1);
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      sessionStorage.setItem(id, sessionImpressions + 1);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1 + "," + now);
+
+      return valid;
     },
 
     registerHideAfterActionWatcher: function (hideAfterActionConstraints, widget) {
@@ -601,7 +614,7 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
           valid = false;
         }
       }
@@ -613,7 +626,7 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
           valid = false;
         }
       }
@@ -625,14 +638,12 @@
           valid = false;
         }
 
-        if (parts[1] != undefined && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
           valid = false;
         }
       }
 
-      if (valid) {
-        context.pathfora.showWidget(widget);
-      }
+      return valid;
     },
 
     /**
@@ -1090,7 +1101,9 @@
       if (typeof config.confirmAction === 'object') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
-          updateActionCookie("PathforaConfirm_" + widget.id);
+          if (typeof updateActionCookie === 'function') {
+            updateActionCookie("PathforaConfirm_" + widget.id);
+          }
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
           }
@@ -1108,7 +1121,9 @@
       } else if (config.type === 'message') {
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
-          updateActionCookie("PathforaConfirm_" + widget.id);
+          if (typeof updateActionCookie === 'function') {
+            updateActionCookie("PathforaConfirm_" + widget.id);
+          }
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
           }
@@ -1129,7 +1144,9 @@
           });
 
           if (valid) {
-            updateActionCookie("PathforaConfirm_" + widget.id);
+            if (typeof updateActionCookie === 'function') {
+              updateActionCookie("PathforaConfirm_" + widget.id);
+            }
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
@@ -1883,7 +1900,7 @@
       }
 
       apiUrl = [
-        '{{apiurl}}/api/me/',
+        '//api.lytics.io/api/me/',
         accountId,
         '/',
         seerId,
