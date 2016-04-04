@@ -48,6 +48,19 @@ gulp.task('build:styles', function () {
 
 gulp.task('build:js', function () {
   gulp.src('src/*.js')
+    .pipe(replace('{{apiurl}}', '//api.lytics.io'))
+    .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
+    .pipe(gulp.dest('dist'))
+    .pipe(uglify())
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest('dist'))
+    .pipe(connect.reload());
+});
+
+gulp.task('local:js', function () {
+  gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', APIURL))
     .pipe(replace('{{cssurl}}', CSSURL))
     .pipe(gulp.dest('dist'))
@@ -137,7 +150,6 @@ gulp.task('build:hbs', function () {
 
   for (var type in config.type) {
     for (var sub in config.type[type]) {
-
       config.type[type][sub].forEach(function(val) {
         if (sub === "layout") {
           var ty = type;
@@ -186,7 +198,6 @@ gulp.task('build:hbs', function () {
 
     outputHtml({layout: layout, type: type, output: contents}, name, [dir]);
   }));
-
 });
 
 gulp.task('test', ['build:styles', 'build:testjs']);
