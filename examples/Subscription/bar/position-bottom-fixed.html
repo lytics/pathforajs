@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscription &gt; bar &gt; position-bottom-fixed</title>
+</head>
+<body>
+
+<h3>Subscription &gt; bar &gt; position-bottom-fixed</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Subscription({
+        id: "widget-Subscription-bar-position-bottom-fixed",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "bar",
+        position: "bottom-fixed",
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

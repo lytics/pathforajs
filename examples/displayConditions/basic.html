@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; basic</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; basic</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-basic",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  "showOnInit": true,
+  "showDelay": 5,
+  "hideAfter": 10,
+  "displayWhenElementVisible": "elem",
+  "scrollPercentageToDisplay": 0,
+  "pageVisits": 5,
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

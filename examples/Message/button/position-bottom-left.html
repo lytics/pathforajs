@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message &gt; button &gt; position-bottom-left</title>
+</head>
+<body>
+
+<h3>Message &gt; button &gt; position-bottom-left</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-Message-button-position-bottom-left",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "button",
+        position: "bottom-left",
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

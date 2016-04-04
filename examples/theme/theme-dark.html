@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>theme &gt; theme-dark</title>
+</head>
+<body>
+
+<h3>theme &gt; theme-dark</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-theme-theme-dark",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        theme: "dark",
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

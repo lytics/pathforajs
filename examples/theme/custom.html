@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>theme &gt; custom</title>
+</head>
+<body>
+
+<h3>theme &gt; custom</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-theme-custom",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        theme: "custom",
+colors: {
+  "background": "#e0ded2",
+  "headline": "#8a3720",
+  "text": "000000",
+  "close": "#8a3720",
+  "actionText": "#ffffff",
+  "actionBackground": "#8a3720",
+  "cancelText": "#8a3720",
+  "cancelBackground": "transparent"
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

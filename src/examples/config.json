@@ -1,0 +1,46 @@
+{
+  "type": {
+    "Message": {
+      "layout": ["modal", "slideout", "bar", "button"]
+    },
+
+    "Form": {
+      "layout": ["modal", "slideout"]
+    },
+
+    "Subscription": {
+      "layout": ["modal", "slideout", "bar"]
+    }
+  },
+
+  "layout": {
+    "slideout": {
+      "position": ["left", "right"],
+      "variant": [1, 2]
+    },
+
+    "modal": {
+      "variant": [1, 2]
+    },
+
+    "folding": {
+      "position": ["bottom-left", "bottom-right", "left"],
+      "variant": [1, 2]
+    },
+
+    "bar": {
+      "position": ["top-absolute", "top-fixed", "bottom-fixed"],
+      "variant": [1]
+    },
+
+    "button": {
+      "position": ["left", "right", "top-left", "top-right", "bottom-left", "bottom-right"]
+    }
+  },
+
+  "other": {
+    "themes": {
+      "theme": ["dark", "light"]
+    }
+  }
+}

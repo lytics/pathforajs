@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscription &gt; slideout &gt; variant-1</title>
+</head>
+<body>
+
+<h3>Subscription &gt; slideout &gt; variant-1</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Subscription({
+        id: "widget-Subscription-slideout-variant-1",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "slideout",
+        "variant": 1,
+"image": "/examples/images/image.jpg"
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

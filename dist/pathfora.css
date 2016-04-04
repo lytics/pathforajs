@@ -72,7 +72,7 @@ a {
 }
 .pf-widget textarea {
   padding: 10px 20px;
-  font-family: 'Open Sans', 'Arial' sans-serif;
+  font-family: 'Open Sans', Arial, sans-serif;
   resize: none;
 }
 .pf-widget .pf-widget-message {
@@ -339,7 +339,8 @@ a {
 .pf-widget-modal .pf-widget-body form {
   width: 100%;
 }
-.pf-widget-modal .pf-widget-body form input {
+.pf-widget-modal .pf-widget-body form input,
+.pf-widget-modal .pf-widget-body form textarea {
   padding-top: 15px;
   padding-bottom: 15px;
   font-size: 16px;
@@ -365,7 +366,6 @@ a {
   text-align: center;
 }
 .pf-widget-modal.pf-no-img .pf-widget-headline {
-  font-weight: 400;
   margin-bottom: 10px;
 }
 .pf-widget-modal.pf-no-img .pf-widget-message {
@@ -383,7 +383,6 @@ a {
   text-align: center;
   margin-top: 140px;
   margin-bottom: 10px;
-  font-weight: 100;
 }
 .pf-widget-modal.pf-widget-variant-2 .pf-widget-body > * {
   display: block;
@@ -625,7 +624,7 @@ a {
 .pf-widget-bar.opened.pf-position-top-fixed {
   top: 0;
 }
-.pf-widget-bar.pf-position-top-absolute,
+.pf-widget-bar.pf-position-top-fixed,
 .pf-widget-bar.pf-position-bottom-fixed {
   position: fixed;
 }
@@ -640,8 +639,7 @@ a {
 .pf-widget-bar.pf-position-bottom-fixed {
   bottom: -50px;
 }
-.pf-widget-bar.pf-position-bottom-fixed,
-.pf-widget-bar.pf-position-top-fixed {
+.pf-widget-bar.pf-position-top-absolute {
   position: absolute;
 }
 .pf-widget-bar.pf-message .pf-widget-message {

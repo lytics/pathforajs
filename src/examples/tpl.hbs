@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{crumbs}}</title>
+</head>
+<body>
+
+<h3>{{crumbs}}</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.{{type}}({
+        id: "widget-{{id}}",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "{{layout}}",
+        {{{output}}}
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

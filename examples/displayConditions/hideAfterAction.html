@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; hideAfterAction</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; hideAfterAction</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-hideAfterAction",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  hideAfterAction: {
+    closed: {
+      hideCount: 3,
+      duration: 604800
+    },
+    confirm: {
+      hideCount: 1
+    },
+    cancel: {
+      duration: 1440
+    }
+  }
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

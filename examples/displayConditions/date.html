@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; date</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; date</h3>
+<div id="elem"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-date",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  date: {
+    start_at: "2016-02-15T11:00:00.000Z",
+    end_at: "2016-02-25T11:00:00.000Z"
+  }
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>
