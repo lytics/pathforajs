@@ -32,26 +32,6 @@
 
 
   /* Position Styles */
-  &.opened {
-    &.pf-position-bottom-left,
-    &.pf-position-left {
-      left: 50px;
-    }
-
-    &.pf-position-bottom-right,
-    &.pf-position-right {
-      right: 50px;
-    }
-
-    &.pf-origin-bottom {
-      bottom: 50px;
-    }
-  }
-
-  &.pf-position-origin-bottom {
-    bottom: -100%;
-  }
-
   &.pf-position-bottom-left,
   &.pf-position-left {
     left: -100%;
@@ -67,6 +47,28 @@
 
     &.pf-origin-bottom {
       right: 50px;
+    }
+  }
+
+  &.pf-origin-bottom {
+    bottom: -100%;
+  }
+
+
+  /* Opened State Styles */
+  &.opened {
+    &.pf-position-bottom-left,
+    &.pf-position-left {
+      left: 50px;
+    }
+
+    &.pf-position-bottom-right,
+    &.pf-position-right {
+      right: 50px;
+    }
+
+    &.pf-origin-bottom {
+      bottom: 50px;
     }
   }
 

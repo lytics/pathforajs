@@ -74,7 +74,6 @@
 }
 .pf-widget .pf-widget-btn {
   display: inline-block;
-  font-family: Arial, sans-serif;
   padding: 0 26px;
   line-height: 35px;
   font-size: 14px;
@@ -98,7 +97,8 @@
   cursor: pointer;
   position: absolute;
   top: 4px;
-  right: 12px;
+  right: 0;
+  margin-right: 12px;
 }
 .pf-widget.opened {
   visibility: visible;
@@ -282,8 +282,9 @@
   display: table;
   top: auto;
   /* Position Styles */
+  /* Opened State Styles */
   /* Variant Styles */
-  /* Form Styles */
+  /* Type Specific Styles */
 }
 .pf-widget-slideout > div {
   display: table-cell;
@@ -303,20 +304,6 @@
 .pf-widget-slideout .pf-widget-headline {
   font-size: 20px;
 }
-.pf-widget-slideout.opened.pf-position-bottom-left,
-.pf-widget-slideout.opened.pf-position-left {
-  left: 50px;
-}
-.pf-widget-slideout.opened.pf-position-bottom-right,
-.pf-widget-slideout.opened.pf-position-right {
-  right: 50px;
-}
-.pf-widget-slideout.opened.pf-origin-bottom {
-  bottom: 50px;
-}
-.pf-widget-slideout.pf-position-origin-bottom {
-  bottom: -100%;
-}
 .pf-widget-slideout.pf-position-bottom-left,
 .pf-widget-slideout.pf-position-left {
   left: -100%;
@@ -332,6 +319,20 @@
 .pf-widget-slideout.pf-position-bottom-right.pf-origin-bottom,
 .pf-widget-slideout.pf-position-right.pf-origin-bottom {
   right: 50px;
+}
+.pf-widget-slideout.pf-origin-bottom {
+  bottom: -100%;
+}
+.pf-widget-slideout.opened.pf-position-bottom-left,
+.pf-widget-slideout.opened.pf-position-left {
+  left: 50px;
+}
+.pf-widget-slideout.opened.pf-position-bottom-right,
+.pf-widget-slideout.opened.pf-position-right {
+  right: 50px;
+}
+.pf-widget-slideout.opened.pf-origin-bottom {
+  bottom: 50px;
 }
 .pf-widget-slideout.pf-widget-variant-2 {
   width: 350px;
@@ -412,7 +413,8 @@
 }
 .pf-widget-bar .pf-widget-close {
   top: 13px;
-  right: 20px;
+  right: 0;
+  margin-right: 20px;
 }
 .pf-widget-bar .pf-widget-btn {
   line-height: 35px;
@@ -480,6 +482,7 @@
   box-shadow: 1px 0 4px 0 rgba(0, 0, 0, 0.5);
   border-radius: 2px;
   /* Position Styles */
+  /* Opened State Styles */
 }
 .pf-widget-button .pf-widget-message {
   line-height: 42px;
