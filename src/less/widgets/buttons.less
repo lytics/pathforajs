@@ -1,10 +1,9 @@
 .pf-widget-button {
-  background: @backgroundDefault;
   position: fixed;
-  box-shadow: 4px 0px 4px -4px rgba(0,0,0,.5);
+  box-shadow: 1px 0 4px 0 rgba(0,0,0,.5);
+  border-radius: 2px;
 
   .pf-widget-message {
-    color: @colorDefault;
     line-height: 42px;
     padding: 0 16px 5px 16px;
     margin: 0;
@@ -17,19 +16,48 @@
     text-overflow: ellipsis;
   }
 
-  &.pf-position-top-left, &.pf-position-top-right {
-    a {
-      padding: 5px 16px 0 16px;
-    }
+  /* Position Styles */
+  &.pf-position-left {
+    transform-origin: left bottom;
+    transform: rotate(90deg);
+    left: -50px;
   }
 
-  &:hover {
-    background: lighten(@backgroundDefault, 5%);
+  &.pf-position-right {
+    box-shadow: -1px 0px 4px 0px rgba(0,0,0,.5);
+    transform-origin: right bottom;
+    transform: rotate(-90deg);
+    right: -50px;
   }
 
   &.pf-position-left,
   &.pf-position-right {
     top: 10%;
+  }
+
+  &.pf-position-top-left,
+  &.pf-position-bottom-left {
+    left: 42px;
+  }
+
+  &.pf-position-top-right,
+  &.pf-position-bottom-right {
+    right: 42px;
+  }
+
+
+  &.pf-position-bottom-left,
+  &.pf-position-bottom-right {
+    bottom: -50px;
+  }
+
+  &.pf-position-top-left,
+  &.pf-position-top-right {
+    top: -50px;
+
+    .pf-widget-message {
+      padding: 5px 16px 0;
+    }
   }
 
   &.opened {
@@ -51,6 +79,7 @@
 
     &.pf-position-bottom-left, &.pf-position-bottom-right {
       bottom: -6px;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.5);
 
       &:hover {
         bottom: -1px;
@@ -59,70 +88,11 @@
 
     &.pf-position-top-left, &.pf-position-top-right {
       top: -6px;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,.5);
 
       &:hover {
         top: -1px;
       }
-    }
-  }
-
-  &.pf-position-left, &.pf-position-right {
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-  }
-
-  &.pf-position-top-left, &.pf-position-top-right {
-    border-bottom-left-radius: 2px;
-    border-bottom-right-radius: 2px;
-  }
-
-  &.pf-position-left {
-    transform-origin: left bottom;
-    transform: rotate(90deg);
-    left: -50px;
-  }
-
-  &.pf-position-right {
-    transform-origin: right bottom;
-    transform: rotate(-90deg);
-    right: -50px;
-  }
-
-  &.pf-position-bottom-left,
-  &.pf-position-bottom-right {
-    bottom: -50px;
-  }
-
-  &.pf-position-top-left,
-  &.pf-position-top-right {
-    top: -50px;
-
-    .pf-widget-message {
-      padding: 5px 16px 0;
-    }
-  }
-
-  &.pf-theme-dark {
-    background: @backgroundDark;
-
-    a, p {
-      color: @colorDark;
-    }
-
-    &:hover {
-      background: lighten(@backgroundDark, 5%);
-    }
-  }
-
-  &.pf-theme-light {
-    background: @orange;
-
-    a, p {
-      color: #fff;
-    }
-
-    &:hover {
-      background: @darkOrange;
     }
   }
 }
