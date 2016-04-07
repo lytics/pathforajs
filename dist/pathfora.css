@@ -16,6 +16,8 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
+  background-color: #f1f1f1;
+  color: #888;
 }
 .pf-widget * {
   box-sizing: border-box;
@@ -28,6 +30,7 @@
 }
 .pf-widget .pf-widget-headline {
   margin: 0 0 10px 0;
+  color: #444;
 }
 .pf-widget input[type=text],
 .pf-widget input[type=email],
@@ -39,7 +42,7 @@
   margin-bottom: 10px;
   width: 100%;
   padding: 10px 20px;
-  background: #fff;
+  background: white;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 .pf-widget input[type=text]:focus,
@@ -85,6 +88,12 @@
 }
 .pf-widget .pf-widget-btn.pf-widget-ok {
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+  color: #444;
+  background-color: white;
+}
+.pf-widget .pf-widget-btn.pf-widget-cancel {
+  color: #bbb;
+  color: #f1f1f1;
 }
 .pf-widget .pf-widget-btn + .pf-widget-btn {
   margin-left: 5px;
@@ -99,6 +108,7 @@
   top: 4px;
   right: 0;
   margin-right: 12px;
+  color: #bbb;
 }
 .pf-widget.opened {
   visibility: visible;

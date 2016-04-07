@@ -17,6 +17,8 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
+  background-color: #f1f1f1;
+  color: #888;
 
   * {
     box-sizing: border-box;
@@ -31,6 +33,7 @@
 
   .pf-widget-headline {
     margin: 0 0 10px 0;
+    color: #444;
   }
 
   input[type=text],
@@ -43,7 +46,7 @@
     margin-bottom: 10px;
     width: 100%;
     padding: 10px 20px;
-    background: #fff;
+    background: white;
     box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
 
     &:focus {
@@ -90,6 +93,13 @@
 
     &.pf-widget-ok {
       box-shadow: 0px 1px 1px rgba(0,0,0,.2);
+      color: #444;
+      background-color: white;
+    }
+
+    &.pf-widget-cancel {
+      color: #bbb;
+      color: #f1f1f1;
     }
 
     & + .pf-widget-btn {
@@ -107,6 +117,7 @@
     top: 4px;
     right: 0;
     margin-right: 12px;
+    color: #bbb;
   }
 
   &.opened {
