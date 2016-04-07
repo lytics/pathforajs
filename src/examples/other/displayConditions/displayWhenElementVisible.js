@@ -1,0 +1,3 @@
+displayConditions: {
+  "displayWhenElementVisible": ".elem",
+},

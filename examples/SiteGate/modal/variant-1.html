@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SiteGate &gt; modal &gt; variant-1</title>
+</head>
+<body>
+
+<h3>SiteGate &gt; modal &gt; variant-1</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.SiteGate({
+        id: "widget-SiteGate-modal-variant-1",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        variant: 1,
+image: "/examples/images/image.jpg"
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

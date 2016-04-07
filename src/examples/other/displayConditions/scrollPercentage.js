@@ -1,0 +1,3 @@
+displayConditions: {
+  "scrollPercentageToDisplay": 20,
+},

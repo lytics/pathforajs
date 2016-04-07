@@ -1,28 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>displayConditions &gt; basic</title>
+    <title>displayConditions &gt; displayWhenElementVisible</title>
 </head>
 <body>
 
-<h3>displayConditions &gt; basic</h3>
-<div id="elem"></div>
+<h3>displayConditions &gt; displayWhenElementVisible</h3>
+<div class="elem" style="height:1000px;"></div>
 
 <script src="/dist/pathfora.js"></script>
 <script>
 
     var modal = pathfora.Message({
-        id: "widget-displayConditions-basic",
+        id: "widget-displayConditions-displayWhenElementVisible",
         msg: "Your custom text here",
         headline: "Welcome",
         layout: "modal",
         displayConditions: {
-  "showOnInit": true,
-  "showDelay": 5,
-  "hideAfter": 10,
-  "displayWhenElementVisible": "elem",
-  "scrollPercentageToDisplay": 0,
-  "pageVisits": 5,
+  "displayWhenElementVisible": ".elem",
 },
     });
 

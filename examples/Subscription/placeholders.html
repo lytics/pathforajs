@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subscription &gt; placeholders</title>
+</head>
+<body>
+
+<h3>Subscription &gt; placeholders</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Subscription({
+        id: "widget-Subscription-placeholders",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        placeholders: {
+  email: "Email Placeholder",
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

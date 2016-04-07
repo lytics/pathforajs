@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Form &gt; slideout &gt; position-right</title>
+    <title>Form &gt; onSubmit</title>
 </head>
 <body>
 
-<h3>Form &gt; slideout &gt; position-right</h3>
-<div id="elem"></div>
+<h3>Form &gt; onSubmit</h3>
+<div class="elem" style="height:1000px;"></div>
 
 <script src="/dist/pathfora.js"></script>
 <script>
 
     var modal = pathfora.Form({
-        id: "widget-Form-slideout-position-right",
+        id: "widget-Form-onSubmit",
         msg: "Your custom text here",
         headline: "Welcome",
-        layout: "slideout",
-        position: "right",
+        layout: "modal",
+        onSubmit: function (event, payload) {
+  console.log(payload.data);
+}
     });
 
     window.pathfora.initializeWidgets([modal]);

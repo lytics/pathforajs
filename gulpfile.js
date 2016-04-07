@@ -8,10 +8,10 @@ var replace = require('gulp-replace');
 var env = require('gulp-env');
 var connect = require('gulp-connect');
 var data = require('gulp-data');
-var handlebars = require('gulp-compile-handlebars');
 var config = require('./src/examples/config.json');
 var fs = require('fs');
 var through = require('through');
+var example = require('./src/examples/examples.js');
 var APIURL;
 var CSSURL;
 
@@ -102,105 +102,66 @@ gulp.task('preview', function () {
 });
 
 
-function outputHtml(extend, name, pathy) {
-  pathy.push(name);
-  extend["crumbs"] = pathy.join(" > ");
-  extend["id"] = pathy.join("-");
-  pathy.pop();
-  gulp.src('src/examples/tpl.hbs')
-    .pipe(data(function(){
-      return extend;
-    }))
-    .pipe(handlebars({}))
-    .pipe(rename(name + '.html'))
-    .pipe(gulp.dest("examples/" + pathy.join("/")));
-    //console.log("examples/" + pathy.join("/") + "/" + name + ".html");
-    //console.log(options);
-}
 
-function copyObject(obj){
-  var n = {};
-  for(var field in obj) {
-    n[field] = obj[field];
-  }
-  return n;
-}
-
-function getFolders(dir) {
-  return fs.readdirSync(dir)
-    .filter(function(file) {
-      return fs.statSync(path.join(dir, file)).isDirectory();
-    });
-}
-
-function checkConfig(extendtemp, sub, lookup, arr, pathy) {
-  arr.forEach(function(fin) {
-    var extend = copyObject(extendtemp);
-    var contents = fs.readFileSync("src/examples/" + sub + "/templates/" + lookup + ".hbs", "utf8");
-    var templateSpec = handlebars.Handlebars.compile(contents);
-    extend[lookup] = fin;
-    extend["output"] = templateSpec(extend);
-
-    outputHtml(extend, lookup + "-" + fin, pathy)
-  });
-}
-
-
-gulp.task('build:hbs', function () {
-
+gulp.task('hbs:config', function () {
   for (var type in config.type) {
-    for (var sub in config.type[type]) {
-      config.type[type][sub].forEach(function(val) {
-        if (sub === "layout") {
-          var ty = type;
+    for (var category in config.type[type]) {
+      config.type[type][category].forEach(function(val) {
+        if (category === "layout") {
+          var ex = new example([type, val], "", type, val);
+
           gulp.src('src/examples/layout/' + val + '/**/*.js')
           .pipe(through(function(file){
-            var contents = fs.readFileSync(file.path, "utf8");
-            var name = path.basename(file.path, ".js");
-            outputHtml({layout: val, type: ty, output: contents}, name, [ty, val]);
+            ex.name = path.basename(file.path, ".js");
+            ex.data.output = fs.readFileSync(file.path, "utf8");
+            ex.output();
           }));
 
-          for(var lookup in config.layout[val]) {
-            checkConfig({"layout": val, type: type}, sub, lookup, config.layout[val][lookup], [type, val]);
+          for(var name in config.layout[val]) {
+            ex.name = name;
+            ex.configure(category, config.layout[val][name]);
           }
         } else {
-          checkConfig({type: type}, "type", sub, config.type[type][sub], [type]);
+          var ex = new example([type], category, type);
+          ex.configure("type", config.type[type][category]);
         }
       });
     }
   }
 
   for (other in config.other) {
-    for (sub in config.other[other]) {
-      checkConfig({layout: "modal", type: "Message"}, "other", sub, config.other[other][sub], [sub]);
+    for (category in config.other[other]) {
+      var ex = new example([category], category);
+      ex.configure("other", config.other[other][category]);
     }
   }
+});
 
-  gulp.src(['src/examples/other/**/*.js', 'src/examples/types/**/*.js'])
+
+gulp.task('hbs:examples', function () {
+  gulp.src(['src/examples/other/**/*.js', 'src/examples/type/**/*.js'])
   .pipe(through(function(file) {
-    var type = "Message";
-    var layout = "modal";
-    var contents = fs.readFileSync(file.path, "utf8");
-    var name = path.basename(file.path, ".js");
     var p = path.relative(process.cwd(), file.path);
-
     var p2 = p.split(/src\/examples\/[^\/;]+\//).pop();
     p2 = p2.split("/");
     var dir = p2.slice(0, -1).join("/");
 
-    if (p.indexOf("examples/layout") > -1) {
-      layout = p2[0];
-    }
+    var ex = new example([dir], path.basename(file.path, ".js"));
+    ex.data.output = fs.readFileSync(file.path, "utf8");
 
-    if (p.indexOf("examples/type") > -1) {
-      type = p2[0];
-    }
+    if (p.indexOf("examples/layout") > -1)
+      ex.data.layout = p2[0];
 
-    outputHtml({layout: layout, type: type, output: contents}, name, [dir]);
+    if (p.indexOf("examples/type") > -1)
+      ex.data.type = p2[0];
+
+    ex.output();
   }));
 });
 
+
+gulp.task('hbs', ['hbs:config', 'hbs:examples']);
 gulp.task('test', ['build:styles', 'build:testjs']);
-gulp.task('local', ['build:hbs', 'build:styles', 'local:js', 'preview', 'local:watch']);
-gulp.task('build', ['build:hbs', 'build:styles', 'build:js']);
+gulp.task('local', ['hbs', 'build:styles', 'local:js', 'preview', 'local:watch']);
+gulp.task('build', ['hbs', 'build:styles', 'build:js']);
 gulp.task('default', ['build', 'preview', 'watch']);

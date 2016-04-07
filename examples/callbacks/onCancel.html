@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>callbacks &gt; onCancel</title>
+</head>
+<body>
+
+<h3>callbacks &gt; onCancel</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-callbacks-onCancel",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        cancelAction: {
+  name: "Cancel Action",
+  callback: function() {
+    alert("Cancel button clicked");
+  }
+}
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

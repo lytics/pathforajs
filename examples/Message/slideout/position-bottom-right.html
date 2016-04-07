@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Message &gt; slideout &gt; position-right</title>
+    <title>Message &gt; slideout &gt; position-bottom-right</title>
 </head>
 <body>
 
-<h3>Message &gt; slideout &gt; position-right</h3>
-<div id="elem"></div>
+<h3>Message &gt; slideout &gt; position-bottom-right</h3>
+<div class="elem" style="height:1000px;"></div>
 
 <script src="/dist/pathfora.js"></script>
 <script>
 
     var modal = pathfora.Message({
-        id: "widget-Message-slideout-position-right",
+        id: "widget-Message-slideout-position-bottom-right",
         msg: "Your custom text here",
         headline: "Welcome",
         layout: "slideout",
-        position: "right",
+        position: "bottom-right",
     });
 
     window.pathfora.initializeWidgets([modal]);

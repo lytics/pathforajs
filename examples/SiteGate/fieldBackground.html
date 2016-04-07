@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SiteGate &gt; fieldBackground</title>
+</head>
+<body>
+
+<h3>SiteGate &gt; fieldBackground</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.SiteGate({
+        id: "widget-SiteGate-fieldBackground",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        theme: "custom",
+colors: {
+  fieldBackground: "#bbe0dd"
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

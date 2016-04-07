@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; showDelay</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; showDelay</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-showDelay",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  "showDelay": 5,
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

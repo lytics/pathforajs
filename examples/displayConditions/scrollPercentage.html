@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; scrollPercentage</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; scrollPercentage</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-scrollPercentage",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  "scrollPercentageToDisplay": 20,
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

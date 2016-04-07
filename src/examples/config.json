@@ -10,21 +10,19 @@
 
     "Subscription": {
       "layout": ["modal", "slideout", "bar"]
+    },
+    "SiteGate": {
+      "layout": ["modal"]
     }
   },
 
   "layout": {
     "slideout": {
-      "position": ["left", "right"],
+      "position": ["bottom-left", "bottom-right"],
       "variant": [1, 2]
     },
 
     "modal": {
-      "variant": [1, 2]
-    },
-
-    "folding": {
-      "position": ["bottom-left", "bottom-right", "left"],
       "variant": [1, 2]
     },
 

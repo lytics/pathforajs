@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>callbacks &gt; onLoad</title>
+</head>
+<body>
+
+<h3>callbacks &gt; onLoad</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-callbacks-onLoad",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        onLoad: function(event, payload){
+  alert("Widget visible to user");
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

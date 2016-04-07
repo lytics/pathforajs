@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>displayConditions &gt; pageVisits</title>
+</head>
+<body>
+
+<h3>displayConditions &gt; pageVisits</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-displayConditions-pageVisits",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        displayConditions: {
+  "pageVisits": 5,
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

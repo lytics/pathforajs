@@ -1,0 +1,3 @@
+displayConditions: {
+  "hideAfter": 10,
+},

@@ -1,22 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Subscription &gt; slideout &gt; position-left</title>
+    <title>Subscription &gt; fieldBackground</title>
 </head>
 <body>
 
-<h3>Subscription &gt; slideout &gt; position-left</h3>
-<div id="elem"></div>
+<h3>Subscription &gt; fieldBackground</h3>
+<div class="elem" style="height:1000px;"></div>
 
 <script src="/dist/pathfora.js"></script>
 <script>
 
     var modal = pathfora.Subscription({
-        id: "widget-Subscription-slideout-position-left",
+        id: "widget-Subscription-fieldBackground",
         msg: "Your custom text here",
         headline: "Welcome",
-        layout: "slideout",
-        position: "left",
+        layout: "modal",
+        theme: "custom",
+colors: {
+  fieldBackground: "#bbe0dd"
+},
     });
 
     window.pathfora.initializeWidgets([modal]);

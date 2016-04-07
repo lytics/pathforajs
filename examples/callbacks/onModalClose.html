@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>callbacks &gt; onModalClose</title>
+</head>
+<body>
+
+<h3>callbacks &gt; onModalClose</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-callbacks-onModalClose",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        onModalClose: function(event, payload){
+  alert("Close Modal");
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

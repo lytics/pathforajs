@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SiteGate &gt; showForm</title>
+</head>
+<body>
+
+<h3>SiteGate &gt; showForm</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.SiteGate({
+        id: "widget-SiteGate-showForm",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        showForm: false,
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

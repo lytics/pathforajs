@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form &gt; placeholders</title>
+</head>
+<body>
+
+<h3>Form &gt; placeholders</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Form({
+        id: "widget-Form-placeholders",
+        msg: "Your custom text here",
+        headline: "Welcome",
+        layout: "modal",
+        placeholders: {
+  name: "Name Placeholder",
+  title: "Title Placeholder",
+  email: "Email Placeholder",
+  message: "Message Placeholder",
+},
+    });
+
+    window.pathfora.initializeWidgets([modal]);
+</script>
+</body>
+</html>

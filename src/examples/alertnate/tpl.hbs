@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{crumbs}}</title>
+</head>
+<body>
+
+<h3>{{crumbs}}</h3>
+<div class="elem" style="height:1000px;"></div>
+
+<script src="/dist/pathfora.js"></script>
+<script>
+
+    var modal = pathfora.Message({
+        id: "widget-1",
+        msg: "This is a first widget",
+        headline: "Welcome",
+        layout: "modal",
+    });
+
+    var modal2 = pathfora.Message({
+        id: "widget-2",
+        msg: "This is a second widget",
+        headline: "Welcome Again",
+        layout: "modal",
+    });
+
+
+    {{additional}}
+
+    window.pathfora.initializeWidgets([modal, modal2]);
+</script>
+</body>
+</html>
