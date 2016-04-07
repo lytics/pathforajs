@@ -1,15 +1,19 @@
+/* Pushdown Styles */
+.pf-push-down {
+  transition: margin-top .3s;
+  margin-top: 0;
+
+  &.opened {
+    margin-top: 55px;
+  }
+}
+
 .pf-widget-bar {
-  background: @backgroundDefault;
-  color: @colorDefault;
   height: auto;
   padding: 10px 0;
-  height:35px;
+  height: 55px;
   left: 0; right: 0;
-  &:extend(.pf-box-shadow);
-
-  .pf-widget-close {
-    // line-height: 1;
-  }
+  .pf-box-shadow();
 
   .pf-widget-body {
     margin: 0 20px;
@@ -22,6 +26,16 @@
     }
   }
 
+  .pf-widget-close {
+    top: 13px;
+    right: 0;
+    margin-right: 20px;
+  }
+
+  .pf-widget-btn {
+    line-height: 35px;
+  }
+
   .pf-bar-content {
     text-align: center;
 
@@ -29,15 +43,13 @@
       max-width: 50%;
       margin-top: 0;
       margin-bottom: 0;
-      // padding-bottom:5px;
       white-space: normal;
     }
 
     input[type=text],
     input[type=email] {
-      margin-left: 16px;
+      margin: 0 0 0 16px;
       width: 200px;
-      // background: #fff;
     }
 
     > * {
@@ -46,23 +58,10 @@
     }
   }
 
-  &.opened {
-    &.pf-position-top-absolute {
-      top: 0;
-    }
-
-    &.pf-position-bottom-fixed {
-      bottom: 0;
-    }
-
-    &.pf-position-top-fixed {
-      top: 0;
-    }
-  }
-
+  /* Position Styles */
   &.pf-position-top-absolute,
-  &.pf-position-bottom-fixed {
-    position: fixed;
+  &.pf-position-bottom-absolute {
+    position: absolute;
   }
 
   &.pf-position-top-absolute,
@@ -80,48 +79,41 @@
 
   &.pf-position-bottom-fixed,
   &.pf-position-top-fixed {
-    position: absolute;
+    position: fixed;
   }
 
-  &.pf-message {
-    .pf-bar-content {
-      // padding-top: 7px;
+  /* Opened State Styles */
+  &.opened {
+    &.pf-position-top-absolute {
+      top: 0;
     }
 
+    &.pf-position-bottom-fixed {
+      bottom: 0;
+    }
+
+    &.pf-position-top-fixed {
+      top: 0;
+    }
+  }
+
+  /* Type Specific Styles */
+  &.pf-message {
     .pf-widget-message {
       margin-right: 40px;
     }
   }
 
   &.pf-subscription {
-    .pf-widget-message {
-      margin-bottom:10px;
-    }
-
     form {
       width: auto;
-    }
 
-    &.pf-bottom-fixed {
-      .pf-widget-message {
-        // margin-bottom: 0;
+      .pf-widget-btn {
+        margin-top: 0;
+      }
+      input[type=email]{
+        height: 35px;
       }
     }
-  }
-
-  &.pf-theme-dark {
-    background: @backgroundDark;
-    color: @colorDark;
-
-    input[type=text],
-    input[type=email],
-    textarea {
-      background-color:#555;
-    }
-  }
-
-  &.pf-theme-light {
-    background: @backgroundLight;
-    border-bottom: 1px solid #333;
   }
 }

@@ -15,7 +15,7 @@
   var originalConf;
   var defaultPositions = {
     modal: '',
-    slideout: 'left',
+    slideout: 'bottom-left',
     button: 'top-left',
     bar: 'top-absolute',
     folding: 'bottom-left'
@@ -464,6 +464,14 @@
       var watcher;
       core.valid = true;
 
+      if (widget.pushDown) {
+        if (widget.layout === 'bar' && (widget.position === "top-fixed" || widget.position === "top-absolute")) {
+          utils.addClass(document.querySelector(widget.pushDown), "pf-push-down");
+        } else {
+          throw new Error('Only top positioned bar widgets may have a pushDown property');
+        }
+      }
+
       if (condition.displayWhenElementVisible) {
         watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
         core.watchers.push(watcher);
@@ -482,19 +490,23 @@
       if (condition.date) {
         core.valid = core.valid && core.dateChecker(condition.date, widget);
       }
-      if (condition.impressions) {
-        core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
-      }
       if (condition.hideAfterAction) {
         core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
       }
       if (condition.urlContains) {
         core.valid = core.valid && core.urlChecker(condition.urlContains, widget);
       }
+
       core.valid = core.valid && condition.showOnInit;
 
-      if (core.valid && core.watchers.length === 0) {
-        context.pathfora.showWidget(widget);
+      if (core.watchers.length === 0) {
+        if (condition.impressions) {
+          core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
+        }
+
+        if (core.valid) {
+          context.pathfora.showWidget(widget);
+        }
       }
     },
 
@@ -514,6 +526,10 @@
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
               valid = core.valid && watchers[key].check();
             }
+          }
+
+          if (widget.displayConditions.impressions && valid) {
+            valid = core.impressionsChecker(condition.impressions, widget);
           }
 
           if (valid) {
@@ -586,13 +602,15 @@
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
+      } else {
+        sessionImpressions += 1;
       }
 
       if (!total) {
         totalImpressions = 1;
       } else {
         parts = total.split(","),
-        totalImpressions = parts[0];
+        totalImpressions = parseInt(parts[0]) + 1;
 
         if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
           valid = false;
@@ -604,8 +622,10 @@
       }
 
 
-      sessionStorage.setItem(id, sessionImpressions + 1);
-      utils.saveCookie(id, Math.min(totalImpressions, 9998) + 1 + "," + now);
+      if (valid && core.valid) {
+        sessionStorage.setItem(id, sessionImpressions);
+        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "," + now);
+      }
 
       return valid;
     },
@@ -721,9 +741,9 @@
      * @returns {object} object, containing onscroll callback function 'check', and
      *                   triggering element reference 'elem'
      */
-    registerElementWatcher: function (id, widget) {
+    registerElementWatcher: function (selector, widget) {
       var watcher = {
-        elem: document.getElementById(id),
+        elem: document.querySelector(selector),
         check: function () {
           var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
           var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
@@ -1222,6 +1242,7 @@
         'pf-' + config.type,
         ' pf-widget-' + config.layout,
         config.position ? ' pf-position-' + config.position : '',
+        config.origin ? ' pf-origin-' + config.origin : '',
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
@@ -1241,7 +1262,7 @@
         choices = [''];
         break;
       case 'slideout':
-        choices = ['left', 'right'];
+        choices = ['bottom-left', 'bottom-right'];
         break;
       case 'bar':
         choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
@@ -1565,7 +1586,7 @@
         props = {
           layout: ['modal', 'slideout', 'bar', 'folding'],
           variant: ['1', '2'],
-          slideout: ['left', 'right'],
+          slideout: ['bottom-left', 'bottom-right'],
           bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
           folding: ['left', 'bottom-left', 'bottom-right']
         };
@@ -2165,6 +2186,10 @@
 
       node = core.createWidgetHtml(widget);
 
+      if (widget.pushDown) {
+        utils.addClass(document.querySelector('.pf-push-down'), "opened");
+      }
+
       if (widget.config.layout !== 'inline') {
         document.body.appendChild(node);
       } else {
@@ -2232,6 +2257,11 @@
 
       node = document.getElementById(id);
       utils.removeClass(node, 'opened');
+
+      var pushDown = document.querySelector('.pf-push-down');
+      if(pushDown) {
+        utils.removeClass(pushDown, "opened");
+      }
 
       // FIXME 500 - magical number
       setTimeout(function () {

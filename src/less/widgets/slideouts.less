@@ -2,20 +2,18 @@
   position: fixed;
   bottom: 50px;
   width: 540px;
-  background: @backgroundDefault;
-  color: @colorDefault;
   border-radius: 4px;
   .pf-box-shadow();
   display: table;
+  top: auto;
 
   > div {
     display: table-cell;
     vertical-align: middle;
   }
 
-  .pf-widget-close {
-    position: absolute;
-    right: 0;
+  .pf-widget-message {
+    margin: 0 0 20px 0;
   }
 
   img {
@@ -25,115 +23,65 @@
   }
 
   .pf-widget-content {
-    padding:30px;
-
+    padding: 30px;
   }
 
   .pf-widget-headline {
     font-size: 20px;
-    margin-bottom: 10px;
-    margin-top:0;
   }
 
-  .pf-widget-message {
-    margin-bottom: 20px;
-  }
 
-  input[type=text],
-  input[type=email] {
-    height: 36px;
-  }
+  /* Position Styles */
+  &.pf-position-bottom-left,
+  &.pf-position-left {
+    left: -100%;
 
-  input[type=text] + .pf-widget-btn,
-  input[type=email] + .pf-widget-btn {
-    padding: 0;
-    width: 20%;
-    text-align: center;
-  }
-
-  .pf-widget-btn {
-    // float: right;
-  }
-
-  &.pf-theme-dark {
-    background: @backgroundDark;
-    color: @colorDark;
-
-    input[type=text],
-    input[type=email],
-    textarea {
-      background-color:#555;
-    }
-  }
-
-  &.pf-theme-light {
-    background: @backgroundLight;
-  }
-
-  &.opened {
-    &.pf-position-left {
+    &.pf-origin-bottom {
       left: 50px;
     }
+  }
 
-    &.pf-position-right {
+  &.pf-position-bottom-right,
+  &.pf-position-right {
+    right: -100%;
+
+    &.pf-origin-bottom {
       right: 50px;
     }
   }
 
-  &.pf-position-left,
-  &.pf-position-right {
-    top: auto;
+  &.pf-origin-bottom {
+    bottom: -100%;
   }
 
-  &.pf-position-left {
-    left: -540px;
-  }
 
-  &.pf-position-right {
-    right: -540px;
-  }
+  /* Opened State Styles */
+  &.opened {
+    &.pf-position-bottom-left,
+    &.pf-position-left {
+      left: 50px;
+    }
 
-  &.pf-subscription {
-    form {
-      // width:80%;
+    &.pf-position-bottom-right,
+    &.pf-position-right {
+      right: 50px;
+    }
+
+    &.pf-origin-bottom {
+      bottom: 50px;
     }
   }
 
+  /* Variant Styles */
   &.pf-widget-variant-2 {
     width: 350px;
 
     .pf-widget-content {
       text-align: center;
-      width: 100%;
-      padding: 30px;
 
       .pf-widget-headline {
-        margin-top: 120px;
+        margin-top: 110px;
       }
-
-      .pf-widget-btn {
-        font-size: 16px;
-      }
-
-      input[type=text],
-      input[type=email] {
-        width: 100%;
-        margin-bottom: 5px;
-      }
-
-      input[type=text] + .pf-widget-btn,
-      input[type=email] + .pf-widget-btn,
-      form + .pf-widget-btn {
-        margin: 0;
-        width: 100%;
-        position: static;
-        box-sizing: border-box;
-      }
-
-      form textarea {
-        margin-bottom: 10px;
-      }
-
     }
 
     .pf-widget-img {
@@ -146,6 +94,11 @@
     }
   }
 
+  &.pf-no-img {
+    width: 370px;
+  }
+
+  /* Type Specific Styles */
   &.pf-form {
     width: 370px;
 
@@ -159,77 +112,28 @@
       }
     }
 
-    &:not(.pf-no-img) {
+    &.pf-widget-variant-1:not(.pf-no-img) {
       .pf-widget-headline {
         line-height: 50px;
       }
-    }
 
-    .pf-widget-body {
-      height: 50px;
-      width: 20%;
-      float: left;
-      padding-top: 20px;
-      padding-left: 20px;
-      margin-right: 20px;
-
-      .pf-widget-img {
-        width: 50px;
-        height: 50px;
-        margin-left: 0;
+      .pf-widget-headline {
+        margin-bottom: 15px;
       }
-    }
 
-    .pf-widget-content {
-      padding: 30px;
-    }
-
-    input[type=text]
-    input[type=email],
-    textarea {
-      width: 100%;
-    }
-
-    .pf-widget-btn {
-
-    }
-
-    &.pf-widget-variant-2 {
       .pf-widget-body {
-        float: none;
-        height: 70px;
-      }
+        height: 50px;
+        width: 20%;
+        float: left;
+        padding-top: 30px;
+        padding-left: 30px;
+        margin-right: 20px;
 
-      .pf-widget-img {
-        float: none;
-        width: 100px;
-        height: 100px;
-        margin-left: -50px;
-      }
-
-
-      .pf-widget-headline {
-        margin-bottom: 5px;
-        margin-top: 20px;
-      }
-    }
-  }
-
-  &.pf-no-image {
-    .pf-widget-content {
-      width: 100%;
-    }
-
-    .pf-widget-body {
-      margin: 0;
-      padding: 0;
-      height: 0 !important;
-      width: 0 !important;
-    }
-
-    &.pf-widget-variant-2 {
-      .pf-widget-headline {
-        margin-top: 0;
+        .pf-widget-img {
+          width: 50px;
+          height: 50px;
+          margin-left: 0;
+        }
       }
     }
   }

@@ -1,8 +1,6 @@
 .pf-widget-folding {
   position: fixed;
   width: 480px;
-  background: @backgroundDefault;
-  color: @colorDefault;
   &:extend(.pf-box-shadow);
   visibility: visible;
   opacity: 1;
@@ -13,7 +11,6 @@
     transition: none;
     font-weight: 700;
     line-height: 42px;
-    color: @colorDefault;
 
     span {
       position: absolute;
@@ -27,7 +24,6 @@
     font-size: 14px;
     display: block;
     width: 100%;
-    border-bottom: 1px solid @colorDefault;
     text-align: left;
 
     span {
@@ -101,7 +97,6 @@
       width: 42px;
       height: 100%;
       font-size: 14px;
-      border-left: 1px solid @colorDefault;
 
       .pf-widget-headline {
         transform: rotate(90deg);
@@ -161,26 +156,6 @@
     }
   } //--------------------- .left
 
-  &.pf-theme-light {
-    background: @backgroundLight;
-    border: 1px solid @borderLight;
-  }
-
-  &.pf-theme-dark {
-    background: @backgroundDark;
-
-    .pf-widget-caption, .pf-widget-caption-left, .pf-widget-headline {
-      color: @colorDark;
-    }
-
-    .pf-widget-caption {
-      border-bottom: 1px solid @borderDark;
-    }
-
-    .pf-widget-caption-left {
-      border-left: 1px solid @borderDark;
-    }
-  }
 
   &.pf-form {
     input[type=text],
@@ -279,6 +254,16 @@
     input[type=text] + .pf-widget-btn,
     input[type=email] + .pf-widget-btn {
       text-align: center;
+    }
+  }
+}
+
+.pf-no-img {
+  &.pf-widget-folding {
+    width: 280px !important;
+
+    &.pf-position-left {
+      padding-right: 30px;
     }
   }
 }

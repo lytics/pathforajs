@@ -84,6 +84,10 @@ gulp.task('watch', function () {
   gulp.watch('src/**/*', ['build']);
 });
 
+gulp.task('local:watch', function () {
+  gulp.watch('src/**/*', ['build:styles', 'local:js']);
+});
+
 gulp.task('preview', function () {
   connect.server({
     port: 8080,
@@ -93,6 +97,6 @@ gulp.task('preview', function () {
 });
 
 gulp.task('test', ['build:styles', 'build:testjs']);
-gulp.task('local', ['build:styles', 'local:js', 'preview', 'watch']);
+gulp.task('local', ['build:styles', 'local:js', 'preview', 'local:watch']);
 gulp.task('build', ['build:styles', 'build:js']);
 gulp.task('default', ['build', 'preview', 'watch']);
