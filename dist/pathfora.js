@@ -922,7 +922,6 @@
       case 'form':
 
         if (config.showSocialLogin === false) {
-          console.log("here");
           node = widget.querySelector('.pf-social-login');
 
           if (node.parentNode) {
@@ -933,7 +932,7 @@
           core.autoCompleteGoogleData();
         }
 
-        function getFormElement(field) {
+        var getFormElement = function(field) {
           if (field === "message")
             return widget.querySelector('textarea');
           else if (field === "name")
