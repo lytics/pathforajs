@@ -4,13 +4,11 @@
     <title>Site gating widget</title>
     <style type="text/css">
       @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
-
       * {
         padding: 0;
         margin: 0;
         box-sizing: border-box;
       }
-
       body {
         font-family: 'Open Sans', sans-serif;
       }
@@ -26,10 +24,8 @@
         showForm: true,
         showSocialLogin: true
       });
-
       // To integrate the SiteGate with Facebook API, use the integration method:
       window.pathfora.integrateWithFacebook('{{ Facebook API AppID }}');
-
       window.pathfora.initializeWidgets([ gate ]);
     </script>
   </body>
