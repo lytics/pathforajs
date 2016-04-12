@@ -924,7 +924,7 @@
         if (config.showSocialLogin === false) {
           node = widget.querySelector('.pf-social-login');
 
-          if (node.parentNode) {
+          if (node && node.parentNode) {
             node.parentNode.removeChild(node);
           }
         } else {
@@ -941,10 +941,10 @@
         }
 
         // Set placeholders
-        Object.keys(config.placeholders).forEach(function (inputField) {
-          var element = getFormElement(inputField);
+        Object.keys(config.placeholders).forEach(function (field) {
+          var element = getFormElement(field);
 
-          if (element) {
+          if (element && element.placeholder) {
             element.placeholder = config.placeholders[inputField];
           }
         });
@@ -1733,7 +1733,7 @@
               onsuccess: pathfora.onGoogleSignIn,
               height: 25,
               width: 90,
-              longtitle: false,
+              longtitle: false
             });
             signInBtn.className += ' social-login-btn';
           });
