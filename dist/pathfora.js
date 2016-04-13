@@ -101,29 +101,36 @@
         email: 'Email',
         message: 'Message'
       },
+      required: {
+        name: true,
+        email: true
+      },
+      fields: {},
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
-      cancelShow: true
+      cancelShow: true,
+      showSocialLogin: false
     },
     sitegate: {
       layout: 'modal',
       position: '',
       variant: '1',
       placeholders: {
-        firstName: 'First Name',
-        lastName: 'Last Name',
+        name: 'Name',
         email: 'Email',
         organization: 'Organization',
         title: 'Title'
       },
-      required: [
-        'firstName',
-        'lastName',
-        'email'
-      ],
+      required: {
+        name: true,
+        email: true
+      },
+      fields: {},
       okMessage: 'Submit',
       okShow: true,
+      cancelShow: true,
+      cancelMessage: 'Cancel',
       showSocialLogin: false,
       showForm: true
     }
@@ -147,25 +154,20 @@
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>'
     },
     form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text" required><input name="email" type="email" required><textarea name="message" rows="5" required></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><\/p><input name="title" type="text"><input name="email" type="email" required><textarea  name="message" rows="5" required></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text" required><input name="title" type="text"><input name="email" type="email" required><textarea name="message" rows="5" required></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button> </form></div></div></div></div></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
+      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><\/p><input name="title" type="text"><input name="email" type="email"><textarea  name="message" rows="5"></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
     },
     sitegate: {
-      modal: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-headline"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>',
-      inline: '<div class="pf-widget-container"> <div class="pf-va-middle"> <div class="pf-widget-content"> <a class="pf-widget-close">×</a> <h2 class="pf-widget-headline"></h2> <div class="pf-widget-body"> <div class="pf-va-middle"> <p class="pf-widget-message"></p> <div class="pf-sitegate-social-plugins pf-social-login"> <p name="fb-login" hidden></p><p name="google-login" hidden><\/p> <div class="pf-sitegate-centered-label">- or -</div> </div> <form> <input class="pf-sitegate-field pf-field-half-width" name="firstName" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="lastName" type="text"> <input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"> <input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"> <input class="pf-sitegate-field pf-field-half-width" name="title" type="text"> <div class="pf-sitegate-clear"></div> <button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button> </form> </div> </div> </div> </div> </div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
     },
     social: {
-      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="icon" data-show-faces="false" data-auto-logout-link="false" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
+      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
       googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div id="{{google-btnId}}" class="g-signin2" data-onsuccess="window.pathfora.onGoogleSignIn"></div>'
+      googleIcon: '<div id="{{google-btnId}}" class="google-login"></div>'
     }
-  };
-
-  var scripts = {
-    facebook: '<div id="fb-root"></div>',
-    google: ''
   };
 
   // NOTE Event callback types
@@ -839,12 +841,6 @@
         case 'slideout':
         case 'random':
         case 'inline':
-          widgetTextArea = widget.querySelector('textarea');
-          widget.querySelector('input[name="username"]').placeholder = config.placeholders.name;
-          widget.querySelector('input[name="title"]').placeholder = config.placeholders.title;
-          widget.querySelector('input[name="email"]').placeholder = config.placeholders.email;
-          widgetTextArea.placeholder = config.placeholders.message;
-
           core.autoCompleteFacebookData();
           core.autoCompleteGoogleData();
           break;
@@ -860,7 +856,6 @@
         case 'slideout':
         case 'random':
         case 'inline':
-          widget.querySelector('input').placeholder = config.placeholders.email;
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -869,7 +864,6 @@
       case 'message':
         switch (config.layout) {
         case 'modal':
-        case 'folding':
         case 'slideout':
         case 'random':
         case 'bar':
@@ -884,31 +878,6 @@
         switch (config.layout) {
         case 'modal':
         case 'inline':
-          Object.keys(config.placeholders).forEach(function (inputField) {
-            var element = widget.querySelector('input[name="' + inputField + '"]');
-
-            if (element) {
-              element.placeholder = config.placeholders[inputField];
-            }
-          });
-
-          Object.keys(config.required).forEach(function (index) {
-            var field = config.required[index];
-            var element = widget.querySelector('input[name="' + field + '"]');
-
-            if (element) {
-              element.setAttribute('required', '');
-            }
-          });
-
-          if (config.showSocialLogin === false) {
-            node = widget.querySelector('.pf-sitegate-social-plugins');
-
-            if (node.parentNode) {
-              node.parentNode.removeChild(node);
-            }
-          }
-
           if (config.showForm === false) {
             node = widget.querySelector('form');
 
@@ -948,26 +917,65 @@
         utils.addClass(widget, 'pf-no-img');
       }
 
-      widgetMessage.innerHTML = config.msg;
+      switch(config.type) {
+      case 'sitegate':
+      case 'form':
 
-      if (config.type === 'form') {
-        if (config.nameField === false) {
-          // FIXME Cache
-          widgetForm.removeChild(widgetForm.querySelector('input[name="username"]'));
+        if (config.showSocialLogin === false) {
+          node = widget.querySelector('.pf-social-login');
+
+          if (node && node.parentNode) {
+            node.parentNode.removeChild(node);
+          }
+        } else {
+          core.autoCompleteFacebookData();
+          core.autoCompleteGoogleData();
         }
-        if (config.titleField === false) {
-          // FIXME Cache
-          widgetForm.removeChild(widgetForm.querySelector('input[name="title"]'));
+
+        var getFormElement = function(field) {
+          if (field === "message")
+            return widget.querySelector('textarea');
+          else if (field === "name")
+            return widget.querySelector('input[name="username"]');
+          return widget.querySelector('input[name="' + field + '"]');
         }
-        if (config.emailField === false) {
-          // FIXME Cache
-          widgetForm.removeChild(widgetForm.querySelector('input[name="email"]'));
-        }
-        if (config.msgField === false) {
-          // FIXME Cache
-          widgetForm.removeChild(widgetForm.querySelector('texarea[name="message"]'));
-        }
+
+        // Set placeholders
+        Object.keys(config.placeholders).forEach(function (field) {
+          var element = getFormElement(field);
+
+          if (element && element.placeholder) {
+            element.placeholder = config.placeholders[inputField];
+          }
+        });
+
+        // Set required Fields
+        Object.keys(config.required).forEach(function (field) {
+          var element = getFormElement(field);
+
+          if (element && config.required[field]) {
+            element.setAttribute('required', '');
+          }
+        });
+
+        // Hide fields
+        Object.keys(config.fields).forEach(function (field) {
+          var element = getFormElement(field);
+
+          if (element && !config.required[field]) {
+            var parent = element.parentNode;
+            if (parent) {
+              parent.removeChild(element);
+            }
+          }
+        });
+        break;
+      case 'subscription':
+        widget.querySelector('input').placeholder = config.placeholders.email;
+        break;
       }
+
+      widgetMessage.innerHTML = config.msg;
     },
 
     /**
@@ -986,6 +994,7 @@
       var widgetOnButtonClick;
       var widgetOnModalClose;
       var updateActionCookie;
+      var cancelShouldClose = true;
       var i;
       var j;
 
@@ -1007,6 +1016,7 @@
             break;
           case 'sitegate':
             widgetAction = 'unlock';
+            cancelShouldClose = false;
             break;
           }
 
@@ -1040,6 +1050,7 @@
 
       switch (config.layout) {
       case 'folding':
+        cancelShouldClose = false;
         widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
         widgetFirstCaption = widget.querySelector('.pf-widget-caption');
 
@@ -1101,11 +1112,13 @@
           utils.saveCookie(name, ct + "," + duration);
         };
 
-        widgetClose.onclick = function (event) {
-          context.pathfora.closeWidget(widget.id);
-          updateActionCookie("PathforaClosed_" + widget.id);
-          widgetOnModalClose(event);
-        };
+        if (widgetClose) {
+          widgetClose.onclick = function (event) {
+            context.pathfora.closeWidget(widget.id);
+            updateActionCookie("PathforaClosed_" + widget.id);
+            widgetOnModalClose(event);
+          };
+        }
 
         if (widgetCancel) {
           if (typeof config.cancelAction === 'object') {
@@ -1114,14 +1127,18 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              context.pathfora.closeWidget(widget.id, true);
+              if (widgetCancel.type !== "reset") {
+                context.pathfora.closeWidget(widget.id, true);
+              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              context.pathfora.closeWidget(widget.id);
+              if (widgetCancel.type !== "reset") {
+                context.pathfora.closeWidget(widget.id);
+              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
@@ -1695,12 +1712,12 @@
             var signInBtn = widget.querySelector('.fb-login-button');
 
             window.FB.XFBML.parse(widget);
-
             signInBtn.className += ' social-login-btn';
           });
           renderWidgets.facebook = [];
+          core.autoCompleteFacebookData();
 
-          return clearTimeout(timeoutInterval['facebook']);
+          return clearTimeout(timeoutInterval['fb']);
         } else {
           return setTimeout(attemptRenderingFacebook, 1000);
         }
@@ -1709,18 +1726,20 @@
       var attemptRenderingGoogle = function () {
         if (typeof window.gapi !== 'undefined') {
           renderWidgets.google.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.g-signin2');
+            var signInBtn = widget.querySelector('.google-login');
 
-            window.gapi.signin2.render(signInBtn, {
+            window.gapi.signin2.render(signInBtn.id, {
               scope: 'profile',
-              width: 16,
-              height: 16
+              onsuccess: pathfora.onGoogleSignIn,
+              height: 25,
+              width: 90,
+              longtitle: false
             });
             signInBtn.className += ' social-login-btn';
           });
           renderWidgets.google = [];
 
-          return clearTimeout(attemptRenderingGoogle);
+          return clearTimeout(timeoutInterval['google']);
         } else {
           return setTimeout(attemptRenderingGoogle, 1000);
         }
@@ -1738,7 +1757,7 @@
           }
 
           requestFacebook = element.querySelector('.fb-login-button') !== null;
-          requestGoogle = element.querySelector('.g-signin2') !== null;
+          requestGoogle = element.querySelector('.google-login') !== null;
 
           if (requestFacebook) {
             renderWidgets.facebook = renderWidgets.facebook.concat(element);
@@ -1748,7 +1767,7 @@
           }
         });
 
-        timeoutInterval['facebook'] = attemptRenderingFacebook();
+        timeoutInterval['fb'] = attemptRenderingFacebook();
         timeoutInterval['google'] = attemptRenderingGoogle();
       };
 
@@ -1777,8 +1796,6 @@
                 lastName: query.last_name || ''
               });
             });
-          } else {
-            throw new Error('Facebook API Error: User not connected');
           }
         });
       }
@@ -1790,7 +1807,6 @@
     autoCompleteGoogleData: function () {
       var auth2;
       var user;
-
       if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
         auth2 = window.gapi.auth2.getAuthInstance();
         user = auth2.currentUser.get().getBasicProfile();
@@ -2186,6 +2202,9 @@
 
       node = core.createWidgetHtml(widget);
 
+      if (widget.showSocialLogin)
+        core.requestSocialPluginRender(node);
+
       if (widget.pushDown) {
         utils.addClass(document.querySelector('.pf-push-down'), "opened");
       }
@@ -2220,9 +2239,8 @@
             widget: widget
           });
         }
-
-        core.requestSocialPluginRender(node);
       }, 50);
+
 
       if (widget.displayConditions.hideAfter) {
         setTimeout(function () {
@@ -2343,22 +2361,20 @@
         window.FB.init({
           appId: appId,
           xfbml: true,
-          version: 'v2.5'
+          version: 'v2.5',
+          status: true,
+          cookie: true
         });
       };
 
       // NOTE API initialization
-      (function (d, s, id) {
-        var js;
-        var fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {
-          return;
-        }
-        js = d.createElement(s);
-        js.id = id;
-        js.src = '//connect.facebook.net/en_GB/sdk.js';
-        fjs.parentNode.insertBefore(js, fjs);
-      }(document, 'script', 'facebook-jssdk'));
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
 
       parseFBLoginTemplate(templates.form);
       parseFBLoginTemplate(templates.sitegate);
@@ -2375,7 +2391,6 @@
       var body = document.querySelector('body');
       var head = document.querySelector('head');
 
-      var appScript = scripts.google;
       var appMetaTag = templates.social.googleMeta.replace(
         /(\{){2}google-clientId(\}){2}/gm,
         clientId
@@ -2394,7 +2409,7 @@
       };
 
       head.innerHTML += appMetaTag;
-      body.innerHTML += appScript;
+
 
       // NOTE Google API
       (function () {
@@ -2407,18 +2422,17 @@
         s.parentNode.insertBefore(po, s);
       })();
 
+      pathforaDataObject.socialNetworks.googleClientID = clientId;
       parseGoogleLoginTemplate(templates.form);
       parseGoogleLoginTemplate(templates.sitegate);
-
-      pathforaDataObject.socialNetworks.googleClientID = clientId;
     };
 
     this.onFacebookSignIn = function () {
       core.autoCompleteFacebookData();
     };
 
-    this.onGoogleSignIn = function () {
-      core.autoCompleteGoogleData();
+    this.onGoogleSignIn = function (googleData) {
+      core.autoCompleteGoogleData(googleData);
     };
 
     /*
