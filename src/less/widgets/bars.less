@@ -1,10 +1,11 @@
 /* Pushdown Styles */
 .pf-push-down {
   transition: margin-top .3s;
-  margin-top: 0;
 
-  &.opened {
-    margin-top: 55px;
+  @media screen and (min-width: 480px) {
+    &.opened {
+      margin-top: 55px;
+    }
   }
 }
 
