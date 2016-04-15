@@ -976,7 +976,9 @@
         break;
       }
 
-      widgetMessage.innerHTML = config.msg;
+      if(config.msg){
+        widgetMessage.innerHTML = config.msg;
+      }
     },
 
     /**
