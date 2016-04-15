@@ -761,6 +761,49 @@ describe('Widgets', function () {
     expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
   });
 
+  it('should handle missing values properly and never surface undefined', function () {
+    var message = pathfora.Message({
+      id: 'message-test-widget',
+      layout: 'slideout',
+      headline: 'Message Title',
+      theme: 'custom',
+    });
+
+    var form = pathfora.Form({
+      id: 'form-test-widget',
+      layout: 'modal',
+      headline: 'Headline Title',
+      theme: 'custom',
+    });
+
+    var subscription = pathfora.Subscription({
+      id: 'subscription-test-widget',
+      layout: 'bar',
+      theme: 'custom',
+    });
+
+    pathfora.initializeWidgets([message, form, subscription],credentials);
+
+    // test message
+    var mwidget = $('#' + message.id);
+    var mheadline = mwidget.find('.pf-widget-headline');
+    var mtext = mwidget.find('.pf-widget-message');
+    expect(mheadline.html()).not.toEqual('undefined');
+    expect(mtext.html()).not.toEqual('undefined');
+
+    // test form
+    var fwidget = $('#' + form.id);
+    var fheadline = fwidget.find('.pf-widget-headline');
+    var ftext = fwidget.find('.pf-widget-message');
+    expect(fheadline.html()).not.toEqual('undefined');
+    expect(ftext.html()).not.toEqual('undefined');
+
+    // test subscription
+    var swidget = $('#' + subscription.id);
+    var stext = swidget.find('.pf-widget-message');
+    expect(stext.html()).not.toEqual('undefined');
+  });
+
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
     var delayedWidget = new pathfora.Message({
