@@ -940,12 +940,13 @@
           return widget.querySelector('input[name="' + field + '"]');
         }
 
+
         // Set placeholders
         Object.keys(config.placeholders).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && element.placeholder) {
-            element.placeholder = config.placeholders[inputField];
+          if (element && typeof element.placeholder !== "undefined") {
+            element.placeholder = config.placeholders[field];
           }
         });
 
@@ -1259,10 +1260,12 @@
         'pf-' + config.type,
         ' pf-widget-' + config.layout,
         config.position ? ' pf-position-' + config.position : '',
+        config.pushDown ? ' pf-has-push-down' : '',
         config.origin ? ' pf-origin-' + config.origin : '',
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
+
       ].join('');
     },
 
@@ -2276,9 +2279,10 @@
       node = document.getElementById(id);
       utils.removeClass(node, 'opened');
 
-      var pushDown = document.querySelector('.pf-push-down');
-      if(pushDown) {
-        utils.removeClass(pushDown, "opened");
+      if (utils.hasClass(node, 'pf-has-push-down')) {
+        var pushDown = document.querySelector('.pf-push-down');
+        if (pushDown)
+          utils.removeClass(pushDown, "opened");
       }
 
       // FIXME 500 - magical number

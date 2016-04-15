@@ -19,6 +19,11 @@
   background-color: #f1f1f1;
   color: #888;
 }
+@media screen and (max-width: 480px) {
+  .pf-widget {
+    display: none;
+  }
+}
 .pf-widget * {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -296,7 +301,6 @@
   width: 540px;
   border-radius: 4px;
   box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
-  display: table;
   top: auto;
   /* Position Styles */
   /* Opened State Styles */
@@ -406,10 +410,11 @@
 /* Pushdown Styles */
 .pf-push-down {
   transition: margin-top 0.3s;
-  margin-top: 0;
 }
-.pf-push-down.opened {
-  margin-top: 55px;
+@media screen and (min-width: 480px) {
+  .pf-push-down.opened {
+    margin-top: 55px;
+  }
 }
 .pf-widget-bar {
   height: auto;
