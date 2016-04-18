@@ -963,7 +963,7 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field]) {
+          if (element && !config.required[field] && !config.fields[field]) {
             var parent = element.parentNode;
             if (parent) {
               parent.removeChild(element);
