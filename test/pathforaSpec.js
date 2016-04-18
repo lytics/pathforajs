@@ -761,6 +761,49 @@ describe('Widgets', function () {
     expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
   });
 
+  it('should handle missing values properly and never surface undefined', function () {
+    var message = pathfora.Message({
+      id: 'message-test-widget',
+      layout: 'slideout',
+      headline: 'Message Title',
+      theme: 'custom',
+    });
+
+    var form = pathfora.Form({
+      id: 'form-test-widget',
+      layout: 'modal',
+      headline: 'Headline Title',
+      theme: 'custom',
+    });
+
+    var subscription = pathfora.Subscription({
+      id: 'subscription-test-widget',
+      layout: 'bar',
+      theme: 'custom',
+    });
+
+    pathfora.initializeWidgets([message, form, subscription],credentials);
+
+    // test message
+    var mwidget = $('#' + message.id);
+    var mheadline = mwidget.find('.pf-widget-headline');
+    var mtext = mwidget.find('.pf-widget-message');
+    expect(mheadline.html()).not.toEqual('undefined');
+    expect(mtext.html()).not.toEqual('undefined');
+
+    // test form
+    var fwidget = $('#' + form.id);
+    var fheadline = fwidget.find('.pf-widget-headline');
+    var ftext = fwidget.find('.pf-widget-message');
+    expect(fheadline.html()).not.toEqual('undefined');
+    expect(ftext.html()).not.toEqual('undefined');
+
+    // test subscription
+    var swidget = $('#' + subscription.id);
+    var stext = swidget.find('.pf-widget-message');
+    expect(stext.html()).not.toEqual('undefined');
+  });
+
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
     var delayedWidget = new pathfora.Message({
@@ -1529,6 +1572,47 @@ describe('API', function () {
     expect($('#' + form3.id).length).toBe(1);
   });
 
+   it('should hide and show fields based on fields config', function () {
+    pathfora.clearAll();
+
+    var formfields = new pathfora.Form({
+      id: 'sample-form',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      fields: {
+        title: false,
+        username: false
+      },
+      required: {
+        message: true,
+        email: false
+      }
+    });
+
+    pathfora.initializeWidgets([ formfields ]);
+
+    var theform = document.getElementsByTagName("form");
+    expect(theform.length).toBe(1);
+
+    for (var elem in theform[0].children) {
+      if(typeof theform[0].children[elem].getAttribute !== "undefined"){
+        var inputname = theform[0].children[elem].getAttribute("name");
+        var inputrequired = theform[0].children[elem].getAttribute("required");
+
+        if(inputname == "message"){
+          expect(inputrequired).toBe('');
+        }else if(inputname !== null){
+          expect(inputrequired).toBe(null);
+        }
+
+        expect(inputname).not.toBe('username');
+        expect(inputname).not.toBe('title');
+      }
+    }
+  });
+
+
   it('should consider multiple display conditions and watchers', function () {
     $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
     var id = "multiple-conditions";
@@ -1578,7 +1662,6 @@ describe('API', function () {
     sessionStorage.setItem('PathforaImpressions_' + id3, 2);
 
     pathfora.initializeWidgets([ form, form2, form3 ]);
-
 
     setTimeout(function() {
       expect($('#' + id).length).toBe(0);
