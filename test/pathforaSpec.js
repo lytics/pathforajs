@@ -1276,7 +1276,7 @@ describe('API', function () {
 
   it('should not show widget if hideAfterAction duration not met', function () {
     var widgetId = 'hideAfterActionWidget1';
-    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1," + Date.now());
+    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1299,7 +1299,7 @@ describe('API', function () {
 
   it('should show widget if hideAfterAction duration met', function () {
     var widgetId = 'hideAfterActionWidget2';
-    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "1," + Date.now());
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "1_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1325,7 +1325,7 @@ describe('API', function () {
 
   it('should not show widget if hideAfterAction count not met', function () {
     var widgetId = 'hideAfterActionWidget3';
-    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "2_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1348,7 +1348,7 @@ describe('API', function () {
 
   it('should show widget if hideAfterAction count not met', function () {
     var widgetId = 'hideAfterActionWidget4';
-    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1434,7 +1434,7 @@ describe('API', function () {
 
   it('should show widget if impression buffer met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1458,7 +1458,7 @@ describe('API', function () {
 
   it('should not show widget if impression buffer not met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2_" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
