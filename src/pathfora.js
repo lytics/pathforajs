@@ -1461,25 +1461,29 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
-        params['pf-form-username'] = htmlElement.elements['username'].value;
-        params['pf-form-title'] = htmlElement.elements['title'].value;
-        params['pf-form-email'] = htmlElement.elements['email'].value;
-        params['pf-form-message'] = htmlElement.elements['message'].value;
+        for (var elem in htmlElement.children) {
+          var child = htmlElement.children[elem];
+          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
+            var childName = child.getAttribute("name");
+            params['pf-form-' + childName] = child.value;
+          }
+        }
         break;
       case 'subscribe':
         params['pf-form-email'] = htmlElement.elements['email'].value;
       case 'unlock':
-        Object.keys(widget.placeholders).forEach(function (inputField) {
-          params['pf-sitegate-' + inputField] = htmlElement.elements[inputField].value;
+        for (var elem in htmlElement.children) {
+          var child = htmlElement.children[elem];
+          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
+            var childName = child.getAttribute("name");
+            params['pf-form-' + childName] = child.value;
+          }
 
-          if (htmlElement.elements[inputField].hasAttribute('required') &&
-             !params['pf-sitegate-' + inputField]) {
-            htmlElement.elements[inputField].setAttribute('invalid', '');
-
+          if (typeof child.hasAttribute !== "undefined" && child.hasAttribute('required') && !params['pf-form-' + childName]) {
+            child.setAttribute('invalid', '');
             valid = false;
           }
-        });
-
+        }
         utils.saveCookie('PathforaUnlocked', valid);
       }
 
