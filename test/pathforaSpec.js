@@ -1276,7 +1276,7 @@ describe('API', function () {
 
   it('should not show widget if hideAfterAction duration not met', function () {
     var widgetId = 'hideAfterActionWidget1';
-    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1," + Date.now());
+    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1299,7 +1299,7 @@ describe('API', function () {
 
   it('should show widget if hideAfterAction duration met', function () {
     var widgetId = 'hideAfterActionWidget2';
-    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "1," + Date.now());
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "1|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1325,7 +1325,7 @@ describe('API', function () {
 
   it('should not show widget if hideAfterAction count not met', function () {
     var widgetId = 'hideAfterActionWidget3';
-    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "2|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1348,7 +1348,7 @@ describe('API', function () {
 
   it('should show widget if hideAfterAction count not met', function () {
     var widgetId = 'hideAfterActionWidget4';
-    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1367,6 +1367,122 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
+  });
+
+  // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+  it('should accept and parse hideAfterAction cookies with comma values', function () {
+    var widgetId = 'hideAfterActionComma';
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, "1," + Date.now());
+    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, "1," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 3,
+            duration: 1440
+          },
+          cancel: {
+            hideCount: 1,
+          },
+          closed: {
+            duration: 30,
+          }
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+  it('should handle invalid cookies gracefully', function () {
+    var form = new pathfora.Form({
+      id: 'brokenthings',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 1
+          }
+        }
+      }
+    });
+    pathfora.utils.saveCookie('PathforaConfirm_' + form.id, "1|imasuperfakecookiemwahah");
+    pathfora.initializeWidgets([ form ]);
+
+    var form2 = new pathfora.Form({
+      id: 'brokenthings2',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 1,
+            duration: 1440
+          }
+        }
+      }
+    });
+    pathfora.utils.saveCookie('PathforaConfirm_' + form2.id, "1#$%&#%U#$#&%#%#");
+    pathfora.initializeWidgets([ form2 ]);
+
+    var form3 = new pathfora.Form({
+      id: 'brokenthings3',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 1
+          }
+        }
+      }
+    });
+    pathfora.utils.saveCookie('PathforaConfirm_' + form3.id, "sdfhsdfh|imasuperfakecookiemwahah");
+    pathfora.initializeWidgets([ form3 ]);
+
+    var form4 = new pathfora.Form({
+      id: 'brokenthings4',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 1
+          }
+        }
+      }
+    });
+    pathfora.utils.saveCookie('PathforaConfirm_' + form4.id, "1|||||#$%&#%U#$#&%#%#");
+    pathfora.initializeWidgets([ form4 ]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+
+    var widget2 = $('#' + form2.id);
+    expect(widget2.length).toBe(0);
+
+    var widget3 = $('#' + form3.id);
+    expect(widget3.length).toBe(1);
+
+    var widget4 = $('#' + form4.id);
+    expect(widget4.length).toBe(0);
   });
 
   it('should not show an impression counter widget without an id', function () {
@@ -1434,7 +1550,7 @@ describe('API', function () {
 
   it('should show widget if impression buffer met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1458,7 +1574,7 @@ describe('API', function () {
 
   it('should not show widget if impression buffer not met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2|" + Date.now());
     var form = new pathfora.Form({
       id: widgetId,
       msg: 'subscription',
@@ -1474,6 +1590,28 @@ describe('API', function () {
     });
 
     pathfora.initializeWidgets([ form ]);
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+  // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+  it('should accept and parse impression cookies with comma values', function () {
+    var widgetId = 'impressionComma';
+    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, "2," + Date.now());
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          total: 2,
+        }
+      }
+    });
+    pathfora.initializeWidgets([ form ]);
+
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
