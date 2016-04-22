@@ -611,8 +611,10 @@
       if (!total) {
         totalImpressions = 1;
       } else {
-        parts = total.split(","),
+        parts = total.split("|"),
         totalImpressions = parseInt(parts[0]) + 1;
+        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+        parts = parts.length === 1 ? total.split(",") : parts;
 
         if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
           valid = false;
@@ -626,7 +628,7 @@
 
       if (valid && core.valid) {
         sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "," + now);
+        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "|" + now);
       }
 
       return valid;
@@ -640,7 +642,9 @@
           closed = utils.readCookie('PathforaClosed_' + widget.id);
 
       if (hideAfterActionConstraints.confirm && confirm) {
-        var parts = confirm.split(",");
+        var parts = confirm.split("|");
+        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+        parts = parts.length === 1 ? confirm.split(",") : parts;
 
         if (parseInt(parts[0]) >= hideAfterActionConstraints.confirm.hideCount) {
           valid = false;
@@ -652,7 +656,9 @@
       }
 
       if (hideAfterActionConstraints.cancel && cancel) {
-        var parts = cancel.split(",");
+        var parts = cancel.split("|");
+        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+        parts = parts.length === 1 ? cancel.split(",") : parts;
 
         if (parseInt(parts[0]) >= hideAfterActionConstraints.cancel.hideCount) {
           valid = false;
@@ -664,7 +670,9 @@
       }
 
       if (hideAfterActionConstraints.closed && closed) {
-        var parts = closed.split(",");
+        var parts = closed.split("|");
+        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+        parts = parts.length === 1 ? closed.split(",") : parts;
 
         if (parseInt(parts[0]) >= hideAfterActionConstraints.closed.hideCount) {
           valid = false;
@@ -1106,13 +1114,15 @@
               ct;
 
           if (val) {
-            val = val.split(",");
+            val = val.split("|");
+            // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+            val = val.length === 1 ? val.split(",") : val;
             ct = Math.min(parseInt(val[0]), 9998) + 1;
           } else {
             ct = 1;
           }
 
-          utils.saveCookie(name, ct + "," + duration);
+          utils.saveCookie(name, ct + "|" + duration);
         };
 
         if (widgetClose) {
