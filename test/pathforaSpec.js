@@ -1402,89 +1402,6 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should handle invalid cookies gracefully', function () {
-    var form = new pathfora.Form({
-      id: 'brokenthings',
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        hideAfterAction: {
-          confirm: {
-            hideCount: 1
-          }
-        }
-      }
-    });
-    pathfora.utils.saveCookie('PathforaConfirm_' + form.id, "1|imasuperfakecookiemwahah");
-    pathfora.initializeWidgets([ form ]);
-
-    var form2 = new pathfora.Form({
-      id: 'brokenthings2',
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        hideAfterAction: {
-          confirm: {
-            hideCount: 1,
-            duration: 1440
-          }
-        }
-      }
-    });
-    pathfora.utils.saveCookie('PathforaConfirm_' + form2.id, "1#$%&#%U#$#&%#%#");
-    pathfora.initializeWidgets([ form2 ]);
-
-    var form3 = new pathfora.Form({
-      id: 'brokenthings3',
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        hideAfterAction: {
-          confirm: {
-            hideCount: 1
-          }
-        }
-      }
-    });
-    pathfora.utils.saveCookie('PathforaConfirm_' + form3.id, "sdfhsdfh|imasuperfakecookiemwahah");
-    pathfora.initializeWidgets([ form3 ]);
-
-    var form4 = new pathfora.Form({
-      id: 'brokenthings4',
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        hideAfterAction: {
-          confirm: {
-            hideCount: 1
-          }
-        }
-      }
-    });
-    pathfora.utils.saveCookie('PathforaConfirm_' + form4.id, "1|||||#$%&#%U#$#&%#%#");
-    pathfora.initializeWidgets([ form4 ]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
-
-    var widget2 = $('#' + form2.id);
-    expect(widget2.length).toBe(0);
-
-    var widget3 = $('#' + form3.id);
-    expect(widget3.length).toBe(1);
-
-    var widget4 = $('#' + form4.id);
-    expect(widget4.length).toBe(0);
-  });
-
   it('should not show an impression counter widget without an id', function () {
     expect(function() {
       var form = new pathfora.Form({
@@ -1501,6 +1418,7 @@ describe('API', function () {
       });
     }).toThrow(new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.'));
   });
+
 
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
@@ -1615,7 +1533,6 @@ describe('API', function () {
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
-
 
   it('should show constrained element when the url matches the display conditions', function () {
     var form = new pathfora.Form({
@@ -1749,7 +1666,6 @@ describe('API', function () {
       }
     }
   });
-
 
   it('should consider multiple display conditions and watchers', function () {
     $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
