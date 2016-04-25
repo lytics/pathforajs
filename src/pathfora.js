@@ -465,9 +465,9 @@
       var watcher;
       core.valid = true;
 
-      // NOTE Default expiration is 120 days
+      // NOTE Default cookie expiration is one year from now
       core.expiration = new Date();
-      core.expiration.setDate(core.expiration.getDate() + 120);
+      core.expiration.setDate(core.expiration.getDate() + 365);
 
       if (widget.pushDown) {
         if (widget.layout === 'bar' && (widget.position === "top-fixed" || widget.position === "top-absolute")) {
@@ -478,8 +478,6 @@
       }
 
       if (condition.date) {
-        if (condition.date['end_at'])
-          core.expiration = new Date(condition.date['end_at']);
         core.valid = core.valid && core.dateChecker(condition.date, widget);
       }
 
@@ -2006,7 +2004,7 @@
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
       var date = new Date();
-      date.setDate(date.getDate() + 120);
+      date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
     };
 
@@ -2129,26 +2127,12 @@
 
         if (!userAbTestingValue) {
           userAbTestingValue = Math.random();
-          var dates = [],
-              maxDate = null;
-
-          abTest.groups.forEach(function (group, index) {
-            group.forEach(function (widget) {
-              if (widget.config.displayConditions && widget.config.displayConditions.date && widget.config.displayConditions.date['end_at']) {
-                dates.push(new Date(widget.config.displayConditions.date['end_at']));
-              }
-            });
-          });
-
-          if (dates.length > 0) {
-            maxDate = new Date(Math.max.apply(null, dates));
-          } else {
-            maxDate = new Date();
-            maxDate.setDate(maxDate.getDate() + 120);
-          }
-
-          utils.saveCookie(abTest.cookieId, userAbTestingValue, maxDate);
         }
+
+        // NOTE Always update the cookie to get the new exp date.
+        var date = new Date();
+        date.setDate(date.getDate() + 365);
+        utils.saveCookie(abTest.cookieId, userAbTestingValue, date);
 
         // NOTE Determine visible group for the user
         i = 0;
