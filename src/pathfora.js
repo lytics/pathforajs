@@ -338,7 +338,7 @@
       var date;
 
       if (expiration) {
-        expires = '; expires=' + expiration.toGMTString();
+        expires = '; expires=' + expiration.toUTCString();
       } else {
         expires = '';
       }
