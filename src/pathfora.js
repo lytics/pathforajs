@@ -2000,6 +2000,11 @@
    * @description Pathfora public API class
    */
   Pathfora = function () {
+    /**
+     * @public
+     * @description Current version
+     */
+    this.version = '0.0.1';
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
