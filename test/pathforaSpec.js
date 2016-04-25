@@ -1419,6 +1419,7 @@ describe('API', function () {
     }).toThrow(new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.'));
   });
 
+
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
