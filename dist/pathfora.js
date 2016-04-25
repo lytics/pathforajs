@@ -333,14 +333,12 @@
      * @param {string} value cookie value
      * @param {number} days  days until the cookie expires
      */
-    saveCookie: function (name, value, days) {
+    saveCookie: function (name, value, expiration) {
       var expires;
       var date;
 
-      if (days) {
-        date = new Date();
-        date.setDate(date.getDate() + days);
-        expires = '; expires=' + date.toGMTString();
+      if (expiration) {
+        expires = '; expires=' + expiration.toUTCString();
       } else {
         expires = '';
       }
@@ -453,6 +451,7 @@
     openedWidgets: [],
     initializedWidgets: [],
     watchers: [],
+    expiration: null,
     valid: true,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
@@ -466,12 +465,20 @@
       var watcher;
       core.valid = true;
 
+      // NOTE Default cookie expiration is one year from now
+      core.expiration = new Date();
+      core.expiration.setDate(core.expiration.getDate() + 365);
+
       if (widget.pushDown) {
         if (widget.layout === 'bar' && (widget.position === "top-fixed" || widget.position === "top-absolute")) {
           utils.addClass(document.querySelector(widget.pushDown), "pf-push-down");
         } else {
           throw new Error('Only top positioned bar widgets may have a pushDown property');
         }
+      }
+
+      if (condition.date) {
+        core.valid = core.valid && core.dateChecker(condition.date, widget);
       }
 
       if (condition.displayWhenElementVisible) {
@@ -489,9 +496,7 @@
       if (condition.pageVisits) {
         core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits, widget);
       }
-      if (condition.date) {
-        core.valid = core.valid && core.dateChecker(condition.date, widget);
-      }
+
       if (condition.hideAfterAction) {
         core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
       }
@@ -628,7 +633,7 @@
 
       if (valid && core.valid) {
         sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "|" + now);
+        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "|" + now, core.expiration);
       }
 
       return valid;
@@ -1122,7 +1127,7 @@
             ct = 1;
           }
 
-          utils.saveCookie(name, ct + "|" + duration);
+          utils.saveCookie(name, ct + "|" + duration, core.expiration);
         };
 
         if (widgetClose) {
@@ -1365,7 +1370,7 @@
      */
     checkIfUserJustEntered: function () {
       if (!utils.readCookie('PathforaInit')) {
-        utils.saveCookie('PathforaInit', true, 30);
+        utils.saveCookie('PathforaInit', true, core.expiration);
         return true;
       }
       return false;
@@ -1489,7 +1494,7 @@
             valid = false;
           }
         }
-        utils.saveCookie('PathforaUnlocked', valid);
+        utils.saveCookie('PathforaUnlocked', valid, core.expiration);
       }
 
       params['pf-widget-event'] = action;
@@ -1998,8 +2003,9 @@
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
-
-      utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1);
+      var date = new Date();
+      date.setDate(date.getDate() + 365);
+      utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
     };
 
     /**
@@ -2121,9 +2127,12 @@
 
         if (!userAbTestingValue) {
           userAbTestingValue = Math.random();
-
-          utils.saveCookie(abTest.cookieId, userAbTestingValue);
         }
+
+        // NOTE Always update the cookie to get the new exp date.
+        var date = new Date();
+        date.setDate(date.getDate() + 365);
+        utils.saveCookie(abTest.cookieId, userAbTestingValue, date);
 
         // NOTE Determine visible group for the user
         i = 0;
