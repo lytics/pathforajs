@@ -1872,19 +1872,6 @@
    */
   api = {
     /**
-     * @description Send user data to Lytics API
-     */
-    initializeCustomAPI: function () {
-      var seerId = utils.readCookie('seerid');
-
-      if (typeof jstag === 'object' && seerId) {
-        jstag.send({
-          'user_id': seerId
-        });
-      }
-    },
-
-    /**
      * @description Prepare GET HTTP request
      * @param {string}   url       target url
      * @param {function} onSuccess success callback
@@ -2027,7 +2014,6 @@
         return;
       }
 
-      api.initializeCustomAPI();
       core.validateWidgetsObject(widgets);
       core.trackTimeOnPage();
 
