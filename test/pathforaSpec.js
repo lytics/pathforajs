@@ -1583,6 +1583,220 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should show widget using simple match', function () {
+    var form1 = new pathfora.Form({
+      id: '88ee86cf72b44e67bf758cc743ac1a5d',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/context.html'
+          }
+        ]
+      }
+    });
+    var form2 = new pathfora.Form({
+      id: 'a793b7352c3346e493573a6827be7815',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/context'
+          }
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form1, form2 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form2.id);
+    expect(widget.length).toBe(0);
+  });
+
+  it('should show widget using exact match', function () {
+    var form1 = new pathfora.Form({
+      id: 'e71c5416ac7345bcba8c5330d14c4a2e',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html'
+          }
+        ]
+      }
+    });
+    var form2 = new pathfora.Form({
+      id: '3ef7653e7f5f4889a0f2f860a679639a',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost/context.html'
+          }
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form1, form2 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form2.id);
+    expect(widget.length).toBe(0);
+  });
+
+  it('should show widget using string match', function () {
+    var form1 = new pathfora.Form({
+      id: '3044aae3e5ad463fbd868a626a7998ca',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'string',
+            value: '/context'
+          }
+        ]
+      }
+    });
+    var form2 = new pathfora.Form({
+      id: 'd66ec2855d284cb2b6ce3edd3c756a1b',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'string',
+            value: '/bonktext'
+          }
+        ]
+      }
+    });
+    var form3 = new pathfora.Form({
+      id: 'f3ededaa19fd4301b066b4da5758e16a',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'imfakeandshouldefault',
+            value: '/context'
+          }
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form1, form2, form3 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form2.id);
+    expect(widget.length).toBe(0);
+
+    var widget = $('#' + form3.id);
+    expect(widget.length).toBe(1);
+  });
+
+  it('should show widget using regex match', function () {
+    var form1 = new pathfora.Form({
+      id: '87a84e6f0d5d480595eebaf5de76693f',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'regex',
+            value: 'context'
+          }
+        ]
+      }
+    });
+    var form2 = new pathfora.Form({
+      id: '3ecbf9717fef4f7c80b2bbc70193ab64',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'regex',
+            value: '^http://'
+          }
+        ]
+      }
+    });
+    var form3 = new pathfora.Form({
+      id: 'e9890969538c49d4ba9c7f516215fa61',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'regex',
+            value: '^(http|https)+:\/\/+[a-z:]{10}\\d{4}\/con[txe]{4}.html$'
+          }
+        ]
+      }
+    });
+    var form4 = new pathfora.Form({
+      id: 'ad547747786249ae8ba9e1cc3f5b86cf',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'regex',
+            value: '^(http|https)+:\/\/+[a-z:]{10}\d{3}\/con[txe]{4}.html$'
+          }
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form1, form2, form3, form4 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form2.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form3.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form4.id);
+    expect(widget.length).toBe(0);
+  });
+
   it('should consider multiple display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
