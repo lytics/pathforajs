@@ -324,6 +324,7 @@
 }
 .pf-widget-slideout .pf-widget-content {
   padding: 30px;
+  min-width: 350px;
 }
 .pf-widget-slideout .pf-widget-headline {
   font-size: 20px;
