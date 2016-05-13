@@ -41,6 +41,8 @@
 .pf-widget textarea {
   margin: 0;
   padding: 0;
+  border: 0;
+  background: none;
 }
 .pf-widget .pf-widget-headline {
   margin: 0 0 10px 0;
@@ -358,6 +360,15 @@
 }
 .pf-widget-slideout.opened.pf-origin-bottom {
   bottom: 50px;
+}
+.pf-widget-slideout.pf-widget-variant-1 {
+  width: 350px;
+}
+.pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {
+  text-align: left;
+}
+.pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-message {
+  text-align: left;
 }
 .pf-widget-slideout.pf-widget-variant-2 {
   width: 350px;
