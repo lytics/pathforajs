@@ -65,7 +65,18 @@
         cancelShow: true,
         // theme: 'dark'
       });
-      window.pathfora.initializeWidgets([ form ]);
+      var shortmessage = pathfora.Message({
+        id: 'adga',
+        layout: 'slideout',
+        position: 'right',
+        headline: 'I Am',
+        image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+        msg: 'Short',
+        variant: '2',
+        okShow: false,
+        cancelShow: false
+      });
+      window.pathfora.initializeWidgets([ form, shortmessage ]);
     </script>
   </body>
 </html>

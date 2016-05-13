@@ -559,8 +559,9 @@
 
 
     urlChecker: function (phrases, widget) {
-      var url = window.location.href;
-      var valid = false;
+      var url = window.location.href,
+          simpleurl = window.location.hostname + window.location.pathname,
+          valid = false;
 
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
@@ -568,12 +569,49 @@
         });
       }
 
-      // array of urlContains params is an or list, so if any are true
-      // evaluate valid to true
+      // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
-          if (url.indexOf(phrase) !== -1) {
-            valid = true;
+          // legacy match allows for an array of strings, check if we are legacy or current object approach
+          switch (typeof phrase) {
+            case 'string':
+              if (url.indexOf(phrase) !== -1) {
+                valid = true;
+              }
+              break;
+            case 'object':
+              if(phrase.match && phrase.value){
+                switch (phrase.match) {
+                  case 'simple':
+                    if (simpleurl === phrase.value) {
+                      valid = true;
+                    }
+                    break;
+                  case 'exact':
+                    if (url === phrase.value) {
+                      valid = true;
+                    }
+                    break;
+                  case 'regex':
+                    var re = new RegExp(phrase.value);
+                    if(re.test(url)){
+                      valid = true;
+                    }
+                    break;
+                  default:
+                    // default to string match
+                    if (url.indexOf(phrase.value) !== -1) {
+                      valid = true;
+                    }
+                    break;
+                }
+              }else{
+                console.log('invalid display conditions')
+              }
+              break;
+            default:
+              console.log('invalid display conditions')
+              break;
           }
         });
       }else{
@@ -1872,19 +1910,6 @@
    */
   api = {
     /**
-     * @description Send user data to Lytics API
-     */
-    initializeCustomAPI: function () {
-      var seerId = utils.readCookie('seerid');
-
-      if (typeof jstag === 'object' && seerId) {
-        jstag.send({
-          'user_id': seerId
-        });
-      }
-    },
-
-    /**
      * @description Prepare GET HTTP request
      * @param {string}   url       target url
      * @param {function} onSuccess success callback
@@ -2004,7 +2029,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.1';
+    this.version = '0.0.2';
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
@@ -2027,7 +2052,6 @@
         return;
       }
 
-      api.initializeCustomAPI();
       core.validateWidgetsObject(widgets);
       core.trackTimeOnPage();
 
