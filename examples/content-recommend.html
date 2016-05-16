@@ -11,7 +11,7 @@
 
       var modal = new pathfora.Message({
         id: 'modal1',
-        layout: 'slideout',
+        layout: 'modal',
         headline: "Check this out!",
         msg: "Here is some cool content we know you'll be interested in",
         cancelShow: false,
@@ -22,7 +22,7 @@
           }
         }
       });
-      
+
       var lyticsId = "";
 
       window.pathfora.initializeWidgets([ modal ], lyticsId, null);

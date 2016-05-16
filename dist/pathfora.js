@@ -942,10 +942,6 @@
         break;
       }
 
-      if (config.type === "message" && config.layout === "slideout" || config.layout === "modal") {
-
-      }
-
       // NOTE Set The headline
       for (i = widgetHeadline.length - 1; i >= 0; i--) {
         widgetHeadline[i].innerHTML = config.headline;
