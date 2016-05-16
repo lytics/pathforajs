@@ -237,6 +237,40 @@
   top: -100vh;
   transition: all .3s;
 }
+.pf-widget-modal .pf-content-rec {
+  width: 95%;
+  margin: auto;
+  display: block;
+  text-align: left;
+  position: relative;
+}
+.pf-widget-modal .pf-content-rec .pf-content-rec-img {
+  position: absolute;
+  display: block;
+  height: 100%;
+  width: 40%;
+  background-size: cover;
+  background-position: center left;
+  background-repeat: no-repeat;
+}
+.pf-widget-modal .pf-content-rec .pf-content-rec-meta {
+  width: 100%;
+  padding: 10px 15px;
+  display: block;
+  overflow: hidden;
+  width: 60%;
+  margin: 0 0 0 auto;
+}
+.pf-widget-modal .pf-content-rec h4 {
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 0 0 7px;
+  font-size: 18px;
+}
+.pf-widget-modal .pf-content-rec p {
+  font-size: 14px;
+  line-height: 1.3;
+}
 .pf-widget-modal .pf-widget-content {
   position: relative;
   width: 780px;
@@ -314,7 +348,7 @@
 .pf-widget-slideout .pf-widget-message {
   margin: 0 0 20px 0;
 }
-.pf-widget-slideout img {
+.pf-widget-slideout .pf-widget-img {
   height: 50px;
   margin: 0 0 0 40px;
   float: left;
@@ -335,6 +369,31 @@
 .pf-widget-slideout.pf-position-bottom-left.pf-origin-bottom,
 .pf-widget-slideout.pf-position-left.pf-origin-bottom {
   left: 50px;
+}
+.pf-widget-slideout .pf-content-rec {
+  width: 100%;
+  display: block;
+  text-align: left;
+}
+.pf-widget-slideout .pf-content-rec h4 {
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 15px 0 7px;
+  padding: 0 15px;
+  font-size: 14px;
+}
+.pf-widget-slideout .pf-content-rec p {
+  font-size: 13px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  width: 100%;
+  padding: 0 15px 15px;
+}
+.pf-widget-slideout .pf-content-rec .pf-content-rec-img {
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 135px;
 }
 .pf-widget-slideout.pf-position-bottom-right,
 .pf-widget-slideout.pf-position-right {

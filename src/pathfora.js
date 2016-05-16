@@ -140,8 +140,8 @@
   // FUTURE Move to separate files and concat
   var templates = {
     message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-content-rec"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-content-rec"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       button: '<p class="pf-widget-message pf-widget-ok"></p>',
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
@@ -801,10 +801,12 @@
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
       var widgetClose = widget.querySelector('.pf-widget-close');
+      var widgetContentRec = widget.querySelector('.pf-content-rec')
       var widgetTextArea;
       var widgetImage;
       var node;
       var i;
+
 
       if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
@@ -830,19 +832,19 @@
         }
       }
 
-      if(widgetCancel !== null) {
+      if (widgetCancel !== null) {
         widgetCancel.innerHTML = config.cancelMessage;
       }
 
-      if(widgetOk !== null) {
+      if (widgetOk !== null) {
         widgetOk.innerHTML = config.okMessage;
       }
 
-      if(widgetOk && widgetOk.value !== null) {
+      if (widgetOk && widgetOk.value !== null) {
         widgetOk.value = config.okMessage;
       }
 
-      if(widgetCancel && widgetCancel.value !== null) {
+      if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
       }
 
@@ -878,6 +880,35 @@
         switch (config.layout) {
         case 'modal':
         case 'slideout':
+          // Add Content recommendation if we have one
+          if (config.content && config.content[0]) {
+            var rec = config.content[0];
+            widgetContentRec.href = rec.url;
+
+            var recImage = document.createElement('div');
+            recImage.className = 'pf-content-rec-img';
+            recImage.style.backgroundImage = "url('" + rec.image + "')";
+            widgetContentRec.appendChild(recImage);
+
+            var recMeta = document.createElement('div');
+            recMeta.className = 'pf-content-rec-meta';
+
+
+            // title
+            var recTitle = document.createElement('h4');
+            recTitle.innerHTML = rec.title;
+            recTitle.className = 'pf-content-rec-title';
+            recMeta.appendChild(recTitle);
+
+            // description
+            var recDesc = document.createElement('p');
+            recDesc.innerHTML = rec.description;
+            recDesc.className = 'pf-content-rec-desc';
+            recMeta.appendChild(recDesc);
+
+            widgetContentRec.appendChild(recMeta);
+          }
+          break;
         case 'random':
         case 'bar':
         case 'button':
@@ -909,6 +940,10 @@
           throw new Error('Invalid widget layout value');
         }
         break;
+      }
+
+      if (config.type === "message" && config.layout === "slideout" || config.layout === "modal") {
+
       }
 
       // NOTE Set The headline
@@ -989,7 +1024,7 @@
         break;
       }
 
-      if(config.msg){
+      if (config.msg){
         widgetMessage.innerHTML = config.msg;
       }
     },
@@ -1389,6 +1424,8 @@
       var okBtn = widget.querySelector('.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var contentRec = widget.querySelector('.pf-content-rec');
+      var contentRecMeta = widget.querySelector('.pf-content-rec-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var i;
       var j;
@@ -1404,6 +1441,12 @@
         for (i = 0; i < j; i++) {
           fields[i].style.backgroundColor = colors.fieldBackground;
         }
+      }
+
+      if (contentRecMeta) {
+        contentRec.style.backgroundColor = colors.actionBackground;
+        contentRecMeta.querySelector('.pf-content-rec-title').style.color = colors.actionText;
+        contentRecMeta.querySelector('.pf-content-rec-desc').style.color = colors.text;
       }
 
       if (close) {
@@ -1530,7 +1573,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array) {
+    initializeWidgetArray: function (array, accountId) {
       var widgetOnInitCallback;
       var defaults;
       var globals;
@@ -1563,10 +1606,32 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.displayConditions.showDelay) {
-          core.registerDelayedWidget(widget);
+        function displayWidget(widget) {
+          if (widget.displayConditions.showDelay) {
+            core.registerDelayedWidget(widget);
+          } else {
+            core.initializeWidget(widget);
+          }
+        }
+
+        if (widget.type === "message" && widget.recommend) {
+          api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
+            var config = {
+              content: [
+                {
+                  title: content.title,
+                  description: content.description,
+                  url: "//" + content.url,
+                  image: content.primary_image
+                }
+              ]
+            }
+
+            core.updateObject(widget, config);
+            displayWidget(widget);
+          });
         } else {
-          core.initializeWidget(widget);
+          displayWidget(widget);
         }
 
         // NOTE onInit feels better here
@@ -1991,7 +2056,36 @@
           }
         });
       });
-    }
+    },
+
+
+    /**
+     * @description Fetch content to recommend
+     * @throws {Error} error
+     * @param {string} accountId  Lytics account ID
+     */
+    recommendContent: function (accountId, filter, callback) {
+      var seerId = utils.readCookie('seerid');
+      var recommendUrl;
+
+      if (!seerId) {
+        // set a default here, instead
+        throw new Error('Cannot find SEERID cookie');
+      }
+
+      recommendUrl = [
+        '{{apiurl}}/api/me/content/recommend/',
+        accountId,
+        '/_uids/',
+        seerId,
+        filter ? '?ql=' + filter : '',
+      ].join('');
+
+
+      this.getData(recommendUrl, function (resp) {
+        callback(JSON.parse(resp).data[0]);
+      });
+    },
   };
 
   /**
@@ -2039,12 +2133,12 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets);
+        core.initializeWidgetArray(widgets, lyticsId);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common);
+          core.initializeWidgetArray(widgets.common, lyticsId);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
@@ -2095,11 +2189,11 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets);
+              core.initializeWidgetArray(targetedwidgets, lyticsId);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse);
+              core.initializeWidgetArray(widgets.inverse, lyticsId);
             }
           });
         }
