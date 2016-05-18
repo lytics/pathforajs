@@ -135,8 +135,8 @@
   // FUTURE Move to separate files and concat
   var templates = {
     message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-content-rec"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-content-rec"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-content-unit"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
+      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-content-unit"></a><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
       button: '<p class="pf-widget-message pf-widget-ok"></p>',
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
@@ -796,7 +796,7 @@
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
       var widgetClose = widget.querySelector('.pf-widget-close');
-      var widgetContentRec = widget.querySelector('.pf-content-rec')
+      var widgetContentUnit = widget.querySelector('.pf-content-unit')
       var widgetTextArea;
       var widgetImage;
       var node;
@@ -883,15 +883,15 @@
               // The top recommendation should be default if we couldn't
               // get one from the api
               var rec = config.content[0]
-              widgetContentRec.href = rec.url;
+              widgetContentUnit.href = rec.url;
 
               var recImage = document.createElement('div');
-              recImage.className = 'pf-content-rec-img';
+              recImage.className = 'pf-content-unit-img';
               recImage.style.backgroundImage = "url('" + rec.image + "')";
-              widgetContentRec.appendChild(recImage);
+              widgetContentUnit.appendChild(recImage);
 
               var recMeta = document.createElement('div');
-              recMeta.className = 'pf-content-rec-meta';
+              recMeta.className = 'pf-content-unit-meta';
 
               // title
               var recTitle = document.createElement('h4');
@@ -903,10 +903,8 @@
               recDesc.innerHTML = rec.description;
               recMeta.appendChild(recDesc);
 
-              widgetContentRec.appendChild(recMeta);
+              widgetContentUnit.appendChild(recMeta);
 
-            } else {
-              throw new Error('Could not get recommendation and no default defined');
             }
           }
           break;
@@ -958,8 +956,6 @@
           widgetImage.className = 'pf-widget-img';
           widgetBody.appendChild(widgetImage);
         }
-      } else {
-        utils.addClass(widget, 'pf-no-img');
       }
 
       switch(config.type) {
@@ -1421,8 +1417,8 @@
       var okBtn = widget.querySelector('.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
-      var contentRec = widget.querySelector('.pf-content-rec');
-      var contentRecMeta = widget.querySelector('.pf-content-rec-meta');
+      var contentUnit = widget.querySelector('.pf-content-unit');
+      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var i;
       var j;
@@ -1440,10 +1436,10 @@
         }
       }
 
-      if (contentRecMeta) {
-        contentRec.style.backgroundColor = colors.actionBackground;
-        contentRecMeta.querySelector('h4').style.color = colors.actionText;
-        contentRecMeta.querySelector('p').style.color = colors.text;
+      if (contentUnitMeta) {
+        contentUnit.style.backgroundColor = colors.actionBackground;
+        contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        contentUnitMeta.querySelector('p').style.color = colors.text;
       }
 
       if (close) {
@@ -1603,7 +1599,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        function displayWidget(widget) {
+        var displayWidget = function(widget) {
           if (widget.displayConditions.showDelay) {
             core.registerDelayedWidget(widget);
           } else {
@@ -1613,7 +1609,15 @@
 
         if (widget.type === "message" && widget.recommend) {
           if (widget.layout !== "slideout" && widget.layout !== "modal") {
-            throw new Error('Unsupported layout for content recommendation.');
+            throw new Error('Unsupported layout for content recommendation');
+          }
+
+          var def;
+          if (widget.content && widget.content[0]) {
+            if (widget.content[0].default)
+              def = widget.content[0];
+            else
+              throw new Error('Cannot define recommended content unless it is a default');
           }
 
           api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
@@ -1626,12 +1630,10 @@
                 url: "http://" + content.url,
                 image: content.primary_image
               });
-            }
-
-            if (widget.content && widget.content[0] && widget.content[0].default) {
-              con.push(widget.content[0]);
+            } else if (def) {
+              con.push(def);
             } else {
-              throw new Error('Cannot define recommended content unless it is a default.');
+              throw new Error('Could not get recommendation and no default defined');
             }
 
             widget.content = con;
@@ -2086,7 +2088,8 @@
         accountId,
         '/_uids/',
         seerId,
-        filter ? '?ql=' + filter : '',
+        '?limit=1',
+        filter ? '&ql=' + filter : '',
       ].join('');
 
 
@@ -2097,6 +2100,8 @@
         } else {
           callback(null);
         }
+      }, function () {
+        callback(null);
       });
     },
   };

@@ -1,7 +1,7 @@
 .pf-widget-slideout {
   position: fixed;
   bottom: 50px;
-  width: 540px;
+  width: 370px;
   border-radius: 4px;
   .pf-box-shadow();
   top: auto;
@@ -13,12 +13,6 @@
 
   .pf-widget-message {
     margin: 0 0 20px 0;
-  }
-
-  .pf-widget-img {
-    height: 50px;
-    margin: 0 0 0 40px;
-    float: left;
   }
 
   .pf-widget-btn {
@@ -40,27 +34,6 @@
 
     &.pf-origin-bottom {
       left: 50px;
-    }
-  }
-
-  .pf-content-rec {
-    width: 100%;
-    display: block;
-    text-align: left;
-
-    .pf-content-rec-meta {
-      h4 {
-        font-size: 14px;
-      }
-
-      p {
-        font-size: 13px;
-      }
-    }
-
-    .pf-content-rec-img {
-      width: 100%;
-      height: 135px;
     }
   }
 
@@ -112,52 +85,38 @@
       height: 100px;
       float: none;
       position: absolute;
-      top: 20px; left: 50%;
+      top: 20px;
+      left: 50%;
       margin-left: -50px;
     }
   }
 
-  &.pf-no-img {
-    width: 370px;
+  &.pf-widget-variant-3 {
+
+    .pf-content-unit {
+      width: 100%;
+      display: block;
+      text-align: left;
+
+      .pf-content-unit-meta {
+        h4 {
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 13px;
+        }
+      }
+
+      .pf-content-unit-img {
+        width: 100%;
+        height: 135px;
+      }
+    }
   }
 
   /* Type Specific Styles */
   &.pf-form {
     width: 370px;
-
-    > div {
-      display: block;
-    }
-
-    &.pf-no-img {
-      .pf-widget-body {
-        height: 0;
-      }
-    }
-
-    &.pf-widget-variant-1:not(.pf-no-img) {
-      .pf-widget-headline {
-        line-height: 50px;
-      }
-
-      .pf-widget-headline {
-        margin-bottom: 15px;
-      }
-
-      .pf-widget-body {
-        height: 50px;
-        width: 20%;
-        float: left;
-        padding-top: 30px;
-        padding-left: 30px;
-        margin-right: 20px;
-
-        .pf-widget-img {
-          width: 50px;
-          height: 50px;
-          margin-left: 0;
-        }
-      }
-    }
   }
 }
