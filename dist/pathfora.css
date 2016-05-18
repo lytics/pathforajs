@@ -50,6 +50,7 @@
 .pf-widget .pf-content-rec {
   display: block;
   text-align: left;
+  margin-bottom: 20px;
   position: relative;
 }
 .pf-widget .pf-content-rec .pf-content-rec-meta {
@@ -57,7 +58,7 @@
 }
 .pf-widget .pf-content-rec .pf-content-rec-meta h4 {
   font-weight: 500;
-  margin: 0 0 7px;
+  margin: 0 0 5px;
   line-height: 1.4;
 }
 .pf-widget .pf-content-rec .pf-content-rec-meta p {
@@ -260,7 +261,8 @@
 }
 .pf-widget-modal .pf-content-rec {
   width: 95%;
-  margin: auto;
+  margin: 0 auto 30px;
+  min-height: 135px;
 }
 .pf-widget-modal .pf-content-rec .pf-content-rec-img {
   position: absolute;
@@ -269,6 +271,7 @@
   width: 40%;
 }
 .pf-widget-modal .pf-content-rec .pf-content-rec-meta {
+  padding: 15px 15px;
   display: block;
   width: 60%;
   margin: 0 0 0 auto;

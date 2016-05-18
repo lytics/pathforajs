@@ -74,11 +74,6 @@
       okShow: true,
       cancelShow: true
     },
-    welcome: {
-      layout: 'modal',
-      position: '',
-      variant: '1'
-    },
     subscription: {
       layout: 'modal',
       position: '',
@@ -881,32 +876,38 @@
         case 'modal':
         case 'slideout':
           // Add Content recommendation if we have one
-          if (config.content && config.content[0]) {
-            var rec = config.content[0];
-            widgetContentRec.href = rec.url;
+          if (config.recommend && config.content) {
+            // Make sure we have content to get
+            if (Object.keys(config.content).length > 0) {
 
-            var recImage = document.createElement('div');
-            recImage.className = 'pf-content-rec-img';
-            recImage.style.backgroundImage = "url('" + rec.image + "')";
-            widgetContentRec.appendChild(recImage);
+              // The top recommendation should be default if we couldn't
+              // get one from the api
+              var rec = config.content[0]
+              widgetContentRec.href = rec.url;
 
-            var recMeta = document.createElement('div');
-            recMeta.className = 'pf-content-rec-meta';
+              var recImage = document.createElement('div');
+              recImage.className = 'pf-content-rec-img';
+              recImage.style.backgroundImage = "url('" + rec.image + "')";
+              widgetContentRec.appendChild(recImage);
 
+              var recMeta = document.createElement('div');
+              recMeta.className = 'pf-content-rec-meta';
 
-            // title
-            var recTitle = document.createElement('h4');
-            recTitle.innerHTML = rec.title;
-            recTitle.className = 'pf-content-rec-title';
-            recMeta.appendChild(recTitle);
+              // title
+              var recTitle = document.createElement('h4');
+              recTitle.innerHTML = rec.title;
+              recMeta.appendChild(recTitle);
 
-            // description
-            var recDesc = document.createElement('p');
-            recDesc.innerHTML = rec.description;
-            recDesc.className = 'pf-content-rec-desc';
-            recMeta.appendChild(recDesc);
+              // description
+              var recDesc = document.createElement('p');
+              recDesc.innerHTML = rec.description;
+              recMeta.appendChild(recDesc);
 
-            widgetContentRec.appendChild(recMeta);
+              widgetContentRec.appendChild(recMeta);
+
+            } else {
+              throw new Error('Could not get recommendation and no default defined');
+            }
           }
           break;
         case 'random':
@@ -1441,8 +1442,8 @@
 
       if (contentRecMeta) {
         contentRec.style.backgroundColor = colors.actionBackground;
-        contentRecMeta.querySelector('.pf-content-rec-title').style.color = colors.actionText;
-        contentRecMeta.querySelector('.pf-content-rec-desc').style.color = colors.text;
+        contentRecMeta.querySelector('h4').style.color = colors.actionText;
+        contentRecMeta.querySelector('p').style.color = colors.text;
       }
 
       if (close) {
@@ -1611,19 +1612,30 @@
         }
 
         if (widget.type === "message" && widget.recommend) {
+          if (widget.layout !== "slideout" && widget.layout !== "modal") {
+            throw new Error('Unsupported layout for content recommendation.');
+          }
+
           api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
-            var config = {
-              content: [
-                {
-                  title: content.title,
-                  description: content.description,
-                  url: "//" + content.url,
-                  image: content.primary_image
-                }
-              ]
+            var con = [];
+
+            if (content) {
+              con.push({
+                title: content.title,
+                description: content.description,
+                url: "http://" + content.url,
+                image: content.primary_image
+              });
             }
 
-            core.updateObject(widget, config);
+            if (widget.content && widget.content[0] && widget.content[0].default) {
+              con.push(widget.content[0]);
+            } else {
+              throw new Error('Cannot define recommended content unless it is a default.');
+            }
+
+            widget.content = con;
+
             displayWidget(widget);
           });
         } else {
@@ -2078,8 +2090,13 @@
       ].join('');
 
 
-      this.getData(recommendUrl, function (resp) {
-        callback(JSON.parse(resp).data[0]);
+      this.getData(recommendUrl, function (json) {
+        var resp = JSON.parse(json);
+        if (resp.data && resp.data.length > 0) {
+          callback(resp.data[0]);
+        } else {
+          callback(null);
+        }
       });
     },
   };
