@@ -2109,12 +2109,11 @@
       }
 
       recommendUrl = [
-        '//api.lytics.io/api/me/content/recommend/',
+        '//api.lytics.io/api/content/recommend/',
         accountId,
-        '/_uids/',
+        '/user/_uids/',
         seerId,
-        '?limit=1',
-        filter ? '&ql=' + filter : '',
+        filter ? '?ql=' + filter : '',
       ].join('');
 
 

@@ -2109,12 +2109,11 @@
       }
 
       recommendUrl = [
-        '{{apiurl}}/api/me/content/recommend/',
+        '{{apiurl}}/api/content/recommend/',
         accountId,
-        '/_uids/',
+        '/user/_uids/',
         seerId,
-        '?limit=1',
-        filter ? '&ql=' + filter : '',
+        filter ? '?ql=' + filter : '',
       ].join('');
 
 

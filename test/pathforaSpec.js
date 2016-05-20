@@ -265,7 +265,7 @@ describe('Pathfora', function () {
     // Should error since there is no default defined
     expect(function() {
       pathfora.initializeWidgets([errorModal], 0);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/content/recommend/0/_uids/123?limit=1&ql=*');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
       
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 400,
@@ -281,7 +281,7 @@ describe('Pathfora', function () {
 
     expect(function() {
       pathfora.initializeWidgets([errorModal3], credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/content/recommend/123/_uids/123?limit=1&ql=*');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
       
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -1068,7 +1068,7 @@ describe('Widgets', function () {
 
     // Should show default
     pathfora.initializeWidgets([defaultModal], 0);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/content/recommend/0/_uids/123?limit=1&ql=*');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 400,
@@ -1078,7 +1078,7 @@ describe('Widgets', function () {
 
     // Should get and show api response
     pathfora.initializeWidgets([modal], credentials);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/content/recommend/123/_uids/123?limit=1&ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       'status': 200,
