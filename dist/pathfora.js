@@ -264,7 +264,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
+    link.setAttribute('href', 'https://pfalocal.ngrok.io/dist/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -1999,7 +1999,7 @@
       }
 
       apiUrl = [
-        '//api.lytics.io/api/me/',
+        'https://api.lytics.io/api/me/',
         accountId,
         '/',
         seerId,

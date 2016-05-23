@@ -5,10 +5,23 @@ var uglify = require('gulp-uglify');
 var cssmin = require('gulp-cssmin');
 var rename = require('gulp-rename');
 var replace = require('gulp-replace');
+var htmlmin = require('gulp-htmlmin');
 var env = require('gulp-env');
 var connect = require('gulp-connect');
+var flatmap = require('gulp-flatmap');
+var foreach = require('gulp-foreach');
+var fs = require("fs");
 var APIURL;
 var CSSURL;
+
+gulp.task('index', function () {
+  var target = gulp.src('./src/index.html');
+  // It's not necessary to read the files (will speed up things), we're only after their paths:
+  var sources = gulp.src(['./src/**/*.js', './src/**/*.css'], {read: false});
+
+  return target.pipe(inject(sources))
+    .pipe(gulp.dest('./src'));
+});
 
 // get overrides from .env file
 try {
@@ -39,6 +52,47 @@ gulp.task('build:styles', function () {
     }))
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
+});
+
+function getFolders(dir) {
+    return fs.readdirSync(dir)
+      .filter(function(file) {
+        return fs.statSync(path.join(dir, file)).isDirectory();
+      });
+}
+
+gulp.task('doSomething', function() {
+  var folders = getFolders("src/templates");
+
+  var tasks = folders.map(function(folder) {
+    console.log(folder);
+  });
+  // var fileContent = fs.readFileSync("src/templates/message/bar.html", "utf8");
+  // test = fileContent.replace(/\>\s+\</g,'');
+  // console.log(test);
+
+
+  // return gulp.src('src/templates/message/*.html')
+  //   .pipe(flatmap(function(stream, file){
+  //     console.log(file.name);
+  //     // var contents = JSON.parse(file.contents.toString('utf8'));
+  //     // //contents.files is an array
+  //     // return gulp.src(contents.files)
+  //     //   //uglify each file individually
+  //     //   .pipe(uglify())
+  //     //   //combine the files
+  //     //   .pipe(concat(path.basename(file.path)));
+  //   }))
+  //   //   message: {
+  //   //   modal: '',
+  //   //   slideout: '',
+  //   //   bar: '',
+  //   //   button: '',
+  //   //   inline: ''
+  //   // },
+  // // return gulp.src(dirs.src + '/templates/*.html')
+  // //   .pipe(myFunction(fileContent))
+  // //   .pipe(gulp.dest('destination/path'));
 });
 
 gulp.task('build:js', function () {
@@ -96,6 +150,7 @@ gulp.task('preview', function () {
   });
 });
 
+gulp.task('bonk', ['doSomething']);
 gulp.task('test', ['build:styles', 'build:testjs']);
 gulp.task('local', ['build:styles', 'local:js', 'preview', 'local:watch']);
 gulp.task('build', ['build:styles', 'build:js']);
