@@ -162,6 +162,7 @@ describe('Pathfora', function () {
     localStorage.clear();
     var messageBar = pathfora.Message({
       layout: 'bar',
+      id: 'interest-widget1',
       msg: 'Message bar  - interest test',
       confirmAction: {
         name: 'Test confirm action',
@@ -170,6 +171,7 @@ describe('Pathfora', function () {
     });
     var messageModal = pathfora.Message({
       layout: 'modal',
+      id: 'interest-widget2',
       msg: 'Message modal - interest test'
     });
     pathfora.initializeWidgets([messageBar, messageModal], credentials);
@@ -253,6 +255,7 @@ describe('Pathfora', function () {
 
     var messageBar = pathfora.Message({
       layout: 'modal',
+      id: 'tracking-widget1',
       msg: 'Message modal - action report test',
       confirmAction: {
         name: 'action test',
@@ -289,6 +292,7 @@ describe('Pathfora', function () {
 
     var messageBar = pathfora.Message({
       layout: 'modal',
+      id: 'tracking-widget2',
       msg: 'Message modal - cancel report test',
       cancelAction: {
         name: 'cancel reporting test',
@@ -357,6 +361,7 @@ describe('Pathfora', function () {
   it('should use specified global config for all widgets', function () {
     var messageBar = pathfora.Message({
       layout: 'bar',
+      id: 'global-config-1',
       msg: 'test'
     });
     var config = {
@@ -387,6 +392,7 @@ describe('Pathfora', function () {
 
     var form = new pathfora.Subscription({
       msg: 'test',
+      id: 'clear-widget',
       layout: 'modal'
     });
 
@@ -513,7 +519,7 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should have proper id when specified, and unique id otherwise', function (done) {
+  it('should have proper id specified', function (done) {
     var w1 = new pathfora.Message({
       layout: 'slideout',
       position: 'right',
@@ -521,23 +527,21 @@ describe('Widgets', function () {
       id: 'test-id-widget'
     });
 
-    var w2 = new pathfora.Message({
-      layout: 'slideout',
-      position: 'left',
-      msg: 'Welcome to our test website'
-    });
+    expect(function() {
+      var w2 = new pathfora.Message({
+        layout: 'slideout',
+        position: 'left',
+        msg: 'Welcome to our test website'
+      });
+    }).toThrow(new Error('All widgets must have an id value'));
 
-    pathfora.initializeWidgets([w1, w2], credentials);
+    pathfora.initializeWidgets([w1], credentials);
 
     setTimeout(function() {
       var right = $('.pf-widget.pf-position-right');
-      var left = $('.pf-widget.pf-position-left');
 
       expect(right).toBeDefined();
-      expect(left).toBeDefined();
 
-      expect(left.attr('id')).toBeDefined();
-      expect(left.attr('id').length).toBeGreaterThan(10);
       expect(right.attr('id')).toBe('test-id-widget');
       done();
     }, 200);
@@ -570,6 +574,7 @@ describe('Widgets', function () {
   it('should not append widget second time if it\'s already opened', function (done) {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
+      id: 'append-widget',
       msg: 'test widget'
     });
     pathfora.initializeWidgets([openedWidget], credentials);
@@ -910,6 +915,7 @@ describe('Widgets', function () {
     var w1 = new pathfora.Message({
       msg: 'Widget positioning test',
       layout: 'modal',
+      id: 'region-widget',
       position: 'customPos'
     });
 
@@ -923,18 +929,22 @@ describe('Widgets', function () {
   it('should use default position if no position is specified', function () {
     var w1 = new pathfora.Message({
       msg: 'button - default pos test',
+      id: 'position-widget-1',
       layout: 'button'
     });
     var w2 = new pathfora.Message({
       msg: 'bar - default pos test',
+      id: 'position-widget-2',
       layout: 'bar'
     });
     var w3 = new pathfora.Message({
       msg: 'slideout - default pos test',
+      id: 'position-widget-3',
       layout: 'slideout'
     });
     var w4 = new pathfora.Form({
       msg: 'folding - default pos test',
+      id: 'position-widget-4',
       layout: 'folding'
     });
 
@@ -955,12 +965,14 @@ describe('Widgets', function () {
 
     var w1 = new pathfora.Message({
       msg: 'test warning display',
+      id: 'position-widget',
       layout: 'bar'
     });
 
     var w2 = new pathfora.Message({
       msg: 'invalid position test',
       layout: 'bar',
+      id: 'wrong-position-2',
       position: 'wrong-position'
     });
 
@@ -1117,6 +1129,7 @@ describe('API', function () {
   it('should report to Google Analytics API, when available', function (done) {
     var messageBar = pathfora.Message({
       layout: 'modal',
+      id: 'ga-widget',
       msg: 'Message modal - ga test',
       confirmAction: {
         name: 'action test',
@@ -1149,6 +1162,7 @@ describe('API', function () {
   it('should not show page-views dependent widget when page views requirement has not been reached', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
+      id: 'page-view-widget-1',
       headline: 'Header',
       layout: 'slideout',
       position: 'bottom-right',
@@ -1166,6 +1180,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
+      id: 'page-view-widget-2',
       layout: 'slideout',
       position: 'right',
       displayConditions: {
@@ -1182,6 +1197,7 @@ describe('API', function () {
   it('should open site gating widget when the cookie is not set', function (done) {
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',
+      id: 'sitegate-widget-1',
       msg: 'Submit this widget to access the website.'
     });
 
@@ -1196,12 +1212,13 @@ describe('API', function () {
   });
 
   it('should not open site gating widget when the cookie is already set', function (done) {
-    pathfora.utils.saveCookie('PathforaUnlocked', true);
-
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',
+      id: 'sitegate-widget-2',
       msg: 'Submit this widget to access the website.'
     });
+
+    pathfora.utils.saveCookie('PathforaUnlocked_' + gate.id, true);
 
     pathfora.initializeWidgets([gate], credentials);
 
@@ -1221,6 +1238,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
+      id: 'date-widget-1',
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
@@ -1245,6 +1263,7 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
+      id: 'date-widget-2',
       position: 'bottom-right',
       displayConditions: {
         date: {
@@ -1256,22 +1275,6 @@ describe('API', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
-  });
-
-  it('should not show a widget with hideAfterAction without an id', function () {
-    expect(function() {
-      var form = new pathfora.Form({
-        msg: 'subscription',
-        headline: 'Header',
-        layout: 'slideout',
-        position: 'bottom-right',
-        displayConditions: {
-          hideAfterAction: {
-            confirm: true
-          }
-        }
-      });
-    }).toThrow(new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.'));
   });
 
   it('should not show widget if hideAfterAction duration not met', function () {
@@ -1402,24 +1405,6 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should not show an impression counter widget without an id', function () {
-    expect(function() {
-      var form = new pathfora.Form({
-        msg: 'subscription',
-        headline: 'Header',
-        layout: 'slideout',
-        position: 'bottom-right',
-        displayConditions: {
-          impressions: {
-            session: 1,
-            total: 5
-          }
-        }
-      });
-    }).toThrow(new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.'));
-  });
-
-
   it('should show impressions counter widget before limited amount of initializations', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
@@ -1539,6 +1524,7 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
+      id: 'url-widget-1',
       position: 'bottom-right',
       displayConditions: {
         urlContains: [
@@ -1550,6 +1536,7 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
+      id: 'url-widget-2',
       position: 'bottom-right',
       displayConditions: {
         urlContains: [
@@ -1570,6 +1557,7 @@ describe('API', function () {
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
+      id: 'url-widget-3',
       position: 'bottom-right',
       displayConditions: {
         urlContains: [
@@ -1801,6 +1789,7 @@ describe('API', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
+      id: 'display-widget-1',
       layout: 'slideout',
       displayConditions: {
         pageVisits: 0,
@@ -1813,6 +1802,7 @@ describe('API', function () {
     var form2 = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
+      id: 'display-widget-2',
       layout: 'slideout',
       displayConditions: {
         pageVisits: 5,
@@ -1825,6 +1815,7 @@ describe('API', function () {
     var form3 = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
+      id: 'display-widget-3',
       layout: 'slideout',
       displayConditions: {
         pageVisits: 0,
