@@ -16,7 +16,9 @@ pages:
   - Display Conditions: display_conditions.md
   - Tracking: tracking.md
   - Callbacks: callbacks.md
-  - Customization: customization.md
+  - Customization:
+    - Color Themes: customization/themes.md
+    - Custom CSS: customization/css.md
   - Examples: examples/usage.md
   - Roadmap: roadmap.md
 theme: readthedocs

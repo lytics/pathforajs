@@ -1,3 +1,1 @@
-## Themes
-
 ## Custom CSS
