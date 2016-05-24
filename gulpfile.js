@@ -1,18 +1,17 @@
-var gulp = require('gulp');
-var less = require('gulp-less');
-var path = require('path');
-var uglify = require('gulp-uglify');
-var cssmin = require('gulp-cssmin');
-var rename = require('gulp-rename');
-var replace = require('gulp-replace');
-var htmlmin = require('gulp-htmlmin');
-var env = require('gulp-env');
-var connect = require('gulp-connect');
-var flatmap = require('gulp-flatmap');
-var foreach = require('gulp-foreach');
-var fs = require("fs");
-var APIURL;
-var CSSURL;
+var gulp = require('gulp'),
+    less = require('gulp-less'),
+    path = require('path'),
+    uglify = require('gulp-uglify'),
+    cssmin = require('gulp-cssmin'),
+    rename = require('gulp-rename'),
+    replace = require('gulp-replace'),
+    minify = require('html-minifier').minify,
+    env = require('gulp-env'),
+    connect = require('gulp-connect'),
+    walk    = require('walk'),
+    fs = require("fs"),
+    APIURL,
+    CSSURL;
 
 gulp.task('index', function () {
   var target = gulp.src('./src/index.html');
@@ -54,51 +53,39 @@ gulp.task('build:styles', function () {
     .pipe(connect.reload());
 });
 
-function getFolders(dir) {
-    return fs.readdirSync(dir)
-      .filter(function(file) {
-        return fs.statSync(path.join(dir, file)).isDirectory();
-      });
-}
+// gathers and minifies all the widget templates for inclusion
+var prepareTemplates = function() {
+  var templateDirectory = "src/templates",
+      templates = {},
+      options = {};
 
-gulp.task('doSomething', function() {
-  var folders = getFolders("src/templates");
+  options = {
+    listeners: {
+      file: function (root, stat, next) {
+        var dir = root.split("/").pop();
 
-  var tasks = folders.map(function(folder) {
-    console.log(folder);
-  });
-  // var fileContent = fs.readFileSync("src/templates/message/bar.html", "utf8");
-  // test = fileContent.replace(/\>\s+\</g,'');
-  // console.log(test);
+        if(!templates[dir]){
+          templates[dir] = {};
+        }
 
+        if ( stat.name.charAt( 0 ) !== '.' ) {
+          var markup = fs.readFileSync(root + '/' + stat.name, "utf-8")
+          var file = stat.name.replace(".html", "");
+          templates[dir][file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+        }
+      }
+    }
+  };
 
-  // return gulp.src('src/templates/message/*.html')
-  //   .pipe(flatmap(function(stream, file){
-  //     console.log(file.name);
-  //     // var contents = JSON.parse(file.contents.toString('utf8'));
-  //     // //contents.files is an array
-  //     // return gulp.src(contents.files)
-  //     //   //uglify each file individually
-  //     //   .pipe(uglify())
-  //     //   //combine the files
-  //     //   .pipe(concat(path.basename(file.path)));
-  //   }))
-  //   //   message: {
-  //   //   modal: '',
-  //   //   slideout: '',
-  //   //   bar: '',
-  //   //   button: '',
-  //   //   inline: ''
-  //   // },
-  // // return gulp.src(dirs.src + '/templates/*.html')
-  // //   .pipe(myFunction(fileContent))
-  // //   .pipe(gulp.dest('destination/path'));
-});
+  walker = walk.walkSync(templateDirectory, options);
+  return JSON.stringify(templates, null, 2);
+};
 
 gulp.task('build:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', '//api.lytics.io'))
     .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -112,6 +99,7 @@ gulp.task('local:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', APIURL))
     .pipe(replace('{{cssurl}}', CSSURL))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -125,6 +113,7 @@ gulp.task('build:testjs', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', TESTAPIURL))
     .pipe(replace('{{cssurl}}', TESTCSSURL))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -150,7 +139,6 @@ gulp.task('preview', function () {
   });
 });
 
-gulp.task('bonk', ['doSomething']);
 gulp.task('test', ['build:styles', 'build:testjs']);
 gulp.task('local', ['build:styles', 'local:js', 'preview', 'local:watch']);
 gulp.task('build', ['build:styles', 'build:js']);
