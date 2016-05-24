@@ -11,14 +11,11 @@ pages:
     - Slideout: layouts/slideout.md
     - Bar: layouts/bar.md
     - Button: layouts/button.md
-    - Folding: layouts/folding.md
-    - Inline: layouts/inline.md
   - Display Conditions: display_conditions.md
   - Tracking: tracking.md
   - Callbacks: callbacks.md
   - Customization:
     - Color Themes: customization/themes.md
     - Custom CSS: customization/css.md
-  - Examples: examples/usage.md
   - Roadmap: roadmap.md
 theme: readthedocs

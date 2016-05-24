@@ -70,7 +70,7 @@ Triggers the modal after a percentage of the page scroll has been performed.
 | Value | Type | Behavior |
 |---|---|---|
 | 0 | int | `default` using 0 disables the property and will show immediately |
-| 0 - ∞ | int | module will hidden until x percent of total scroll has been performed |        
+| 0 - 100 | int | module will hidden until x percent of total scroll has been performed |        
 
 ```
 // example: show module when the 50 percent of the page scroll has been completed
@@ -90,6 +90,7 @@ Triggers the module when the user visits the page a certain amount of times (tot
 
 ```
 // example: show module after they have visited at least 3 times
+
 displayConditions: {
   pageVisits: 3
 }
@@ -164,7 +165,7 @@ displayConditions: {
 ```
 	
 ## impressions
-Display the module in a specified interval of time.
+Hide the module after a certain number of impressions
 
 <table>
 	<tr>
@@ -173,7 +174,7 @@ Display the module in a specified interval of time.
 		<th>BEHAVIOR</th>
 	</tr>
 	<tr>
-		<td>date</td>
+		<td>impressions</td>
 		<td>obj</td>
 		<td>must be object formatted using following options / values</td>
 	</tr>
@@ -189,44 +190,44 @@ Display the module in a specified interval of time.
 		<th>BEHAVIOR</th>
 	</tr>
 	<tr>
-		<td> start_at </td>
-		<td>string</td>
-		<td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to start showing module</td>
+		<td> session </td>
+		<td>int</td>
+		<td><code>optional</code> integer count of how many session-based impressions before showing the module</td>
 	</tr>
 	<tr>
-		<td> end_at </td>
-		<td>string</td>
-		<td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to stop showing module</td>
+		<td> total </td>
+		<td>int</td>
+		<td><code>optional</code> integer count of how many total (multisession) impressions before showing the module</td>
 	</tr>
 </table>
 
 ```
-// example: show module starting February 12, 2017
+// example: hide module after the second impressions in the same session
 
 displayConditions: {
-  date: {
-  	start_at: "2017-02-12T11:00:00.000Z"
+  impressions: {
+  	session: 2
   }
 }
 ```
 
 ```
-// example: hide module starting February 12, 2017
+// example: hide module after five total impressions
 
 displayConditions: {
-  date: {
-  	end_at: "2017-02-12T11:00:00.000Z"
+  impressions: {
+  	total: 5
   }
 }
 ```		
 
 ```
-// example: show module between February 12, 2017 and March 12, 2017
+// example: hide the module after the second impression in the same session or if it has been seen five times ever
 
 displayConditions: {
-  date: {
-  	start_at: "2017-02-12T11:00:00.000Z",
-  	end_at: "2017-03-12T11:00:00.000Z"
+  impressions: {
+  	session: 2,
+  	total: 5
   }
 }
 ```
@@ -242,7 +243,7 @@ Hide the module after a particular action has been taken (`closed, confirm, canc
 		<th>BEHAVIOR</th>
 	</tr>
 	<tr>
-		<td>date</td>
+		<td>hideAfterAction</td>
 		<td>obj</td>
 		<td>must be object formatted using following options / values</td>
 	</tr>
@@ -285,7 +286,7 @@ displayConditions: {
 ```
 
 ```
-// example: hide module after confirmation has been clicked
+// example: hide module permanently after confirmation has been clicked
 
 displayConditions: {
 	hideAfterAction: {
@@ -297,7 +298,7 @@ displayConditions: {
 ```
 
 ```
-// example: hide module for 1 week after manual close
+// example: hide module for 1 week after cancel has been clicked
 
 displayConditions: {
 	hideAfterAction: {
