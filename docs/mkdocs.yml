@@ -1,0 +1,22 @@
+site_name: PathforaJS SDK
+pages:
+  - Pathfora JS: index.md
+  - Types:
+    - Message: types/message.md
+    - Form: types/form.md
+    - Subscription: types/subscription.md
+    - Gate: types/gate.md
+  - Layouts:
+    - Modal: layouts/modal.md
+    - Slideout: layouts/slideout.md
+    - Bar: layouts/bar.md
+    - Button: layouts/button.md
+    - Folding: layouts/folding.md
+    - Inline: layouts/inline.md
+  - Display Conditions: display_conditions.md
+  - Tracking: tracking.md
+  - Callbacks: callbacks.md
+  - Customization: customization.md
+  - Examples: examples/usage.md
+  - Roadmap: roadmap.md
+theme: readthedocs
