@@ -1630,8 +1630,9 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (accountId && accountId.length <= 4)
+        if (accountId && accountId.length <= 4) {
           console.warn('Pathfora: please update credentials to full Acccount ID');
+        }
 
         if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
           continue;
@@ -1665,7 +1666,6 @@
           }
 
           api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
-
             if (content) {
               widget.content = {
                 0: {
@@ -1677,8 +1677,9 @@
               };
             }
 
-            if (!widget.content)
+            if (!widget.content) {
               throw new Error('Could not get recommendation and no default defined');
+            }
 
             displayWidget(widget);
           });
