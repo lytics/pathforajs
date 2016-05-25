@@ -834,12 +834,10 @@
       var widgetBody = widget.querySelector('.pf-widget-body');
       var widgetMessage = widget.querySelector('.pf-widget-message');
       var widgetClose = widget.querySelector('.pf-widget-close');
-      var widgetContentUnit = widget.querySelector('.pf-content-unit')
       var widgetTextArea;
       var widgetImage;
       var node;
       var i;
-
 
       if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
@@ -913,38 +911,6 @@
         switch (config.layout) {
         case 'modal':
         case 'slideout':
-          // Add Content recommendation if we have one
-          if (config.recommend && config.content) {
-            // Make sure we have content to get
-            if (Object.keys(config.content).length > 0) {
-
-              // The top recommendation should be default if we couldn't
-              // get one from the api
-              var rec = config.content[0]
-              widgetContentUnit.href = rec.url;
-
-              var recImage = document.createElement('div');
-              recImage.className = 'pf-content-unit-img';
-              recImage.style.backgroundImage = "url('" + rec.image + "')";
-              widgetContentUnit.appendChild(recImage);
-
-              var recMeta = document.createElement('div');
-              recMeta.className = 'pf-content-unit-meta';
-
-              // title
-              var recTitle = document.createElement('h4');
-              recTitle.innerHTML = rec.title;
-              recMeta.appendChild(recTitle);
-
-              // description
-              var recDesc = document.createElement('p');
-              recDesc.innerHTML = rec.description;
-              recMeta.appendChild(recDesc);
-
-              widgetContentUnit.appendChild(recMeta);
-
-            }
-          }
           break;
         case 'random':
         case 'bar':
@@ -1353,6 +1319,46 @@
     },
 
     /**
+     * @description Setup content recommendation if we have one
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetContentUnit: function (widget, config) {
+      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+
+      if (config.recommend && config.content) {
+        // Make sure we have content to get
+        if (Object.keys(config.content).length > 0) {
+
+          // The top recommendation should be default if we couldn't
+          // get one from the api
+          var rec = config.content[0]
+          widgetContentUnit.href = rec.url;
+
+          var recImage = document.createElement('div');
+          recImage.className = 'pf-content-unit-img';
+          recImage.style.backgroundImage = "url('" + rec.image + "')";
+          widgetContentUnit.appendChild(recImage);
+
+          var recMeta = document.createElement('div');
+          recMeta.className = 'pf-content-unit-meta';
+
+          // title
+          var recTitle = document.createElement('h4');
+          recTitle.innerHTML = rec.title;
+          recMeta.appendChild(recTitle);
+
+          // description
+          var recDesc = document.createElement('p');
+          recDesc.innerHTML = rec.description;
+          recMeta.appendChild(recDesc);
+
+          widgetContentUnit.appendChild(recMeta);
+        }
+      }
+    },
+
+    /**
      * Validate position for a widget of specific type
      * @param   {object}   widget
      * @param   {object}   config
@@ -1412,6 +1418,7 @@
 
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
+      this.setupWidgetContentUnit(widget, config);
       this.setWidgetClassname(widget, config);
       this.constructWidgetLayout(widget, config);
       this.setupWidgetColors(widget, config);
@@ -1623,6 +1630,9 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
+        if (accountId && accountId.length <= 4)
+          console.warn('Pathfora: please update credentials to full Acccount ID');
+
         if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
@@ -1645,36 +1655,30 @@
           }
         }
 
-        if (widget.type === "message" && widget.recommend) {
+        if (widget.type === "message" && (widget.recommend || widget.content)) {
           if (widget.layout !== "slideout" && widget.layout !== "modal") {
             throw new Error('Unsupported layout for content recommendation');
           }
 
-          var def;
-          if (widget.content && widget.content[0]) {
-            if (widget.content[0].default)
-              def = widget.content[0];
-            else
-              throw new Error('Cannot define recommended content unless it is a default');
+          if (widget.content && widget.content[0] && !widget.content[0].default) {
+            throw new Error('Cannot define recommended content unless it is a default');
           }
 
           api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
-            var con = [];
 
             if (content) {
-              con.push({
-                title: content.title,
-                description: content.description,
-                url: "http://" + content.url,
-                image: content.primary_image
-              });
-            } else if (def) {
-              con.push(def);
-            } else {
-              throw new Error('Could not get recommendation and no default defined');
+              widget.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: "http://" + content.url,
+                  image: content.primary_image
+                }
+              };
             }
 
-            widget.content = con;
+            if (!widget.content)
+              throw new Error('Could not get recommendation and no default defined');
 
             displayWidget(widget);
           });
@@ -2104,7 +2108,6 @@
       var recommendUrl;
 
       if (!seerId) {
-        // set a default here, instead
         throw new Error('Cannot find SEERID cookie');
       }
 
