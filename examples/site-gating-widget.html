@@ -25,7 +25,8 @@
         showSocialLogin: true
       });
       // To integrate the SiteGate with Facebook API, use the integration method:
-      window.pathfora.integrateWithFacebook('{{ Facebook API AppID }}');
+      window.pathfora.integrateWithFacebook('{{ Facebook App Id }}');
+      window.pathfora.integrateWithGoogle('{{ Google Credentials }}');
       window.pathfora.initializeWidgets([ gate ]);
     </script>
   </body>
