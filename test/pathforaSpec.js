@@ -218,6 +218,87 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
+  it('should throw errors if default content is improperly defined', function (done) {
+    jasmine.Ajax.install();
+    var errorModal = pathfora.Message({
+      id: 'recommendation-modal4',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: "*",
+        }
+      },
+    });
+
+    var errorModal2 = pathfora.Message({
+      id: 'recommendation-modal5',
+      msg: 'A',
+      variant: 3,
+      layout: 'button',
+      recommend: {
+        ql: {
+          raw: "*",
+        }
+      },
+    });
+
+    var errorModal3 = pathfora.Message({
+      id: 'recommendation-modal6',
+      msg: 'A',
+      variant: 3,
+      layout: 'slideout',
+      recommend: {
+        ql: {
+          raw: "*",
+        }
+      },
+      content: [
+        {
+          url: "http://www.example.com/2",
+          title: "Default Title",
+          description: "Default description",
+          image: "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg"
+        }
+      ]
+    });
+
+    // Should error since there is no default defined
+    expect(function() {
+      pathfora.initializeWidgets([errorModal], 0);
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+      
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 400,
+        'contentType': 'application/json',
+        'responseText': '{"data": null,"message": "No such account id","status": 400}',
+      });
+    }).toThrow(new Error('Could not get recommendation and no default defined'));
+
+
+    expect(function() {
+      pathfora.initializeWidgets([errorModal2], credentials);
+    }).toThrow(new Error('Unsupported layout for content recommendation'));
+
+    expect(function() {
+      pathfora.initializeWidgets([errorModal3], credentials);
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
+      
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
+      });
+    }).toThrow(new Error('Cannot define recommended content unless it is a default'));
+
+    setTimeout(function() {
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
   it('should report closing widgets and it\'s variants', function () {
     jasmine.Ajax.install();
     jasmine.clock().install();
@@ -958,6 +1039,95 @@ describe('Widgets', function () {
     expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
     expect(widget3.hasClass('pf-position-bottom-left')).toBeTruthy();
     expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
+  });
+
+  it('should show recommendations returned from the api and default content if there is an error', function (done) {
+    jasmine.Ajax.install();
+    var modal = pathfora.Message({
+      id: 'recommendation-modal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: "FILTER AND(url LIKE \"www.example.com/*\") FROM content",
+        }
+      },
+    });
+
+    var defaultModal = pathfora.Message({
+      id: 'recommendation-modal2',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      content: [
+        {
+          default: true,
+          url: "http://www.example.com/2",
+          title: "Default Title",
+          description: "Default description",
+          image: "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg"
+        }
+      ],
+      recommend: {
+        ql: {
+          raw: "*",
+        }
+      },
+    });
+
+    // Should show default
+    pathfora.initializeWidgets([defaultModal], 0);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 400,
+      'contentType': 'application/json',
+      'responseText': '{"data": null,"message": "No such account id","status": 400}',
+    });
+
+    // Should get and show api response
+    pathfora.initializeWidgets([modal], credentials);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
+    });
+
+    var widget = $('#' + modal.id);
+    var widget2 = $('#' + defaultModal.id);
+    expect(widget).toBeDefined();
+    expect(widget2).toBeDefined();
+
+    setTimeout(function() {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(widget2.hasClass('opened')).toBeTruthy();
+
+      var href = widget.find('.pf-content-unit').attr('href');
+      var desc = widget.find('.pf-content-unit p').text();
+      var img = widget.find('.pf-content-unit-img').css('background-image');
+      var title = widget.find('.pf-content-unit h4').text();
+      expect(title).toBe('Example Title');
+      expect(href).toBe('http://www.example.com/1');
+      expect(desc).toBe('An example description');
+      expect(img).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+
+      href = widget2.find('.pf-content-unit').attr('href');
+      desc = widget2.find('.pf-content-unit p').text();
+      img = widget2.find('.pf-content-unit-img').css('background-image');
+      title = widget2.find('.pf-content-unit h4').text();
+      expect(title).toBe('Default Title');
+      expect(href).toBe('http://www.example.com/2');
+      expect(desc).toBe('Default description');
+      expect(img).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+
+      pathfora.clearAll();
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
   });
 
   it('should show warning when user tries to use not available widget position', function () {
