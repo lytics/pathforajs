@@ -6,6 +6,7 @@
   left: 0;
   background: rgba(0,0,0,.5);
   z-index: 9999;
+  text-align: center;
 
   .pf-va-middle {
     display: table-cell;
@@ -31,20 +32,14 @@
   }
 
   .pf-widget-content {
+    width: auto;
     position: relative;
-    width: 780px;
+    max-width: 780px;
     margin: 0 auto;
     padding: 40px;
     border-radius: 5px;
     .pf-box-shadow();
     transition: all .3s;
-  }
-
-  .pf-widget-img {
-    float: right;
-    width: 100px;
-    height: 100px;
-    margin-left: 20px;
   }
 
   .pf-widget-headline {
@@ -82,30 +77,48 @@
   }
 
   /* Variant Styles */
-  &.pf-no-img {
-    text-align: center;
-  }
-
   &.pf-widget-variant-2 {
-    .pf-widget-content {
-      text-align: center;
-      max-width: 70%;
-      width: auto;
-    }
-
     .pf-widget-headline {
       margin-top: 140px;
     }
 
-    .pf-widget-body {
-      .pf-widget-img {
-        float: none;
+    .pf-widget-img {
+      float: none;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      margin-left: -70px;
+      width: 140px;
+      height: 140px;
+    }
+  }
+
+  &.pf-widget-variant-3 {
+    .pf-content-unit {
+      width: 95%;
+      margin: 0 auto 30px;
+      min-height: 135px;
+
+      .pf-content-unit-img {
         position: absolute;
-        top: 20px;
-        left: 50%;
-        margin-left: -70px;
-        width: 140px;
-        height: 140px;
+        display: block;
+        height: 100%;
+        width: 40%;
+      }
+
+      .pf-content-unit-meta {
+        padding: 15px 15px;
+        display: block;
+        width: 60%;
+        margin: 0 0 0 auto;
+
+        h4 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 14px;
+        }
       }
     }
   }

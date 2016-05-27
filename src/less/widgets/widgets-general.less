@@ -49,6 +49,10 @@
     font-weight: 500;
   }
 
+  .pf-content-unit {
+    display: none;
+  }
+
   input[type=text],
   input[type=email],
   textarea {
@@ -90,6 +94,7 @@
   }
 
   .pf-widget-img {
+    display: none;
     border-radius: 50%;
   }
 
@@ -146,6 +151,41 @@
   }
 }
 
+.pf-widget-variant-2 {
+  .pf-widget-img {
+    display: block;
+  }
+}
+
+.pf-widget-variant-3 {
+  .pf-content-unit {
+    display: block;
+    text-align: left;
+    margin-bottom: 20px;
+    position: relative;
+
+    .pf-content-unit-meta {
+      padding: 10px 15px;
+
+      h4 {
+        font-weight: 500;
+        margin: 0 0 5px;
+        line-height: 1.4;
+      }
+
+      p {
+        line-height: 1.3;
+      }
+    }
+
+    .pf-content-unit-img {
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
 /* Type Specific Styles */
 .pf-subscription {
   form {
@@ -194,11 +234,7 @@
   .pf-sitegate-clear {
     display: block;
     width: 100%;
-    height: 1px;
-  }
-
-  .pf-widget-btn {
-    margin-top: 10px;
+    height: 10px;
   }
 }
 
