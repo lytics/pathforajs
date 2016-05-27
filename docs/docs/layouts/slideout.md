@@ -1,6 +1,6 @@
 [NEEDS: description]
 
-## Position
+## position
 
 Positition of the slideout module relative to the browser window.
 
@@ -17,7 +17,7 @@ Positition of the slideout module relative to the browser window.
 <pre data-src="../../examples/src/layouts/slideout/positions.js"></pre>
 
 
-## Variant
+## variant
 
 Variants determines any extra content that may be used by the module.
 
@@ -34,7 +34,7 @@ Variants determines any extra content that may be used by the module.
 <pre data-src="../../examples/src/layouts/slideout/image.js"></pre>
 
 
-## Origin
+## origin
 
 Direction from which the slideout module should slide from.
 

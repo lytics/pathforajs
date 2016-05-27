@@ -29,3 +29,7 @@ h3 a {
 table {
   width: 100%;
 }
+
+a.toctree-l4 {
+  display: none;
+}

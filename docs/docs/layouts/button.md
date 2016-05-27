@@ -1,6 +1,6 @@
 [NEEDS: description]
 
-## Position
+## position
 
 Positition of the button module relative to the browser window.
 

@@ -1,6 +1,6 @@
 [NEEDS: description]
 
-## Variant
+## variant
 
 Variants determines any extra content that may be used by the module.
 

@@ -21,3 +21,19 @@ var module = pathfora.Form({
 ![Form Slideout](../examples/img/types/form/slideout.png)
 
 <pre data-src="../../examples/src/types/form/slideout.js"></pre>
+
+
+## showSocialLogin
+
+With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email.
+
+| Value | Type | Behavior |
+|---|---|---|
+| false | boolean | `default` do not show social login buttons |
+| true | boolean | show social login buttons |  
+
+### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/form/social.html)
+
+![Social Login Form](../examples/img/types/form/social.png)
+
+<pre data-src="../../examples/src/types/form/social.js"></pre>

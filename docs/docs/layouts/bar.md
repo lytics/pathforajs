@@ -1,6 +1,6 @@
 [NEEDS: description]
 
-## Position
+## position
 
 Positition of the bar module relative to the browser window.
 
@@ -18,7 +18,7 @@ Positition of the bar module relative to the browser window.
 <pre data-src="../../examples/src/layouts/bar/positions.js"></pre>
 
 
-## Variant
+## variant
 
 Variants determines any extra content that may be used by the module.
 
@@ -32,3 +32,18 @@ Variants determines any extra content that may be used by the module.
 ![Image Bar](../examples/img/layouts/bar/image.png)
 
 <pre data-src="../../examples/src/layouts/bar/image.js"></pre>
+
+
+## pushDown
+
+For `top` or `top-fixed` positioned bars, we can select an element to push down (add a top margin) so it doesn't get covered by the module, this is especially helpful for top-aligned site navigation.
+
+| Value | Type | Behavior |
+|---|---|---|
+|  | string | selector of the element that should move down with the bar. |
+
+### Image - [Live Preview](../../examples/preview/layouts/bar/pushdown.html)
+
+![pushDown Bar](../examples/img/layouts/bar/pushdown.png)
+
+<pre data-src="../../examples/src/layouts/bar/pushdown.js"></pre>

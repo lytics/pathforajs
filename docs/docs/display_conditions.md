@@ -63,7 +63,7 @@ displayConditions: {
   displayWhenElementVisible: "#footer"
 }
 ```
-	
+  
 ## scrollPercentageToDisplay
 Triggers the modal after a percentage of the page scroll has been performed.
 
@@ -79,7 +79,7 @@ displayConditions: {
   scrollPercentageToDisplay: 50
 }
 ```
-	
+  
 ## pageVisits
 Triggers the module when the user visits the page a certain amount of times (total saved in cookie).
 
@@ -100,37 +100,37 @@ displayConditions: {
 Display the module in a specified interval of time.
 
 <table>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td>date</td>
-		<td>obj</td>
-		<td>must be object formatted using following options / values</td>
-	</tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>date</td>
+    <td>obj</td>
+    <td>must be object formatted using following options / values</td>
+  </tr>
 </table>
 
 <table>
-	<tr>
-		<td colspan="3" align="center"><code>date</code> object</td>
-	</tr>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td> start_at </td>
-		<td>string</td>
-		<td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to start showing module</td>
-	</tr>
-	<tr>
-		<td> end_at </td>
-		<td>string</td>
-		<td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to stop showing module</td>
-	</tr>
+  <tr>
+    <td colspan="3" align="center"><code>date</code> object</td>
+  </tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td> start_at </td>
+    <td>string</td>
+    <td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to start showing module</td>
+  </tr>
+  <tr>
+    <td> end_at </td>
+    <td>string</td>
+    <td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to stop showing module</td>
+  </tr>
 </table>
   
 ```
@@ -138,7 +138,7 @@ Display the module in a specified interval of time.
 
 displayConditions: {
   date: {
-  	start_at: "2017-02-12T11:00:00.000Z"
+    start_at: "2017-02-12T11:00:00.000Z"
   }
 }
 ```
@@ -148,57 +148,57 @@ displayConditions: {
 
 displayConditions: {
   date: {
-  	end_at: "2017-02-12T11:00:00.000Z"
+    end_at: "2017-02-12T11:00:00.000Z"
   }
 }
-```		
+```   
 
 ```
 // example: show module between February 12, 2017 and March 12, 2017
 
 displayConditions: {
   date: {
-  	start_at: "2017-02-12T11:00:00.000Z",
-  	end_at: "2017-03-12T11:00:00.000Z"
+    start_at: "2017-02-12T11:00:00.000Z",
+    end_at: "2017-03-12T11:00:00.000Z"
   }
 }
 ```
-	
+  
 ## impressions
 Hide the module after a certain number of impressions
 
 <table>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td>impressions</td>
-		<td>obj</td>
-		<td>must be object formatted using following options / values</td>
-	</tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>impressions</td>
+    <td>obj</td>
+    <td>must be object formatted using following options / values</td>
+  </tr>
 </table>
 
 <table>
-	<tr>
-		<td colspan="3" align="center"><code>date</code> object</td>
-	</tr>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td> session </td>
-		<td>int</td>
-		<td><code>optional</code> integer count of how many session-based impressions before showing the module</td>
-	</tr>
-	<tr>
-		<td> total </td>
-		<td>int</td>
-		<td><code>optional</code> integer count of how many total (multisession) impressions before showing the module</td>
-	</tr>
+  <tr>
+    <td colspan="3" align="center"><code>date</code> object</td>
+  </tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td> session </td>
+    <td>int</td>
+    <td><code>optional</code> integer count of how many session-based impressions before showing the module</td>
+  </tr>
+  <tr>
+    <td> total </td>
+    <td>int</td>
+    <td><code>optional</code> integer count of how many total (multisession) impressions before showing the module</td>
+  </tr>
 </table>
 
 ```
@@ -206,7 +206,7 @@ Hide the module after a certain number of impressions
 
 displayConditions: {
   impressions: {
-  	session: 2
+    session: 2
   }
 }
 ```
@@ -216,72 +216,71 @@ displayConditions: {
 
 displayConditions: {
   impressions: {
-  	total: 5
+    total: 5
   }
 }
-```		
+```   
 
 ```
 // example: hide the module after the second impression in the same session or if it has been seen five times ever
 
 displayConditions: {
   impressions: {
-  	session: 2,
-  	total: 5
+    session: 2,
+    total: 5
   }
 }
 ```
-	
-	
+  
+  
 ## hideAfterAction
 Hide the module after a particular action has been taken (`closed, confirm, cancel`)
 
 <table>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td>hideAfterAction</td>
-		<td>obj</td>
-		<td>must be object formatted using following options / values</td>
-	</tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>hideAfterAction</td>
+    <td>obj</td>
+    <td>must be object formatted using following options / values</td>
+  </tr>
 </table>
 
 <table>
-	<tr>
-		<td colspan="3" align="center"><code>closed</code> / <code>confirm</code> / <code>cancel</code> object</td>
-	</tr>
-	<tr>
-		<th>VALUE</th>
-		<th>TYPE</th>
-		<th>BEHAVIOR</th>
-	</tr>
-	<tr>
-		<td>hideCount</td>
-		<td>int</td>
-		<td><code>optional</code> integer count of times module has been closed manually by user</td>
-	</tr>
-	<tr>
-		<td>duration</td>
-		<td>int</td>
-		<td><code>optional</code> integer representing how long the module should be hidden in seconds</td>
-	</tr>
+  <tr>
+    <td colspan="3" align="center"><code>closed</code> / <code>confirm</code> / <code>cancel</code> object</td>
+  </tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>hideCount</td>
+    <td>int</td>
+    <td><code>optional</code> integer count of times module has been closed manually by user</td>
+  </tr>
+  <tr>
+    <td>duration</td>
+    <td>int</td>
+    <td><code>optional</code> integer representing how long the module should be hidden in seconds</td>
+  </tr>
 </table>
-
 
 
 ```
 // example: hide module for 6 minutes after 5th close
 
 displayConditions: {
-	hideAfterAction: {
-		closed: {
-			hideCount: 5,
-			duration: 360
-		}
-	}
+  hideAfterAction: {
+    closed: {
+      hideCount: 5,
+      duration: 360
+    }
+  }
 }
 ```
 
@@ -289,11 +288,11 @@ displayConditions: {
 // example: hide module permanently after confirmation has been clicked
 
 displayConditions: {
-	hideAfterAction: {
-		confirm: {
-			hideCount: 1
-		}
-	}
+  hideAfterAction: {
+    confirm: {
+      hideCount: 1
+    }
+  }
 }
 ```
 
@@ -301,12 +300,12 @@ displayConditions: {
 // example: hide module for 1 week after cancel has been clicked
 
 displayConditions: {
-	hideAfterAction: {
-		cancel: {
-			hideCount: 1,
-			duration: 604800
-		}
-	}
+  hideAfterAction: {
+    cancel: {
+      hideCount: 1,
+      duration: 604800
+    }
+  }
 }
 ```
 
@@ -314,18 +313,177 @@ displayConditions: {
 // example: all of the above
 
 displayConditions: {
-	hideAfterAction: {
-		cancel: {
-			hideCount: 1,
-			duration: 604800
-		},
-		confirm: {
-			hideCount: 1
-		},
-		closed: {
-			hideCount: 5,
-			duration: 360
-		}
-	}
+  hideAfterAction: {
+    cancel: {
+      hideCount: 1,
+      duration: 604800
+    },
+    confirm: {
+      hideCount: 1
+    },
+    closed: {
+      hideCount: 5,
+      duration: 360
+    }
+  }
 }
+```
+
+
+## urlContains
+
+Only display the module on pages that match the url conditions defined.
+
+<table>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>urlContains</td>
+    <td>array</td>
+    <td>must be an array of objects formatted using following options / values</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td colspan="3" align="center">object in <code>urlContains</code> array</td>
+  </tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>match</td>
+    <td>string</td>
+    <td><code>optional</code> name of the matching rule (see below)</td>
+  </tr>
+  <tr>
+    <td>value</td>
+    <td>string</td>
+    <td>value to match the current page url against</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td colspan="3" align="center"><code>match</code> string</td>
+  </tr>
+  <tr>
+    <th>VALUE</th>
+    <th>TYPE</th>
+    <th>BEHAVIOR</th>
+  </tr>
+  <tr>
+    <td>simple</td>
+    <td>string</td>
+    <td><code>default</code> fuzzy match that removes the URL protocol and query string before matching</td>
+  </tr>
+  <tr>
+    <td>exact</td>
+    <td>string</td>
+    <td>the url must match what is typed exactly: protocol, query params, etc.</td>
+  </tr>
+  <tr>
+    <td>string</td>
+    <td>string</td>
+    <td>sub-string match against the url</td>
+  </tr>
+  <tr>
+    <td>regex</td>
+    <td>string</td>
+    <td>evaluates regex against the url</td>
+  </tr>
+</table>
+
+
+```
+// example: simple match
+
+displayConditions: {
+  urlContains: [
+    {
+      match: 'simple',
+      value: 'www.getlytics.com'
+    }
+  ]
+}
+
+// Matches:
+// https://www.getlytics.com
+// http://www.getlytics.com
+// http://www.getlytics.com?ad_campaign=1ed387faed
+
+// Doesn't Match:
+// http://www.getlytics.com/blog
+// https://activate.getlytics.com
+```
+
+```
+// example: exact match
+
+displayConditions: {
+  urlContains: [
+    {
+      match: 'exact',
+      value: 'https://www.getlytics.com/resources?id=a763efd12c'
+    }
+  ]
+}
+
+// Matches:
+// https://www.getlytics.com/resources?id=a763efd12c
+
+// Doesn't Match:
+// http://www.getlytics.com/resources?id=a763efd12c
+// https://getlytics.com/resources?id=a763efd12c
+// https://www.getlytics.com/resources?id=a763efd12c&something=that-will-404
+```
+
+```
+// example: string match
+
+displayConditions: {
+  urlContains: [
+    {
+      match: 'string',
+      value: '/blog/'
+    }
+  ]
+}
+
+// Matches:
+// http://www.getlytics.com/blog/
+// http://getlytics.com/blog/some-post-in-the-past
+// https://www.getlytics.com/blog/tag/customer-data-platform?referrer=thegreatgoogle
+
+// Doesn't Match:
+// https://www.getlytics.com/
+// http://getlytics.com/careers
+```
+
+```
+// example: regex match
+
+displayConditions: {
+  urlContains: [
+    {
+      match: 'regex',
+      value: '\/integrations\/.+?\?.*?ref=our_partner'
+    }
+  ]
+}
+
+// Matches:
+// http://www.getlytics.com/integrations/campaignmonitor?ref=our_partner
+// http://www.getlytics.com/integrations/campaignmonitor?session=125929&ref=our_partner
+// https://www.getlytics.com/blog/tag/customer-data-platform?referrer=thegreatgoogle
+
+// Doesn't Match:
+// http://www.getlytics.com/integrations/campaignmonitor?ref=some_stranger
+// http://www.getlytics.com/integrations?ref=our_partner
+// http://www.getlytics.com/blog/adroll?session=125929&ref=our_partner
 ```

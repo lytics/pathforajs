@@ -11,13 +11,17 @@ pages:
     - Slideout: layouts/slideout.md
     - Bar: layouts/bar.md
     - Button: layouts/button.md
-  - Display Conditions: display_conditions.md
-  - Tracking: tracking.md
-  - Callbacks: callbacks.md
   - Customization:
+    - Buttons: customization/buttons.md
     - Color Themes: customization/themes.md
     - Custom CSS: customization/css.md
-  - Roadmap: roadmap.md
+    - Form Elements: customization/form.md
+  - A/B Testing: ab_testing.md
+  - Audience Targeting: targeting.md
+  - Callbacks: callbacks.md
+  - Display Conditions: display_conditions.md
+  - Generalizing Config: config.md
+  - Tracking: tracking.md
 extra_javascript:
   - assets/pre.js
 extra_css:
