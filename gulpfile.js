@@ -7,6 +7,10 @@ var rename = require('gulp-rename');
 var replace = require('gulp-replace');
 var env = require('gulp-env');
 var connect = require('gulp-connect');
+var handlebars = require('gulp-compile-handlebars');
+var through = require('through');
+var fs = require('fs');
+var walk = require('walk');
 var APIURL;
 var CSSURL;
 
@@ -96,7 +100,29 @@ gulp.task('preview', function () {
   });
 });
 
+gulp.task('build:hbs', function () {
+  var basedir = "docs/docs/examples/src",
+      destdir = "docs/docs/examples/preview",
+      options = {
+        listeners: {
+          file: function (root, stat, next) {
+            if (stat.name.split('.').pop() === "js") {
+              var contents = {config: fs.readFileSync(root + '/' + stat.name, "utf8")};
+              var dest = root.split(basedir + '/').pop();
+
+              gulp.src(basedir + '/template.hbs')
+                .pipe(handlebars(contents))
+                .pipe(rename(stat.name.replace(".js", ".html")))
+                .pipe(gulp.dest(destdir + "/" +  dest));
+            }
+          }
+        }
+      };
+
+  walk.walkSync(basedir, options);
+});
+
 gulp.task('test', ['build:styles', 'build:testjs']);
-gulp.task('local', ['build:styles', 'local:js', 'preview', 'local:watch']);
-gulp.task('build', ['build:styles', 'build:js']);
+gulp.task('local', ['build:styles', 'local:js', 'build:hbs', 'preview', 'local:watch']);
+gulp.task('build', ['build:styles', 'build:js', 'build:hbs']);
 gulp.task('default', ['build', 'preview', 'watch']);

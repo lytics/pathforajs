@@ -1,4 +1,3 @@
-## Overview
 Focused on deliverying outbound communication. Perhaps announcing a product launch, new content, top-level alert, etc. Message modules details regarding calls to action or other customization can be explored in detail here.
 
 ``` javascript
@@ -7,39 +6,31 @@ var module = pathfora.Message({
 });
 ```
 
-**Applicable Layouts:** Modal, Slideout, Bar, Button
 
-## Type Specfic Settings
+## Layouts
+### Modal - [Live Preview](../../examples/preview/types/message/modal.html)
 
-Tba
+![Message Modal](../examples/img/types/message/modal.png)
+
+<pre data-src="../../examples/src/types/message/modal.js"></pre>
 
 
-## Examples
-<img src ="../../examples/types/message/modal.png" alt="Message Modal" style="width: 80%;">
+### Slideout - [Live Preview](../../examples/preview/types/message/slideout.html)
 
-<small>[Live Example](../../examples/types/message/modal.html)</small>
+![Message Slideout](../examples/img/types/message/slideout.png)
 
-<pre data-src="../../examples/types/message/modal.js"></pre>
+<pre data-src="../../examples/src/types/message/slideout.js"></pre>
 
----
-<img src ="../../examples/types/message/slideout.png" alt="Message Slideout" style="width: 80%;">
 
-<small>[Live Example](../../examples/types/message/slideout.html)</small>
+### Bar - [Live Preview](../../examples/preview/types/message/bar.html)
 
-<pre data-src="../../examples/types/message/slideout.js"></pre>
+![Message Bar](../examples/img/types/message/bar.png)
 
----
+<pre data-src="../../examples/src/types/message/bar.js"></pre>
 
-<img src ="../../examples/types/message/bar.png" alt="Message Bar" style="width: 80%;">
 
-<small>[Live Example](../../examples/types/message/bar.html)</small>
+### Button - [Live Preview](../../examples/preview/types/message/button.html)
 
-<pre data-src="../../examples/types/message/bar.js"></pre>
+![Message Button](../examples/img/types/message/button.png)
 
----
-
-<img src ="../../examples/types/message/button.png" alt="Message Button" style="width: 80%;">
-
-<small>[Live Example](../../examples/types/message/button.html)</small>
-
-<pre data-src="../../examples/types/message/button.js"></pre>
+<pre data-src="../../examples/src/types/message/button.js"></pre>

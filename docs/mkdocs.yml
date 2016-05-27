@@ -18,4 +18,9 @@ pages:
     - Color Themes: customization/themes.md
     - Custom CSS: customization/css.md
   - Roadmap: roadmap.md
+extra_javascript:
+  - assets/pre.js
+extra_css:
+  - assets/examples.css
+
 theme: readthedocs
