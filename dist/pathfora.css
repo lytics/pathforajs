@@ -204,10 +204,7 @@
 .pf-sitegate .pf-sitegate-clear {
   display: block;
   width: 100%;
-  height: 1px;
-}
-.pf-sitegate .pf-widget-btn {
-  margin-top: 10px;
+  height: 10px;
 }
 .pf-social-login {
   text-align: right;

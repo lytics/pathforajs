@@ -124,8 +124,6 @@
       fields: {},
       okMessage: 'Submit',
       okShow: true,
-      cancelShow: true,
-      cancelMessage: 'Cancel',
       showSocialLogin: false,
       showForm: true
     }
@@ -155,8 +153,8 @@
       inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
     },
     sitegate: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
+      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button></form></div></div></div></div></div>',
+      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button></form></div></div></div></div></div>'
     },
     social: {
       facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
@@ -927,15 +925,19 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
+            var child = node.querySelector('input');
 
             if (node) {
-              node.className += ' pf-hidden';
-            }
+              while(child) {
+                node.removeChild(child);
+                child = node.querySelector('input');
+              }
 
-            node = widget.querySelector('.pf-sitegate-centered-label');
+              child = node.querySelector('.pf-sitegate-clear');
 
-            if (node.parentNode) {
-              node.parentNode.removeChild(node);
+              if (child) {
+                node.removeChild(child);
+              }
             }
           }
           break;
@@ -1177,18 +1179,12 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id, true);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
@@ -1575,7 +1571,7 @@
             valid = false;
           }
         }
-        utils.saveCookie('PathforaUnlocked', valid, core.expiration);
+        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
       }
 
       params['pf-widget-event'] = action;
@@ -1630,11 +1626,12 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
+
         if (accountId && accountId.length <= 4) {
           console.warn('Pathfora: please update credentials to full Acccount ID');
         }
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1794,23 +1791,11 @@
       widget.type = type;
       widget.config = config;
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.impressions !== 'undefined') {
-        delete config.displayConditions.impressions;
-
-        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      if (!config.id) {
+        throw new Error('All widgets must have an id value');
       }
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.hideAfterAction !== 'undefined') {
-        delete config.displayConditions.hideAfterAction;
-
-        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
-      }
-
-      widget.id = config.id || utils.generateUniqueId();
+      widget.id = config.id;
 
       return widget;
     },
@@ -2374,8 +2359,13 @@
 
       node = core.createWidgetHtml(widget);
 
-      if (widget.showSocialLogin)
+      if (widget.showSocialLogin) {
+        if (widget.showForm === false) {
+          throw new Error('Social login requires a form on the widget');
+        }
+
         core.requestSocialPluginRender(node);
+      }
 
       if (widget.pushDown) {
         utils.addClass(document.querySelector('.pf-push-down'), "opened");

@@ -40,6 +40,7 @@
       var inlineForm = new window.pathfora.Form({
         msg: 'subscription',
         headline: 'Header',
+        id: 'inline1',
 
         // Use 'inline' layout and define position as a query selector
         // to the parent DOMElement
@@ -49,6 +50,7 @@
 
       var inlineMessage = new pathfora.Message({
         msg: 'Welcome to our website',
+        id: 'inline2',
         confirmAction: {
           name: 'Confirm action',
           callback: function() {
