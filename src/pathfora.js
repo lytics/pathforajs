@@ -24,18 +24,7 @@
     generic: {
       className: 'pathfora',
       headline: '',
-      theme: 'default',
       themes: {
-        default: {
-          background: '#f1f1f1',
-          headline: '#444',
-          text: '#888',
-          close: '#bbb',
-          actionText: '#444',
-          actionBackground: '#fff',
-          cancelText: '#bbb',
-          cancelBackground: '#f1f1f1'
-        },
         dark: {
           background: '#333',
           headline: '#fefefe',
@@ -1231,36 +1220,14 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      var colors = {};
-
-      if (typeof config.theme === 'undefined') {
-        core.setCustomColors(widget, defaultProps.generic.themes['default']);
-      }
-
-      if(config.config && config.config.theme === null) {
-        core.updateObject(colors, defaultProps.generic.themes['default']);
-        core.updateObject(colors, config.config.colors);
-        core.setCustomColors(widget, colors);
-      } else if (config.themes) {
+      if (config.theme) {
         if (config.theme === 'custom') {
-
-          // NOTE custom colors
-          core.updateObject(colors, config.colors);
-        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-
-          // NOTE colors set via the higher config
-          if (defaultProps.generic.theme === 'custom') {
-            core.updateObject(colors, defaultProps.generic.colors);
-          } else {
-            core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
+          if (config.colors) {
+            core.setCustomColors(widget, config.colors);
           }
         } else {
-
-          // NOTE default theme
-          core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+          core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
-
-        core.setCustomColors(widget, colors);
       }
     },
 
@@ -1434,53 +1401,75 @@
       var i;
       var j;
 
-      if (utils.hasClass(widget, 'pf-widget-modal')) {
-        widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
-      } else {
-        widget.style.backgroundColor = colors.background;
+      if (colors.background) {
+        if (utils.hasClass(widget, 'pf-widget-modal')) {
+          widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+        } else {
+          widget.style.backgroundColor = colors.background;
+        }
       }
 
-      if (fields.length > 0) {
-        j = fields.length;
-        for (i = 0; i < j; i++) {
-          fields[i].style.backgroundColor = colors.fieldBackground;
+      if (colors.fieldBackground) {
+        if (fields.length > 0) {
+          j = fields.length;
+          for (i = 0; i < j; i++) {
+            fields[i].style.backgroundColor = colors.fieldBackground;
+          }
         }
       }
 
       if (contentUnitMeta) {
-        contentUnit.style.backgroundColor = colors.actionBackground;
-        contentUnitMeta.querySelector('h4').style.color = colors.actionText;
-        contentUnitMeta.querySelector('p').style.color = colors.text;
+        if (colors.actionBackground) {
+          contentUnit.style.backgroundColor = colors.actionBackground;
+        }
+
+        if (colors.actionText) {
+          contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        }
+
+        if (colors.text) {
+          contentUnitMeta.querySelector('p').style.color = colors.text;
+        }
       }
 
-      if (close) {
+      if (close && colors.close) {
         close.style.color = colors.close;
       }
 
-      if (headline) {
+      if (headline && colors.headline) {
         headline.style.color = colors.headline;
       }
 
-      if (headlineLeft) {
+      if (headlineLeft && colors.headline) {
         headlineLeft.style.color = colors.headline;
       }
 
-      if (arrow) {
+      if (arrow && colors.close) {
         arrow.style.color = colors.close;
       }
 
-      if (arrowLeft) {
+      if (arrowLeft && colors.close) {
         arrowLeft.style.color = colors.close;
       }
 
       if (cancelBtn) {
-        cancelBtn.style.color = colors.cancelText;
-        cancelBtn.style.backgroundColor = colors.cancelBackground;
+        if (colors.cancelText) {
+          cancelBtn.style.color = colors.cancelText;
+        }
+
+        if (colors.cancelBackground) {
+          cancelBtn.style.backgroundColor = colors.cancelBackground;
+        }
       }
 
       if (okBtn) {
-        okBtn.style.color = colors.actionText;
-        okBtn.style.backgroundColor = colors.actionBackground;
+        if (colors.actionText) {
+          okBtn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          okBtn.style.backgroundColor = colors.actionBackground;
+        }
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;

@@ -756,24 +756,15 @@ describe('Widgets', function () {
       }
     };
 
-    var w4 = new pathfora.Message({
-      layout: 'button',
-      position: 'top-right',
-      msg: 'default button',
-      id: 'def-theme-widget'
-    });
-
-    pathfora.initializeWidgets([w1,w2,w3, w4], credentials,config);
+    pathfora.initializeWidgets([w1,w2,w3], credentials,config);
 
     var light = $('#' + w1.id);
     var dark = $('#' + w2.id);
     var custom = $('#' + w3.id);
-    var def = $('#' + w4.id);
 
     expect(light.hasClass('pf-theme-light')).toBeTruthy();
     expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
     expect(custom.hasClass('pf-theme-custom')).toBeTruthy();
-    expect(def.hasClass('pf-theme-default')).toBeTruthy();
 
     expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
   });
