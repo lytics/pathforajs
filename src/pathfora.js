@@ -1767,7 +1767,7 @@
       }
 
       test.id = config.id;
-      test.cookieId = abHashMD5 + config.id;
+      test.cookieId = 'PathforaTest_' + config.id;
       test.groups = config.groups;
 
       if (!abTestingTypes[config.type]) {
@@ -2214,7 +2214,12 @@
         var i;
 
         if (!userAbTestingValue) {
-          userAbTestingValue = Math.random();
+          // Support old cookie name convention
+          userAbTestingValue = utils.readCookie(abHashMD5 + abTest.id);
+
+          if (!userAbTestingValue) {
+            userAbTestingValue = Math.random();
+          }
         }
 
         // NOTE Always update the cookie to get the new exp date.
