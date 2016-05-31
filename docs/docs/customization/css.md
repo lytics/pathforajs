@@ -2,6 +2,19 @@
 
 [NEEDS: description]
 
+Key Class Names:
+- `pf-widget` - 
+- `pf-widget-[layout name]`
+- `pf-widget-content`
+- `pf-widget-headline`
+- `pf-widget-btn`
+- `pf-widget-close`
+- `pf-widget-ok`
+- `pf-widget-cancel`
+
+
+All modules have the `pf-widget` class, thus any styles applied to this class and sub-elements will effect all widgets used on the page. To 
+
 To add custom CSS to a module we suggest adding a custom class name in the config.
 
 ```javascript
@@ -15,4 +28,5 @@ var module = pathfora.Subscription({
 
 window.pathfora.initializeWidgets([ module ]);
 ```
+
 

@@ -4,10 +4,22 @@ Focused on deliverying outbound communication. Perhaps announcing a product laun
 var module = pathfora.Message({
 	// module settings
 });
+
+pathfora.initializeWidgets([ module ]);
 ```
 
 
-## Layouts
+## layout
+
+Define which layout type the form module should use.
+
+| Value | Type | Behavior |
+|---|---|---|
+| modal | string | module uses a [modal layout](../layouts/modal.md) |
+| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |
+| bar | string | module uses a [bar layout](../layouts/bar.md) |  
+| button | string | module uses a [button layout](../layouts/button.md) |  
+
 ### Modal - [Live Preview](../../examples/preview/types/message/modal.html)
 
 ![Message Modal](../examples/img/types/message/modal.png)

@@ -74,11 +74,6 @@
       okShow: true,
       cancelShow: true
     },
-    welcome: {
-      layout: 'modal',
-      position: '',
-      variant: '1'
-    },
     subscription: {
       layout: 'modal',
       position: '',
@@ -129,8 +124,6 @@
       fields: {},
       okMessage: 'Submit',
       okShow: true,
-      cancelShow: true,
-      cancelMessage: 'Cancel',
       showSocialLogin: false,
       showForm: true
     }
@@ -138,37 +131,7 @@
 
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
-  var templates = {
-    message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      button: '<p class="pf-widget-message pf-widget-ok"></p>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
-    },
-    subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>'
-    },
-    form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><\/p><input name="title" type="text"><input name="email" type="email"><textarea  name="message" rows="5"></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    sitegate: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    social: {
-      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
-      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div id="{{google-btnId}}" class="google-login"></div>'
-    }
-  };
+  var templates = {{templates}};
 
   // NOTE Event callback types
   var callbackTypes = {
@@ -868,19 +831,19 @@
         }
       }
 
-      if(widgetCancel !== null) {
+      if (widgetCancel !== null) {
         widgetCancel.innerHTML = config.cancelMessage;
       }
 
-      if(widgetOk !== null) {
+      if (widgetOk !== null) {
         widgetOk.innerHTML = config.okMessage;
       }
 
-      if(widgetOk && widgetOk.value !== null) {
+      if (widgetOk && widgetOk.value !== null) {
         widgetOk.value = config.okMessage;
       }
 
-      if(widgetCancel && widgetCancel.value !== null) {
+      if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
       }
 
@@ -916,6 +879,7 @@
         switch (config.layout) {
         case 'modal':
         case 'slideout':
+          break;
         case 'random':
         case 'bar':
         case 'button':
@@ -931,15 +895,19 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
+            var child = node.querySelector('input');
 
             if (node) {
-              node.className += ' pf-hidden';
-            }
+              while(child) {
+                node.removeChild(child);
+                child = node.querySelector('input');
+              }
 
-            node = widget.querySelector('.pf-sitegate-centered-label');
+              child = node.querySelector('.pf-sitegate-clear');
 
-            if (node.parentNode) {
-              node.parentNode.removeChild(node);
+              if (child) {
+                node.removeChild(child);
+              }
             }
           }
           break;
@@ -964,8 +932,6 @@
           widgetImage.className = 'pf-widget-img';
           widgetBody.appendChild(widgetImage);
         }
-      } else {
-        utils.addClass(widget, 'pf-no-img');
       }
 
       switch(config.type) {
@@ -1027,7 +993,7 @@
         break;
       }
 
-      if(config.msg){
+      if (config.msg){
         widgetMessage.innerHTML = config.msg;
       }
     },
@@ -1183,18 +1149,12 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id, true);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
@@ -1325,6 +1285,46 @@
     },
 
     /**
+     * @description Setup content recommendation if we have one
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetContentUnit: function (widget, config) {
+      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+
+      if (config.recommend && config.content) {
+        // Make sure we have content to get
+        if (Object.keys(config.content).length > 0) {
+
+          // The top recommendation should be default if we couldn't
+          // get one from the api
+          var rec = config.content[0]
+          widgetContentUnit.href = rec.url;
+
+          var recImage = document.createElement('div');
+          recImage.className = 'pf-content-unit-img';
+          recImage.style.backgroundImage = "url('" + rec.image + "')";
+          widgetContentUnit.appendChild(recImage);
+
+          var recMeta = document.createElement('div');
+          recMeta.className = 'pf-content-unit-meta';
+
+          // title
+          var recTitle = document.createElement('h4');
+          recTitle.innerHTML = rec.title;
+          recMeta.appendChild(recTitle);
+
+          // description
+          var recDesc = document.createElement('p');
+          recDesc.innerHTML = rec.description;
+          recMeta.appendChild(recDesc);
+
+          widgetContentUnit.appendChild(recMeta);
+        }
+      }
+    },
+
+    /**
      * Validate position for a widget of specific type
      * @param   {object}   widget
      * @param   {object}   config
@@ -1384,6 +1384,7 @@
 
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
+      this.setupWidgetContentUnit(widget, config);
       this.setWidgetClassname(widget, config);
       this.constructWidgetLayout(widget, config);
       this.setupWidgetColors(widget, config);
@@ -1427,6 +1428,8 @@
       var okBtn = widget.querySelector('.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var contentUnit = widget.querySelector('.pf-content-unit');
+      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var i;
       var j;
@@ -1442,6 +1445,12 @@
         for (i = 0; i < j; i++) {
           fields[i].style.backgroundColor = colors.fieldBackground;
         }
+      }
+
+      if (contentUnitMeta) {
+        contentUnit.style.backgroundColor = colors.actionBackground;
+        contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        contentUnitMeta.querySelector('p').style.color = colors.text;
       }
 
       if (close) {
@@ -1532,7 +1541,7 @@
             valid = false;
           }
         }
-        utils.saveCookie('PathforaUnlocked', valid, core.expiration);
+        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
       }
 
       params['pf-widget-event'] = action;
@@ -1568,7 +1577,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array) {
+    initializeWidgetArray: function (array, accountId) {
       var widgetOnInitCallback;
       var defaults;
       var globals;
@@ -1587,7 +1596,12 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
+
+        if (accountId && accountId.length <= 4) {
+          console.warn('Pathfora: please update credentials to full Acccount ID');
+        }
+
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1601,10 +1615,43 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.displayConditions.showDelay) {
-          core.registerDelayedWidget(widget);
+        var displayWidget = function(widget) {
+          if (widget.displayConditions.showDelay) {
+            core.registerDelayedWidget(widget);
+          } else {
+            core.initializeWidget(widget);
+          }
+        }
+
+        if (widget.type === "message" && (widget.recommend || widget.content)) {
+          if (widget.layout !== "slideout" && widget.layout !== "modal") {
+            throw new Error('Unsupported layout for content recommendation');
+          }
+
+          if (widget.content && widget.content[0] && !widget.content[0].default) {
+            throw new Error('Cannot define recommended content unless it is a default');
+          }
+
+          api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
+            if (content) {
+              widget.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: "http://" + content.url,
+                  image: content.primary_image
+                }
+              };
+            }
+
+            if (!widget.content) {
+              throw new Error('Could not get recommendation and no default defined');
+            }
+
+            displayWidget(widget);
+          });
         } else {
-          core.initializeWidget(widget);
+          displayWidget(widget);
         }
 
         // NOTE onInit feels better here
@@ -1714,23 +1761,11 @@
       widget.type = type;
       widget.config = config;
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.impressions !== 'undefined') {
-        delete config.displayConditions.impressions;
-
-        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      if (!config.id) {
+        throw new Error('All widgets must have an id value');
       }
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.hideAfterAction !== 'undefined') {
-        delete config.displayConditions.hideAfterAction;
-
-        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
-      }
-
-      widget.id = config.id || utils.generateUniqueId();
+      widget.id = config.id;
 
       return widget;
     },
@@ -2016,7 +2051,42 @@
           }
         });
       });
-    }
+    },
+
+
+    /**
+     * @description Fetch content to recommend
+     * @throws {Error} error
+     * @param {string} accountId  Lytics account ID
+     */
+    recommendContent: function (accountId, filter, callback) {
+      var seerId = utils.readCookie('seerid');
+      var recommendUrl;
+
+      if (!seerId) {
+        throw new Error('Cannot find SEERID cookie');
+      }
+
+      recommendUrl = [
+        '{{apiurl}}/api/content/recommend/',
+        accountId,
+        '/user/_uids/',
+        seerId,
+        filter ? '?ql=' + filter : '',
+      ].join('');
+
+
+      this.getData(recommendUrl, function (json) {
+        var resp = JSON.parse(json);
+        if (resp.data && resp.data.length > 0) {
+          callback(resp.data[0]);
+        } else {
+          callback(null);
+        }
+      }, function () {
+        callback(null);
+      });
+    },
   };
 
   /**
@@ -2063,12 +2133,12 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets);
+        core.initializeWidgetArray(widgets, lyticsId);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common);
+          core.initializeWidgetArray(widgets.common, lyticsId);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
@@ -2119,11 +2189,11 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets);
+              core.initializeWidgetArray(targetedwidgets, lyticsId);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse);
+              core.initializeWidgetArray(widgets.inverse, lyticsId);
             }
           });
         }
@@ -2259,8 +2329,13 @@
 
       node = core.createWidgetHtml(widget);
 
-      if (widget.showSocialLogin)
+      if (widget.showSocialLogin) {
+        if (widget.showForm === false) {
+          throw new Error('Social login requires a form on the widget');
+        }
+
         core.requestSocialPluginRender(node);
+      }
 
       if (widget.pushDown) {
         utils.addClass(document.querySelector('.pf-push-down'), "opened");

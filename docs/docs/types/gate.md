@@ -4,8 +4,9 @@ A more invasive approach to data collection or user identification. This type of
 var module = pathfora.SiteGate({
 	// module settings
 });
+
+pathfora.initializeWidgets([ module ]);
 ```
-## SiteGate
 
 ### SiteGate - [Live Preview](../../examples/preview/types/gate/gate.html)
 
@@ -28,3 +29,18 @@ With social login enabled, a module can show Google or Facebook login buttons wh
 ![Site Gate](../examples/img/types/gate/social.png)
 
 <pre data-src="../../examples/src/types/gate/social.js"></pre>
+
+## showForm
+
+By default the a gate module includes a form, with this setting it can be hidden for a text-only gated widget.
+
+| Value | Type | Behavior |
+|---|---|---|
+| true | boolean | `default` show the gated form |
+| false | boolean | hide the form for a text-only gated widget |  
+
+### Text-only Gate - [Live Preview](../../examples/preview/types/gate/showForm.html)
+
+![Site Gate](../examples/img/types/gate/showForm.png)
+
+<pre data-src="../../examples/src/types/gate/showForm.js"></pre>

@@ -2,12 +2,21 @@ Used primarily for data collection or user identification. Supporting a variety 
 
 ``` javascript
 var module = pathfora.Form({
-	// module settings
+	// form module settings
 });
+
+pathfora.initializeWidgets([ module ]);
 ```
 
 
-## Layouts
+## layout
+
+Define which layout type the form module should use.
+
+| Value | Type | Behavior |
+|---|---|---|
+| modal | string | module uses a [modal layout](../layouts/modal.md) |
+| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |  
 
 ### Form - [Live Preview](../../examples/preview/types/form/modal.html)
 

@@ -4,9 +4,20 @@ A lite version of the form type this module focuses on gathering the minimum amo
 var module = pathfora.Subscription({
 	// module settings
 });
+
+pathfora.initializeWidgets([ module ]);
 ```
 
-## Layouts
+## layout
+
+Define which layout type the form module should use.
+
+| Value | Type | Behavior |
+|---|---|---|
+| modal | string | module uses a [modal layout](../layouts/modal.md) |
+| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |
+| bar | string | module uses a [bar layout](../layouts/bar.md) |  
+
 ### Modal - [Live Preview](../../examples/preview/types/subscription/modal.html)
 
 ![Subscription Modal](../examples/img/types/subscription/modal.png)

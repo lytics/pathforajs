@@ -1,5 +1,14 @@
 The `displayConditions` key controls how, when, and for how long any single module is displayed/hidden. All options can be combined with one-another for maximum control. Each module requires its own set of `displayConditions`. By default all modules will leverage `showOnInit`. Upon configuring another options this init based display is automatically disabled unless explicitly defined again in the module config.
 
+
+``` javascript
+var module = pathfora.Message({
+  displayConditions: {
+    // display conditions here
+  }
+});
+```
+
 ## showOnInit
 Determines if the rendered module is displayed as soon as it is initialized or waits for another event.
 
@@ -8,7 +17,7 @@ Determines if the rendered module is displayed as soon as it is initialized or w
 | true | bool | `default` module will be displayed as soon as it has been loaded |
 | false | bool | module will be added to DOM but not displayed until another trigger instructs it to |  
 
-```
+``` javascript
 // example: loads immediately after initializing the module
 
 displayConditions: {
@@ -25,7 +34,7 @@ Adds a delay, in seconds, that must be completed before module is loaded.
 | 0 - ∞ | int | module will be displayed after waiting x seconds after initialization |  
 
 
-```
+``` javascript
 // example: loads after a 10 second delay
 
 displayConditions: {
@@ -41,7 +50,7 @@ Adds a countdown, in seconds, that must hides module on expiration.
 | 0 | int | `default` using 0 disables the showDelay property and will not be hidden |
 | 0 - ∞ | int | module will hidden from screen after x seconds have passed |  
 
-```
+``` javascript
 // example: hide module after 10 seconds
 
 displayConditions: {
@@ -56,7 +65,7 @@ Triggers the module when a specific DOM element enters the viewport.
 |---|---|---|
 | element id | string | waits for an element with specific id to enter the viewport |
 
-```
+``` javascript
 // example: show module when the #footer is visible
 
 displayConditions: {
@@ -72,7 +81,7 @@ Triggers the modal after a percentage of the page scroll has been performed.
 | 0 | int | `default` using 0 disables the property and will show immediately |
 | 0 - 100 | int | module will hidden until x percent of total scroll has been performed |        
 
-```
+``` javascript
 // example: show module when the 50 percent of the page scroll has been completed
 
 displayConditions: {
@@ -88,7 +97,7 @@ Triggers the module when the user visits the page a certain amount of times (tot
 | 0 | int | `default` using 0 disables the property and will show on all visits |
 | 0 - ∞ | int | module will show only when visits > x |        
 
-```
+``` javascript
 // example: show module after they have visited at least 3 times
 
 displayConditions: {
@@ -133,7 +142,7 @@ Display the module in a specified interval of time.
   </tr>
 </table>
   
-```
+``` javascript
 // example: show module starting February 12, 2017
 
 displayConditions: {
@@ -143,7 +152,7 @@ displayConditions: {
 }
 ```
   
-```
+``` javascript
 // example: hide module starting February 12, 2017
 
 displayConditions: {
@@ -153,7 +162,7 @@ displayConditions: {
 }
 ```   
 
-```
+``` javascript
 // example: show module between February 12, 2017 and March 12, 2017
 
 displayConditions: {
@@ -201,7 +210,7 @@ Hide the module after a certain number of impressions
   </tr>
 </table>
 
-```
+``` javascript
 // example: hide module after the second impressions in the same session
 
 displayConditions: {
@@ -211,7 +220,7 @@ displayConditions: {
 }
 ```
 
-```
+``` javascript
 // example: hide module after five total impressions
 
 displayConditions: {
@@ -221,7 +230,7 @@ displayConditions: {
 }
 ```   
 
-```
+``` javascript
 // example: hide the module after the second impression in the same session or if it has been seen five times ever
 
 displayConditions: {
@@ -271,7 +280,7 @@ Hide the module after a particular action has been taken (`closed, confirm, canc
 </table>
 
 
-```
+``` javascript
 // example: hide module for 6 minutes after 5th close
 
 displayConditions: {
@@ -284,7 +293,7 @@ displayConditions: {
 }
 ```
 
-```
+``` javascript
 // example: hide module permanently after confirmation has been clicked
 
 displayConditions: {
@@ -296,7 +305,7 @@ displayConditions: {
 }
 ```
 
-```
+``` javascript
 // example: hide module for 1 week after cancel has been clicked
 
 displayConditions: {
@@ -309,7 +318,7 @@ displayConditions: {
 }
 ```
 
-```
+``` javascript
 // example: all of the above
 
 displayConditions: {
@@ -400,7 +409,7 @@ Only display the module on pages that match the url conditions defined.
 </table>
 
 
-```
+``` javascript
 // example: simple match
 
 displayConditions: {
@@ -422,7 +431,7 @@ displayConditions: {
 // https://activate.getlytics.com
 ```
 
-```
+``` javascript
 // example: exact match
 
 displayConditions: {
@@ -443,7 +452,7 @@ displayConditions: {
 // https://www.getlytics.com/resources?id=a763efd12c&something=that-will-404
 ```
 
-```
+``` javascript
 // example: string match
 
 displayConditions: {
@@ -465,7 +474,7 @@ displayConditions: {
 // http://getlytics.com/careers
 ```
 
-```
+``` javascript
 // example: regex match
 
 displayConditions: {
