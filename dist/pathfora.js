@@ -24,18 +24,7 @@
     generic: {
       className: 'pathfora',
       headline: '',
-      theme: 'default',
       themes: {
-        default: {
-          background: '#f1f1f1',
-          headline: '#444',
-          text: '#888',
-          close: '#bbb',
-          actionText: '#444',
-          actionBackground: '#fff',
-          cancelText: '#bbb',
-          cancelBackground: '#f1f1f1'
-        },
         dark: {
           background: '#333',
           headline: '#fefefe',
@@ -158,8 +147,8 @@
   "form": {
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"><input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button> <button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button></form></div>",
     "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"><input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
-    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\">\n\t\t\t\t\t\t</textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
-    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\">\n\t\t</textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
+    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
   }
 };
 
@@ -1261,36 +1250,14 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      var colors = {};
-
-      if (typeof config.theme === 'undefined') {
-        core.setCustomColors(widget, defaultProps.generic.themes['default']);
-      }
-
-      if(config.config && config.config.theme === null) {
-        core.updateObject(colors, defaultProps.generic.themes['default']);
-        core.updateObject(colors, config.config.colors);
-        core.setCustomColors(widget, colors);
-      } else if (config.themes) {
+      if (config.theme) {
         if (config.theme === 'custom') {
-
-          // NOTE custom colors
-          core.updateObject(colors, config.colors);
-        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-
-          // NOTE colors set via the higher config
-          if (defaultProps.generic.theme === 'custom') {
-            core.updateObject(colors, defaultProps.generic.colors);
-          } else {
-            core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
+          if (config.colors) {
+            core.setCustomColors(widget, config.colors);
           }
         } else {
-
-          // NOTE default theme
-          core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+          core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
-
-        core.setCustomColors(widget, colors);
       }
     },
 
@@ -1464,53 +1431,75 @@
       var i;
       var j;
 
-      if (utils.hasClass(widget, 'pf-widget-modal')) {
-        widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
-      } else {
-        widget.style.backgroundColor = colors.background;
-      }
-
-      if (fields.length > 0) {
-        j = fields.length;
-        for (i = 0; i < j; i++) {
-          fields[i].style.backgroundColor = colors.fieldBackground;
+      if (colors.background) {
+        if (utils.hasClass(widget, 'pf-widget-modal')) {
+          widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+        } else {
+          widget.style.backgroundColor = colors.background;
         }
       }
 
-      if (contentUnitMeta) {
-        contentUnit.style.backgroundColor = colors.actionBackground;
-        contentUnitMeta.querySelector('h4').style.color = colors.actionText;
-        contentUnitMeta.querySelector('p').style.color = colors.text;
+      if (colors.fieldBackground) {
+        if (fields.length > 0) {
+          j = fields.length;
+          for (i = 0; i < j; i++) {
+            fields[i].style.backgroundColor = colors.fieldBackground;
+          }
+        }
       }
 
-      if (close) {
+      if (contentUnit && contentUnitMeta) {
+        if (colors.actionBackground) {
+          contentUnit.style.backgroundColor = colors.actionBackground;
+        }
+
+        if (colors.actionText) {
+          contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        }
+
+        if (colors.text) {
+          contentUnitMeta.querySelector('p').style.color = colors.text;
+        }
+      }
+
+      if (close && colors.close) {
         close.style.color = colors.close;
       }
 
-      if (headline) {
+      if (headline && colors.headline) {
         headline.style.color = colors.headline;
       }
 
-      if (headlineLeft) {
+      if (headlineLeft && colors.headline) {
         headlineLeft.style.color = colors.headline;
       }
 
-      if (arrow) {
+      if (arrow && colors.close) {
         arrow.style.color = colors.close;
       }
 
-      if (arrowLeft) {
+      if (arrowLeft && colors.close) {
         arrowLeft.style.color = colors.close;
       }
 
       if (cancelBtn) {
-        cancelBtn.style.color = colors.cancelText;
-        cancelBtn.style.backgroundColor = colors.cancelBackground;
+        if (colors.cancelText) {
+          cancelBtn.style.color = colors.cancelText;
+        }
+
+        if (colors.cancelBackground) {
+          cancelBtn.style.backgroundColor = colors.cancelBackground;
+        }
       }
 
       if (okBtn) {
-        okBtn.style.color = colors.actionText;
-        okBtn.style.backgroundColor = colors.actionBackground;
+        if (colors.actionText) {
+          okBtn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          okBtn.style.backgroundColor = colors.actionBackground;
+        }
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
@@ -1808,7 +1797,7 @@
       }
 
       test.id = config.id;
-      test.cookieId = abHashMD5 + config.id;
+      test.cookieId = 'PathforaTest_' + config.id;
       test.groups = config.groups;
 
       if (!abTestingTypes[config.type]) {
@@ -2255,7 +2244,12 @@
         var i;
 
         if (!userAbTestingValue) {
-          userAbTestingValue = Math.random();
+          // Support old cookie name convention
+          userAbTestingValue = utils.readCookie(abHashMD5 + abTest.id);
+
+          if (!userAbTestingValue) {
+            userAbTestingValue = Math.random();
+          }
         }
 
         // NOTE Always update the cookie to get the new exp date.
