@@ -1448,7 +1448,7 @@
         }
       }
 
-      if (contentUnitMeta) {
+      if (contentUnit && contentUnitMeta) {
         if (colors.actionBackground) {
           contentUnit.style.backgroundColor = colors.actionBackground;
         }
