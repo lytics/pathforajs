@@ -29,8 +29,8 @@ try {
 
 var TESTAPIURL = "//api.lytics.io";
 var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
-var basedir = "docs/docs/examples/src",
-    destdir = "docs/docs/examples/preview";
+var EXAMPLESSRC = "docs/docs/examples/src",
+    EXAMPLESDEST = "docs/docs/examples/preview";
 
 gulp.task('build:styles', function () {
   gulp.src('src/less/*.less')
@@ -146,7 +146,7 @@ gulp.task('docs:watch', function () {
 
 var compileExample = function(root, name) {
   if (name.split('.').pop() === "js") {
-    var dest = root.split(basedir + '/').pop(),
+    var dest = root.split(EXAMPLESSRC + '/').pop(),
       contents = {
         config: fs.readFileSync(root + '/' + name, "utf8"),
         css: ''
@@ -157,10 +157,10 @@ var compileExample = function(root, name) {
       contents.css = fs.readFileSync(root + '/' + name.replace(".js", ".css"), "utf8")
     }
 
-    gulp.src(basedir + '/template.hbs')
+    gulp.src(EXAMPLESSRC + '/template.hbs')
       .pipe(handlebars(contents))
       .pipe(rename(name.replace(".js", ".html")))
-      .pipe(gulp.dest(destdir + "/" +  dest));
+      .pipe(gulp.dest(EXAMPLESDEST + "/" +  dest));
   }
 }
 
@@ -173,7 +173,7 @@ gulp.task('docs:hbs', function () {
     }
   };
 
-  walk.walkSync(basedir, options);
+  walk.walkSync(EXAMPLESSRC, options);
 });
 
 gulp.task('docs:mkdocs', shell.task([

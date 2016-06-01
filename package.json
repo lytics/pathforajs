@@ -15,6 +15,7 @@
     "gh-pages": "^0.8.0",
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
+    "gulp-compile-handlebars": "^0.6.1",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "^2.3.1",
     "gulp-cssmin": "^0.1.7",
