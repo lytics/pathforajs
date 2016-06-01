@@ -231,7 +231,8 @@ displayConditions: {
 ```   
 
 ``` javascript
-// example: hide the module after the second impression in the same session or if it has been seen five times ever
+// example: hide the module after the second impression in the same session
+// or if it has been seen five times ever
 
 displayConditions: {
   impressions: {

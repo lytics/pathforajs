@@ -15,7 +15,6 @@ var gulp = require('gulp'),
     APIURL,
     CSSURL;
 
-
 // get overrides from .env file
 try {
   env({
@@ -30,6 +29,8 @@ try {
 
 var TESTAPIURL = "//api.lytics.io";
 var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
+var basedir = "docs/docs/examples/src",
+    destdir = "docs/docs/examples/preview";
 
 gulp.task('build:styles', function () {
   gulp.src('src/less/*.less')
@@ -74,6 +75,7 @@ var prepareTemplates = function() {
   walker = walk.walkSync(templateDirectory, options);
   return JSON.stringify(templates, null, 2);
 };
+
 
 gulp.task('build:js', function () {
   gulp.src('src/*.js')
@@ -125,10 +127,6 @@ gulp.task('local:watch', function () {
   gulp.watch('src/**/*', ['build:local']);
 });
 
-gulp.task('docs:watch', function () {
-  gulp.watch('docs/docs/examples/src/**/*.js', ['docs:hbs']);
-});
-
 gulp.task('preview', function () {
   connect.server({
     port: 8080,
@@ -137,24 +135,35 @@ gulp.task('preview', function () {
   });
 });
 
-gulp.task('docs:hbs', function () {
-  var basedir = "docs/docs/examples/src",
-      destdir = "docs/docs/examples/preview",
-      options = {
-        listeners: {
-          file: function (root, stat, next) {
-            if (stat.name.split('.').pop() === "js") {
-              var contents = {config: fs.readFileSync(root + '/' + stat.name, "utf8")};
-              var dest = root.split(basedir + '/').pop();
+gulp.task('docs:watch', function () {
+  var watcher = gulp.watch('docs/docs/examples/src/**/*.js', function(event) {
+    var p = path.relative(process.cwd(), event.path);
+    var root = p.substring(0, p.lastIndexOf("/") + 1);
+    var name = p.substring(p.lastIndexOf("/") + 1, p.length);
+    compileExample(root, name)
+  });
+});
 
-              gulp.src(basedir + '/template.hbs')
-                .pipe(handlebars(contents))
-                .pipe(rename(stat.name.replace(".js", ".html")))
-                .pipe(gulp.dest(destdir + "/" +  dest));
-            }
-          }
-        }
-      };
+var compileExample = function(root, name) {
+  if (name.split('.').pop() === "js") {
+    var contents = {config: fs.readFileSync(root + '/' + name, "utf8")};
+    var dest = root.split(basedir + '/').pop();
+
+    gulp.src(basedir + '/template.hbs')
+      .pipe(handlebars(contents))
+      .pipe(rename(name.replace(".js", ".html")))
+      .pipe(gulp.dest(destdir + "/" +  dest));
+  }
+}
+
+gulp.task('docs:hbs', function () {
+  var options = {
+    listeners: {
+      file: function(root, stat) {
+        compileExample(root, stat.name)
+      },
+    }
+  };
 
   walk.walkSync(basedir, options);
 });

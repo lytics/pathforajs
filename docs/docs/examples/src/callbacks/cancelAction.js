@@ -10,4 +10,5 @@ var module = pathfora.Message({
   }
 });
 
+
 pathfora.initializeWidgets([ module ]);
