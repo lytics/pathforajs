@@ -126,7 +126,7 @@ gulp.task('local:watch', function () {
 });
 
 gulp.task('docs:watch', function () {
-  gulp.watch('docs/docs/examples/src/**/*.js', ['build:docs']);
+  gulp.watch('docs/docs/examples/src/**/*.js', ['docs:hbs']);
 });
 
 gulp.task('preview', function () {

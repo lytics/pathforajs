@@ -33,3 +33,7 @@ table {
 a.toctree-l4 {
   display: none;
 }
+
+img.full {
+  width: 100%;
+}

@@ -49,7 +49,7 @@ In the example below roughly half of all users will be shown a gated form (A) an
 ## With Audience Targeting
 A/B Testing can be combined with [audience targeting](targeting.md) to divide an audience into a 50/50 split. 
 
-In the example below module "A" will be displayed to roughly half of the users in the `smt_new` segment, while the other half of the audience will be shown module "B".
+In the example below module "A" will be displayed to roughly half of the users in the `smt_new` audience, while the other half of the audience will be shown module "B".
 
 
 ### New Users Message Test

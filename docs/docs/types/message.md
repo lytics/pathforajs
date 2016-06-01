@@ -1,4 +1,4 @@
-Focused on deliverying outbound communication. Perhaps announcing a product launch, new content, top-level alert, etc. Message modules details regarding calls to action or other customization can be explored in detail here.
+Focused on deliverying outbound communication. Perhaps announcing a product launch, new content, top-level alert, etc. Message modules are simple text modules which can be used in a variety of formats.
 
 ``` javascript
 var module = pathfora.Message({
