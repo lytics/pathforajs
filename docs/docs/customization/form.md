@@ -1,4 +1,4 @@
-[NEEDS: description]
+Pathfora allows for some customization on form elements including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
 
 ## fields
 

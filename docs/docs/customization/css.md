@@ -50,84 +50,23 @@ window.pathfora.initializeWidgets([ module ]);
 
 ## Example
 
-### [Live Preview](../../examples/src/customization/css/custom.html)
+### [Live Preview](../../examples/preview/customization/css/custom.html)
 
 ![General Config](../examples/img/customization/css/custom.png)
 
 ### Javascript
-``` javascript
-var module = pathfora.Message({
-  id: 'twitter-module',
-  className: 'pf-twitter-module',
-  layout: 'slideout',
-  headline: 'Thank You!',
-  msg: 'We hope you are enjoying your recent purchase, and we\'d love to hear from you! Send us a tweet and let us know what you think.',
-  okMessage: 'Tweet @ us!',
-  cancelMessage: 'No Thanks',
-  variant: 2,
-  image: '/assets/twitter.png',
-  theme: 'custom'
-});
-```
+
+<pre data-src="../../examples/src/customization/css/custom.js"></pre>
 
 
 ### CSS
 
-``` css
-.pf-widget.pf-twitter-module {
-  background-color: #4a4a4a;
-  color: #fff;
-  border-radius: 0px;
-  box-shadow: none;
-  font-family: Roboto, Arial, 'sans-serif';
-}
-
-/* message paragraph */
-.pf-widget.pf-twitter-module .pf-widget-message {
-  font-size: 15px;
-  line-height: 1.7;
-}
-
-/* headline */
-.pf-widget.pf-twitter-module .pf-widget-headline {
-  color: #39aec0;
-  font-size: 28px;
-}
-
-/* "x" button */
-.pf-widget.pf-twitter-module .pf-widget-close {
-  color: #39aec0;
-}
-
-/* buttons */
-.pf-widget.pf-twitter-module .pf-widget-btn {
-  border-radius: 0px;
-  padding: 1px 25px;
-}
-
-/* confirm button */
-.pf-widget.pf-twitter-module .pf-widget-btn.pf-widget-ok {
-  background-color: #1b91a7;
-  color: #fff;
-  box-shadow: none;
-}
-
-/* cancel button */
-.pf-widget.pf-twitter-module .pf-widget-btn.pf-widget-cancel {
-  border: 1px solid #6a6a6a;
-}
-
-/* img */
-.pf-widget.pf-twitter-module .pf-widget-img {
-  border-radius: 0px;
-}
-```
+<pre data-src="../../examples/src/customization/css/custom.css"></pre>
 
 ### SASS/LESS
 
 ``` css
 .pf-widget {
-
   &.pf-twitter-module {
     background-color: #4a4a4a;
     color: #fff;

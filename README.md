@@ -5,6 +5,12 @@
   Integrates with your Lytics account for tracking user actions, and conditionally displaying widgets based on user segment. 
   For more info, and full configuration examples please check wiki pages.
 
+## Build with docs
+```sh
+gulp docs
+```
+Docs will serve on localhost port 8000.
+
 ## Gulp tasks
 
 ### gulp.build:styles

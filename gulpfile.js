@@ -146,8 +146,16 @@ gulp.task('docs:watch', function () {
 
 var compileExample = function(root, name) {
   if (name.split('.').pop() === "js") {
-    var contents = {config: fs.readFileSync(root + '/' + name, "utf8")};
-    var dest = root.split(basedir + '/').pop();
+    var dest = root.split(basedir + '/').pop(),
+      contents = {
+        config: fs.readFileSync(root + '/' + name, "utf8"),
+        css: ''
+      };
+
+    // Custom CSS example should load css
+    if (root.indexOf('customization/css') !== -1) {
+      contents.css = fs.readFileSync(root + '/' + name.replace(".js", ".css"), "utf8")
+    }
 
     gulp.src(basedir + '/template.hbs')
       .pipe(handlebars(contents))

@@ -1,4 +1,4 @@
-[NEEDS: description]
+A thin module which appears at the top or bottom of the browser window. Note that the bar modal does not support header text.
 
 ## position
 

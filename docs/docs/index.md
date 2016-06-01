@@ -10,21 +10,9 @@ The layout parameter does the heavy lifting when it comes to rendering the actua
 [What are display conditions?](display_conditions.md)  
 The final piece of the module puzzle comes in the form of display conditions. These conditions, for the most part, control when a module is displayed. Scroll position, number of sessions and time delay are a very small sample of the various methods built into Pathfora for triggering a module for display.
 
-[How much can I customize?](customization.md)  
+[How much can I customize?](customization/themes.md)  
 Though there is a set of universal out-of-the-box styles included with Pathora the output is extremely customizable. Here we cover a few of the options for basic to full customization of the look and feel.
 
 ## Getting Started
 install gulp  
 `npm install --global gulp-cli`
-
-## For Developers
-
-How we build documentation
---------------------------
-
-When we import your documentation, we look at two things first: your *Repository URL* and the *Documentation Type*.
-We will clone your repository,
-and then build your documentation using the *Documentation Type* specified.
-
-Sphinx
-~~~~~~

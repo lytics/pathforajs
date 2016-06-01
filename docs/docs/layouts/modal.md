@@ -1,4 +1,4 @@
-[NEEDS: description]
+A large size modal with an overlay behind it - meant to cover a substantial area of the browser window, so that it demands attention from the user.
 
 ## variant
 
