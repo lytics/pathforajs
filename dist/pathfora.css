@@ -1,4 +1,4 @@
-/* default/light color theme */
+/* Default/light color theme */
 .pf-box-shadow,
 .pf-widget-folding {
   box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
@@ -6,7 +6,7 @@
 .pf-hidden {
   display: none;
 }
-/* default widget styles */
+/* Default widget styles */
 .pf-widget {
   z-index: 9999;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -86,10 +86,6 @@
 .pf-widget input[type=email] {
   clear: both;
 }
-.pf-widget input[type=text] + .pf-widget-btn,
-.pf-widget input[type=email] + .pf-widget-btn {
-  position: absolute;
-}
 .pf-widget textarea {
   resize: none;
 }
@@ -142,6 +138,7 @@
   visibility: visible;
   opacity: 1;
 }
+/* Variant Styles */
 .pf-widget-variant-2 .pf-widget-img {
   display: block;
 }
@@ -170,7 +167,7 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
-/* Type Specific Styles */
+/* Type Styles */
 .pf-subscription form {
   width: 100%;
   display: block;
@@ -185,7 +182,6 @@
   float: right;
   margin-left: 5px;
   padding: 0 16px;
-  margin-top: 2px;
 }
 .pf-subscription form span {
   display: block;
@@ -250,6 +246,7 @@
   text-align: center;
   /* Opened State Styles */
   /* Variant Styles */
+  /* Type Styles */
 }
 .pf-widget-modal .pf-va-middle {
   display: table-cell;
@@ -338,6 +335,9 @@
 }
 .pf-widget-modal.pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta p {
   font-size: 14px;
+}
+.pf-widget-modal.pf-subscription .pf-widget-btn {
+  margin-top: 2px;
 }
 .pf-widget-slideout {
   position: fixed;

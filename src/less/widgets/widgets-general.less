@@ -1,4 +1,4 @@
-/* default/light color theme */
+/* Default/light color theme */
 
 @background: #f1f1f1;
 @text: #888;
@@ -18,7 +18,7 @@
   display: none;
 }
 
-/* default widget styles */
+/* Default widget styles */
 .pf-widget {
   z-index: 9999;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -95,10 +95,6 @@
   input[type=text],
   input[type=email] {
     clear: both;
-
-    & + .pf-widget-btn {
-      position: absolute;
-    }
   }
 
   textarea {
@@ -163,6 +159,7 @@
   }
 }
 
+/* Variant Styles */
 .pf-widget-variant-2 {
   .pf-widget-img {
     display: block;
@@ -201,7 +198,7 @@
   }
 }
 
-/* Type Specific Styles */
+/* Type Styles */
 .pf-subscription {
   form {
     width: 100%;
@@ -218,7 +215,6 @@
       float: right;
       margin-left: 5px;
       padding: 0 16px;
-      margin-top: 2px;
     }
 
     span {
