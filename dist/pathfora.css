@@ -1,3 +1,4 @@
+/* default/light color theme */
 .pf-box-shadow,
 .pf-widget-folding {
   box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
@@ -5,7 +6,7 @@
 .pf-hidden {
   display: none;
 }
-/* Default widget styles */
+/* default widget styles */
 .pf-widget {
   z-index: 9999;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -149,6 +150,7 @@
   text-align: left;
   margin-bottom: 20px;
   position: relative;
+  background-color: white;
 }
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta {
   padding: 10px 15px;
@@ -157,9 +159,11 @@
   font-weight: 500;
   margin: 0 0 5px;
   line-height: 1.4;
+  color: #444;
 }
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta p {
   line-height: 1.3;
+  color: #888;
 }
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-img {
   background-size: cover;
