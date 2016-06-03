@@ -1,3 +1,15 @@
+/* Default/light color theme */
+
+@background: #f1f1f1;
+@text: #888;
+@headline: #444;
+@close: #bbb;
+@actionBackground: white;
+@actionText: #444;
+@fieldBackground: white;
+@cancelBackground: #f1f1f1;
+@cancelText: #bbb;
+
 .pf-box-shadow {
   box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
 }
@@ -17,8 +29,8 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
-  background-color: #f1f1f1;
-  color: #888;
+  background-color: @background;
+  color: @text;
 
   @media screen and (max-width: 480px) {
     .pf-hidden();
@@ -45,7 +57,7 @@
 
   .pf-widget-headline {
     margin: 0 0 10px 0;
-    color: #444;
+    color: @headline;
     font-weight: 500;
   }
 
@@ -83,10 +95,6 @@
   input[type=text],
   input[type=email] {
     clear: both;
-
-    & + .pf-widget-btn {
-      position: absolute;
-    }
   }
 
   textarea {
@@ -117,13 +125,13 @@
 
     &.pf-widget-ok {
       box-shadow: 0px 1px 1px rgba(0,0,0,.2);
-      color: #444;
-      background-color: white;
+      color: @actionText;
+      background-color: @actionBackground;
     }
 
     &.pf-widget-cancel {
-      color: #bbb;
-      background-color: #f1f1f1;
+      color: @cancelText;
+      background-color: @cancelBackground;
     }
 
     & + .pf-widget-btn {
@@ -151,6 +159,7 @@
   }
 }
 
+/* Variant Styles */
 .pf-widget-variant-2 {
   .pf-widget-img {
     display: block;
@@ -163,6 +172,7 @@
     text-align: left;
     margin-bottom: 20px;
     position: relative;
+    background-color: @actionBackground;
 
     .pf-content-unit-meta {
       padding: 10px 15px;
@@ -171,10 +181,12 @@
         font-weight: 500;
         margin: 0 0 5px;
         line-height: 1.4;
+        color: @headline;
       }
 
       p {
         line-height: 1.3;
+        color: @text;
       }
     }
 
@@ -186,7 +198,7 @@
   }
 }
 
-/* Type Specific Styles */
+/* Type Styles */
 .pf-subscription {
   form {
     width: 100%;
@@ -203,7 +215,6 @@
       float: right;
       margin-left: 5px;
       padding: 0 16px;
-      margin-top: 2px;
     }
 
     span {

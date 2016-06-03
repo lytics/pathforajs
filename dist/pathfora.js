@@ -246,7 +246,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -1421,8 +1421,8 @@
       var close = widget.querySelector('.pf-widget-close');
       var headline = widget.querySelector('.pf-widget-headline');
       var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
-      var cancelBtn = widget.querySelector('.pf-widget-cancel');
-      var okBtn = widget.querySelector('.pf-widget-ok');
+      var cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel');
+      var okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
       var contentUnit = widget.querySelector('.pf-content-unit');
