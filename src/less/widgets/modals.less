@@ -32,8 +32,8 @@
   }
 
   .pf-widget-content {
-    background-color: #f1f1f1;
-    color: #888;
+    background-color: @background;
+    color: @text;
     width: auto;
     position: relative;
     max-width: 780px;
@@ -121,6 +121,13 @@
           font-size: 14px;
         }
       }
+    }
+  }
+
+  /* Type Styles */
+  &.pf-subscription {
+    .pf-widget-btn {
+      margin-top: 2px;
     }
   }
 }
