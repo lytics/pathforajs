@@ -104,6 +104,8 @@ window.pathfora.initializeWidgets([ module ]);
 
     /* cancel button */
     .pf-widget-btn.pf-widget-cancel {
+      background: transparent;
+      color: #fff;
       border: 1px solid #6a6a6a;
     }
 

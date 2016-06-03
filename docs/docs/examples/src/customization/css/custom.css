@@ -38,6 +38,8 @@
 
 /* cancel button */
 .pf-widget.pf-twitter-module .pf-widget-btn.pf-widget-cancel {
+  background: transparent;
+  color: #fff;
   border: 1px solid #6a6a6a;
 }
 
