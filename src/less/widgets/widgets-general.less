@@ -1,5 +1,4 @@
 /* Default/light color theme */
-
 @background: #f1f1f1;
 @text: #888;
 @headline: #444;
@@ -10,21 +9,12 @@
 @cancelBackground: #f1f1f1;
 @cancelText: #bbb;
 
-
-/* Mixins for mobile */
-.mobile(@orientation; @rules) {
-  @media (max-width: 736px) 
-  and (orientation: @orientation) { 
-    @rules();
-  }
-}
-
+/* Mixin for mobile boundries */
 .mobile(@rules) {
-  @media (max-width: 736px) {
+  @media screen and (max-width: 736px) , screen and (max-height: 640px) {
     @rules();
   }
 }
-
 
 .pf-box-shadow {
   box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
@@ -47,6 +37,12 @@
   -webkit-sizing: border-box;
   background-color: @background;
   color: @text;
+
+  &.pf-mobile-hide {
+    .mobile({
+      display: none;
+    });
+  }
 
   * {
     box-sizing: border-box;

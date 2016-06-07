@@ -61,7 +61,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     subscription: {
       layout: 'modal',
@@ -73,7 +74,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     form: {
       layout: 'modal',
@@ -94,7 +96,8 @@
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false
+      showSocialLogin: false,
+      responsive: true
     },
     sitegate: {
       layout: 'modal',
@@ -114,7 +117,8 @@
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
-      showForm: true
+      showForm: true,
+      responsive: true
     }
   };
 
@@ -1247,7 +1251,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
 

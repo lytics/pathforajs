@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>BAR</title>
+    <title>RESPONSIVE BAR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   </head>
   <style type="text/css">
   @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
@@ -16,16 +17,10 @@
       var subscription = pathfora.Subscription({
         id: 'asd',
         layout: 'bar',
-        variant: '2',
-        msg: 'Welcome to our website',
+        msg: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
         variant: '2',
         image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-        placeholders: {
-          email: "Email",
-          title: "Title"
-        },
-        okMessage: 'Hoop',
-        okShow: true,
+        responsive: true,
       });
       window.pathfora.initializeWidgets([ subscription ]);
     </script>

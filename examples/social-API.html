@@ -8,7 +8,6 @@
     <script src="../dist/pathfora.min.js"></script>
     <script>
       var widgets = [];
-
       var form1 = new window.pathfora.Form({
         msg: 'lipsum',
         id: 'social-widget',
@@ -16,12 +15,10 @@
         headline: 'lipsum'
       });
       widgets.push(form1);
-
       // When user logs in, forms will be automatically filled with
       // the data fetched from the social networks.
       window.pathfora.integrateWithFacebook('{{ Facebook API AppID }}');
       window.pathfora.integrateWithGoogle('{{ Google API ClientID }}');
-
       window.pathfora.initializeWidgets(widgets);
     </script>
   </body>
