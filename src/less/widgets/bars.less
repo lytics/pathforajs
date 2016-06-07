@@ -2,17 +2,19 @@
 .pf-push-down {
   transition: margin-top .3s;
 
-  @media screen and (min-width: 480px) {
-    &.opened {
-      margin-top: 55px;
-    }
+  &.opened {
+    margin-top: 59px;
+
+    .mobile ({
+      margin-top: 0;
+    });
   }
 }
 
 .pf-widget-bar {
   height: auto;
   padding: 10px 0;
-  height: 55px;
+  min-height: 59px;
   left: 0; right: 0;
   .pf-box-shadow();
 
@@ -22,9 +24,12 @@
   }
 
   .pf-widget-close {
-    top: 11px;
-    right: 0;
-    margin-right: 20px;
+    top: 50%;
+    position: absolute;
+    margin-top: -16px;
+    right: 20px;
+    line-height: 1;
+    margin-right: 0;
   }
 
   .pf-widget-btn {
@@ -33,19 +38,25 @@
 
   .pf-bar-content {
     text-align: center;
+    padding: 0 40px;
+
+    .mobile({
+      padding: 0 40px 0 20px;
+    });
 
     .pf-widget-message {
-      max-width: 50%;
-      margin-top: 0;
-      margin-bottom: 0;
       white-space: nowrap;
-      overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      overflow: hidden;
+      display: inline-block;
+      white-space: normal;
+      margin: 6px 16px;
     }
 
     input[type=text],
     input[type=email] {
-      margin: 0 0 0 16px;
+      margin: 0;
       width: 200px;
     }
 
@@ -99,14 +110,20 @@
     .pf-widget-img {
       height: 35px;
       width: 35px;
+      top: 50%;
+      margin-top: -17.5px;
       position: absolute;
+
+      .mobile({
+        display: none;
+      });
     }
   }
 
   /* Type Specific Styles */
   &.pf-message {
-    .pf-widget-message {
-      margin-right: 40px;
+    .pf-widget-btn {
+      margin-top: 2px;
     }
   }
 
@@ -114,11 +131,12 @@
     form {
       width: auto;
 
-      .pf-widget-btn {
-        margin-top: 0;
-      }
       input[type=email]{
         height: 35px;
+      }
+
+      .pf-widget-btn {
+        margin-top: 2px;
       }
     }
   }

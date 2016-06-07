@@ -10,6 +10,22 @@
 @cancelBackground: #f1f1f1;
 @cancelText: #bbb;
 
+
+/* Mixins for mobile */
+.mobile(@orientation; @rules) {
+  @media (max-width: 736px) 
+  and (orientation: @orientation) { 
+    @rules();
+  }
+}
+
+.mobile(@rules) {
+  @media (max-width: 736px) {
+    @rules();
+  }
+}
+
+
 .pf-box-shadow {
   box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
 }
@@ -31,10 +47,6 @@
   -webkit-sizing: border-box;
   background-color: @background;
   color: @text;
-
-  @media screen and (max-width: 480px) {
-    .pf-hidden();
-  }
 
   * {
     box-sizing: border-box;
@@ -121,6 +133,7 @@
     transition: all .3s;
     cursor: pointer;
     border: 0;
+    margin-bottom: 2px;
     outline: none;
 
     &.pf-widget-ok {

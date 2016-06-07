@@ -1,10 +1,17 @@
 .pf-widget-slideout {
   position: fixed;
   bottom: 50px;
-  width: 370px;
+  width: 350px;
   border-radius: 4px;
   .pf-box-shadow();
   top: auto;
+  max-height: 100%;
+  overflow: auto;
+
+  @media screen and (max-width: 480px) {
+    width: 100%;
+    max-width: 350px;
+  }
 
   > div {
     display: table-cell;
@@ -21,25 +28,40 @@
 
   .pf-widget-content {
     padding: 30px;
-    min-width:350px;
+    min-width: 350px;
+
+    @media screen and (max-width: 350px) {
+      width: 100%;
+      min-width: initial;
+    }
   }
 
   .pf-widget-headline {
     font-size: 20px;
   }
 
+  @media screen and (max-width: 480px) {
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+
+
   /* Position Styles */
   &.pf-position-bottom-left,
   &.pf-position-left {
+    transition: left 0.3s;
     left: -100%;
 
     &.pf-origin-bottom {
       left: 50px;
+      bottom: auto;
     }
   }
 
   &.pf-position-bottom-right,
   &.pf-position-right {
+    transition: right 0.3s;
     right: -100%;
 
     &.pf-origin-bottom {
@@ -49,6 +71,7 @@
 
   &.pf-origin-bottom {
     bottom: -100%;
+    transition: bottom 0.3s;
   }
 
 
@@ -57,22 +80,32 @@
     &.pf-position-bottom-left,
     &.pf-position-left {
       left: 50px;
+
+      @media screen and (max-width: 480px) {
+        left: 0;
+      }
     }
 
     &.pf-position-bottom-right,
     &.pf-position-right {
       right: 50px;
+
+      @media screen and (max-width: 480px) {
+        right: 0;
+      }
     }
 
     &.pf-origin-bottom {
       bottom: 50px;
+
+      @media screen and (max-width: 480px) {
+        bottom: 0;
+      }
     }
   }
 
   /* Variant Styles */
   &.pf-widget-variant-1 {
-    width: 350px;
-
     .pf-widget-content {
       .pf-widget-headline {
         text-align: left;
@@ -85,8 +118,6 @@
   }
 
   &.pf-widget-variant-2 {
-    width: 350px;
-
     .pf-widget-content {
       text-align: center;
 
@@ -107,7 +138,6 @@
   }
 
   &.pf-widget-variant-3 {
-
     .pf-content-unit {
       width: 100%;
       display: block;
@@ -133,5 +163,10 @@
   /* Type Specific Styles */
   &.pf-form {
     width: 370px;
+
+    @media screen and (max-width: 480px) {
+      width: 100%;
+      max-width: 370px;
+    }
   }
 }
