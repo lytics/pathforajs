@@ -505,14 +505,49 @@
       return true;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
-      return (core.pageViews >= pageVisitsRequired);
+    /**
+     * @description Parse url queries as an object
+     * @param {string} url
+     */
+    parseQueries: function (url) {
+      var queries = {};
+      var pieces = url.split('?');
+      if (pieces.length > 1) {
+        pieces = pieces[1].split('&');
+
+        for (var i = 0; i < pieces.length; i++) {
+          var pair = pieces[i].split('=');
+
+          if (pair.length > 1) {
+            queries[pair[0]] = pair[1];
+          }
+        }
+      }
+      return queries;
     },
 
+    /**
+     * @description Compare query params between the url
+     *              the user is visiting and the match
+     *              rule provided
+     * @param {obj} queries
+     * @param {obj} matchQueries
+     */
+    compareQueries: function (queries, matchQueries) {
+      // any query in the matchQueries should exist in the url in the browser
+      for (var key in matchQueries) {
+        if (matchQueries[key] !== queries[key]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     urlChecker: function (phrases, widget) {
-      var url = window.location.href,
-          simpleurl = window.location.hostname + window.location.pathname,
+      var url = decodeURIComponent(window.location.href),
+          simpleurl = decodeURIComponent(window.location.hostname + window.location.pathname),
+          queries = core.parseQueries(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -524,40 +559,52 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
+
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase) !== -1) {
-                valid = true;
+              var matchUrl = decodeURIComponent(phrase);
+
+              if (url.indexOf(matchUrl.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQueries(matchUrl)) && true;
               }
               break;
+
             case 'object':
-              if(phrase.match && phrase.value){
+              if (phrase.match && phrase.value) {
                 switch (phrase.match) {
+                  // simple match
                   case 'simple':
-                    if (simpleurl === phrase.value) {
+                    if (simpleurl === decodeURIComponent(phrase.value)) {
                       valid = true;
                     }
                     break;
+
+                  // exact match
                   case 'exact':
-                    if (url === phrase.value) {
+                    if (url === decodeURIComponent(phrase.value)) {
                       valid = true;
                     }
                     break;
+
+                  // regex
                   case 'regex':
                     var re = new RegExp(phrase.value);
-                    if(re.test(url)){
+                    if (re.test(url)) {
                       valid = true;
                     }
                     break;
+
+                  // string match (default)
                   default:
-                    // default to string match
-                    if (url.indexOf(phrase.value) !== -1) {
-                      valid = true;
+                    var matchUrl = decodeURIComponent(phrase.value);
+
+                    if (url.indexOf(matchUrl.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQueries(matchUrl)) && true;
                     }
                     break;
                 }
-              }else{
+              } else {
                 console.log('invalid display conditions')
               }
               break;
@@ -566,11 +613,15 @@
               break;
           }
         });
-      }else{
+      } else {
         valid = true;
       }
 
       return valid;
+    },
+
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     dateChecker: function (date, widget) {
