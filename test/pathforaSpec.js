@@ -2007,7 +2007,7 @@ describe('API', function () {
       }
     });
 
-    pathfora.initializeWidgets([ form1, form2 ]);
+    pathfora.initializeWidgets([ form1, form2, form3, form4 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
