@@ -1,4 +1,4 @@
-A medium modal which slides from either side into the window. This module provides a good amount of space for text and content without taking the full attention of the user.
+A medium module which slides from either side into the window. This module provides a good amount of space for text and content without taking the full attention of the user.
 
 ## position
 

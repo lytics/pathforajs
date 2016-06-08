@@ -71,7 +71,7 @@ var module = pathfora.Message({
   cancelShow: false,
   okMessage: 'View Now',
   confirmAction: {
-    name: "targeted_slideout_confirm",
+    name: "targeted_bar_confirm",
     callback: function () {
       window.location.pathname = "/new-products";
     }
