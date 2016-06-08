@@ -9,21 +9,15 @@ There are 4 types of modules and 4 layouts currently supported. For more informa
 **Modules can be of the following types:**
 
   - **Message** - Module with a simple text message.
-   
   - **Form** - Module with a form to capture user information, can contain fields for `name`, `email`, `title` and `message`.
-    
   - **Subscription** - Module with a single input field, `email`.
-    
   - **Gate** - Module which gates the page behind it, the user cannot view the page until they enter information into the gate form. Can contain form fields for `name`, `email`, `organization`, `title`.
   
 **Modules are displayed in one of following layouts:**
  
   - **Modal** - A large size module with an overlay behind it - meant to cover a substantial area of the browser window, so that it demands attention from the user.
-   
   - **Slideout** - A medium module which slides from either side into the window.
-    
   - **Bar** - A thin module which appears at the top or bottom of the browser window.
-    
   - **Button** - A small module which only allows for a short call to action and a single click action.
 
 ## General Usage
@@ -80,16 +74,21 @@ $ npm install
 Gulp tasks:
 
 - **`gulp build`** - minify `LESS` files and uglify `js` files in the `src` directory, and place output in `dist` directory.
-- **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
-- **`gulp docs`** - see [below](#documentation).
-- **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL. Below is an example `.env.json` file, which will use local CSS:
 
-```json
-{
-  "APIURL": "https://api.lytics.io",
-  "CSSURL": "http://localhost:8080/dist/pathfora.min.css"
-}
-```
+- **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
+
+- **`gulp docs`** - see [below](#documentation).
+
+- **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL. 
+
+  Example `.env.json` file, (use local CSS):
+
+  ```json
+  {
+    "APIURL": "https://api.lytics.io",
+    "CSSURL": "http://localhost:8080/dist/pathfora.min.css"
+  }
+  ```
 
 ### Documentation
 Soon we will be hosting Pathfora documentation externally, for now documentation can be run locally and contributed to, using the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you much install before running the `gulp docs` task.
