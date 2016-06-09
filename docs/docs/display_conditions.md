@@ -288,7 +288,7 @@ displayConditions: {
   hideAfterAction: {
     closed: {
       hideCount: 5,
-      duration: 360
+      duration: 60 * 6
     }
   }
 }
@@ -313,7 +313,7 @@ displayConditions: {
   hideAfterAction: {
     cancel: {
       hideCount: 1,
-      duration: 604800
+      duration: 60 * 60 * 24 * 7
     }
   }
 }
@@ -326,14 +326,14 @@ displayConditions: {
   hideAfterAction: {
     cancel: {
       hideCount: 1,
-      duration: 604800
+      duration: 60 * 60 * 24 * 7
     },
     confirm: {
       hideCount: 1
     },
     closed: {
       hideCount: 5,
-      duration: 360
+      duration: 60 * 6
     }
   }
 }
