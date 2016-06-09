@@ -1,10 +1,10 @@
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
 
-# Pathfora.js
-Lightweight library for displaying widgets on your website. Integrates with your Lytics account for tracking user actions, and conditionally displaying widgets based on user segment. For more info, and full configuration check out the [full documentation](#documentation).
+# Pathfora JS
+Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience memebership. For more info, and full configuration examples check out the [full documentation](#documentation).
         
 ## Modules
-There are 4 types of modules and 4 layouts currently supported. For more information, see our [documentation](#documentation).
+There are 4 types of modules and 4 layouts currently supported.
 
 **Modules can be of the following types:**
 
@@ -21,25 +21,17 @@ There are 4 types of modules and 4 layouts currently supported. For more informa
   - **Button** - A small module which only allows for a short call to action and a single click action.
 
 ## General Usage
-1. Add [lytics tracking tag](https://activate.getlytics.com/#/documentation/jstag_anon) to your website, and import pathfora.js file.
+1. Add [Lytics tracking tag](https://activate.getlytics.com/#/documentation/jstag_anon) to your website, and import pathfora.js file.
 
   ``` html
-  <html>
-      <head>
-          <title>Pathfora example</title>
-      </head>
-      <body>
-          <h1>This is example usage of Pathfora SDK</h1>
-          <div>
-              <p>Page content<p>
-          </div>
-          <script src="https://api.lytics.io/api/tag/XXXXXXXXXXX/lio.js"></script>
-          <script src="http://c.lytics.io/static/pathfora.min.js"></script>
-      </body>
-  </html>
+  <!-- Your Lytics JS Tag -->
+  <script src="https://api.lytics.io/api/tag/{{YOUR LYTICS API KEY}}/lio.js"></script>
+
+  <!-- Pathfora Tag -->
+  <script src="http://c.lytics.io/static/pathfora.min.js"></script>
   ```
 
-2. Set up your module configuration, simple example provided below. See the documentation for a full list of settings and examples.
+2. Set up your module configuration, a simple example is provided below. See the [documentation](#documentation) for a full list of settings and examples.
 
   ```javascript
   // example: show a bar module with a button leading to a new products page
@@ -51,15 +43,15 @@ There are 4 types of modules and 4 layouts currently supported. For more informa
     cancelShow: false,
     okMessage: 'View Now',
     confirmAction: {
-      name: "bar-valued-customers-confirm",
+      name: "view now",
       callback: function () {
         window.location.pathname = "/new-products";
       }
     }
   });
 
-pathfora.initializeWidgets([ module ]);
-```
+  pathfora.initializeWidgets([ module ]);
+  ```
 
 ## Development
 Pathfora uses [NPM](https://docs.npmjs.com/) for package management, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
@@ -77,11 +69,11 @@ Gulp tasks:
 
 - **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
 
-- **`gulp docs`** - see [below](#documentation).
+- **`gulp docs`** - [see below](#documentation).
 
 - **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL. 
 
-  Example `.env.json` file, (use local CSS):
+  Example `.env.json` file, (using local CSS):
 
   ```json
   {

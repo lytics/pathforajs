@@ -1,7 +1,7 @@
 All buttons, forms, and other such events support optional javascript callback settings.
 
 ## confirmAction
-Set a tracking name and javascript callback for a "confirm" button click event.
+Set a [tracking name](/tracking.md) and javascript callback for a "confirm" button click event.
 
 <table>
   <tr>
@@ -42,7 +42,7 @@ Set a tracking name and javascript callback for a "confirm" button click event.
 <pre data-src="../../examples/src/callbacks/confirmAction.js"></pre>
 
 ## cancelAction
-Set a tracking name and javascript callback for a "cancel" button click event.
+Set a [tracking name](/tracking.md) and javascript callback for a "cancel" button click event.
 
 <table>
   <tr>
