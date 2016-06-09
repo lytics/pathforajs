@@ -7,4 +7,4 @@ var module = pathfora.Message({
   origin: 'bottom',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

@@ -10,15 +10,30 @@ var module = pathfora.Form({
 pathfora.initializeWidgets([ module ]);
 ```
 
-
 ## layout
 
 Define which layout type the form module should use.
 
-| Value | Type | Behavior |
-|---|---|---|
-| modal | string | module uses a [modal layout](../layouts/modal.md) |
-| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>layout</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>modal</td>
+    <td>module uses a <a href="/layouts/modal">modal layout</a></td>
+  </tr>
+  <tr>
+    <td>slideout</td>
+    <td>module uses a <a href="/layouts/slideout">slideout layout</a></td>
+  </tr>
+</table>
 
 ### Form - [Live Preview](../../examples/preview/types/form/modal.html)
 
@@ -38,10 +53,26 @@ Define which layout type the form module should use.
 
 With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email.
 
-| Value | Type | Behavior |
-|---|---|---|
-| false | boolean | `default` do not show social login buttons |
-| true | boolean | show social login buttons |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showSocialLogin</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>false</td>
+    <td><code>default</code> do not show social login buttons</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>show social login buttons</td>
+  </tr>
+</table>
 
 ### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/form/social.html)
 

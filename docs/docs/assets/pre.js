@@ -1,11 +1,24 @@
 $(document).ready(function() {
    $('pre[data-src]').each(function() {
-    var pre = $(this);
+    var pre = $(this),
+        url = $(this).attr('data-src');
       $.ajax({
-        url : $(this).attr('data-src'),
+        url : url,
         dataType: "text",
         success : function (data) {
-          pre.html('<code class="javascript hljs">' + data + '</code>');
+          var lang;
+
+          switch(url.split('.').pop()) {
+            case 'js':
+              lang = "javascript";
+              break;
+            case 'css':
+            case 'sass':
+              lang = "css";
+              break;
+          }
+
+          pre.html('<code class="' + lang + ' hljs">' + data + '</code>');
           hljs.highlightBlock(pre.find('code').get(0));
         }
       });

@@ -5,4 +5,4 @@ var module = pathfora.Subscription({
   msg: 'Sign up to get newsletter updates.',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

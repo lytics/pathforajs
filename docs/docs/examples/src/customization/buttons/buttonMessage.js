@@ -7,4 +7,4 @@ var module = pathfora.Message({
   cancelMessage: 'No Thanks'
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

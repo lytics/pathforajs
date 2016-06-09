@@ -4,4 +4,4 @@ var module = pathfora.Message({
   msg: 'Welcome to our website',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

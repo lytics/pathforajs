@@ -1,4 +1,4 @@
-Message type modules are focused on deliverying outbound communication for example, announcing a product launch, new content, top-level alert, etc. These modules provide a as simple text message which can be used in a variety of formats.
+Message type modules are focused on deliverying outbound communication for example: announcing a product launch, new content, top-level alert, etc. These modules provide a as simple text message which can be used in a variety of formats.
 
 ``` javascript
 var module = pathfora.Message({
@@ -9,7 +9,6 @@ var module = pathfora.Message({
 
 pathfora.initializeWidgets([ module ]);
 ```
-
 
 ## layout
 
@@ -36,7 +35,7 @@ Define which layout type the form module should use.
   </tr>
   <tr>
     <td>bar</td>
-    <td>module uses a <a href="/layouts/slideout">bar layout</a></td>
+    <td>module uses a <a href="/layouts/bar">bar layout</a></td>
   </tr>
   <tr>
     <td>button</td>

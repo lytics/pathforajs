@@ -7,4 +7,4 @@ var module = pathfora.Form({
   image: '/assets/lion.jpg'
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

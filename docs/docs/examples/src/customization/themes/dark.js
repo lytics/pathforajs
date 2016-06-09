@@ -6,4 +6,4 @@ var module = pathfora.Form({
   theme: 'dark',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

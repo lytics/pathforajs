@@ -6,7 +6,7 @@ Set the color scheme of the module, this can be a predefined theme or indicate t
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>theme</code> string</td>
+      <td colspan="2" align="center"><code>theme</code> string</td>
     </tr>
     <tr>
       <th>Value</th>
@@ -41,10 +41,10 @@ Define a set of custom colors for each element of the module.
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>colors</code> obj</td>
+      <td colspan="3" align="center"><code>colors</code> object</td>
     </tr>
     <tr>
-      <th>Field</th>
+      <th>Key</th>
       <th>Type</th>
       <th>Behavior</th>
     </tr>

@@ -12,4 +12,4 @@ var moduleBottom = pathfora.Message({
   msg: 'bottom aligned',
 });
 
-window.pathfora.initializeWidgets([ moduleTop, moduleBottom ]);
+pathfora.initializeWidgets([ moduleTop, moduleBottom ]);

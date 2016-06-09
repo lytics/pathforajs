@@ -10,4 +10,4 @@ var module = pathfora.SiteGate({
   }
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

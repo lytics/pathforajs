@@ -7,4 +7,4 @@ var module = pathfora.Message({
   pushDown: '.myElementClass'
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

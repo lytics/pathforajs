@@ -4,20 +4,52 @@ Pathfora modules can have up to two action buttons "confirm" and "cancel". You c
 
 Show or hide the "Confirm" button.
 
-| Value | Type | Behavior |
-|---|---|---|
-| true | boolean | `default` module has confirm button |
-| false | boolean | module does not have confirm button |
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>okShow</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>true</td>
+    <td><code>default</code> module has confirm button</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>module does not have confirm button</td>
+  </tr>
+</table>
 
 
 ## cancelShow
 
 Show or hide the "Cancel" button.
 
-| Value | Type | Behavior |
-|---|---|---|
-| true | boolean | `default` module has cancel button |
-| false | boolean | module does not have cancel button |
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>cancelShow</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>true</td>
+    <td><code>default</code> module has cancel button</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>module does not have cancel button</td>
+  </tr>
+</table>
 
 ### Hide Cancel Button - [Live Preview](../../examples/preview/customization/buttons/cancelShow.html)
 
@@ -30,20 +62,42 @@ Show or hide the "Cancel" button.
 
 Set the text for the "Confirm" button.
 
-| Value | Type | Behavior |
-|---|---|---|
-| Confirm | string | `default` |
-|  | string | set the module's confirm button text |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>confirmMessage</td>
+    <td>string</td>
+    <td>set custom text for the module's confirm button</td>
+  </tr>
+</table>
 
 
 ## cancelMessage
 
 Set the text for the "Cancel" button.
 
-| Value | Type | Behavior |
-|---|---|---|
-| Cancel | string | `default` |
-|  | string | set the module's confirm button text |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>cancelMessage</td>
+    <td>string</td>
+    <td>set custom text for the module's cancel button</td>
+  </tr>
+</table>
 
 ### Custom Button Text - [Live Preview](../../examples/preview/customization/buttons/buttonMessage.html)
 

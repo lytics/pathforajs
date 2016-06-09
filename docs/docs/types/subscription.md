@@ -14,11 +14,30 @@ pathfora.initializeWidgets([ module ]);
 
 Define which layout type the form module should use.
 
-| Value | Type | Behavior |
-|---|---|---|
-| modal | string | module uses a [modal layout](../layouts/modal.md) |
-| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |
-| bar | string | module uses a [bar layout](../layouts/bar.md) |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>layout</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>modal</td>
+    <td>module uses a <a href="/layouts/modal">modal layout</a></td>
+  </tr>
+  <tr>
+    <td>slideout</td>
+    <td>module uses a <a href="/layouts/slideout">slideout layout</a></td>
+  </tr>
+  <tr>
+    <td>bar</td>
+    <td>module uses a <a href="/layouts/bar">bar layout</a></td>
+  </tr>
+</table>
 
 ### Modal - [Live Preview](../../examples/preview/types/subscription/modal.html)
 

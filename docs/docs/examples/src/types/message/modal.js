@@ -5,4 +5,4 @@ var module = pathfora.Message({
   msg: 'Please enjoy your visit.',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

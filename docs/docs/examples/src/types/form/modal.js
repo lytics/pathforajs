@@ -5,4 +5,4 @@ var module = pathfora.Form({
   msg: 'Submit this form to get updates',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

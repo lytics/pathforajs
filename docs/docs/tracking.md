@@ -17,15 +17,17 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
 | `pf-form-message` | string | user submitted value of "message" field on module |
 | `pf-form-organization` | string | user submitted value of "organization" field on module |
 
-
 <table>
-  <tr>
-    <td colspan="2" align="center"><code>pf-widget-event</code> string</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>pf-widget-event</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
     <td>show</td>
     <td>module was displayed to the user</td>

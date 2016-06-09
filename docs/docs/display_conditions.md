@@ -4,18 +4,41 @@ The `displayConditions` key controls how, when, and for how long any single modu
 ``` javascript
 var module = pathfora.Message({
   displayConditions: {
-    // display conditions here
+    showDelay: 10,
+    impressions: {
+      session: 2
+    }
   }
 });
+
+pathfora.initializeWidgets([ module ]);
 ```
+
+Some display conditions may require that cookies be enabled to work properly.
 
 ## showOnInit
 Determines if the rendered module is displayed as soon as it is initialized or waits for another event.
 
-| Value | Type | Behavior |
-|---|---|---|
-| true | bool | `default` module will be displayed as soon as it has been loaded |
-| false | bool | module will be added to DOM but not displayed until another trigger instructs it to |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showOnInit</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>true</td>
+    <td><code>default</code> module will be displayed as soon as it has been loaded</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>module will be added to DOM but not displayed until another trigger instructs it to</td>
+  </tr>
+</table>
 
 ``` javascript
 // example: loads immediately after initializing the module
@@ -28,10 +51,26 @@ displayConditions: {
 ## showDelay
 Adds a delay, in seconds, that must be completed before module is loaded.
 
-| Value | Type | Behavior |
-|---|---|---|
-| 0 | int | `default` using 0 disables the showDelay property and will show immediately |
-| 0 - ∞ | int | module will be displayed after waiting x seconds after initialization |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showDelay</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>0</td>
+    <td><code>default</code> using 0 disables the showDelay property and will show immediately</td>
+  </tr>
+  <tr>
+    <td>0 – ∞</td>
+    <td>module will be displayed after waiting x seconds after initialization</td>
+  </tr>
+</table>
 
 
 ``` javascript
@@ -45,10 +84,26 @@ displayConditions: {
 ## hideAfter
 Adds a countdown, in seconds, that must hides module on expiration.
 
-| Value | Type | Behavior |
-|---|---|---|
-| 0 | int | `default` using 0 disables the showDelay property and will not be hidden |
-| 0 - ∞ | int | module will hidden from screen after x seconds have passed |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>hideAfter</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>0</td>
+    <td><code>default</code> using 0 disables the showDelay property and will not be hidden</td>
+  </tr>
+  <tr>
+    <td>0 – ∞</td>
+    <td>module will hidden from screen after x seconds have passed</td>
+  </tr>
+</table>
 
 ``` javascript
 // example: hide module after 10 seconds
@@ -61,9 +116,22 @@ displayConditions: {
 ## displayWhenElementVisible
 Triggers the module when a specific DOM element enters the viewport.
 
-| Value | Type | Behavior |
-|---|---|---|
-| selector | string | waits for an element with specific selector to enter the viewport |
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>displayWhenElementVisible</td>
+    <td>string</td>
+    <td>selector for the element which when visible will trigger the module</td>
+  </tr>
+</table>
+
 
 ``` javascript
 // example: show module when the .footer is visible
@@ -76,10 +144,26 @@ displayConditions: {
 ## scrollPercentageToDisplay
 Triggers the modal after a percentage of the page scroll has been performed.
 
-| Value | Type | Behavior |
-|---|---|---|
-| 0 | int | `default` using 0 disables the property and will show immediately |
-| 0 - 100 | int | module will hidden until x percent of total scroll has been performed |        
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>scrollPercentageToDisplay</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>0</td>
+    <td><code>default</code> using 0 disables the property and will show immediately</td>
+  </tr>
+  <tr>
+    <td>0 – 100</td>
+    <td>module will hidden until x percent of total scroll has been performed</td>
+  </tr>
+</table>
 
 ``` javascript
 // example: show module when the 50 percent of the page scroll has been completed
@@ -90,12 +174,28 @@ displayConditions: {
 ```
   
 ## pageVisits
-Triggers the module when the user visits the page a certain amount of times (total saved in cookie).
+Triggers the module when the user visits the page a certain amount of times. The total number of page visits is saved in cookie `PathforaPageView` to compare against this value.
 
-| Value | Type | Behavior |
-|---|---|---|
-| 0 | int | `default` using 0 disables the property and will show on all visits |
-| 0 - ∞ | int | module will show only when visits > x |        
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>pageVisits</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>0</td>
+    <td><code>default</code> using 0 disables the property and will show on all visits</td>
+  </tr>
+  <tr>
+    <td>0 – ∞</td>
+    <td>module will show only when the user has visited more than x times</td>
+  </tr>
+</table>
 
 ``` javascript
 // example: show module after they have visited at least 3 times
@@ -109,36 +209,26 @@ displayConditions: {
 Display the module in a specified interval of time.
 
 <table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>date</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td>date</td>
-    <td>obj</td>
-    <td>must be object formatted using following options / values</td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td colspan="3" align="center"><code>date</code> object</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td> start_at </td>
+    <td>start_at</td>
     <td>string</td>
-    <td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to start showing module</td>
+    <td><code>optional</code> valid ISO 8601 formatted date for date to start showing module</td>
   </tr>
   <tr>
-    <td> end_at </td>
+    <td>end_at</td>
     <td>string</td>
-    <td><code>optional</code> valid date string <code>2016-02-15T11:00:00.000Z</code> for date to stop showing module</td>
+    <td><code>optional</code> valid ISO 8601 formatted date for date to stop showing module</td>
   </tr>
 </table>
   
@@ -174,39 +264,29 @@ displayConditions: {
 ```
   
 ## impressions
-Hide the module after a certain number of impressions
+Hide the module after a certain number of impressions. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
 
 <table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>impressions</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td>impressions</td>
-    <td>obj</td>
-    <td>must be object formatted using following options / values</td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td colspan="3" align="center"><code>date</code> object</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td> session </td>
+    <td>session</td>
     <td>int</td>
-    <td><code>optional</code> integer count of how many session-based impressions before showing the module</td>
+    <td><code>optional</code> count of how many session-based impressions before showing the module</td>
   </tr>
   <tr>
-    <td> total </td>
+    <td>total</td>
     <td>int</td>
-    <td><code>optional</code> integer count of how many total (multisession) impressions before showing the module</td>
+    <td><code>optional</code> count of how many total (multisession) impressions before showing the module</td>
   </tr>
 </table>
 
@@ -244,39 +324,58 @@ displayConditions: {
   
   
 ## hideAfterAction
-Hide the module after a particular action has been taken (`closed, confirm, cancel`)
+Hide the module after a particular action has been taken (`closed`, `cancel`, or `confirm`). The current number of impressions is saved in a cookie `Pathfora[action]_[module id]` to compare against this value.
 
 <table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>hideAfterAction</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
+    <td>closed</td>
+    <td>object</td>
+    <td><code>optional</code> settings for hiding the module based on the close action</td>
   </tr>
   <tr>
-    <td>hideAfterAction</td>
-    <td>obj</td>
-    <td>must be object formatted using following options / values</td>
+    <td>cancel</td>
+    <td>object</td>
+    <td><code>optional</code> settings for hiding the module based on the cancel button click action</td>
+  </tr>
+  <tr>
+    <td>confirm</td>
+    <td>object</td>
+    <td><code>optional</code> settings for hiding the module based on the confirm button action</td>
   </tr>
 </table>
 
 <table>
-  <tr>
-    <td colspan="3" align="center"><code>closed</code> / <code>confirm</code> / <code>cancel</code> object</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>closed</code> / <code>confirm</code> / <code>cancel</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
   <tr>
     <td>hideCount</td>
     <td>int</td>
-    <td><code>optional</code> integer count of times module has been closed manually by user</td>
+    <td><code>optional</code> count of times module has been closed manually by user before hiding the module</td>
   </tr>
   <tr>
     <td>duration</td>
     <td>int</td>
-    <td><code>optional</code> integer representing how long the module should be hidden in seconds</td>
+    <td><code>optional</code> how long the module should be hidden in seconds</td>
   </tr>
 </table>
 
@@ -345,27 +444,17 @@ displayConditions: {
 Only display the module on pages that match the url conditions defined.
 
 <table>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td>urlContains</td>
-    <td>array</td>
-    <td>must be an array of objects formatted using following options / values</td>
-  </tr>
-</table>
-
-<table>
-  <tr>
-    <td colspan="3" align="center">object in <code>urlContains</code> array</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">object in <code>urlContains</code> array</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
     <td>match</td>
     <td>string</td>
@@ -379,14 +468,17 @@ Only display the module on pages that match the url conditions defined.
 </table>
 
 <table>
-  <tr>
-    <td colspan="3" align="center"><code>match</code> string</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>match</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
     <td>simple</td>
     <td>string</td>
@@ -408,7 +500,6 @@ Only display the module on pages that match the url conditions defined.
     <td>evaluates regex against the url</td>
   </tr>
 </table>
-
 
 ``` javascript
 // example: simple match

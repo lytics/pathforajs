@@ -12,4 +12,4 @@ var moduleRight = pathfora.Form({
   headline: 'Right Aligned',
 });
 
-window.pathfora.initializeWidgets([ moduleLeft, moduleRight ]);
+pathfora.initializeWidgets([ moduleLeft, moduleRight ]);

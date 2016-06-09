@@ -10,6 +10,10 @@ var module = pathfora.SiteGate({
 pathfora.initializeWidgets([ module ]);
 ```
 
+## Gate
+
+Gate modules will remain hidden once the user has submitted their information once. A cookie `PathforaUnlocked_[id of module]` is created to save this status so that the user has access to the gated content as long as their cookies persist.
+
 ### SiteGate - [Live Preview](../../examples/preview/types/gate/gate.html)
 
 ![Site Gate](../examples/img/types/gate/gate.png)
@@ -21,10 +25,26 @@ pathfora.initializeWidgets([ module ]);
 
 With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email.
 
-| Value | Type | Behavior |
-|---|---|---|
-| false | boolean | `default` do not show social login buttons |
-| true | boolean | show social login buttons |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showSocialLogin</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>false</td>
+    <td><code>default</code> do not show social login buttons</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>show social login buttons</td>
+  </tr>
+</table>
 
 ### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/gate/social.html)
 
@@ -36,10 +56,26 @@ With social login enabled, a module can show Google or Facebook login buttons wh
 
 By default the a gate module includes a form, with this setting it can be hidden for a text-only gated widget.
 
-| Value | Type | Behavior |
-|---|---|---|
-| true | boolean | `default` show the gated form |
-| false | boolean | hide the form for a text-only gated widget |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showForm</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>true</td>
+    <td><code>default</code> show the gated form</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td>hide the form for a text-only gated widget</td>
+  </tr>
+</table>
 
 ### Text-only Gate - [Live Preview](../../examples/preview/types/gate/showForm.html)
 

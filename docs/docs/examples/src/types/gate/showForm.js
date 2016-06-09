@@ -6,4 +6,4 @@ var module = pathfora.SiteGate({
   okMessage: 'I Agree'
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

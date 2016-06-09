@@ -6,4 +6,4 @@ var module = pathfora.Message({
   cancelShow: false
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

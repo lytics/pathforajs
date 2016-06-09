@@ -4,4 +4,4 @@ var module = pathfora.Message({
   msg: 'New Feature!',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

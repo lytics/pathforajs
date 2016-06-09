@@ -6,6 +6,6 @@ var module = pathfora.Form({
   showSocialLogin: true
 });
 
-window.pathfora.integrateWithFacebook('{{ Facebook App ID }}');
-window.pathfora.integrateWithGoogle('{{ Google API ClientID }}');
-window.pathfora.initializeWidgets([ module ]);
+pathfora.integrateWithFacebook('{{ Facebook App ID }}');
+pathfora.integrateWithGoogle('{{ Google API ClientID }}');
+pathfora.initializeWidgets([ module ]);

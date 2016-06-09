@@ -28,27 +28,34 @@ Finally you'll need to have at least one audience built in Lytics that you want 
 A list of rules assigning modules to audiences.
 
 <table>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
     <td>target</td>
-    <td>array</td>
-    <td>list of objects containing targeting rules</td>
+    <td>string</td>
+    <td>list of targeting rule objects</td>
   </tr>
+  <tr>
 </table>
 
 <table>
-  <tr>
-    <td colspan="3" align="center">object in <code>target</code> array</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">object in <code>target</code> array</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
   <tr>
     <td>segment</td>
     <td>string</td>
@@ -57,7 +64,7 @@ A list of rules assigning modules to audiences.
   <tr>
     <td>widgets</td>
     <td>array</td>
-    <td>list of modules to show to users in the audience</td>
+    <td>list of modulels to show the users in the audience</td>
   </tr>
 </table>
 
@@ -139,17 +146,22 @@ pathfora.initializeWidgets(modules, lyticsAcctId);
 
 Target all users who are not a part of any of the audiences in the defined targeting rules.
 
+
 <table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
   <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
-  <tr>
-    <td>target</td>
+    <td>inverse</td>
     <td>array</td>
     <td>list of modules to show any user who is not a member of any of the audiences in the targeting rules</td>
   </tr>
+  <tr>
 </table>
 
 ``` javascript

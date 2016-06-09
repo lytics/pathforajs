@@ -42,12 +42,12 @@ var moduleBottomRight = pathfora.Message({
 
 
 var modules = [ 
-	moduleLeft, 
-	moduleRight, 
-	moduleTopLeft, 
-	moduleTopRight, 
-	moduleBottomLeft, 
-	moduleBottomRight 
+  moduleLeft, 
+  moduleRight, 
+  moduleTopLeft, 
+  moduleTopRight, 
+  moduleBottomLeft, 
+  moduleBottomRight 
 ];
 
-window.pathfora.initializeWidgets(modules);
+pathfora.initializeWidgets(modules);

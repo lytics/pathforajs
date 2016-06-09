@@ -4,10 +4,26 @@ A medium module which slides from either side into the window. This module provi
 
 Positition of the slideout module relative to the browser window.
 
-| Value | Type | Behavior |
-|---|---|---|
-| bottom-left | string | `default` display the module in the bottom-left corner |
-| bottom-right | string | display the module in the bottom-right corner |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>position</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>bottom-left</td>
+    <td><code>default</code> display the module in the bottom left corner of the window</td>
+  </tr>
+  <tr>
+    <td>bottom-right</td>
+    <td>display the module in the bottom right corner of the window</td>
+  </tr>
+</table>
 
 
 ### Positions - [Live Preview](../../examples/preview/layouts/slideout/positions.html)
@@ -21,11 +37,30 @@ Positition of the slideout module relative to the browser window.
 
 Variant determines any extra content that may be used by the module.
 
-| Value | Type | Behavior |
-|---|---|---|
-| 1 | int | `default` text-only module |
-| 2 | int | module includes an image |  
-| 3 | int | module includes a content recommendation |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>variant</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>1</td>
+    <td><code>default</code> text-only-module</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>module includes an image</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>module includes a content recommendation</td>
+  </tr>
+</table>
 
 ### Image - [Live Preview](../../examples/preview/layouts/slideout/image.html)
 
@@ -38,11 +73,31 @@ Variant determines any extra content that may be used by the module.
 
 Origin is the direction from which the the module will slide in.
 
-| Value | Type | Behavior |
-|---|---|---|
-| left | string | `default` for bottom-left positioned modules |
-| right | string | `default` for bottom-right positioned modules |
-| bottom | string | module slides up from the bottom of the window | 
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>origin</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>left</td>
+    <td><code>default</code> for bottom-left positioned modules</td>
+  </tr>
+  <tr>
+    <td>right</td>
+    <td><code>default</code> for bottom-right positioned modules</td>
+  </tr>
+  <tr>
+    <td>bottom</td>
+    <td>module slides up from the bottom of the window</td>
+  </tr>
+</table>
+
 
 ### Bottom - [Live Preview](../../examples/preview/layouts/slideout/origin.html)
 

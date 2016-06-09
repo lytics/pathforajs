@@ -11,4 +11,4 @@ var module = pathfora.Form({
   }
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

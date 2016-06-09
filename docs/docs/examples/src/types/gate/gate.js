@@ -4,4 +4,4 @@ var module = pathfora.SiteGate({
   msg: 'Please enter your information to proceed',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

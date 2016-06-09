@@ -7,4 +7,4 @@ var module = pathfora.Message({
   image: '/assets/lion.jpg',
 });
 
-window.pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([ module ]);

@@ -7,7 +7,7 @@ var moduleTest = pathfora.ABTest({
   type: '50/50',
   groups: [
     [ moduleA ],
-    [ moduleB ]
+    [ ]
   ]
 });
 
@@ -17,10 +17,10 @@ pathfora.initializeABTesting([ moduleTest ]);
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>ABTest</code> settings obj</td>
+      <td colspan="3" align="center"><code>ABTest</code> settings object</td>
     </tr>
     <tr>
-      <th>Field</th>
+      <th>Key</th>
       <th>Type</th>
       <th>Behavior</th>
     </tr>

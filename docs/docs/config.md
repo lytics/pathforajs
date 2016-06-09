@@ -2,7 +2,9 @@ For multiple modules with common elements we can define a configuration to apply
 
 ``` javascript
 var config = {
-  // config settings
+  generic: {
+    theme: dark
+  }
 };
 
 // Lytics Account ID can be an empty string if not used for targeting
@@ -10,27 +12,29 @@ pathfora.initializeWidgets([ module, module2 ], "", config);
 ```
 
 <table>
-  <tr>
-    <td colspan="3" align="center"><code>config</code> object</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>config</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
   <tr>
     <td>generic</td>
-    <td>obj</td>
+    <td>object</td>
     <td><code>optional</code> setting which should apply to all modules initialized with this config</td>
   </tr>
   <tr>
     <td>message</td>
-    <td>obj</td>
+    <td>object</td>
     <td><code>optional</code> setting which should apply to all <b>message</b> modules initialized with this config</td>
   </tr>
    <tr>
     <td>form</td>
-    <td>obj</td>
+    <td>object</td>
     <td><code>optional</code> setting which should apply to all <b>form</b> modules initialized with this config</td>
   </tr>
   <tr>
