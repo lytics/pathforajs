@@ -1,8 +1,11 @@
-Part of what makes Pathfora powerful is it's ability to interact with [Lytics](http://www.getlytics.com/) and target certain audiences with certain modules. Setting up the targeting in Pathfora requires an object with certain targeting rules as the first param to `initializeWidgets` instead of a array of widgets. And it must include a second, `string` param, your lytics account ID.
+Part of what makes Pathfora powerful is its ability to interact with [Lytics](http://www.getlytics.com/) and target certain audiences with certain modules. Setting up the targeting in Pathfora requires an object with certain targeting rules as the first param to `initializeWidgets` instead of an array of widgets. And it must include a second, `string` param, your Lytics account ID.
 
 ``` javascript
 var modules = {
-  // targeting rules
+  target: [{
+    segment: 'smt_name',
+    widgets: [ module ]
+  }]
 };
 
 pathfora.initializeWidgets(modules, "YOUR LYTICS ACCOUNT ID");
@@ -14,7 +17,7 @@ To target an audience with a module you will need to know your Lytics Account ID
 
 <img class="full" src="../../assets/acctid.jpg" alt="Lytics Jstag Account Id">
 
-You will also need to make sure that any domain you want to use Pathfora on is whitelisted in your account, you can contact your customer success representative `success@getlytics.com` to do this. Your account should already have any domain whitelisted with the lytics javascript tag installed on it, but be sure to include your local and testing environments. 
+You will also need to make sure that any domain you want to use Pathfora on is whitelisted in your account, you can contact your customer success representative `success@getlytics.com` to do this. Your account should already have any domain whitelisted with the Lytics javascript tag installed on it, but be sure to include your local and testing environments. 
 
 Finally you'll need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID.
 

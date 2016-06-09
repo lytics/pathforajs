@@ -19,7 +19,7 @@ Positition of the slideout module relative to the browser window.
 
 ## variant
 
-Variants determines any extra content that may be used by the module.
+Variant determines any extra content that may be used by the module.
 
 | Value | Type | Behavior |
 |---|---|---|
@@ -36,7 +36,7 @@ Variants determines any extra content that may be used by the module.
 
 ## origin
 
-Direction from which the slideout module should slide from.
+Origin is the direction from which the the module will slide in.
 
 | Value | Type | Behavior |
 |---|---|---|

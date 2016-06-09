@@ -12,7 +12,7 @@ pages:
     - Bar: layouts/bar.md
     - Button: layouts/button.md
   - Customization:
-    - Buttons: customization/buttons.md
+    - Action Buttons: customization/buttons.md
     - Color Themes: customization/themes.md
     - Custom CSS: customization/css.md
     - Form Elements: customization/form.md

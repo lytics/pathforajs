@@ -1,7 +1,7 @@
-Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics, as long as your tags are all set up in the correct order, module data will be sent automatically. Below we will look at which fields are sent in detail and their formats.
+Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent automatically. Below we will look at which fields are sent in detail and their formats.
 
 ## Lytics
-As long as your [Lytics javascript tag](#) is loaded before the Pathfora tag, all event data, and data collected from modules with user input will be sent to the `default` stream in your Lytics account. The following raw data fields can be sent to Lytics by Pathfora.
+As long as your [Lytics javascript tag](https://activate.getlytics.com/resources/documentation/) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics javascript tag](https://activate.getlytics.com/resources/documentation/jstag). The following raw data fields can be sent to Lytics by Pathfora.
 
 | Attribute | Type | Value |
 |---|---|---|
@@ -58,12 +58,12 @@ As long as your [Lytics javascript tag](#) is loaded before the Pathfora tag, al
 
 To verify that the event data fields are being sent properly to Lytics, you can simulate an action by interacting with your module and checking that the expected fields exist in the data streams section of your Lytics Account.
 
-By default these fields are fields are available as user fields so that you can use them in the creation of segments. If you need help using these fields or would like to map the user fields differently please contact your customer success representative `success@getlytics.com`.
+By default these fields are available as user fields so that you can use them in the creation of segments. If you need help using these fields or would like to map the user fields differently please contact your customer success representative `success@getlytics.com`.
 
 
 ## Google Analytics
 
-Pathfora will send event data from the modules on your website to your google analytics account as long as it has access to the `ga` function. This requires that you have the [analytics.js snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) on your website loaded before the Pathfora tag. An event sent to google analytics by pathfora will use the following attributes for [event tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview):
+Pathfora will send event data from the modules on your website to your Google Analytics account as long as it has access to the `ga` function. This requires that you have the [analytics.js snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) on your website loaded before the Pathfora tag. An event sent to Google Analytics by Pathfora will use the following attributes for [event tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview):
 
 | Attribute | Type | Value |
 |---|---|---|

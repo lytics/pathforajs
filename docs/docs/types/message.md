@@ -1,8 +1,10 @@
-Focused on deliverying outbound communication. Perhaps announcing a product launch, new content, top-level alert, etc. Message modules are simple text modules which can be used in a variety of formats.
+Message type modules are focused on deliverying outbound communication for example, announcing a product launch, new content, top-level alert, etc. These modules provide a as simple text message which can be used in a variety of formats.
 
 ``` javascript
 var module = pathfora.Message({
-	// module settings
+  id: 'my-message-module-id',
+  headline: 'My Headline Text',
+  msg: 'My message text here.'
 });
 
 pathfora.initializeWidgets([ module ]);
@@ -13,12 +15,34 @@ pathfora.initializeWidgets([ module ]);
 
 Define which layout type the form module should use.
 
-| Value | Type | Behavior |
-|---|---|---|
-| modal | string | module uses a [modal layout](../layouts/modal.md) |
-| slideout | string | module uses a [slideout layout](../layouts/slideout.md) |
-| bar | string | module uses a [bar layout](../layouts/bar.md) |  
-| button | string | module uses a [button layout](../layouts/button.md) |  
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>layout</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>modal</td>
+    <td>module uses a <a href="/layouts/modal">modal layout</a></td>
+  </tr>
+  <tr>
+    <td>slideout</td>
+    <td>module uses a <a href="/layouts/slideout">slideout layout</a></td>
+  </tr>
+  <tr>
+    <td>bar</td>
+    <td>module uses a <a href="/layouts/slideout">bar layout</a></td>
+  </tr>
+  <tr>
+    <td>button</td>
+    <td>module uses a <a href="/layouts/button">button layout</a></td>
+  </tr>
+</table>
 
 ### Modal - [Live Preview](../../examples/preview/types/message/modal.html)
 

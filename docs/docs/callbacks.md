@@ -1,4 +1,4 @@
-All buttons, forms, and other such events support optional javascript callback settings.
+All actions taken for clicking a button, submitting a form, and other such events support optional javascript callback settings.
 
 ## confirmAction
 Set a [tracking name](/tracking.md) and javascript callback for a "confirm" button click event.

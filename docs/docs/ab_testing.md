@@ -1,23 +1,31 @@
-Pathfora supports A/B testing on a global level as well as on a targeted audience. You can select to split a pool of users to show some proportion of them a group of modules "A" and the other portion a group "B", (group being a collection of 0 or more modules).
+Pathfora supports A/B testing on a global level as well as on a targeted audience. You can split a pool of users to show some proportion of them a group of modules "A" and the other portion a group "B".
 
 
 ``` javascript
 var moduleTest = pathfora.ABTest({
-  // A/B test settings
+  id: 'ab-test-id',
+  type: '50/50',
+  groups: [
+    [ moduleA ],
+    [ moduleB ]
+  ]
 });
 
 pathfora.initializeABTesting([ moduleTest ]);
 ```
 
 <table>
-  <tr>
-    <td colspan="3" align="center"><code>ABTest</code> settings object</td>
-  </tr>
-  <tr>
-    <th>VALUE</th>
-    <th>TYPE</th>
-    <th>BEHAVIOR</th>
-  </tr>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>ABTest</code> settings obj</td>
+    </tr>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
   <tr>
     <td>id</td>
     <td>string</td>
@@ -83,7 +91,7 @@ var widgets = {
   }]
 };
 
-var lyticsAcctId = "0d47e6304d12858905b4f111090a68a1";
+var lyticsAcctId = "YOUR LYTICS ACCOUNT ID";
 
 pathfora.initializeABTesting([ ab ]);
 pathfora.initializeWidgets(widgets, lyticsAcctId);

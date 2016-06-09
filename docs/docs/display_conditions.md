@@ -1,4 +1,4 @@
-The `displayConditions` key controls how, when, and for how long any single module is displayed/hidden. All options can be combined with one-another for maximum control. Each module requires its own set of `displayConditions`. By default all modules will leverage `showOnInit`. Upon configuring another options this init based display is automatically disabled unless explicitly defined again in the module config.
+The `displayConditions` key controls how, when, and for how long any single module is displayed/hidden. All options can be combined with one-another for maximum control. Each module requires its own set of `displayConditions`. By default all modules will leverage `showOnInit`. Once other display conditions are set, they will override this default.
 
 
 ``` javascript
@@ -63,13 +63,13 @@ Triggers the module when a specific DOM element enters the viewport.
 
 | Value | Type | Behavior |
 |---|---|---|
-| element id | string | waits for an element with specific id to enter the viewport |
+| selector | string | waits for an element with specific selector to enter the viewport |
 
 ``` javascript
-// example: show module when the #footer is visible
+// example: show module when the .footer is visible
 
 displayConditions: {
-  displayWhenElementVisible: "#footer"
+  displayWhenElementVisible: ".footer"
 }
 ```
   

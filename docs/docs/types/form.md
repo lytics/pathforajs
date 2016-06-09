@@ -1,8 +1,10 @@
-Used primarily for data collection or user identification. Supporting a variety of form fields and options for passing data to various end-points this type presents a form for the user to fill out and submit.
+Form type modules are used primarily for data collection or user identification. Supporting a variety of form fields and options for passing data to various end-points, this type presents a form for the user to fill out and submit.
 
 ``` javascript
 var module = pathfora.Form({
-	// form module settings
+  id: 'my-form-module-id',
+  headline: 'My Headline Text',
+  msg: 'My message text here.'
 });
 
 pathfora.initializeWidgets([ module ]);

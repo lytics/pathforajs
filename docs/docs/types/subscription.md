@@ -1,8 +1,10 @@
-A lite version of the form type this module focuses on gathering the minimum amount of user data necessary to maintain communication. By default only email address will be collected.
+Subscription modules are a lite version of the form type focused on gathering the minimum amount of user data necessary to maintain communication. By default only email address will be collected by a subscription module.
 
 ``` javascript
 var module = pathfora.Subscription({
-	// module settings
+  id: 'my-subscription-module-id',
+  headline: 'My Headline Text',
+  msg: 'My message text here.'
 });
 
 pathfora.initializeWidgets([ module ]);

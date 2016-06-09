@@ -2,7 +2,7 @@ Pathfora is built to be entirely customizable for developers. With the javascrip
 
 ## Key Class Names
 
-The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the the containing div surrounding the content, but for [modal](/layouts/modal.md) and [gate](/types/gate.md) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
+The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the containing div surrounding the content, but for [modal](/layouts/modal.md) and [gate](/types/gate.md) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
 
 **Subclasses of `pf-widget`:**
 
@@ -39,7 +39,7 @@ All modules use the `pf-widget` class, thus any styles applied to this class and
 ```javascript
 var module = pathfora.Subscription({
   id: 'form-css',
-  className: 'pf-sign-up-newsletter',
+  className: 'sign-up-newsletter',
   layout: 'modal',
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates'

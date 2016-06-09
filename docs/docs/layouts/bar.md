@@ -1,4 +1,6 @@
-A thin module which appears at the top or bottom of the browser window. Note that the bar module does not support header text.
+A thin module which appears at the top or bottom of the browser window.
+
+**Note:** the bar module does not support the `headline` config property.
 
 ## position
 
@@ -20,7 +22,7 @@ Positition of the bar module relative to the browser window.
 
 ## variant
 
-Variants determines any extra content that may be used by the module.
+Variant determines any extra content that may be used by the module.
 
 | Value | Type | Behavior |
 |---|---|---|

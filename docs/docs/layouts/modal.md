@@ -2,7 +2,7 @@ A large size module with an overlay behind it - meant to cover a substantial are
 
 ## variant
 
-Variants determines any extra content that may be used by the module.
+Variant determines any extra content that may be used by the module.
 
 | Value | Type | Behavior |
 |---|---|---|
