@@ -539,8 +539,8 @@
      * @description Parse url queries as an object
      * @param {string} url
      */
-    parseQueries: function (url) {
-      var queries = {};
+    parseQuery: function (url) {
+      var query = {};
       var pieces = url.split('?');
       if (pieces.length > 1) {
         pieces = pieces[1].split('&');
@@ -549,11 +549,15 @@
           var pair = pieces[i].split('=');
 
           if (pair.length > 1) {
-            queries[pair[0]] = pair[1];
+            // NOTE We should not account for the preview id
+            if (pair[0] !== "lytics_variation_preview_id") {
+              query[pair[0]] = pair[1];
+            }
           }
         }
       }
-      return queries;
+
+      return query;
     },
 
     /**
@@ -562,11 +566,22 @@
      *              rule provided
      * @param {obj} queries
      * @param {obj} matchQueries
+     * @param {string} rule
      */
-    compareQueries: function (queries, matchQueries) {
-      // any query in the matchQueries should exist in the url in the browser
-      for (var key in matchQueries) {
-        if (matchQueries[key] !== queries[key]) {
+    compareQueries: function (query, matchQuery, rule) {
+      switch (rule) {
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      for (var key in matchQuery) {
+        if (matchQuery[key] !== query[key]) {
           return false;
         }
       }
@@ -575,9 +590,9 @@
     },
 
     urlChecker: function (phrases, widget) {
-      var url = decodeURIComponent(window.location.href),
-          simpleurl = decodeURIComponent(window.location.hostname + window.location.pathname),
-          queries = core.parseQueries(url),
+      var url = window.location.href,
+          simpleurl = window.location.hostname + window.location.pathname,
+          queries = core.parseQuery(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -593,10 +608,8 @@
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              var matchUrl = decodeURIComponent(phrase);
-
-              if (url.indexOf(matchUrl.split("?")[0]) !== -1) {
-                valid = core.compareQueries(queries, core.parseQueries(matchUrl)) && true;
+              if (url.indexOf(phrase.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
               }
               break;
 
@@ -605,15 +618,15 @@
                 switch (phrase.match) {
                   // simple match
                   case 'simple':
-                    if (simpleurl === decodeURIComponent(phrase.value)) {
+                    if (simpleurl === phrase.value) {
                       valid = true;
                     }
                     break;
 
                   // exact match
                   case 'exact':
-                    if (url === decodeURIComponent(phrase.value)) {
-                      valid = true;
+                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
 
@@ -627,10 +640,8 @@
 
                   // string match (default)
                   default:
-                    var matchUrl = decodeURIComponent(phrase.value);
-
-                    if (url.indexOf(matchUrl.split("?")[0]) !== -1) {
-                      valid = core.compareQueries(queries, core.parseQueries(matchUrl)) && true;
+                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
                 }

@@ -1946,8 +1946,81 @@ describe('API', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should ignore order of query params for exact rule', function () {
+    window.history.pushState({} , '', '/context.html?bar=2&foo=1');
+
+    var form1 = new pathfora.Form({
+      id: 'f41a595548c54321a4e12b613c466159',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html?foo=1&bar=2'
+          }
+        ]
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      id: 'ef2848a4949d4474b3a5d12ba1017eb7',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html?foo=1'
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([ form1, form2 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    widget = $('#' + form2.id);
+    expect(widget.length).toBe(0);
+
+    window.history.pushState({} , '', window.location.pathname);
+  });
+
+  it('should ignore "lytics_variation_preview_id" query in comparison', function () {
+    window.history.pushState({} , '', '/context.html?bar=2&foo=1&lytics_variation_preview_id=7b26ca56afb84669bba0bf0810ec459f');
+
+    var form1 = new pathfora.Form({
+      id: '7b26ca56afb84669bba0bf0810ec459f',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html?foo=1&bar=2'
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([ form1 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    window.history.pushState({} , '', window.location.pathname);
+  });
+
   it('should ignore order of query params and extra params for string rule', function () {
-    window.history.pushState({} , '', '/context?bar=2&foo=1&baz=3');
+    window.history.pushState({} , '', '/context.html?bar=2&foo=1&baz=3');
 
     var form1 = new pathfora.Form({
       id: '339f97d11af84630add78cfd39da1105',
