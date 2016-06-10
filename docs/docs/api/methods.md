@@ -1,4 +1,4 @@
-This document will walk you through the methods of the `pathfora` class that will be used to help you deploy your modules. The rest of the SDK documentation will walk you through how to customize your module's configuration, and provide code examples for of how these configurations interact with the functions below.
+This document will walk you through the methods of the `pathfora` class that will be used to help you deploy your modules. The rest of the SDK documentation will walk you through how to customize your module's configuration, and provide code examples to show you these methods in context.
 
 
 ## initializeWidgets
@@ -36,7 +36,7 @@ This method is used to initialize any modules built with Pathfora. It kicks off 
 
 ### Type Configuration Methods
 
-Each module type that Pathfora supports has it's own configuration method, which accepts a single object as a parameter. This object should include the configuration settings for the module, the following keys are common accross all module configurations.
+Each module type that Pathfora supports has its own configuration method, which accepts a single object as a parameter. This object should include the configuration settings for the module, the following keys are common across all module configuration types.
 
 
 <table>
@@ -134,7 +134,7 @@ Pathfora can integrate with your Facebook App to allow users to autofill the fie
 
 ## integrateWithGoogle
 
-Pathfora can integrate with your Google to allow users to autofill the fields of [form](/types/form.md) or [gate](/types/gate.md) modules with their google account information. This method is used to authenticate this integration with Google. This method should be called **before** the `initializeWidgets` method.
+Pathfora can integrate with your Google App to allow users to autofill the fields of [form](/types/form.md) or [gate](/types/gate.md) modules with their Google account information. This method is used to authenticate this integration with Google. This method should be called **before** the `initializeWidgets` method.
 
 **Note:** In addition to using this method, you will need to enable [social login](/types/form.md#showsociallogin) in your module's config to allow for form autofill.
 
