@@ -2,42 +2,42 @@ var moduleLeft = pathfora.Message({
   id: 'button-left',
   position: 'left',
   layout: 'button',
-  msg: 'Left',
+  msg: 'Left'
 });
 
 var moduleRight = pathfora.Message({
   id: 'button-right',
   layout: 'button',
   position: 'right',
-  msg: 'Right',
+  msg: 'Right'
 });
 
 var moduleTopLeft = pathfora.Message({
   id: 'button-top-left',
   layout: 'button',
   position: 'top-left',
-  msg: 'Top Left',
+  msg: 'Top Left'
 });
 
 var moduleTopRight = pathfora.Message({
   id: 'button-top-right',
   layout: 'button',
   position: 'top-right',
-  msg: 'Top Right',
+  msg: 'Top Right'
 });
 
 var moduleBottomLeft = pathfora.Message({
   id: 'button-bottom-left',
   layout: 'button',
   position: 'bottom-left',
-  msg: 'Bottom Left',
+  msg: 'Bottom Left'
 });
 
 var moduleBottomRight = pathfora.Message({
   id: 'button-bottom-right',
   layout: 'button',
   position: 'bottom-right',
-  msg: 'Bottom Right',
+  msg: 'Bottom Right'
 });
 
 

@@ -137,7 +137,7 @@ Triggers the module when a specific DOM element enters the viewport.
 // example: show module when the .footer is visible
 
 displayConditions: {
-  displayWhenElementVisible: ".footer"
+  displayWhenElementVisible: '.footer'
 }
 ```
   
@@ -237,7 +237,7 @@ Display the module in a specified interval of time.
 
 displayConditions: {
   date: {
-    start_at: "2017-02-12T11:00:00.000Z"
+    start_at: '2017-02-12T11:00:00.000Z'
   }
 }
 ```
@@ -247,7 +247,7 @@ displayConditions: {
 
 displayConditions: {
   date: {
-    end_at: "2017-02-12T11:00:00.000Z"
+    end_at: '2017-02-12T11:00:00.000Z'
   }
 }
 ```   
@@ -257,8 +257,8 @@ displayConditions: {
 
 displayConditions: {
   date: {
-    start_at: "2017-02-12T11:00:00.000Z",
-    end_at: "2017-03-12T11:00:00.000Z"
+    start_at: '2017-02-12T11:00:00.000Z',
+    end_at: '2017-03-12T11:00:00.000Z'
   }
 }
 ```

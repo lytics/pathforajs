@@ -48,37 +48,37 @@ var slideoutMsg = pathfora.Message({
   id: 'slideoutMsg',
   layout: 'slideout',
   position: 'bottom-right',
-  msg: 'Slideout Message',
+  msg: 'Slideout Message'
 });
 
 var barSub = pathfora.Subscription({
   id: 'barSubscription',
   layout: 'bar',
-  msg: 'Bar Subscription',
+  msg: 'Bar Subscription'
 });
 
 var slideoutForm = pathfora.Form({
   id: 'slideoutForm',
   layout: 'slideout',
-  msg: 'Slideout Form',
+  msg: 'Slideout Form'
 });
 
 var buttonMsg = pathfora.Message({
   id: 'buttonMsg',
   layout: 'button',
   position: 'right',
-  msg: 'Button Module',
+  msg: 'Button Module'
 
   // settings in the module definition will override
   // anything in generic and the type specific settings
-  theme: 'dark',
+  theme: 'dark'
 });
 
 var modules = [
   slideoutMsg,
   barSub,
   slideoutForm,
-  buttonMsg,
+  buttonMsg
 ];
 
-pathfora.initializeWidgets(modules, "", config);
+pathfora.initializeWidgets(modules, '', config);

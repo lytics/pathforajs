@@ -37,21 +37,21 @@ Define which layout type the form module should use.
 
 ### Form - [Live Preview](../../examples/preview/types/form/modal.html)
 
-![Form Modal](../examples/img/types/form/modal.png)
+![Modal Form Module](../examples/img/types/form/modal.png)
 
 <pre data-src="../../examples/src/types/form/modal.js"></pre>
 
 
 ### Slideout - [Live Preview](../../examples/preview/types/form/slideout.html)
 
-![Form Slideout](../examples/img/types/form/slideout.png)
+![Slideout Form Module](../examples/img/types/form/slideout.png)
 
 <pre data-src="../../examples/src/types/form/slideout.js"></pre>
 
 
 ## showSocialLogin
 
-With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email.
+With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email. This setting requires authentication with [integrateWithFacebook](/api/methods.md#integratewithfacebook) or [integrateWithGoogle](/api/methods.md#integratewithgoogle).
 
 <table>
   <thead>
@@ -76,6 +76,6 @@ With social login enabled, a module can show Google or Facebook login buttons wh
 
 ### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/form/social.html)
 
-![Social Login Form](../examples/img/types/form/social.png)
+![Social Login Form Module](../examples/img/types/form/social.png)
 
 <pre data-src="../../examples/src/types/form/social.js"></pre>

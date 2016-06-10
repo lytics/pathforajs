@@ -1,4 +1,4 @@
-Pathfora modules can have up to two action buttons "confirm" and "cancel". You can set custom text for these buttons as well as select to hide one or both of them. See the [callbacks](callbacks.md) section for how to add javascript callbacks on these buttons.
+Pathfora modules can have up to two action buttons "confirm" and "cancel". You can set custom text for these buttons as well as select to hide one or both of them. See the [callbacks](/callbacks.md) section for how to add javascript callbacks on these buttons.
 
 ## okShow
 
@@ -53,7 +53,7 @@ Show or hide the "Cancel" button.
 
 ### Hide Cancel Button - [Live Preview](../../examples/preview/customization/buttons/cancelShow.html)
 
-![Form Placeholders](../examples/img/customization/buttons/cancelShow.png)
+![Hide Cancel Button](../examples/img/customization/buttons/cancelShow.png)
 
 <pre data-src="../../examples/src/customization/buttons/cancelShow.js"></pre>
 
@@ -101,6 +101,6 @@ Set the text for the "Cancel" button.
 
 ### Custom Button Text - [Live Preview](../../examples/preview/customization/buttons/buttonMessage.html)
 
-![Form Placeholders](../examples/img/customization/buttons/buttonMessage.png)
+![Custom Button Text](../examples/img/customization/buttons/buttonMessage.png)
 
 <pre data-src="../../examples/src/customization/buttons/buttonMessage.js"></pre>

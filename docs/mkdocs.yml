@@ -1,6 +1,10 @@
 site_name: PathforaJS SDK
 pages:
   - Pathfora JS: index.md
+  - API Reference:
+    - Methods: api/methods.md
+    - Lytics Account ID: api/acctid.md
+    - Generalized Configuration: api/config.md
   - Types:
     - Message: types/message.md
     - Form: types/form.md
@@ -20,7 +24,6 @@ pages:
   - Audience Targeting: targeting.md
   - Callbacks: callbacks.md
   - Display Conditions: display_conditions.md
-  - Generalizing Config: config.md
   - Tracking: tracking.md
 extra_javascript:
   - assets/pre.js

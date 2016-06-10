@@ -30,7 +30,7 @@ Set the color scheme of the module, this can be a predefined theme or indicate t
 
 ### Dark Theme - [Live Preview](../../examples/preview/customization/themes/dark.html)
 
-![Form Placeholders](../examples/img/customization/themes/dark.png)
+![Dark Theme Module](../examples/img/customization/themes/dark.png)
 
 <pre data-src="../../examples/src/customization/themes/dark.js"></pre>
 
@@ -99,6 +99,6 @@ Define a set of custom colors for each element of the module.
 
 ### Custom Theme - [Live Preview](../../examples/preview/customization/themes/custom.html)
 
-![Form Placeholders](../examples/img/customization/themes/custom.png)
+![Custom Theme Module](../examples/img/customization/themes/custom.png)
 
 <pre data-src="../../examples/src/customization/themes/custom.js"></pre>

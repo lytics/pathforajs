@@ -41,20 +41,20 @@ Define which layout type the form module should use.
 
 ### Modal - [Live Preview](../../examples/preview/types/subscription/modal.html)
 
-![Subscription Modal](../examples/img/types/subscription/modal.png)
+![Modal Subscription Module](../examples/img/types/subscription/modal.png)
 
 <pre data-src="../../examples/src/types/subscription/modal.js"></pre>
 
 
 ### Slideout - [Live Preview](../../examples/preview/types/subscription/slideout.html)
 
-![Subscription Slideout](../examples/img/types/subscription/slideout.png)
+![Slideout Subscription Module](../examples/img/types/subscription/slideout.png)
 
 <pre data-src="../../examples/src/types/subscription/slideout.js"></pre>
 
 
 ### Bar - [Live Preview](../../examples/preview/types/subscription/bar.html)
 
-![Subscription Bar](../examples/img/types/subscription/bar.png)
+![Bar Subscription Module](../examples/img/types/subscription/bar.png)
 
 <pre data-src="../../examples/src/types/subscription/bar.js"></pre>

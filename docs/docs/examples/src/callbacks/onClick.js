@@ -3,7 +3,7 @@ var module = pathfora.Message({
   layout: 'button',
   msg: 'Click Me!',
   onClick: function (event, payload) {
-    console.log("OnClick Callback: ");
+    console.log('OnClick Callback: ');
     console.log(event);
     console.log(payload);
   }

@@ -1,4 +1,4 @@
-For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as third, optional argument to `initializeWidgets`.
+For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as third, optional argument to [initializeWidgets](/api/methods.md#initializewidgets).
 
 ``` javascript
 var config = {
@@ -8,7 +8,7 @@ var config = {
 };
 
 // Lytics Account ID can be an empty string if not used for targeting
-pathfora.initializeWidgets([ module, module2 ], "", config);
+pathfora.initializeWidgets([ module, module2 ], '', config);
 ```
 
 <table>

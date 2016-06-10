@@ -16,14 +16,14 @@ Gate modules will remain hidden once the user has submitted their information on
 
 ### SiteGate - [Live Preview](../../examples/preview/types/gate/gate.html)
 
-![Site Gate](../examples/img/types/gate/gate.png)
+![Gate Module](../examples/img/types/gate/gate.png)
 
 <pre data-src="../../examples/src/types/gate/gate.js"></pre>
 
 
 ## showSocialLogin
 
-With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email.
+With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email. This setting requires authentication with [integrateWithFacebook](/api/methods.md#integratewithfacebook) or [integrateWithGoogle](/api/methods.md#integratewithgoogle).
 
 <table>
   <thead>
@@ -48,7 +48,7 @@ With social login enabled, a module can show Google or Facebook login buttons wh
 
 ### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/gate/social.html)
 
-![Site Gate](../examples/img/types/gate/social.png)
+![Social Login Gate Module](../examples/img/types/gate/social.png)
 
 <pre data-src="../../examples/src/types/gate/social.js"></pre>
 
@@ -79,6 +79,6 @@ By default the a gate module includes a form, with this setting it can be hidden
 
 ### Text-only Gate - [Live Preview](../../examples/preview/types/gate/showForm.html)
 
-![Site Gate](../examples/img/types/gate/showForm.png)
+![Text Only Gate Module](../examples/img/types/gate/showForm.png)
 
 <pre data-src="../../examples/src/types/gate/showForm.js"></pre>

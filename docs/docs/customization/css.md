@@ -53,7 +53,7 @@ pathfora.initializeWidgets([ module ]);
 
 ### [Live Preview](../../examples/preview/customization/css/custom.html)
 
-![General Config](../examples/img/customization/css/custom.png)
+![Custom CSS](../examples/img/customization/css/custom.png)
 
 ### Javascript
 

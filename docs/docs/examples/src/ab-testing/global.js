@@ -1,12 +1,12 @@
 var moduleA = pathfora.SiteGate({
   id: 'gate-a',
-  msg: 'Please submit your information to continue.',
+  msg: 'Please submit your information to continue.'
 });
 
 var moduleB = pathfora.Form({
   id: 'form-b',
   layout: 'modal',
-  msg: 'Please submit your information.',
+  msg: 'Please submit your information.'
 });
 
 var ab = pathfora.ABTest({

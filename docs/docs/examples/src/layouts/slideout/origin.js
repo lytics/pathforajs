@@ -4,7 +4,7 @@ var module = pathfora.Message({
   headline: 'Welcome',
   msg: 'Welcome to our website.',
   position: 'bottom-right',
-  origin: 'bottom',
+  origin: 'bottom'
 });
 
 pathfora.initializeWidgets([ module ]);

@@ -46,6 +46,6 @@ Positition of the button module relative to the browser window.
 
 ### Positions - [Live Preview](../../examples/preview/layouts/button/positions.html)
 
-![Positions Bar](../examples/img/layouts/button/positions.png)
+![Position Button Modules](../examples/img/layouts/button/positions.png)
 
 <pre data-src="../../examples/src/layouts/button/positions.js"></pre>

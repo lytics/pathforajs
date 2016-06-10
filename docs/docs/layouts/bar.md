@@ -33,7 +33,7 @@ Positition of the bar module relative to the browser window.
 
 ### Positions - [Live Preview](../../examples/preview/layouts/bar/positions.html)
 
-![Positions Bar](../examples/img/layouts/bar/positions.png)
+![Position Bar Modules](../examples/img/layouts/bar/positions.png)
 
 <pre data-src="../../examples/src/layouts/bar/positions.js"></pre>
 
@@ -63,10 +63,31 @@ Variant determines any extra content that may be used by the module.
   </tr>
 </table>
 
+## image
 
-### Image - [Live Preview](../../examples/preview/layouts/bar/image.html)
+Define the featured image you would like to use for the module.
 
-![Image Bar](../examples/img/layouts/bar/image.png)
+**Note:** This setting is only valid for modules with a variant value of 2.
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>image</td>
+    <td>string</td>
+    <td>URL of the image to feature</td>
+  </tr>
+</table>
+
+### Image (variant 2) - [Live Preview](../../examples/preview/layouts/bar/image.html)
+
+![Image Bar Module](../examples/img/layouts/bar/image.png)
 
 <pre data-src="../../examples/src/layouts/bar/image.js"></pre>
 
@@ -95,6 +116,6 @@ For `top` or `top-fixed` positioned bars, we can select an element to push down 
 
 ### Image - [Live Preview](../../examples/preview/layouts/bar/pushdown.html)
 
-![pushDown Bar](../examples/img/layouts/bar/pushdown.png)
+![pushDown Bar Module](../examples/img/layouts/bar/pushdown.png)
 
 <pre data-src="../../examples/src/layouts/bar/pushdown.js"></pre>

@@ -4,10 +4,10 @@ var module = pathfora.Form({
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates',
   placeholders: {
-    name: "Your Name",
-    title: "Job Title",
-    email: "Email Address",
-    message: "How did you hear about us?",
+    name: 'Your Name',
+    title: 'Job Title',
+    email: 'Email Address',
+    message: 'How did you hear about us?',
   }
 });
 

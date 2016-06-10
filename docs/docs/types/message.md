@@ -45,27 +45,27 @@ Define which layout type the form module should use.
 
 ### Modal - [Live Preview](../../examples/preview/types/message/modal.html)
 
-![Message Modal](../examples/img/types/message/modal.png)
+![Modal Message Module](../examples/img/types/message/modal.png)
 
 <pre data-src="../../examples/src/types/message/modal.js"></pre>
 
 
 ### Slideout - [Live Preview](../../examples/preview/types/message/slideout.html)
 
-![Message Slideout](../examples/img/types/message/slideout.png)
+![Slideout Message Module](../examples/img/types/message/slideout.png)
 
 <pre data-src="../../examples/src/types/message/slideout.js"></pre>
 
 
 ### Bar - [Live Preview](../../examples/preview/types/message/bar.html)
 
-![Message Bar](../examples/img/types/message/bar.png)
+![Bar Message Module](../examples/img/types/message/bar.png)
 
 <pre data-src="../../examples/src/types/message/bar.js"></pre>
 
 
 ### Button - [Live Preview](../../examples/preview/types/message/button.html)
 
-![Message Button](../examples/img/types/message/button.png)
+![Button Message Module](../examples/img/types/message/button.png)
 
 <pre data-src="../../examples/src/types/message/button.js"></pre>

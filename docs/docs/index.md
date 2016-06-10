@@ -5,16 +5,19 @@ Before you begin creating modules with Pathfora you must add the [Lytics javascr
 
 ``` html
 <!-- Your Lytics JS Tag -->
-<script src="https://api.lytics.io/api/tag/{{YOUR LYTICS API KEY}}/lio.js"></script>
+<script src="https://c.lytics.io/api/tag/YOUR LYTICS ACCOUNT ID/lio.js"></script>
 
 <!-- Pathfora Tag -->
 <script src="http://c.lytics.io/static/pathfora.min.js"></script>
 ```
 
-Next you'll need to set up configuration for your module and initialize it with `pathfora.initializeWidgets`. Example configurations, settings, and their outputted modules can be found throughout the documentation.
+Next you'll need to set up configuration for your module and initialize it with `initializeWidgets`. Example configurations, settings, and their outputted modules can be found throughout the documentation.
 
 ## Overview
 Here are a couple sections to get you started on the basics of Pathfora JS. See the navigation in the sidebar for a full list of docs.
+
+- **[API Reference](api/methods.md)** 
+> This section acts as a reference for Pathfora's top level functions which will use the module configs you create use to deploy modules on your website.
 
 - **[Types](types/message.md)** 
 > The type parameter relays information to the layout (see below) related to the type of content being rendered. Pathfora currently supports four types of modules: message, form, subscription and gate.

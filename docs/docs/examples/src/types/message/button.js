@@ -1,7 +1,7 @@
 var module = pathfora.Message({
   id: 'message-button',
   layout: 'button',
-  msg: 'New Feature!',
+  msg: 'New Feature!'
 });
 
 pathfora.initializeWidgets([ module ]);
