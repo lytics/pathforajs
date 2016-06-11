@@ -67,7 +67,7 @@ var buttonMsg = pathfora.Message({
   id: 'buttonMsg',
   layout: 'button',
   position: 'right',
-  msg: 'Button Module'
+  msg: 'Button Module',
 
   // settings in the module definition will override
   // anything in generic and the type specific settings

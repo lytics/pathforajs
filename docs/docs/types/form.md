@@ -27,22 +27,22 @@ Define which layout type the form module should use.
   
   <tr>
     <td>modal</td>
-    <td>module uses a <a href="/layouts/modal">modal layout</a></td>
+    <td>module uses a <a href="../../layouts/modal">modal layout</a></td>
   </tr>
   <tr>
     <td>slideout</td>
-    <td>module uses a <a href="/layouts/slideout">slideout layout</a></td>
+    <td>module uses a <a href="../../layouts/slideout">slideout layout</a></td>
   </tr>
 </table>
 
-### Form - [Live Preview](../../examples/preview/types/form/modal.html)
+### Form - [Live Preview](../examples/preview/types/form/modal.html)
 
 ![Modal Form Module](../examples/img/types/form/modal.png)
 
 <pre data-src="../../examples/src/types/form/modal.js"></pre>
 
 
-### Slideout - [Live Preview](../../examples/preview/types/form/slideout.html)
+### Slideout - [Live Preview](../examples/preview/types/form/slideout.html)
 
 ![Slideout Form Module](../examples/img/types/form/slideout.png)
 
@@ -74,7 +74,7 @@ With social login enabled, a module can show Google or Facebook login buttons wh
   </tr>
 </table>
 
-### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/form/social.html)
+### Social Login /w Google & Facebook - [Live Preview](../examples/preview/types/form/social.html)
 
 ![Social Login Form Module](../examples/img/types/form/social.png)
 

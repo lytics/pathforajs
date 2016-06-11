@@ -51,7 +51,7 @@ pathfora.initializeWidgets([ module, module2 ], '', config);
 
 ## Example
 
-### [Live Preview](../../examples/preview/config/config.html)
+### [Live Preview](../examples/preview/config/config.html)
 
 ![General Config](../examples/img/config/config.png)
 

@@ -51,7 +51,7 @@ Show or hide the "Cancel" button.
   </tr>
 </table>
 
-### Hide Cancel Button - [Live Preview](../../examples/preview/customization/buttons/cancelShow.html)
+### Hide Cancel Button - [Live Preview](../examples/preview/customization/buttons/cancelShow.html)
 
 ![Hide Cancel Button](../examples/img/customization/buttons/cancelShow.png)
 
@@ -99,7 +99,7 @@ Set the text for the "Cancel" button.
   </tr>
 </table>
 
-### Custom Button Text - [Live Preview](../../examples/preview/customization/buttons/buttonMessage.html)
+### Custom Button Text - [Live Preview](../examples/preview/customization/buttons/buttonMessage.html)
 
 ![Custom Button Text](../examples/img/customization/buttons/buttonMessage.png)
 

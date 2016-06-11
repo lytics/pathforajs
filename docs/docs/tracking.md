@@ -46,15 +46,15 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
   </tr>
   <tr>
     <td>submit</td>
-    <td>user submitted information from a <a href="/types/form">form module</a></td>
+    <td>user submitted information from a <a href="../types/form">form module</a></td>
   </tr>
   <tr>
     <td>subscribe</td>
-    <td>user submitted email from a <a href="/types/subscription">subscription module</a></td>
+    <td>user submitted email from a <a href="../types/subscription">subscription module</a></td>
   </tr>
   <tr>
     <td>unlock</td>
-    <td>user submitted information from a <a href="/types/gate">gate module</a></td>
+    <td>user submitted information from a <a href="../types/gate">gate module</a></td>
   </tr>
 </table>
 

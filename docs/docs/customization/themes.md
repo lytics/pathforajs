@@ -28,7 +28,7 @@ Set the color scheme of the module, this can be a predefined theme or indicate t
   </tr>
 </table>
 
-### Dark Theme - [Live Preview](../../examples/preview/customization/themes/dark.html)
+### Dark Theme - [Live Preview](../examples/preview/customization/themes/dark.html)
 
 ![Dark Theme Module](../examples/img/customization/themes/dark.png)
 
@@ -97,7 +97,7 @@ Define a set of custom colors for each element of the module.
   </tr>
 </table>
 
-### Custom Theme - [Live Preview](../../examples/preview/customization/themes/custom.html)
+### Custom Theme - [Live Preview](../examples/preview/customization/themes/custom.html)
 
 ![Custom Theme Module](../examples/img/customization/themes/custom.png)
 

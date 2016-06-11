@@ -15,7 +15,7 @@ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 
 You'll need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID, you will use this id in the targeting rules.
 
-<img class="full" src="../../assets/api_access.jpg" alt="Lytics Jstag Account Id">
+<img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess">
 
 ## target
 

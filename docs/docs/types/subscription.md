@@ -27,33 +27,33 @@ Define which layout type the form module should use.
   
   <tr>
     <td>modal</td>
-    <td>module uses a <a href="/layouts/modal">modal layout</a></td>
+    <td>module uses a <a href="../../layouts/modal">modal layout</a></td>
   </tr>
   <tr>
     <td>slideout</td>
-    <td>module uses a <a href="/layouts/slideout">slideout layout</a></td>
+    <td>module uses a <a href="../../layouts/slideout">slideout layout</a></td>
   </tr>
   <tr>
     <td>bar</td>
-    <td>module uses a <a href="/layouts/bar">bar layout</a></td>
+    <td>module uses a <a href="../../layouts/bar">bar layout</a></td>
   </tr>
 </table>
 
-### Modal - [Live Preview](../../examples/preview/types/subscription/modal.html)
+### Modal - [Live Preview](../examples/preview/types/subscription/modal.html)
 
 ![Modal Subscription Module](../examples/img/types/subscription/modal.png)
 
 <pre data-src="../../examples/src/types/subscription/modal.js"></pre>
 
 
-### Slideout - [Live Preview](../../examples/preview/types/subscription/slideout.html)
+### Slideout - [Live Preview](../examples/preview/types/subscription/slideout.html)
 
 ![Slideout Subscription Module](../examples/img/types/subscription/slideout.png)
 
 <pre data-src="../../examples/src/types/subscription/slideout.js"></pre>
 
 
-### Bar - [Live Preview](../../examples/preview/types/subscription/bar.html)
+### Bar - [Live Preview](../examples/preview/types/subscription/bar.html)
 
 ![Bar Subscription Module](../examples/img/types/subscription/bar.png)
 

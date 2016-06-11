@@ -14,7 +14,7 @@ pathfora.initializeWidgets([ module ]);
 
 Gate modules will remain hidden once the user has submitted their information once. A cookie `PathforaUnlocked_[id of module]` is created to save this status so that the user has access to the gated content as long as their cookies persist.
 
-### SiteGate - [Live Preview](../../examples/preview/types/gate/gate.html)
+### SiteGate - [Live Preview](../examples/preview/types/gate/gate.html)
 
 ![Gate Module](../examples/img/types/gate/gate.png)
 
@@ -46,7 +46,7 @@ With social login enabled, a module can show Google or Facebook login buttons wh
   </tr>
 </table>
 
-### Social Login /w Google & Facebook - [Live Preview](../../examples/preview/types/gate/social.html)
+### Social Login /w Google & Facebook - [Live Preview](../examples/preview/types/gate/social.html)
 
 ![Social Login Gate Module](../examples/img/types/gate/social.png)
 
@@ -77,7 +77,7 @@ By default the a gate module includes a form, with this setting it can be hidden
   </tr>
 </table>
 
-### Text-only Gate - [Live Preview](../../examples/preview/types/gate/showForm.html)
+### Text-only Gate - [Live Preview](../examples/preview/types/gate/showForm.html)
 
 ![Text Only Gate Module](../examples/img/types/gate/showForm.png)
 

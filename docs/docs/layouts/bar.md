@@ -31,7 +31,7 @@ Positition of the bar module relative to the browser window.
   </tr>
 </table>
 
-### Positions - [Live Preview](../../examples/preview/layouts/bar/positions.html)
+### Positions - [Live Preview](../examples/preview/layouts/bar/positions.html)
 
 ![Position Bar Modules](../examples/img/layouts/bar/positions.png)
 
@@ -85,7 +85,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-### Image (variant 2) - [Live Preview](../../examples/preview/layouts/bar/image.html)
+### Image (variant 2) - [Live Preview](../examples/preview/layouts/bar/image.html)
 
 ![Image Bar Module](../examples/img/layouts/bar/image.png)
 
@@ -114,7 +114,7 @@ For `top` or `top-fixed` positioned bars, we can select an element to push down 
 </table>
 
 
-### Image - [Live Preview](../../examples/preview/layouts/bar/pushdown.html)
+### Image - [Live Preview](../examples/preview/layouts/bar/pushdown.html)
 
 ![pushDown Bar Module](../examples/img/layouts/bar/pushdown.png)
 

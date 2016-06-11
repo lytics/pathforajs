@@ -27,9 +27,9 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
   </tr>
 </table>
 
-### [Live Preview](../../examples/preview/callbacks/confirmAction.html)
+### [Live Preview](examples/preview/callbacks/confirmAction.html)
 
-<pre data-src="../../examples/src/callbacks/confirmAction.js"></pre>
+<pre data-src="../examples/src/callbacks/confirmAction.js"></pre>
 
 ## cancelAction
 Set a [tracking name](/tracking.md) and javascript callback for a "cancel" button click event.
@@ -58,9 +58,9 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
   </tr>
 </table>
 
-### [Live Preview](../../examples/preview/callbacks/cancelAction.html)
+### [Live Preview](examples/preview/callbacks/cancelAction.html)
 
-<pre data-src="../../examples/src/callbacks/cancelAction.js"></pre>
+<pre data-src="../examples/src/callbacks/cancelAction.js"></pre>
 
 ## onInit
 Javascript callback function on initialization of the module, this should trigger just before the module is shown.
@@ -89,9 +89,9 @@ Javascript callback function on initialization of the module, this should trigge
   </tr>
 </table>
 
-### [Live Preview](../../examples/preview/callbacks/onInit.html)
+### [Live Preview](examples/preview/callbacks/onInit.html)
 
-<pre data-src="../../examples/src/callbacks/onInit.js"></pre>
+<pre data-src="../examples/src/callbacks/onInit.js"></pre>
 
 
 ## onLoad
@@ -122,9 +122,9 @@ Javascript callback function on loading the module, triggered when the module is
 </table>
 
 
-### [Live Preview](../../examples/preview/callbacks/onLoad.html)
+### [Live Preview](examples/preview/callbacks/onLoad.html)
 
-<pre data-src="../../examples/src/callbacks/onLoad.js"></pre>
+<pre data-src="../examples/src/callbacks/onLoad.js"></pre>
 
 
 ## onClick
@@ -155,9 +155,9 @@ Javascript callback function **for [button layouts](/layouts/button.md) only** o
 </table>
 
 
-### [Live Preview](../../examples/preview/callbacks/onClick.html)
+### [Live Preview](examples/preview/callbacks/onClick.html)
 
-<pre data-src="../../examples/src/callbacks/onClick.js"></pre>
+<pre data-src="../examples/src/callbacks/onClick.js"></pre>
 
 ## onSubmit
 Javascript callback function **for any types with form elements** on submission of the form (includes form data as param).
@@ -186,6 +186,6 @@ Javascript callback function **for any types with form elements** on submission 
   </tr>
 </table>
 
-### [Live Preview](../../examples/preview/callbacks/onSubmit.html)
+### [Live Preview](examples/preview/callbacks/onSubmit.html)
 
-<pre data-src="../../examples/src/callbacks/onSubmit.js"></pre>
+<pre data-src="../examples/src/callbacks/onSubmit.js"></pre>

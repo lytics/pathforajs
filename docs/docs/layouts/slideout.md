@@ -26,7 +26,7 @@ Positition of the slideout module relative to the browser window.
 </table>
 
 
-### Positions - [Live Preview](../../examples/preview/layouts/slideout/positions.html)
+### Positions - [Live Preview](../examples/preview/layouts/slideout/positions.html)
 
 ![Position Slideout Modules](../examples/img/layouts/slideout/positions.png)
 
@@ -63,7 +63,7 @@ Origin is the direction from which the the module will slide in.
 </table>
 
 
-### Bottom - [Live Preview](../../examples/preview/layouts/slideout/origin.html)
+### Bottom - [Live Preview](../examples/preview/layouts/slideout/origin.html)
 
 <pre data-src="../../examples/src/layouts/slideout/origin.js"></pre>
 
@@ -119,7 +119,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-### Image (variant 2) - [Live Preview](../../examples/preview/layouts/slideout/image.html)
+### Image (variant 2) - [Live Preview](../examples/preview/layouts/slideout/image.html)
 
 ![Image Slideout Module](../examples/img/layouts/slideout/image.png)
 
@@ -197,7 +197,7 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
 </table>
 
 
-### Content Recommendation (variant 3) - [Live Preview](../../examples/preview/layouts/slideout/contentRecommend.html)
+### Content Recommendation (variant 3) - [Live Preview](../examples/preview/layouts/slideout/contentRecommend.html)
 
 **Note:** The example will show the default content in this case since a valid account ID is not provided.
 

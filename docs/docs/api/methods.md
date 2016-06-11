@@ -25,12 +25,12 @@ This method is used to initialize any modules built with Pathfora. It kicks off 
   <tr>
     <td>acctid</td>
     <td>string</td>
-    <td><code>optional</code> your <a href="/api/acctid">Lytics account ID</a> (required for some features)</td>
+    <td><code>optional</code> your <a href="../acctid">Lytics account ID</a> (required for some features)</td>
   </tr>
   <tr>
     <td>config</td>
     <td>object</td>
-    <td><code>optional</code> <a href="/api/config">generalized configuration</a> settings for multiple modules</td>
+    <td><code>optional</code> <a href="../config">generalized configuration</a> settings for multiple modules</td>
   </tr>
 </table>
 
