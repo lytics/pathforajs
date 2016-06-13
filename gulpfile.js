@@ -27,9 +27,9 @@ try {
   CSSURL = "//c.lytics.io/static/pathfora.min.css";
 }
 
-var TESTAPIURL = "//api.lytics.io";
-var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
-var EXAMPLESSRC = "docs/docs/examples/src",
+var TESTAPIURL = "//api.lytics.io",
+    TESTCSSURL = "//c.lytics.io/static/pathfora.min.css",
+    EXAMPLESSRC = "docs/docs/examples/src",
     EXAMPLESDEST = "docs/docs/examples/preview";
 
 gulp.task('build:styles', function () {

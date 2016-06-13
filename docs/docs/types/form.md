@@ -35,14 +35,15 @@ Define which layout type the form module should use.
   </tr>
 </table>
 
-### Form - [Live Preview](../examples/preview/types/form/modal.html)
+
+<h3>Form - <a href="../../examples/preview/types/form/modal.html" target="_blank">Live Preview</a></h3>
 
 ![Modal Form Module](../examples/img/types/form/modal.png)
 
 <pre data-src="../../examples/src/types/form/modal.js"></pre>
 
 
-### Slideout - [Live Preview](../examples/preview/types/form/slideout.html)
+<h3>Slideout - <a href="../../examples/preview/types/form/slideout.html" target="_blank">Live Preview</a></h3>
 
 ![Slideout Form Module](../examples/img/types/form/slideout.png)
 
@@ -74,7 +75,7 @@ With social login enabled, a module can show Google or Facebook login buttons wh
   </tr>
 </table>
 
-### Social Login /w Google & Facebook - [Live Preview](../examples/preview/types/form/social.html)
+<h3>Social Login /w Google &amp; Facebook - <a href="../../examples/preview/types/form/social.html" target="_blank">Live Preview</a></h3>
 
 ![Social Login Form Module](../examples/img/types/form/social.png)
 

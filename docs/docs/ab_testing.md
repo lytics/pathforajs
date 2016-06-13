@@ -34,12 +34,12 @@ Pathfora has a special configuration method for A/B Testing. This configuration 
   <tr>
     <td>id</td>
     <td>string</td>
-    <td>unique identifier for the AB Test</td>
+    <td>unique identifier for the A/B Test</td>
   </tr>
   <tr>
     <td>type</td>
     <td>string</td>
-    <td>the proportional split between A/B (currently only <code>50/50</code> is supported)</td>
+    <td>the proportional split between A/B (currently only <code>50/50</code>, <code>80/20</code>, and <code>100</code> is supported)</td>
   </tr>
   <tr>
     <td>groups</td>
@@ -54,7 +54,8 @@ For a global A/B test, some proportion of all users will see module "A" while th
 
 In the example below roughly half of all users will be shown a gated form (A) and the other half will see a form modal (B).
 
-### All Users Form/SiteGate Test - [Live Preview](examples/preview/ab-testing/global.html)
+
+<h3>All Users Form/SiteGate Test - <a href="../examples/preview/ab-testing/global.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/ab-testing/global.js"></pre>
 

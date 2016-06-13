@@ -7,7 +7,7 @@ var module = pathfora.Form({
     username: false,
     title: false,
     email: true,
-    message: true,
+    message: true
   }
 });
 

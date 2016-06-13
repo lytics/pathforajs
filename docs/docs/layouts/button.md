@@ -43,8 +43,7 @@ Positition of the button module relative to the browser window.
 </table>
 
 
-
-### Positions - [Live Preview](../examples/preview/layouts/button/positions.html)
+<h3>Positions - <a href="../../examples/preview/layouts/button/positions.html" target="_blank">Live Preview</a></h3>
 
 ![Position Button Modules](../examples/img/layouts/button/positions.png)
 

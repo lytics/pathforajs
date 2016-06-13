@@ -51,7 +51,7 @@ pathfora.initializeWidgets([ module ]);
 
 ## Example
 
-### [Live Preview](../../examples/preview/customization/css/custom.html)
+<h3><a href="../../examples/preview/customization/css/custom.html" target="_blank">Live Preview</a></h3>
 
 ![Custom CSS](../examples/img/customization/css/custom.png)
 

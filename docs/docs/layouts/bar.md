@@ -31,7 +31,7 @@ Positition of the bar module relative to the browser window.
   </tr>
 </table>
 
-### Positions - [Live Preview](../examples/preview/layouts/bar/positions.html)
+<h3>Positions - <a href="../../examples/preview/layouts/bar/positions.html" target="_blank">Live Preview</a></h3>
 
 ![Position Bar Modules](../examples/img/layouts/bar/positions.png)
 
@@ -85,7 +85,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-### Image (variant 2) - [Live Preview](../examples/preview/layouts/bar/image.html)
+<h3>Image (variant 2) - <a href="../../examples/preview/layouts/bar/image.html" target="_blank">Live Preview</a></h3>
 
 ![Image Bar Module](../examples/img/layouts/bar/image.png)
 
@@ -94,7 +94,7 @@ Define the featured image you would like to use for the module.
 
 ## pushDown
 
-For `top` or `top-fixed` positioned bars, we can select an element to push down (add a top margin) so it doesn't get covered by the module, this is especially helpful for top-aligned site navigation.
+For `top` or `top-fixed` positioned bars, we can select an element to push down (add a top margin) so it doesn't get covered by the module, this is especially helpful for a top-aligned site navigation.
 
 <table>
   <thead>
@@ -113,8 +113,7 @@ For `top` or `top-fixed` positioned bars, we can select an element to push down 
   <tr>
 </table>
 
-
-### Image - [Live Preview](../examples/preview/layouts/bar/pushdown.html)
+<h3><a href="../../examples/preview/layouts/bar/pushdown.html" target="_blank">Live Preview</a></h3>
 
 ![pushDown Bar Module](../examples/img/layouts/bar/pushdown.png)
 

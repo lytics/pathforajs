@@ -3,7 +3,7 @@ var module = pathfora.Form({
   layout: 'modal',
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates',
-  theme: 'dark',
+  theme: 'dark'
 });
 
 pathfora.initializeWidgets([ module ]);

@@ -7,7 +7,7 @@ var module = pathfora.Form({
     name: 'Your Name',
     title: 'Job Title',
     email: 'Email Address',
-    message: 'How did you hear about us?',
+    message: 'How did you hear about us?'
   }
 });
 

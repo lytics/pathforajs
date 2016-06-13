@@ -43,8 +43,7 @@ Select which fields should be a part of the module's form. By default, all avail
   </tr>
 </table>
 
-
-### Show/Hide Fields - [Live Preview](../examples/preview/customization/form/fields.html)
+<h3>Show/Hide Fields - <a href="../../examples/preview/customization/form/fields.html" target="_blank">Live Preview</a></h3>
 
 ![Form Fields](../examples/img/customization/form/fields.png)
 
@@ -94,7 +93,7 @@ Set which fields are required to be filled out by the user to submit the form.
 </table>
 
 
-### Required Fields - [Live Preview](../examples/preview/customization/form/required.html)
+<h3>Required Fields - <a href="../../examples/preview/customization/form/required.html" target="_blank">Live Preview</a></h3>
 
 ![Required Form Fields](../examples/img/customization/form/required.png)
 
@@ -144,7 +143,7 @@ Set the placeholder text for form elements.
   </tr>
 </table>
 
-### Placeholders - [Live Preview](../examples/preview/customization/form/placeholders.html)
+<h3>Placeholders - <a href="../../examples/preview/customization/form/placeholders.html" target="_blank">Live Preview</a></h3>
 
 ![Form Field Placeholders](../examples/img/customization/form/placeholders.png)
 

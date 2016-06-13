@@ -18,7 +18,7 @@ var config = {
   // settings for all message modules
   message: {
     cancelShow: false,
-    okMessage: 'View Content',
+    okMessage: 'View Content'
   },
 
   // Form settings will overwrite the "generic"

@@ -1,4 +1,4 @@
-For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as third, optional argument to [initializeWidgets](/api/methods.md#initializewidgets).
+For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as a third, optional argument to [initializeWidgets](/api/methods.md#initializewidgets).
 
 ``` javascript
 var config = {
@@ -51,7 +51,7 @@ pathfora.initializeWidgets([ module, module2 ], '', config);
 
 ## Example
 
-### [Live Preview](../examples/preview/config/config.html)
+<h3><a href="../../examples/preview/config/config.html" target="_blank">Live Preview</a></h3>
 
 ![General Config](../examples/img/config/config.png)
 

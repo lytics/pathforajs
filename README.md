@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
 
 # Pathfora JS
-Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience memebership. For more info, and full configuration examples check out the [full documentation](#documentation).
+Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](#documentation).
         
 ## Modules
 There are 4 types of modules and 4 layouts currently supported.
@@ -25,7 +25,7 @@ There are 4 types of modules and 4 layouts currently supported.
 
   ``` html
   <!-- Your Lytics JS Tag -->
-  <script src="https://api.lytics.io/api/tag/{{YOUR LYTICS API KEY}}/lio.js"></script>
+  <script src="https://c.lytics.io/api/tag/YOUR LYTICS API KEY/lio.js"></script>
 
   <!-- Pathfora Tag -->
   <script src="http://c.lytics.io/static/pathfora.min.js"></script>
@@ -83,18 +83,18 @@ Gulp tasks:
   ```
 
 ### Documentation
-Soon we will be hosting Pathfora documentation externally, for now documentation can be run locally and contributed to, using the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you much install before running the `gulp docs` task.
+Soon we will be hosting Pathfora documentation externally, for now, documentation can be run locally using the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you must install before running the `gulp docs` task.
 
 ```sh 
 $ pip install mkdocs
 $ gulp docs
 ```
 
-Documentation will serve on `localhost` port `8000` while running this task.
+Documentation will be served on `localhost` port `8000` while running this task.
 
-The source code for all the examples provided in the documentation live in `docs/docs/examples/src`. Preview images for the examples live in `docs/docs/examples/images`.
+The source code for all the examples provided in the documentation can be found in `docs/docs/examples/src`. Preview images for the examples live in `docs/docs/examples/images`.
 
-The docs task will walk through every `.js` file in the examples source directory and compile it as a working html example in `docs/docs/examples/preview` using a handlebars template. These js files also get used are the source code to populate the `<pre>` elements within the docs.
+The docs task will walk through every `.js` file in the examples source directory and compile it as a working html example in `docs/docs/examples/preview` using a handlebars template. These js files also get used as the source code to populate the `<pre>` elements within the docs.
 
 This allows us to keep our source code in one place. Changing a js file in the examples source folder will change the code snippet in the docs and update the example .html file.
 

@@ -1,4 +1,4 @@
-Part of what makes Pathfora powerful is its ability to interact with [Lytics](http://www.getlytics.com/) and target certain audiences with certain modules. Setting up the targeting in Pathfora requires an object with certain targeting rules as the first param to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
+Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first param to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
 
 ``` javascript
 var modules = {
@@ -11,7 +11,7 @@ var modules = {
 pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 ```
 
-## Setup Audiences
+## Setup Your Audiences
 
 You'll need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID, you will use this id in the targeting rules.
 
@@ -104,8 +104,8 @@ var newModule = pathfora.Message({
   id: 'new_slideout',
   layout: 'slideout',
   position: 'bottom-right',
-  headline: 'Welcome'
-  msg: 'You must be new here! Please take a look at our guide for new users.'
+  headline: 'Welcome',
+  msg: 'You must be new here! Please take a look at our guide for new users.',
   cancelShow: false,
   okMessage: 'View Guide'
 });
@@ -114,8 +114,8 @@ var returningModule = pathfora.Message({
   id: 'returning_slideout',
   layout: 'slideout',
   position: 'bottom-right',
-  headline: 'Welcome Back'
-  msg: 'Thanks for coming back, why not check out our blog for the newest updates?'
+  headline: 'Welcome Back',
+  msg: 'Thanks for coming back, why not check out our blog for the newest updates?',
   cancelShow: false,
   okMessage: 'View Blog'
 });
@@ -165,7 +165,7 @@ Target all users who are not a part of any of the audiences in the defined targe
 var subscriptionModule = pathfora.Subscription({
   id: 'sign_up_module',
   layout: 'modal',
-  headline: 'Sign Up'
+  headline: 'Sign Up',
   msg: 'We want to send you updates, sign up now!'
 });
 

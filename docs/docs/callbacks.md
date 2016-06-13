@@ -27,7 +27,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
   </tr>
 </table>
 
-### [Live Preview](examples/preview/callbacks/confirmAction.html)
+<h3><a href="../examples/preview/callbacks/confirmAction.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/confirmAction.js"></pre>
 
@@ -58,7 +58,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
   </tr>
 </table>
 
-### [Live Preview](examples/preview/callbacks/cancelAction.html)
+<h3><a href="../examples/preview/callbacks/cancelAction.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/cancelAction.js"></pre>
 
@@ -89,7 +89,7 @@ Javascript callback function on initialization of the module, this should trigge
   </tr>
 </table>
 
-### [Live Preview](examples/preview/callbacks/onInit.html)
+<h3><a href="../examples/preview/callbacks/onInit.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/onInit.js"></pre>
 
@@ -122,7 +122,7 @@ Javascript callback function on loading the module, triggered when the module is
 </table>
 
 
-### [Live Preview](examples/preview/callbacks/onLoad.html)
+<h3><a href="../examples/preview/callbacks/onLoad.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/onLoad.js"></pre>
 
@@ -155,7 +155,7 @@ Javascript callback function **for [button layouts](/layouts/button.md) only** o
 </table>
 
 
-### [Live Preview](examples/preview/callbacks/onClick.html)
+<h3><a href="../examples/preview/callbacks/onClick.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/onClick.js"></pre>
 
@@ -186,6 +186,6 @@ Javascript callback function **for any types with form elements** on submission 
   </tr>
 </table>
 
-### [Live Preview](examples/preview/callbacks/onSubmit.html)
+<h3><a href="../examples/preview/callbacks/onSubmit.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../examples/src/callbacks/onSubmit.js"></pre>

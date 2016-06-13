@@ -51,8 +51,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-
-### Image (variant 2) - [Live Preview](../examples/preview/layouts/modal/image.html)
+<h3>Image (variant 2) - <a href="../../examples/preview/layouts/modal/image.html" target="_blank">Live Preview</a></h3>
 
 ![Image Slideout Module](../examples/img/layouts/modal/image.png)
 
@@ -130,8 +129,7 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
   </tr>
 </table>
 
-
-### Content Recommendation (variant 3) - [Live Preview](../examples/preview/layouts/modal/contentRecommend.html)
+<h3>Content Recommendation (variant 3) - <a href="../../examples/preview/layouts/modal/contentRecommend.html" target="_blank">Live Preview</a></h3>
 
 **Note:** The example will show the default content in this case since a valid account ID is not provided.
 

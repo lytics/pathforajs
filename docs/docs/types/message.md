@@ -1,4 +1,4 @@
-Message type modules are focused on deliverying outbound communication for example: announcing a product launch, new content, top-level alert, etc. These modules provide a as simple text message which can be used in a variety of formats.
+Message type modules are focused on delivering outbound communication for example: announcing a product launch, new content, top-level alert, etc. These modules provide a simple text message which can be used in a variety of formats.
 
 ``` javascript
 var module = pathfora.Message({
@@ -43,28 +43,28 @@ Define which layout type the form module should use.
   </tr>
 </table>
 
-### Modal - [Live Preview](../examples/preview/types/message/modal.html)
+<h3>Modal - <a href="../../examples/preview/types/message/modal.html" target="_blank">Live Preview</a></h3>
 
 ![Modal Message Module](../examples/img/types/message/modal.png)
 
 <pre data-src="../../examples/src/types/message/modal.js"></pre>
 
 
-### Slideout - [Live Preview](../examples/preview/types/message/slideout.html)
+<h3>Slideout - <a href="../../examples/preview/types/message/slideout.html" target="_blank">Live Preview</a></h3>
 
 ![Slideout Message Module](../examples/img/types/message/slideout.png)
 
 <pre data-src="../../examples/src/types/message/slideout.js"></pre>
 
 
-### Bar - [Live Preview](../examples/preview/types/message/bar.html)
+<h3>Bar - <a href="../../examples/preview/types/message/bar.html" target="_blank">Live Preview</a></h3>
 
 ![Bar Message Module](../examples/img/types/message/bar.png)
 
 <pre data-src="../../examples/src/types/message/bar.js"></pre>
 
 
-### Button - [Live Preview](../examples/preview/types/message/button.html)
+<h3>Button - <a href="../../examples/preview/types/message/button.html" target="_blank">Live Preview</a></h3>
 
 ![Button Message Module](../examples/img/types/message/button.png)
 

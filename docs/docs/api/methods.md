@@ -81,7 +81,7 @@ We cover each of these type configuration methods and their parameters in indivi
 
 ## initializeABTesting
 
-This method is used to initialize [A/B Tests](/ab_testing.md) modules. If you're creating an A/B test scenario this  should always be called **before** the `initializeWidgets` method.
+This method is used to initialize [A/B Tests](/ab_testing.md) modules. If you're creating an A/B test scenario this should always be called **before** the `initializeWidgets` method.
 
 <table>
   <thead>
@@ -128,7 +128,7 @@ Pathfora can integrate with your Facebook App to allow users to autofill the fie
   <tr>
     <td>appId</td>
     <td>string</td>
-    <td><a href="https://developers.facebook.com/docs/apps/register#app-id">app id</a> for your Facebook application</td>
+    <td><a href="https://developers.facebook.com/docs/apps/register#app-id" target="_blank">app id</a> for your Facebook application</td>
   </tr>
 </table>
 
@@ -153,6 +153,6 @@ Pathfora can integrate with your Google App to allow users to autofill the field
   <tr>
     <td>clientID</td>
     <td>string</td>
-    <td><a href="https://developers.google.com/identity/sign-in/web/devconsole-project">client id</a> from your Google Developers Console project</td>
+    <td><a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank">client id</a> from your Google Developers Console project</td>
   </tr>
 </table>

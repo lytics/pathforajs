@@ -3,9 +3,7 @@ var initModule = pathfora.Message({
   layout: 'modal',
   msg: 'Check the console log',
   onInit: function (event, module) {
-    console.log('OnInit Callback: ');
-    console.log(event);
-    console.log(module);
+    console.log('OnInit Callback', event, module);
   }
 });
 
