@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inline widgets</title>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Open Sans', sans-serif;
+      }
+
+      .inline-widget-host {
+        margin: 25px;
+        background: green;
+        font-size: 20px;
+        font-weight: bold;
+        color: #000;
+        padding: 25px;
+      }
+
+      .inline-widget-host#host-2 {
+        width: 250px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Create parent elements for the inline widgets  -->
+    <div id="host-1" class="inline-widget-host"><p></p></div>
+    <div id="host-2" class="inline-widget-host"><p></p></div>
+
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var inlineForm = new window.pathfora.Form({
+        msg: 'subscription',
+        headline: 'Header',
+        id: 'inline1',
+
+        // Use 'inline' layout and define position as a query selector
+        // to the parent DOMElement
+        layout: 'inline',
+        position: '.inline-widget-host#host-1'
+      });
+
+      var inlineMessage = new pathfora.Message({
+        msg: 'Welcome to our website',
+        id: 'inline2',
+        confirmAction: {
+          name: 'Confirm action',
+          callback: function() {
+            alert('Test - confirmed');
+          }
+        },
+        layout: 'inline',
+        position: '.inline-widget-host#host-2'
+      });
+
+      window.pathfora.initializeWidgets([ inlineForm, inlineMessage ]);
+    </script>
+  </body>
+</html>

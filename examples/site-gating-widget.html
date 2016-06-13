@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Site gating widget</title>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Open Sans', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="../dist/pathfora.js"></script>
+    <script>
+      var gate = new window.pathfora.SiteGate({
+        headline: 'Blocking Widget',
+        id: "gate-widget",
+        msg: 'Submit this widget to access the website.',
+        okMessage: "Submit"
+      });
+      window.pathfora.initializeWidgets([ gate ]);
+    </script>
+  </body>
+</html>

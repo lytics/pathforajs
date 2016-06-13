@@ -61,7 +61,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     subscription: {
       layout: 'modal',
@@ -73,7 +74,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     form: {
       layout: 'modal',
@@ -94,7 +96,8 @@
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false
+      showSocialLogin: false,
+      responsive: true
     },
     sitegate: {
       layout: 'modal',
@@ -114,7 +117,8 @@
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
-      showForm: true
+      showForm: true,
+      responsive: true
     }
   };
 
@@ -122,7 +126,7 @@
   // FUTURE Move to separate files and concat
   var templates = {
   "subscription": {
-    "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><input name=\"email\" type=\"email\" required><input type=\"submit\" class=\"pf-widget-btn pf-widget-ok\"></form></div>",
+    "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
     "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
@@ -138,7 +142,7 @@
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input class=\"pf-sitegate-field pf-field-full-width\" name=\"username\" type=\"text\"> <input class=\"pf-sitegate-field pf-field-full-width\" name=\"email\" type=\"email\"> <input class=\"pf-sitegate-field pf-field-half-width\" name=\"organization\" type=\"text\"><input class=\"pf-sitegate-field pf-field-half-width\" name=\"title\" type=\"text\"><div class=\"pf-sitegate-clear\"></div><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>"
   },
   "message": {
-    "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div>",
+    "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><span><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></span></div>",
     "button": "<p class=\"pf-widget-message pf-widget-ok\"></p>",
     "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-content-unit\"></a> <a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
@@ -246,7 +250,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -535,14 +539,64 @@
       return true;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
-      return (core.pageViews >= pageVisitsRequired);
+    /**
+     * @description Parse url queries as an object
+     * @param {string} url
+     */
+    parseQuery: function (url) {
+      var query = {};
+      var pieces = url.split('?');
+      if (pieces.length > 1) {
+        pieces = pieces[1].split('&');
+
+        for (var i = 0; i < pieces.length; i++) {
+          var pair = pieces[i].split('=');
+
+          if (pair.length > 1) {
+            // NOTE We should not account for the preview id
+            if (pair[0] !== "lytics_variation_preview_id") {
+              query[pair[0]] = pair[1];
+            }
+          }
+        }
+      }
+
+      return query;
     },
 
+    /**
+     * @description Compare query params between the url
+     *              the user is visiting and the match
+     *              rule provided
+     * @param {obj} queries
+     * @param {obj} matchQueries
+     * @param {string} rule
+     */
+    compareQueries: function (query, matchQuery, rule) {
+      switch (rule) {
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      for (var key in matchQuery) {
+        if (matchQuery[key] !== query[key]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     urlChecker: function (phrases, widget) {
       var url = window.location.href,
           simpleurl = window.location.hostname + window.location.pathname,
+          queries = core.parseQuery(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -554,40 +608,48 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
+
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase) !== -1) {
-                valid = true;
+              if (url.indexOf(phrase.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
               }
               break;
+
             case 'object':
-              if(phrase.match && phrase.value){
+              if (phrase.match && phrase.value) {
                 switch (phrase.match) {
+                  // simple match
                   case 'simple':
                     if (simpleurl === phrase.value) {
                       valid = true;
                     }
                     break;
+
+                  // exact match
                   case 'exact':
-                    if (url === phrase.value) {
-                      valid = true;
+                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
+
+                  // regex
                   case 'regex':
                     var re = new RegExp(phrase.value);
-                    if(re.test(url)){
+                    if (re.test(url)) {
                       valid = true;
                     }
                     break;
+
+                  // string match (default)
                   default:
-                    // default to string match
-                    if (url.indexOf(phrase.value) !== -1) {
-                      valid = true;
+                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
                 }
-              }else{
+              } else {
                 console.log('invalid display conditions')
               }
               break;
@@ -596,11 +658,15 @@
               break;
           }
         });
-      }else{
+      } else {
         valid = true;
       }
 
       return valid;
+    },
+
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     dateChecker: function (date, widget) {
@@ -1277,7 +1343,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
 
