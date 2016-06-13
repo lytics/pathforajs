@@ -61,7 +61,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     subscription: {
       layout: 'modal',
@@ -73,7 +74,8 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true
     },
     form: {
       layout: 'modal',
@@ -94,7 +96,8 @@
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false
+      showSocialLogin: false,
+      responsive: true
     },
     sitegate: {
       layout: 'modal',
@@ -114,7 +117,8 @@
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
-      showForm: true
+      showForm: true,
+      responsive: true
     }
   };
 
@@ -122,7 +126,7 @@
   // FUTURE Move to separate files and concat
   var templates = {
   "subscription": {
-    "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><input name=\"email\" type=\"email\" required><input type=\"submit\" class=\"pf-widget-btn pf-widget-ok\"></form></div>",
+    "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
     "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
@@ -138,7 +142,7 @@
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input class=\"pf-sitegate-field pf-field-full-width\" name=\"username\" type=\"text\"> <input class=\"pf-sitegate-field pf-field-full-width\" name=\"email\" type=\"email\"> <input class=\"pf-sitegate-field pf-field-half-width\" name=\"organization\" type=\"text\"><input class=\"pf-sitegate-field pf-field-half-width\" name=\"title\" type=\"text\"><div class=\"pf-sitegate-clear\"></div><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>"
   },
   "message": {
-    "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div>",
+    "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><span><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></span></div>",
     "button": "<p class=\"pf-widget-message pf-widget-ok\"></p>",
     "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
     "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-content-unit\"></a> <a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
@@ -1339,7 +1343,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
 

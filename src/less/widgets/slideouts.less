@@ -1,10 +1,19 @@
 .pf-widget-slideout {
   position: fixed;
   bottom: 50px;
-  width: 370px;
+  width: 350px;
   border-radius: 4px;
   .pf-box-shadow();
   top: auto;
+  max-height: 100%;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .mobile({
+    width: 100%;
+    max-width: 350px;
+  });
 
   > div {
     display: table-cell;
@@ -21,29 +30,53 @@
 
   .pf-widget-content {
     padding: 30px;
-    min-width:350px;
+    min-width: 350px;
+
+    .mobile({
+      width: 100%;
+      min-width: initial;
+    });
   }
 
   .pf-widget-headline {
     font-size: 20px;
   }
 
+
   /* Position Styles */
   &.pf-position-bottom-left,
   &.pf-position-left {
     left: -100%;
 
+    .mobile({
+      bottom: 0;
+    });
+
     &.pf-origin-bottom {
       left: 50px;
+
+      .mobile({
+        left: 0;
+      });
     }
   }
 
   &.pf-position-bottom-right,
   &.pf-position-right {
+    left: auto;
     right: -100%;
+
+    .mobile({
+      bottom: 0;
+    });
 
     &.pf-origin-bottom {
       right: 50px;
+
+      .mobile({
+        left: auto;
+        right: 0;
+      });
     }
   }
 
@@ -57,22 +90,33 @@
     &.pf-position-bottom-left,
     &.pf-position-left {
       left: 50px;
+
+      .mobile({
+        left: 0;
+      });
     }
 
     &.pf-position-bottom-right,
     &.pf-position-right {
       right: 50px;
+
+      .mobile({
+        right: 0;
+        left: auto;
+      });
     }
 
     &.pf-origin-bottom {
       bottom: 50px;
+
+      .mobile({
+        bottom: 0;
+      });
     }
   }
 
   /* Variant Styles */
   &.pf-widget-variant-1 {
-    width: 350px;
-
     .pf-widget-content {
       .pf-widget-headline {
         text-align: left;
@@ -85,8 +129,6 @@
   }
 
   &.pf-widget-variant-2 {
-    width: 350px;
-
     .pf-widget-content {
       text-align: center;
 
@@ -107,7 +149,6 @@
   }
 
   &.pf-widget-variant-3 {
-
     .pf-content-unit {
       width: 100%;
       display: block;
@@ -133,5 +174,10 @@
   /* Type Specific Styles */
   &.pf-form {
     width: 370px;
+
+    .mobile({
+      width: 100%;
+      max-width: 370px;
+    });
   }
 }
