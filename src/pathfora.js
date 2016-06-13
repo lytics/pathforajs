@@ -505,14 +505,64 @@
       return true;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
-      return (core.pageViews >= pageVisitsRequired);
+    /**
+     * @description Parse url queries as an object
+     * @param {string} url
+     */
+    parseQuery: function (url) {
+      var query = {};
+      var pieces = url.split('?');
+      if (pieces.length > 1) {
+        pieces = pieces[1].split('&');
+
+        for (var i = 0; i < pieces.length; i++) {
+          var pair = pieces[i].split('=');
+
+          if (pair.length > 1) {
+            // NOTE We should not account for the preview id
+            if (pair[0] !== "lytics_variation_preview_id") {
+              query[pair[0]] = pair[1];
+            }
+          }
+        }
+      }
+
+      return query;
     },
 
+    /**
+     * @description Compare query params between the url
+     *              the user is visiting and the match
+     *              rule provided
+     * @param {obj} queries
+     * @param {obj} matchQueries
+     * @param {string} rule
+     */
+    compareQueries: function (query, matchQuery, rule) {
+      switch (rule) {
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      for (var key in matchQuery) {
+        if (matchQuery[key] !== query[key]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     urlChecker: function (phrases, widget) {
       var url = window.location.href,
           simpleurl = window.location.hostname + window.location.pathname,
+          queries = core.parseQuery(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -524,40 +574,48 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
+
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase) !== -1) {
-                valid = true;
+              if (url.indexOf(phrase.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
               }
               break;
+
             case 'object':
-              if(phrase.match && phrase.value){
+              if (phrase.match && phrase.value) {
                 switch (phrase.match) {
+                  // simple match
                   case 'simple':
                     if (simpleurl === phrase.value) {
                       valid = true;
                     }
                     break;
+
+                  // exact match
                   case 'exact':
-                    if (url === phrase.value) {
-                      valid = true;
+                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
+
+                  // regex
                   case 'regex':
                     var re = new RegExp(phrase.value);
-                    if(re.test(url)){
+                    if (re.test(url)) {
                       valid = true;
                     }
                     break;
+
+                  // string match (default)
                   default:
-                    // default to string match
-                    if (url.indexOf(phrase.value) !== -1) {
-                      valid = true;
+                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
                 }
-              }else{
+              } else {
                 console.log('invalid display conditions')
               }
               break;
@@ -566,11 +624,15 @@
               break;
           }
         });
-      }else{
+      } else {
         valid = true;
       }
 
       return valid;
+    },
+
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     dateChecker: function (date, widget) {
