@@ -1,0 +1,33 @@
+site_name: PathforaJS SDK
+pages:
+  - Pathfora JS: index.md
+  - API Reference:
+    - Methods: api/methods.md
+    - Lytics Account ID: api/acctid.md
+    - Generalized Configuration: api/config.md
+  - Types:
+    - Message: types/message.md
+    - Form: types/form.md
+    - Subscription: types/subscription.md
+    - Gate: types/gate.md
+  - Layouts:
+    - Modal: layouts/modal.md
+    - Slideout: layouts/slideout.md
+    - Bar: layouts/bar.md
+    - Button: layouts/button.md
+  - Customization:
+    - Action Buttons: customization/buttons.md
+    - Color Themes: customization/themes.md
+    - Custom CSS: customization/css.md
+    - Form Elements: customization/form.md
+  - A/B Testing: ab_testing.md
+  - Audience Targeting: targeting.md
+  - Callbacks: callbacks.md
+  - Display Conditions: display_conditions.md
+  - Tracking: tracking.md
+extra_javascript:
+  - assets/pre.js
+extra_css:
+  - assets/examples.css
+
+theme: readthedocs

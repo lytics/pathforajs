@@ -10,17 +10,10 @@ var gulp = require('gulp'),
     connect = require('gulp-connect'),
     walk    = require('walk'),
     fs = require("fs"),
+    handlebars = require('gulp-compile-handlebars'),
+    shell = require('gulp-shell'),
     APIURL,
     CSSURL;
-
-gulp.task('index', function () {
-  var target = gulp.src('./src/index.html');
-  // It's not necessary to read the files (will speed up things), we're only after their paths:
-  var sources = gulp.src(['./src/**/*.js', './src/**/*.css'], {read: false});
-
-  return target.pipe(inject(sources))
-    .pipe(gulp.dest('./src'));
-});
 
 // get overrides from .env file
 try {
@@ -34,8 +27,10 @@ try {
   CSSURL = "//c.lytics.io/static/pathfora.min.css";
 }
 
-var TESTAPIURL = "//api.lytics.io";
-var TESTCSSURL = "//c.lytics.io/static/pathfora.min.css";
+var TESTAPIURL = "//api.lytics.io",
+    TESTCSSURL = "//c.lytics.io/static/pathfora.min.css",
+    EXAMPLESSRC = "docs/docs/examples/src",
+    EXAMPLESDEST = "docs/docs/examples/preview";
 
 gulp.task('build:styles', function () {
   gulp.src('src/less/*.less')
@@ -80,6 +75,7 @@ var prepareTemplates = function() {
   walker = walk.walkSync(templateDirectory, options);
   return JSON.stringify(templates, null, 2);
 };
+
 
 gulp.task('build:js', function () {
   gulp.src('src/*.js')
@@ -128,7 +124,7 @@ gulp.task('watch', function () {
 });
 
 gulp.task('local:watch', function () {
-  gulp.watch('src/**/*', ['build:styles', 'local:js']);
+  gulp.watch('src/**/*', ['build:local']);
 });
 
 gulp.task('preview', function () {
@@ -139,7 +135,57 @@ gulp.task('preview', function () {
   });
 });
 
+gulp.task('docs:watch', function () {
+  var watcher = gulp.watch('docs/docs/examples/src/**/*.js', function(event) {
+    var p = path.relative(process.cwd(), event.path);
+    var root = p.substring(0, p.lastIndexOf("/") + 1);
+    var name = p.substring(p.lastIndexOf("/") + 1, p.length);
+    compileExample(root, name)
+  });
+});
+
+var compileExample = function(root, name) {
+  if (name.split('.').pop() === "js") {
+    var dest = root.split(EXAMPLESSRC + '/').pop(),
+      contents = {
+        config: fs.readFileSync(root + '/' + name, "utf8"),
+        css: ''
+      };
+
+    // Custom CSS example should load css
+    if (root.indexOf('customization/css') !== -1) {
+      contents.css = fs.readFileSync(root + '/' + name.replace(".js", ".css"), "utf8")
+    }
+
+    gulp.src(EXAMPLESSRC + '/template.hbs')
+      .pipe(handlebars(contents))
+      .pipe(rename(name.replace(".js", ".html")))
+      .pipe(gulp.dest(EXAMPLESDEST + "/" +  dest));
+  }
+}
+
+gulp.task('docs:hbs', function () {
+  var options = {
+    listeners: {
+      file: function(root, stat) {
+        compileExample(root, stat.name)
+      },
+    }
+  };
+
+  walk.walkSync(EXAMPLESSRC, options);
+});
+
+gulp.task('docs:mkdocs', shell.task([
+  'mkdocs serve'
+], {
+  cwd: 'docs'
+}))
+
 gulp.task('test', ['build:styles', 'build:testjs']);
-gulp.task('local', ['build:styles', 'local:js', 'preview', 'local:watch']);
+gulp.task('build:local', ['build:styles', 'local:js']);
+gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs'])
 gulp.task('build', ['build:styles', 'build:js']);
+gulp.task('local', ['build:local', 'preview', 'local:watch']);
+gulp.task('docs', ['build:local', 'build:docs', 'preview', 'docs:watch']);
 gulp.task('default', ['build', 'preview', 'watch']);
