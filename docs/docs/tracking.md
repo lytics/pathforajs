@@ -15,7 +15,9 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
 | `pf-form-title` | string | user submitted value of "title" field on module |
 | `pf-form-email` | string | user submitted value of "email" field on module |
 | `pf-form-message` | string | user submitted value of "message" field on module |
-| `pf-form-organization` | string | user submitted value of "organization" field on module |
+| `pf-form-company` | string | user submitted value of "company" field on module |
+| `pf-form-phone` | string | user submitted value of "phone number" field on module |
+
 
 <table>
   <thead>

@@ -4,10 +4,12 @@ var module = pathfora.Form({
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates',
   fields: {
-    username: false,
-    title: false,
+    name: false,
+    title: true,
     email: true,
-    message: true
+    message: true,
+    phone: false,
+    company: true
   }
 });
 

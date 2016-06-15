@@ -1045,7 +1045,7 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field] && !config.fields[field]) {
+          if (element && !config.fields[field]) {
             var parent = element.parentNode,
                 prev = element.previousElementSibling,
                 next = element.nextElementSibling;
