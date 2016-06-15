@@ -234,27 +234,23 @@
   }
 }
 
-.pf-sitegate {
-  .pf-sitegate-field {
-    position: relative;
-    display: inline-block;
-
+.pf-form, .pf-sitegate {
+  input {
     &.pf-field-half-width {
       width: 49.5%;
-      & + .pf-field-half-width {
-        margin-left: 1%;
-      }
-    }
+      display: block;
+      clear: none;
+      float: left;
 
-    &.pf-field-full-width {
-      width: 100%;
+      & + .pf-field-half-width {
+        float: right;
+      }
     }
   }
 
-  .pf-sitegate-clear {
-    display: block;
-    width: 100%;
-    height: 10px;
+  .pf-widget-btn {
+    clear: both;
+    margin-top: 5px;
   }
 }
 

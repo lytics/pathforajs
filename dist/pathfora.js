@@ -85,13 +85,18 @@
         name: 'Name',
         title: 'Title',
         email: 'Email',
-        message: 'Message'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        company: false,
+        phone: false,
+      },
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
@@ -105,15 +110,21 @@
       variant: '1',
       placeholders: {
         name: 'Name',
+        title: 'Title',
         email: 'Email',
-        organization: 'Organization',
-        title: 'Title'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        message: false,
+        phone: false
+
+      },
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
@@ -138,8 +149,8 @@
     "googleMeta": "<meta name=\"google-signin-client_id\" content=\"{{google-clientId}}\">"
   },
   "sitegate": {
-    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input class=\"pf-sitegate-field pf-field-full-width\" name=\"username\" type=\"text\"> <input class=\"pf-sitegate-field pf-field-full-width\" name=\"email\" type=\"email\"> <input class=\"pf-sitegate-field pf-field-half-width\" name=\"organization\" type=\"text\"> <input class=\"pf-sitegate-field pf-field-half-width\" name=\"title\" type=\"text\"><div class=\"pf-sitegate-clear\"></div><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>",
-    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input class=\"pf-sitegate-field pf-field-full-width\" name=\"username\" type=\"text\"> <input class=\"pf-sitegate-field pf-field-full-width\" name=\"email\" type=\"email\"> <input class=\"pf-sitegate-field pf-field-half-width\" name=\"organization\" type=\"text\"><input class=\"pf-sitegate-field pf-field-half-width\" name=\"title\" type=\"text\"><div class=\"pf-sitegate-clear\"></div><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>"
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>"
   },
   "message": {
     "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><span><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></span></div>",
@@ -149,10 +160,10 @@
     "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><a class=\"pf-content-unit\"></a> <a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div>"
   },
   "form": {
-    "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"><input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button> <button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button></form></div>",
-    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"><input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
-    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
-    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"title\" type=\"text\"> <input name=\"email\" type=\"email\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
+    "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button> <button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button></form></div>",
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
+    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
   }
 };
 
@@ -1066,8 +1077,22 @@
           var element = getFormElement(field);
 
           if (element && !config.required[field] && !config.fields[field]) {
-            var parent = element.parentNode;
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
             if (parent) {
+              // NOTE: collapse half-width inputs
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(prev, 'pf-field-half-width');
+                }
+
+                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(next, 'pf-field-half-width');
+                }
+              }
+
               parent.removeChild(element);
             }
           }
@@ -1975,7 +2000,7 @@
                 username: query.name || '',
                 email: query.email || '',
                 firstName: query.first_name || '',
-                lastName: query.last_name || ''
+                lastName: query.last_name || '',
               });
             });
           }
