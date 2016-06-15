@@ -123,7 +123,6 @@
       fields: {
         message: false,
         phone: false
-
       },
       okMessage: 'Submit',
       okShow: true,
@@ -1970,7 +1969,7 @@
                 username: query.name || '',
                 email: query.email || '',
                 firstName: query.first_name || '',
-                lastName: query.last_name || '',
+                lastName: query.last_name || ''
               });
             });
           }
