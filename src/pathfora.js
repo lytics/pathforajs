@@ -1484,6 +1484,7 @@
       var contentUnit = widget.querySelector('.pf-content-unit');
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
+      var branding = widget.querySelector('.branding svg');
       var i;
       var j;
 
@@ -1556,6 +1557,10 @@
         if (colors.actionBackground) {
           okBtn.style.backgroundColor = colors.actionBackground;
         }
+      }
+
+      if (colors.text && branding) {
+        branding.style.fill = colors.text;
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
