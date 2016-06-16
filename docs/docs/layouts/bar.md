@@ -1,4 +1,4 @@
-A thin module which appears at the top or bottom of the browser window.
+A bar is a thin module which appears at the top or bottom of the browser window.
 
 **Note:** the bar module does not support the `headline` config property.
 
@@ -94,7 +94,7 @@ Define the featured image you would like to use for the module.
 
 ## pushDown
 
-For `top` or `top-fixed` positioned bars, we can select an element to push down (add a top margin) so it doesn't get covered by the module, this is especially helpful for a top-aligned site navigation.
+For `top` or `top-fixed` positioned bars, we can select an element to push down (add a top margin) so it doesn't get covered by the module. This is especially helpful for a top-aligned site navigation.
 
 <table>
   <thead>

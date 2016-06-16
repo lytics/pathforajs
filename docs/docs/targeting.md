@@ -1,4 +1,4 @@
-Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first param to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
+Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
 
 ``` javascript
 var modules = {
@@ -13,7 +13,7 @@ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 
 ## Setup Your Audiences
 
-You'll need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID, you will use this id in the targeting rules.
+You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.
 
 <img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess">
 

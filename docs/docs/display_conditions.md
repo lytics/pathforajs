@@ -1,4 +1,4 @@
-The `displayConditions` key controls how, when, and for how long any single module is displayed/hidden. All options can be combined with one-another for maximum control. Each module requires its own set of `displayConditions`. By default all modules will leverage `showOnInit`. Once other display conditions are set, they will override this default.
+The `displayConditions` key controls how, when, and for how long any single module is displayed/hidden. All options can be combined with one another for maximum control. Each module requires its own set of `displayConditions`. By default all modules will leverage `showOnInit`. Once other display conditions are set, they will override this default.
 
 
 ``` javascript

@@ -30,12 +30,12 @@ Within the `pf-widget` div most key elements are assigned class names. Form comp
 | `pf-widget-img` | image element for modules of [variant 2](/layouts/modal.md#variant)
 | `pf-social-login` | div containing social login buttons for modules with [showSocialLogin](/types/form.md#showsociallogin) enabled |
 
-To see these classes in action, you can view the html [templates](https://github.com/lytics/pathforajs/tree/master/src/templates) that will be rendered on your website. This is the html that gets minified, and added to a div with the class `pf-widget` that div then gets added to the DOM of your website.
+To see these classes in action, you can view the html [templates](https://github.com/lytics/pathforajs/tree/master/src/templates) that will be rendered on your website. This is the html that gets minified, and added to a div with the class `pf-widget`. That div then gets added to the DOM of your website.
 
 
 ## Custom Class Name
 
-All modules use the `pf-widget` class, thus any styles applied to this class and sub-elements will effect all widgets used on the page. If you want to select and style a single module without using its `id` as a selector, you can add a custom class name to the `pf-widget` div in your javascript config.
+All modules use the `pf-widget` class and thus any styles applied to this class and sub-elements will effect all modules used on the page. If you want to select and style a single module without using its `id` as a selector, you can add a custom class name to the `pf-widget` div in your javascript config.
 
 ```javascript
 var module = pathfora.Subscription({
