@@ -63,7 +63,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
 <pre data-src="../examples/src/callbacks/cancelAction.js"></pre>
 
 ## onInit
-Javascript callback function on initialization of the module, this should trigger just before the module is shown.
+Javascript callback function on initialization of the module. This should trigger just before the module is shown.
 
 <table>
   <thead>

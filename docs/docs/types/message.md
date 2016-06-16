@@ -1,4 +1,4 @@
-Message type modules are focused on delivering outbound communication for example: announcing a product launch, new content, top-level alert, etc. These modules provide a simple text message which can be used in a variety of formats.
+Message type modules are focused on delivering outbound communication. For example: announcing a product launch, new content, top-level alert, etc. These modules provide a simple text message which can be used in a variety of formats.
 
 ``` javascript
 var module = pathfora.Message({
