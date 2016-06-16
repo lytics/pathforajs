@@ -62,7 +62,8 @@
       cancelMessage: 'Cancel',
       okShow: true,
       cancelShow: true,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     subscription: {
       layout: 'modal',
@@ -75,7 +76,8 @@
       cancelMessage: 'Cancel',
       okShow: true,
       cancelShow: true,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     form: {
       layout: 'modal',
@@ -97,7 +99,8 @@
       cancelMessage: 'Cancel',
       cancelShow: true,
       showSocialLogin: false,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     sitegate: {
       layout: 'modal',
@@ -118,7 +121,8 @@
       okShow: true,
       showSocialLogin: false,
       showForm: true,
-      responsive: true
+      responsive: true,
+      branding: true
     }
   };
 
@@ -850,6 +854,7 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
+      var widgetContent = widget.querySelector('.pf-widget-content');
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
@@ -900,6 +905,20 @@
 
       if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
+      }
+
+      switch(config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+          if (widgetContent && config.branding) {
+            var branding = document.createElement('div');
+            branding.className = 'branding';
+            branding.innerHTML = templates.assets.lytics;
+            widgetContent.appendChild(branding);
+          }
+
+        break;
       }
 
       switch (config.type) {
@@ -1313,6 +1332,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
+        config.branding ? ' pf-widget-has-branding' : '',
         !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
