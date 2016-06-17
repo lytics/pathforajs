@@ -95,7 +95,7 @@
       },
       fields: {
         company: false,
-        phone: false,
+        phone: false
       },
       okMessage: 'Send',
       okShow: true,
