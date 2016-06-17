@@ -5,7 +5,7 @@ var module = pathfora.SiteGate({
   required: {
     name: false,
     email: true,
-    organization: false,
+    company: false,
     title: true
   }
 });
