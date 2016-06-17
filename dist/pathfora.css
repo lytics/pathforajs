@@ -140,6 +140,14 @@
   visibility: visible;
   opacity: 1;
 }
+.pf-widget .branding svg {
+  position: absolute;
+  bottom: 11px;
+  right: 15px;
+  fill: #888;
+  opacity: 0.25;
+  width: 120px;
+}
 /* Variant Styles */
 .pf-widget-variant-2 .pf-widget-img {
   display: block;
@@ -343,6 +351,9 @@
 .pf-widget-modal.pf-subscription .pf-widget-btn {
   margin-top: 2px;
 }
+.pf-widget-modal.pf-subscription.pf-widget-has-branding span {
+  margin-bottom: 13px;
+}
 .pf-widget-slideout {
   bottom: 50px;
   width: 350px;
@@ -364,10 +375,6 @@
     max-width: 350px;
   }
 }
-.pf-widget-slideout > div {
-  display: table-cell;
-  vertical-align: middle;
-}
 .pf-widget-slideout .pf-widget-message {
   margin: 0 0 20px 0;
 }
@@ -376,13 +383,7 @@
 }
 .pf-widget-slideout .pf-widget-content {
   padding: 30px;
-  min-width: 350px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout .pf-widget-content {
-    width: 100%;
-    min-width: initial;
-  }
+  width: 100%;
 }
 .pf-widget-slideout .pf-widget-headline {
   font-size: 20px;
@@ -461,6 +462,11 @@
     bottom: 0;
   }
 }
+.pf-widget-slideout .branding svg {
+  bottom: 7px;
+  right: 10px;
+  width: 100px;
+}
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {
   text-align: left;
 }
@@ -505,6 +511,9 @@
     width: 100%;
     max-width: 370px;
   }
+}
+.pf-widget-slideout.pf-subscription.pf-widget-has-branding span {
+  margin-bottom: 13px;
 }
 /* Pushdown Styles */
 .pf-push-down {
