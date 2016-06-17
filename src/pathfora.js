@@ -85,13 +85,18 @@
         name: 'Name',
         title: 'Title',
         email: 'Email',
-        message: 'Message'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        company: false,
+        phone: false
+      },
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
@@ -105,15 +110,20 @@
       variant: '1',
       placeholders: {
         name: 'Name',
+        title: 'Title',
         email: 'Email',
-        organization: 'Organization',
-        title: 'Title'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        message: false,
+        phone: false
+      },
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
@@ -1035,9 +1045,23 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field] && !config.fields[field]) {
-            var parent = element.parentNode;
+          if (element && !config.fields[field]) {
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
             if (parent) {
+              // NOTE: collapse half-width inputs
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(prev, 'pf-field-half-width');
+                }
+
+                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(next, 'pf-field-half-width');
+                }
+              }
+
               parent.removeChild(element);
             }
           }

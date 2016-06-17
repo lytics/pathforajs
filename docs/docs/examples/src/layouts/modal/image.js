@@ -4,7 +4,7 @@ var module = pathfora.Form({
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates',
   variant: 2,
-  image: '/assets/lion.jpg'
+  image: '../../../../assets/lion.jpg'
 });
 
 pathfora.initializeWidgets([ module ]);

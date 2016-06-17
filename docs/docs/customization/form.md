@@ -2,7 +2,7 @@ Pathfora allows for some customization on form elements including hiding specifi
 
 ## fields
 
-Select which fields should be a part of the module's form. By default, all available fields for 
+Select which fields should be a part of the module's form. By default, a [form](/types/form.md) module has the name, email, title, and message fields. And a [gate](/types/form.md) module has the name, email, company, and title fields. 
 
 <table>
   <thead>
@@ -19,27 +19,32 @@ Select which fields should be a part of the module's form. By default, all avail
   <tr>
     <td>name</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> show or hide input for the user's full name</td>
   </tr>
   <tr>
     <td>email</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> show or hide input for the user's email address</td>
+  </tr>
+  <tr>
+    <td>title</td>
+    <td>boolean</td>
+    <td><code>optional</code> show or hide input for the user's job title</td>
+  </tr>
+  <tr>
+    <td>company</td>
+    <td>boolean</td>
+    <td><code>optional</code> show or hide input for the user's company of employment</td>
+  </tr>
+  <tr>
+    <td>phone</td>
+    <td>boolean</td>
+    <td><code>optional</code> show or hide input for the user's phone number</td>
   </tr>
   <tr>
     <td>message</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form</td>
-  </tr>
-  <tr>
-    <td>organization</td>
-    <td>boolean</td>
-    <td><code>optional</code> supported types: gate</td>
+    <td><code>optional</code> show or hide texarea field for comments or a longer form message</td>
   </tr>
 </table>
 
@@ -51,7 +56,7 @@ Select which fields should be a part of the module's form. By default, all avail
 
 ## required
 
-Set which fields are required to be filled out by the user to submit the form.
+Set which fields are required to be filled out by the user to submit the form. By default only name and email fields are required for all modules with forms.
 
 <table>
   <thead>
@@ -68,27 +73,32 @@ Set which fields are required to be filled out by the user to submit the form.
   <tr>
     <td>name</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> set the required status for the name field</td>
   </tr>
   <tr>
     <td>email</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> set the required status for the email address field</td>
+  </tr>
+  <tr>
+    <td>title</td>
+    <td>boolean</td>
+    <td><code>optional</code> set the required status for the job title field</td>
+  </tr>
+  <tr>
+    <td>company</td>
+    <td>boolean</td>
+    <td><code>optional</code> set the required status for the company of employment field</td>
+  </tr>
+  <tr>
+    <td>phone</td>
+    <td>boolean</td>
+    <td><code>optional</code> set the required status for the phone number field</td>
   </tr>
   <tr>
     <td>message</td>
     <td>boolean</td>
-    <td><code>optional</code> supported types: form</td>
-  </tr>
-  <tr>
-    <td>organization</td>
-    <td>boolean</td>
-    <td><code>optional</code> supported types: gate</td>
+    <td><code>optional</code> set the required status for the long form message field</td>
   </tr>
 </table>
 
@@ -119,27 +129,32 @@ Set the placeholder text for form elements.
   <tr>
     <td>name</td>
     <td>string</td>
-    <td><code>optional</code> supported types: form, gate</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>string</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> set the placeholder text for the name field</td>
   </tr>
   <tr>
     <td>email</td>
     <td>string</td>
-    <td><code>optional</code> supported types: form, gate</td>
+    <td><code>optional</code> set the placeholder text for the email address field</td>
+  </tr>
+  <tr>
+    <td>title</td>
+    <td>string</td>
+    <td><code>optional</code> set the placeholder text for the job title field</td>
+  </tr>
+  <tr>
+    <td>company</td>
+    <td>string</td>
+    <td><code>optional</code> set the placeholder text for the company of employment field</td>
+  </tr>
+  <tr>
+    <td>phone</td>
+    <td>string</td>
+    <td><code>optional</code> set the placeholder text for the phone number field</td>
   </tr>
   <tr>
     <td>message</td>
     <td>string</td>
-    <td><code>optional</code> supported types: form</td>
-  </tr>
-  <tr>
-    <td>organization</td>
-    <td>string</td>
-    <td><code>optional</code> supported types: gate</td>
+    <td><code>optional</code> set the placeholder text for the long form message field</td>
   </tr>
 </table>
 
