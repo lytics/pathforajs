@@ -139,7 +139,6 @@
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
   var templates = {
-  "templates": {},
   "subscription": {
     "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
@@ -444,6 +443,73 @@
               'widgets': [widget]
           });
       }
+    },
+
+    /**
+     * @description Escape URIs optionally without double-encoding
+     * @param   {string}  text                 the uri text to escape
+     * @param   {obj}     options
+     * @param   {boolean} options.usePlus      escape `space` to `+` instead of `%20`
+     * @param   {boolean} options.keepEscaped  do not double-encode text
+     * @returns {string}  uri                  the uri-escaped text
+     */
+    escapeURI: function(text, options) {
+      return escapeURI(text, options);
+
+      // NOTE This was ported from various bits of C++ code from Chromium
+      function escapeURI(text, options) {
+        options || (options = {});
+        var usePlus = options.usePlus || false,
+            keepEscaped = options.keepEscaped || false,
+            length = text.length,
+            escaped = [],
+            index,
+            charText,
+            charCode;
+
+        for (index = 0; index < length; index++) {
+          charText = text[index];
+          charCode = text.charCodeAt(index);
+
+          if (usePlus && ' ' === charText) {
+            escaped.push('+');
+          } else if (keepEscaped && '%' === charText && length >= index + 2 &&
+              isHexDigit(text[index + 1]) &&
+              isHexDigit(text[index + 2])) {
+            escaped.push('%');
+          } else if (shouldEscape(charText)) {
+            escaped.push('%',
+              toHexDigit(charCode >> 4),
+              toHexDigit(charCode & 0xf));
+          } else {
+            escaped.push(charText);
+          }
+        }
+        return escaped.join('');
+      }
+
+      function isHexDigit(c) {
+        return /[0-9A-Fa-f]/.test(c);
+      }
+
+      function toHexDigit(i) {
+        return '0123456789ABCDEF'[i];
+      }
+
+      function shouldEscape(charText) {
+        return !isURISeparator(charText) && containsChar([
+          0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
+          0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+        ], charText.charCodeAt(0));
+      }
+
+      function isURISeparator(c) {
+        return [ '#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '=' ].indexOf(c) !== -1;
+      }
+
+      function containsChar(charMap, charCode) {
+        return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
+      }
     }
   };
 
@@ -632,13 +698,15 @@
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase.split("?")[0]) !== -1) {
-                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
+              if (url.indexOf(utils.escapeURI(phrase.split("?")[0], { keepEscaped: true })) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
               }
               break;
 
             case 'object':
               if (phrase.match && phrase.value) {
+                var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+
                 switch (phrase.match) {
                   // simple match
                   case 'simple':
@@ -649,8 +717,8 @@
 
                   // exact match
                   case 'exact':
-                    if (url.split("?")[0].replace(/\/$/, '') === phrase.value.split("?")[0].replace(/\/$/, '')) {
-                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
+                    if (url.split("?")[0].replace(/\/$/, '') === phraseValue.split("?")[0].replace(/\/$/, '')) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
                     }
                     break;
 
@@ -664,8 +732,8 @@
 
                   // string match (default)
                   default:
-                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
-                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
+                    if (url.indexOf(phraseValue.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
                     }
                     break;
                 }
@@ -1991,7 +2059,7 @@
             });
             core.clearFormFields("facebook", ['username', 'email']);
           });
-        
+
         } else {
           FB.login(function(resp) {
             if (resp.authResponse) {
