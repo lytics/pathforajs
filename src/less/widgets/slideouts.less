@@ -15,11 +15,6 @@
     max-width: 350px;
   });
 
-  > div {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
   .pf-widget-message {
     margin: 0 0 20px 0;
   }
@@ -30,12 +25,7 @@
 
   .pf-widget-content {
     padding: 30px;
-    min-width: 350px;
-
-    .mobile({
-      width: 100%;
-      min-width: initial;
-    });
+    width: 100%;
   }
 
   .pf-widget-headline {
@@ -115,6 +105,14 @@
     }
   }
 
+  .branding {
+    svg {
+      bottom: 7px;
+      right: 10px;
+      width: 100px;
+    }
+  }
+
   /* Variant Styles */
   &.pf-widget-variant-1 {
     .pf-widget-content {
@@ -179,5 +177,13 @@
       width: 100%;
       max-width: 370px;
     });
+  }
+
+  &.pf-subscription {
+    &.pf-widget-has-branding {
+      span {
+        margin-bottom: 13px;
+      }
+    }
   }
 }

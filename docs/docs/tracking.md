@@ -15,7 +15,9 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
 | `pf-form-title` | string | user submitted value of "title" field on module |
 | `pf-form-email` | string | user submitted value of "email" field on module |
 | `pf-form-message` | string | user submitted value of "message" field on module |
-| `pf-form-organization` | string | user submitted value of "organization" field on module |
+| `pf-form-company` | string | user submitted value of "company" field on module |
+| `pf-form-phone` | string | user submitted value of "phone number" field on module |
+
 
 <table>
   <thead>
@@ -72,4 +74,4 @@ Pathfora will send event data from the modules on your website to your Google An
 | eventCategory | string | Lytics |
 | eventAction | string | [id of module] : [event name] |
 
-The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics), however if you've defined custom names in the [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) settings this will override the event name for those actions.
+The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) settings this will override the event name for those actions.

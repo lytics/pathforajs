@@ -20,6 +20,7 @@ pages:
     - Color Themes: customization/themes.md
     - Custom CSS: customization/css.md
     - Form Elements: customization/form.md
+    - Responsive Styles: customization/responsive.md
   - A/B Testing: ab_testing.md
   - Audience Targeting: targeting.md
   - Callbacks: callbacks.md

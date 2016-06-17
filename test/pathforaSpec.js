@@ -1235,6 +1235,28 @@ describe('Widgets', function () {
     pathfora.clearAll();
   });
 
+  it('should show branding assets unless set otherwise', function () {
+    var w1 = new pathfora.Message({
+      msg: 'test',
+      id: 'branding1',
+      layout: 'slideout'
+    });
+
+    var w2 = new pathfora.Message({
+      msg: 'test',
+      id: 'branding2',
+      layout: 'modal',
+      branding: false
+    });
+
+    pathfora.initializeWidgets([w1, w2]);
+    var widget1 = $('#' + w1.id);
+    var widget2 = $('#' + w2.id);
+
+    expect(widget1.find(".branding svg").length).toBe(1);
+    expect(widget2.find(".branding svg").length).toBe(0);
+  });
+
   // -------------------------
   //  COLORS/THEME
   // -------------------------

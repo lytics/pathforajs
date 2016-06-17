@@ -62,7 +62,8 @@
       cancelMessage: 'Cancel',
       okShow: true,
       cancelShow: true,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     subscription: {
       layout: 'modal',
@@ -75,7 +76,8 @@
       cancelMessage: 'Cancel',
       okShow: true,
       cancelShow: true,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     form: {
       layout: 'modal',
@@ -85,19 +87,25 @@
         name: 'Name',
         title: 'Title',
         email: 'Email',
-        message: 'Message'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        company: false,
+        phone: false
+      },
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
       showSocialLogin: false,
-      responsive: true
+      responsive: true,
+      branding: true
     },
     sitegate: {
       layout: 'modal',
@@ -105,20 +113,26 @@
       variant: '1',
       placeholders: {
         name: 'Name',
+        title: 'Title',
         email: 'Email',
-        organization: 'Organization',
-        title: 'Title'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        message: false,
+        phone: false
+      },
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
       showForm: true,
-      responsive: true
+      responsive: true,
+      branding: true
     }
   };
 
@@ -850,6 +864,7 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
+      var widgetContent = widget.querySelector('.pf-widget-content');
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
@@ -900,6 +915,20 @@
 
       if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
+      }
+
+      switch(config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+          if (widgetContent && config.branding) {
+            var branding = document.createElement('div');
+            branding.className = 'branding';
+            branding.innerHTML = templates.assets.lytics;
+            widgetContent.appendChild(branding);
+          }
+
+        break;
       }
 
       switch (config.type) {
@@ -1035,9 +1064,23 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field] && !config.fields[field]) {
-            var parent = element.parentNode;
+          if (element && !config.fields[field]) {
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
             if (parent) {
+              // NOTE: collapse half-width inputs
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(prev, 'pf-field-half-width');
+                }
+
+                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(next, 'pf-field-half-width');
+                }
+              }
+
               parent.removeChild(element);
             }
           }
@@ -1313,6 +1356,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
+        config.branding ? ' pf-widget-has-branding' : '',
         !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
@@ -1464,6 +1508,7 @@
       var contentUnit = widget.querySelector('.pf-content-unit');
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
+      var branding = widget.querySelector('.branding svg');
       var i;
       var j;
 
@@ -1536,6 +1581,10 @@
         if (colors.actionBackground) {
           okBtn.style.backgroundColor = colors.actionBackground;
         }
+      }
+
+      if (colors.text && branding) {
+        branding.style.fill = colors.text;
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;

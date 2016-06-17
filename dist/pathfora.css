@@ -140,6 +140,14 @@
   visibility: visible;
   opacity: 1;
 }
+.pf-widget .branding svg {
+  position: absolute;
+  bottom: 11px;
+  right: 15px;
+  fill: #888;
+  opacity: 0.25;
+  width: 120px;
+}
 /* Variant Styles */
 .pf-widget-variant-2 .pf-widget-img {
   display: block;
@@ -190,23 +198,21 @@
   padding: 2px;
   overflow: hidden;
 }
-.pf-sitegate .pf-sitegate-field {
-  position: relative;
-  display: inline-block;
-}
-.pf-sitegate .pf-sitegate-field.pf-field-half-width {
+.pf-form input.pf-field-half-width,
+.pf-sitegate input.pf-field-half-width {
   width: 49.5%;
-}
-.pf-sitegate .pf-sitegate-field.pf-field-half-width + .pf-field-half-width {
-  margin-left: 1%;
-}
-.pf-sitegate .pf-sitegate-field.pf-field-full-width {
-  width: 100%;
-}
-.pf-sitegate .pf-sitegate-clear {
   display: block;
-  width: 100%;
-  height: 10px;
+  clear: none;
+  float: left;
+}
+.pf-form input.pf-field-half-width + .pf-field-half-width,
+.pf-sitegate input.pf-field-half-width + .pf-field-half-width {
+  float: right;
+}
+.pf-form .pf-widget-btn,
+.pf-sitegate .pf-widget-btn {
+  clear: both;
+  margin-top: 5px;
 }
 .pf-social-login {
   text-align: right;
@@ -345,6 +351,9 @@
 .pf-widget-modal.pf-subscription .pf-widget-btn {
   margin-top: 2px;
 }
+.pf-widget-modal.pf-subscription.pf-widget-has-branding span {
+  margin-bottom: 13px;
+}
 .pf-widget-slideout {
   bottom: 50px;
   width: 350px;
@@ -366,10 +375,6 @@
     max-width: 350px;
   }
 }
-.pf-widget-slideout > div {
-  display: table-cell;
-  vertical-align: middle;
-}
 .pf-widget-slideout .pf-widget-message {
   margin: 0 0 20px 0;
 }
@@ -378,13 +383,7 @@
 }
 .pf-widget-slideout .pf-widget-content {
   padding: 30px;
-  min-width: 350px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout .pf-widget-content {
-    width: 100%;
-    min-width: initial;
-  }
+  width: 100%;
 }
 .pf-widget-slideout .pf-widget-headline {
   font-size: 20px;
@@ -463,6 +462,11 @@
     bottom: 0;
   }
 }
+.pf-widget-slideout .branding svg {
+  bottom: 7px;
+  right: 10px;
+  width: 100px;
+}
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {
   text-align: left;
 }
@@ -507,6 +511,9 @@
     width: 100%;
     max-width: 370px;
   }
+}
+.pf-widget-slideout.pf-subscription.pf-widget-has-branding span {
+  margin-bottom: 13px;
 }
 /* Pushdown Styles */
 .pf-push-down {

@@ -1,4 +1,4 @@
-A small module which only allows for a short piece of text, and a single click action. Because of their limited size and capabilities, button modules are best used for short messages, such as calling out a new site feature, or directing a user to a new piece of content.
+A button is a small module which only allows for a short piece of text, and a single click action. Because of their limited size and capabilities, button modules are best used for short messages, such as calling out a new site feature, or directing a user to a new piece of content.
 
 
 ## position

@@ -4,7 +4,7 @@ var module = pathfora.Message({
   headline: 'Welcome',
   msg: 'Welcome to our website.',
   variant: 2,
-  image: '/assets/lion.jpg'
+  image: '../../../../assets/lion.jpg'
 });
 
 pathfora.initializeWidgets([ module ]);
