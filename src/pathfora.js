@@ -2203,7 +2203,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.2';
+    this.version = '0.0.03';
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
