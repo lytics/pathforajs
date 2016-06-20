@@ -24,18 +24,7 @@
     generic: {
       className: 'pathfora',
       headline: '',
-      theme: 'default',
       themes: {
-        default: {
-          background: '#f1f1f1',
-          headline: '#444',
-          text: '#888',
-          close: '#bbb',
-          actionText: '#444',
-          actionBackground: '#fff',
-          cancelText: '#bbb',
-          cancelBackground: '#f1f1f1'
-        },
         dark: {
           background: '#333',
           headline: '#fefefe',
@@ -72,12 +61,9 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
-    },
-    welcome: {
-      layout: 'modal',
-      position: '',
-      variant: '1'
+      cancelShow: true,
+      responsive: true,
+      branding: true
     },
     subscription: {
       layout: 'modal',
@@ -89,7 +75,9 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true,
+      branding: true
     },
     form: {
       layout: 'modal',
@@ -99,18 +87,25 @@
         name: 'Name',
         title: 'Title',
         email: 'Email',
-        message: 'Message'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        company: false,
+        phone: false
+      },
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false
+      showSocialLogin: false,
+      responsive: true,
+      branding: true
     },
     sitegate: {
       layout: 'modal',
@@ -118,57 +113,32 @@
       variant: '1',
       placeholders: {
         name: 'Name',
+        title: 'Title',
         email: 'Email',
-        organization: 'Organization',
-        title: 'Title'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        message: false,
+        phone: false
+      },
       okMessage: 'Submit',
       okShow: true,
-      cancelShow: true,
-      cancelMessage: 'Cancel',
       showSocialLogin: false,
-      showForm: true
+      showForm: true,
+      responsive: true,
+      branding: true
     }
   };
 
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
-  var templates = {
-    message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      button: '<p class="pf-widget-message pf-widget-ok"></p>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
-    },
-    subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>'
-    },
-    form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><\/p><input name="title" type="text"><input name="email" type="email"><textarea  name="message" rows="5"></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    sitegate: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    social: {
-      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
-      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div id="{{google-btnId}}" class="google-login"></div>'
-    }
-  };
+  var templates = {{templates}};
 
   // NOTE Event callback types
   var callbackTypes = {
@@ -553,14 +523,64 @@
       return true;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
-      return (core.pageViews >= pageVisitsRequired);
+    /**
+     * @description Parse url queries as an object
+     * @param {string} url
+     */
+    parseQuery: function (url) {
+      var query = {};
+      var pieces = url.split('?');
+      if (pieces.length > 1) {
+        pieces = pieces[1].split('&');
+
+        for (var i = 0; i < pieces.length; i++) {
+          var pair = pieces[i].split('=');
+
+          if (pair.length > 1) {
+            // NOTE We should not account for the preview id
+            if (pair[0] !== "lytics_variation_preview_id") {
+              query[pair[0]] = pair[1];
+            }
+          }
+        }
+      }
+
+      return query;
     },
 
+    /**
+     * @description Compare query params between the url
+     *              the user is visiting and the match
+     *              rule provided
+     * @param {obj} queries
+     * @param {obj} matchQueries
+     * @param {string} rule
+     */
+    compareQueries: function (query, matchQuery, rule) {
+      switch (rule) {
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      for (var key in matchQuery) {
+        if (matchQuery[key] !== query[key]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     urlChecker: function (phrases, widget) {
       var url = window.location.href,
           simpleurl = window.location.hostname + window.location.pathname,
+          queries = core.parseQuery(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -572,40 +592,48 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
+
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase) !== -1) {
-                valid = true;
+              if (url.indexOf(phrase.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
               }
               break;
+
             case 'object':
-              if(phrase.match && phrase.value){
+              if (phrase.match && phrase.value) {
                 switch (phrase.match) {
+                  // simple match
                   case 'simple':
                     if (simpleurl === phrase.value) {
                       valid = true;
                     }
                     break;
+
+                  // exact match
                   case 'exact':
-                    if (url === phrase.value) {
-                      valid = true;
+                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
+
+                  // regex
                   case 'regex':
                     var re = new RegExp(phrase.value);
-                    if(re.test(url)){
+                    if (re.test(url)) {
                       valid = true;
                     }
                     break;
+
+                  // string match (default)
                   default:
-                    // default to string match
-                    if (url.indexOf(phrase.value) !== -1) {
-                      valid = true;
+                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
                 }
-              }else{
+              } else {
                 console.log('invalid display conditions')
               }
               break;
@@ -614,11 +642,15 @@
               break;
           }
         });
-      }else{
+      } else {
         valid = true;
       }
 
       return valid;
+    },
+
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     dateChecker: function (date, widget) {
@@ -832,6 +864,7 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
+      var widgetContent = widget.querySelector('.pf-widget-content');
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
@@ -868,20 +901,34 @@
         }
       }
 
-      if(widgetCancel !== null) {
+      if (widgetCancel !== null) {
         widgetCancel.innerHTML = config.cancelMessage;
       }
 
-      if(widgetOk !== null) {
+      if (widgetOk !== null) {
         widgetOk.innerHTML = config.okMessage;
       }
 
-      if(widgetOk && widgetOk.value !== null) {
+      if (widgetOk && widgetOk.value !== null) {
         widgetOk.value = config.okMessage;
       }
 
-      if(widgetCancel && widgetCancel.value !== null) {
+      if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
+      }
+
+      switch(config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+          if (widgetContent && config.branding) {
+            var branding = document.createElement('div');
+            branding.className = 'branding';
+            branding.innerHTML = templates.assets.lytics;
+            widgetContent.appendChild(branding);
+          }
+
+        break;
       }
 
       switch (config.type) {
@@ -916,6 +963,7 @@
         switch (config.layout) {
         case 'modal':
         case 'slideout':
+          break;
         case 'random':
         case 'bar':
         case 'button':
@@ -931,15 +979,19 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
+            var child = node.querySelector('input');
 
             if (node) {
-              node.className += ' pf-hidden';
-            }
+              while(child) {
+                node.removeChild(child);
+                child = node.querySelector('input');
+              }
 
-            node = widget.querySelector('.pf-sitegate-centered-label');
+              child = node.querySelector('.pf-sitegate-clear');
 
-            if (node.parentNode) {
-              node.parentNode.removeChild(node);
+              if (child) {
+                node.removeChild(child);
+              }
             }
           }
           break;
@@ -964,8 +1016,6 @@
           widgetImage.className = 'pf-widget-img';
           widgetBody.appendChild(widgetImage);
         }
-      } else {
-        utils.addClass(widget, 'pf-no-img');
       }
 
       switch(config.type) {
@@ -1014,9 +1064,23 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field] && !config.fields[field]) {
-            var parent = element.parentNode;
+          if (element && !config.fields[field]) {
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
             if (parent) {
+              // NOTE: collapse half-width inputs
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(prev, 'pf-field-half-width');
+                }
+
+                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(next, 'pf-field-half-width');
+                }
+              }
+
               parent.removeChild(element);
             }
           }
@@ -1027,7 +1091,7 @@
         break;
       }
 
-      if(config.msg){
+      if (config.msg){
         widgetMessage.innerHTML = config.msg;
       }
     },
@@ -1183,18 +1247,12 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id, true);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
@@ -1271,36 +1329,14 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      var colors = {};
-
-      if (typeof config.theme === 'undefined') {
-        core.setCustomColors(widget, defaultProps.generic.themes['default']);
-      }
-
-      if(config.config && config.config.theme === null) {
-        core.updateObject(colors, defaultProps.generic.themes['default']);
-        core.updateObject(colors, config.config.colors);
-        core.setCustomColors(widget, colors);
-      } else if (config.themes) {
+      if (config.theme) {
         if (config.theme === 'custom') {
-
-          // NOTE custom colors
-          core.updateObject(colors, config.colors);
-        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-
-          // NOTE colors set via the higher config
-          if (defaultProps.generic.theme === 'custom') {
-            core.updateObject(colors, defaultProps.generic.colors);
-          } else {
-            core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
+          if (config.colors) {
+            core.setCustomColors(widget, config.colors);
           }
         } else {
-
-          // NOTE default theme
-          core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+          core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
-
-        core.setCustomColors(widget, colors);
       }
     },
 
@@ -1320,8 +1356,49 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-
+        config.branding ? ' pf-widget-has-branding' : '',
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
+    },
+
+    /**
+     * @description Setup content recommendation if we have one
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetContentUnit: function (widget, config) {
+      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+
+      if (config.recommend && config.content) {
+        // Make sure we have content to get
+        if (Object.keys(config.content).length > 0) {
+
+          // The top recommendation should be default if we couldn't
+          // get one from the api
+          var rec = config.content[0]
+          widgetContentUnit.href = rec.url;
+
+          var recImage = document.createElement('div');
+          recImage.className = 'pf-content-unit-img';
+          recImage.style.backgroundImage = "url('" + rec.image + "')";
+          widgetContentUnit.appendChild(recImage);
+
+          var recMeta = document.createElement('div');
+          recMeta.className = 'pf-content-unit-meta';
+
+          // title
+          var recTitle = document.createElement('h4');
+          recTitle.innerHTML = rec.title;
+          recMeta.appendChild(recTitle);
+
+          // description
+          var recDesc = document.createElement('p');
+          recDesc.innerHTML = rec.description;
+          recMeta.appendChild(recDesc);
+
+          widgetContentUnit.appendChild(recMeta);
+        }
+      }
     },
 
     /**
@@ -1384,6 +1461,7 @@
 
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
+      this.setupWidgetContentUnit(widget, config);
       this.setWidgetClassname(widget, config);
       this.constructWidgetLayout(widget, config);
       this.setupWidgetColors(widget, config);
@@ -1423,55 +1501,90 @@
       var close = widget.querySelector('.pf-widget-close');
       var headline = widget.querySelector('.pf-widget-headline');
       var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
-      var cancelBtn = widget.querySelector('.pf-widget-cancel');
-      var okBtn = widget.querySelector('.pf-widget-ok');
+      var cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel');
+      var okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var contentUnit = widget.querySelector('.pf-content-unit');
+      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
+      var branding = widget.querySelector('.branding svg');
       var i;
       var j;
 
-      if (utils.hasClass(widget, 'pf-widget-modal')) {
-        widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
-      } else {
-        widget.style.backgroundColor = colors.background;
-      }
-
-      if (fields.length > 0) {
-        j = fields.length;
-        for (i = 0; i < j; i++) {
-          fields[i].style.backgroundColor = colors.fieldBackground;
+      if (colors.background) {
+        if (utils.hasClass(widget, 'pf-widget-modal')) {
+          widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+        } else {
+          widget.style.backgroundColor = colors.background;
         }
       }
 
-      if (close) {
+      if (colors.fieldBackground) {
+        if (fields.length > 0) {
+          j = fields.length;
+          for (i = 0; i < j; i++) {
+            fields[i].style.backgroundColor = colors.fieldBackground;
+          }
+        }
+      }
+
+      if (contentUnit && contentUnitMeta) {
+        if (colors.actionBackground) {
+          contentUnit.style.backgroundColor = colors.actionBackground;
+        }
+
+        if (colors.actionText) {
+          contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        }
+
+        if (colors.text) {
+          contentUnitMeta.querySelector('p').style.color = colors.text;
+        }
+      }
+
+      if (close && colors.close) {
         close.style.color = colors.close;
       }
 
-      if (headline) {
+      if (headline && colors.headline) {
         headline.style.color = colors.headline;
       }
 
-      if (headlineLeft) {
+      if (headlineLeft && colors.headline) {
         headlineLeft.style.color = colors.headline;
       }
 
-      if (arrow) {
+      if (arrow && colors.close) {
         arrow.style.color = colors.close;
       }
 
-      if (arrowLeft) {
+      if (arrowLeft && colors.close) {
         arrowLeft.style.color = colors.close;
       }
 
       if (cancelBtn) {
-        cancelBtn.style.color = colors.cancelText;
-        cancelBtn.style.backgroundColor = colors.cancelBackground;
+        if (colors.cancelText) {
+          cancelBtn.style.color = colors.cancelText;
+        }
+
+        if (colors.cancelBackground) {
+          cancelBtn.style.backgroundColor = colors.cancelBackground;
+        }
       }
 
       if (okBtn) {
-        okBtn.style.color = colors.actionText;
-        okBtn.style.backgroundColor = colors.actionBackground;
+        if (colors.actionText) {
+          okBtn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          okBtn.style.backgroundColor = colors.actionBackground;
+        }
+      }
+
+      if (colors.text && branding) {
+        branding.style.fill = colors.text;
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
@@ -1532,7 +1645,7 @@
             valid = false;
           }
         }
-        utils.saveCookie('PathforaUnlocked', valid, core.expiration);
+        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
       }
 
       params['pf-widget-event'] = action;
@@ -1568,7 +1681,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array) {
+    initializeWidgetArray: function (array, accountId) {
       var widgetOnInitCallback;
       var defaults;
       var globals;
@@ -1587,7 +1700,12 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
+
+        if (accountId && accountId.length <= 4) {
+          console.warn('Pathfora: please update credentials to full Acccount ID');
+        }
+
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1601,10 +1719,43 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.displayConditions.showDelay) {
-          core.registerDelayedWidget(widget);
+        var displayWidget = function(widget) {
+          if (widget.displayConditions.showDelay) {
+            core.registerDelayedWidget(widget);
+          } else {
+            core.initializeWidget(widget);
+          }
+        }
+
+        if (widget.type === "message" && (widget.recommend || widget.content)) {
+          if (widget.layout !== "slideout" && widget.layout !== "modal") {
+            throw new Error('Unsupported layout for content recommendation');
+          }
+
+          if (widget.content && widget.content[0] && !widget.content[0].default) {
+            throw new Error('Cannot define recommended content unless it is a default');
+          }
+
+          api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
+            if (content) {
+              widget.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: "http://" + content.url,
+                  image: content.primary_image
+                }
+              };
+            }
+
+            if (!widget.content) {
+              throw new Error('Could not get recommendation and no default defined');
+            }
+
+            displayWidget(widget);
+          });
         } else {
-          core.initializeWidget(widget);
+          displayWidget(widget);
         }
 
         // NOTE onInit feels better here
@@ -1714,23 +1865,11 @@
       widget.type = type;
       widget.config = config;
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.impressions !== 'undefined') {
-        delete config.displayConditions.impressions;
-
-        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      if (!config.id) {
+        throw new Error('All widgets must have an id value');
       }
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.hideAfterAction !== 'undefined') {
-        delete config.displayConditions.hideAfterAction;
-
-        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
-      }
-
-      widget.id = config.id || utils.generateUniqueId();
+      widget.id = config.id;
 
       return widget;
     },
@@ -1743,7 +1882,7 @@
       }
 
       test.id = config.id;
-      test.cookieId = abHashMD5 + config.id;
+      test.cookieId = 'PathforaTest_' + config.id;
       test.groups = config.groups;
 
       if (!abTestingTypes[config.type]) {
@@ -2016,7 +2155,42 @@
           }
         });
       });
-    }
+    },
+
+
+    /**
+     * @description Fetch content to recommend
+     * @throws {Error} error
+     * @param {string} accountId  Lytics account ID
+     */
+    recommendContent: function (accountId, filter, callback) {
+      var seerId = utils.readCookie('seerid');
+      var recommendUrl;
+
+      if (!seerId) {
+        throw new Error('Cannot find SEERID cookie');
+      }
+
+      recommendUrl = [
+        '{{apiurl}}/api/content/recommend/',
+        accountId,
+        '/user/_uids/',
+        seerId,
+        filter ? '?ql=' + filter : '',
+      ].join('');
+
+
+      this.getData(recommendUrl, function (json) {
+        var resp = JSON.parse(json);
+        if (resp.data && resp.data.length > 0) {
+          callback(resp.data[0]);
+        } else {
+          callback(null);
+        }
+      }, function () {
+        callback(null);
+      });
+    },
   };
 
   /**
@@ -2063,12 +2237,12 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets);
+        core.initializeWidgetArray(widgets, lyticsId);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common);
+          core.initializeWidgetArray(widgets.common, lyticsId);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
@@ -2119,11 +2293,11 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets);
+              core.initializeWidgetArray(targetedwidgets, lyticsId);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse);
+              core.initializeWidgetArray(widgets.inverse, lyticsId);
             }
           });
         }
@@ -2155,7 +2329,12 @@
         var i;
 
         if (!userAbTestingValue) {
-          userAbTestingValue = Math.random();
+          // Support old cookie name convention
+          userAbTestingValue = utils.readCookie(abHashMD5 + abTest.id);
+
+          if (!userAbTestingValue) {
+            userAbTestingValue = Math.random();
+          }
         }
 
         // NOTE Always update the cookie to get the new exp date.
@@ -2259,8 +2438,13 @@
 
       node = core.createWidgetHtml(widget);
 
-      if (widget.showSocialLogin)
+      if (widget.showSocialLogin) {
+        if (widget.showForm === false) {
+          throw new Error('Social login requires a form on the widget');
+        }
+
         core.requestSocialPluginRender(node);
+      }
 
       if (widget.pushDown) {
         utils.addClass(document.querySelector('.pf-push-down'), "opened");

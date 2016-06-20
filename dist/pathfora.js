@@ -24,18 +24,7 @@
     generic: {
       className: 'pathfora',
       headline: '',
-      theme: 'default',
       themes: {
-        default: {
-          background: '#f1f1f1',
-          headline: '#444',
-          text: '#888',
-          close: '#bbb',
-          actionText: '#444',
-          actionBackground: '#fff',
-          cancelText: '#bbb',
-          cancelBackground: '#f1f1f1'
-        },
         dark: {
           background: '#333',
           headline: '#fefefe',
@@ -72,12 +61,9 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
-    },
-    welcome: {
-      layout: 'modal',
-      position: '',
-      variant: '1'
+      cancelShow: true,
+      responsive: true,
+      branding: true
     },
     subscription: {
       layout: 'modal',
@@ -89,7 +75,9 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true
+      cancelShow: true,
+      responsive: true,
+      branding: true
     },
     form: {
       layout: 'modal',
@@ -99,18 +87,25 @@
         name: 'Name',
         title: 'Title',
         email: 'Email',
-        message: 'Message'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        company: false,
+        phone: false
+      },
       okMessage: 'Send',
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false
+      showSocialLogin: false,
+      responsive: true,
+      branding: true
     },
     sitegate: {
       layout: 'modal',
@@ -118,57 +113,65 @@
       variant: '1',
       placeholders: {
         name: 'Name',
+        title: 'Title',
         email: 'Email',
-        organization: 'Organization',
-        title: 'Title'
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number'
       },
       required: {
         name: true,
         email: true
       },
-      fields: {},
+      fields: {
+        message: false,
+        phone: false
+      },
       okMessage: 'Submit',
       okShow: true,
-      cancelShow: true,
-      cancelMessage: 'Cancel',
       showSocialLogin: false,
-      showForm: true
+      showForm: true,
+      responsive: true,
+      branding: true
     }
   };
 
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
   var templates = {
-    message: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      bar: '<a class="pf-widget-body"></a><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div>',
-      button: '<p class="pf-widget-message pf-widget-ok"></p>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><a class="pf-widget-btn pf-widget-ok">Confirm</a><a class="pf-widget-btn pf-widget-cancel">Cancel</a></div></div></div></div></div>'
-    },
-    subscription: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div>',
-      bar: '<div class="pf-widget-body"></div><a class="pf-widget-close">&times;</a><div class="pf-bar-content"><p class="pf-widget-message"></p><form><input name="email" type="email" required><input type="submit" class="pf-widget-btn pf-widget-ok" /></form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><form><button type="submit" class="pf-widget-btn pf-widget-ok">X</button><span><input name="email" type="email" required></span></form></div></div></div></div></div>'
-    },
-    form: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      slideout: '<a class="pf-widget-close">&times;</a><div class="pf-widget-body"></div><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea> <button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div>',
-      folding: '<a class="pf-widget-caption"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><a class="pf-widget-caption-left"><p class="pf-widget-headline"></p><span>&rsaquo;</span></a><div class="pf-widget-body"></div><div class="pf-widget-content"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><\/p><input name="title" type="text"><input name="email" type="email"><textarea  name="message" rows="5"></textarea> <button class="pf-widget-btn pf-widget-cancel">Cancel</button><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button> </form></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><a class="pf-widget-close">&times;</a><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input name="username" type="text"><input name="title" type="text"><input name="email" type="email"><textarea name="message" rows="5"></textarea><button type="submit" class="pf-widget-btn pf-widget-ok">Send</button><button class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    sitegate: {
-      modal: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>',
-      inline: '<div class="pf-widget-container"><div class="pf-va-middle"><div class="pf-widget-content"><h2 class="pf-widget-headline"></h2><div class="pf-widget-body"><div class="pf-va-middle"><p class="pf-widget-message"></p><div class="pf-sitegate-social-plugins pf-social-login"><p name="fb-login" hidden></p><p name="google-login" hidden><\/p></div><form><input class="pf-sitegate-field pf-field-full-width" name="username" type="text"><input  class="pf-sitegate-field pf-field-full-width" name="email" type="email"><input class="pf-sitegate-field pf-field-half-width" name="organization" type="text"><input class="pf-sitegate-field pf-field-half-width" name="title" type="text"><div class="pf-sitegate-clear"></div><button type="submit" class="pf-widget-btn pf-widget-ok">Submit</button><button type="reset" class="pf-widget-btn pf-widget-cancel">Cancel</button></form></div></div></div></div></div>'
-    },
-    social: {
-      facebookIcon: '<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true" data-scope="public_profile,email" data-onlogin="window.pathfora.onFacebookSignIn();"></div>',
-      googleMeta: '<meta name="google-signin-client_id" content="{{google-clientId}}">',
-      googleIcon: '<div id="{{google-btnId}}" class="google-login"></div>'
-    }
-  };
+  "subscription": {
+    "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
+    "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div></div></div></div></div>",
+    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>"
+  },
+  "social": {
+    "facebookIcon": "<div class=\"fb-login-button\" data-max-rows=\"1\" data-size=\"large\" data-show-faces=\"false\" data-auto-logout-link=\"true\" data-scope=\"public_profile,email\" data-onlogin=\"window.pathfora.onFacebookSignIn();\"></div>",
+    "googleIcon": "<div id=\"{{google-btnId}}\" class=\"google-login\"></div>",
+    "googleMeta": "<meta name=\"google-signin-client_id\" content=\"{{google-clientId}}\">"
+  },
+  "sitegate": {
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-sitegate-social-plugins pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Submit</button></form></div></div></div></div></div>"
+  },
+  "message": {
+    "bar": "<a class=\"pf-widget-body\"></a> <a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><span><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></span></div>",
+    "button": "<p class=\"pf-widget-message pf-widget-ok\"></p>",
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><a class=\"pf-content-unit\"></a> <a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div></div></div></div></div>",
+    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><a class=\"pf-content-unit\"></a> <a class=\"pf-widget-btn pf-widget-ok\">Confirm</a> <a class=\"pf-widget-btn pf-widget-cancel\">Cancel</a></div>"
+  },
+  "form": {
+    "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button> <button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button></form></div>",
+    "inline": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
+    "modal": "<div class=\"pf-widget-container\"><div class=\"pf-va-middle\"><div class=\"pf-widget-content\"><a class=\"pf-widget-close\">&times;</a><h2 class=\"pf-widget-headline\"></h2><div class=\"pf-widget-body\"><div class=\"pf-va-middle\"><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div></div></div></div></div>",
+    "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
+  },
+  "assets": {
+    "lytics": "<a href=\"https://www.getlytics.com?utm_source=pathfora&amp;utm_medium=web&amp;utm_campaign=personalization\" target=\"_blank\"><svg width=\"120px\" height=\"30\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 143.97 36.85\"><title>lytics</title><path d=\"M122.26 11.36h.1c1.41-.39 2.33-1 2.2-2.94 0-.7-.28-1.06-.69-1.06-.7 0-1.3 1.38-1.37 1.53l-.09.21a3.22 3.22 0 0 0-.5 2 .38.38 0 0 0 .36.25\" transform=\"translate(-.85)\"/><path d=\"M88 5.27a.76.76 0 0 0-1.09.73v.18a1.57 1.57 0 0 0 .45.93 8.78 8.78 0 0 0 6 2.6h.21a.12.12 0 0 1 .13.14 32 32 0 0 1-2 8 1.76 1.76 0 0 1-1 1.17.6.6 0 0 1-.26-.07c-.32-.16-.74-.41-1.18-.67a13.8 13.8 0 0 0-1.72-.93 15.11 15.11 0 0 0-3.88-1.22c-1.81-.2-4.09.56-4.47 2.52a4.7 4.7 0 0 0 2 4.47 10 10 0 0 0 5.19 1.75 6.34 6.34 0 0 0 3.74-1.24l.47-.39c.27-.23.82-.69 1.13-.9a.12.12 0 0 1 .15 0l.5.41a7.84 7.84 0 0 0 .62.5 7.72 7.72 0 0 0 3.54 1.33h.58a5.21 5.21 0 0 0 2.62-.66.12.12 0 0 1 .15 0 2.19 2.19 0 0 0 1.6.68c1.75 0 3.76-1.83 5.06-3.29v.1a8.92 8.92 0 0 1-.83 2.69 7.53 7.53 0 0 1-1.06 1.33l-.47.52a35.84 35.84 0 0 0-3 4.07c-.9 1.43-1.67 2.95-1.31 4.35a3.2 3.2 0 0 0 1.65 2 3.39 3.39 0 0 0 1.67.49c2.09 0 3.25-2.42 3.75-3.86a16.38 16.38 0 0 0 .82-4c.07-.6.14-1.22.25-1.94l.08-.59a3.35 3.35 0 0 1 .8-2.22c.64-.57 1.28-1.17 1.89-1.74l.09-.09.72-.67.28-.25a.12.12 0 0 1 .2.06 4.52 4.52 0 0 0 .71 1.61 3.32 3.32 0 0 0 2.73 1.36 4 4 0 0 0 2.76-1.15 5.29 5.29 0 0 0 .53-.72.12.12 0 0 1 .2 0 2.1 2.1 0 0 0 .47.49 3.52 3.52 0 0 0 2.05.91c.87 0 1.54-.6 2.48-1.5a2.14 2.14 0 0 0 .29-.4.12.12 0 0 1 .21 0l.23.39a4.53 4.53 0 0 0 3.12 2 9.87 9.87 0 0 0 1.46.12 5.58 5.58 0 0 0 4.47-2.09.12.12 0 0 1 .19 0 5.41 5.41 0 0 0 .84.93 5.35 5.35 0 0 0 3.32 1.21 3 3 0 0 0 3.05-2.22 1.33 1.33 0 0 1 1.23-1.29c.67-.25 2.25-.95 2.45-2.16a.77.77 0 0 0-.14-.66.69.69 0 0 0-.55-.23 5.83 5.83 0 0 0-2.08.81 10.5 10.5 0 0 1-1 .46.12.12 0 0 1-.14 0 2.78 2.78 0 0 1-.24-.67 3.12 3.12 0 0 0-.12-.4 32.49 32.49 0 0 0-1.77-3.46 4.53 4.53 0 0 1-.25-.57 3 3 0 0 0-.61-1.1 2.89 2.89 0 0 0-1.53-.45.74.74 0 0 0-.8.42 1.23 1.23 0 0 0 .07.9l.08.26a2.77 2.77 0 0 1-.06.76 3.65 3.65 0 0 1-.69 1.44l-.14.18c-.3.37-.52.65-.67.87a.68.68 0 0 0-.28-.06.67.67 0 0 0-.52.25 3.21 3.21 0 0 0-.47 1.67v.06a13.23 13.23 0 0 0-.76 1.12c-.16.26-.31.5-.42.63a3.3 3.3 0 0 1-2.47 1 3.65 3.65 0 0 1-2.42-.95 1.76 1.76 0 0 1-.56-1.35 6.7 6.7 0 0 1 1.92-4.19 2.4 2.4 0 0 1 1.44-.77.66.66 0 0 1 .32-.02c.4.21.38.32.07.91a1.77 1.77 0 0 0-.3 1.26.48.48 0 0 0 .24.3l.72.4a.51.51 0 0 0 .63-.1 3.19 3.19 0 0 0 .83-3.35c-.48-1.07-1.71-1.59-3.25-1.34a6.61 6.61 0 0 0-4.9 5l-.09.44-.38.66c-.52.92-1.16 2.06-2 2.37a2.1 2.1 0 0 1-.68.17h-.06a3.3 3.3 0 0 1 .12-1.07l.08-.39a15.21 15.21 0 0 1 .78-2.53 12.54 12.54 0 0 0 .91-3.4 1.45 1.45 0 0 0-.4-1.11 1.2 1.2 0 0 0-.86-.41.94.94 0 0 0-.82.51 22.22 22.22 0 0 0-2.13 6.27v.06l-.28.37a7 7 0 0 1-2.37 2.32 1 1 0 0 1-1.22-.23 2 2 0 0 1-.21-1.7c.35-1.23.66-2.49 1-3.75a34.52 34.52 0 0 0 1.23-3.54l.1-.08c.85-.15 1.72-.3 2.56-.41.28 0 .56-.05.85-.07h.63a.5.5 0 0 0 .42-.31 1 1 0 0 0-.07-.88 1.79 1.79 0 0 0-1.4-.74h-.08c-.61 0-1.31 0-2 .08l-.13-.17a8.47 8.47 0 0 0 .46-2.67 2.68 2.68 0 0 0-.32-1.49 1.38 1.38 0 0 0-1.5-.67 2.07 2.07 0 0 0-1.13 1.48 14.92 14.92 0 0 0-.41 1.59c-.27.62-.56 1.33-.85 2.1l-.28.22h-.84a17.31 17.31 0 0 0-2.62.32 1.21 1.21 0 0 0-.91.76.81.81 0 0 0 .08.66 2.49 2.49 0 0 0 1.37 1 2 2 0 0 0 .49.06 8.68 8.68 0 0 0 1.61-.23h.14c-.12.41-.24.83-.35 1.26-.21.82-.37 1.58-.48 2.3-.29.51-.6 1-.94 1.49a12.48 12.48 0 0 1-1.83 1.9l-.23.38a39.76 39.76 0 0 1 .76-5.35.49.49 0 0 0-.16-.46l-.69-.59a.51.51 0 0 0-.33-.12h-.25a.38.38 0 0 0-.33.19c-.51.9-.9 1.7-1.27 2.47a23.51 23.51 0 0 1-2.07 3.66 2.8 2.8 0 0 1-2.05 1 1.06 1.06 0 0 1-.72-.23v-.08a1.38 1.38 0 0 0-.12-.41l-.15-.25v-.14a21.73 21.73 0 0 1 1.38-6.69 1.88 1.88 0 0 0 .15-1.67 1 1 0 0 0-.9-.39h-.25c-1.18.12-2.27 2.69-2.28 2.72a15.2 15.2 0 0 0-1 6.62.12.12 0 0 1-.06.12 3.83 3.83 0 0 1-2 .58c-.76-.06-1.72-.25-3.45-1.72a.12.12 0 0 1 0-.15 27 27 0 0 0 2.88-9.57 1.32 1.32 0 0 1 .28-.87 3.25 3.25 0 0 1 .87-.11h.14a17 17 0 0 0 2.8-.36 11.86 11.86 0 0 0 3.94-1.74 5.54 5.54 0 0 0 2.72-3.76 3.2 3.2 0 0 0-.85-2.5 3.83 3.83 0 0 0-3.09-1.2 8.54 8.54 0 0 0-5.3 2.31 21.6 21.6 0 0 0-2.48 3.16 6.87 6.87 0 0 0-.37.7 2 2 0 0 1-.92 1.19 6.38 6.38 0 0 1-4.63-1.36 5 5 0 0 0-.77-.52l-.43-.21zm14.3-2.93l.34-.11a2.16 2.16 0 0 1 2 .23.69.69 0 0 1 .1.6 4 4 0 0 1-1.64 2.3 11.44 11.44 0 0 1-5.63 1.88.12.12 0 0 1-.12-.18 9.82 9.82 0 0 1 5-4.73zm-17.3 19.95a4.36 4.36 0 0 1-3.39-2.16 1.22 1.22 0 0 1 .1-1.34 1.67 1.67 0 0 1 1.29-.44c2 0 5.08 1.71 6.41 2.47a.12.12 0 0 1 0 .18c-.74 1-2.16 1.42-4.44 1.29zm20.4 6.43c-.17 1-.35 1.94-.52 2.67-.33 1.4-.82 2.36-2.2 2.8h-.35a.39.39 0 0 1-.41-.14c-.09-.17-.25-1 1.71-3.86l.07-.1c.51-.76 1.1-1.54 1.65-2.23a.12.12 0 0 1 .22.1zm31.7-11.51h.2a9.64 9.64 0 0 1 1.55 2.64.12.12 0 0 1-.11.17 4.59 4.59 0 0 1-2.08-.47.72.72 0 0 1-.42-.43 3.23 3.23 0 0 1 .86-1.9zm1.85 5a.73.73 0 0 1-.88.61 3.3 3.3 0 0 1-1.65-.5 2.36 2.36 0 0 1-.65-1.05.12.12 0 0 1 .23-.17 6.66 6.66 0 0 0 2.42.9h.58v.18zM.85 21.74v-8h3.52a2.51 2.51 0 1 1 0 5h-2.12v3h-1.4zm4.69-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3zM7.79 17.74a4 4 0 0 1 4.09-4.14 4 4 0 0 1 4.12 4.14 4 4 0 0 1-4.09 4.14 4 4 0 0 1-4.12-4.14zm6.74 0a2.66 2.66 0 1 0-5.3 0 2.66 2.66 0 1 0 5.3 0z\" transform=\"translate(-.85)\"/><path d=\"M22.35 21.74l-1.56-5.9-1.55 5.9h-1.49l-2.29-8h1.57l1.56 6.16 1.66-6.16h1.12l1.66 6.16 1.55-6.16h1.57l-2.28 8h-1.52zM27.07 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.07v1.24h-5.48z\"/><path d=\"M39.42 21.74l-1.77-3h-1.4v3h-1.4v-8h3.51a2.43 2.43 0 0 1 2.64 2.5 2.24 2.24 0 0 1-1.9 2.35l2 3.14h-1.68zm.12-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3z\" transform=\"translate(-.85)\"/><path d=\"M41.53 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.08v1.24h-5.49z\"/><path d=\"M49.31 21.74v-8h3a3.91 3.91 0 0 1 4.19 4 3.9 3.9 0 0 1-4.19 4h-3zm5.72-4a2.59 2.59 0 0 0-2.75-2.74h-1.57v5.5h1.57a2.63 2.63 0 0 0 2.72-2.76zM60.91 21.74v-8h3.93a2 2 0 0 1 2.28 2 1.8 1.8 0 0 1-1.39 1.83 2 2 0 0 1 1.55 2 2.1 2.1 0 0 1-2.28 2.17h-4zm4.77-5.74a1 1 0 0 0-1.13-1h-2.24v2h2.24a1 1 0 0 0 1.13-1zm.16 3.37a1.1 1.1 0 0 0-1.22-1.1h-2.3v2.23h2.3a1.08 1.08 0 0 0 1.22-1.12z\" transform=\"translate(-.85)\"/><path d=\"M69.74 21.74v-3.33l-3.11-4.68h1.61l2.21 3.43 2.18-3.43h1.61l-3.09 4.68v3.32h-1.4z\"/></svg></a>"
+  }
+};
 
   // NOTE Event callback types
   var callbackTypes = {
@@ -553,14 +556,64 @@
       return true;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
-      return (core.pageViews >= pageVisitsRequired);
+    /**
+     * @description Parse url queries as an object
+     * @param {string} url
+     */
+    parseQuery: function (url) {
+      var query = {};
+      var pieces = url.split('?');
+      if (pieces.length > 1) {
+        pieces = pieces[1].split('&');
+
+        for (var i = 0; i < pieces.length; i++) {
+          var pair = pieces[i].split('=');
+
+          if (pair.length > 1) {
+            // NOTE We should not account for the preview id
+            if (pair[0] !== "lytics_variation_preview_id") {
+              query[pair[0]] = pair[1];
+            }
+          }
+        }
+      }
+
+      return query;
     },
 
+    /**
+     * @description Compare query params between the url
+     *              the user is visiting and the match
+     *              rule provided
+     * @param {obj} queries
+     * @param {obj} matchQueries
+     * @param {string} rule
+     */
+    compareQueries: function (query, matchQuery, rule) {
+      switch (rule) {
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      for (var key in matchQuery) {
+        if (matchQuery[key] !== query[key]) {
+          return false;
+        }
+      }
+
+      return true;
+    },
 
     urlChecker: function (phrases, widget) {
       var url = window.location.href,
           simpleurl = window.location.hostname + window.location.pathname,
+          queries = core.parseQuery(url),
           valid = false;
 
       if (!(phrases instanceof Array)) {
@@ -572,40 +625,48 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
+
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase) !== -1) {
-                valid = true;
+              if (url.indexOf(phrase.split("?")[0]) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
               }
               break;
+
             case 'object':
-              if(phrase.match && phrase.value){
+              if (phrase.match && phrase.value) {
                 switch (phrase.match) {
+                  // simple match
                   case 'simple':
                     if (simpleurl === phrase.value) {
                       valid = true;
                     }
                     break;
+
+                  // exact match
                   case 'exact':
-                    if (url === phrase.value) {
-                      valid = true;
+                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
+
+                  // regex
                   case 'regex':
                     var re = new RegExp(phrase.value);
-                    if(re.test(url)){
+                    if (re.test(url)) {
                       valid = true;
                     }
                     break;
+
+                  // string match (default)
                   default:
-                    // default to string match
-                    if (url.indexOf(phrase.value) !== -1) {
-                      valid = true;
+                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
                 }
-              }else{
+              } else {
                 console.log('invalid display conditions')
               }
               break;
@@ -614,11 +675,15 @@
               break;
           }
         });
-      }else{
+      } else {
         valid = true;
       }
 
       return valid;
+    },
+
+    pageVisitsChecker: function (pageVisitsRequired, widget) {
+      return (core.pageViews >= pageVisitsRequired);
     },
 
     dateChecker: function (date, widget) {
@@ -832,6 +897,7 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
+      var widgetContent = widget.querySelector('.pf-widget-content');
       var widgetCancel = widget.querySelector('.pf-widget-cancel');
       var widgetOk = widget.querySelector('.pf-widget-ok');
       var widgetForm = widget.querySelector('form');
@@ -868,20 +934,34 @@
         }
       }
 
-      if(widgetCancel !== null) {
+      if (widgetCancel !== null) {
         widgetCancel.innerHTML = config.cancelMessage;
       }
 
-      if(widgetOk !== null) {
+      if (widgetOk !== null) {
         widgetOk.innerHTML = config.okMessage;
       }
 
-      if(widgetOk && widgetOk.value !== null) {
+      if (widgetOk && widgetOk.value !== null) {
         widgetOk.value = config.okMessage;
       }
 
-      if(widgetCancel && widgetCancel.value !== null) {
+      if (widgetCancel && widgetCancel.value !== null) {
         widgetCancel.value = config.cancelMessage;
+      }
+
+      switch(config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+          if (widgetContent && config.branding) {
+            var branding = document.createElement('div');
+            branding.className = 'branding';
+            branding.innerHTML = templates.assets.lytics;
+            widgetContent.appendChild(branding);
+          }
+
+        break;
       }
 
       switch (config.type) {
@@ -916,6 +996,7 @@
         switch (config.layout) {
         case 'modal':
         case 'slideout':
+          break;
         case 'random':
         case 'bar':
         case 'button':
@@ -931,15 +1012,19 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
+            var child = node.querySelector('input');
 
             if (node) {
-              node.className += ' pf-hidden';
-            }
+              while(child) {
+                node.removeChild(child);
+                child = node.querySelector('input');
+              }
 
-            node = widget.querySelector('.pf-sitegate-centered-label');
+              child = node.querySelector('.pf-sitegate-clear');
 
-            if (node.parentNode) {
-              node.parentNode.removeChild(node);
+              if (child) {
+                node.removeChild(child);
+              }
             }
           }
           break;
@@ -964,8 +1049,6 @@
           widgetImage.className = 'pf-widget-img';
           widgetBody.appendChild(widgetImage);
         }
-      } else {
-        utils.addClass(widget, 'pf-no-img');
       }
 
       switch(config.type) {
@@ -1014,9 +1097,23 @@
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && !config.required[field] && !config.fields[field]) {
-            var parent = element.parentNode;
+          if (element && !config.fields[field]) {
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
             if (parent) {
+              // NOTE: collapse half-width inputs
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(prev, 'pf-field-half-width');
+                }
+
+                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                  utils.removeClass(next, 'pf-field-half-width');
+                }
+              }
+
               parent.removeChild(element);
             }
           }
@@ -1027,7 +1124,7 @@
         break;
       }
 
-      if(config.msg){
+      if (config.msg){
         widgetMessage.innerHTML = config.msg;
       }
     },
@@ -1183,18 +1280,12 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id, true);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              if (widgetCancel.type !== "reset") {
-                context.pathfora.closeWidget(widget.id);
-              }
               updateActionCookie("PathforaCancel_" + widget.id);
               widgetOnModalClose(event);
             };
@@ -1271,36 +1362,14 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      var colors = {};
-
-      if (typeof config.theme === 'undefined') {
-        core.setCustomColors(widget, defaultProps.generic.themes['default']);
-      }
-
-      if(config.config && config.config.theme === null) {
-        core.updateObject(colors, defaultProps.generic.themes['default']);
-        core.updateObject(colors, config.config.colors);
-        core.setCustomColors(widget, colors);
-      } else if (config.themes) {
+      if (config.theme) {
         if (config.theme === 'custom') {
-
-          // NOTE custom colors
-          core.updateObject(colors, config.colors);
-        } else if (config.theme === 'default' && defaultProps.generic.theme !== 'default') {
-
-          // NOTE colors set via the higher config
-          if (defaultProps.generic.theme === 'custom') {
-            core.updateObject(colors, defaultProps.generic.colors);
-          } else {
-            core.updateObject(colors, defaultProps.generic.themes[defaultProps.generic.theme]);
+          if (config.colors) {
+            core.setCustomColors(widget, config.colors);
           }
         } else {
-
-          // NOTE default theme
-          core.updateObject(colors, defaultProps.generic.themes[config.theme]);
+          core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
-
-        core.setCustomColors(widget, colors);
       }
     },
 
@@ -1320,8 +1389,49 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-
+        config.branding ? ' pf-widget-has-branding' : '',
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
+    },
+
+    /**
+     * @description Setup content recommendation if we have one
+     * @param {object} widget
+     * @param {object} config
+     */
+    setupWidgetContentUnit: function (widget, config) {
+      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+
+      if (config.recommend && config.content) {
+        // Make sure we have content to get
+        if (Object.keys(config.content).length > 0) {
+
+          // The top recommendation should be default if we couldn't
+          // get one from the api
+          var rec = config.content[0]
+          widgetContentUnit.href = rec.url;
+
+          var recImage = document.createElement('div');
+          recImage.className = 'pf-content-unit-img';
+          recImage.style.backgroundImage = "url('" + rec.image + "')";
+          widgetContentUnit.appendChild(recImage);
+
+          var recMeta = document.createElement('div');
+          recMeta.className = 'pf-content-unit-meta';
+
+          // title
+          var recTitle = document.createElement('h4');
+          recTitle.innerHTML = rec.title;
+          recMeta.appendChild(recTitle);
+
+          // description
+          var recDesc = document.createElement('p');
+          recDesc.innerHTML = rec.description;
+          recMeta.appendChild(recDesc);
+
+          widgetContentUnit.appendChild(recMeta);
+        }
+      }
     },
 
     /**
@@ -1384,6 +1494,7 @@
 
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
+      this.setupWidgetContentUnit(widget, config);
       this.setWidgetClassname(widget, config);
       this.constructWidgetLayout(widget, config);
       this.setupWidgetColors(widget, config);
@@ -1423,55 +1534,90 @@
       var close = widget.querySelector('.pf-widget-close');
       var headline = widget.querySelector('.pf-widget-headline');
       var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
-      var cancelBtn = widget.querySelector('.pf-widget-cancel');
-      var okBtn = widget.querySelector('.pf-widget-ok');
+      var cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel');
+      var okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok');
       var arrow = widget.querySelector('.pf-widget-caption span');
       var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var contentUnit = widget.querySelector('.pf-content-unit');
+      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
+      var branding = widget.querySelector('.branding svg');
       var i;
       var j;
 
-      if (utils.hasClass(widget, 'pf-widget-modal')) {
-        widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
-      } else {
-        widget.style.backgroundColor = colors.background;
-      }
-
-      if (fields.length > 0) {
-        j = fields.length;
-        for (i = 0; i < j; i++) {
-          fields[i].style.backgroundColor = colors.fieldBackground;
+      if (colors.background) {
+        if (utils.hasClass(widget, 'pf-widget-modal')) {
+          widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+        } else {
+          widget.style.backgroundColor = colors.background;
         }
       }
 
-      if (close) {
+      if (colors.fieldBackground) {
+        if (fields.length > 0) {
+          j = fields.length;
+          for (i = 0; i < j; i++) {
+            fields[i].style.backgroundColor = colors.fieldBackground;
+          }
+        }
+      }
+
+      if (contentUnit && contentUnitMeta) {
+        if (colors.actionBackground) {
+          contentUnit.style.backgroundColor = colors.actionBackground;
+        }
+
+        if (colors.actionText) {
+          contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+        }
+
+        if (colors.text) {
+          contentUnitMeta.querySelector('p').style.color = colors.text;
+        }
+      }
+
+      if (close && colors.close) {
         close.style.color = colors.close;
       }
 
-      if (headline) {
+      if (headline && colors.headline) {
         headline.style.color = colors.headline;
       }
 
-      if (headlineLeft) {
+      if (headlineLeft && colors.headline) {
         headlineLeft.style.color = colors.headline;
       }
 
-      if (arrow) {
+      if (arrow && colors.close) {
         arrow.style.color = colors.close;
       }
 
-      if (arrowLeft) {
+      if (arrowLeft && colors.close) {
         arrowLeft.style.color = colors.close;
       }
 
       if (cancelBtn) {
-        cancelBtn.style.color = colors.cancelText;
-        cancelBtn.style.backgroundColor = colors.cancelBackground;
+        if (colors.cancelText) {
+          cancelBtn.style.color = colors.cancelText;
+        }
+
+        if (colors.cancelBackground) {
+          cancelBtn.style.backgroundColor = colors.cancelBackground;
+        }
       }
 
       if (okBtn) {
-        okBtn.style.color = colors.actionText;
-        okBtn.style.backgroundColor = colors.actionBackground;
+        if (colors.actionText) {
+          okBtn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          okBtn.style.backgroundColor = colors.actionBackground;
+        }
+      }
+
+      if (colors.text && branding) {
+        branding.style.fill = colors.text;
       }
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
@@ -1532,7 +1678,7 @@
             valid = false;
           }
         }
-        utils.saveCookie('PathforaUnlocked', valid, core.expiration);
+        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
       }
 
       params['pf-widget-event'] = action;
@@ -1568,7 +1714,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array) {
+    initializeWidgetArray: function (array, accountId) {
       var widgetOnInitCallback;
       var defaults;
       var globals;
@@ -1587,7 +1733,12 @@
         defaults = defaultProps[widget.type];
         globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked') === 'true' || widget.hiddenViaABTests === true) {
+
+        if (accountId && accountId.length <= 4) {
+          console.warn('Pathfora: please update credentials to full Acccount ID');
+        }
+
+        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -1601,10 +1752,43 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.displayConditions.showDelay) {
-          core.registerDelayedWidget(widget);
+        var displayWidget = function(widget) {
+          if (widget.displayConditions.showDelay) {
+            core.registerDelayedWidget(widget);
+          } else {
+            core.initializeWidget(widget);
+          }
+        }
+
+        if (widget.type === "message" && (widget.recommend || widget.content)) {
+          if (widget.layout !== "slideout" && widget.layout !== "modal") {
+            throw new Error('Unsupported layout for content recommendation');
+          }
+
+          if (widget.content && widget.content[0] && !widget.content[0].default) {
+            throw new Error('Cannot define recommended content unless it is a default');
+          }
+
+          api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
+            if (content) {
+              widget.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: "http://" + content.url,
+                  image: content.primary_image
+                }
+              };
+            }
+
+            if (!widget.content) {
+              throw new Error('Could not get recommendation and no default defined');
+            }
+
+            displayWidget(widget);
+          });
         } else {
-          core.initializeWidget(widget);
+          displayWidget(widget);
         }
 
         // NOTE onInit feels better here
@@ -1714,23 +1898,11 @@
       widget.type = type;
       widget.config = config;
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.impressions !== 'undefined') {
-        delete config.displayConditions.impressions;
-
-        throw new Error('Widgets with the impression displayConditions need a preset id value. Display condition denied.');
+      if (!config.id) {
+        throw new Error('All widgets must have an id value');
       }
 
-      if (!config.id &&
-           config.displayConditions &&
-           typeof config.displayConditions.hideAfterAction !== 'undefined') {
-        delete config.displayConditions.hideAfterAction;
-
-        throw new Error('Widgets with the hideAfterAction displayConditions need a preset id value. Display condition denied.');
-      }
-
-      widget.id = config.id || utils.generateUniqueId();
+      widget.id = config.id;
 
       return widget;
     },
@@ -1743,7 +1915,7 @@
       }
 
       test.id = config.id;
-      test.cookieId = abHashMD5 + config.id;
+      test.cookieId = 'PathforaTest_' + config.id;
       test.groups = config.groups;
 
       if (!abTestingTypes[config.type]) {
@@ -2016,7 +2188,42 @@
           }
         });
       });
-    }
+    },
+
+
+    /**
+     * @description Fetch content to recommend
+     * @throws {Error} error
+     * @param {string} accountId  Lytics account ID
+     */
+    recommendContent: function (accountId, filter, callback) {
+      var seerId = utils.readCookie('seerid');
+      var recommendUrl;
+
+      if (!seerId) {
+        throw new Error('Cannot find SEERID cookie');
+      }
+
+      recommendUrl = [
+        '//api.lytics.io/api/content/recommend/',
+        accountId,
+        '/user/_uids/',
+        seerId,
+        filter ? '?ql=' + filter : '',
+      ].join('');
+
+
+      this.getData(recommendUrl, function (json) {
+        var resp = JSON.parse(json);
+        if (resp.data && resp.data.length > 0) {
+          callback(resp.data[0]);
+        } else {
+          callback(null);
+        }
+      }, function () {
+        callback(null);
+      });
+    },
   };
 
   /**
@@ -2063,12 +2270,12 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets);
+        core.initializeWidgetArray(widgets, lyticsId);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common);
+          core.initializeWidgetArray(widgets.common, lyticsId);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
@@ -2119,11 +2326,11 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets);
+              core.initializeWidgetArray(targetedwidgets, lyticsId);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse);
+              core.initializeWidgetArray(widgets.inverse, lyticsId);
             }
           });
         }
@@ -2155,7 +2362,12 @@
         var i;
 
         if (!userAbTestingValue) {
-          userAbTestingValue = Math.random();
+          // Support old cookie name convention
+          userAbTestingValue = utils.readCookie(abHashMD5 + abTest.id);
+
+          if (!userAbTestingValue) {
+            userAbTestingValue = Math.random();
+          }
         }
 
         // NOTE Always update the cookie to get the new exp date.
@@ -2259,8 +2471,13 @@
 
       node = core.createWidgetHtml(widget);
 
-      if (widget.showSocialLogin)
+      if (widget.showSocialLogin) {
+        if (widget.showForm === false) {
+          throw new Error('Social login requires a form on the widget');
+        }
+
         core.requestSocialPluginRender(node);
+      }
 
       if (widget.pushDown) {
         utils.addClass(document.querySelector('.pf-push-down'), "opened");

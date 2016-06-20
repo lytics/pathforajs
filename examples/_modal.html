@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>MODAL</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   </head>
   <style type="text/css">
   @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,800);
@@ -31,15 +32,21 @@
       //   variant: '1',
       // });
       // window.pathfora.initializeWidgets([ messageBar ]);
-      var subscription = pathfora.Subscription({
+      var subscription = pathfora.Message({
         layout: "modal",
+        id: 'modal-subscription',
         msg: "Welcome to our website",
         headline: 'Aenean leo malesuada',
-        msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
+        msg: 'In placerat orci eget turpis euismod semper. Aenean leo malesuada.',
         placeholders: {
           email: "Email",
           title: "Title"
         },
+        theme: 'dark',
+        // fields: {
+        //   message: false,
+        //   title: false,
+        // },
         okMessage: 'Hoop',
         okShow: true,
         // variant: '2',

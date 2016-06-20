@@ -2,7 +2,7 @@
 npm-debug.log
 node_modules
 src/css/
+docs/site/
+docs/docs/examples/preview
 .DS_Store
-docs/
-docs/
 .env.json

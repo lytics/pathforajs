@@ -1,24 +1,22 @@
 .pf-widget-slideout {
   position: fixed;
   bottom: 50px;
-  width: 540px;
+  width: 350px;
   border-radius: 4px;
   .pf-box-shadow();
   top: auto;
+  max-height: 100%;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
 
-  > div {
-    display: table-cell;
-    vertical-align: middle;
-  }
+  .mobile({
+    width: 100%;
+    max-width: 350px;
+  });
 
   .pf-widget-message {
     margin: 0 0 20px 0;
-  }
-
-  img {
-    height: 50px;
-    margin: 0 0 0 40px;
-    float: left;
   }
 
   .pf-widget-btn {
@@ -27,7 +25,7 @@
 
   .pf-widget-content {
     padding: 30px;
-    min-width:350px;
+    width: 100%;
   }
 
   .pf-widget-headline {
@@ -40,17 +38,35 @@
   &.pf-position-left {
     left: -100%;
 
+    .mobile({
+      bottom: 0;
+    });
+
     &.pf-origin-bottom {
       left: 50px;
+
+      .mobile({
+        left: 0;
+      });
     }
   }
 
   &.pf-position-bottom-right,
   &.pf-position-right {
+    left: auto;
     right: -100%;
+
+    .mobile({
+      bottom: 0;
+    });
 
     &.pf-origin-bottom {
       right: 50px;
+
+      .mobile({
+        left: auto;
+        right: 0;
+      });
     }
   }
 
@@ -64,22 +80,41 @@
     &.pf-position-bottom-left,
     &.pf-position-left {
       left: 50px;
+
+      .mobile({
+        left: 0;
+      });
     }
 
     &.pf-position-bottom-right,
     &.pf-position-right {
       right: 50px;
+
+      .mobile({
+        right: 0;
+        left: auto;
+      });
     }
 
     &.pf-origin-bottom {
       bottom: 50px;
+
+      .mobile({
+        bottom: 0;
+      });
+    }
+  }
+
+  .branding {
+    svg {
+      bottom: 7px;
+      right: 10px;
+      width: 100px;
     }
   }
 
   /* Variant Styles */
   &.pf-widget-variant-1 {
-    width: 350px;
-
     .pf-widget-content {
       .pf-widget-headline {
         text-align: left;
@@ -92,8 +127,6 @@
   }
 
   &.pf-widget-variant-2 {
-    width: 350px;
-
     .pf-widget-content {
       text-align: center;
 
@@ -107,51 +140,49 @@
       height: 100px;
       float: none;
       position: absolute;
-      top: 20px; left: 50%;
+      top: 20px;
+      left: 50%;
       margin-left: -50px;
     }
   }
 
-  &.pf-no-img {
-    width: 370px;
+  &.pf-widget-variant-3 {
+    .pf-content-unit {
+      width: 100%;
+      display: block;
+      text-align: left;
+
+      .pf-content-unit-meta {
+        h4 {
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 13px;
+        }
+      }
+
+      .pf-content-unit-img {
+        width: 100%;
+        height: 135px;
+      }
+    }
   }
 
   /* Type Specific Styles */
   &.pf-form {
     width: 370px;
 
-    > div {
-      display: block;
-    }
+    .mobile({
+      width: 100%;
+      max-width: 370px;
+    });
+  }
 
-    &.pf-no-img {
-      .pf-widget-body {
-        height: 0;
-      }
-    }
-
-    &.pf-widget-variant-1:not(.pf-no-img) {
-      .pf-widget-headline {
-        line-height: 50px;
-      }
-
-      .pf-widget-headline {
-        margin-bottom: 15px;
-      }
-
-      .pf-widget-body {
-        height: 50px;
-        width: 20%;
-        float: left;
-        padding-top: 30px;
-        padding-left: 30px;
-        margin-right: 20px;
-
-        .pf-widget-img {
-          width: 50px;
-          height: 50px;
-          margin-left: 0;
-        }
+  &.pf-subscription {
+    &.pf-widget-has-branding {
+      span {
+        margin-bottom: 13px;
       }
     }
   }

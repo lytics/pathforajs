@@ -1,3 +1,21 @@
+/* Default/light color theme */
+@background: #f1f1f1;
+@text: #888;
+@headline: #444;
+@close: #bbb;
+@actionBackground: white;
+@actionText: #444;
+@fieldBackground: white;
+@cancelBackground: #f1f1f1;
+@cancelText: #bbb;
+
+/* Mixin for mobile boundries */
+.mobile(@rules) {
+  @media screen and (max-width: 736px) , screen and (max-height: 640px) {
+    @rules();
+  }
+}
+
 .pf-box-shadow {
   box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
 }
@@ -12,16 +30,18 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   visibility: hidden;
   opacity: 0;
-  transition: all .3s;
+  transition: all 0.3s;
   text-align: left;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
-  background-color: #f1f1f1;
-  color: #888;
+  background-color: @background;
+  color: @text;
 
-  @media screen and (max-width: 480px) {
-    .pf-hidden();
+  &.pf-mobile-hide {
+    .mobile({
+      display: none;
+    });
   }
 
   * {
@@ -45,8 +65,12 @@
 
   .pf-widget-headline {
     margin: 0 0 10px 0;
-    color: #444;
+    color: @headline;
     font-weight: 500;
+  }
+
+  .pf-content-unit {
+    display: none;
   }
 
   input[type=text],
@@ -79,10 +103,6 @@
   input[type=text],
   input[type=email] {
     clear: both;
-
-    & + .pf-widget-btn {
-      position: absolute;
-    }
   }
 
   textarea {
@@ -90,6 +110,7 @@
   }
 
   .pf-widget-img {
+    display: none;
     border-radius: 50%;
   }
 
@@ -108,17 +129,18 @@
     transition: all .3s;
     cursor: pointer;
     border: 0;
+    margin-bottom: 2px;
     outline: none;
 
     &.pf-widget-ok {
       box-shadow: 0px 1px 1px rgba(0,0,0,.2);
-      color: #444;
-      background-color: white;
+      color: @actionText;
+      background-color: @actionBackground;
     }
 
     &.pf-widget-cancel {
-      color: #bbb;
-      color: #f1f1f1;
+      color: @cancelText;
+      background-color: @cancelBackground;
     }
 
     & + .pf-widget-btn {
@@ -144,9 +166,59 @@
     visibility: visible;
     opacity: 1;
   }
+
+  .branding {
+    svg {
+      position: absolute;
+      bottom: 11px;
+      right: 15px;
+      fill: @text;
+      opacity: 0.25;
+      width: 120px;
+    }
+  }
 }
 
-/* Type Specific Styles */
+/* Variant Styles */
+.pf-widget-variant-2 {
+  .pf-widget-img {
+    display: block;
+  }
+}
+
+.pf-widget-variant-3 {
+  .pf-content-unit {
+    display: block;
+    text-align: left;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: @actionBackground;
+
+    .pf-content-unit-meta {
+      padding: 10px 15px;
+
+      h4 {
+        font-weight: 500;
+        margin: 0 0 5px;
+        line-height: 1.4;
+        color: @headline;
+      }
+
+      p {
+        line-height: 1.3;
+        color: @text;
+      }
+    }
+
+    .pf-content-unit-img {
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+/* Type Styles */
 .pf-subscription {
   form {
     width: 100%;
@@ -163,7 +235,6 @@
       float: right;
       margin-left: 5px;
       padding: 0 16px;
-      margin-top: 2px;
     }
 
     span {
@@ -174,31 +245,23 @@
   }
 }
 
-.pf-sitegate {
-  .pf-sitegate-field {
-    position: relative;
-    display: inline-block;
-
+.pf-form, .pf-sitegate {
+  input {
     &.pf-field-half-width {
       width: 49.5%;
+      display: block;
+      clear: none;
+      float: left;
+
       & + .pf-field-half-width {
-        margin-left: 1%;
+        float: right;
       }
     }
-
-    &.pf-field-full-width {
-      width: 100%;
-    }
-  }
-
-  .pf-sitegate-clear {
-    display: block;
-    width: 100%;
-    height: 1px;
   }
 
   .pf-widget-btn {
-    margin-top: 10px;
+    clear: both;
+    margin-top: 5px;
   }
 }
 
