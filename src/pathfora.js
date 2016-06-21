@@ -939,8 +939,6 @@
         case 'slideout':
         case 'random':
         case 'inline':
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -1028,9 +1026,6 @@
           if (node && node.parentNode) {
             node.parentNode.removeChild(node);
           }
-        } else {
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
         }
 
         var getFormElement = function(field) {
@@ -1509,6 +1504,7 @@
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var branding = widget.querySelector('.branding svg');
+      var socialBtns = widget.querySelectorAll('.social-login-btn');
       var i;
       var j;
 
@@ -1586,6 +1582,16 @@
       if (colors.text && branding) {
         branding.style.fill = colors.text;
       }
+
+      socialBtns.forEach(function(btn) {
+        if (colors.actionText) {
+          btn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          btn.style.backgroundColor = colors.actionBackground;
+        }
+      });
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
     },
@@ -1895,131 +1901,93 @@
     },
 
     /**
-     * @description Social APIs require certain DOM elements to be redrawn
-     *                  after initialization (ex. buttons). Request a timeout
-     *                  redraw, which executes after all social APIs are initialized.
-     *                  Generates a clojure function inside.
+     * @description Attempt to load forms' data from Facebook API.
+     * @param {object} facebook buttons element selector
      */
-    requestSocialPluginRender: function () {
-      var renderWidgets = {
-        facebook: [],
-        google: []
-      };
-      var timeoutInterval = {};
-
-      var attemptRenderingFacebook = function () {
-        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
-          renderWidgets.facebook.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.fb-login-button');
-
-            window.FB.XFBML.parse(widget);
-            signInBtn.className += ' social-login-btn';
+    autoCompleteFacebookData: function (elements) {
+      FB.api('/me', {
+        fields: 'name,email,work'
+      }, function (resp) {
+        if (resp && !resp.error) {
+          core.autoCompleteFormFields({
+            type: "facebook",
+            username: resp.name || '',
+            email: resp.email || ''
           });
-          renderWidgets.facebook = [];
-          core.autoCompleteFacebookData();
 
-          return clearTimeout(timeoutInterval['fb']);
-        } else {
-          return setTimeout(attemptRenderingFacebook, 1000);
-        }
-      };
-
-      var attemptRenderingGoogle = function () {
-        if (typeof window.gapi !== 'undefined') {
-          renderWidgets.google.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.google-login');
-
-            window.gapi.signin2.render(signInBtn.id, {
-              scope: 'profile',
-              onsuccess: pathfora.onGoogleSignIn,
-              height: 25,
-              width: 90,
-              longtitle: false
-            });
-            signInBtn.className += ' social-login-btn';
+          elements.forEach(function(item) {
+            item.innerHTML = "Log Out";
           });
-          renderWidgets.google = [];
-
-          return clearTimeout(timeoutInterval['google']);
-        } else {
-          return setTimeout(attemptRenderingGoogle, 1000);
         }
-      };
-
-      this.requestSocialPluginRender = function (widget) {
-        var widgets = widget instanceof Array ? widget : [widget];
-
-        widgets.forEach(function (element) {
-          var requestFacebook = false;
-          var requestGoogle = false;
-
-          if (typeof element.querySelector === 'undefined') {
-            return false;
-          }
-
-          requestFacebook = element.querySelector('.fb-login-button') !== null;
-          requestGoogle = element.querySelector('.google-login') !== null;
-
-          if (requestFacebook) {
-            renderWidgets.facebook = renderWidgets.facebook.concat(element);
-          }
-          if (requestGoogle) {
-            renderWidgets.google = renderWidgets.google.concat(element);
-          }
-        });
-
-        timeoutInterval['fb'] = attemptRenderingFacebook();
-        timeoutInterval['google'] = attemptRenderingGoogle();
-      };
-
-      this.requestSocialPluginRender(arguments[0]);
+      });
     },
 
     /**
-     * @description Attempt to load forms' data from Facebook API.
-     * @throws {Error} Facebook API Error
+     * @description Click handler to log in/log out from facebook.
+     * @param {object} facebook buttons element selector
      */
-    autoCompleteFacebookData: function () {
-      if (typeof window.FB !== 'undefined') {
-        window.FB.getLoginStatus(function (connection) {
-          if (connection.status === 'connected') {
-            window.FB.api('/me', {
-              fields: 'name,first_name,last_name,email'
-            }, function (query) {
-              if (query.error) {
-                throw new Error('Facebook API Error: ' + query.error);
-              }
-
-              core.autoCompleteFormFields({
-                username: query.name || '',
-                email: query.email || '',
-                firstName: query.first_name || '',
-                lastName: query.last_name || ''
-              });
+    onFacebookClick: function(elements) {
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          FB.logout(function(resp) {
+            elements.forEach(function(elem) {
+              elem.innerHTML = "Log In";
             });
-          }
-        });
-      }
+            core.clearFormFields("facebook", ['username', 'email']);
+          });
+        
+        } else {
+          FB.login(function(resp) {
+            if (resp.authResponse) {
+              core.autoCompleteFacebookData(elements);
+            }
+          });
+        }
+      });
     },
 
     /**
      * @description Attempt to load forms' data from Google+ API.
+     * @param {object} current googleUser
+     * @param {object} google buttons element selector
      */
-    autoCompleteGoogleData: function () {
-      var auth2;
-      var user;
-      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
-        auth2 = window.gapi.auth2.getAuthInstance();
-        user = auth2.currentUser.get().getBasicProfile();
+    autoCompleteGoogleData: function (user, elements) {
+      if (typeof user !== 'undefined') {
+        var profile = user.getBasicProfile();
 
-        if (typeof user !== 'undefined') {
+        if (typeof profile !== 'undefined') {
           core.autoCompleteFormFields({
-            username: user.getName() || '',
-            email: user.getEmail() || '',
-            firstName: '',
-            lastName: ''
+            type: "google",
+            username: profile.getName() || '',
+            email: profile.getEmail() || ''
+          });
+
+          elements.forEach(function(item) {
+            item.innerHTML = "Sign Out";
           });
         }
+      }
+    },
+
+    /**
+     * @description Click handler to sign in/sign out from google.
+     * @param {object} google buttons element selector
+     */
+    onGoogleClick: function(elements) {
+      var auth2 = gapi.auth2.getAuthInstance();
+
+      if (auth2.isSignedIn.get()) {
+        auth2.signOut().then(function() {
+          elements.forEach(function(elem) {
+            elem.innerHTML = "Sign In";
+          });
+          core.clearFormFields("google", ['username', 'email']);
+        });
+
+      } else {
+        auth2.signIn().then(function() {
+          core.autoCompleteGoogleData(auth2.currentUser.get(), elements);
+        });
       }
     },
 
@@ -2028,18 +1996,41 @@
      * @param {object} data user data
      */
     autoCompleteFormFields: function (data) {
-      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+      var widgets = document.querySelectorAll('.pf-widget-content');
 
       widgets.forEach(function (widget) {
-        Object.keys(data).forEach(function (inputField) {
-          var field = widget.querySelector('input[name="' + inputField + '"]');
+        if (widget.querySelector('.' + data.type + '-login-btn')) {
+          Object.keys(data).forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
 
-          if (field && !field.value) {
-            field.value = data[inputField];
-          }
-        });
+            if (field && !field.value) {
+              field.value = data[inputField];
+            }
+          });
+        }
       });
-    }
+    },
+
+    /**
+     * @description Clear user data from form fields
+     * @param {object} type of integration
+     * @param {object} fields to clear
+     */
+    clearFormFields: function (type, fields) {
+      var widgets = document.querySelectorAll('.pf-widget-content');
+
+      widgets.forEach(function (widget) {
+        if (widget.querySelector('.' + type + '-login-btn')) {
+          fields.forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
+
+            if (field) {
+              field.value = '';
+            }
+          });
+        }
+      });
+    },
   };
 
   /**
@@ -2443,7 +2434,8 @@
           throw new Error('Social login requires a form on the widget');
         }
 
-        core.requestSocialPluginRender(node);
+        var showAfter = typeof widget.config.showAfterSocialLogin !== 'undefined' ? widget.config.showAfterSocialLogin : false;
+
       }
 
       if (widget.pushDown) {
@@ -2589,12 +2581,17 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
-      // FUTURE Combine with Google integration and move to utils
+
+      var btn = templates.social.facebookBtn.replace(
+        /(\{){2}facebook-icon(\}){2}/gm,
+        templates.assets.facebookIcon
+      );
+
       var parseFBLoginTemplate = function (parentTemplates) {
         Object.keys(parentTemplates).forEach(function (type) {
           parentTemplates[type] = parentTemplates[type].replace(
             /<p name="fb-login" hidden><\/p>/gm,
-            templates.social.facebookIcon
+            btn
           );
         });
       };
@@ -2607,6 +2604,8 @@
           status: true,
           cookie: true
         });
+
+        pathfora.onFacebookLoad();
       };
 
       // NOTE API initialization
@@ -2624,6 +2623,24 @@
       pathforaDataObject.socialNetworks.facebookAppId = appId;
     };
 
+    this.onFacebookLoad = function() {
+      var fbBtns = document.querySelectorAll('.social-login-btn.facebook-login-btn span');
+
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          core.autoCompleteFacebookData(fbBtns);
+        }
+      });
+
+      fbBtns.forEach(function(element) {
+        if (element.parentElement) {
+          element.parentElement.onclick = function() {
+            core.onFacebookClick(fbBtns);
+          }
+        }
+      });
+    };
+
     /**
      * @public
      * @description Integrate with Google App API
@@ -2638,20 +2655,27 @@
         clientId
       );
 
+      var btn = templates.social.googleBtn.replace(
+        /(\{){2}google-icon(\}){2}/gm,
+        templates.assets.googleIcon
+      );
+
       var parseGoogleLoginTemplate = function (parentTemplates) {
         Object.keys(parentTemplates).forEach(function (type, index) {
           parentTemplates[type] = parentTemplates[type].replace(
             /<p name="google-login" hidden><\/p>/gm,
-            templates.social.googleIcon.replace(
-              /(\{){2}google-btnId(\}){2}/gm,
-              'g-' + index
-            )
+            btn
           );
         });
       };
 
       head.innerHTML += appMetaTag;
 
+      window.___gcfg = {
+        parsetags: 'onload'
+      }
+
+      window.pathforaGoogleOnLoad = pathfora.onGoogleLoad;
 
       // NOTE Google API
       (function () {
@@ -2659,7 +2683,7 @@
         var po = document.createElement('script');
         po.type = 'text/javascript';
         po.async = true;
-        po.src = 'https://apis.google.com/js/platform.js';
+        po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
         s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(po, s);
       })();
@@ -2669,12 +2693,30 @@
       parseGoogleLoginTemplate(templates.sitegate);
     };
 
-    this.onFacebookSignIn = function () {
-      core.autoCompleteFacebookData();
-    };
 
-    this.onGoogleSignIn = function (googleData) {
-      core.autoCompleteGoogleData(googleData);
+    this.onGoogleLoad = function() {
+      gapi.load('auth2', function() {
+        var auth2 = gapi.auth2.init({
+          clientId: pathforaDataObject.socialNetworks.googleClientID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile'
+        });
+
+        var googleBtns = document.querySelectorAll('.social-login-btn.google-login-btn span');
+
+        auth2.then(function() {
+          var user = auth2.currentUser.get();
+          core.autoCompleteGoogleData(user, googleBtns);
+        });
+
+        googleBtns.forEach(function(element) {
+          if (element.parentElement) {
+            element.parentElement.onclick = function() {
+              core.onGoogleClick(googleBtns);
+            }
+          }
+        });
+      });
     };
 
     /*
