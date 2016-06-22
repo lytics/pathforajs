@@ -1504,7 +1504,7 @@
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var branding = widget.querySelector('.branding svg');
-      var socialBtns = widget.querySelectorAll('.social-login-btn');
+      var socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
       var i;
       var j;
 
@@ -1582,6 +1582,7 @@
       if (colors.text && branding) {
         branding.style.fill = colors.text;
       }
+
 
       socialBtns.forEach(function(btn) {
         if (colors.actionText) {
@@ -1910,7 +1911,7 @@
      * @description Load callback for facebook integration
      */
     onFacebookLoad: function() {
-      var fbBtns = document.querySelectorAll('.social-login-btn.facebook-login-btn span');
+      var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
       FB.getLoginStatus(function (connection) {
         if (connection.status === 'connected') {
@@ -1985,7 +1986,7 @@
           scope: 'profile'
         });
 
-        var googleBtns = document.querySelectorAll('.social-login-btn.google-login-btn span');
+        var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
 
         auth2.then(function() {
           var user = auth2.currentUser.get();
@@ -2052,7 +2053,7 @@
      * @param {object} data user data
      */
     autoCompleteFormFields: function (data) {
-      var widgets = document.querySelectorAll('.pf-widget-content');
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
       widgets.forEach(function (widget) {
         if (widget.querySelector('.' + data.type + '-login-btn')) {
@@ -2073,7 +2074,7 @@
      * @param {object} fields to clear
      */
     clearFormFields: function (type, fields) {
-      var widgets = document.querySelectorAll('.pf-widget-content');
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
       widgets.forEach(function (widget) {
         if (widget.querySelector('.' + type + '-login-btn')) {
@@ -2086,28 +2087,7 @@
           });
         }
       });
-    },
-
-    /**
-     * @description Clear user data from form fields
-     * @param {object} type of integration
-     * @param {object} fields to clear
-     */
-    clearFormFields: function (type, fields) {
-      var widgets = document.querySelectorAll('.pf-widget');
-
-      widgets.forEach(function (widget) {
-        if (widget.querySelector('.' + type + '-login-btn')) {
-          fields.forEach(function (inputField) {
-            var field = widget.querySelector('input[name="' + inputField + '"]');
-
-            if (field) {
-              field.value = '';
-            }
-          });
-        }
-      });
-    },
+    }
   };
 
   /**
@@ -2510,9 +2490,6 @@
         if (widget.showForm === false) {
           throw new Error('Social login requires a form on the widget');
         }
-
-        var showAfter = typeof widget.config.showAfterSocialLogin !== 'undefined' ? widget.config.showAfterSocialLogin : false;
-
       }
 
       if (widget.pushDown) {
