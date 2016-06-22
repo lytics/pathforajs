@@ -1387,8 +1387,7 @@
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
         config.branding ? ' pf-widget-has-branding' : '',
-        !config.responsive ? ' pf-mobile-hide' : '',
-        config.submitOnLogin ? ' pf-submit-on-login': ''
+        !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
 
