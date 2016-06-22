@@ -139,6 +139,7 @@
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
   var templates = {
+  "templates": {},
   "subscription": {
     "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
@@ -646,7 +647,7 @@
 
                   // exact match
                   case 'exact':
-                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                    if (url.split("?")[0].replace(/\/$/, '') === phrase.value.split("?")[0].replace(/\/$/, '')) {
                       valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
@@ -1155,7 +1156,6 @@
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
-
           event.preventDefault();
 
           switch(config.type) {

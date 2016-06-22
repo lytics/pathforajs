@@ -2438,6 +2438,50 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should ignore trailing slashes for the exact match rule', function () {
+    window.history.pushState({} , '', '/test/');
+
+    var form1 = new pathfora.Form({
+      id: 'e71c5416ac7345bcba8c5330d14c4a2e',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/test'
+          }
+        ]
+      }
+    });
+    var form2 = new pathfora.Form({
+      id: '3ef7653e7f5f4889a0f2f860a679639a',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/test/'
+          }
+        ]
+      }
+    });
+    pathfora.initializeWidgets([ form1, form2 ]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    var widget = $('#' + form2.id);
+    expect(widget.length).toBe(1);
+
+    window.history.pushState({} , '', '/context.html');
+  });
+
   it('should ignore order of query params for exact rule', function () {
     window.history.pushState({} , '', '/context.html?bar=2&foo=1');
 

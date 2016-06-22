@@ -613,7 +613,7 @@
 
                   // exact match
                   case 'exact':
-                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                    if (url.split("?")[0].replace(/\/$/, '') === phrase.value.split("?")[0].replace(/\/$/, '')) {
                       valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
@@ -1122,7 +1122,6 @@
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
-
           event.preventDefault();
 
           switch(config.type) {
