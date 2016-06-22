@@ -1036,7 +1036,6 @@
           return widget.querySelector('input[name="' + field + '"]');
         }
 
-
         // Set placeholders
         Object.keys(config.placeholders).forEach(function (field) {
           var element = getFormElement(field);
@@ -1352,7 +1351,8 @@
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
         config.branding ? ' pf-widget-has-branding' : '',
-        !config.responsive ? ' pf-mobile-hide' : ''
+        !config.responsive ? ' pf-mobile-hide' : '',
+        config.submitOnLogin ? ' pf-submit-on-login': ''
       ].join('');
     },
 
@@ -1603,7 +1603,7 @@
      * @param {object}  widget      related widget
      * @param {Element} htmlElement related DOM element
      */
-    trackWidgetAction: function (action, widget, htmlElement) {
+    trackWidgetAction: function (action, widget, htmlElement, data) {
       var params = {
         'pf-widget-id': widget.id,
         'pf-widget-type': widget.type,
@@ -1628,11 +1628,17 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
-        for (var elem in htmlElement.children) {
-          var child = htmlElement.children[elem];
-          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
-            var childName = child.getAttribute("name");
-            params['pf-form-' + childName] = child.value;
+        if (htmlElement) {
+          for (var elem in htmlElement.children) {
+            var child = htmlElement.children[elem];
+            if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
+              var childName = child.getAttribute("name");
+              params['pf-form-' + childName] = child.value;
+            }
+          }
+        } else if (typeof data !== 'undefined') {
+          for (var key in data) {
+            params['pf-form-' + key] = data[key];
           }
         }
         break;
@@ -1901,6 +1907,27 @@
     },
 
     /**
+     * @description Load callback for facebook integration
+     */
+    onFacebookLoad: function() {
+      var fbBtns = document.querySelectorAll('.social-login-btn.facebook-login-btn span');
+
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          core.autoCompleteFacebookData(fbBtns);
+        }
+      });
+
+      fbBtns.forEach(function(element) {
+        if (element.parentElement) {
+          element.parentElement.onclick = function() {
+            core.onFacebookClick(fbBtns);
+          }
+        }
+      });
+    },
+
+    /**
      * @description Attempt to load forms' data from Facebook API.
      * @param {object} facebook buttons element selector
      */
@@ -1943,6 +1970,35 @@
             }
           });
         }
+      });
+    },
+
+    /**
+     * @description Load callback for google integration
+     * @param {object} optional widget object
+     */
+    onGoogleLoad: function() {
+      gapi.load('auth2', function() {
+        var auth2 = gapi.auth2.init({
+          clientId: pathforaDataObject.socialNetworks.googleClientID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile'
+        });
+
+        var googleBtns = document.querySelectorAll('.social-login-btn.google-login-btn span');
+
+        auth2.then(function() {
+          var user = auth2.currentUser.get();
+          core.autoCompleteGoogleData(user, googleBtns);
+
+          googleBtns.forEach(function(element) {
+            if (element.parentElement) {
+              element.parentElement.onclick = function() {
+                core.onGoogleClick(googleBtns);
+              }
+            }
+          });
+        });
       });
     },
 
@@ -2018,6 +2074,27 @@
      */
     clearFormFields: function (type, fields) {
       var widgets = document.querySelectorAll('.pf-widget-content');
+
+      widgets.forEach(function (widget) {
+        if (widget.querySelector('.' + type + '-login-btn')) {
+          fields.forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
+
+            if (field) {
+              field.value = '';
+            }
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Clear user data from form fields
+     * @param {object} type of integration
+     * @param {object} fields to clear
+     */
+    clearFormFields: function (type, fields) {
+      var widgets = document.querySelectorAll('.pf-widget');
 
       widgets.forEach(function (widget) {
         if (widget.querySelector('.' + type + '-login-btn')) {
@@ -2581,64 +2658,47 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
+      if (appId !== '') {
+        var btn = templates.social.facebookBtn.replace(
+          /(\{){2}facebook-icon(\}){2}/gm,
+          templates.assets.facebookIcon
+        );
 
-      var btn = templates.social.facebookBtn.replace(
-        /(\{){2}facebook-icon(\}){2}/gm,
-        templates.assets.facebookIcon
-      );
+        var parseFBLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="fb-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
-      var parseFBLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="fb-login" hidden><\/p>/gm,
-            btn
-          );
-        });
-      };
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: appId,
+            xfbml: true,
+            version: 'v2.5',
+            status: true,
+            cookie: true
+          });
 
-      window.fbAsyncInit = function () {
-        window.FB.init({
-          appId: appId,
-          xfbml: true,
-          version: 'v2.5',
-          status: true,
-          cookie: true
-        });
+          core.onFacebookLoad();
+        };
 
-        pathfora.onFacebookLoad();
-      };
+        // NOTE API initialization
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "//connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
 
-      // NOTE API initialization
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+        parseFBLoginTemplate(templates.form);
+        parseFBLoginTemplate(templates.sitegate);
 
-      parseFBLoginTemplate(templates.form);
-      parseFBLoginTemplate(templates.sitegate);
-
-      pathforaDataObject.socialNetworks.facebookAppId = appId;
-    };
-
-    this.onFacebookLoad = function() {
-      var fbBtns = document.querySelectorAll('.social-login-btn.facebook-login-btn span');
-
-      FB.getLoginStatus(function (connection) {
-        if (connection.status === 'connected') {
-          core.autoCompleteFacebookData(fbBtns);
-        }
-      });
-
-      fbBtns.forEach(function(element) {
-        if (element.parentElement) {
-          element.parentElement.onclick = function() {
-            core.onFacebookClick(fbBtns);
-          }
-        }
-      });
+        pathforaDataObject.socialNetworks.facebookAppId = appId;
+      }
     };
 
     /**
@@ -2647,76 +2707,52 @@
      * @param {string} clientId
      */
     this.integrateWithGoogle = function (clientId) {
-      var body = document.querySelector('body');
-      var head = document.querySelector('head');
+      if (clientId !== '') {
+        var body = document.querySelector('body');
+        var head = document.querySelector('head');
 
-      var appMetaTag = templates.social.googleMeta.replace(
-        /(\{){2}google-clientId(\}){2}/gm,
-        clientId
-      );
+        var appMetaTag = templates.social.googleMeta.replace(
+          /(\{){2}google-clientId(\}){2}/gm,
+          clientId
+        );
 
-      var btn = templates.social.googleBtn.replace(
-        /(\{){2}google-icon(\}){2}/gm,
-        templates.assets.googleIcon
-      );
+        var btn = templates.social.googleBtn.replace(
+          /(\{){2}google-icon(\}){2}/gm,
+          templates.assets.googleIcon
+        );
 
-      var parseGoogleLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type, index) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="google-login" hidden><\/p>/gm,
-            btn
-          );
-        });
-      };
+        var parseGoogleLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type, index) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="google-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
-      head.innerHTML += appMetaTag;
+        head.innerHTML += appMetaTag;
 
-      window.___gcfg = {
-        parsetags: 'onload'
+        window.___gcfg = {
+          parsetags: 'onload'
+        }
+
+        window.pathforaGoogleOnLoad = core.onGoogleLoad;
+
+        // NOTE Google API
+        (function () {
+          var s;
+          var po = document.createElement('script');
+          po.type = 'text/javascript';
+          po.async = true;
+          po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
+          s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(po, s);
+        })();
+
+        pathforaDataObject.socialNetworks.googleClientID = clientId;
+        parseGoogleLoginTemplate(templates.form);
+        parseGoogleLoginTemplate(templates.sitegate);
       }
-
-      window.pathforaGoogleOnLoad = pathfora.onGoogleLoad;
-
-      // NOTE Google API
-      (function () {
-        var s;
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.async = true;
-        po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
-        s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(po, s);
-      })();
-
-      pathforaDataObject.socialNetworks.googleClientID = clientId;
-      parseGoogleLoginTemplate(templates.form);
-      parseGoogleLoginTemplate(templates.sitegate);
-    };
-
-
-    this.onGoogleLoad = function() {
-      gapi.load('auth2', function() {
-        var auth2 = gapi.auth2.init({
-          clientId: pathforaDataObject.socialNetworks.googleClientID,
-          cookiepolicy: 'single_host_origin',
-          scope: 'profile'
-        });
-
-        var googleBtns = document.querySelectorAll('.social-login-btn.google-login-btn span');
-
-        auth2.then(function() {
-          var user = auth2.currentUser.get();
-          core.autoCompleteGoogleData(user, googleBtns);
-        });
-
-        googleBtns.forEach(function(element) {
-          if (element.parentElement) {
-            element.parentElement.onclick = function() {
-              core.onGoogleClick(googleBtns);
-            }
-          }
-        });
-      });
     };
 
     /*
