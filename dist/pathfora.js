@@ -1639,7 +1639,7 @@
      * @param {object}  widget      related widget
      * @param {Element} htmlElement related DOM element
      */
-    trackWidgetAction: function (action, widget, htmlElement, data) {
+    trackWidgetAction: function (action, widget, htmlElement) {
       var params = {
         'pf-widget-id': widget.id,
         'pf-widget-type': widget.type,
@@ -1664,17 +1664,11 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
-        if (htmlElement) {
-          for (var elem in htmlElement.children) {
-            var child = htmlElement.children[elem];
-            if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
-              var childName = child.getAttribute("name");
-              params['pf-form-' + childName] = child.value;
-            }
-          }
-        } else if (typeof data !== 'undefined') {
-          for (var key in data) {
-            params['pf-form-' + key] = data[key];
+        for (var elem in htmlElement.children) {
+          var child = htmlElement.children[elem];
+          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
+            var childName = child.getAttribute("name");
+            params['pf-form-' + childName] = child.value;
           }
         }
         break;
