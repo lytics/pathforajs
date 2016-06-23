@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Audience Targeting - PathforaJS SDK</title>
+  
+
+  <link rel="shortcut icon" href="../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  <link href="../assets/examples.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Audience Targeting";
+    var mkdocs_page_input_path = "targeting.md";
+    var mkdocs_page_url = "/targeting/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script src="../js/theme.js"></script> 
+  <script src="../assets/pre.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> PathforaJS SDK</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="..">Pathfora JS</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>API Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../api/methods/">Methods</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../api/acctid/">Lytics Account ID</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../api/config/">Generalized Configuration</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Types</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../types/message/">Message</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../types/form/">Form</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../types/subscription/">Subscription</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../types/gate/">Gate</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Layouts</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../layouts/modal/">Modal</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../layouts/slideout/">Slideout</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../layouts/bar/">Bar</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../layouts/button/">Button</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Customization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../customization/buttons/">Action Buttons</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../customization/themes/">Color Themes</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../customization/css/">Custom CSS</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../customization/form/">Form Elements</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../customization/responsive/">Responsive Styles</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../ab_testing/">A/B Testing</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Audience Targeting</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#setup-your-audiences">Setup Your Audiences</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#target">target</a></li>
+                
+                    <li><a class="toctree-l4" href="#single-target-audience-high-value-users">Single Target Audience - High Value Users</a></li>
+                
+                    <li><a class="toctree-l4" href="#multiple-target-audiences-new-vs-returning">Multiple Target Audiences - New vs. Returning</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#inverse">inverse</a></li>
+                
+            
+            </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../callbacks/">Callbacks</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../display_conditions/">Display Conditions</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../tracking/">Tracking</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">PathforaJS SDK</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Audience Targeting</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>Pathfora gains power by seamlessly integrating with <a href="http://www.getlytics.com/">Lytics</a> for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to <a href="../api/methods/#initializewidgets">initializeWidgets</a> and your Lytics Account ID as a second parameter.</p>
+<pre><code class="javascript">var modules = {
+  target: [{
+    segment: 'smt_name',
+    widgets: [ module ]
+  }]
+};
+
+pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
+</code></pre>
+
+<h2 id="setup-your-audiences">Setup Your Audiences</h2>
+<p>You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.</p>
+<p><img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess"></p>
+<h2 id="target">target</h2>
+<p>A list of rules assigning modules to audiences.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>target</td>
+    <td>string</td>
+    <td>list of targeting rule objects</td>
+  </tr>
+  <tr>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">object in <code>target</code> array</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>segment</td>
+    <td>string</td>
+    <td>API access ID of the Lytics audience</td>
+  </tr>
+  <tr>
+    <td>widgets</td>
+    <td>array</td>
+    <td>list of modulels to show the users in the audience</td>
+  </tr>
+</table>
+
+<h3 id="single-target-audience-high-value-users">Single Target Audience - High Value Users</h3>
+<pre><code class="javascript">// example: show a bar module to all users in the `high_value_users` audience promoting new products
+
+var module = pathfora.Message({
+  id: 'targeted_bar',
+  layout: 'bar',
+  msg: 'Thanks for being a valued customer, please check out our new products.'
+  cancelShow: false,
+  okMessage: 'View Now',
+  confirmAction: {
+    name: &quot;targeted_bar_confirm&quot;,
+    callback: function () {
+      window.location.pathname = &quot;/new-products&quot;;
+    }
+  }
+});
+
+var modules = {
+  target: [{
+    segment: 'high_value_users', // API Access ID for your Lytics audience
+    widgets: [ module ]
+  }]
+};
+
+var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
+
+pathfora.initializeWidgets(modules, lyticsAcctId);
+</code></pre>
+
+<h3 id="multiple-target-audiences-new-vs-returning">Multiple Target Audiences - New vs. Returning</h3>
+<pre><code class="javascript">// example: change messaging of module for new vs returning users
+
+var newModule = pathfora.Message({
+  id: 'new_slideout',
+  layout: 'slideout',
+  position: 'bottom-right',
+  headline: 'Welcome',
+  msg: 'You must be new here! Please take a look at our guide for new users.',
+  cancelShow: false,
+  okMessage: 'View Guide'
+});
+
+var returningModule = pathfora.Message({
+  id: 'returning_slideout',
+  layout: 'slideout',
+  position: 'bottom-right',
+  headline: 'Welcome Back',
+  msg: 'Thanks for coming back, why not check out our blog for the newest updates?',
+  cancelShow: false,
+  okMessage: 'View Blog'
+});
+
+var modules = {
+  target: [{
+    segment: 'new_users', // API Access ID for your Lytics audience
+    widgets: [ newModule ]
+  },
+  {
+    segment: 'returning', // API Access ID for your Lytics audience
+    widgets: [ returningModule ]
+  }]
+};
+
+var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
+
+pathfora.initializeWidgets(modules, lyticsAcctId);
+</code></pre>
+
+<h2 id="inverse">inverse</h2>
+<p>Target all users who are not a part of any of the audiences in the defined targeting rules.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>inverse</td>
+    <td>array</td>
+    <td>list of modules to show any user who is not a member of any of the audiences in the targeting rules</td>
+  </tr>
+  <tr>
+</table>
+
+<pre><code class="javascript">// example: show a feedback form module to all users that are known (has email)
+// and a subsciption module to everyone else
+
+var subscriptionModule = pathfora.Subscription({
+  id: 'sign_up_module',
+  layout: 'modal',
+  headline: 'Sign Up',
+  msg: 'We want to send you updates, sign up now!'
+});
+
+var feedbackModule = pathfora.Message({
+  id: 'known_module',
+  layout: 'modal',
+  headline: 'Give us Feedback',
+  msg: 'What do you think of our newest updates?',
+  fields: {
+    name: false,
+    email: false,
+    title: false,
+    message: true
+  }
+});
+
+var modules = {
+  target: [{
+    segment: 'known', // API Access ID for your Lytics audience
+    widgets: [ feedbackModule ]
+  }],
+  inverse: [ subscriptionModule ]
+};
+
+var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
+
+pathfora.initializeWidgets(modules, lyticsAcctId);
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../callbacks/" class="btn btn-neutral float-right" title="Callbacks">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../ab_testing/" class="btn btn-neutral" title="A/B Testing"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../ab_testing/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../callbacks/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

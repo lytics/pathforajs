@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Custom CSS - PathforaJS SDK</title>
+  
+
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../assets/examples.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Custom CSS";
+    var mkdocs_page_input_path = "customization/css.md";
+    var mkdocs_page_url = "/customization/css/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+  <script src="../../js/theme.js"></script> 
+  <script src="../../assets/pre.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> PathforaJS SDK</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Pathfora JS</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>API Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../api/methods/">Methods</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../api/acctid/">Lytics Account ID</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../api/config/">Generalized Configuration</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Types</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/message/">Message</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/form/">Form</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/subscription/">Subscription</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/gate/">Gate</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Layouts</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/modal/">Modal</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/slideout/">Slideout</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/bar/">Bar</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/button/">Button</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Customization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../buttons/">Action Buttons</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../themes/">Color Themes</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Custom CSS</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#key-class-names">Key Class Names</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#custom-class-name">Custom Class Name</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#example">Example</a></li>
+                
+                    <li><a class="toctree-l4" href="#javascript">Javascript</a></li>
+                
+                    <li><a class="toctree-l4" href="#css">CSS</a></li>
+                
+                    <li><a class="toctree-l4" href="#sassless">SASS/LESS</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../form/">Form Elements</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../responsive/">Responsive Styles</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../ab_testing/">A/B Testing</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../targeting/">Audience Targeting</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../callbacks/">Callbacks</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../display_conditions/">Display Conditions</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../tracking/">Tracking</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">PathforaJS SDK</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Customization &raquo;</li>
+        
+      
+    
+    <li>Custom CSS</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>Pathfora is built to be entirely customizable for developers. With the javascript config alone you can <a href="../themes/">change the colors</a> of any element of the module. But, to make your module fully fit the look and feel of your site you can add custom CSS.</p>
+<h2 id="key-class-names">Key Class Names</h2>
+<p>The outer most <code>&lt;div&gt;</code> of all Pathfora modules have the <code>pf-widget</code> class. For most modules this will be the containing div surrounding the content, but for <a href="../../layouts/modal/">modal</a> and <a href="../../types/gate/">gate</a> modules this div will contain the full-screen overlay behind the module. <code>pf-widget</code> has a number of useful subclasses to help select modules by their settings from the javascript config.</p>
+<p><strong>Subclasses of <code>pf-widget</code>:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Class Name</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pf-[type]</code></td>
+<td>select modules by type</td>
+</tr>
+<tr>
+<td><code>pf-widget-[layout]</code></td>
+<td>select modules by layout</td>
+</tr>
+<tr>
+<td><code>pf-position-[position]</code></td>
+<td>select modules by position</td>
+</tr>
+<tr>
+<td><code>pf-widget-variant-[variant]</code></td>
+<td>select modules by variant</td>
+</tr>
+<tr>
+<td><code>opened</code></td>
+<td>added once the module becomes visiable to the user, can be used for changing the transition animation</td>
+</tr>
+</tbody>
+</table>
+<p>Within the <code>pf-widget</code> div most key elements are assigned class names. Form components are nested in a <code>&lt;form&gt;</code> element and should be selected and styled by element type.</p>
+<p><strong>Key Classes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Class Name</th>
+<th>Element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pf-widget-content</code></td>
+<td>second container div inside <code>pf-widget</code> (for modal and gate layouts this will the the box surrounding the actual module content)</td>
+</tr>
+<tr>
+<td><code>pf-widget-headline</code></td>
+<td><code>&lt;h2&gt;</code> headline text</td>
+</tr>
+<tr>
+<td><code>pf-widget-message</code></td>
+<td><code>&lt;p&gt;</code> containing widget message text</td>
+</tr>
+<tr>
+<td><code>pf-widget-close</code></td>
+<td>"x" icon to close the modal</td>
+</tr>
+<tr>
+<td><code>pf-widget-btn</code></td>
+<td>general class for all buttons</td>
+</tr>
+<tr>
+<td><code>pf-widget-ok</code></td>
+<td>"Confirm" button</td>
+</tr>
+<tr>
+<td><code>pf-widget-cancel</code></td>
+<td>"Cancel" button</td>
+</tr>
+<tr>
+<td><code>pf-widget-img</code></td>
+<td>image element for modules of <a href="../../layouts/modal/#variant">variant 2</a></td>
+</tr>
+<tr>
+<td><code>pf-social-login</code></td>
+<td>div containing social login buttons for modules with <a href="../../types/form/#showsociallogin">showSocialLogin</a> enabled</td>
+</tr>
+</tbody>
+</table>
+<p>To see these classes in action, you can view the html <a href="https://github.com/lytics/pathforajs/tree/master/src/templates">templates</a> that will be rendered on your website. This is the html that gets minified, and added to a div with the class <code>pf-widget</code>. That div then gets added to the DOM of your website.</p>
+<h2 id="custom-class-name">Custom Class Name</h2>
+<p>All modules use the <code>pf-widget</code> class and thus any styles applied to this class and sub-elements will effect all modules used on the page. If you want to select and style a single module without using its <code>id</code> as a selector, you can add a custom class name to the <code>pf-widget</code> div in your javascript config.</p>
+<pre><code class="javascript">var module = pathfora.Subscription({
+  id: 'form-css',
+  className: 'sign-up-newsletter',
+  layout: 'modal',
+  headline: 'Sign Up!',
+  msg: 'Submit this form to get updates'
+});
+
+pathfora.initializeWidgets([ module ]);
+</code></pre>
+
+<h2 id="example">Example</h2>
+<h3><a href="../../examples/preview/customization/css/custom.html" target="_blank">Live Preview</a></h3>
+
+<p><img alt="Custom CSS" src="../../examples/img/customization/css/custom.png" /></p>
+<h3 id="javascript">Javascript</h3>
+<pre data-src="../../examples/src/customization/css/custom.js"></pre>
+
+<h3 id="css">CSS</h3>
+<pre data-src="../../examples/src/customization/css/custom.css"></pre>
+
+<h3 id="sassless">SASS/LESS</h3>
+<pre><code class="css">.pf-widget {
+  &amp;.pf-twitter-module {
+    background-color: #4a4a4a;
+    color: #fff;
+    border-radius: 0px;
+    box-shadow: none;
+    font-family: Roboto, Arial, 'sans-serif';
+
+    /* message paragraph */
+    .pf-widget-message {
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* headline */
+    .pf-widget-headline {
+      font-size: 28px;
+    }
+
+    .pf-widget-close, .pf-widget-headline {
+      color: #39aec0;
+    }
+
+    /* buttons */
+    .pf-widget-btn {
+      border-radius: 0px;
+      padding: 1px 25px;
+    }
+
+    /* confirm button */
+    .pf-widget-btn.pf-widget-ok {
+      background-color: #1b91a7;
+      color: #fff;
+      box-shadow: none;
+    }
+
+    /* cancel button */
+    .pf-widget-btn.pf-widget-cancel {
+      background: transparent;
+      color: #fff;
+      border: 1px solid #6a6a6a;
+    }
+
+    /* img */
+    .pf-widget-img {
+      border-radius: 0px;
+    }
+  }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../form/" class="btn btn-neutral float-right" title="Form Elements">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../themes/" class="btn btn-neutral" title="Color Themes"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../themes/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../form/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>

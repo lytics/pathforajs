@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  
+  <title>Methods - PathforaJS SDK</title>
+  
+
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../assets/examples.css" rel="stylesheet">
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Methods";
+    var mkdocs_page_input_path = "api/methods.md";
+    var mkdocs_page_url = "/api/methods/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+  <script src="../../js/theme.js"></script> 
+  <script src="../../assets/pre.js"></script>
+
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> PathforaJS SDK</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+        <ul class="current">
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../..">Pathfora JS</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>API Reference</span></li>
+
+        
+            
+    <li class="toctree-l1 current">
+        <a class="current" href="./">Methods</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#initializewidgets">initializeWidgets</a></li>
+                
+                    <li><a class="toctree-l4" href="#type-configuration-methods">Type Configuration Methods</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#initializeabtesting">initializeABTesting</a></li>
+                
+                    <li><a class="toctree-l4" href="#ab-test-configuration-method">A/B Test Configuration Method</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#integratewithfacebook">integrateWithFacebook</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#integratewithgoogle">integrateWithGoogle</a></li>
+                
+            
+            </ul>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../acctid/">Lytics Account ID</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../config/">Generalized Configuration</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Types</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/message/">Message</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/form/">Form</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/subscription/">Subscription</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../types/gate/">Gate</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Layouts</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/modal/">Modal</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/slideout/">Slideout</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/bar/">Bar</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../layouts/button/">Button</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Customization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../customization/buttons/">Action Buttons</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../customization/themes/">Color Themes</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../customization/css/">Custom CSS</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../customization/form/">Form Elements</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../customization/responsive/">Responsive Styles</a>
+        
+    </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../ab_testing/">A/B Testing</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../targeting/">Audience Targeting</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../callbacks/">Callbacks</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../display_conditions/">Display Conditions</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../../tracking/">Tracking</a>
+        
+    </li>
+<li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">PathforaJS SDK</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>API Reference &raquo;</li>
+        
+      
+    
+    <li>Methods</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>This document will walk you through the methods of the <code>pathfora</code> class that will be used to help you deploy your modules. The rest of the SDK documentation will walk you through how to customize your module's configuration, and provide code examples to show you these methods in context.</p>
+<h2 id="initializewidgets">initializeWidgets</h2>
+<p>This method is used to initialize any modules built with Pathfora. It kicks off all the heavy lifting that needs to be done to render the modules on the page based on their configuration settings.</p>
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>initializeWidgets</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>modules</td>
+    <td>array or targetting object</td>
+    <td>list of modules to initilize on the page</td>
+  </tr>
+  <tr>
+    <td>acctid</td>
+    <td>string</td>
+    <td><code>optional</code> your <a href="../acctid">Lytics account ID</a> (required for some features)</td>
+  </tr>
+  <tr>
+    <td>config</td>
+    <td>object</td>
+    <td><code>optional</code> <a href="../config">generalized configuration</a> settings for multiple modules</td>
+  </tr>
+</table>
+
+<h3 id="type-configuration-methods">Type Configuration Methods</h3>
+<p>Each module type that Pathfora supports has its own configuration method, which accepts a single object as a parameter. This object should include the configuration settings for the module, the following keys are common across all module configuration types.</p>
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">type configuration object</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>id</td>
+    <td>string</td>
+    <td><code>required</code> unique id for the module, no two modules can have the same id</td>
+  </tr>
+  <tr>
+    <td>msg</td>
+    <td>string</td>
+    <td>text message content, often contained in a paragraph tag in the module</td>
+  </tr>
+  <tr>
+    <td>headline</td>
+    <td>string</td>
+    <td>header or title text for the module, not supported by some layouts</td>
+  </tr>
+</table>
+
+<p>We cover each of these type configuration methods and their parameters in individual type sections below.</p>
+<ul>
+<li><a href="../../types/message/">Message</a></li>
+<li><a href="../../types/form/">Form</a></li>
+<li><a href="../../types/subscription/">Subscription</a></li>
+<li><a href="../../types/gate/">Gate</a></li>
+</ul>
+<h2 id="initializeabtesting">initializeABTesting</h2>
+<p>This method is used to initialize <a href="../../ab_testing/">A/B Tests</a> modules. If you're creating an A/B test scenario this should always be called <strong>before</strong> the <code>initializeWidgets</code> method.</p>
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>initializeABTesting</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>abTests</td>
+    <td>array</td>
+    <td>list of A/B test config objects to initialize</td>
+  </tr>
+</table>
+
+<h3 id="ab-test-configuration-method">A/B Test Configuration Method</h3>
+<p>A/B Tests have their own configuration method <code>ABTest</code>. We cover this configuration in detail in the <a href="../../ab_testing/">A/B Testing</a> section of this documentation.</p>
+<h2 id="integratewithfacebook">integrateWithFacebook</h2>
+<p>Pathfora can integrate with your Facebook App to allow users to autofill the fields of <a href="../../types/form/">form</a> or <a href="../../types/gate/">gate</a> modules with their facebook profile information. This method is used to authenticate this integration with Facebook. This method should be called <strong>before</strong> the <code>initializeWidgets</code> method.</p>
+<p><strong>Note:</strong> In addition to using this method, you will need to enable <a href="../../types/form/#showsociallogin">social login</a> in your module's config to allow for form autofill.</p>
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>integrateWithFacebook</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>appId</td>
+    <td>string</td>
+    <td><a href="https://developers.facebook.com/docs/apps/register#app-id" target="_blank">app id</a> for your Facebook application</td>
+  </tr>
+</table>
+
+<h2 id="integratewithgoogle">integrateWithGoogle</h2>
+<p>Pathfora can integrate with your Google App to allow users to autofill the fields of <a href="../../types/form/">form</a> or <a href="../../types/gate/">gate</a> modules with their Google account information. This method is used to authenticate this integration with Google. This method should be called <strong>before</strong> the <code>initializeWidgets</code> method.</p>
+<p><strong>Note:</strong> In addition to using this method, you will need to enable <a href="../../types/form/#showsociallogin">social login</a> in your module's config to allow for form autofill.</p>
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>integrateWithGoogle</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>clientID</td>
+    <td>string</td>
+    <td><a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank">client id</a> from your Google Developers Console project</td>
+  </tr>
+</table>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../acctid/" class="btn btn-neutral float-right" title="Lytics Account ID">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../.." class="btn btn-neutral" title="Pathfora JS"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+<div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../.." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../acctid/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+</body>
+</html>
