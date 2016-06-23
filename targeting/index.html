@@ -302,7 +302,8 @@
   }]
 };
 
-pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID'); };
 </code></pre>
 
 <h2 id="setup-your-audiences">Setup Your Audiences</h2>
@@ -390,7 +391,10 @@ var modules = {
 
 var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
 
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules, lyticsAcctId);
+};
 </code></pre>
 
 <h3 id="multiple-target-audiences-new-vs-returning">Multiple Target Audiences - New vs. Returning</h3>
@@ -429,7 +433,10 @@ var modules = {
 
 var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
 
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules, lyticsAcctId);
+};
 </code></pre>
 
 <h2 id="inverse">inverse</h2>
@@ -484,7 +491,10 @@ var modules = {
 
 var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
 
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules, lyticsAcctId);
+};
 </code></pre>
               
             </div>
