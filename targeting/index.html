@@ -225,6 +225,11 @@
             
                 <li class="toctree-l3"><a href="#leveraging-the-lytics-segments-loaded-callback">Leveraging the Lytics Segments Loaded Callback</a></li>
                 
+            
+                <li class="toctree-l3"><a href="#target">target</a></li>
+                
+                    <li><a class="toctree-l4" href="#single-target-audience-high-value-users">Single Target Audience - High Value Users</a></li>
+                
                     <li><a class="toctree-l4" href="#multiple-target-audiences-new-vs-returning">Multiple Target Audiences - New vs. Returning</a></li>
                 
             
@@ -305,71 +310,62 @@ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 <p>You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.</p>
 <h2 id="leveraging-the-lytics-segments-loaded-callback">Leveraging the Lytics Segments Loaded Callback</h2>
 <p>When leveraging real-time user identity and/or segment membership in any Pathfora widget implementation, it is recommended that you use the Lytics "Segments Loaded" callback. This ensures all user data has been loaded prior to the Pathfora initialization. Failing to load user identify may result in having users segments default to only the 'all' segment.</p>
-<pre><code class="javascript">&lt;script type=&quot;text/javascript&quot;&gt;
+<pre><code class="html">&lt;script type=&quot;text/javascript&quot;&gt;
   window.liosetup = window[&quot;liosetup&quot;] || {};
   window.liosetup.callback = function(){ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID'); };
- &lt;/script&gt;
- &lt;script type=&quot;text/javascript&quot;&gt;
+&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
   // insert your Lytics javascript tag here, async or sync
- &lt;/script&gt;
- ```
+&lt;/script&gt;
+</code></pre>
 
- The above can be wrapped around any of the Pathfora examples present in these docs.
+<p>The above can be wrapped around any of the Pathfora examples present in these docs.</p>
+<p><img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess"></p>
+<h2 id="target">target</h2>
+<p>A list of rules assigning modules to audiences.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
 
+  <tr>
+    <td>target</td>
+    <td>string</td>
+    <td>list of targeting rule objects</td>
+  </tr>
+  <tr>
+</table>
 
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">object in <code>target</code> array</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
 
-&lt;img class=&quot;full&quot; src=&quot;../assets/api_access.jpg&quot; alt=&quot;Lytics Audience API Acess&quot;&gt;
+  <tr>
+    <td>segment</td>
+    <td>string</td>
+    <td>API access ID of the Lytics audience</td>
+  </tr>
+  <tr>
+    <td>widgets</td>
+    <td>array</td>
+    <td>list of modulels to show the users in the audience</td>
+  </tr>
+</table>
 
-## target
-
-A list of rules assigning modules to audiences.
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Key&lt;/th&gt;
-      &lt;th&gt;Type&lt;/th&gt;
-      &lt;th&gt;Behavior&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-
-  &lt;tr&gt;
-    &lt;td&gt;target&lt;/td&gt;
-    &lt;td&gt;string&lt;/td&gt;
-    &lt;td&gt;list of targeting rule objects&lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-&lt;/table&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;td colspan=&quot;3&quot; align=&quot;center&quot;&gt;object in &lt;code&gt;target&lt;/code&gt; array&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Key&lt;/th&gt;
-      &lt;th&gt;Type&lt;/th&gt;
-      &lt;th&gt;Behavior&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-
-  &lt;tr&gt;
-    &lt;td&gt;segment&lt;/td&gt;
-    &lt;td&gt;string&lt;/td&gt;
-    &lt;td&gt;API access ID of the Lytics audience&lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-    &lt;td&gt;widgets&lt;/td&gt;
-    &lt;td&gt;array&lt;/td&gt;
-    &lt;td&gt;list of modulels to show the users in the audience&lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/table&gt;
-
-
-### Single Target Audience - High Value Users
-
-``` javascript
-// example: show a bar module to all users in the `high_value_users` audience promoting new products
+<h3 id="single-target-audience-high-value-users">Single Target Audience - High Value Users</h3>
+<pre><code class="javascript">// example: show a bar module to all users in the `high_value_users` audience promoting new products
 
 var module = pathfora.Message({
   id: 'targeted_bar',
