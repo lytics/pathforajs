@@ -307,7 +307,8 @@ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 </code></pre>
 
 <h2 id="setup-your-audiences">Setup Your Audiences</h2>
-<p>You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.</p>
+<p>You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.
+<img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess"></p>
 <h2 id="leveraging-the-lytics-segments-loaded-callback">Leveraging the Lytics Segments Loaded Callback</h2>
 <p>When leveraging real-time user identity and/or segment membership in any Pathfora widget implementation, it is recommended that you use the Lytics "Segments Loaded" callback. This ensures all user data has been loaded prior to the Pathfora initialization. Failing to load user identify may result in having users segments default to only the 'all' segment.</p>
 <pre><code class="html">&lt;script type=&quot;text/javascript&quot;&gt;
@@ -321,7 +322,6 @@ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
 </code></pre>
 
 <p>The above can be wrapped around any of the Pathfora examples present in these docs.</p>
-<p><img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess"></p>
 <h2 id="target">target</h2>
 <p>A list of rules assigning modules to audiences.</p>
 <table>
