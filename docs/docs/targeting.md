@@ -1,4 +1,4 @@
-Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
+Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](/api/methods.md#initializewidgets).
 
 ``` javascript
 var modules = {
@@ -9,7 +9,7 @@ var modules = {
 };
 
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID'); };
+window.liosetup.callback = function(){ pathfora.initializeWidgets(modules); };
 ```
 
 ## Setup Your Audiences
@@ -107,11 +107,9 @@ var modules = {
   }]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
-
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
 window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules, lyticsAcctId);
+  pathfora.initializeWidgets(modules);
 };
 ```
 
@@ -152,11 +150,9 @@ var modules = {
   }]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
-
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
 window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules, lyticsAcctId);
+  pathfora.initializeWidgets(modules);
 };
 ```
 
@@ -214,10 +210,8 @@ var modules = {
   inverse: [ subscriptionModule ]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID'; // Empty string if you do not have a Lytics Account ID
-
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
 window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules, lyticsAcctId);
+  pathfora.initializeWidgets(modules);
 };
 ```
