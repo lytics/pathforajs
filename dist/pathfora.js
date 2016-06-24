@@ -148,8 +148,8 @@
     "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>"
   },
   "social": {
-    "facebookIcon": "<div class=\"fb-login-button\" data-max-rows=\"1\" data-size=\"large\" data-show-faces=\"false\" data-auto-logout-link=\"true\" data-scope=\"public_profile,email\" data-onlogin=\"window.pathfora.onFacebookSignIn();\"></div>",
-    "googleIcon": "<div id=\"{{google-btnId}}\" class=\"google-login\"></div>",
+    "facebookBtn": "<div class=\"social-login-btn facebook-login-btn\">{{facebook-icon}} <span>Log In</span></div>",
+    "googleBtn": "<div class=\"social-login-btn google-login-btn\">{{google-icon}} <span>Sign In</span></div>",
     "googleMeta": "<meta name=\"google-signin-client_id\" content=\"{{google-clientId}}\">"
   },
   "sitegate": {
@@ -170,7 +170,9 @@
     "slideout": "<a class=\"pf-widget-close\">&times;</a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><h2 class=\"pf-widget-headline\"></h2><p class=\"pf-widget-message\"></p><div class=\"pf-social-login\"><p name=\"fb-login\" hidden></p><p name=\"google-login\" hidden></p></div><form><input name=\"username\" type=\"text\"> <input name=\"email\" type=\"email\"> <input class=\"pf-field-half-width\" name=\"title\" type=\"text\"> <input class=\"pf-field-half-width\" name=\"company\" type=\"text\"> <input name=\"phone\" type=\"text\"><textarea name=\"message\" rows=\"5\"></textarea><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">Send</button> <button class=\"pf-widget-btn pf-widget-cancel\">Cancel</button></form></div>"
   },
   "assets": {
-    "lytics": "<a href=\"https://www.getlytics.com?utm_source=pathfora&amp;utm_medium=web&amp;utm_campaign=personalization\" target=\"_blank\"><svg width=\"120px\" height=\"30\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 143.97 36.85\"><title>lytics</title><path d=\"M122.26 11.36h.1c1.41-.39 2.33-1 2.2-2.94 0-.7-.28-1.06-.69-1.06-.7 0-1.3 1.38-1.37 1.53l-.09.21a3.22 3.22 0 0 0-.5 2 .38.38 0 0 0 .36.25\" transform=\"translate(-.85)\"/><path d=\"M88 5.27a.76.76 0 0 0-1.09.73v.18a1.57 1.57 0 0 0 .45.93 8.78 8.78 0 0 0 6 2.6h.21a.12.12 0 0 1 .13.14 32 32 0 0 1-2 8 1.76 1.76 0 0 1-1 1.17.6.6 0 0 1-.26-.07c-.32-.16-.74-.41-1.18-.67a13.8 13.8 0 0 0-1.72-.93 15.11 15.11 0 0 0-3.88-1.22c-1.81-.2-4.09.56-4.47 2.52a4.7 4.7 0 0 0 2 4.47 10 10 0 0 0 5.19 1.75 6.34 6.34 0 0 0 3.74-1.24l.47-.39c.27-.23.82-.69 1.13-.9a.12.12 0 0 1 .15 0l.5.41a7.84 7.84 0 0 0 .62.5 7.72 7.72 0 0 0 3.54 1.33h.58a5.21 5.21 0 0 0 2.62-.66.12.12 0 0 1 .15 0 2.19 2.19 0 0 0 1.6.68c1.75 0 3.76-1.83 5.06-3.29v.1a8.92 8.92 0 0 1-.83 2.69 7.53 7.53 0 0 1-1.06 1.33l-.47.52a35.84 35.84 0 0 0-3 4.07c-.9 1.43-1.67 2.95-1.31 4.35a3.2 3.2 0 0 0 1.65 2 3.39 3.39 0 0 0 1.67.49c2.09 0 3.25-2.42 3.75-3.86a16.38 16.38 0 0 0 .82-4c.07-.6.14-1.22.25-1.94l.08-.59a3.35 3.35 0 0 1 .8-2.22c.64-.57 1.28-1.17 1.89-1.74l.09-.09.72-.67.28-.25a.12.12 0 0 1 .2.06 4.52 4.52 0 0 0 .71 1.61 3.32 3.32 0 0 0 2.73 1.36 4 4 0 0 0 2.76-1.15 5.29 5.29 0 0 0 .53-.72.12.12 0 0 1 .2 0 2.1 2.1 0 0 0 .47.49 3.52 3.52 0 0 0 2.05.91c.87 0 1.54-.6 2.48-1.5a2.14 2.14 0 0 0 .29-.4.12.12 0 0 1 .21 0l.23.39a4.53 4.53 0 0 0 3.12 2 9.87 9.87 0 0 0 1.46.12 5.58 5.58 0 0 0 4.47-2.09.12.12 0 0 1 .19 0 5.41 5.41 0 0 0 .84.93 5.35 5.35 0 0 0 3.32 1.21 3 3 0 0 0 3.05-2.22 1.33 1.33 0 0 1 1.23-1.29c.67-.25 2.25-.95 2.45-2.16a.77.77 0 0 0-.14-.66.69.69 0 0 0-.55-.23 5.83 5.83 0 0 0-2.08.81 10.5 10.5 0 0 1-1 .46.12.12 0 0 1-.14 0 2.78 2.78 0 0 1-.24-.67 3.12 3.12 0 0 0-.12-.4 32.49 32.49 0 0 0-1.77-3.46 4.53 4.53 0 0 1-.25-.57 3 3 0 0 0-.61-1.1 2.89 2.89 0 0 0-1.53-.45.74.74 0 0 0-.8.42 1.23 1.23 0 0 0 .07.9l.08.26a2.77 2.77 0 0 1-.06.76 3.65 3.65 0 0 1-.69 1.44l-.14.18c-.3.37-.52.65-.67.87a.68.68 0 0 0-.28-.06.67.67 0 0 0-.52.25 3.21 3.21 0 0 0-.47 1.67v.06a13.23 13.23 0 0 0-.76 1.12c-.16.26-.31.5-.42.63a3.3 3.3 0 0 1-2.47 1 3.65 3.65 0 0 1-2.42-.95 1.76 1.76 0 0 1-.56-1.35 6.7 6.7 0 0 1 1.92-4.19 2.4 2.4 0 0 1 1.44-.77.66.66 0 0 1 .32-.02c.4.21.38.32.07.91a1.77 1.77 0 0 0-.3 1.26.48.48 0 0 0 .24.3l.72.4a.51.51 0 0 0 .63-.1 3.19 3.19 0 0 0 .83-3.35c-.48-1.07-1.71-1.59-3.25-1.34a6.61 6.61 0 0 0-4.9 5l-.09.44-.38.66c-.52.92-1.16 2.06-2 2.37a2.1 2.1 0 0 1-.68.17h-.06a3.3 3.3 0 0 1 .12-1.07l.08-.39a15.21 15.21 0 0 1 .78-2.53 12.54 12.54 0 0 0 .91-3.4 1.45 1.45 0 0 0-.4-1.11 1.2 1.2 0 0 0-.86-.41.94.94 0 0 0-.82.51 22.22 22.22 0 0 0-2.13 6.27v.06l-.28.37a7 7 0 0 1-2.37 2.32 1 1 0 0 1-1.22-.23 2 2 0 0 1-.21-1.7c.35-1.23.66-2.49 1-3.75a34.52 34.52 0 0 0 1.23-3.54l.1-.08c.85-.15 1.72-.3 2.56-.41.28 0 .56-.05.85-.07h.63a.5.5 0 0 0 .42-.31 1 1 0 0 0-.07-.88 1.79 1.79 0 0 0-1.4-.74h-.08c-.61 0-1.31 0-2 .08l-.13-.17a8.47 8.47 0 0 0 .46-2.67 2.68 2.68 0 0 0-.32-1.49 1.38 1.38 0 0 0-1.5-.67 2.07 2.07 0 0 0-1.13 1.48 14.92 14.92 0 0 0-.41 1.59c-.27.62-.56 1.33-.85 2.1l-.28.22h-.84a17.31 17.31 0 0 0-2.62.32 1.21 1.21 0 0 0-.91.76.81.81 0 0 0 .08.66 2.49 2.49 0 0 0 1.37 1 2 2 0 0 0 .49.06 8.68 8.68 0 0 0 1.61-.23h.14c-.12.41-.24.83-.35 1.26-.21.82-.37 1.58-.48 2.3-.29.51-.6 1-.94 1.49a12.48 12.48 0 0 1-1.83 1.9l-.23.38a39.76 39.76 0 0 1 .76-5.35.49.49 0 0 0-.16-.46l-.69-.59a.51.51 0 0 0-.33-.12h-.25a.38.38 0 0 0-.33.19c-.51.9-.9 1.7-1.27 2.47a23.51 23.51 0 0 1-2.07 3.66 2.8 2.8 0 0 1-2.05 1 1.06 1.06 0 0 1-.72-.23v-.08a1.38 1.38 0 0 0-.12-.41l-.15-.25v-.14a21.73 21.73 0 0 1 1.38-6.69 1.88 1.88 0 0 0 .15-1.67 1 1 0 0 0-.9-.39h-.25c-1.18.12-2.27 2.69-2.28 2.72a15.2 15.2 0 0 0-1 6.62.12.12 0 0 1-.06.12 3.83 3.83 0 0 1-2 .58c-.76-.06-1.72-.25-3.45-1.72a.12.12 0 0 1 0-.15 27 27 0 0 0 2.88-9.57 1.32 1.32 0 0 1 .28-.87 3.25 3.25 0 0 1 .87-.11h.14a17 17 0 0 0 2.8-.36 11.86 11.86 0 0 0 3.94-1.74 5.54 5.54 0 0 0 2.72-3.76 3.2 3.2 0 0 0-.85-2.5 3.83 3.83 0 0 0-3.09-1.2 8.54 8.54 0 0 0-5.3 2.31 21.6 21.6 0 0 0-2.48 3.16 6.87 6.87 0 0 0-.37.7 2 2 0 0 1-.92 1.19 6.38 6.38 0 0 1-4.63-1.36 5 5 0 0 0-.77-.52l-.43-.21zm14.3-2.93l.34-.11a2.16 2.16 0 0 1 2 .23.69.69 0 0 1 .1.6 4 4 0 0 1-1.64 2.3 11.44 11.44 0 0 1-5.63 1.88.12.12 0 0 1-.12-.18 9.82 9.82 0 0 1 5-4.73zm-17.3 19.95a4.36 4.36 0 0 1-3.39-2.16 1.22 1.22 0 0 1 .1-1.34 1.67 1.67 0 0 1 1.29-.44c2 0 5.08 1.71 6.41 2.47a.12.12 0 0 1 0 .18c-.74 1-2.16 1.42-4.44 1.29zm20.4 6.43c-.17 1-.35 1.94-.52 2.67-.33 1.4-.82 2.36-2.2 2.8h-.35a.39.39 0 0 1-.41-.14c-.09-.17-.25-1 1.71-3.86l.07-.1c.51-.76 1.1-1.54 1.65-2.23a.12.12 0 0 1 .22.1zm31.7-11.51h.2a9.64 9.64 0 0 1 1.55 2.64.12.12 0 0 1-.11.17 4.59 4.59 0 0 1-2.08-.47.72.72 0 0 1-.42-.43 3.23 3.23 0 0 1 .86-1.9zm1.85 5a.73.73 0 0 1-.88.61 3.3 3.3 0 0 1-1.65-.5 2.36 2.36 0 0 1-.65-1.05.12.12 0 0 1 .23-.17 6.66 6.66 0 0 0 2.42.9h.58v.18zM.85 21.74v-8h3.52a2.51 2.51 0 1 1 0 5h-2.12v3h-1.4zm4.69-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3zM7.79 17.74a4 4 0 0 1 4.09-4.14 4 4 0 0 1 4.12 4.14 4 4 0 0 1-4.09 4.14 4 4 0 0 1-4.12-4.14zm6.74 0a2.66 2.66 0 1 0-5.3 0 2.66 2.66 0 1 0 5.3 0z\" transform=\"translate(-.85)\"/><path d=\"M22.35 21.74l-1.56-5.9-1.55 5.9h-1.49l-2.29-8h1.57l1.56 6.16 1.66-6.16h1.12l1.66 6.16 1.55-6.16h1.57l-2.28 8h-1.52zM27.07 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.07v1.24h-5.48z\"/><path d=\"M39.42 21.74l-1.77-3h-1.4v3h-1.4v-8h3.51a2.43 2.43 0 0 1 2.64 2.5 2.24 2.24 0 0 1-1.9 2.35l2 3.14h-1.68zm.12-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3z\" transform=\"translate(-.85)\"/><path d=\"M41.53 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.08v1.24h-5.49z\"/><path d=\"M49.31 21.74v-8h3a3.91 3.91 0 0 1 4.19 4 3.9 3.9 0 0 1-4.19 4h-3zm5.72-4a2.59 2.59 0 0 0-2.75-2.74h-1.57v5.5h1.57a2.63 2.63 0 0 0 2.72-2.76zM60.91 21.74v-8h3.93a2 2 0 0 1 2.28 2 1.8 1.8 0 0 1-1.39 1.83 2 2 0 0 1 1.55 2 2.1 2.1 0 0 1-2.28 2.17h-4zm4.77-5.74a1 1 0 0 0-1.13-1h-2.24v2h2.24a1 1 0 0 0 1.13-1zm.16 3.37a1.1 1.1 0 0 0-1.22-1.1h-2.3v2.23h2.3a1.08 1.08 0 0 0 1.22-1.12z\" transform=\"translate(-.85)\"/><path d=\"M69.74 21.74v-3.33l-3.11-4.68h1.61l2.21 3.43 2.18-3.43h1.61l-3.09 4.68v3.32h-1.4z\"/></svg></a>"
+    "facebookIcon": "<svg width=\"16\" height=\"16\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 266.89 266.89\"><title>facebookIcon</title><path d=\"M252.16 0h-237.43a14.73 14.73 0 0 0-14.73 14.73v237.43a14.73 14.73 0 0 0 14.73 14.73h127.83v-103.35h-34.79v-40.28h34.78v-29.71c0-34.47 21.05-53.24 51.81-53.24a285.41 285.41 0 0 1 31.08 1.59v36h-21.33c-16.72 0-20 7.95-20 19.61v25.72h39.89l-5.19 40.28h-34.66v103.38h68a14.73 14.73 0 0 0 14.73-14.73v-237.43a14.73 14.73 0 0 0-14.72-14.73z\" fill=\"#3c5a99\"/><path d=\"M218.84 163.54l5.16-40.28h-39.85v-25.72c0-11.66 3.24-19.61 20-19.61h21.33v-36a285.41 285.41 0 0 0-31.08-1.59c-30.75 0-51.81 18.77-51.81 53.24v29.71h-34.82v40.28h34.78v103.32h41.6v-103.35h34.69z\" fill=\"#fff\"/></svg>",
+    "googleIcon": "<svg width=\"16\" height=\"16\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 18 18\"><title>googleIcon</title><g><path d=\"M17.64 9.2a10.34 10.34 0 0 0-.16-1.84h-8.48v3.48h4.84a4.14 4.14 0 0 1-1.84 2.72v2.26h3a8.78 8.78 0 0 0 2.64-6.62z\" fill=\"#4285f4\"/><path d=\"M9 18a8.59 8.59 0 0 0 6-2.18l-3-2.26a5.43 5.43 0 0 1-8-2.85h-3v2.29a9 9 0 0 0 8 5z\" fill=\"#34a853\"/><path d=\"M4 10.71a5.32 5.32 0 0 1 0-3.42v-2.29h-3a9 9 0 0 0 0 8l3-2.33z\" fill=\"#fbbc05\"/><path d=\"M9 3.58a4.86 4.86 0 0 1 3.44 1.35l2.56-2.59a8.65 8.65 0 0 0-6-2.34 9 9 0 0 0-8 5l3 2.29a5.36 5.36 0 0 1 5-3.71z\" fill=\"#ea4335\"/><path d=\"M0 0h18v18h-18v-18z\" fill=\"none\"/></g></svg>",
+    "lytics": "<a href=\"https://www.getlytics.com?utm_source=pathfora&amp;utm_medium=web&amp;utm_campaign=personalization\" target=\"_blank\"><svg width=\"120\" height=\"30\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 143.97 36.85\"><title>lytics</title><path d=\"M122.26 11.36h.1c1.41-.39 2.33-1 2.2-2.94 0-.7-.28-1.06-.69-1.06-.7 0-1.3 1.38-1.37 1.53l-.09.21a3.22 3.22 0 0 0-.5 2 .38.38 0 0 0 .36.25\" transform=\"translate(-.85)\"/><path d=\"M88 5.27a.76.76 0 0 0-1.09.73v.18a1.57 1.57 0 0 0 .45.93 8.78 8.78 0 0 0 6 2.6h.21a.12.12 0 0 1 .13.14 32 32 0 0 1-2 8 1.76 1.76 0 0 1-1 1.17.6.6 0 0 1-.26-.07c-.32-.16-.74-.41-1.18-.67a13.8 13.8 0 0 0-1.72-.93 15.11 15.11 0 0 0-3.88-1.22c-1.81-.2-4.09.56-4.47 2.52a4.7 4.7 0 0 0 2 4.47 10 10 0 0 0 5.19 1.75 6.34 6.34 0 0 0 3.74-1.24l.47-.39c.27-.23.82-.69 1.13-.9a.12.12 0 0 1 .15 0l.5.41a7.84 7.84 0 0 0 .62.5 7.72 7.72 0 0 0 3.54 1.33h.58a5.21 5.21 0 0 0 2.62-.66.12.12 0 0 1 .15 0 2.19 2.19 0 0 0 1.6.68c1.75 0 3.76-1.83 5.06-3.29v.1a8.92 8.92 0 0 1-.83 2.69 7.53 7.53 0 0 1-1.06 1.33l-.47.52a35.84 35.84 0 0 0-3 4.07c-.9 1.43-1.67 2.95-1.31 4.35a3.2 3.2 0 0 0 1.65 2 3.39 3.39 0 0 0 1.67.49c2.09 0 3.25-2.42 3.75-3.86a16.38 16.38 0 0 0 .82-4c.07-.6.14-1.22.25-1.94l.08-.59a3.35 3.35 0 0 1 .8-2.22c.64-.57 1.28-1.17 1.89-1.74l.09-.09.72-.67.28-.25a.12.12 0 0 1 .2.06 4.52 4.52 0 0 0 .71 1.61 3.32 3.32 0 0 0 2.73 1.36 4 4 0 0 0 2.76-1.15 5.29 5.29 0 0 0 .53-.72.12.12 0 0 1 .2 0 2.1 2.1 0 0 0 .47.49 3.52 3.52 0 0 0 2.05.91c.87 0 1.54-.6 2.48-1.5a2.14 2.14 0 0 0 .29-.4.12.12 0 0 1 .21 0l.23.39a4.53 4.53 0 0 0 3.12 2 9.87 9.87 0 0 0 1.46.12 5.58 5.58 0 0 0 4.47-2.09.12.12 0 0 1 .19 0 5.41 5.41 0 0 0 .84.93 5.35 5.35 0 0 0 3.32 1.21 3 3 0 0 0 3.05-2.22 1.33 1.33 0 0 1 1.23-1.29c.67-.25 2.25-.95 2.45-2.16a.77.77 0 0 0-.14-.66.69.69 0 0 0-.55-.23 5.83 5.83 0 0 0-2.08.81 10.5 10.5 0 0 1-1 .46.12.12 0 0 1-.14 0 2.78 2.78 0 0 1-.24-.67 3.12 3.12 0 0 0-.12-.4 32.49 32.49 0 0 0-1.77-3.46 4.53 4.53 0 0 1-.25-.57 3 3 0 0 0-.61-1.1 2.89 2.89 0 0 0-1.53-.45.74.74 0 0 0-.8.42 1.23 1.23 0 0 0 .07.9l.08.26a2.77 2.77 0 0 1-.06.76 3.65 3.65 0 0 1-.69 1.44l-.14.18c-.3.37-.52.65-.67.87a.68.68 0 0 0-.28-.06.67.67 0 0 0-.52.25 3.21 3.21 0 0 0-.47 1.67v.06a13.23 13.23 0 0 0-.76 1.12c-.16.26-.31.5-.42.63a3.3 3.3 0 0 1-2.47 1 3.65 3.65 0 0 1-2.42-.95 1.76 1.76 0 0 1-.56-1.35 6.7 6.7 0 0 1 1.92-4.19 2.4 2.4 0 0 1 1.44-.77.66.66 0 0 1 .32-.02c.4.21.38.32.07.91a1.77 1.77 0 0 0-.3 1.26.48.48 0 0 0 .24.3l.72.4a.51.51 0 0 0 .63-.1 3.19 3.19 0 0 0 .83-3.35c-.48-1.07-1.71-1.59-3.25-1.34a6.61 6.61 0 0 0-4.9 5l-.09.44-.38.66c-.52.92-1.16 2.06-2 2.37a2.1 2.1 0 0 1-.68.17h-.06a3.3 3.3 0 0 1 .12-1.07l.08-.39a15.21 15.21 0 0 1 .78-2.53 12.54 12.54 0 0 0 .91-3.4 1.45 1.45 0 0 0-.4-1.11 1.2 1.2 0 0 0-.86-.41.94.94 0 0 0-.82.51 22.22 22.22 0 0 0-2.13 6.27v.06l-.28.37a7 7 0 0 1-2.37 2.32 1 1 0 0 1-1.22-.23 2 2 0 0 1-.21-1.7c.35-1.23.66-2.49 1-3.75a34.52 34.52 0 0 0 1.23-3.54l.1-.08c.85-.15 1.72-.3 2.56-.41.28 0 .56-.05.85-.07h.63a.5.5 0 0 0 .42-.31 1 1 0 0 0-.07-.88 1.79 1.79 0 0 0-1.4-.74h-.08c-.61 0-1.31 0-2 .08l-.13-.17a8.47 8.47 0 0 0 .46-2.67 2.68 2.68 0 0 0-.32-1.49 1.38 1.38 0 0 0-1.5-.67 2.07 2.07 0 0 0-1.13 1.48 14.92 14.92 0 0 0-.41 1.59c-.27.62-.56 1.33-.85 2.1l-.28.22h-.84a17.31 17.31 0 0 0-2.62.32 1.21 1.21 0 0 0-.91.76.81.81 0 0 0 .08.66 2.49 2.49 0 0 0 1.37 1 2 2 0 0 0 .49.06 8.68 8.68 0 0 0 1.61-.23h.14c-.12.41-.24.83-.35 1.26-.21.82-.37 1.58-.48 2.3-.29.51-.6 1-.94 1.49a12.48 12.48 0 0 1-1.83 1.9l-.23.38a39.76 39.76 0 0 1 .76-5.35.49.49 0 0 0-.16-.46l-.69-.59a.51.51 0 0 0-.33-.12h-.25a.38.38 0 0 0-.33.19c-.51.9-.9 1.7-1.27 2.47a23.51 23.51 0 0 1-2.07 3.66 2.8 2.8 0 0 1-2.05 1 1.06 1.06 0 0 1-.72-.23v-.08a1.38 1.38 0 0 0-.12-.41l-.15-.25v-.14a21.73 21.73 0 0 1 1.38-6.69 1.88 1.88 0 0 0 .15-1.67 1 1 0 0 0-.9-.39h-.25c-1.18.12-2.27 2.69-2.28 2.72a15.2 15.2 0 0 0-1 6.62.12.12 0 0 1-.06.12 3.83 3.83 0 0 1-2 .58c-.76-.06-1.72-.25-3.45-1.72a.12.12 0 0 1 0-.15 27 27 0 0 0 2.88-9.57 1.32 1.32 0 0 1 .28-.87 3.25 3.25 0 0 1 .87-.11h.14a17 17 0 0 0 2.8-.36 11.86 11.86 0 0 0 3.94-1.74 5.54 5.54 0 0 0 2.72-3.76 3.2 3.2 0 0 0-.85-2.5 3.83 3.83 0 0 0-3.09-1.2 8.54 8.54 0 0 0-5.3 2.31 21.6 21.6 0 0 0-2.48 3.16 6.87 6.87 0 0 0-.37.7 2 2 0 0 1-.92 1.19 6.38 6.38 0 0 1-4.63-1.36 5 5 0 0 0-.77-.52l-.43-.21zm14.3-2.93l.34-.11a2.16 2.16 0 0 1 2 .23.69.69 0 0 1 .1.6 4 4 0 0 1-1.64 2.3 11.44 11.44 0 0 1-5.63 1.88.12.12 0 0 1-.12-.18 9.82 9.82 0 0 1 5-4.73zm-17.3 19.95a4.36 4.36 0 0 1-3.39-2.16 1.22 1.22 0 0 1 .1-1.34 1.67 1.67 0 0 1 1.29-.44c2 0 5.08 1.71 6.41 2.47a.12.12 0 0 1 0 .18c-.74 1-2.16 1.42-4.44 1.29zm20.4 6.43c-.17 1-.35 1.94-.52 2.67-.33 1.4-.82 2.36-2.2 2.8h-.35a.39.39 0 0 1-.41-.14c-.09-.17-.25-1 1.71-3.86l.07-.1c.51-.76 1.1-1.54 1.65-2.23a.12.12 0 0 1 .22.1zm31.7-11.51h.2a9.64 9.64 0 0 1 1.55 2.64.12.12 0 0 1-.11.17 4.59 4.59 0 0 1-2.08-.47.72.72 0 0 1-.42-.43 3.23 3.23 0 0 1 .86-1.9zm1.85 5a.73.73 0 0 1-.88.61 3.3 3.3 0 0 1-1.65-.5 2.36 2.36 0 0 1-.65-1.05.12.12 0 0 1 .23-.17 6.66 6.66 0 0 0 2.42.9h.58v.18zM.85 21.74v-8h3.52a2.51 2.51 0 1 1 0 5h-2.12v3h-1.4zm4.69-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3zM7.79 17.74a4 4 0 0 1 4.09-4.14 4 4 0 0 1 4.12 4.14 4 4 0 0 1-4.09 4.14 4 4 0 0 1-4.12-4.14zm6.74 0a2.66 2.66 0 1 0-5.3 0 2.66 2.66 0 1 0 5.3 0z\" transform=\"translate(-.85)\"/><path d=\"M22.35 21.74l-1.56-5.9-1.55 5.9h-1.49l-2.29-8h1.57l1.56 6.16 1.66-6.16h1.12l1.66 6.16 1.55-6.16h1.57l-2.28 8h-1.52zM27.07 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.07v1.24h-5.48z\"/><path d=\"M39.42 21.74l-1.77-3h-1.4v3h-1.4v-8h3.51a2.43 2.43 0 0 1 2.64 2.5 2.24 2.24 0 0 1-1.9 2.35l2 3.14h-1.68zm.12-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3z\" transform=\"translate(-.85)\"/><path d=\"M41.53 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.08v1.24h-5.49z\"/><path d=\"M49.31 21.74v-8h3a3.91 3.91 0 0 1 4.19 4 3.9 3.9 0 0 1-4.19 4h-3zm5.72-4a2.59 2.59 0 0 0-2.75-2.74h-1.57v5.5h1.57a2.63 2.63 0 0 0 2.72-2.76zM60.91 21.74v-8h3.93a2 2 0 0 1 2.28 2 1.8 1.8 0 0 1-1.39 1.83 2 2 0 0 1 1.55 2 2.1 2.1 0 0 1-2.28 2.17h-4zm4.77-5.74a1 1 0 0 0-1.13-1h-2.24v2h2.24a1 1 0 0 0 1.13-1zm.16 3.37a1.1 1.1 0 0 0-1.22-1.1h-2.3v2.23h2.3a1.08 1.08 0 0 0 1.22-1.12z\" transform=\"translate(-.85)\"/><path d=\"M69.74 21.74v-3.33l-3.11-4.68h1.61l2.21 3.43 2.18-3.43h1.61l-3.09 4.68v3.32h-1.4z\"/></svg></a>"
   }
 };
 
@@ -973,8 +975,6 @@
         case 'slideout':
         case 'random':
         case 'inline':
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -1062,9 +1062,6 @@
           if (node && node.parentNode) {
             node.parentNode.removeChild(node);
           }
-        } else {
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
         }
 
         var getFormElement = function(field) {
@@ -1074,7 +1071,6 @@
             return widget.querySelector('input[name="username"]');
           return widget.querySelector('input[name="' + field + '"]');
         }
-
 
         // Set placeholders
         Object.keys(config.placeholders).forEach(function (field) {
@@ -1542,6 +1538,7 @@
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var branding = widget.querySelector('.branding svg');
+      var socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
       var i;
       var j;
 
@@ -1619,6 +1616,17 @@
       if (colors.text && branding) {
         branding.style.fill = colors.text;
       }
+
+
+      socialBtns.forEach(function(btn) {
+        if (colors.actionText) {
+          btn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          btn.style.backgroundColor = colors.actionBackground;
+        }
+      });
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
     },
@@ -1928,131 +1936,143 @@
     },
 
     /**
-     * @description Social APIs require certain DOM elements to be redrawn
-     *                  after initialization (ex. buttons). Request a timeout
-     *                  redraw, which executes after all social APIs are initialized.
-     *                  Generates a clojure function inside.
+     * @description Load callback for facebook integration
      */
-    requestSocialPluginRender: function () {
-      var renderWidgets = {
-        facebook: [],
-        google: []
-      };
-      var timeoutInterval = {};
+    onFacebookLoad: function() {
+      var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
-      var attemptRenderingFacebook = function () {
-        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
-          renderWidgets.facebook.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.fb-login-button');
-
-            window.FB.XFBML.parse(widget);
-            signInBtn.className += ' social-login-btn';
-          });
-          renderWidgets.facebook = [];
-          core.autoCompleteFacebookData();
-
-          return clearTimeout(timeoutInterval['fb']);
-        } else {
-          return setTimeout(attemptRenderingFacebook, 1000);
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          core.autoCompleteFacebookData(fbBtns);
         }
-      };
+      });
 
-      var attemptRenderingGoogle = function () {
-        if (typeof window.gapi !== 'undefined') {
-          renderWidgets.google.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.google-login');
-
-            window.gapi.signin2.render(signInBtn.id, {
-              scope: 'profile',
-              onsuccess: pathfora.onGoogleSignIn,
-              height: 25,
-              width: 90,
-              longtitle: false
-            });
-            signInBtn.className += ' social-login-btn';
-          });
-          renderWidgets.google = [];
-
-          return clearTimeout(timeoutInterval['google']);
-        } else {
-          return setTimeout(attemptRenderingGoogle, 1000);
+      fbBtns.forEach(function(element) {
+        if (element.parentElement) {
+          element.parentElement.onclick = function() {
+            core.onFacebookClick(fbBtns);
+          }
         }
-      };
-
-      this.requestSocialPluginRender = function (widget) {
-        var widgets = widget instanceof Array ? widget : [widget];
-
-        widgets.forEach(function (element) {
-          var requestFacebook = false;
-          var requestGoogle = false;
-
-          if (typeof element.querySelector === 'undefined') {
-            return false;
-          }
-
-          requestFacebook = element.querySelector('.fb-login-button') !== null;
-          requestGoogle = element.querySelector('.google-login') !== null;
-
-          if (requestFacebook) {
-            renderWidgets.facebook = renderWidgets.facebook.concat(element);
-          }
-          if (requestGoogle) {
-            renderWidgets.google = renderWidgets.google.concat(element);
-          }
-        });
-
-        timeoutInterval['fb'] = attemptRenderingFacebook();
-        timeoutInterval['google'] = attemptRenderingGoogle();
-      };
-
-      this.requestSocialPluginRender(arguments[0]);
+      });
     },
 
     /**
-     * @description Attempt to load forms' data from Facebook API.
-     * @throws {Error} Facebook API Error
+     * @description Attempt to load forms data from Facebook API.
+     * @param {object} facebook buttons element selector
      */
-    autoCompleteFacebookData: function () {
-      if (typeof window.FB !== 'undefined') {
-        window.FB.getLoginStatus(function (connection) {
-          if (connection.status === 'connected') {
-            window.FB.api('/me', {
-              fields: 'name,first_name,last_name,email'
-            }, function (query) {
-              if (query.error) {
-                throw new Error('Facebook API Error: ' + query.error);
-              }
+    autoCompleteFacebookData: function (elements) {
+      FB.api('/me', {
+        fields: 'name,email,work'
+      }, function (resp) {
+        if (resp && !resp.error) {
+          core.autoCompleteFormFields({
+            type: 'facebook',
+            username: resp.name || '',
+            email: resp.email || ''
+          });
 
-              core.autoCompleteFormFields({
-                username: query.name || '',
-                email: query.email || '',
-                firstName: query.first_name || '',
-                lastName: query.last_name || ''
-              });
+          elements.forEach(function(item) {
+            item.innerHTML = "Log Out";
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Click handler to log in/log out from facebook.
+     * @param {object} facebook buttons element selector
+     */
+    onFacebookClick: function(elements) {
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          FB.logout(function(resp) {
+            elements.forEach(function(elem) {
+              elem.innerHTML = "Log In";
             });
-          }
+            core.clearFormFields("facebook", ['username', 'email']);
+          });
+        
+        } else {
+          FB.login(function(resp) {
+            if (resp.authResponse) {
+              core.autoCompleteFacebookData(elements);
+            }
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Load callback for google integration
+     * @param {object} optional widget object
+     */
+    onGoogleLoad: function() {
+      gapi.load('auth2', function() {
+        var auth2 = gapi.auth2.init({
+          clientId: pathforaDataObject.socialNetworks.googleClientID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile'
         });
-      }
+
+        var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
+
+        auth2.then(function() {
+          var user = auth2.currentUser.get();
+          core.autoCompleteGoogleData(user, googleBtns);
+
+          googleBtns.forEach(function(element) {
+            if (element.parentElement) {
+              element.parentElement.onclick = function() {
+                core.onGoogleClick(googleBtns);
+              }
+            }
+          });
+        });
+      });
     },
 
     /**
      * @description Attempt to load forms' data from Google+ API.
+     * @param {object} current googleUser
+     * @param {object} google buttons element selector
      */
-    autoCompleteGoogleData: function () {
-      var auth2;
-      var user;
-      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
-        auth2 = window.gapi.auth2.getAuthInstance();
-        user = auth2.currentUser.get().getBasicProfile();
+    autoCompleteGoogleData: function (user, elements) {
+      if (typeof user !== 'undefined') {
+        var profile = user.getBasicProfile();
 
-        if (typeof user !== 'undefined') {
+        if (typeof profile !== 'undefined') {
           core.autoCompleteFormFields({
-            username: user.getName() || '',
-            email: user.getEmail() || '',
-            firstName: '',
-            lastName: ''
+            type: 'google',
+            username: profile.getName() || '',
+            email: profile.getEmail() || ''
+          });
+
+          elements.forEach(function(item) {
+            item.innerHTML = "Sign Out";
           });
         }
+      }
+    },
+
+    /**
+     * @description Click handler to sign in/sign out from google.
+     * @param {object} google buttons element selector
+     */
+    onGoogleClick: function(elements) {
+      var auth2 = gapi.auth2.getAuthInstance();
+
+      if (auth2.isSignedIn.get()) {
+        auth2.signOut().then(function() {
+          elements.forEach(function(elem) {
+            elem.innerHTML = "Sign In";
+          });
+          core.clearFormFields("google", ['username', 'email']);
+        });
+
+      } else {
+        auth2.signIn().then(function() {
+          core.autoCompleteGoogleData(auth2.currentUser.get(), elements);
+        });
       }
     },
 
@@ -2064,13 +2084,36 @@
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
       widgets.forEach(function (widget) {
-        Object.keys(data).forEach(function (inputField) {
-          var field = widget.querySelector('input[name="' + inputField + '"]');
+        if (widget.querySelector('.' + data.type + '-login-btn')) {
+          Object.keys(data).forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
 
-          if (field && !field.value) {
-            field.value = data[inputField];
-          }
-        });
+            if (field && !field.value) {
+              field.value = data[inputField];
+            }
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Clear user data from form fields
+     * @param {object} type of integration
+     * @param {object} fields to clear
+     */
+    clearFormFields: function (type, fields) {
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+      widgets.forEach(function (widget) {
+        if (widget.querySelector('.' + type + '-login-btn')) {
+          fields.forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
+
+            if (field) {
+              field.value = '';
+            }
+          });
+        }
       });
     }
   };
@@ -2455,8 +2498,6 @@
         if (widget.showForm === false) {
           throw new Error('Social login requires a form on the widget');
         }
-
-        core.requestSocialPluginRender(node);
       }
 
       if (widget.pushDown) {
@@ -2602,39 +2643,47 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
-      // FUTURE Combine with Google integration and move to utils
-      var parseFBLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="fb-login" hidden><\/p>/gm,
-            templates.social.facebookIcon
-          );
-        });
-      };
+      if (appId !== '') {
+        var btn = templates.social.facebookBtn.replace(
+          /(\{){2}facebook-icon(\}){2}/gm,
+          templates.assets.facebookIcon
+        );
 
-      window.fbAsyncInit = function () {
-        window.FB.init({
-          appId: appId,
-          xfbml: true,
-          version: 'v2.5',
-          status: true,
-          cookie: true
-        });
-      };
+        var parseFBLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="fb-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
-      // NOTE API initialization
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: appId,
+            xfbml: true,
+            version: 'v2.5',
+            status: true,
+            cookie: true
+          });
 
-      parseFBLoginTemplate(templates.form);
-      parseFBLoginTemplate(templates.sitegate);
+          core.onFacebookLoad();
+        };
 
-      pathforaDataObject.socialNetworks.facebookAppId = appId;
+        // NOTE API initialization
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "//connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+
+        parseFBLoginTemplate(templates.form);
+        parseFBLoginTemplate(templates.sitegate);
+
+        pathforaDataObject.socialNetworks.facebookAppId = appId;
+      }
     };
 
     /**
@@ -2643,51 +2692,52 @@
      * @param {string} clientId
      */
     this.integrateWithGoogle = function (clientId) {
-      var body = document.querySelector('body');
-      var head = document.querySelector('head');
+      if (clientId !== '') {
+        var body = document.querySelector('body');
+        var head = document.querySelector('head');
 
-      var appMetaTag = templates.social.googleMeta.replace(
-        /(\{){2}google-clientId(\}){2}/gm,
-        clientId
-      );
+        var appMetaTag = templates.social.googleMeta.replace(
+          /(\{){2}google-clientId(\}){2}/gm,
+          clientId
+        );
 
-      var parseGoogleLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type, index) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="google-login" hidden><\/p>/gm,
-            templates.social.googleIcon.replace(
-              /(\{){2}google-btnId(\}){2}/gm,
-              'g-' + index
-            )
-          );
-        });
-      };
+        var btn = templates.social.googleBtn.replace(
+          /(\{){2}google-icon(\}){2}/gm,
+          templates.assets.googleIcon
+        );
 
-      head.innerHTML += appMetaTag;
+        var parseGoogleLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type, index) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="google-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
+        head.innerHTML += appMetaTag;
 
-      // NOTE Google API
-      (function () {
-        var s;
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.async = true;
-        po.src = 'https://apis.google.com/js/platform.js';
-        s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(po, s);
-      })();
+        window.___gcfg = {
+          parsetags: 'onload'
+        }
 
-      pathforaDataObject.socialNetworks.googleClientID = clientId;
-      parseGoogleLoginTemplate(templates.form);
-      parseGoogleLoginTemplate(templates.sitegate);
-    };
+        window.pathforaGoogleOnLoad = core.onGoogleLoad;
 
-    this.onFacebookSignIn = function () {
-      core.autoCompleteFacebookData();
-    };
+        // NOTE Google API
+        (function () {
+          var s;
+          var po = document.createElement('script');
+          po.type = 'text/javascript';
+          po.async = true;
+          po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
+          s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(po, s);
+        })();
 
-    this.onGoogleSignIn = function (googleData) {
-      core.autoCompleteGoogleData(googleData);
+        pathforaDataObject.socialNetworks.googleClientID = clientId;
+        parseGoogleLoginTemplate(templates.form);
+        parseGoogleLoginTemplate(templates.sitegate);
+      }
     };
 
     /*

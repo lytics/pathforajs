@@ -268,35 +268,35 @@
 .pf-social-login {
   text-align: right;
   margin-bottom: 10px;
-  height: 25px;
-  overflow: hidden;
-
-  p {
-    display: inline-block;
-  }
-
-  & > div:not(:first-of-type) {
-    margin-left: 4px;
-  }
 
   .social-login-btn {
+    font-size: 13px;
     display: inline-block;
     margin: 0;
     padding: 0;
-    height: 25px;
-    vertical-align: top;
+    cursor: pointer;
+    padding: 6px 10px 4px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    outline: none;
+    box-shadow: 0px 1px 1px rgba(0,0,0,.2);
+    color: @actionText;
+    background-color: @actionBackground;
 
-    *, *:hover {
-      box-shadow: none;
+    & + .social-login-btn {
+      margin-left: 4px;
     }
 
-    &.fb-login-button {
-      width: 85px;
+    svg {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
     }
 
-    // NOTE Fix for Facebook build-in button (fixable with custom buttons)
     span {
-      vertical-align: top !important;
+      vertical-align: top;
+      margin-left: 5px;
+      display: inline-block;
     }
   }
 }
