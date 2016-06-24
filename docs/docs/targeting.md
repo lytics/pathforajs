@@ -1,4 +1,4 @@
-Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](/api/methods.md#initializewidgets) and your Lytics Account ID as a second parameter.
+Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](/api/methods.md#initializewidgets).
 
 ``` javascript
 var modules = {
@@ -8,14 +8,32 @@ var modules = {
   }]
 };
 
-pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID');
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){ pathfora.initializeWidgets(modules); };
 ```
 
 ## Setup Your Audiences
 
 You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.
-
 <img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess">
+
+## Leveraging the Lytics "Data Loaded" Callback
+
+When leveraging real-time user identity and/or segment membership in any Pathfora widget implementation, it is recommended that you use the Lytics "Data Loaded" callback. This ensures all user data has been loaded prior to the Pathfora initialization. Failing to load user identify may result in having users segments default to only the 'all' segment.
+
+``` html
+<script type="text/javascript">
+  window.liosetup = window["liosetup"] || {};
+  window.liosetup.callback = function(){ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID'); };
+</script>
+<script type="text/javascript">
+  // insert your Lytics javascript tag here, async or sync
+</script>
+
+```
+
+ The above can be wrapped around any of the Pathfora examples present in these docs.
+
 
 ## target
 
@@ -89,9 +107,10 @@ var modules = {
   }]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID';
-
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules);
+};
 ```
 
 
@@ -131,9 +150,10 @@ var modules = {
   }]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID';
-
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules);
+};
 ```
 
 ## inverse
@@ -190,7 +210,8 @@ var modules = {
   inverse: [ subscriptionModule ]
 };
 
-var lyticsAcctId = 'YOUR LYTICS ACCOUNT ID';
-
-pathfora.initializeWidgets(modules, lyticsAcctId);
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(modules);
+};
 ```

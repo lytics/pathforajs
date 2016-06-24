@@ -1,8 +1,8 @@
-Pathfora integrates with [Lytics](http://www.getlytics.com/) to support its most powerful features such as [audience targeting](/targeting.md) and [content recommendations](/layouts/modal.md#recommend).
+Pathfora integrates with [Lytics](http://www.getlytics.com/) to support its [content recommendations](/layouts/modal.md#recommend) feature.
 
 ## Using your Lytics Account ID
 
-To use these features you will need to know your Lytics Account ID. This account ID should be the same as the one in the Lytics javascript tag. This is the string value you can use for the second parameter in [initializeWidgets](/api/methods.md#initializewidgets).
+To use this feature you will need to know your Lytics Account ID. This account ID should be the same as the one in the Lytics javascript tag. This is the string value you can use for the second parameter in [initializeWidgets](/api/methods.md#initializewidgets).
 
 <img class="full" src="../../assets/acctid.jpg" alt="Lytics Account Id">
 

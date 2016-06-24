@@ -2128,32 +2128,12 @@
      * @param {string} accountId  Lytics user ID
      * @param {string} callback   universal callback
      */
-    checkUserSegments: function (accountId, callback) {
-      var seerId = utils.readCookie('seerid');
-      var apiUrl;
-
-      if (!seerId) {
-        throw new Error('Cannot find SEERID cookie');
+    checkUserSegments: function (callback) {
+      if(context.lio && context.lio.data && context.lio.data.segments){
+        callback(context.lio.data.segments);
+      }else{
+        callback(['all']);
       }
-
-      apiUrl = [
-        '{{apiurl}}/api/me/',
-        accountId,
-        '/',
-        seerId,
-        '?segments=true'
-      ].join('');
-
-      this.getData(apiUrl, function (response) {
-        callback(JSON.parse(response).data.segments);
-
-      }, function () {
-        callback({
-          data: {
-            segments: ['all']
-          }
-        });
-      });
     },
 
 
@@ -2246,7 +2226,7 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(lyticsId, function (segments) {
+          api.checkUserSegments(function (segments) {
 
             var target,
               targetmatched = false,

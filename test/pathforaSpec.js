@@ -359,7 +359,12 @@ describe('Pathfora', function () {
   // -------------------------
 
   it('should distinguish newcomers, subscribers and common users', function (done) {
-    jasmine.Ajax.install();
+    window.lio = {
+      data: {
+        segments: ['all','b']
+      }
+    }
+
     var messageA = pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -401,13 +406,6 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
-
-    jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":{"segments":["all","b"]}}'
-    });
 
     var widget = $('#' + messageB.id);
     expect(widget).toBeDefined();
@@ -427,12 +425,15 @@ describe('Pathfora', function () {
       pathfora.clearAll();
       done();
     }, 200);
-
-    jasmine.Ajax.uninstall();
   });
 
   it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
-    jasmine.Ajax.install();
+    window.lio = {
+      data: {
+        segments: ['a','b']
+      }
+    }
+
     var messageA = pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -457,13 +458,6 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeWidgets(widgets, credentials);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
-
-    jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":{"segments":["a","b"]}}'
-    });
 
     var widgetA = $('#' + messageA.id);
 
@@ -476,8 +470,6 @@ describe('Pathfora', function () {
       pathfora.clearAll();
       done();
     }, 200);
-
-    jasmine.Ajax.uninstall();
   });
 
   // -------------------------
@@ -671,7 +663,7 @@ describe('Pathfora', function () {
 
     var w = $('[id*="ab-widget2"]');
     expect(w.length).toBe(2);
-    
+
     var first = w.first();
     expect(first.find('.pf-widget-message').text()).toEqual(first.next().find('.pf-widget-message').text());
   });
@@ -792,7 +784,7 @@ describe('Pathfora', function () {
 
     var w = $('[id*="ab-widget"]');
     expect(w.length).toBe(2);
-    
+
     var w5 = $('[id*="ab-widget5"]');
     expect(w5.length).toBe(1);
 
@@ -801,7 +793,12 @@ describe('Pathfora', function () {
   });
 
   it('should handle A/B Tests in conjunction with audience targeting', function() {
-    jasmine.Ajax.install();
+    window.lio = {
+      data: {
+        segments: ['all','smt_new']
+      }
+    }
+
     var widgetA = pathfora.Message({
       id: 'ab-widget10-a',
       layout: 'slideout',
@@ -833,17 +830,8 @@ describe('Pathfora', function () {
     pathfora.initializeABTesting([ ab ]);
     pathfora.initializeWidgets(widgets, credentials);
 
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/me/123/123?segments=true');
-
-    jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":{"segments":["all","smt_new"]}}'
-    });
-
     var w = $('[id*="ab-widget10"]');
     expect(w.length).toBe(1);
-    jasmine.Ajax.uninstall();
   });
 
   it('should support the old cookie naming convention for A/B tests', function() {
@@ -1681,7 +1669,7 @@ describe('Widgets', function () {
     expect(function() {
       pathfora.initializeWidgets([errorModal], 0);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
-      
+
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 400,
         'contentType': 'application/json',
@@ -1697,7 +1685,7 @@ describe('Widgets', function () {
     expect(function() {
       pathfora.initializeWidgets([errorModal3], credentials);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
-      
+
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
         'contentType': 'application/json',
