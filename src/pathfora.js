@@ -408,6 +408,73 @@
               'widgets': [widget]
           });
       }
+    },
+
+    /**
+     * @description Escape URIs optionally without double-encoding
+     * @param   {string}  text                 the uri text to escape
+     * @param   {obj}     options
+     * @param   {boolean} options.usePlus      escape `space` to `+` instead of `%20`
+     * @param   {boolean} options.keepEscaped  do not double-encode text
+     * @returns {string}  uri                  the uri-escaped text
+     */
+    escapeURI: function(text, options) {
+      return escapeURI(text, options);
+
+      // NOTE This was ported from various bits of C++ code from Chromium
+      function escapeURI(text, options) {
+        options || (options = {});
+        var usePlus = options.usePlus || false,
+            keepEscaped = options.keepEscaped || false,
+            length = text.length,
+            escaped = [],
+            index,
+            charText,
+            charCode;
+
+        for (index = 0; index < length; index++) {
+          charText = text[index];
+          charCode = text.charCodeAt(index);
+
+          if (usePlus && ' ' === charText) {
+            escaped.push('+');
+          } else if (keepEscaped && '%' === charText && length >= index + 2 &&
+              isHexDigit(text[index + 1]) &&
+              isHexDigit(text[index + 2])) {
+            escaped.push('%');
+          } else if (shouldEscape(charText)) {
+            escaped.push('%',
+              toHexDigit(charCode >> 4),
+              toHexDigit(charCode & 0xf));
+          } else {
+            escaped.push(charText);
+          }
+        }
+        return escaped.join('');
+      }
+
+      function isHexDigit(c) {
+        return /[0-9A-Fa-f]/.test(c);
+      }
+
+      function toHexDigit(i) {
+        return '0123456789ABCDEF'[i];
+      }
+
+      function shouldEscape(charText) {
+        return !isURISeparator(charText) && containsChar([
+          0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
+          0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+        ], charText.charCodeAt(0));
+      }
+
+      function isURISeparator(c) {
+        return [ '#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '=' ].indexOf(c) !== -1;
+      }
+
+      function containsChar(charMap, charCode) {
+        return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
+      }
     }
   };
 
@@ -596,13 +663,15 @@
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
             case 'string':
-              if (url.indexOf(phrase.split("?")[0]) !== -1) {
-                valid = core.compareQueries(queries, core.parseQuery(phrase), phrase.match) && true;
+              if (url.indexOf(utils.escapeURI(phrase.split("?")[0], { keepEscaped: true })) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
               }
               break;
 
             case 'object':
               if (phrase.match && phrase.value) {
+                var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+
                 switch (phrase.match) {
                   // simple match
                   case 'simple':
@@ -613,8 +682,8 @@
 
                   // exact match
                   case 'exact':
-                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
-                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
+                    if (url.split("?")[0].replace(/\/$/, '') === phraseValue.split("?")[0].replace(/\/$/, '')) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
                     }
                     break;
 
@@ -628,8 +697,8 @@
 
                   // string match (default)
                   default:
-                    if (url.indexOf(phrase.value.split("?")[0]) !== -1) {
-                      valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
+                    if (url.indexOf(phraseValue.split("?")[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
                     }
                     break;
                 }
@@ -939,8 +1008,6 @@
         case 'slideout':
         case 'random':
         case 'inline':
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -1028,9 +1095,6 @@
           if (node && node.parentNode) {
             node.parentNode.removeChild(node);
           }
-        } else {
-          core.autoCompleteFacebookData();
-          core.autoCompleteGoogleData();
         }
 
         var getFormElement = function(field) {
@@ -1040,7 +1104,6 @@
             return widget.querySelector('input[name="username"]');
           return widget.querySelector('input[name="' + field + '"]');
         }
-
 
         // Set placeholders
         Object.keys(config.placeholders).forEach(function (field) {
@@ -1122,7 +1185,6 @@
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
-
           event.preventDefault();
 
           switch(config.type) {
@@ -1509,6 +1571,7 @@
       var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
       var fields = widget.querySelectorAll('input, textarea');
       var branding = widget.querySelector('.branding svg');
+      var socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
       var i;
       var j;
 
@@ -1586,6 +1649,17 @@
       if (colors.text && branding) {
         branding.style.fill = colors.text;
       }
+
+
+      socialBtns.forEach(function(btn) {
+        if (colors.actionText) {
+          btn.style.color = colors.actionText;
+        }
+
+        if (colors.actionBackground) {
+          btn.style.backgroundColor = colors.actionBackground;
+        }
+      });
 
       widget.querySelector('.pf-widget-message').style.color = colors.text;
     },
@@ -1895,131 +1969,143 @@
     },
 
     /**
-     * @description Social APIs require certain DOM elements to be redrawn
-     *                  after initialization (ex. buttons). Request a timeout
-     *                  redraw, which executes after all social APIs are initialized.
-     *                  Generates a clojure function inside.
+     * @description Load callback for facebook integration
      */
-    requestSocialPluginRender: function () {
-      var renderWidgets = {
-        facebook: [],
-        google: []
-      };
-      var timeoutInterval = {};
+    onFacebookLoad: function() {
+      var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
-      var attemptRenderingFacebook = function () {
-        if (typeof window.FB !== 'undefined' && typeof window.FB.XFBML.parse === 'function') {
-          renderWidgets.facebook.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.fb-login-button');
-
-            window.FB.XFBML.parse(widget);
-            signInBtn.className += ' social-login-btn';
-          });
-          renderWidgets.facebook = [];
-          core.autoCompleteFacebookData();
-
-          return clearTimeout(timeoutInterval['fb']);
-        } else {
-          return setTimeout(attemptRenderingFacebook, 1000);
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          core.autoCompleteFacebookData(fbBtns);
         }
-      };
+      });
 
-      var attemptRenderingGoogle = function () {
-        if (typeof window.gapi !== 'undefined') {
-          renderWidgets.google.forEach(function (widget) {
-            var signInBtn = widget.querySelector('.google-login');
-
-            window.gapi.signin2.render(signInBtn.id, {
-              scope: 'profile',
-              onsuccess: pathfora.onGoogleSignIn,
-              height: 25,
-              width: 90,
-              longtitle: false
-            });
-            signInBtn.className += ' social-login-btn';
-          });
-          renderWidgets.google = [];
-
-          return clearTimeout(timeoutInterval['google']);
-        } else {
-          return setTimeout(attemptRenderingGoogle, 1000);
+      fbBtns.forEach(function(element) {
+        if (element.parentElement) {
+          element.parentElement.onclick = function() {
+            core.onFacebookClick(fbBtns);
+          }
         }
-      };
-
-      this.requestSocialPluginRender = function (widget) {
-        var widgets = widget instanceof Array ? widget : [widget];
-
-        widgets.forEach(function (element) {
-          var requestFacebook = false;
-          var requestGoogle = false;
-
-          if (typeof element.querySelector === 'undefined') {
-            return false;
-          }
-
-          requestFacebook = element.querySelector('.fb-login-button') !== null;
-          requestGoogle = element.querySelector('.google-login') !== null;
-
-          if (requestFacebook) {
-            renderWidgets.facebook = renderWidgets.facebook.concat(element);
-          }
-          if (requestGoogle) {
-            renderWidgets.google = renderWidgets.google.concat(element);
-          }
-        });
-
-        timeoutInterval['fb'] = attemptRenderingFacebook();
-        timeoutInterval['google'] = attemptRenderingGoogle();
-      };
-
-      this.requestSocialPluginRender(arguments[0]);
+      });
     },
 
     /**
-     * @description Attempt to load forms' data from Facebook API.
-     * @throws {Error} Facebook API Error
+     * @description Attempt to load forms data from Facebook API.
+     * @param {object} facebook buttons element selector
      */
-    autoCompleteFacebookData: function () {
-      if (typeof window.FB !== 'undefined') {
-        window.FB.getLoginStatus(function (connection) {
-          if (connection.status === 'connected') {
-            window.FB.api('/me', {
-              fields: 'name,first_name,last_name,email'
-            }, function (query) {
-              if (query.error) {
-                throw new Error('Facebook API Error: ' + query.error);
-              }
+    autoCompleteFacebookData: function (elements) {
+      FB.api('/me', {
+        fields: 'name,email,work'
+      }, function (resp) {
+        if (resp && !resp.error) {
+          core.autoCompleteFormFields({
+            type: 'facebook',
+            username: resp.name || '',
+            email: resp.email || ''
+          });
 
-              core.autoCompleteFormFields({
-                username: query.name || '',
-                email: query.email || '',
-                firstName: query.first_name || '',
-                lastName: query.last_name || ''
-              });
+          elements.forEach(function(item) {
+            item.innerHTML = "Log Out";
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Click handler to log in/log out from facebook.
+     * @param {object} facebook buttons element selector
+     */
+    onFacebookClick: function(elements) {
+      FB.getLoginStatus(function (connection) {
+        if (connection.status === 'connected') {
+          FB.logout(function(resp) {
+            elements.forEach(function(elem) {
+              elem.innerHTML = "Log In";
             });
-          }
+            core.clearFormFields("facebook", ['username', 'email']);
+          });
+
+        } else {
+          FB.login(function(resp) {
+            if (resp.authResponse) {
+              core.autoCompleteFacebookData(elements);
+            }
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Load callback for google integration
+     * @param {object} optional widget object
+     */
+    onGoogleLoad: function() {
+      gapi.load('auth2', function() {
+        var auth2 = gapi.auth2.init({
+          clientId: pathforaDataObject.socialNetworks.googleClientID,
+          cookiepolicy: 'single_host_origin',
+          scope: 'profile'
         });
-      }
+
+        var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
+
+        auth2.then(function() {
+          var user = auth2.currentUser.get();
+          core.autoCompleteGoogleData(user, googleBtns);
+
+          googleBtns.forEach(function(element) {
+            if (element.parentElement) {
+              element.parentElement.onclick = function() {
+                core.onGoogleClick(googleBtns);
+              }
+            }
+          });
+        });
+      });
     },
 
     /**
      * @description Attempt to load forms' data from Google+ API.
+     * @param {object} current googleUser
+     * @param {object} google buttons element selector
      */
-    autoCompleteGoogleData: function () {
-      var auth2;
-      var user;
-      if (typeof window.gapi !== 'undefined' && typeof window.gapi.auth2 !== 'undefined') {
-        auth2 = window.gapi.auth2.getAuthInstance();
-        user = auth2.currentUser.get().getBasicProfile();
+    autoCompleteGoogleData: function (user, elements) {
+      if (typeof user !== 'undefined') {
+        var profile = user.getBasicProfile();
 
-        if (typeof user !== 'undefined') {
+        if (typeof profile !== 'undefined') {
           core.autoCompleteFormFields({
-            username: user.getName() || '',
-            email: user.getEmail() || '',
-            firstName: '',
-            lastName: ''
+            type: 'google',
+            username: profile.getName() || '',
+            email: profile.getEmail() || ''
+          });
+
+          elements.forEach(function(item) {
+            item.innerHTML = "Sign Out";
           });
         }
+      }
+    },
+
+    /**
+     * @description Click handler to sign in/sign out from google.
+     * @param {object} google buttons element selector
+     */
+    onGoogleClick: function(elements) {
+      var auth2 = gapi.auth2.getAuthInstance();
+
+      if (auth2.isSignedIn.get()) {
+        auth2.signOut().then(function() {
+          elements.forEach(function(elem) {
+            elem.innerHTML = "Sign In";
+          });
+          core.clearFormFields("google", ['username', 'email']);
+        });
+
+      } else {
+        auth2.signIn().then(function() {
+          core.autoCompleteGoogleData(auth2.currentUser.get(), elements);
+        });
       }
     },
 
@@ -2031,13 +2117,36 @@
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
       widgets.forEach(function (widget) {
-        Object.keys(data).forEach(function (inputField) {
-          var field = widget.querySelector('input[name="' + inputField + '"]');
+        if (widget.querySelector('.' + data.type + '-login-btn')) {
+          Object.keys(data).forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
 
-          if (field && !field.value) {
-            field.value = data[inputField];
-          }
-        });
+            if (field && !field.value) {
+              field.value = data[inputField];
+            }
+          });
+        }
+      });
+    },
+
+    /**
+     * @description Clear user data from form fields
+     * @param {object} type of integration
+     * @param {object} fields to clear
+     */
+    clearFormFields: function (type, fields) {
+      var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+      widgets.forEach(function (widget) {
+        if (widget.querySelector('.' + type + '-login-btn')) {
+          fields.forEach(function (inputField) {
+            var field = widget.querySelector('input[name="' + inputField + '"]');
+
+            if (field) {
+              field.value = '';
+            }
+          });
+        }
       });
     }
   };
@@ -2129,32 +2238,12 @@
      * @param {string} accountId  Lytics user ID
      * @param {string} callback   universal callback
      */
-    checkUserSegments: function (accountId, callback) {
-      var seerId = utils.readCookie('seerid');
-      var apiUrl;
-
-      if (!seerId) {
-        throw new Error('Cannot find SEERID cookie');
+    checkUserSegments: function (callback) {
+      if(context.lio && context.lio.data && context.lio.data.segments){
+        callback(context.lio.data.segments);
+      }else{
+        callback(['all']);
       }
-
-      apiUrl = [
-        '{{apiurl}}/api/me/',
-        accountId,
-        '/',
-        seerId,
-        '?segments=true'
-      ].join('');
-
-      this.getData(apiUrl, function (response) {
-        callback(JSON.parse(response).data.segments);
-
-      }, function () {
-        callback({
-          data: {
-            segments: ['all']
-          }
-        });
-      });
     },
 
 
@@ -2203,7 +2292,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.03';
+    this.version = '0.0.04';
 
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView');
@@ -2247,7 +2336,7 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(lyticsId, function (segments) {
+          api.checkUserSegments(function (segments) {
 
             var target,
               targetmatched = false,
@@ -2442,8 +2531,6 @@
         if (widget.showForm === false) {
           throw new Error('Social login requires a form on the widget');
         }
-
-        core.requestSocialPluginRender(node);
       }
 
       if (widget.pushDown) {
@@ -2589,39 +2676,47 @@
      * @param {string} appId
      */
     this.integrateWithFacebook = function (appId) {
-      // FUTURE Combine with Google integration and move to utils
-      var parseFBLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="fb-login" hidden><\/p>/gm,
-            templates.social.facebookIcon
-          );
-        });
-      };
+      if (appId !== '') {
+        var btn = templates.social.facebookBtn.replace(
+          /(\{){2}facebook-icon(\}){2}/gm,
+          templates.assets.facebookIcon
+        );
 
-      window.fbAsyncInit = function () {
-        window.FB.init({
-          appId: appId,
-          xfbml: true,
-          version: 'v2.5',
-          status: true,
-          cookie: true
-        });
-      };
+        var parseFBLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="fb-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
-      // NOTE API initialization
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
+        window.fbAsyncInit = function () {
+          window.FB.init({
+            appId: appId,
+            xfbml: true,
+            version: 'v2.5',
+            status: true,
+            cookie: true
+          });
 
-      parseFBLoginTemplate(templates.form);
-      parseFBLoginTemplate(templates.sitegate);
+          core.onFacebookLoad();
+        };
 
-      pathforaDataObject.socialNetworks.facebookAppId = appId;
+        // NOTE API initialization
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "//connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+
+        parseFBLoginTemplate(templates.form);
+        parseFBLoginTemplate(templates.sitegate);
+
+        pathforaDataObject.socialNetworks.facebookAppId = appId;
+      }
     };
 
     /**
@@ -2630,51 +2725,52 @@
      * @param {string} clientId
      */
     this.integrateWithGoogle = function (clientId) {
-      var body = document.querySelector('body');
-      var head = document.querySelector('head');
+      if (clientId !== '') {
+        var body = document.querySelector('body');
+        var head = document.querySelector('head');
 
-      var appMetaTag = templates.social.googleMeta.replace(
-        /(\{){2}google-clientId(\}){2}/gm,
-        clientId
-      );
+        var appMetaTag = templates.social.googleMeta.replace(
+          /(\{){2}google-clientId(\}){2}/gm,
+          clientId
+        );
 
-      var parseGoogleLoginTemplate = function (parentTemplates) {
-        Object.keys(parentTemplates).forEach(function (type, index) {
-          parentTemplates[type] = parentTemplates[type].replace(
-            /<p name="google-login" hidden><\/p>/gm,
-            templates.social.googleIcon.replace(
-              /(\{){2}google-btnId(\}){2}/gm,
-              'g-' + index
-            )
-          );
-        });
-      };
+        var btn = templates.social.googleBtn.replace(
+          /(\{){2}google-icon(\}){2}/gm,
+          templates.assets.googleIcon
+        );
 
-      head.innerHTML += appMetaTag;
+        var parseGoogleLoginTemplate = function (parentTemplates) {
+          Object.keys(parentTemplates).forEach(function (type, index) {
+            parentTemplates[type] = parentTemplates[type].replace(
+              /<p name="google-login" hidden><\/p>/gm,
+              btn
+            );
+          });
+        };
 
+        head.innerHTML += appMetaTag;
 
-      // NOTE Google API
-      (function () {
-        var s;
-        var po = document.createElement('script');
-        po.type = 'text/javascript';
-        po.async = true;
-        po.src = 'https://apis.google.com/js/platform.js';
-        s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(po, s);
-      })();
+        window.___gcfg = {
+          parsetags: 'onload'
+        }
 
-      pathforaDataObject.socialNetworks.googleClientID = clientId;
-      parseGoogleLoginTemplate(templates.form);
-      parseGoogleLoginTemplate(templates.sitegate);
-    };
+        window.pathforaGoogleOnLoad = core.onGoogleLoad;
 
-    this.onFacebookSignIn = function () {
-      core.autoCompleteFacebookData();
-    };
+        // NOTE Google API
+        (function () {
+          var s;
+          var po = document.createElement('script');
+          po.type = 'text/javascript';
+          po.async = true;
+          po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
+          s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(po, s);
+        })();
 
-    this.onGoogleSignIn = function (googleData) {
-      core.autoCompleteGoogleData(googleData);
+        pathforaDataObject.socialNetworks.googleClientID = clientId;
+        parseGoogleLoginTemplate(templates.form);
+        parseGoogleLoginTemplate(templates.sitegate);
+      }
     };
 
     /*

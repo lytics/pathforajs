@@ -98,7 +98,11 @@ var widgets = {
 };
 
 pathfora.initializeABTesting([ ab ]);
-pathfora.initializeWidgets(widgets, 'YOUR LYTICS ACCOUNT ID');
+
+// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
+window.liosetup.callback = function(){
+  pathfora.initializeWidgets(widgets);
+};
 ```
 
 ## Testing

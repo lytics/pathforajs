@@ -39,7 +39,7 @@ There are 4 types of modules and 4 layouts currently supported.
   var module = pathfora.Message({
     id: 'bar-valued-customers',
     layout: 'bar',
-    msg: 'Thanks for being a valued customer, please check out our new products.'
+    msg: 'Thanks for being a valued customer, please check out our new products.',
     cancelShow: false,
     okMessage: 'View Now',
     confirmAction: {
