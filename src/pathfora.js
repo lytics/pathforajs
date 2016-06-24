@@ -613,7 +613,7 @@
 
                   // exact match
                   case 'exact':
-                    if (url.split("?")[0] === phrase.value.split("?")[0]) {
+                    if (url.split("?")[0].replace(/\/$/, '') === phrase.value.split("?")[0].replace(/\/$/, '')) {
                       valid = core.compareQueries(queries, core.parseQuery(phrase.value), phrase.match) && true;
                     }
                     break;
@@ -1116,7 +1116,6 @@
         widgetForm = widget.querySelector('form');
         widgetOnFormSubmit = function (event) {
           var widgetAction;
-
           event.preventDefault();
 
           switch(config.type) {
@@ -1922,7 +1921,7 @@
     },
 
     /**
-     * @description Attempt to load forms' data from Facebook API.
+     * @description Attempt to load forms data from Facebook API.
      * @param {object} facebook buttons element selector
      */
     autoCompleteFacebookData: function (elements) {
@@ -1931,7 +1930,7 @@
       }, function (resp) {
         if (resp && !resp.error) {
           core.autoCompleteFormFields({
-            type: "facebook",
+            type: 'facebook',
             username: resp.name || '',
             email: resp.email || ''
           });
@@ -2007,7 +2006,7 @@
 
         if (typeof profile !== 'undefined') {
           core.autoCompleteFormFields({
-            type: "google",
+            type: 'google',
             username: profile.getName() || '',
             email: profile.getEmail() || ''
           });
@@ -2170,32 +2169,12 @@
      * @param {string} accountId  Lytics user ID
      * @param {string} callback   universal callback
      */
-    checkUserSegments: function (accountId, callback) {
-      var seerId = utils.readCookie('seerid');
-      var apiUrl;
-
-      if (!seerId) {
-        throw new Error('Cannot find SEERID cookie');
+    checkUserSegments: function (callback) {
+      if(context.lio && context.lio.data && context.lio.data.segments){
+        callback(context.lio.data.segments);
+      }else{
+        callback(['all']);
       }
-
-      apiUrl = [
-        '{{apiurl}}/api/me/',
-        accountId,
-        '/',
-        seerId,
-        '?segments=true'
-      ].join('');
-
-      this.getData(apiUrl, function (response) {
-        callback(JSON.parse(response).data.segments);
-
-      }, function () {
-        callback({
-          data: {
-            segments: ['all']
-          }
-        });
-      });
     },
 
 
@@ -2288,7 +2267,7 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(lyticsId, function (segments) {
+          api.checkUserSegments(function (segments) {
 
             var target,
               targetmatched = false,
