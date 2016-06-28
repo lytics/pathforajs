@@ -4,12 +4,14 @@ Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytic
 var modules = {
   target: [{
     segment: 'smt_name',
-    widgets: [ module ]
+    widgets: [module]
   }]
 };
 
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){ pathfora.initializeWidgets(modules); };
+window.liosetup.callback = function () {
+  pathfora.initializeWidgets(modules);
+};
 ```
 
 ## Setup Your Audiences
@@ -24,11 +26,12 @@ When leveraging real-time user identity and/or segment membership in any Pathfor
 ``` html
 <script type="text/javascript">
   window.liosetup = window["liosetup"] || {};
-  window.liosetup.callback = function(){ pathfora.initializeWidgets(modules, 'YOUR LYTICS ACCOUNT ID'); };
+  window.liosetup.callback = function () {
+    pathfora.initializeWidgets(modules);
+  };
 </script>
-<script type="text/javascript">
-  // insert your Lytics javascript tag here, async or sync
-</script>
+
+<!-- insert your Lytics javascript tag here, async or sync -->
 
 ```
 
@@ -86,16 +89,16 @@ A list of rules assigning modules to audiences.
 ``` javascript
 // example: show a bar module to all users in the `high_value_users` audience promoting new products
 
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'targeted_bar',
   layout: 'bar',
-  msg: 'Thanks for being a valued customer, please check out our new products.'
+  msg: 'Thanks for being a valued customer, please check out our new products.',
   cancelShow: false,
   okMessage: 'View Now',
   confirmAction: {
-    name: "targeted_bar_confirm",
+    name: 'targeted_bar_confirm',
     callback: function () {
-      window.location.pathname = "/new-products";
+      window.location.pathname = '/new-products';
     }
   }
 });
@@ -103,7 +106,7 @@ var module = pathfora.Message({
 var modules = {
   target: [{
     segment: 'high_value_users', // API Access ID for your Lytics audience
-    widgets: [ module ]
+    widgets: [module]
   }]
 };
 
@@ -119,7 +122,7 @@ window.liosetup.callback = function(){
 ``` javascript
 // example: change messaging of module for new vs returning users
 
-var newModule = pathfora.Message({
+var newModule = new pathfora.Message({
   id: 'new_slideout',
   layout: 'slideout',
   position: 'bottom-right',
@@ -129,7 +132,7 @@ var newModule = pathfora.Message({
   okMessage: 'View Guide'
 });
 
-var returningModule = pathfora.Message({
+var returningModule = new pathfora.Message({
   id: 'returning_slideout',
   layout: 'slideout',
   position: 'bottom-right',
@@ -142,11 +145,11 @@ var returningModule = pathfora.Message({
 var modules = {
   target: [{
     segment: 'new_users', // API Access ID for your Lytics audience
-    widgets: [ newModule ]
+    widgets: [newModule]
   },
   {
     segment: 'returning', // API Access ID for your Lytics audience
-    widgets: [ returningModule ]
+    widgets: [returningModule]
   }]
 };
 
@@ -182,14 +185,14 @@ Target all users who are not a part of any of the audiences in the defined targe
 // example: show a feedback form module to all users that are known (has email)
 // and a subsciption module to everyone else
 
-var subscriptionModule = pathfora.Subscription({
+var subscriptionModule = new pathfora.Subscription({
   id: 'sign_up_module',
   layout: 'modal',
   headline: 'Sign Up',
   msg: 'We want to send you updates, sign up now!'
 });
 
-var feedbackModule = pathfora.Message({
+var feedbackModule = new pathfora.Message({
   id: 'known_module',
   layout: 'modal',
   headline: 'Give us Feedback',
@@ -205,9 +208,9 @@ var feedbackModule = pathfora.Message({
 var modules = {
   target: [{
     segment: 'known', // API Access ID for your Lytics audience
-    widgets: [ feedbackModule ]
+    widgets: [feedbackModule]
   }],
-  inverse: [ subscriptionModule ]
+  inverse: [subscriptionModule]
 };
 
 // using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config

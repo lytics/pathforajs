@@ -1,4 +1,4 @@
-var module = pathfora.SiteGate({
+var module = new pathfora.SiteGate({
   id: 'gate-hide-form',
   headline: 'Gated Site Feature',
   msg: 'Please agree to the terms to proceed.',
@@ -6,4 +6,4 @@ var module = pathfora.SiteGate({
   okMessage: 'I Agree'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

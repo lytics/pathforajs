@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp'),
     less = require('gulp-less'),
     path = require('path'),
@@ -8,29 +10,28 @@ var gulp = require('gulp'),
     minify = require('html-minifier').minify,
     env = require('gulp-env'),
     connect = require('gulp-connect'),
-    walk    = require('walk'),
-    fs = require("fs"),
+    walk = require('walk'),
+    fs = require('fs'),
     handlebars = require('gulp-compile-handlebars'),
     shell = require('gulp-shell'),
-    APIURL,
-    CSSURL;
+    eslint = require('gulp-eslint'),
+    TESTAPIURL = '//api.lytics.io',
+    TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
+    EXAMPLESSRC = 'docs/docs/examples/src',
+    EXAMPLESDEST = 'docs/docs/examples/preview',
+    APIURL, CSSURL;
 
 // get overrides from .env file
 try {
   env({
-      file: '.env.json',
+    file: '.env.json'
   });
-  APIURL = process.env.APIURL || "//api.lytics.io";
-  CSSURL = process.env.CSSURL || "//c.lytics.io/static/pathfora.min.css";
+  APIURL = process.env.APIURL || '//api.lytics.io';
+  CSSURL = process.env.CSSURL || '//c.lytics.io/static/pathfora.min.css';
 } catch (error) {
-  APIURL = "//api.lytics.io";
-  CSSURL = "//c.lytics.io/static/pathfora.min.css";
+  APIURL = '//api.lytics.io';
+  CSSURL = '//c.lytics.io/static/pathfora.min.css';
 }
-
-var TESTAPIURL = "//api.lytics.io",
-    TESTCSSURL = "//c.lytics.io/static/pathfora.min.css",
-    EXAMPLESSRC = "docs/docs/examples/src",
-    EXAMPLESDEST = "docs/docs/examples/preview";
 
 gulp.task('build:styles', function () {
   gulp.src('src/less/*.less')
@@ -49,30 +50,30 @@ gulp.task('build:styles', function () {
 });
 
 // gathers and minifies all the widget templates for inclusion
-var prepareTemplates = function() {
-  var templateDirectory = "src/templates",
+var prepareTemplates = function () {
+  var templateDirectory = 'src/templates',
       templates = {},
       options = {};
 
   options = {
     listeners: {
-      file: function (root, stat, next) {
-        var dir = root.split("/").pop();
+      file: function (root, stat) {
+        var dir = root.split('/').pop();
 
-        if(!templates[dir]){
+        if (!templates[dir]) {
           templates[dir] = {};
         }
 
-        if ( stat.name.charAt( 0 ) !== '.' ) {
-          var markup = fs.readFileSync(root + '/' + stat.name, "utf-8")
-          var file = stat.name.replace(".html", "");
+        if (stat.name.charAt(0) !== '.') {
+          var markup = fs.readFileSync(root + '/' + stat.name, 'utf-8'),
+              file = stat.name.replace('.html', '');
           templates[dir][file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
         }
       }
     }
   };
 
-  walker = walk.walkSync(templateDirectory, options);
+  walk.walkSync(templateDirectory, options);
   return JSON.stringify(templates, null, 2);
 };
 
@@ -81,7 +82,7 @@ gulp.task('build:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', '//api.lytics.io'))
     .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -95,7 +96,7 @@ gulp.task('local:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', APIURL))
     .pipe(replace('{{cssurl}}', CSSURL))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -109,7 +110,7 @@ gulp.task('build:testjs', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', TESTAPIURL))
     .pipe(replace('{{cssurl}}', TESTCSSURL))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -135,41 +136,41 @@ gulp.task('preview', function () {
   });
 });
 
-gulp.task('docs:watch', function () {
-  var watcher = gulp.watch('docs/docs/examples/src/**/*.js', function(event) {
-    var p = path.relative(process.cwd(), event.path);
-    var root = p.substring(0, p.lastIndexOf("/") + 1);
-    var name = p.substring(p.lastIndexOf("/") + 1, p.length);
-    compileExample(root, name)
-  });
-});
-
-var compileExample = function(root, name) {
-  if (name.split('.').pop() === "js") {
+var compileExample = function (root, name) {
+  if (name.split('.').pop() === 'js') {
     var dest = root.split(EXAMPLESSRC + '/').pop(),
-      contents = {
-        config: fs.readFileSync(root + '/' + name, "utf8"),
-        css: ''
-      };
+        contents = {
+          config: fs.readFileSync(root + '/' + name, 'utf8'),
+          css: ''
+        };
 
     // Custom CSS example should load css
     if (root.indexOf('customization/css') !== -1) {
-      contents.css = fs.readFileSync(root + '/' + name.replace(".js", ".css"), "utf8")
+      contents.css = fs.readFileSync(root + '/' + name.replace('.js', '.css'), 'utf8');
     }
 
     gulp.src(EXAMPLESSRC + '/template.hbs')
       .pipe(handlebars(contents))
-      .pipe(rename(name.replace(".js", ".html")))
-      .pipe(gulp.dest(EXAMPLESDEST + "/" +  dest));
+      .pipe(rename(name.replace('.js', '.html')))
+      .pipe(gulp.dest(EXAMPLESDEST + '/' + dest));
   }
-}
+};
+
+gulp.task('docs:watch', function () {
+  gulp.watch('docs/docs/examples/src/**/*.js', function (event) {
+    var p = path.relative(process.cwd(), event.path);
+    var root = p.substring(0, p.lastIndexOf('/') + 1);
+    var name = p.substring(p.lastIndexOf('/') + 1, p.length);
+    compileExample(root, name);
+  });
+});
 
 gulp.task('docs:hbs', function () {
   var options = {
     listeners: {
-      file: function(root, stat) {
-        compileExample(root, stat.name)
-      },
+      file: function (root, stat) {
+        compileExample(root, stat.name);
+      }
     }
   };
 
@@ -180,11 +181,18 @@ gulp.task('docs:mkdocs', shell.task([
   'mkdocs serve'
 ], {
   cwd: 'docs'
-}))
+}));
+
+gulp.task('lint', function () {
+  return gulp.src(['src/pathfora.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
+});
 
 gulp.task('test', ['build:styles', 'build:testjs']);
 gulp.task('build:local', ['build:styles', 'local:js']);
-gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs'])
+gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs']);
 gulp.task('build', ['build:styles', 'build:js']);
 gulp.task('local', ['build:local', 'preview', 'local:watch']);
 gulp.task('docs', ['build:local', 'build:docs', 'preview', 'docs:watch']);

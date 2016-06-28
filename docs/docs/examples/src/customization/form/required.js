@@ -1,4 +1,4 @@
-var module = pathfora.SiteGate({
+var module = new pathfora.SiteGate({
   id: 'required-fields',
   headline: 'Sign Up!',
   msg: 'Submit this form to get updates',
@@ -10,4 +10,4 @@ var module = pathfora.SiteGate({
   }
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

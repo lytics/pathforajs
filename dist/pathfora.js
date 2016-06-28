@@ -1,18 +1,16 @@
 /* global jstag, ga, pfCfg */
-"use strict";
+'use strict';
 
 /**
  * @module Pathfora-API
  */
 (function (context, document) {
   // NOTE Output & processing variables
-  var Pathfora;
-  var utils;
-  var core;
-  var api;
+  var Pathfora, utils, core, api;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
+
   var defaultPositions = {
     modal: '',
     slideout: 'bottom-left',
@@ -20,6 +18,7 @@
     bar: 'top-absolute',
     folding: 'bottom-left'
   };
+
   var defaultProps = {
     generic: {
       className: 'pathfora',
@@ -139,6 +138,7 @@
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
   var templates = {
+  "templates": {},
   "subscription": {
     "bar": "<div class=\"pf-widget-body\"></div><a class=\"pf-widget-close\">&times;</a><div class=\"pf-bar-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" placeholder=\"Email\" required></span></form></div>",
     "folding": "<a class=\"pf-widget-caption\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span> </a><a class=\"pf-widget-caption-left\"><p class=\"pf-widget-headline\"></p><span>&rsaquo;</span></a><div class=\"pf-widget-body\"></div><div class=\"pf-widget-content\"><p class=\"pf-widget-message\"></p><form><button type=\"submit\" class=\"pf-widget-btn pf-widget-ok\">X</button> <span><input name=\"email\" type=\"email\" required></span></form></div>",
@@ -193,23 +193,18 @@
    */
   var createABTestingModePreset = function () {
     var groups = [];
-    var groupsSum;
-    var groupsSumRatio;
-    var i;
-    var j;
 
-    j = arguments.length;
-    for (i = 0; i < j; i++) {
+    for (var i = 0; i < arguments.length; i++) {
       groups.push(arguments[i]);
     }
 
-    groupsSum = groups.reduce(function (sum, element) {
+    var groupsSum = groups.reduce(function (sum, element) {
       return sum + element;
     });
 
     // NOTE If groups collapse into a number greater than 1, normalize
     if (groupsSum > 1) {
-      groupsSumRatio = 1 / groupsSum;
+      var groupsSumRatio = 1 / groupsSum;
 
       groups = groups.map(function (element) {
         return element * groupsSumRatio;
@@ -261,11 +256,8 @@
    * @description Append pathfora stylesheet to document
    */
   var appendPathforaStylesheet = function () {
-    var head;
-    var link;
-
-    head = document.getElementsByTagName('head')[0];
-    link = document.createElement('link');
+    var head = document.getElementsByTagName('head')[0],
+        link = document.createElement('link');
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
@@ -326,8 +318,8 @@
      * @returns {string} cookie value
      */
     readCookie: function (name) {
-      var cookies = document.cookie;
-      var findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      var cookies = document.cookie,
+          findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
       return findCookieRegexp ? findCookieRegexp.pop() : null;
     },
@@ -340,7 +332,6 @@
      */
     saveCookie: function (name, value, expiration) {
       var expires;
-      var date;
 
       if (expiration) {
         expires = '; expires=' + expiration.toUTCString();
@@ -391,9 +382,9 @@
      */
     initWidgetScaffold: function () {
       return {
-          target: [],
-          exclude: [],
-          inverse: []
+        target: [],
+        exclude: [],
+        inverse: []
       };
     },
 
@@ -406,42 +397,42 @@
      */
     insertWidget: function (method, segment, widget, config) {
       // assume that we need to add a new widget until proved otherwise
-      var makeNew = true;
-      var subject;
+      var makeNew = true,
+          subject;
 
       // make sure our scaffold is valid
-      if(!config.target){
+      if (!config.target) {
         throw new Error('Invalid scaffold. No target array.');
       }
-      if(!config.exclude){
+      if (!config.exclude) {
         throw new Error('Invalid scaffold. No exclude array.');
       }
-      if(!config.inverse){
+      if (!config.inverse) {
         throw new Error('Invalid scaffold. No inverse array.');
       }
 
-      if (method === "target"){
+      if (method === 'target') {
         subject = config.target;
-      }else if(method === "exclude"){
+      } else if (method === 'exclude') {
         subject = config.exclude;
-      }else{
+      } else {
         throw new Error('Invalid method (' + method + ').');
       }
 
       for (var i = 0; i < subject.length; i++) {
         var wgt = subject[i];
 
-        if (wgt.segment === segment){
-            wgt.widgets.push(widget);
-            makeNew  = false;
+        if (wgt.segment === segment) {
+          wgt.widgets.push(widget);
+          makeNew = false;
         }
       }
 
-      if(makeNew){
-          subject.push({
-              'segment': segment,
-              'widgets': [widget]
-          });
+      if (makeNew) {
+        subject.push({
+          'segment': segment,
+          'widgets': [widget]
+        });
       }
     },
 
@@ -453,63 +444,58 @@
      * @param   {boolean} options.keepEscaped  do not double-encode text
      * @returns {string}  uri                  the uri-escaped text
      */
-    escapeURI: function(text, options) {
-      return escapeURI(text, options);
-
+    escapeURI: function (text, options) {
       // NOTE This was ported from various bits of C++ code from Chromium
-      function escapeURI(text, options) {
-        options || (options = {});
-        var usePlus = options.usePlus || false,
-            keepEscaped = options.keepEscaped || false,
-            length = text.length,
-            escaped = [],
-            index,
-            charText,
-            charCode;
+      options || (options = {});
 
-        for (index = 0; index < length; index++) {
-          charText = text[index];
-          charCode = text.charCodeAt(index);
+      var length = text.length,
+          escaped = [],
+          usePlus = options.usePlus || false,
+          keepEscaped = options.keepEscaped || false;
 
-          if (usePlus && ' ' === charText) {
-            escaped.push('+');
-          } else if (keepEscaped && '%' === charText && length >= index + 2 &&
-              isHexDigit(text[index + 1]) &&
-              isHexDigit(text[index + 2])) {
-            escaped.push('%');
-          } else if (shouldEscape(charText)) {
-            escaped.push('%',
-              toHexDigit(charCode >> 4),
-              toHexDigit(charCode & 0xf));
-          } else {
-            escaped.push(charText);
-          }
-        }
-        return escaped.join('');
-      }
-
-      function isHexDigit(c) {
+      function isHexDigit (c) {
         return /[0-9A-Fa-f]/.test(c);
       }
 
-      function toHexDigit(i) {
+      function toHexDigit (i) {
         return '0123456789ABCDEF'[i];
       }
 
-      function shouldEscape(charText) {
+      function containsChar (charMap, charCode) {
+        return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
+      }
+
+      function isURISeparator (c) {
+        return ['#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '='].indexOf(c) !== -1;
+      }
+
+      function shouldEscape (charText) {
         return !isURISeparator(charText) && containsChar([
           0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
-          0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff,
+          0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
         ], charText.charCodeAt(0));
       }
 
-      function isURISeparator(c) {
-        return [ '#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '=' ].indexOf(c) !== -1;
+      for (var index = 0; index < length; index++) {
+        var charText = text[index],
+            charCode = text.charCodeAt(index);
+
+        if (usePlus && charText === ' ') {
+          escaped.push('+');
+        } else if (keepEscaped && charText === '%' && length >= index + 2 &&
+            isHexDigit(text[index + 1]) &&
+            isHexDigit(text[index + 2])) {
+          escaped.push('%');
+        } else if (shouldEscape(charText)) {
+          escaped.push('%',
+            toHexDigit(charCode >> 4),
+            toHexDigit(charCode & 0xf));
+        } else {
+          escaped.push(charText);
+        }
       }
 
-      function containsChar(charMap, charCode) {
-        return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
-      }
+      return escaped.join('');
     }
   };
 
@@ -533,8 +519,9 @@
      * @param {object} widget
      */
     initializeWidget: function (widget) {
-      var condition = widget.displayConditions;
-      var watcher;
+      var condition = widget.displayConditions,
+          watcher;
+
       core.valid = true;
 
       // NOTE Default cookie expiration is one year from now
@@ -542,38 +529,38 @@
       core.expiration.setDate(core.expiration.getDate() + 365);
 
       if (widget.pushDown) {
-        if (widget.layout === 'bar' && (widget.position === "top-fixed" || widget.position === "top-absolute")) {
-          utils.addClass(document.querySelector(widget.pushDown), "pf-push-down");
+        if (widget.layout === 'bar' && (widget.position === 'top-fixed' || widget.position === 'top-absolute')) {
+          utils.addClass(document.querySelector(widget.pushDown), 'pf-push-down');
         } else {
           throw new Error('Only top positioned bar widgets may have a pushDown property');
         }
       }
 
       if (condition.date) {
-        core.valid = core.valid && core.dateChecker(condition.date, widget);
+        core.valid = core.valid && core.dateChecker(condition.date);
       }
 
       if (condition.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+        watcher = core.registerElementWatcher(condition.displayWhenElementVisible);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers, widget);
       }
 
       if (condition.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay);
         core.watchers.push(watcher);
         core.initializeScrollWatchers(core.watchers, widget);
       }
 
       if (condition.pageVisits) {
-        core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits, widget);
+        core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits);
       }
 
       if (condition.hideAfterAction) {
         core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
       }
       if (condition.urlContains) {
-        core.valid = core.valid && core.urlChecker(condition.urlContains, widget);
+        core.valid = core.valid && core.urlChecker(condition.urlContains);
       }
 
       core.valid = core.valid && condition.showOnInit;
@@ -598,17 +585,16 @@
     initializeScrollWatchers: function (watchers, widget) {
       if (!core.scrollListener) {
         core.scrollListener = function () {
-          var key;
           var valid;
 
-          for (key in watchers) {
+          for (var key in watchers) {
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
               valid = core.valid && watchers[key].check();
             }
           }
 
           if (widget.displayConditions.impressions && valid) {
-            valid = core.impressionsChecker(condition.impressions, widget);
+            valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
           }
 
           if (valid) {
@@ -630,8 +616,9 @@
      * @param {string} url
      */
     parseQuery: function (url) {
-      var query = {};
-      var pieces = url.split('?');
+      var query = {},
+          pieces = utils.escapeURI(url, { keepEscaped: true }).split('?');
+
       if (pieces.length > 1) {
         pieces = pieces[1].split('&');
 
@@ -640,7 +627,7 @@
 
           if (pair.length > 1) {
             // NOTE We should not account for the preview id
-            if (pair[0] !== "lytics_variation_preview_id") {
+            if (pair[0] !== 'lytics_variation_preview_id') {
               query[pair[0]] = pair[1];
             }
           }
@@ -660,18 +647,18 @@
      */
     compareQueries: function (query, matchQuery, rule) {
       switch (rule) {
-        case 'exact':
-          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
-            return false;
-          }
-          break;
+      case 'exact':
+        if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+          return false;
+        }
+        break;
 
-        default:
-          break;
+      default:
+        break;
       }
 
       for (var key in matchQuery) {
-        if (matchQuery[key] !== query[key]) {
+        if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
           return false;
         }
       }
@@ -679,8 +666,8 @@
       return true;
     },
 
-    urlChecker: function (phrases, widget) {
-      var url = window.location.href,
+    urlChecker: function (phrases) {
+      var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
           simpleurl = window.location.hostname + window.location.pathname,
           queries = core.parseQuery(url),
           valid = false;
@@ -697,53 +684,55 @@
 
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
-            case 'string':
-              if (url.indexOf(utils.escapeURI(phrase.split("?")[0], { keepEscaped: true })) !== -1) {
-                valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
-              }
-              break;
+          case 'string':
+            if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+              valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
+            }
+            break;
 
-            case 'object':
-              if (phrase.match && phrase.value) {
-                var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+          case 'object':
+            if (phrase.match && phrase.value) {
+              var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
 
-                switch (phrase.match) {
-                  // simple match
-                  case 'simple':
-                    if (simpleurl === phrase.value) {
-                      valid = true;
-                    }
-                    break;
-
-                  // exact match
-                  case 'exact':
-                    if (url.split("?")[0].replace(/\/$/, '') === phraseValue.split("?")[0].replace(/\/$/, '')) {
-                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                    }
-                    break;
-
-                  // regex
-                  case 'regex':
-                    var re = new RegExp(phrase.value);
-                    if (re.test(url)) {
-                      valid = true;
-                    }
-                    break;
-
-                  // string match (default)
-                  default:
-                    if (url.indexOf(phraseValue.split("?")[0]) !== -1) {
-                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                    }
-                    break;
+              switch (phrase.match) {
+              // simple match
+              case 'simple':
+                if (simpleurl === phrase.value) {
+                  valid = true;
                 }
-              } else {
-                console.log('invalid display conditions')
+                break;
+
+              // exact match
+              case 'exact':
+                if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
+                }
+                break;
+
+              // regex
+              case 'regex':
+                var re = new RegExp(phrase.value);
+
+                if (re.test(url)) {
+                  valid = true;
+                }
+                break;
+
+              // string match (default)
+              default:
+                if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
+                }
+                break;
               }
-              break;
-            default:
-              console.log('invalid display conditions')
-              break;
+            } else {
+              console.log('invalid display conditions');
+            }
+            break;
+
+          default:
+            console.log('invalid display conditions');
+            break;
           }
         });
       } else {
@@ -753,19 +742,19 @@
       return valid;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired, widget) {
+    pageVisitsChecker: function (pageVisitsRequired) {
       return (core.pageViews >= pageVisitsRequired);
     },
 
-    dateChecker: function (date, widget) {
-      var valid = true;
-      var today = Date.now();
+    dateChecker: function (date) {
+      var valid = true,
+          today = Date.now();
 
-      if (date['start_at'] && today < new Date(date['start_at']).getTime()) {
+      if (date.start_at && today < new Date(date.start_at).getTime()) {
         valid = false;
       }
 
-      if (date['end_at'] && today > new Date(date['end_at']).getTime()) {
+      if (date.end_at && today > new Date(date.end_at).getTime()) {
         valid = false;
       }
 
@@ -778,8 +767,7 @@
           sessionImpressions = ~~sessionStorage.getItem(id),
           total = utils.readCookie(id),
           now = Date.now(),
-          parts,
-          totalImpressions;
+          parts, totalImpressions;
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
@@ -790,12 +778,12 @@
       if (!total) {
         totalImpressions = 1;
       } else {
-        parts = total.split("|"),
-        totalImpressions = parseInt(parts[0]) + 1;
+        parts = total.split('|');
+        totalImpressions = parseInt(parts[0], 10) + 1;
         // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? total.split(",") : parts;
+        parts = parts.length === 1 ? total.split(',') : parts;
 
-        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
           valid = false;
         }
       }
@@ -807,7 +795,7 @@
 
       if (valid && core.valid) {
         sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + "|" + now, core.expiration);
+        utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
       }
 
       return valid;
@@ -818,46 +806,47 @@
           now = Date.now(),
           confirm = utils.readCookie('PathforaConfirm_' + widget.id),
           cancel = utils.readCookie('PathforaCancel_' + widget.id),
-          closed = utils.readCookie('PathforaClosed_' + widget.id);
+          closed = utils.readCookie('PathforaClosed_' + widget.id),
+          parts;
 
       if (hideAfterActionConstraints.confirm && confirm) {
-        var parts = confirm.split("|");
+        parts = confirm.split('|');
         // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? confirm.split(",") : parts;
+        parts = parts.length === 1 ? confirm.split(',') : parts;
 
-        if (parseInt(parts[0]) >= hideAfterActionConstraints.confirm.hideCount) {
+        if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
           valid = false;
         }
 
-        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
           valid = false;
         }
       }
 
       if (hideAfterActionConstraints.cancel && cancel) {
-        var parts = cancel.split("|");
+        parts = cancel.split('|');
         // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? cancel.split(",") : parts;
+        parts = parts.length === 1 ? cancel.split(',') : parts;
 
-        if (parseInt(parts[0]) >= hideAfterActionConstraints.cancel.hideCount) {
+        if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
           valid = false;
         }
 
-        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
           valid = false;
         }
       }
 
       if (hideAfterActionConstraints.closed && closed) {
-        var parts = closed.split("|");
+        parts = closed.split('|');
         // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? closed.split(",") : parts;
+        parts = parts.length === 1 ? closed.split(',') : parts;
 
-        if (parseInt(parts[0]) >= hideAfterActionConstraints.closed.hideCount) {
+        if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
           valid = false;
         }
 
-        if (typeof parts[1] !== "undefined" && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
           valid = false;
         }
       }
@@ -907,11 +896,11 @@
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
      */
-    registerPositionWatcher: function (percent, widget) {
+    registerPositionWatcher: function (percent) {
       var watcher = {
         check: function () {
-          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
-          var offset = document.documentElement.scrollTop || document.body.scrollTop;
+          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
+              offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
             core.removeWatcher(watcher);
             return true;
@@ -930,12 +919,14 @@
      * @returns {object} object, containing onscroll callback function 'check', and
      *                   triggering element reference 'elem'
      */
-    registerElementWatcher: function (selector, widget) {
+    registerElementWatcher: function (selector) {
       var watcher = {
         elem: document.querySelector(selector),
+
         check: function () {
-          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-          var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
+              scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
             core.removeWatcher(watcher);
             return true;
@@ -952,9 +943,7 @@
      * @param {object} watcher
      */
     removeWatcher: function (watcher) {
-      var key;
-
-      for (key in core.watchers) {
+      for (var key in core.watchers) {
         if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
           core.watchers.splice(key, 1);
         }
@@ -968,18 +957,14 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
-      var widgetContent = widget.querySelector('.pf-widget-content');
-      var widgetCancel = widget.querySelector('.pf-widget-cancel');
-      var widgetOk = widget.querySelector('.pf-widget-ok');
-      var widgetForm = widget.querySelector('form');
-      var widgetHeadline = widget.querySelectorAll('.pf-widget-headline');
-      var widgetBody = widget.querySelector('.pf-widget-body');
-      var widgetMessage = widget.querySelector('.pf-widget-message');
-      var widgetClose = widget.querySelector('.pf-widget-close');
-      var widgetTextArea;
-      var widgetImage;
-      var node;
-      var i;
+      var widgetContent = widget.querySelector('.pf-widget-content'),
+          widgetCancel = widget.querySelector('.pf-widget-cancel'),
+          widgetOk = widget.querySelector('.pf-widget-ok'),
+          widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
+          widgetBody = widget.querySelector('.pf-widget-body'),
+          widgetMessage = widget.querySelector('.pf-widget-message'),
+          widgetClose = widget.querySelector('.pf-widget-close'),
+          node, child;
 
       if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
@@ -1021,16 +1006,16 @@
         widgetCancel.value = config.cancelMessage;
       }
 
-      switch(config.layout) {
-        case 'modal':
-        case 'slideout':
-        case 'sitegate':
-          if (widgetContent && config.branding) {
-            var branding = document.createElement('div');
-            branding.className = 'branding';
-            branding.innerHTML = templates.assets.lytics;
-            widgetContent.appendChild(branding);
-          }
+      switch (config.layout) {
+      case 'modal':
+      case 'slideout':
+      case 'sitegate':
+        if (widgetContent && config.branding) {
+          var branding = document.createElement('div');
+          branding.className = 'branding';
+          branding.innerHTML = templates.assets.lytics;
+          widgetContent.appendChild(branding);
+        }
 
         break;
       }
@@ -1081,10 +1066,10 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
-            var child = node.querySelector('input');
+            child = node.querySelector('input');
 
             if (node) {
-              while(child) {
+              while (child) {
                 node.removeChild(child);
                 child = node.querySelector('input');
               }
@@ -1104,7 +1089,7 @@
       }
 
       // NOTE Set The headline
-      for (i = widgetHeadline.length - 1; i >= 0; i--) {
+      for (var i = widgetHeadline.length - 1; i >= 0; i--) {
         widgetHeadline[i].innerHTML = config.headline;
       }
 
@@ -1113,17 +1098,16 @@
         if (config.layout === 'button') {
           // NOTE Images are not compatible with the button layout
         } else {
-          widgetImage = document.createElement('img');
+          var widgetImage = document.createElement('img');
           widgetImage.src = config.image;
           widgetImage.className = 'pf-widget-img';
           widgetBody.appendChild(widgetImage);
         }
       }
 
-      switch(config.type) {
+      switch (config.type) {
       case 'sitegate':
       case 'form':
-
         if (config.showSocialLogin === false) {
           node = widget.querySelector('.pf-social-login');
 
@@ -1132,19 +1116,20 @@
           }
         }
 
-        var getFormElement = function(field) {
-          if (field === "message")
+        var getFormElement = function (field) {
+          if (field === 'message') {
             return widget.querySelector('textarea');
-          else if (field === "name")
+          } else if (field === 'name') {
             return widget.querySelector('input[name="username"]');
+          }
           return widget.querySelector('input[name="' + field + '"]');
-        }
+        };
 
         // Set placeholders
         Object.keys(config.placeholders).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && typeof element.placeholder !== "undefined") {
+          if (element && typeof element.placeholder !== 'undefined') {
             element.placeholder = config.placeholders[field];
           }
         });
@@ -1160,12 +1145,13 @@
 
         // Hide fields
         Object.keys(config.fields).forEach(function (field) {
-          var element = getFormElement(field);
+          var element = getFormElement(field),
+              parent, prev, next;
 
           if (element && !config.fields[field]) {
-            var parent = element.parentNode,
-                prev = element.previousElementSibling,
-                next = element.nextElementSibling;
+            parent = element.parentNode;
+            prev = element.previousElementSibling;
+            next = element.nextElementSibling;
 
             if (parent) {
               // NOTE: collapse half-width inputs
@@ -1189,7 +1175,7 @@
         break;
       }
 
-      if (config.msg){
+      if (config.msg) {
         widgetMessage.innerHTML = config.msg;
       }
     },
@@ -1200,29 +1186,19 @@
      * @param {object} config
      */
     constructWidgetActions: function (widget, config) {
-      var widgetOk = widget.querySelector('.pf-widget-ok');
-      var widgetAllCaptions;
-      var widgetFirstCaption;
-      var widgetCancel;
-      var widgetClose;
-      var widgetForm;
-      var widgetOnFormSubmit;
-      var widgetOnButtonClick;
-      var widgetOnModalClose;
-      var updateActionCookie;
-      var cancelShouldClose = true;
-      var i;
-      var j;
+      var widgetOk = widget.querySelector('.pf-widget-ok'),
+          widgetOnModalClose, updateActionCookie, widgetOnButtonClick;
 
       switch (config.type) {
       case 'form':
       case 'sitegate':
-        widgetForm = widget.querySelector('form');
-        widgetOnFormSubmit = function (event) {
+        var widgetForm = widget.querySelector('form');
+
+        var widgetOnFormSubmit = function (event) {
           var widgetAction;
           event.preventDefault();
 
-          switch(config.type) {
+          switch (config.type) {
           case 'form':
             widgetAction = 'submit';
             break;
@@ -1231,7 +1207,6 @@
             break;
           case 'sitegate':
             widgetAction = 'unlock';
-            cancelShouldClose = false;
             break;
           }
 
@@ -1265,9 +1240,8 @@
 
       switch (config.layout) {
       case 'folding':
-        cancelShouldClose = false;
-        widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
-        widgetFirstCaption = widget.querySelector('.pf-widget-caption');
+        var widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left'),
+            widgetFirstCaption = widget.querySelector('.pf-widget-caption');
 
         if (config.position !== 'left') {
           setTimeout(function () {
@@ -1276,8 +1250,7 @@
           }, 0);
         }
 
-        j = widgetAllCaptions.length - 1;
-        for (i = j; i >= 0; i--) {
+        for (var i = widgetAllCaptions.length - 1; i >= 0; i--) {
           widgetAllCaptions[i].onclick = function () {
             if (utils.hasClass(widget, 'opened')) {
               utils.removeClass(widget, 'opened');
@@ -1287,6 +1260,7 @@
           };
         }
         break;
+
       case 'button':
         if (typeof config.onClick === 'function') {
           widgetOnButtonClick = function (event) {
@@ -1297,12 +1271,14 @@
           };
         }
         break;
+
       case 'modal':
       case 'slideout':
       case 'bar':
       case 'inline':
-        widgetCancel = widget.querySelector('.pf-widget-cancel');
-        widgetClose = widget.querySelector('.pf-widget-close');
+        var widgetCancel = widget.querySelector('.pf-widget-cancel'),
+            widgetClose = widget.querySelector('.pf-widget-close');
+
         widgetOnModalClose = function (event) {
           if (typeof config.onModalClose === 'function') {
             config.onModalClose(callbackTypes.MODAL_CLOSE, {
@@ -1318,21 +1294,21 @@
               ct;
 
           if (val) {
-            val = val.split("|");
+            val = val.split('|');
             // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-            val = val.length === 1 ? val.split(",") : val;
-            ct = Math.min(parseInt(val[0]), 9998) + 1;
+            val = val.length === 1 ? val.split(',') : val;
+            ct = Math.min(parseInt(val[0], 10), 9998) + 1;
           } else {
             ct = 1;
           }
 
-          utils.saveCookie(name, ct + "|" + duration, core.expiration);
+          utils.saveCookie(name, ct + '|' + duration, core.expiration);
         };
 
         if (widgetClose) {
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
-            updateActionCookie("PathforaClosed_" + widget.id);
+            updateActionCookie('PathforaClosed_' + widget.id);
             widgetOnModalClose(event);
           };
         }
@@ -1344,13 +1320,13 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              updateActionCookie("PathforaCancel_" + widget.id);
+              updateActionCookie('PathforaCancel_' + widget.id);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              updateActionCookie("PathforaCancel_" + widget.id);
+              updateActionCookie('PathforaCancel_' + widget.id);
               widgetOnModalClose(event);
             };
           }
@@ -1363,7 +1339,7 @@
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
           if (typeof updateActionCookie === 'function') {
-            updateActionCookie("PathforaConfirm_" + widget.id);
+            updateActionCookie('PathforaConfirm_' + widget.id);
           }
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback();
@@ -1383,7 +1359,7 @@
         widgetOk.onclick = function () {
           core.trackWidgetAction('confirm', config);
           if (typeof updateActionCookie === 'function') {
-            updateActionCookie("PathforaConfirm_" + widget.id);
+            updateActionCookie('PathforaConfirm_' + widget.id);
           }
           if (typeof widgetOnButtonClick === 'function') {
             widgetOnButtonClick(event);
@@ -1406,7 +1382,7 @@
 
           if (valid) {
             if (typeof updateActionCookie === 'function') {
-              updateActionCookie("PathforaConfirm_" + widget.id);
+              updateActionCookie('PathforaConfirm_' + widget.id);
             }
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
@@ -1472,24 +1448,25 @@
 
           // The top recommendation should be default if we couldn't
           // get one from the api
-          var rec = config.content[0]
+          var rec = config.content[0],
+              recImage = document.createElement('div'),
+              recMeta = document.createElement('div'),
+              recTitle = document.createElement('h4'),
+              recDesc = document.createElement('p');
+
           widgetContentUnit.href = rec.url;
 
-          var recImage = document.createElement('div');
           recImage.className = 'pf-content-unit-img';
           recImage.style.backgroundImage = "url('" + rec.image + "')";
           widgetContentUnit.appendChild(recImage);
 
-          var recMeta = document.createElement('div');
           recMeta.className = 'pf-content-unit-meta';
 
           // title
-          var recTitle = document.createElement('h4');
           recTitle.innerHTML = rec.title;
           recMeta.appendChild(recTitle);
 
           // description
-          var recDesc = document.createElement('p');
           recDesc.innerHTML = rec.description;
           recMeta.appendChild(recDesc);
 
@@ -1595,20 +1572,18 @@
      * @param {object} colors custom theme
      */
     setCustomColors: function (widget, colors) {
-      var close = widget.querySelector('.pf-widget-close');
-      var headline = widget.querySelector('.pf-widget-headline');
-      var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
-      var cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel');
-      var okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok');
-      var arrow = widget.querySelector('.pf-widget-caption span');
-      var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
-      var contentUnit = widget.querySelector('.pf-content-unit');
-      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
-      var fields = widget.querySelectorAll('input, textarea');
-      var branding = widget.querySelector('.branding svg');
-      var socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
-      var i;
-      var j;
+      var close = widget.querySelector('.pf-widget-close'),
+          headline = widget.querySelector('.pf-widget-headline'),
+          headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
+          cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
+          okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
+          arrow = widget.querySelector('.pf-widget-caption span'),
+          arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
+          contentUnit = widget.querySelector('.pf-content-unit'),
+          contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
+          fields = widget.querySelectorAll('input, textarea'),
+          branding = widget.querySelector('.branding svg'),
+          socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
 
       if (colors.background) {
         if (utils.hasClass(widget, 'pf-widget-modal')) {
@@ -1620,8 +1595,7 @@
 
       if (colors.fieldBackground) {
         if (fields.length > 0) {
-          j = fields.length;
-          for (i = 0; i < j; i++) {
+          for (var i = 0; i < fields.length; i++) {
             fields[i].style.backgroundColor = colors.fieldBackground;
           }
         }
@@ -1686,7 +1660,7 @@
       }
 
 
-      socialBtns.forEach(function(btn) {
+      socialBtns.forEach(function (btn) {
         if (colors.actionText) {
           btn.style.color = colors.actionText;
         }
@@ -1707,13 +1681,15 @@
      * @param {Element} htmlElement related DOM element
      */
     trackWidgetAction: function (action, widget, htmlElement) {
+      var child, childName, elem,
+          valid = true;
+
       var params = {
         'pf-widget-id': widget.id,
         'pf-widget-type': widget.type,
         'pf-widget-layout': widget.layout,
         'pf-widget-variant': widget.variant
       };
-      var valid = true;
 
       switch (action) {
       case 'show':
@@ -1723,38 +1699,44 @@
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
-        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || "default confirm";
+        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
         pathforaDataObject.completedActions.push(params);
         break;
       case 'cancel':
-        params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || "default cancel";
+        params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
-        for (var elem in htmlElement.children) {
-          var child = htmlElement.children[elem];
-          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
-            var childName = child.getAttribute("name");
-            params['pf-form-' + childName] = child.value;
+        for (elem in htmlElement.children) {
+          if (htmlElement.children.hasOwnProperty(elem)) {
+            child = htmlElement.children[elem];
+            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+              childName = child.getAttribute('name');
+              params['pf-form-' + childName] = child.value;
+            }
           }
         }
         break;
       case 'subscribe':
-        params['pf-form-email'] = htmlElement.elements['email'].value;
+        params['pf-form-email'] = htmlElement.elements.email.value;
+        break;
       case 'unlock':
-        for (var elem in htmlElement.children) {
-          var child = htmlElement.children[elem];
-          if(typeof child.getAttribute !== "undefined" && child.getAttribute("name") !== null) {
-            var childName = child.getAttribute("name");
-            params['pf-form-' + childName] = child.value;
-          }
+        for (elem in htmlElement.children) {
+          if (htmlElement.children.hasOwnProperty(elem)) {
+            child = htmlElement.children[elem];
+            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+              childName = child.getAttribute('name');
+              params['pf-form-' + childName] = child.value;
+            }
 
-          if (typeof child.hasAttribute !== "undefined" && child.hasAttribute('required') && !params['pf-form-' + childName]) {
-            child.setAttribute('invalid', '');
-            valid = false;
+            if (typeof child.hasAttribute !== 'undefined' && child.hasAttribute('required') && !params['pf-form-' + childName]) {
+              child.setAttribute('invalid', '');
+              valid = false;
+            }
           }
         }
         utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
+        break;
       }
 
       params['pf-widget-event'] = action;
@@ -1769,12 +1751,10 @@
      * @param {object} config new configuration
      */
     updateObject: function (object, config) {
-      var prop;
-
-      for (prop in config) {
-        if (typeof config[prop] === 'object' && config[prop] !== null) {
-          if(config.hasOwnProperty(prop)) {
-            if(typeof object[prop] === 'undefined') {
+      for (var prop in config) {
+        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null) {
+          if (config.hasOwnProperty(prop)) {
+            if (typeof object[prop] === 'undefined') {
               object[prop] = {};
             }
             core.updateObject(object[prop], config[prop]);
@@ -1791,23 +1771,43 @@
      * @param  {array} array list of widgets to initialize
      */
     initializeWidgetArray: function (array, accountId) {
-      var widgetOnInitCallback;
-      var defaults;
-      var globals;
-      var widget;
-      var i;
-      var j;
+      var displayWidget = function (w) {
+        if (w.displayConditions.showDelay) {
+          core.registerDelayedWidget(w);
+        } else {
+          core.initializeWidget(w);
+        }
+      };
 
-      j = array.length;
-      for (i = 0; i < j; i++) {
-        widget = array[i];
+      var contentCb = function (content, w) {
+        if (content) {
+          w.content = {
+            0: {
+              title: content.title,
+              description: content.description,
+              url: 'http://' + content.url,
+              image: content.primary_image
+            }
+          };
+        }
+
+        if (!w.content) {
+          throw new Error('Could not get recommendation and no default defined');
+        }
+
+        displayWidget(w);
+      };
+
+      for (var i = 0; i < array.length; i++) {
+        var widget = array[i];
+
         if (!widget || !widget.config) {
           continue;
         }
 
-        widgetOnInitCallback = widget.config.onInit;
-        defaults = defaultProps[widget.type];
-        globals = defaultProps.generic;
+        var widgetOnInitCallback = widget.config.onInit,
+            defaults = defaultProps[widget.type],
+            globals = defaultProps.generic;
 
 
         if (accountId && accountId.length <= 4) {
@@ -1828,16 +1828,8 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        var displayWidget = function(widget) {
-          if (widget.displayConditions.showDelay) {
-            core.registerDelayedWidget(widget);
-          } else {
-            core.initializeWidget(widget);
-          }
-        }
-
-        if (widget.type === "message" && (widget.recommend || widget.content)) {
-          if (widget.layout !== "slideout" && widget.layout !== "modal") {
+        if (widget.type === 'message' && (widget.recommend && widget.recommend.ql || widget.content)) {
+          if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
 
@@ -1845,24 +1837,8 @@
             throw new Error('Cannot define recommended content unless it is a default');
           }
 
-          api.recommendContent(accountId, widget.recommend.ql.raw, function(content){
-            if (content) {
-              widget.content = {
-                0: {
-                  title: content.title,
-                  description: content.description,
-                  url: "http://" + content.url,
-                  image: content.primary_image
-                }
-              };
-            }
+          api.recommendContent(accountId, widget, contentCb);
 
-            if (!widget.content) {
-              throw new Error('Could not get recommendation and no default defined');
-            }
-
-            displayWidget(widget);
-          });
         } else {
           displayWidget(widget);
         }
@@ -1882,19 +1858,14 @@
      * @param {object} widgets
      */
     validateWidgetsObject: function (widgets) {
-      var i;
-      var j;
-
       if (!widgets) {
         throw new Error('Widgets not specified');
       }
 
       if (!(widgets instanceof Array) && widgets.target) {
-        j = widgets.target.length;
-
         widgets.common = widgets.common || [];
 
-        for (i = 0; i < j; i++) {
+        for (var i = 0; i < widgets.target.length; i++) {
           if (!widgets.target[i].segment) {
             throw new Error('All targeted widgets should have segment specified');
           } else if (widgets.target[i].segment === '*') {
@@ -1913,15 +1884,14 @@
      * @returns {object} generated widget object
      */
     prepareWidget: function (type, config) {
-      var widget = {};
-      var props;
-      var random;
+      var props, random,
+          widget = {};
 
       if (!config) {
         throw new Error('Config object is missing');
       }
 
-      if(config.layout === 'random') {
+      if (config.layout === 'random') {
         props = {
           layout: ['modal', 'slideout', 'bar', 'folding'],
           variant: ['1', '2'],
@@ -1931,7 +1901,7 @@
         };
 
         // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
-        switch(type) {
+        switch (type) {
         case 'message':
           random = Math.floor(Math.random() * 4);
           config.layout = props.layout[random];
@@ -2002,11 +1972,10 @@
 
       return test;
     },
-
     /**
      * @description Load callback for facebook integration
      */
-    onFacebookLoad: function() {
+    onFacebookLoad: function () {
       var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
       FB.getLoginStatus(function (connection) {
@@ -2015,11 +1984,11 @@
         }
       });
 
-      fbBtns.forEach(function(element) {
+      fbBtns.forEach(function (element) {
         if (element.parentElement) {
-          element.parentElement.onclick = function() {
+          element.parentElement.onclick = function () {
             core.onFacebookClick(fbBtns);
-          }
+          };
         }
       });
     },
@@ -2039,8 +2008,8 @@
             email: resp.email || ''
           });
 
-          elements.forEach(function(item) {
-            item.innerHTML = "Log Out";
+          elements.forEach(function (item) {
+            item.innerHTML = 'Log Out';
           });
         }
       });
@@ -2050,18 +2019,18 @@
      * @description Click handler to log in/log out from facebook.
      * @param {object} facebook buttons element selector
      */
-    onFacebookClick: function(elements) {
+    onFacebookClick: function (elements) {
       FB.getLoginStatus(function (connection) {
         if (connection.status === 'connected') {
-          FB.logout(function(resp) {
-            elements.forEach(function(elem) {
-              elem.innerHTML = "Log In";
+          FB.logout(function () {
+            elements.forEach(function (elem) {
+              elem.innerHTML = 'Log In';
             });
-            core.clearFormFields("facebook", ['username', 'email']);
+            core.clearFormFields('facebook', ['username', 'email']);
           });
 
         } else {
-          FB.login(function(resp) {
+          FB.login(function (resp) {
             if (resp.authResponse) {
               core.autoCompleteFacebookData(elements);
             }
@@ -2074,8 +2043,8 @@
      * @description Load callback for google integration
      * @param {object} optional widget object
      */
-    onGoogleLoad: function() {
-      gapi.load('auth2', function() {
+    onGoogleLoad: function () {
+      gapi.load('auth2', function () {
         var auth2 = gapi.auth2.init({
           clientId: pathforaDataObject.socialNetworks.googleClientID,
           cookiepolicy: 'single_host_origin',
@@ -2084,15 +2053,15 @@
 
         var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
 
-        auth2.then(function() {
+        auth2.then(function () {
           var user = auth2.currentUser.get();
           core.autoCompleteGoogleData(user, googleBtns);
 
-          googleBtns.forEach(function(element) {
+          googleBtns.forEach(function (element) {
             if (element.parentElement) {
-              element.parentElement.onclick = function() {
+              element.parentElement.onclick = function () {
                 core.onGoogleClick(googleBtns);
-              }
+              };
             }
           });
         });
@@ -2115,8 +2084,8 @@
             email: profile.getEmail() || ''
           });
 
-          elements.forEach(function(item) {
-            item.innerHTML = "Sign Out";
+          elements.forEach(function (item) {
+            item.innerHTML = 'Sign Out';
           });
         }
       }
@@ -2126,19 +2095,19 @@
      * @description Click handler to sign in/sign out from google.
      * @param {object} google buttons element selector
      */
-    onGoogleClick: function(elements) {
+    onGoogleClick: function (elements) {
       var auth2 = gapi.auth2.getAuthInstance();
 
       if (auth2.isSignedIn.get()) {
-        auth2.signOut().then(function() {
-          elements.forEach(function(elem) {
-            elem.innerHTML = "Sign In";
+        auth2.signOut().then(function () {
+          elements.forEach(function (elem) {
+            elem.innerHTML = 'Sign In';
           });
-          core.clearFormFields("google", ['username', 'email']);
+          core.clearFormFields('google', ['username', 'email']);
         });
 
       } else {
-        auth2.signIn().then(function() {
+        auth2.signIn().then(function () {
           core.autoCompleteGoogleData(auth2.currentUser.get(), elements);
         });
       }
@@ -2223,7 +2192,7 @@
     postData: function (url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
-      xhr.setRequestHeader('Accept','application/json');
+      xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-type', 'application/json');
 
       xhr.onreadystatechange = function () {
@@ -2274,22 +2243,21 @@
      * @param {string} callback   universal callback
      */
     checkUserSegments: function (callback) {
-      if(context.lio && context.lio.data && context.lio.data.segments){
+      if (context.lio && context.lio.data && context.lio.data.segments) {
         callback(context.lio.data.segments);
-      }else{
+      } else {
         callback(['all']);
       }
     },
-
 
     /**
      * @description Fetch content to recommend
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, filter, callback) {
-      var seerId = utils.readCookie('seerid');
-      var recommendUrl;
+    recommendContent: function (accountId, widget, callback) {
+      var seerId = utils.readCookie('seerid'),
+          recommendUrl;
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
@@ -2300,21 +2268,21 @@
         accountId,
         '/user/_uids/',
         seerId,
-        filter ? '?ql=' + filter : '',
+        widget.recommend.ql.raw ? '?ql=' + widget.recommend.ql.raw : ''
       ].join('');
 
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
         if (resp.data && resp.data.length > 0) {
-          callback(resp.data[0]);
+          callback(resp.data[0], widget);
         } else {
-          callback(null);
+          callback(null, widget);
         }
       }, function () {
-        callback(null);
+        callback(null, widget);
       });
-    },
+    }
   };
 
   /**
@@ -2330,8 +2298,8 @@
     this.version = '0.0.04';
 
     this.initializePageViews = function () {
-      var cookie = utils.readCookie('PathforaPageView');
-      var date = new Date();
+      var cookie = utils.readCookie('PathforaPageView'),
+          date = new Date();
       date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
     };
@@ -2372,22 +2340,12 @@
 
         if (widgets.target || widgets.exclude) {
           api.checkUserSegments(function (segments) {
-
-            var target,
-              targetmatched = false,
-              targetedwidgets = [],
-              ti,
-              tl,
-              exclude,
-              excludematched = false,
-              confirmedwidgets = [],
-              ei,
-              ex,
-              ey,
-              el;
+            var target, ti, tl, exclude, ei, ex, ey, el,
+                targetedwidgets = [],
+                excludematched = false;
 
             // handle inclusions
-            if(widgets.target){
+            if (widgets.target) {
               tl = widgets.target.length;
               for (ti = 0; ti < tl; ti++) {
                 target = widgets.target[ti];
@@ -2398,7 +2356,7 @@
             }
 
             // handle exclusions
-            if(widgets.exclude){
+            if (widgets.exclude) {
               el = widgets.exclude.length;
               for (ei = 0; ei < el; ei++) {
                 exclude = widgets.exclude[ei];
@@ -2447,10 +2405,10 @@
      */
     this.initializeABTesting = function (abTests) {
       abTests.forEach(function (abTest) {
-        var abTestingType = abTest.type;
-        var userAbTestingValue = utils.readCookie(abTest.cookieId);
-        var userAbTestingGroup = 0;
-        var i;
+        var abTestingType = abTest.type,
+            userAbTestingValue = utils.readCookie(abTest.cookieId),
+            userAbTestingGroup = 0,
+            date = new Date();
 
         if (!userAbTestingValue) {
           // Support old cookie name convention
@@ -2462,12 +2420,11 @@
         }
 
         // NOTE Always update the cookie to get the new exp date.
-        var date = new Date();
         date.setDate(date.getDate() + 365);
         utils.saveCookie(abTest.cookieId, userAbTestingValue, date);
 
         // NOTE Determine visible group for the user
-        i = 0;
+        var i = 0;
         while (i < 1) {
           i += abTestingType.groups[userAbTestingGroup];
 
@@ -2544,14 +2501,8 @@
      * @param {object} widget
      */
     this.showWidget = function (widget) {
-      var i;
-      var j;
-      var node;
-      var hostNode;
-
       // FIXME Change to Array#filter and Array#length
-      j = core.openedWidgets.length;
-      for (i = 0; i < j; i++) {
+      for (var i = 0; i < core.openedWidgets.length; i++) {
         if (core.openedWidgets[i] === widget) {
           return;
         }
@@ -2560,7 +2511,7 @@
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
 
-      node = core.createWidgetHtml(widget);
+      var node = core.createWidgetHtml(widget);
 
       if (widget.showSocialLogin) {
         if (widget.showForm === false) {
@@ -2569,13 +2520,13 @@
       }
 
       if (widget.pushDown) {
-        utils.addClass(document.querySelector('.pf-push-down'), "opened");
+        utils.addClass(document.querySelector('.pf-push-down'), 'opened');
       }
 
       if (widget.config.layout !== 'inline') {
         document.body.appendChild(node);
       } else {
-        hostNode = document.querySelector(widget.config.position);
+        var hostNode = document.querySelector(widget.config.position);
 
         if (hostNode) {
           hostNode.appendChild(node);
@@ -2620,13 +2571,10 @@
      * @param {boolean} noTrack if true, closing action will not be recorded
      */
     this.closeWidget = function (id, noTrack) {
-      var i;
-      var j;
-      var node;
+      var node = document.getElementById(id);
 
       // FIXME Change to Array#some or Array#filter
-      j = core.openedWidgets.length;
-      for (i = 0; i < j; i++) {
+      for (var i = 0; i < core.openedWidgets.length; i++) {
         if (core.openedWidgets[i].id === id) {
           if (!noTrack) {
             core.trackWidgetAction('close', core.openedWidgets[i]);
@@ -2636,13 +2584,13 @@
         }
       }
 
-      node = document.getElementById(id);
       utils.removeClass(node, 'opened');
 
       if (utils.hasClass(node, 'pf-has-push-down')) {
         var pushDown = document.querySelector('.pf-push-down');
-        if (pushDown)
-          utils.removeClass(pushDown, "opened");
+        if (pushDown) {
+          utils.removeClass(pushDown, 'opened');
+        }
       }
 
       // FIXME 500 - magical number
@@ -2667,21 +2615,18 @@
      * @description Clean widgets and data state
      */
     this.clearAll = function () {
-      var opened = core.openedWidgets;
-      var delayed = core.delayedWidgets;
-      var element;
-      var i;
+      var opened = core.openedWidgets,
+          delayed = core.delayedWidgets;
 
       opened.forEach(function (widget) {
-        element = document.getElementById(widget.id);
+        var element = document.getElementById(widget.id);
         utils.removeClass(element, 'opened');
         element.parentNode.removeChild(element);
       });
 
       opened.slice(0);
 
-      i = delayed.length;
-      for (i; i > -1; i--) {
+      for (var i = delayed.length; i > -1; i--) {
         core.cancelDelayedWidget(delayed[i]);
       }
 
@@ -2739,13 +2684,15 @@
         };
 
         // NOTE API initialization
-        (function(d, s, id){
-           var js, fjs = d.getElementsByTagName(s)[0];
-           if (d.getElementById(id)) {return;}
-           js = d.createElement(s); js.id = id;
-           js.src = "//connect.facebook.net/en_US/sdk.js";
-           fjs.parentNode.insertBefore(js, fjs);
-         }(document, 'script', 'facebook-jssdk'));
+        (function (d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {
+            return;
+          }
+          js = d.createElement(s); js.id = id;
+          js.src = '//connect.facebook.net/en_US/sdk.js';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
 
         parseFBLoginTemplate(templates.form);
         parseFBLoginTemplate(templates.sitegate);
@@ -2761,7 +2708,6 @@
      */
     this.integrateWithGoogle = function (clientId) {
       if (clientId !== '') {
-        var body = document.querySelector('body');
         var head = document.querySelector('head');
 
         var appMetaTag = templates.social.googleMeta.replace(
@@ -2775,7 +2721,7 @@
         );
 
         var parseGoogleLoginTemplate = function (parentTemplates) {
-          Object.keys(parentTemplates).forEach(function (type, index) {
+          Object.keys(parentTemplates).forEach(function (type) {
             parentTemplates[type] = parentTemplates[type].replace(
               /<p name="google-login" hidden><\/p>/gm,
               btn
@@ -2787,20 +2733,19 @@
 
         window.___gcfg = {
           parsetags: 'onload'
-        }
+        };
 
         window.pathforaGoogleOnLoad = core.onGoogleLoad;
 
         // NOTE Google API
         (function () {
-          var s;
-          var po = document.createElement('script');
+          var s, po = document.createElement('script');
           po.type = 'text/javascript';
           po.async = true;
           po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
           s = document.getElementsByTagName('script')[0];
           s.parentNode.insertBefore(po, s);
-        })();
+        }());
 
         pathforaDataObject.socialNetworks.googleClientID = clientId;
         parseGoogleLoginTemplate(templates.form);
@@ -2829,7 +2774,6 @@
 
   // NOTE Webadmin generated config
   if (typeof pfCfg === 'object') {
-
     api.getData([
       document.location.protocol === 'https:' ? 'https' : 'http',
       '://pathfora.parseapp.com/config/',
@@ -2837,42 +2781,38 @@
       '/',
       pfCfg.pid
     ].join(''),
+
     function (data) {
-      var parsed = JSON.parse(data);
-      var widgets = parsed.widgets;
-      var themes = {};
-      var widgetsConfig;
-      var prepareWidgetArray;
-      var i;
-      var j;
+      var parsed = JSON.parse(data),
+          widgets = parsed.widgets,
+          themes = {},
+          i;
 
       if (typeof parsed.config.themes !== 'undefined') {
-        j = parsed.config.themes.length;
-        for (i = 0; i < j; i++) {
+        for (i = 0; i < parsed.config.themes.length; i++) {
           themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
         }
       }
 
-      widgetsConfig = {
+      var widgetsConfig = {
         generic: {
           themes: themes
         }
       };
 
-      prepareWidgetArray = function (array) {
-        j = array.length;
-        for (i = 0; i < j; i++) {
+      var prepareWidgetArray = function (array) {
+        for (i = 0; i < array.length; i++) {
           array[i] = core.prepareWidget(array[i].type, array[i]);
         }
       };
+
       prepareWidgetArray(widgets.common);
 
-      j = widgets.target.length;
-      for (i = 0; i < j; i++) {
+      for (i = 0; i < widgets.target.length; i++) {
         prepareWidgetArray(widgets.target[i].widgets);
       }
 
       context.pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
     });
   }
-})(window, document);
+}(window, document));

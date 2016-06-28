@@ -1,4 +1,4 @@
-var initModule = pathfora.Message({
+var initModule = new pathfora.Message({
   id: 'onInit-callback',
   layout: 'modal',
   msg: 'Check the console log',
@@ -7,4 +7,4 @@ var initModule = pathfora.Message({
   }
 });
 
-pathfora.initializeWidgets([ initModule ]);
+pathfora.initializeWidgets([initModule]);

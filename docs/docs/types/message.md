@@ -1,13 +1,13 @@
 Message type modules are focused on delivering outbound communication. For example: announcing a product launch, new content, top-level alert, etc. These modules provide a simple text message which can be used in a variety of formats.
 
 ``` javascript
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'my-message-module-id',
   headline: 'My Headline Text',
   msg: 'My message text here.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 ```
 
 ## layout

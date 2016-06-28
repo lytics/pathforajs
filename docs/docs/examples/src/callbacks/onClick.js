@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'onClick-callback',
   layout: 'button',
   msg: 'Click Me!',
@@ -7,4 +7,4 @@ var module = pathfora.Message({
   }
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

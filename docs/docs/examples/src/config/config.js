@@ -24,7 +24,7 @@ var config = {
   // Form settings will overwrite the "generic"
   // settings for all form modules
   form: {
-    okMessage: "Submit Form",
+    okMessage: 'Submit Form',
     fields: {
       title: false
     },
@@ -42,28 +42,28 @@ var config = {
       actionBackground: '#fff'
     }
   }
-}
+};
 
-var slideoutMsg = pathfora.Message({
+var slideoutMsg = new pathfora.Message({
   id: 'slideoutMsg',
   layout: 'slideout',
   position: 'bottom-right',
   msg: 'Slideout Message'
 });
 
-var barSub = pathfora.Subscription({
+var barSub = new pathfora.Subscription({
   id: 'barSubscription',
   layout: 'bar',
   msg: 'Bar Subscription'
 });
 
-var slideoutForm = pathfora.Form({
+var slideoutForm = new pathfora.Form({
   id: 'slideoutForm',
   layout: 'slideout',
   msg: 'Slideout Form'
 });
 
-var buttonMsg = pathfora.Message({
+var buttonMsg = new pathfora.Message({
   id: 'buttonMsg',
   layout: 'button',
   position: 'right',
