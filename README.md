@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
 
 # Pathfora JS
-Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](#documentation).
+Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](https://lytics.github.io/pathforadocs/).
         
 ## Modules
 There are 4 types of modules and 4 layouts currently supported.
