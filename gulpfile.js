@@ -121,7 +121,7 @@ gulp.task('build:testjs', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*', ['build']);
+  gulp.watch('src/**/*', ['build:styles', 'build:js']);
 });
 
 gulp.task('local:watch', function () {
@@ -193,7 +193,7 @@ gulp.task('lint', function () {
 gulp.task('test', ['build:styles', 'build:testjs']);
 gulp.task('build:local', ['build:styles', 'local:js']);
 gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs']);
-gulp.task('build', ['build:styles', 'build:js']);
+gulp.task('build', ['build:styles', 'build:js', 'lint']);
 gulp.task('local', ['build:local', 'preview', 'local:watch']);
 gulp.task('docs', ['build:local', 'build:docs', 'preview', 'docs:watch']);
 gulp.task('default', ['build', 'preview', 'watch']);
