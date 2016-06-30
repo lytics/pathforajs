@@ -1,4 +1,4 @@
-/* global jstag, ga, pfCfg */
+/* global jstag, ga */
 'use strict';
 
 /**
@@ -137,7 +137,9 @@
 
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
-  var templates = '{{templates}}';
+  /* eslint-disable indent */
+  var templates = {{templates}};
+  /* eslint-enable indent */
 
   // NOTE Event callback types
   var callbackTypes = {
@@ -361,8 +363,8 @@
      */
     insertWidget: function (method, segment, widget, config) {
       // assume that we need to add a new widget until proved otherwise
-      var makeNew = true,
-          subject;
+      var subject,
+          makeNew = true;
 
       // make sure our scaffold is valid
       if (!config.target) {
@@ -483,8 +485,8 @@
      * @param {object} widget
      */
     initializeWidget: function (widget) {
-      var condition = widget.displayConditions,
-          watcher;
+      var watcher,
+          condition = widget.displayConditions;
 
       core.valid = true;
 
@@ -548,6 +550,7 @@
      */
     initializeScrollWatchers: function (watchers, widget) {
       if (!core.scrollListener) {
+
         core.scrollListener = function () {
           var valid;
 
@@ -565,6 +568,7 @@
             context.pathfora.showWidget(widget);
           }
         };
+
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
         if (typeof context.addEventListener === 'function') {
           context.addEventListener('scroll', core.scrollListener, false);
@@ -726,12 +730,12 @@
     },
 
     impressionsChecker: function (impressionConstraints, widget) {
-      var valid = true,
+      var parts, totalImpressions,
+          valid = true,
           id = 'PathforaImpressions_' + widget.id,
           sessionImpressions = ~~sessionStorage.getItem(id),
           total = utils.readCookie(id),
-          now = Date.now(),
-          parts, totalImpressions;
+          now = Date.now();
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
@@ -766,12 +770,12 @@
     },
 
     hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
-      var valid = true,
+      var parts,
+          valid = true,
           now = Date.now(),
           confirm = utils.readCookie('PathforaConfirm_' + widget.id),
           cancel = utils.readCookie('PathforaCancel_' + widget.id),
-          closed = utils.readCookie('PathforaClosed_' + widget.id),
-          parts;
+          closed = utils.readCookie('PathforaClosed_' + widget.id);
 
       if (hideAfterActionConstraints.confirm && confirm) {
         parts = confirm.split('|');
@@ -921,14 +925,14 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
-      var widgetContent = widget.querySelector('.pf-widget-content'),
+      var node, child,
+          widgetContent = widget.querySelector('.pf-widget-content'),
           widgetCancel = widget.querySelector('.pf-widget-cancel'),
           widgetOk = widget.querySelector('.pf-widget-ok'),
           widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
           widgetBody = widget.querySelector('.pf-widget-body'),
           widgetMessage = widget.querySelector('.pf-widget-message'),
-          widgetClose = widget.querySelector('.pf-widget-close'),
-          node, child;
+          widgetClose = widget.querySelector('.pf-widget-close');
 
       if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
@@ -1109,8 +1113,8 @@
 
         // Hide fields
         Object.keys(config.fields).forEach(function (field) {
-          var element = getFormElement(field),
-              parent, prev, next;
+          var parent, prev, next,
+              element = getFormElement(field);
 
           if (element && !config.fields[field]) {
             parent = element.parentNode;
@@ -1150,8 +1154,8 @@
      * @param {object} config
      */
     constructWidgetActions: function (widget, config) {
-      var widgetOk = widget.querySelector('.pf-widget-ok'),
-          widgetOnModalClose, updateActionCookie, widgetOnButtonClick;
+      var widgetOnModalClose, updateActionCookie, widgetOnButtonClick,
+          widgetOk = widget.querySelector('.pf-widget-ok');
 
       switch (config.type) {
       case 'form':
@@ -1253,9 +1257,9 @@
         };
 
         updateActionCookie = function (name) {
-          var val = utils.readCookie(name),
-              duration = Date.now(),
-              ct;
+          var ct,
+              val = utils.readCookie(name),
+              duration = Date.now();
 
           if (val) {
             val = val.split('|');
@@ -1420,17 +1424,18 @@
 
           widgetContentUnit.href = rec.url;
 
+          // image div
           recImage.className = 'pf-content-unit-img';
           recImage.style.backgroundImage = "url('" + rec.image + "')";
           widgetContentUnit.appendChild(recImage);
 
           recMeta.className = 'pf-content-unit-meta';
 
-          // title
+          // title h4
           recTitle.innerHTML = rec.title;
           recMeta.appendChild(recTitle);
 
-          // description
+          // description p
           recDesc.innerHTML = rec.description;
           recMeta.appendChild(recDesc);
 
@@ -2220,8 +2225,8 @@
      * @param {string} accountId  Lytics account ID
      */
     recommendContent: function (accountId, widget, callback) {
-      var seerId = utils.readCookie('seerid'),
-          recommendUrl;
+      var recommendUrl,
+          seerId = utils.readCookie('seerid');
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
@@ -2736,47 +2741,4 @@
   context.pathfora = new Pathfora();
   context.pathfora.initializePageViews();
 
-  // NOTE Webadmin generated config
-  if (typeof pfCfg === 'object') {
-    api.getData([
-      document.location.protocol === 'https:' ? 'https' : 'http',
-      '://pathfora.parseapp.com/config/',
-      pfCfg.uid,
-      '/',
-      pfCfg.pid
-    ].join(''),
-
-    function (data) {
-      var parsed = JSON.parse(data),
-          widgets = parsed.widgets,
-          themes = {},
-          i;
-
-      if (typeof parsed.config.themes !== 'undefined') {
-        for (i = 0; i < parsed.config.themes.length; i++) {
-          themes[parsed.config.themes[i].name] = parsed.config.themes[i].colors;
-        }
-      }
-
-      var widgetsConfig = {
-        generic: {
-          themes: themes
-        }
-      };
-
-      var prepareWidgetArray = function (array) {
-        for (i = 0; i < array.length; i++) {
-          array[i] = core.prepareWidget(array[i].type, array[i]);
-        }
-      };
-
-      prepareWidgetArray(widgets.common);
-
-      for (i = 0; i < widgets.target.length; i++) {
-        prepareWidgetArray(widgets.target[i].widgets);
-      }
-
-      context.pathfora.initializeWidgets(widgets, pfCfg.lid, widgetsConfig);
-    });
-  }
 }(window, document));

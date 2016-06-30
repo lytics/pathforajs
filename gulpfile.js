@@ -74,7 +74,7 @@ var prepareTemplates = function () {
   };
 
   walk.walkSync(templateDirectory, options);
-  return JSON.stringify(templates, null, 2);
+  return JSON.stringify(templates, null, 2).replace(/\"/g, '\'');
 };
 
 
@@ -82,7 +82,7 @@ gulp.task('build:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', '//api.lytics.io'))
     .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
-    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -96,7 +96,7 @@ gulp.task('local:js', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', APIURL))
     .pipe(replace('{{cssurl}}', CSSURL))
-    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
@@ -184,7 +184,7 @@ gulp.task('docs:mkdocs', shell.task([
 }));
 
 gulp.task('lint', function () {
-  return gulp.src(['src/pathfora.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
+  return gulp.src(['dist/pathfora.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
