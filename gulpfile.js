@@ -110,7 +110,7 @@ gulp.task('build:testjs', function () {
   gulp.src('src/*.js')
     .pipe(replace('{{apiurl}}', TESTAPIURL))
     .pipe(replace('{{cssurl}}', TESTCSSURL))
-    .pipe(replace('\'{{templates}}\'', prepareTemplates()))
+    .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({
