@@ -2745,14 +2745,14 @@
   /**
    * @class
    * @name Inline
-   * @description Inline Class
+   * @description Inline Personalization
    */
   Inline = function () {
     this.lioElements = [];
     this.preppedElements = [];
 
     /*
-     * @description Prepare all the elements for hiding / showing based on membership
+     * @description Prepare all the elements with the attribute provided
      * @param {attr} name of attribute to select by
      */
     this.prepElements = function (attr) {
@@ -2793,7 +2793,7 @@
     };
 
     /*
-     * @description show/hide the elements based on membership
+     * @description Show/hide the elements based on membership
      */
     this.procElements = function () {
       var elementObj = this.prepElements('data-liotrigger');
@@ -2827,7 +2827,7 @@
             }
           }
 
-          // if nothing matched show default
+          // if nothing matched show the default
           if (!matched && key !== 'default' && defaultEl.elem) {
             defaultEl.elem.removeAttribute('data-liotrigger');
             defaultEl.elem.setAttribute('data-liomodified', 'true');
@@ -2839,8 +2839,7 @@
     };
 
 
-    // for our automatic element handling we need to ensure they are all hidden by default
-    // so do that.
+    // ensure they are all trigger elements are hidden by default
     var css = '[data-liotrigger]{ display: none; }',
         style = document.createElement('style');
 
@@ -2859,6 +2858,8 @@
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
   context.pathfora.initializePageViews();
+
+  // Setup Inline Personalization
   context.inline = new Inline();
 
   context.liosetup = context.liosetup || {};
