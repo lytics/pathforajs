@@ -1,13 +1,13 @@
 Gate modules provide an approach for requiring data collection or user identification. This type of module prevents users from viewing content or navigating until some sort of data has been collected and processed. These modules are highly effective when promoting white papers or other online materials that are not to be freely available.
 
 ``` javascript
-var module = pathfora.SiteGate({
+var module = new pathfora.SiteGate({
   id: 'my-gate-module-id',
   headline: 'My Headline Text',
   msg: 'My message text here.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 ```
 
 ## Gate

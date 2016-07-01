@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'twitter-module',
   className: 'pf-twitter-module',
   layout: 'slideout',
@@ -7,8 +7,9 @@ var module = pathfora.Message({
   okMessage: 'Tweet @ us!',
   cancelMessage: 'No Thanks',
   variant: 2,
-  image: '/assets/twitter.png',
-  theme: 'custom'
+  image: '../../../../assets/twitter.png',
+  theme: 'custom',
+  branding: false
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

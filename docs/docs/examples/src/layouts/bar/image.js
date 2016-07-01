@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'bar-image',
   layout: 'bar',
   msg: 'Welcome to our website.',
@@ -6,4 +6,4 @@ var module = pathfora.Message({
   image: '../../../../assets/lion.jpg'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

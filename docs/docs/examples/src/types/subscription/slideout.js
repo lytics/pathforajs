@@ -1,8 +1,8 @@
-var module = pathfora.Subscription({
+var module = new pathfora.Subscription({
   id: 'subscription-slideout',
   layout: 'slideout',
   headline: 'Sign up!',
   msg: 'Sign up to get newsletter updates.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

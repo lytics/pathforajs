@@ -1,4 +1,4 @@
-var module = pathfora.Form({
+var module = new pathfora.Form({
   id: 'modal-image',
   layout: 'modal',
   headline: 'Sign Up!',
@@ -7,4 +7,4 @@ var module = pathfora.Form({
   image: '../../../../assets/lion.jpg'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

@@ -3,12 +3,12 @@ For multiple modules with common elements we can define a configuration to apply
 ``` javascript
 var config = {
   generic: {
-    theme: dark
+    theme: 'dark'
   }
 };
 
 // Lytics Account ID can be an empty string if not used for targeting
-pathfora.initializeWidgets([ module, module2 ], '', config);
+pathfora.initializeWidgets([module, module2], '', config);
 ```
 
 <table>

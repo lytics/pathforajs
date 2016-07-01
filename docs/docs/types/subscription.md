@@ -1,13 +1,13 @@
 Subscription modules are a lite version of the form type focused on gathering the minimum amount of user data necessary to maintain communication. By default only email address will be collected by a subscription module.
 
 ``` javascript
-var module = pathfora.Subscription({
+var module = new pathfora.Subscription({
   id: 'my-subscription-module-id',
   headline: 'My Headline Text',
   msg: 'My message text here.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 ```
 
 ## layout
