@@ -1005,7 +1005,7 @@ describe('Pathfora', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   xit('should be able to display widget only if user can see specific DOM element', function () {
@@ -2746,7 +2746,7 @@ describe('Widgets', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   // -------------------------
@@ -2918,5 +2918,135 @@ describe('Utils', function () {
 
       expect(escapedTwice).toBe(escapedOnce);
     });
+  });
+});
+
+
+// -------------------------
+// INLINE PERSONALIZATION TEST
+// -------------------------
+
+describe('Inline Personalization', function () {
+  beforeEach(function () {
+    window.inline.lioElements = null;
+  });
+
+  it('should select to show the first matching element per group', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'high_value', 'email', 'smt_new']
+      }
+    };
+
+    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="smt_new">New</div>');
+
+    $(document.body).append('<div data-liogroup="testgrp2" data-liotrigger="high_momentum">High Momentum</div>' +
+      '<div data-liogroup="testgrp2" data-liotrigger="email">Has Email</div>' +
+      '<div data-liogroup="testgrp2" data-liotrigger="default">Default</div>');
+
+    window.inline.procElements();
+
+    var grp1hide = $('[data-liogroup="testgrp"][data-liotrigger]'),
+        grp2hide = $('[data-liogroup="testgrp2"][data-liotrigger]'),
+        grp1show = $('[data-liogroup="testgrp"][data-liomodified="true"]'),
+        grp2show = $('[data-liogroup="testgrp2"][data-liomodified="true"]');
+
+    expect(grp1show.length).toBe(1);
+    expect(grp2show.length).toBe(1);
+    expect(grp1show.text()).toBe('High Value');
+    expect(grp2show.text()).toBe('Has Email');
+    expect(grp1show.css('display')).toBe('block');
+    expect(grp2show.css('display')).toBe('block');
+
+    expect(grp1hide.length).toBe(2);
+    expect(grp2hide.length).toBe(2);
+    expect(grp1hide.css('display')).toBe('none');
+    expect(grp2hide.css('display')).toBe('none');
+
+    $('[data-liogroup="testgrp"], [data-liogroup="testgrp2"]').remove();
+  });
+
+
+  it('should select to show the default if none of the triggers match', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'email']
+      }
+    };
+
+    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
+
+    window.inline.procElements();
+
+    var def = $('[data-liomodified="true"]'),
+        hidden = $('[data-liotrigger]');
+
+    expect(def.length).toBe(1);
+    expect(def.text()).toBe('Default');
+    expect(def.css('display')).toBe('block');
+
+    expect(hidden.length).toBe(2);
+    expect(hidden.css('display')).toBe('none');
+
+    $('[data-liogroup="testgrp"]').remove();
+  });
+
+  it('should not interfere with pathfora targeting', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'portlanders', 'email']
+      }
+    };
+
+    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+      '<div data-liogroup="testgrp" data-liotrigger="email">Has Email</div>');
+
+    var testModule = new pathfora.Message({
+      id: '9ec53f71a1514339bb1552280ae76682',
+      layout: 'slideout',
+      msg: 'show this to people with an email'
+    });
+
+    var testModule2 = new pathfora.Message({
+      id: 'ba6a6df43f774d769058950969b07a16',
+      layout: 'slideout',
+      msg: 'show this to people without an email'
+    });
+
+    var widgets = {
+      target: [{
+        segment: 'email',
+        widgets: [testModule]
+      }],
+      inverse: [testModule2]
+    };
+
+    pathfora.initializeWidgets(widgets);
+    window.inline.procElements();
+
+    setTimeout(function () {
+      var shown = $('[data-liomodified="true"]'),
+          hidden = $('[data-liotrigger]'),
+          w1 = $('#' + testModule.id),
+          w2 = $('#' + testModule2.id);
+
+      expect(shown.length).toBe(1);
+      expect(shown.text()).toBe('Portlander');
+      expect(shown.css('display')).toBe('block');
+
+      expect(hidden.length).toBe(2);
+      expect(hidden.css('display')).toBe('none');
+
+      expect(w1.length).toBe(1);
+      expect(w2.length).toBe(0);
+    }, 200);
+
+    $('[data-liogroup="testgrp"]').remove();
+    pathfora.clearAll();
   });
 });

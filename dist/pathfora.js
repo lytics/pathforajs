@@ -6,7 +6,7 @@
  */
 (function (context, document) {
   // NOTE Output & processing variables
-  var Pathfora, utils, core, api;
+  var Pathfora, utils, core, api, Inline;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
@@ -1196,6 +1196,8 @@
       switch (config.type) {
       case 'form':
       case 'sitegate':
+      case 'subscription':
+
         var widgetForm = widget.querySelector('form');
 
         var widgetOnFormSubmit = function (event) {
@@ -1372,7 +1374,7 @@
             context.pathfora.closeWidget(widget.id);
           }
         };
-      } else if (config.type === 'form' || config.type === 'sitegate') {
+      } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
         widgetOk.onclick = function () {
           var valid = true;
 
@@ -2243,15 +2245,19 @@
 
     /**
      * @description Retrieve user segment data from Lytics
-     * @throws {Error} error
-     * @param {string} accountId  Lytics user ID
-     * @param {string} callback   universal callback
+     * @param {string} callback universal callback
      */
     checkUserSegments: function (callback) {
       if (context.lio && context.lio.data && context.lio.data.segments) {
-        callback(context.lio.data.segments);
-      } else {
+        if (callback) {
+          callback(context.lio.data.segments);
+        } else {
+          return context.lio.data.segments;
+        }
+      } else if (callback) {
         callback(['all']);
+      } else {
+        return ['all'];
       }
     },
 
@@ -2772,9 +2778,130 @@
     this.utils = utils;
   };
 
+  /**
+   * @class
+   * @name Inline
+   * @description Inline Class
+   */
+  Inline = function () {
+    this.lioElements = [];
+    this.preppedElements = [];
+
+    /*
+     * @description Prepare all the elements for hiding / showing based on membership
+     * @param {attr} name of attribute to select by
+     */
+    this.prepElements = function (attr) {
+      var lioDataElements = {};
+
+      if (!this.lioElements) {
+        this.lioElements = document.querySelectorAll('[' + attr + ']');
+      }
+
+      var lioElements = this.lioElements;
+
+      for (var i = 0; i < lioElements.length; i++) {
+        if (lioElements[i].getAttribute(attr) !== null) {
+          var theElement = lioElements[i],
+              lioGroup = theElement.getAttribute('data-liogroup'),
+              lioType = theElement.getAttribute('data-liotype'),
+              lioTrigger = theElement.getAttribute('data-liotrigger');
+
+          if (!lioGroup) {
+            lioGroup = 'default';
+          }
+
+          if (!lioDataElements[lioGroup]) {
+            lioDataElements[lioGroup] = [];
+          }
+
+          lioDataElements[lioGroup].push({
+            elem: theElement,
+            displayType: theElement.style.display,
+            group: lioGroup,
+            type: lioType,
+            trigger: lioTrigger
+          });
+        }
+      }
+
+      return lioDataElements;
+    };
+
+    /*
+     * @description show/hide the elements based on membership
+     */
+    this.procElements = function () {
+      var elementObj = this.prepElements('data-liotrigger');
+
+      var inSegment = function (match) {
+        return (api.checkUserSegments().indexOf(match) !== -1);
+      };
+
+      for (var key in elementObj) {
+        if (elementObj.hasOwnProperty(key)) {
+          var matched = false,
+              defaultEl = {};
+
+          for (var i = 0; i < elementObj[key].length; i++) {
+            var singleElementObj = elementObj[key][i];
+
+            // if we find a match show that and prevent others from showing in same group
+            if (inSegment(singleElementObj.trigger) && !matched) {
+              singleElementObj.elem.removeAttribute('data-liotrigger');
+              singleElementObj.elem.setAttribute('data-liomodified', 'true');
+
+              if (key !== 'default') {
+                matched = true;
+                continue;
+              }
+            }
+
+            // if this is the default save it
+            if (singleElementObj.trigger === 'default') {
+              defaultEl = singleElementObj;
+            }
+          }
+
+          // if nothing matched show default
+          if (!matched && key !== 'default' && defaultEl.elem) {
+            defaultEl.elem.removeAttribute('data-liotrigger');
+            defaultEl.elem.setAttribute('data-liomodified', 'true');
+          }
+        }
+      }
+
+      this.preppedElements = elementObj;
+    };
+
+
+    // for our automatic element handling we need to ensure they are all hidden by default
+    // so do that.
+    var css = '[data-liotrigger]{ display: none; }',
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) { // handle ie
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    document.getElementsByTagName('head')[0].appendChild(style);
+  };
+
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
   context.pathfora.initializePageViews();
+  context.inline = new Inline();
+
+  context.liosetup = context.liosetup || {};
+  if (context.lio) {
+    context.lio.addCallback(function () {
+      context.inline.procElements();
+    });
+  }
 
 }(window, document));

@@ -1,4 +1,4 @@
-Pathfora integrates with [Lytics](http://www.getlytics.com/) to support its [content recommendations](/layouts/modal.md#recommend) feature.
+Pathfora integrates with [Lytics](http://www.getlytics.com/) to support its [content recommendations](/content_recommend.md) feature.
 
 ## Using your Lytics Account ID
 
