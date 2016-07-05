@@ -365,6 +365,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.segmentsCbCalled = true;
+
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -433,6 +435,8 @@ describe('Pathfora', function () {
         segments: ['a', 'b']
       }
     };
+
+    window.lio.segmentsCbCalled = true;
 
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
@@ -801,6 +805,8 @@ describe('Pathfora', function () {
         segments: ['all', 'smt_new']
       }
     };
+
+    window.lio.segmentsCbCalled = true;
 
     var widgetA = new pathfora.Message({
       id: 'ab-widget10-a',
@@ -2928,7 +2934,7 @@ describe('Utils', function () {
 
 describe('Inline Personalization', function () {
   beforeEach(function () {
-    window.inline.lioElements = null;
+    window.inline.elements = [];
   });
 
   it('should select to show the first matching element per group', function () {
@@ -2937,6 +2943,8 @@ describe('Inline Personalization', function () {
         segments: ['all', 'high_value', 'email', 'smt_new']
       }
     };
+
+    window.lio.segmentsCbCalled = true;
 
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
@@ -2976,6 +2984,8 @@ describe('Inline Personalization', function () {
       }
     };
 
+    window.lio.segmentsCbCalled = true;
+
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
@@ -3001,6 +3011,8 @@ describe('Inline Personalization', function () {
         segments: ['all', 'portlanders', 'email']
       }
     };
+
+    window.lio.segmentsCbCalled = true;
 
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +

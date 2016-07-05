@@ -2308,6 +2308,28 @@
      */
     this.version = '0.0.04';
 
+    /**
+     * @public
+     * @description callbacks to execute once segments load
+     */
+    this.callbacks = [];
+
+    /**
+     * @public
+     * @description Add callbacks to execute once segments load
+     */
+    this.addCallback = function (cb) {
+      if (context.lio) {
+        if (!context.lio.segmentsCbCalled) {
+          context.lio.addCallback(cb);
+        } else {
+          cb();
+        }
+      } else {
+        this.callbacks.push(cb);
+      }
+    };
+
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView'),
           date = new Date();
@@ -2350,49 +2372,55 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(function (segments) {
-            var target, ti, tl, exclude, ei, ex, ey, el,
-                targetedwidgets = [],
-                excludematched = false;
 
-            // handle inclusions
-            if (widgets.target) {
-              tl = widgets.target.length;
-              for (ti = 0; ti < tl; ti++) {
-                target = widgets.target[ti];
-                if (segments && segments.indexOf(target.segment) !== -1) {
-                  targetedwidgets = target.widgets;
+          // Add callback to initialize once we know segments are loaded
+          var cb = function () {
+            api.checkUserSegments(function (segments) {
+              var target, ti, tl, exclude, ei, ex, ey, el,
+                  targetedwidgets = [],
+                  excludematched = false;
+
+              // handle inclusions
+              if (widgets.target) {
+                tl = widgets.target.length;
+                for (ti = 0; ti < tl; ti++) {
+                  target = widgets.target[ti];
+                  if (segments && segments.indexOf(target.segment) !== -1) {
+                    targetedwidgets = target.widgets;
+                  }
                 }
               }
-            }
 
-            // handle exclusions
-            if (widgets.exclude) {
-              el = widgets.exclude.length;
-              for (ei = 0; ei < el; ei++) {
-                exclude = widgets.exclude[ei];
-                if (segments && segments.indexOf(exclude.segment) !== -1) {
-                  // we found a match, ensure the corresponding segment(s) are not in the
-                  // targetted widgets array
-                  for (ex = 0; ex < targetedwidgets.length; ex++) {
-                    for (ey = 0; ey < exclude.widgets.length; ey++) {
-                      if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                        targetedwidgets.splice(ex, 1);
+              // handle exclusions
+              if (widgets.exclude) {
+                el = widgets.exclude.length;
+                for (ei = 0; ei < el; ei++) {
+                  exclude = widgets.exclude[ei];
+                  if (segments && segments.indexOf(exclude.segment) !== -1) {
+                    // we found a match, ensure the corresponding segment(s) are not in the
+                    // targetted widgets array
+                    for (ex = 0; ex < targetedwidgets.length; ex++) {
+                      for (ey = 0; ey < exclude.widgets.length; ey++) {
+                        if (targetedwidgets[ex] === exclude.widgets[ey]) {
+                          targetedwidgets.splice(ex, 1);
+                        }
                       }
                     }
                   }
                 }
               }
-            }
 
-            if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets, lyticsId);
-            }
+              if (targetedwidgets.length) {
+                core.initializeWidgetArray(targetedwidgets, lyticsId);
+              }
 
-            if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse, lyticsId);
-            }
-          });
+              if (!targetedwidgets.length && !excludematched && widgets.inverse) {
+                core.initializeWidgetArray(widgets.inverse, lyticsId);
+              }
+            });
+          };
+
+          this.addCallback(cb);
         }
       }
     };
@@ -2784,7 +2812,7 @@
    * @description Inline Personalization
    */
   Inline = function () {
-    this.lioElements = [];
+    this.elements = [];
     this.preppedElements = [];
 
     /*
@@ -2792,40 +2820,40 @@
      * @param {attr} name of attribute to select by
      */
     this.prepElements = function (attr) {
-      var lioDataElements = {};
+      var dataElements = {};
 
-      if (!this.lioElements) {
-        this.lioElements = document.querySelectorAll('[' + attr + ']');
+      if (this.elements.length === 0) {
+        this.elements = document.querySelectorAll('[' + attr + ']');
       }
 
-      var lioElements = this.lioElements;
+      var elements = this.elements;
 
-      for (var i = 0; i < lioElements.length; i++) {
-        if (lioElements[i].getAttribute(attr) !== null) {
-          var theElement = lioElements[i],
-              lioGroup = theElement.getAttribute('data-liogroup'),
-              lioType = theElement.getAttribute('data-liotype'),
-              lioTrigger = theElement.getAttribute('data-liotrigger');
+      for (var i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute(attr) !== null) {
+          var theElement = elements[i],
+              group = theElement.getAttribute('data-liogroup'),
+              type = theElement.getAttribute('data-liotype'),
+              trigger = theElement.getAttribute('data-liotrigger');
 
-          if (!lioGroup) {
-            lioGroup = 'default';
+          if (!group) {
+            group = 'default';
           }
 
-          if (!lioDataElements[lioGroup]) {
-            lioDataElements[lioGroup] = [];
+          if (!dataElements[group]) {
+            dataElements[group] = [];
           }
 
-          lioDataElements[lioGroup].push({
+          dataElements[group].push({
             elem: theElement,
             displayType: theElement.style.display,
-            group: lioGroup,
-            type: lioType,
-            trigger: lioTrigger
+            group: group,
+            type: type,
+            trigger: trigger
           });
         }
       }
 
-      return lioDataElements;
+      return dataElements;
     };
 
     /*
@@ -2898,11 +2926,8 @@
   // Setup Inline Personalization
   context.inline = new Inline();
 
-  context.liosetup = context.liosetup || {};
-  if (context.lio) {
-    context.lio.addCallback(function () {
-      context.inline.procElements();
-    });
-  }
+  context.pathfora.addCallback(function () {
+    context.inline.procElements();
+  });
 
 }(window, document));
