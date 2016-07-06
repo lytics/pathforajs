@@ -2407,9 +2407,6 @@
    * @description Pathfora public API class
    */
   Pathfora = function () {
-
-    var pf = this;
-
     /**
      * @public
      * @description Current version
@@ -2434,11 +2431,31 @@
       }
     };
 
+    /**
+     * @public
+     * @description Create page view cookie
+     */
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView'),
           date = new Date();
       date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
+    };
+
+    /**
+     * @public
+     * @description Initialize inline personalization
+     */
+    this.initializeInline = function () {
+      var pf = this;
+
+      if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', function () {
+          pf.addCallback(function () {
+            pf.inline.procElements();
+          });
+        });
+      }
     };
 
     /**
@@ -2908,21 +2925,18 @@
      */
     this.utils = utils;
 
+    /*
+     * @public
+     * @description Inline personalization class
+     */
+    this.inline = new Inline();
 
-    if (document.addEventListener) {
-      document.addEventListener('DOMContentLoaded', function () {
-        pf.inline = new Inline();
-
-        pf.addCallback(function () {
-          pf.inline.procElements();
-        });
-      });
-    }
+    this.initializePageViews();
+    this.initializeInline();
   };
 
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
-  context.pathfora.initializePageViews();
 
 }(window, document));
