@@ -365,7 +365,7 @@ describe('Pathfora', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
@@ -436,7 +436,7 @@ describe('Pathfora', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
@@ -806,7 +806,7 @@ describe('Pathfora', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     var widgetA = new pathfora.Message({
       id: 'ab-widget10-a',
@@ -2944,7 +2944,7 @@ describe('Inline Personalization', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
@@ -2984,7 +2984,7 @@ describe('Inline Personalization', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
@@ -3012,7 +3012,7 @@ describe('Inline Personalization', function () {
       }
     };
 
-    window.lio.segmentsCbCalled = true;
+    window.lio.loaded = true;
 
     $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +

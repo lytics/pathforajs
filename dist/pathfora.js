@@ -2320,10 +2320,10 @@
      */
     this.addCallback = function (cb) {
       if (context.lio) {
-        if (!context.lio.segmentsCbCalled) {
-          context.lio.addCallback(cb);
+        if (context.lio.loaded) {
+          cb(context.lio.data);
         } else {
-          cb();
+          context.lio.addCallback(cb);
         }
       } else {
         this.callbacks.push(cb);
