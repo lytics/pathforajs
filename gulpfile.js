@@ -15,6 +15,7 @@ var gulp = require('gulp'),
     handlebars = require('gulp-compile-handlebars'),
     shell = require('gulp-shell'),
     eslint = require('gulp-eslint'),
+    gutil = require('gulp-util'),
     TESTAPIURL = '//api.lytics.io',
     TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
     EXAMPLESSRC = 'docs/docs/examples/src',
@@ -84,7 +85,7 @@ gulp.task('build:js', function () {
     .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
     .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
+    .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
       suffix: '.min'
     }))
@@ -98,7 +99,7 @@ gulp.task('local:js', function () {
     .pipe(replace('{{cssurl}}', CSSURL))
     .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
+    .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
       suffix: '.min'
     }))
@@ -112,7 +113,7 @@ gulp.task('build:testjs', function () {
     .pipe(replace('{{cssurl}}', TESTCSSURL))
     .pipe(replace('{{templates}}', prepareTemplates()))
     .pipe(gulp.dest('dist'))
-    .pipe(uglify())
+    .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
       suffix: '.min'
     }))

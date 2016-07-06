@@ -365,6 +365,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.loaded = true;
+
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -434,6 +436,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.loaded = true;
+
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -457,7 +461,7 @@ describe('Pathfora', function () {
       }]
     };
 
-    pathfora.initializeWidgets(widgets, credentials);
+    pathfora.initializeWidgets(widgets);
 
     var widgetA = $('#' + messageA.id),
         widgetB = $('#' + messageB.id);
@@ -802,6 +806,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.loaded = true;
+
     var widgetA = new pathfora.Message({
       id: 'ab-widget10-a',
       layout: 'slideout',
@@ -1005,7 +1011,7 @@ describe('Pathfora', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   xit('should be able to display widget only if user can see specific DOM element', function () {
@@ -2746,7 +2752,7 @@ describe('Widgets', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   // -------------------------
@@ -2917,6 +2923,370 @@ describe('Utils', function () {
           escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
 
       expect(escapedTwice).toBe(escapedOnce);
+    });
+  });
+});
+
+
+// -------------------------
+// INLINE PERSONALIZATION TEST
+// -------------------------
+
+describe('Inline Personalization', function () {
+  // -------------------------
+  // TRIGGER ELEMENTS
+  // -------------------------
+  describe('liotrigger elements', function () {
+    beforeEach(function () {
+      window.pathfora.inline.elements = [];
+    });
+
+    it('should select to show the first matching element per group', function () {
+      window.lio = {
+        data: {
+          segments: ['all', 'high_value', 'email', 'smt_new']
+        }
+      };
+
+      window.lio.loaded = true;
+
+      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="smt_new">New</div>');
+
+      $(document.body).append('<div data-liogroup="testgrp2" data-liotrigger="high_momentum">High Momentum</div>' +
+        '<div data-liogroup="testgrp2" data-liotrigger="email">Has Email</div>' +
+        '<div data-liogroup="testgrp2" data-liotrigger="default">Default</div>');
+
+      window.pathfora.inline.procElements();
+
+      var grp1hide = $('[data-liogroup="testgrp"][data-liotrigger]'),
+          grp2hide = $('[data-liogroup="testgrp2"][data-liotrigger]'),
+          grp1show = $('[data-liogroup="testgrp"][data-liomodified="true"]'),
+          grp2show = $('[data-liogroup="testgrp2"][data-liomodified="true"]');
+
+      expect(grp1show.length).toBe(1);
+      expect(grp2show.length).toBe(1);
+      expect(grp1show.text()).toBe('High Value');
+      expect(grp2show.text()).toBe('Has Email');
+      expect(grp1show.css('display')).toBe('block');
+      expect(grp2show.css('display')).toBe('block');
+
+      expect(grp1hide.length).toBe(2);
+      expect(grp2hide.length).toBe(2);
+      expect(grp1hide.css('display')).toBe('none');
+      expect(grp2hide.css('display')).toBe('none');
+
+      $('[data-liogroup="testgrp"], [data-liogroup="testgrp2"]').remove();
+    });
+
+
+    it('should select to show the default if none of the triggers match', function () {
+      window.lio = {
+        data: {
+          segments: ['all', 'email']
+        }
+      };
+
+      window.lio.loaded = true;
+
+      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
+
+      window.pathfora.inline.procElements();
+
+      var def = $('[data-liomodified="true"]'),
+          hidden = $('[data-liotrigger]');
+
+      expect(def.length).toBe(1);
+      expect(def.text()).toBe('Default');
+      expect(def.css('display')).toBe('block');
+
+      expect(hidden.length).toBe(2);
+      expect(hidden.css('display')).toBe('none');
+
+      $('[data-liogroup="testgrp"]').remove();
+    });
+
+    it('should not interfere with pathfora targeting', function () {
+      window.lio = {
+        data: {
+          segments: ['all', 'portlanders', 'email']
+        }
+      };
+
+      window.lio.loaded = true;
+
+      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
+        '<div data-liogroup="testgrp" data-liotrigger="email">Has Email</div>');
+
+      var testModule = new pathfora.Message({
+        id: '9ec53f71a1514339bb1552280ae76682',
+        layout: 'slideout',
+        msg: 'show this to people with an email'
+      });
+
+      var testModule2 = new pathfora.Message({
+        id: 'ba6a6df43f774d769058950969b07a16',
+        layout: 'slideout',
+        msg: 'show this to people without an email'
+      });
+
+      var widgets = {
+        target: [{
+          segment: 'email',
+          widgets: [testModule]
+        }],
+        inverse: [testModule2]
+      };
+
+      pathfora.initializeWidgets(widgets);
+      window.pathfora.inline.procElements();
+
+      setTimeout(function () {
+        var shown = $('[data-liomodified="true"]'),
+            hidden = $('[data-liotrigger]'),
+            w1 = $('#' + testModule.id),
+            w2 = $('#' + testModule2.id);
+
+        expect(shown.length).toBe(1);
+        expect(shown.text()).toBe('Portlander');
+        expect(shown.css('display')).toBe('block');
+
+        expect(hidden.length).toBe(2);
+        expect(hidden.css('display')).toBe('none');
+
+        expect(w1.length).toBe(1);
+        expect(w2.length).toBe(0);
+      }, 200);
+
+      $('[data-liogroup="testgrp"]').remove();
+      pathfora.clearAll();
+    });
+  });
+
+  // -------------------------
+  // RECOMMENDATION ELEMENTS
+  // -------------------------
+  describe('liorecommend elements', function () {
+    beforeEach(function () {
+      pathfora.inline.acctid = credentials;
+      pathfora.inline.elements = [];
+    });
+
+    it('should fill liotype elements with content recommendation data', function () {
+      jasmine.Ajax.install();
+
+      $(document.body).append('<div data-lioblock="group1" data-liorecommend="www.example.com/*">' +
+        '<img data-liotype="image" alt="My Image">' +
+        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
+        '<p data-liotype="description"></p>' +
+        '</div><div data-lioblock="group1" data-liorecommend="default"></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+
+      var rec = $('[data-liomodified="true"]'),
+          recImage = rec.find('[data-liotype="image"]'),
+          recUrl = rec.find('[data-liotype="url"]'),
+          recTitle = rec.find('[data-liotype="title"]'),
+          recDesc = rec.find('[data-liotype="description"]'),
+          def = $('[data-liorecommend="default"]');
+
+      expect(rec.length).toBe(1);
+      expect(rec.css('display')).toBe('block');
+      expect(recImage.attr('src')).toBe('http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg');
+      expect(recUrl.attr('href')).toBe('http://www.example.com/1');
+      expect(recTitle.text()).toBe('Example Title');
+      expect(recDesc.text()).toBe('An example description');
+
+      expect(def.length).toBe(1);
+      expect(def.css('display')).toBe('none');
+
+      $('[data-lioblock="group1"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should show the default content if invalid response from API', function () {
+      jasmine.Ajax.install();
+
+      $(document.body).append('<div data-lioblock="group2" data-liorecommend="www.example.com/*">' +
+        '<img data-liotype="image" alt="My Image">' +
+        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
+        '<p data-liotype="description"></p>' +
+        '</div><div data-lioblock="group2" data-liorecommend="default"></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 400,
+        'contentType': 'application/json',
+        'responseText': '{"data": null,"message": "No such account id","status": 400}'
+      });
+
+
+      var def = $('[data-liomodified="true"]'),
+          bad = $('[data-liorecommend="www.example.com/*"]');
+
+      expect(def.length).toBe(1);
+      expect(def.css('display')).toBe('block');
+
+      expect(bad.length).toBe(1);
+      expect(bad.css('display')).toBe('none');
+
+      $('[data-lioblock="group2"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should set the background image of a div with liodatatype image or the innerHtml of a div with liodatatype url', function () {
+      jasmine.Ajax.install();
+
+      $(document.body).append('<div data-lioblock="group3" data-liorecommend="www.example.com/*">' +
+        '<div data-liotype="image"></div>' +
+        '<div data-liotype="url"></div></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+
+      var rec = $('[data-liomodified="true"]'),
+          recImage = rec.find('[data-liotype="image"]'),
+          recUrl = rec.find('[data-liotype="url"]');
+
+      expect(rec.length).toBe(1);
+      expect(rec.css('display')).toBe('block');
+      expect(recImage.css('background-image')).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+      expect(recUrl.html()).toBe('http://www.example.com/1');
+
+      $('[data-lioblock="group3"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
+      jasmine.Ajax.install();
+
+      $(document.body).append('<div data-lioblock="group4" data-liorecommend="www.example.com/*">' +
+        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
+        '</div><div data-lioblock="group5" data-liorecommend="www.example.com/*">' +
+        '<h2 data-liotype="title"></h2>' +
+        '<div data-liotype="url"></div></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false},' +
+          '{"url": "www.example.com/2","title": "Another Example Title","description": "An second example description","primary_image": "image2.jpg","confidence": 0.23334,"visited": false}]}'
+      });
+
+
+      var recs = $('[data-liomodified="true"]');
+      expect(recs.length).toBe(2);
+
+      var rec1 = $(recs[0]),
+          rec1Title = rec1.find('[data-liotype="title"]'),
+          rec1Url = rec1.find('[data-liotype="url"]');
+
+      expect(rec1.css('display')).toBe('block');
+      expect(rec1Title.text()).toBe('Example Title');
+      expect(rec1Url.attr('href')).toBe('http://www.example.com/1');
+
+      var rec2 = $(recs[1]),
+          rec2Title = rec2.find('[data-liotype="title"]'),
+          rec2Url = rec2.find('[data-liotype="url"]');
+
+      expect(rec2.css('display')).toBe('block');
+      expect(rec2Title.text()).toBe('Another Example Title');
+      expect(rec2Url.html()).toBe('http://www.example.com/2');
+
+      $('[data-lioblock="group4"], [data-lioblock="group5"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should not conflict with segment trigger groups', function () {
+      jasmine.Ajax.install();
+
+      window.lio = {
+        data: {
+          segments: ['all', 'high_value', 'email', 'smt_new']
+        }
+      };
+
+      $(document.body).append('<div data-liogroup="seg1" data-liotrigger="high_value" data-lioblock="block1" data-liorecommend="www.example.com/*">' +
+        '<a data-liotype="url"><h2 data-liotype="title"></h2></a></div>' +
+        '<div data-lioblock="block1" data-liorecommend="default">default block1</div>' +
+        '<div data-liogroup="seg1" data-liotrigger="default">default seg1</div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data": null,"message": "No such account id","status": 400}'
+      });
+
+
+      var elems = $('[data-liomodified="true"]');
+      expect(elems.length).toBe(2);
+
+      var elem1 = $(elems[0]);
+      expect(elem1.css('display')).toBe('none');
+      expect(elem1.attr('data-lioblock')).toBe('block1');
+      expect(elem1.attr('data-liorecommend')).toBe('www.example.com/*');
+
+      var elem2 = $(elems[1]);
+      expect(elem2.css('display')).toBe('block');
+      expect(elem2.html()).toBe('default block1');
+
+      $('[data-liogroup="seg1"], [data-lioblock="block1"]').remove();
+
+      $(document.body).append('<div data-liogroup="seg2" data-liotrigger="blah">in blah seg2</div>' +
+        '<div data-liogroup="seg2" data-liotrigger="high_value">in high_value seg2</div>' +
+        '<div data-liogroup="seg2" data-liotrigger="default" data-lioblock="block2" data-liorecommend="www.example.com/*">' +
+        '<a data-liotype="url"><h2 data-liotype="title"></h2></a></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+
+      elems = $('[data-liomodified="true"]');
+      expect(elems.length).toBe(2);
+
+      elem1 = $(elems[0]);
+      expect(elem1.css('display')).toBe('block');
+      expect(elem1.html()).toBe('in high_value seg2');
+
+      elem2 = $(elems[1]);
+      expect(elem2.css('display')).toBe('none');
+      expect(elem2.attr('data-lioblock')).toBe('block2');
+
+      $('[data-liogroup="seg2"], [data-lioblock="block2"]').remove();
+      jasmine.Ajax.uninstall();
     });
   });
 });

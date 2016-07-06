@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Inline Personalization Examples</title>
+
+    <style>
+      [data-lioblock] {
+        width: 300px;
+      }
+
+      [data-lioblock] img {
+        width: 300px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.min.js"></script>
+
+    <h1>Inline Personalization</h1>
+
+    <div data-liogroup="grp1" data-liotrigger="portlanders">You are in the "Portlanders" segment</div>
+    <div data-liogroup="grp1" data-liotrigger="smt_new">You are in the "New Users" segment</div>
+    <div data-liogroup="grp1" data-liotrigger="smt_active">You are in the "Active Users" segment</div>
+    <div data-liogroup="grp1" data-liotrigger="default">You are in none of the segments selected</div>
+
+    <h1>Inline Content Recommendations</h1>
+
+    <div data-lioblock="block1" data-liorecommend="www.example.com/blog/*">
+      <div data-liotype="image"></div>
+      <a data-liotype="url"><h2 data-liotype="title"></h2></a>
+      <p data-liotype="description"></p>
+    </div>
+
+    <div data-lioblock="block1" data-liorecommend="default">
+      <img src="https://www.getlytics.com/img/blog/posts/introducing_lytics_reporting/introducing_lytics_reporting-bg.png" alt="Introducing: Lytics Journey Reporting">
+      <a href="https://www.getlytics.com/blog/post/introducing_lytics_reporting"><h2>Introducing: Lytics Journey Reporting</h2></a>
+      <p>See people move through the customer journey and measure their progress and interactions using Lytics Journey Reporting. Build a customer journey that is measurable, based on your key marketing goals.</p>
+    </div>
+
+  </body>
+</html>

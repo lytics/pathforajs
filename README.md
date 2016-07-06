@@ -65,7 +65,7 @@ $ npm install
 
 Gulp tasks:
 
-- **`gulp build`** - minify `LESS` files and uglify `js` files in the `src` directory, and place output in `dist` directory.
+- **`gulp build`** - minify `LESS` files, lint and uglify `js` files in the `src` directory, and place output in `dist` directory.
 
 - **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
 

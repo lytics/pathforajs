@@ -24,6 +24,7 @@ pages:
   - A/B Testing: ab_testing.md
   - Audience Targeting: targeting.md
   - Callbacks: callbacks.md
+  - Content Recommendations: content_recommend.md
   - Display Conditions: display_conditions.md
   - Tracking: tracking.md
 extra_javascript:

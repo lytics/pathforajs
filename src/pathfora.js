@@ -6,7 +6,7 @@
  */
 (function (context, document) {
   // NOTE Output & processing variables
-  var Pathfora, utils, core, api;
+  var Pathfora, utils, core, api, Inline;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
@@ -1160,6 +1160,7 @@
       switch (config.type) {
       case 'form':
       case 'sitegate':
+      case 'subscription':
         var widgetForm = widget.querySelector('form');
 
         var widgetOnFormSubmit = function (event) {
@@ -1336,7 +1337,7 @@
             context.pathfora.closeWidget(widget.id);
           }
         };
-      } else if (config.type === 'form' || config.type === 'sitegate') {
+      } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
         widgetOk.onclick = function () {
           var valid = true;
 
@@ -1748,23 +1749,26 @@
         }
       };
 
-      var contentCb = function (content, w) {
-        if (content) {
-          w.content = {
-            0: {
-              title: content.title,
-              description: content.description,
-              url: 'http://' + content.url,
-              image: content.primary_image
-            }
-          };
-        }
+      var recContent = function (w) {
+        api.recommendContent(accountId, w.recommend.ql.raw, function (resp) {
+          if (resp[0]) {
+            var content = resp[0];
+            w.content = {
+              0: {
+                title: content.title,
+                description: content.description,
+                url: 'http://' + content.url,
+                image: content.primary_image
+              }
+            };
+          }
 
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
+          if (!w.content) {
+            throw new Error('Could not get recommendation and no default defined');
+          }
 
-        displayWidget(w);
+          displayWidget(w);
+        });
       };
 
       for (var i = 0; i < array.length; i++) {
@@ -1806,7 +1810,7 @@
             throw new Error('Cannot define recommended content unless it is a default');
           }
 
-          api.recommendContent(accountId, widget, contentCb);
+          recContent(widget);
 
         } else {
           displayWidget(widget);
@@ -2207,16 +2211,21 @@
 
     /**
      * @description Retrieve user segment data from Lytics
-     * @throws {Error} error
-     * @param {string} accountId  Lytics user ID
-     * @param {string} callback   universal callback
      */
-    checkUserSegments: function (callback) {
+    getUserSegments: function () {
       if (context.lio && context.lio.data && context.lio.data.segments) {
-        callback(context.lio.data.segments);
+        return context.lio.data.segments;
       } else {
-        callback(['all']);
+        return ['all'];
       }
+    },
+
+    /**
+     * @description Check if a user is a member of
+     * @param {match} name of segment to check for match
+     */
+    inSegment: function (match) {
+      return (this.getUserSegments().indexOf(match) !== -1);
     },
 
     /**
@@ -2224,7 +2233,7 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, widget, callback) {
+    recommendContent: function (accountId, filter, callback) {
       var recommendUrl,
           seerId = utils.readCookie('seerid');
 
@@ -2237,21 +2246,271 @@
         accountId,
         '/user/_uids/',
         seerId,
-        widget.recommend.ql.raw ? '?ql=' + widget.recommend.ql.raw : ''
+        filter ? '?ql=' + filter : ''
       ].join('');
-
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
         if (resp.data && resp.data.length > 0) {
-          callback(resp.data[0], widget);
+          callback(resp.data);
         } else {
-          callback(null, widget);
+          callback([]);
         }
       }, function () {
-        callback(null, widget);
+        callback([]);
       });
+    },
+
+    /**
+     * @description Fetch content to recommend
+     * @throws {Error} error
+     * @param {string} accountId  Lytics account ID
+     */
+    constructRecommendFilter: function (urlPat) {
+      return 'FILTER AND(url LIKE "' + urlPat + '") FROM content';
     }
+  };
+
+  /**
+   * @class
+   * @name Inline
+   * @description Inline Personalization
+   */
+  Inline = function () {
+    this.elements = [];
+    this.preppedElements = [];
+    this.defaultElements = [];
+    this.acctid = '';
+
+    /*
+     * @description Prepare all the triggered or recommended elements
+     * @param {attr} name of attribute to select by
+     */
+    this.prepElements = function (attr) {
+      var dataElements = {},
+          elements = document.querySelectorAll('[' + attr + ']');
+
+      this.elements = this.elements.concat(elements);
+
+      for (var i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute(attr) !== null) {
+          var theElement = elements[i];
+
+          switch (attr) {
+          // CASE: Segment triggered elements
+          case 'data-liotrigger':
+            var group = theElement.getAttribute('data-liogroup');
+
+            if (!group) {
+              group = 'default';
+            }
+
+            if (!dataElements[group]) {
+              dataElements[group] = [];
+            }
+
+            dataElements[group].push({
+              elem: theElement,
+              displayType: theElement.style.display,
+              group: group,
+              trigger: theElement.getAttribute('data-liotrigger')
+            });
+            break;
+
+          // CASE: Content recommendation elements
+          case 'data-liorecommend':
+            var recommend = theElement.getAttribute('data-liorecommend'),
+                block = theElement.getAttribute('data-lioblock');
+
+            if (!block) {
+              block = 'default';
+            }
+
+            if (!recommend) {
+              recommend = 'default';
+            }
+
+            if (!dataElements[recommend]) {
+              dataElements[recommend] = [];
+            }
+
+            dataElements[recommend][block] = {
+              elem: theElement,
+              displayType: theElement.style.display,
+              block: block,
+              recommend: recommend,
+              title: theElement.querySelector('[data-liotype="title"]'),
+              image: theElement.querySelector('[data-liotype="image"]'),
+              description: theElement.querySelector('[data-liotype="description"]'),
+              url: theElement.querySelector('[data-liotype="url"]')
+            };
+            break;
+          }
+        }
+      }
+      return dataElements;
+    };
+
+    /*
+     * @description show/hide the elements based on membership
+     */
+    this.procElements = function () {
+      var attrs = ['data-liotrigger', 'data-liorecommend'],
+          inline = this,
+          count = 0;
+
+      var cb = function (elements) {
+        count++;
+        // After we have processed all elements, proc defaults
+        if (count === Object.keys(elements).length) {
+          inline.setDefaultRecommend(elements);
+        }
+      };
+
+      attrs.forEach(function (attr) {
+        var elements = inline.prepElements(attr);
+
+        for (var key in elements) {
+          if (elements.hasOwnProperty(key)) {
+
+            switch (attr) {
+            // CASE: Segment triggered elements
+            case 'data-liotrigger':
+              inline.procTriggerElements(elements[key], key);
+              break;
+
+            // CASE: Content recommendation elements
+            case 'data-liorecommend':
+              inline.procRecommendElements(elements[key], key, function () {
+                cb(elements);
+              });
+              break;
+            }
+          }
+        }
+      });
+    };
+
+    this.procTriggerElements = function (elems, group) {
+      var matched = false,
+          defaultEl = {};
+
+      for (var i = 0; i < elems.length; i++) {
+        var elem = elems[i];
+
+        // if we find a match show that and prevent others from showing in same group
+        if (api.inSegment(elem.trigger) && !matched) {
+          elem.elem.removeAttribute('data-liotrigger');
+          elem.elem.setAttribute('data-liomodified', 'true');
+          this.preppedElements[group] = elem;
+
+          if (group !== 'default') {
+            matched = true;
+            continue;
+          }
+        }
+
+        // if this is the default save it
+        if (elem.trigger === 'default') {
+          defaultEl = elem;
+        }
+      }
+
+      // if nothing matched show default
+      if (!matched && group !== 'default' && defaultEl.elem) {
+        defaultEl.elem.removeAttribute('data-liotrigger');
+        defaultEl.elem.setAttribute('data-liomodified', 'true');
+        this.preppedElements[group] = defaultEl;
+      }
+    };
+
+    this.procRecommendElements = function (blocks, rec, cb) {
+      var inline = this;
+
+      if (rec !== 'default') {
+        // TODO: NEED TO MAKE SURE FILTER IS WORKING, SEEMS BROKEN ATM
+        api.recommendContent(this.acctid, api.constructRecommendFilter(rec), function (resp) {
+          var idx = 0;
+          for (var block in blocks) {
+            if (blocks.hasOwnProperty(block)) {
+              var elems = blocks[block];
+
+              if (resp[idx]) {
+                var content = resp[idx];
+
+                if (elems.title) {
+                  elems.title.innerHTML = content.title;
+                }
+
+                // If attribute is on image element
+                if (elems.image) {
+                  if (typeof elems.image.src !== 'undefined') {
+                    elems.image.src = content.primary_image;
+                  // If attribute is on container element, set the background
+                  } else {
+                    elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
+                  }
+                }
+
+                if (elems.description) {
+                  elems.description.innerHTML = content.description;
+                }
+
+                // If attribute is on an a (link) element
+                if (elems.url) {
+                  if (typeof elems.url.href !== 'undefined') {
+                    elems.url.href = 'http://' + content.url;
+                  // If attribute is on container element
+                  } else {
+                    elems.url.innerHTML = 'http://' + content.url;
+                  }
+                }
+
+                elems.elem.removeAttribute('data-liorecommend');
+                elems.elem.setAttribute('data-liomodified', 'true');
+                inline.preppedElements[block] = elems;
+              } else {
+                break;
+              }
+              idx++;
+            }
+          }
+          cb();
+        });
+      } else {
+        for (var block in blocks) {
+          if (blocks.hasOwnProperty(block)) {
+            inline.defaultElements[block] = blocks[block];
+          }
+        }
+        cb();
+      }
+    };
+
+    this.setDefaultRecommend = function () {
+      for (var block in this.defaultElements) {
+        if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
+          var def = this.defaultElements[block];
+          def.elem.removeAttribute('data-liorecommend');
+          def.elem.setAttribute('data-liomodified', 'true');
+          this.preppedElements[block] = def;
+        }
+      }
+    };
+
+    // for our automatic element handling we need to ensure they are all hidden by default
+    var css = '[data-liotrigger], [data-liorecommend]{ display: none; }',
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) { // handle ie
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    document.getElementsByTagName('head')[0].appendChild(style);
   };
 
   /**
@@ -2266,11 +2525,50 @@
      */
     this.version = '0.0.04';
 
+    /**
+     * @public
+     * @description callbacks to execute once segments load
+     */
+    this.callbacks = [];
+
+    /**
+     * @public
+     * @description Add callbacks to execute once segments load
+     */
+    this.addCallback = function (cb) {
+      if (context.lio && context.lio.loaded) {
+        cb(context.lio.data);
+      } else {
+        this.callbacks.push(cb);
+      }
+    };
+
+    /**
+     * @public
+     * @description Create page view cookie
+     */
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView'),
           date = new Date();
       date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
+    };
+
+    /**
+     * @public
+     * @description Initialize inline personalization
+     */
+    this.initializeInline = function () {
+      var pf = this;
+
+      if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', function () {
+          pf.addCallback(function () {
+            pf.inline.acctid = context.ly_cid;
+            pf.inline.procElements();
+          });
+        });
+      }
     };
 
     /**
@@ -2308,10 +2606,12 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(function (segments) {
+          // Add callback to initialize once we know segments are loaded
+          this.addCallback(function () {
             var target, ti, tl, exclude, ei, ex, ey, el,
                 targetedwidgets = [],
-                excludematched = false;
+                excludematched = false,
+                segments = api.getUserSegments();
 
             // handle inclusions
             if (widgets.target) {
@@ -2734,11 +3034,19 @@
      * @description Get utils object
      */
     this.utils = utils;
+
+    /*
+     * @public
+     * @description Inline personalization class
+     */
+    this.inline = new Inline();
+
+    this.initializePageViews();
+    this.initializeInline();
   };
 
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
-  context.pathfora.initializePageViews();
 
 }(window, document));
