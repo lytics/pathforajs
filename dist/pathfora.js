@@ -2245,17 +2245,10 @@
 
     /**
      * @description Retrieve user segment data from Lytics
-     * @param {string} callback universal callback
      */
-    checkUserSegments: function (callback) {
+    getUserSegments: function () {
       if (context.lio && context.lio.data && context.lio.data.segments) {
-        if (callback) {
-          callback(context.lio.data.segments);
-        } else {
-          return context.lio.data.segments;
-        }
-      } else if (callback) {
-        callback(['all']);
+        return context.lio.data.segments;
       } else {
         return ['all'];
       }
@@ -2298,10 +2291,125 @@
 
   /**
    * @class
+   * @name Inline
+   * @description Inline Personalization
+   */
+  Inline = function () {
+    this.elements = [];
+    this.preppedElements = [];
+
+    /*
+     * @description Prepare all the elements with the attribute provided
+     * @param {attr} name of attribute to select by
+     */
+    this.prepElements = function (attr) {
+      var dataElements = {};
+
+      if (this.elements.length === 0) {
+        this.elements = document.querySelectorAll('[' + attr + ']');
+      }
+
+      var elements = this.elements;
+
+      for (var i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute(attr) !== null) {
+          var theElement = elements[i],
+              group = theElement.getAttribute('data-liogroup'),
+              type = theElement.getAttribute('data-liotype'),
+              trigger = theElement.getAttribute('data-liotrigger');
+
+          if (!group) {
+            group = 'default';
+          }
+
+          if (!dataElements[group]) {
+            dataElements[group] = [];
+          }
+
+          dataElements[group].push({
+            elem: theElement,
+            displayType: theElement.style.display,
+            group: group,
+            type: type,
+            trigger: trigger
+          });
+        }
+      }
+
+      return dataElements;
+    };
+
+    /*
+     * @description Show/hide the elements based on membership
+     */
+    this.procElements = function () {
+      var elementObj = this.prepElements('data-liotrigger');
+
+      var inSegment = function (match) {
+        return (api.getUserSegments().indexOf(match) !== -1);
+      };
+
+      for (var key in elementObj) {
+        if (elementObj.hasOwnProperty(key)) {
+          var matched = false,
+              defaultEl = {};
+
+          for (var i = 0; i < elementObj[key].length; i++) {
+            var singleElementObj = elementObj[key][i];
+
+            // if we find a match show that and prevent others from showing in same group
+            if (inSegment(singleElementObj.trigger) && !matched) {
+              singleElementObj.elem.removeAttribute('data-liotrigger');
+              singleElementObj.elem.setAttribute('data-liomodified', 'true');
+
+              if (key !== 'default') {
+                matched = true;
+                continue;
+              }
+            }
+
+            // if this is the default save it
+            if (singleElementObj.trigger === 'default') {
+              defaultEl = singleElementObj;
+            }
+          }
+
+          // if nothing matched show the default
+          if (!matched && key !== 'default' && defaultEl.elem) {
+            defaultEl.elem.removeAttribute('data-liotrigger');
+            defaultEl.elem.setAttribute('data-liomodified', 'true');
+          }
+        }
+      }
+
+      this.preppedElements = elementObj;
+    };
+
+
+    // ensure they are all trigger elements are hidden by default
+    var css = '[data-liotrigger]{ display: none; }',
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) { // handle ie
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    document.getElementsByTagName('head')[0].appendChild(style);
+  };
+
+  /**
+   * @class
    * @name Pathfora
    * @description Pathfora public API class
    */
   Pathfora = function () {
+
+    var pf = this;
+
     /**
      * @public
      * @description Current version
@@ -2319,12 +2427,8 @@
      * @description Add callbacks to execute once segments load
      */
     this.addCallback = function (cb) {
-      if (context.lio) {
-        if (context.lio.loaded) {
-          cb(context.lio.data);
-        } else {
-          context.lio.addCallback(cb);
-        }
+      if (context.lio && context.lio.loaded) {
+        cb(context.lio.data);
       } else {
         this.callbacks.push(cb);
       }
@@ -2375,49 +2479,48 @@
 
           // Add callback to initialize once we know segments are loaded
           var cb = function () {
-            api.checkUserSegments(function (segments) {
-              var target, ti, tl, exclude, ei, ex, ey, el,
-                  targetedwidgets = [],
-                  excludematched = false;
+            var target, ti, tl, exclude, ei, ex, ey, el,
+                targetedwidgets = [],
+                excludematched = false,
+                segments = api.getUserSegments();
 
-              // handle inclusions
-              if (widgets.target) {
-                tl = widgets.target.length;
-                for (ti = 0; ti < tl; ti++) {
-                  target = widgets.target[ti];
-                  if (segments && segments.indexOf(target.segment) !== -1) {
-                    targetedwidgets = target.widgets;
-                  }
+            // handle inclusions
+            if (widgets.target) {
+              tl = widgets.target.length;
+              for (ti = 0; ti < tl; ti++) {
+                target = widgets.target[ti];
+                if (segments && segments.indexOf(target.segment) !== -1) {
+                  targetedwidgets = target.widgets;
                 }
               }
+            }
 
-              // handle exclusions
-              if (widgets.exclude) {
-                el = widgets.exclude.length;
-                for (ei = 0; ei < el; ei++) {
-                  exclude = widgets.exclude[ei];
-                  if (segments && segments.indexOf(exclude.segment) !== -1) {
-                    // we found a match, ensure the corresponding segment(s) are not in the
-                    // targetted widgets array
-                    for (ex = 0; ex < targetedwidgets.length; ex++) {
-                      for (ey = 0; ey < exclude.widgets.length; ey++) {
-                        if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                          targetedwidgets.splice(ex, 1);
-                        }
+            // handle exclusions
+            if (widgets.exclude) {
+              el = widgets.exclude.length;
+              for (ei = 0; ei < el; ei++) {
+                exclude = widgets.exclude[ei];
+                if (segments && segments.indexOf(exclude.segment) !== -1) {
+                  // we found a match, ensure the corresponding segment(s) are not in the
+                  // targetted widgets array
+                  for (ex = 0; ex < targetedwidgets.length; ex++) {
+                    for (ey = 0; ey < exclude.widgets.length; ey++) {
+                      if (targetedwidgets[ex] === exclude.widgets[ey]) {
+                        targetedwidgets.splice(ex, 1);
                       }
                     }
                   }
                 }
               }
+            }
 
-              if (targetedwidgets.length) {
-                core.initializeWidgetArray(targetedwidgets, lyticsId);
-              }
+            if (targetedwidgets.length) {
+              core.initializeWidgetArray(targetedwidgets, lyticsId);
+            }
 
-              if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-                core.initializeWidgetArray(widgets.inverse, lyticsId);
-              }
-            });
+            if (!targetedwidgets.length && !excludematched && widgets.inverse) {
+              core.initializeWidgetArray(widgets.inverse, lyticsId);
+            }
           };
 
           this.addCallback(cb);
@@ -2804,130 +2907,22 @@
      * @description Get utils object
      */
     this.utils = utils;
-  };
-
-  /**
-   * @class
-   * @name Inline
-   * @description Inline Personalization
-   */
-  Inline = function () {
-    this.elements = [];
-    this.preppedElements = [];
-
-    /*
-     * @description Prepare all the elements with the attribute provided
-     * @param {attr} name of attribute to select by
-     */
-    this.prepElements = function (attr) {
-      var dataElements = {};
-
-      if (this.elements.length === 0) {
-        this.elements = document.querySelectorAll('[' + attr + ']');
-      }
-
-      var elements = this.elements;
-
-      for (var i = 0; i < elements.length; i++) {
-        if (elements[i].getAttribute(attr) !== null) {
-          var theElement = elements[i],
-              group = theElement.getAttribute('data-liogroup'),
-              type = theElement.getAttribute('data-liotype'),
-              trigger = theElement.getAttribute('data-liotrigger');
-
-          if (!group) {
-            group = 'default';
-          }
-
-          if (!dataElements[group]) {
-            dataElements[group] = [];
-          }
-
-          dataElements[group].push({
-            elem: theElement,
-            displayType: theElement.style.display,
-            group: group,
-            type: type,
-            trigger: trigger
-          });
-        }
-      }
-
-      return dataElements;
-    };
-
-    /*
-     * @description Show/hide the elements based on membership
-     */
-    this.procElements = function () {
-      var elementObj = this.prepElements('data-liotrigger');
-
-      var inSegment = function (match) {
-        return (api.checkUserSegments().indexOf(match) !== -1);
-      };
-
-      for (var key in elementObj) {
-        if (elementObj.hasOwnProperty(key)) {
-          var matched = false,
-              defaultEl = {};
-
-          for (var i = 0; i < elementObj[key].length; i++) {
-            var singleElementObj = elementObj[key][i];
-
-            // if we find a match show that and prevent others from showing in same group
-            if (inSegment(singleElementObj.trigger) && !matched) {
-              singleElementObj.elem.removeAttribute('data-liotrigger');
-              singleElementObj.elem.setAttribute('data-liomodified', 'true');
-
-              if (key !== 'default') {
-                matched = true;
-                continue;
-              }
-            }
-
-            // if this is the default save it
-            if (singleElementObj.trigger === 'default') {
-              defaultEl = singleElementObj;
-            }
-          }
-
-          // if nothing matched show the default
-          if (!matched && key !== 'default' && defaultEl.elem) {
-            defaultEl.elem.removeAttribute('data-liotrigger');
-            defaultEl.elem.setAttribute('data-liomodified', 'true');
-          }
-        }
-      }
-
-      this.preppedElements = elementObj;
-    };
 
 
-    // ensure they are all trigger elements are hidden by default
-    var css = '[data-liotrigger]{ display: none; }',
-        style = document.createElement('style');
+    if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', function () {
+        pf.inline = new Inline();
 
-    style.type = 'text/css';
-
-    if (style.styleSheet) { // handle ie
-      style.styleSheet.cssText = css;
-    } else {
-      style.appendChild(document.createTextNode(css));
+        pf.addCallback(function () {
+          pf.inline.procElements();
+        });
+      });
     }
-
-    document.getElementsByTagName('head')[0].appendChild(style);
   };
 
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
   context.pathfora.initializePageViews();
-
-  // Setup Inline Personalization
-  context.inline = new Inline();
-
-  context.pathfora.addCallback(function () {
-    context.inline.procElements();
-  });
 
 }(window, document));

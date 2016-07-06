@@ -2934,7 +2934,7 @@ describe('Utils', function () {
 
 describe('Inline Personalization', function () {
   beforeEach(function () {
-    window.inline.elements = [];
+    window.pathfora.inline.elements = [];
   });
 
   it('should select to show the first matching element per group', function () {
@@ -2954,7 +2954,7 @@ describe('Inline Personalization', function () {
       '<div data-liogroup="testgrp2" data-liotrigger="email">Has Email</div>' +
       '<div data-liogroup="testgrp2" data-liotrigger="default">Default</div>');
 
-    window.inline.procElements();
+    window.pathfora.inline.procElements();
 
     var grp1hide = $('[data-liogroup="testgrp"][data-liotrigger]'),
         grp2hide = $('[data-liogroup="testgrp2"][data-liotrigger]'),
@@ -2990,7 +2990,7 @@ describe('Inline Personalization', function () {
       '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
       '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
 
-    window.inline.procElements();
+    window.pathfora.inline.procElements();
 
     var def = $('[data-liomodified="true"]'),
         hidden = $('[data-liotrigger]');
@@ -3039,7 +3039,7 @@ describe('Inline Personalization', function () {
     };
 
     pathfora.initializeWidgets(widgets);
-    window.inline.procElements();
+    window.pathfora.inline.procElements();
 
     setTimeout(function () {
       var shown = $('[data-liomodified="true"]'),
