@@ -365,6 +365,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.loaded = true;
+
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
       msg: 'A',
@@ -433,6 +435,8 @@ describe('Pathfora', function () {
         segments: ['a', 'b']
       }
     };
+
+    window.lio.loaded = true;
 
     var messageA = new pathfora.Message({
       id: 'test-bar-01',
@@ -802,6 +806,8 @@ describe('Pathfora', function () {
       }
     };
 
+    window.lio.loaded = true;
+
     var widgetA = new pathfora.Message({
       id: 'ab-widget10-a',
       layout: 'slideout',
@@ -1005,7 +1011,7 @@ describe('Pathfora', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   xit('should be able to display widget only if user can see specific DOM element', function () {
@@ -2746,7 +2752,7 @@ describe('Widgets', function () {
       }, 200);
     }, 200);
 
-    $('.height-element').remove();
+    $('#height-element').remove();
   });
 
   // -------------------------
@@ -2918,5 +2924,141 @@ describe('Utils', function () {
 
       expect(escapedTwice).toBe(escapedOnce);
     });
+  });
+});
+
+
+// -------------------------
+// INLINE PERSONALIZATION TEST
+// -------------------------
+
+describe('Inline Personalization', function () {
+  beforeEach(function () {
+    window.pathfora.inline.elements = [];
+  });
+
+  it('should select to show the first matching element per group', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'high_value', 'email', 'smt_new']
+      }
+    };
+
+    window.lio.loaded = true;
+
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="smt_new">New</div>');
+
+    $(document.body).append('<div data-pfgroup="testgrp2" data-pftrigger="high_momentum">High Momentum</div>' +
+      '<div data-pfgroup="testgrp2" data-pftrigger="email">Has Email</div>' +
+      '<div data-pfgroup="testgrp2" data-pftrigger="default">Default</div>');
+
+    window.pathfora.inline.procElements();
+
+    var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]'),
+        grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
+        grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
+        grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
+
+    expect(grp1show.length).toBe(1);
+    expect(grp2show.length).toBe(1);
+    expect(grp1show.text()).toBe('High Value');
+    expect(grp2show.text()).toBe('Has Email');
+    expect(grp1show.css('display')).toBe('block');
+    expect(grp2show.css('display')).toBe('block');
+
+    expect(grp1hide.length).toBe(2);
+    expect(grp2hide.length).toBe(2);
+    expect(grp1hide.css('display')).toBe('none');
+    expect(grp2hide.css('display')).toBe('none');
+
+    $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
+  });
+
+
+  it('should select to show the default if none of the triggers match', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'email']
+      }
+    };
+
+    window.lio.loaded = true;
+
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="default">Default</div>');
+
+    window.pathfora.inline.procElements();
+
+    var def = $('[data-pfmodified="true"]'),
+        hidden = $('[data-pftrigger]');
+
+    expect(def.length).toBe(1);
+    expect(def.text()).toBe('Default');
+    expect(def.css('display')).toBe('block');
+
+    expect(hidden.length).toBe(2);
+    expect(hidden.css('display')).toBe('none');
+
+    $('[data-pfgroup="testgrp"]').remove();
+  });
+
+  it('should not interfere with pathfora targeting', function () {
+    window.lio = {
+      data: {
+        segments: ['all', 'portlanders', 'email']
+      }
+    };
+
+    window.lio.loaded = true;
+
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>');
+
+    var testModule = new pathfora.Message({
+      id: '9ec53f71a1514339bb1552280ae76682',
+      layout: 'slideout',
+      msg: 'show this to people with an email'
+    });
+
+    var testModule2 = new pathfora.Message({
+      id: 'ba6a6df43f774d769058950969b07a16',
+      layout: 'slideout',
+      msg: 'show this to people without an email'
+    });
+
+    var widgets = {
+      target: [{
+        segment: 'email',
+        widgets: [testModule]
+      }],
+      inverse: [testModule2]
+    };
+
+    pathfora.initializeWidgets(widgets);
+    window.pathfora.inline.procElements();
+
+    setTimeout(function () {
+      var shown = $('[data-pfmodified="true"]'),
+          hidden = $('[data-pftrigger]'),
+          w1 = $('#' + testModule.id),
+          w2 = $('#' + testModule2.id);
+
+      expect(shown.length).toBe(1);
+      expect(shown.text()).toBe('Portlander');
+      expect(shown.css('display')).toBe('block');
+
+      expect(hidden.length).toBe(2);
+      expect(hidden.css('display')).toBe('none');
+
+      expect(w1.length).toBe(1);
+      expect(w2.length).toBe(0);
+    }, 200);
+
+    $('[data-pfgroup="testgrp"]').remove();
+    pathfora.clearAll();
   });
 });

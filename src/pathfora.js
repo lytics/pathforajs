@@ -6,7 +6,7 @@
  */
 (function (context, document) {
   // NOTE Output & processing variables
-  var Pathfora, utils, core, api;
+  var Pathfora, utils, core, api, Inline;
 
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
@@ -1160,6 +1160,8 @@
       switch (config.type) {
       case 'form':
       case 'sitegate':
+      case 'subscription':
+
         var widgetForm = widget.querySelector('form');
 
         var widgetOnFormSubmit = function (event) {
@@ -1336,7 +1338,7 @@
             context.pathfora.closeWidget(widget.id);
           }
         };
-      } else if (config.type === 'form' || config.type === 'sitegate') {
+      } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
         widgetOk.onclick = function () {
           var valid = true;
 
@@ -2207,15 +2209,12 @@
 
     /**
      * @description Retrieve user segment data from Lytics
-     * @throws {Error} error
-     * @param {string} accountId  Lytics user ID
-     * @param {string} callback   universal callback
      */
-    checkUserSegments: function (callback) {
+    getUserSegments: function () {
       if (context.lio && context.lio.data && context.lio.data.segments) {
-        callback(context.lio.data.segments);
+        return context.lio.data.segments;
       } else {
-        callback(['all']);
+        return ['all'];
       }
     },
 
@@ -2256,6 +2255,118 @@
 
   /**
    * @class
+   * @name Inline
+   * @description Inline Personalization
+   */
+  Inline = function () {
+    this.elements = [];
+    this.preppedElements = [];
+
+    /*
+     * @description Prepare all the elements with the attribute provided
+     * @param {attr} name of attribute to select by
+     */
+    this.prepElements = function (attr) {
+      var dataElements = {};
+
+      if (this.elements.length === 0) {
+        this.elements = document.querySelectorAll('[' + attr + ']');
+      }
+
+      var elements = this.elements;
+
+      for (var i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute(attr) !== null) {
+          var theElement = elements[i],
+              group = theElement.getAttribute('data-pfgroup'),
+              type = theElement.getAttribute('data-pftype'),
+              trigger = theElement.getAttribute('data-pftrigger');
+
+          if (!group) {
+            group = 'default';
+          }
+
+          if (!dataElements[group]) {
+            dataElements[group] = [];
+          }
+
+          dataElements[group].push({
+            elem: theElement,
+            displayType: theElement.style.display,
+            group: group,
+            type: type,
+            trigger: trigger
+          });
+        }
+      }
+
+      return dataElements;
+    };
+
+    /*
+     * @description Show/hide the elements based on membership
+     */
+    this.procElements = function () {
+      var elementObj = this.prepElements('data-pftrigger');
+
+      var inSegment = function (match) {
+        return (api.getUserSegments().indexOf(match) !== -1);
+      };
+
+      for (var key in elementObj) {
+        if (elementObj.hasOwnProperty(key)) {
+          var matched = false,
+              defaultEl = {};
+
+          for (var i = 0; i < elementObj[key].length; i++) {
+            var singleElementObj = elementObj[key][i];
+
+            // if we find a match show that and prevent others from showing in same group
+            if (inSegment(singleElementObj.trigger) && !matched) {
+              singleElementObj.elem.removeAttribute('data-pftrigger');
+              singleElementObj.elem.setAttribute('data-pfmodified', 'true');
+
+              if (key !== 'default') {
+                matched = true;
+                continue;
+              }
+            }
+
+            // if this is the default save it
+            if (singleElementObj.trigger === 'default') {
+              defaultEl = singleElementObj;
+            }
+          }
+
+          // if nothing matched show the default
+          if (!matched && key !== 'default' && defaultEl.elem) {
+            defaultEl.elem.removeAttribute('data-pftrigger');
+            defaultEl.elem.setAttribute('data-pfmodified', 'true');
+          }
+        }
+      }
+
+      this.preppedElements = elementObj;
+    };
+
+
+    // ensure they are all trigger elements are hidden by default
+    var css = '[data-pftrigger]{ display: none; }',
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) { // handle ie
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    document.getElementsByTagName('head')[0].appendChild(style);
+  };
+
+  /**
+   * @class
    * @name Pathfora
    * @description Pathfora public API class
    */
@@ -2266,11 +2377,49 @@
      */
     this.version = '0.0.04';
 
+    /**
+     * @public
+     * @description callbacks to execute once segments load
+     */
+    this.callbacks = [];
+
+    /**
+     * @public
+     * @description Add callbacks to execute once segments load
+     */
+    this.addCallback = function (cb) {
+      if (context.lio && context.lio.loaded) {
+        cb(context.lio.data);
+      } else {
+        this.callbacks.push(cb);
+      }
+    };
+
+    /**
+     * @public
+     * @description Create page view cookie
+     */
     this.initializePageViews = function () {
       var cookie = utils.readCookie('PathforaPageView'),
           date = new Date();
       date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
+    };
+
+    /**
+     * @public
+     * @description Initialize inline personalization
+     */
+    this.initializeInline = function () {
+      var pf = this;
+
+      if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', function () {
+          pf.addCallback(function () {
+            pf.inline.procElements();
+          });
+        });
+      }
     };
 
     /**
@@ -2308,10 +2457,13 @@
         }
 
         if (widgets.target || widgets.exclude) {
-          api.checkUserSegments(function (segments) {
+
+          // Add callback to initialize once we know segments are loaded
+          var cb = function () {
             var target, ti, tl, exclude, ei, ex, ey, el,
                 targetedwidgets = [],
-                excludematched = false;
+                excludematched = false,
+                segments = api.getUserSegments();
 
             // handle inclusions
             if (widgets.target) {
@@ -2350,7 +2502,9 @@
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
               core.initializeWidgetArray(widgets.inverse, lyticsId);
             }
-          });
+          };
+
+          this.addCallback(cb);
         }
       }
     };
@@ -2734,11 +2888,19 @@
      * @description Get utils object
      */
     this.utils = utils;
+
+    /*
+     * @public
+     * @description Inline personalization class
+     */
+    this.inline = new Inline();
+
+    this.initializePageViews();
+    this.initializeInline();
   };
 
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
-  context.pathfora.initializePageViews();
 
 }(window, document));

@@ -8,35 +8,15 @@ var modules = {
   }]
 };
 
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function () {
-  pathfora.initializeWidgets(modules);
-};
+pathfora.initializeWidgets(modules);
 ```
+
+For audience targeting, it is required that you load the [Lytics Javascript Tag](https://activate.getlytics.com/documentation/jstag_anon). Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of. If you do not load this tag for targeted modules they will never initialize. 
 
 ## Setup Your Audiences
 
 You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id in the targeting rules.
 <img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess">
-
-## Leveraging the Lytics "Data Loaded" Callback
-
-When leveraging real-time user identity and/or segment membership in any Pathfora widget implementation, it is recommended that you use the Lytics "Data Loaded" callback. This ensures all user data has been loaded prior to the Pathfora initialization. Failing to load user identify may result in having users segments default to only the 'all' segment.
-
-``` html
-<script type="text/javascript">
-  window.liosetup = window["liosetup"] || {};
-  window.liosetup.callback = function () {
-    pathfora.initializeWidgets(modules);
-  };
-</script>
-
-<!-- insert your Lytics javascript tag here, async or sync -->
-
-```
-
- The above can be wrapped around any of the Pathfora examples present in these docs.
-
 
 ## target
 
@@ -110,10 +90,7 @@ var modules = {
   }]
 };
 
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules);
-};
+pathfora.initializeWidgets(modules);
 ```
 
 
@@ -153,10 +130,8 @@ var modules = {
   }]
 };
 
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules);
-};
+pathfora.initializeWidgets(modules);
+
 ```
 
 ## inverse
@@ -213,8 +188,5 @@ var modules = {
   inverse: [subscriptionModule]
 };
 
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){
-  pathfora.initializeWidgets(modules);
-};
+pathfora.initializeWidgets(modules);
 ```
