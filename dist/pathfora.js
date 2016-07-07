@@ -263,7 +263,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -2334,8 +2334,8 @@
 
           switch (attr) {
           // CASE: Segment triggered elements
-          case 'data-liotrigger':
-            var group = theElement.getAttribute('data-liogroup');
+          case 'data-pftrigger':
+            var group = theElement.getAttribute('data-pfgroup');
 
             if (!group) {
               group = 'default';
@@ -2349,14 +2349,14 @@
               elem: theElement,
               displayType: theElement.style.display,
               group: group,
-              trigger: theElement.getAttribute('data-liotrigger')
+              trigger: theElement.getAttribute('data-pftrigger')
             });
             break;
 
           // CASE: Content recommendation elements
-          case 'data-liorecommend':
-            var recommend = theElement.getAttribute('data-liorecommend'),
-                block = theElement.getAttribute('data-lioblock');
+          case 'data-pfrecommend':
+            var recommend = theElement.getAttribute('data-pfrecommend'),
+                block = theElement.getAttribute('data-pfblock');
 
             if (!block) {
               block = 'default';
@@ -2375,10 +2375,10 @@
               displayType: theElement.style.display,
               block: block,
               recommend: recommend,
-              title: theElement.querySelector('[data-liotype="title"]'),
-              image: theElement.querySelector('[data-liotype="image"]'),
-              description: theElement.querySelector('[data-liotype="description"]'),
-              url: theElement.querySelector('[data-liotype="url"]')
+              title: theElement.querySelector('[data-pftype="title"]'),
+              image: theElement.querySelector('[data-pftype="image"]'),
+              description: theElement.querySelector('[data-pftype="description"]'),
+              url: theElement.querySelector('[data-pftype="url"]')
             };
             break;
           }
@@ -2391,7 +2391,7 @@
      * @description show/hide the elements based on membership
      */
     this.procElements = function () {
-      var attrs = ['data-liotrigger', 'data-liorecommend'],
+      var attrs = ['data-pftrigger', 'data-pfrecommend'],
           inline = this,
           count = 0;
 
@@ -2411,12 +2411,12 @@
 
             switch (attr) {
             // CASE: Segment triggered elements
-            case 'data-liotrigger':
+            case 'data-pftrigger':
               inline.procTriggerElements(elements[key], key);
               break;
 
             // CASE: Content recommendation elements
-            case 'data-liorecommend':
+            case 'data-pfrecommend':
               inline.procRecommendElements(elements[key], key, function () {
                 cb(elements);
               });
@@ -2436,8 +2436,8 @@
 
         // if we find a match show that and prevent others from showing in same group
         if (api.inSegment(elem.trigger) && !matched) {
-          elem.elem.removeAttribute('data-liotrigger');
-          elem.elem.setAttribute('data-liomodified', 'true');
+          elem.elem.removeAttribute('data-pftrigger');
+          elem.elem.setAttribute('data-pfmodified', 'true');
           this.preppedElements[group] = elem;
 
           if (group !== 'default') {
@@ -2454,8 +2454,8 @@
 
       // if nothing matched show default
       if (!matched && group !== 'default' && defaultEl.elem) {
-        defaultEl.elem.removeAttribute('data-liotrigger');
-        defaultEl.elem.setAttribute('data-liomodified', 'true');
+        defaultEl.elem.removeAttribute('data-pftrigger');
+        defaultEl.elem.setAttribute('data-pfmodified', 'true');
         this.preppedElements[group] = defaultEl;
       }
     };
@@ -2502,8 +2502,8 @@
                   }
                 }
 
-                elems.elem.removeAttribute('data-liorecommend');
-                elems.elem.setAttribute('data-liomodified', 'true');
+                elems.elem.removeAttribute('data-pfrecommend');
+                elems.elem.setAttribute('data-pfmodified', 'true');
                 inline.preppedElements[block] = elems;
               } else {
                 break;
@@ -2527,15 +2527,15 @@
       for (var block in this.defaultElements) {
         if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
           var def = this.defaultElements[block];
-          def.elem.removeAttribute('data-liorecommend');
-          def.elem.setAttribute('data-liomodified', 'true');
+          def.elem.removeAttribute('data-pfrecommend');
+          def.elem.setAttribute('data-pfmodified', 'true');
           this.preppedElements[block] = def;
         }
       }
     };
 
     // for our automatic element handling we need to ensure they are all hidden by default
-    var css = '[data-liotrigger], [data-liorecommend]{ display: none; }',
+    var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
         style = document.createElement('style');
 
     style.type = 'text/css';

@@ -4,11 +4,18 @@
     <title>Inline Personalization Examples</title>
 
     <style>
-      [data-lioblock] {
+      [data-pfblock] {
         width: 300px;
       }
 
-      [data-lioblock] img {
+      [data-pfblock] div[data-pftype="image"] {
+        width: 300px;
+        display: block;
+        height: 150px;
+        background-size: cover;
+      }
+
+      [data-pfblock] img {
         width: 300px;
       }
 
@@ -20,20 +27,20 @@
 
     <h1>Inline Personalization</h1>
 
-    <div data-liogroup="grp1" data-liotrigger="portlanders">You are in the "Portlanders" segment</div>
-    <div data-liogroup="grp1" data-liotrigger="smt_new">You are in the "New Users" segment</div>
-    <div data-liogroup="grp1" data-liotrigger="smt_active">You are in the "Active Users" segment</div>
-    <div data-liogroup="grp1" data-liotrigger="default">You are in none of the segments selected</div>
+    <div data-pfgroup="grp1" data-pftrigger="portlanders">You are in the "Portlanders" segment</div>
+    <div data-pfgroup="grp1" data-pftrigger="smt_new">You are in the "New Users" segment</div>
+    <div data-pfgroup="grp1" data-pftrigger="smt_active">You are in the "Active Users" segment</div>
+    <div data-pfgroup="grp1" data-pftrigger="default">You are in none of the segments selected</div>
 
     <h1>Inline Content Recommendations</h1>
 
-    <div data-lioblock="block1" data-liorecommend="www.example.com/blog/*">
-      <div data-liotype="image"></div>
-      <a data-liotype="url"><h2 data-liotype="title"></h2></a>
-      <p data-liotype="description"></p>
+    <div data-pfblock="block1" data-pfrecommend="www.getlytics.com/blog/post/*">
+      <div data-pftype="image"></div>
+      <a data-pftype="url"><h2 data-pftype="title"></h2></a>
+      <p data-pftype="description"></p>
     </div>
 
-    <div data-lioblock="block1" data-liorecommend="default">
+    <div data-pfblock="block1" data-pfrecommend="default">
       <img src="https://www.getlytics.com/img/blog/posts/introducing_lytics_reporting/introducing_lytics_reporting-bg.png" alt="Introducing: Lytics Journey Reporting">
       <a href="https://www.getlytics.com/blog/post/introducing_lytics_reporting"><h2>Introducing: Lytics Journey Reporting</h2></a>
       <p>See people move through the customer journey and measure their progress and interactions using Lytics Journey Reporting. Build a customer journey that is measurable, based on your key marketing goals.</p>

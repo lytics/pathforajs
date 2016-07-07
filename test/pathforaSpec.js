@@ -2936,7 +2936,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   // TRIGGER ELEMENTS
   // -------------------------
-  describe('liotrigger elements', function () {
+  describe('pftrigger elements', function () {
     beforeEach(function () {
       window.pathfora.inline.elements = [];
     });
@@ -2950,20 +2950,20 @@ describe('Inline Personalization', function () {
 
       window.lio.loaded = true;
 
-      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="smt_new">New</div>');
+      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="smt_new">New</div>');
 
-      $(document.body).append('<div data-liogroup="testgrp2" data-liotrigger="high_momentum">High Momentum</div>' +
-        '<div data-liogroup="testgrp2" data-liotrigger="email">Has Email</div>' +
-        '<div data-liogroup="testgrp2" data-liotrigger="default">Default</div>');
+      $(document.body).append('<div data-pfgroup="testgrp2" data-pftrigger="high_momentum">High Momentum</div>' +
+        '<div data-pfgroup="testgrp2" data-pftrigger="email">Has Email</div>' +
+        '<div data-pfgroup="testgrp2" data-pftrigger="default">Default</div>');
 
       window.pathfora.inline.procElements();
 
-      var grp1hide = $('[data-liogroup="testgrp"][data-liotrigger]'),
-          grp2hide = $('[data-liogroup="testgrp2"][data-liotrigger]'),
-          grp1show = $('[data-liogroup="testgrp"][data-liomodified="true"]'),
-          grp2show = $('[data-liogroup="testgrp2"][data-liomodified="true"]');
+      var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]'),
+          grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
+          grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
+          grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
 
       expect(grp1show.length).toBe(1);
       expect(grp2show.length).toBe(1);
@@ -2977,7 +2977,7 @@ describe('Inline Personalization', function () {
       expect(grp1hide.css('display')).toBe('none');
       expect(grp2hide.css('display')).toBe('none');
 
-      $('[data-liogroup="testgrp"], [data-liogroup="testgrp2"]').remove();
+      $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
     });
 
 
@@ -2990,14 +2990,14 @@ describe('Inline Personalization', function () {
 
       window.lio.loaded = true;
 
-      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
+      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="default">Default</div>');
 
       window.pathfora.inline.procElements();
 
-      var def = $('[data-liomodified="true"]'),
-          hidden = $('[data-liotrigger]');
+      var def = $('[data-pfmodified="true"]'),
+          hidden = $('[data-pftrigger]');
 
       expect(def.length).toBe(1);
       expect(def.text()).toBe('Default');
@@ -3006,7 +3006,7 @@ describe('Inline Personalization', function () {
       expect(hidden.length).toBe(2);
       expect(hidden.css('display')).toBe('none');
 
-      $('[data-liogroup="testgrp"]').remove();
+      $('[data-pfgroup="testgrp"]').remove();
     });
 
     it('should not interfere with pathfora targeting', function () {
@@ -3018,9 +3018,9 @@ describe('Inline Personalization', function () {
 
       window.lio.loaded = true;
 
-      $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-        '<div data-liogroup="testgrp" data-liotrigger="email">Has Email</div>');
+      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+        '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>');
 
       var testModule = new pathfora.Message({
         id: '9ec53f71a1514339bb1552280ae76682',
@@ -3046,8 +3046,8 @@ describe('Inline Personalization', function () {
       window.pathfora.inline.procElements();
 
       setTimeout(function () {
-        var shown = $('[data-liomodified="true"]'),
-            hidden = $('[data-liotrigger]'),
+        var shown = $('[data-pfmodified="true"]'),
+            hidden = $('[data-pftrigger]'),
             w1 = $('#' + testModule.id),
             w2 = $('#' + testModule2.id);
 
@@ -3062,7 +3062,7 @@ describe('Inline Personalization', function () {
         expect(w2.length).toBe(0);
       }, 200);
 
-      $('[data-liogroup="testgrp"]').remove();
+      $('[data-pfgroup="testgrp"]').remove();
       pathfora.clearAll();
     });
   });
@@ -3070,20 +3070,20 @@ describe('Inline Personalization', function () {
   // -------------------------
   // RECOMMENDATION ELEMENTS
   // -------------------------
-  describe('liorecommend elements', function () {
+  describe('pfrecommend elements', function () {
     beforeEach(function () {
       pathfora.inline.acctid = credentials;
       pathfora.inline.elements = [];
     });
 
-    it('should fill liotype elements with content recommendation data', function () {
+    it('should fill pftype elements with content recommendation data', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-lioblock="group1" data-liorecommend="www.example.com/*">' +
-        '<img data-liotype="image" alt="My Image">' +
-        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
-        '<p data-liotype="description"></p>' +
-        '</div><div data-lioblock="group1" data-liorecommend="default"></div>');
+      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="www.example.com/*">' +
+        '<img data-pftype="image" alt="My Image">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '<p data-pftype="description"></p>' +
+        '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3095,12 +3095,12 @@ describe('Inline Personalization', function () {
       });
 
 
-      var rec = $('[data-liomodified="true"]'),
-          recImage = rec.find('[data-liotype="image"]'),
-          recUrl = rec.find('[data-liotype="url"]'),
-          recTitle = rec.find('[data-liotype="title"]'),
-          recDesc = rec.find('[data-liotype="description"]'),
-          def = $('[data-liorecommend="default"]');
+      var rec = $('[data-pfmodified="true"]'),
+          recImage = rec.find('[data-pftype="image"]'),
+          recUrl = rec.find('[data-pftype="url"]'),
+          recTitle = rec.find('[data-pftype="title"]'),
+          recDesc = rec.find('[data-pftype="description"]'),
+          def = $('[data-pfrecommend="default"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -3112,18 +3112,18 @@ describe('Inline Personalization', function () {
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('none');
 
-      $('[data-lioblock="group1"]').remove();
+      $('[data-pfblock="group1"]').remove();
       jasmine.Ajax.uninstall();
     });
 
     it('should show the default content if invalid response from API', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-lioblock="group2" data-liorecommend="www.example.com/*">' +
-        '<img data-liotype="image" alt="My Image">' +
-        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
-        '<p data-liotype="description"></p>' +
-        '</div><div data-lioblock="group2" data-liorecommend="default"></div>');
+      $(document.body).append('<div data-pfblock="group2" data-pfrecommend="www.example.com/*">' +
+        '<img data-pftype="image" alt="My Image">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '<p data-pftype="description"></p>' +
+        '</div><div data-pfblock="group2" data-pfrecommend="default"></div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3135,8 +3135,8 @@ describe('Inline Personalization', function () {
       });
 
 
-      var def = $('[data-liomodified="true"]'),
-          bad = $('[data-liorecommend="www.example.com/*"]');
+      var def = $('[data-pfmodified="true"]'),
+          bad = $('[data-pfrecommend="www.example.com/*"]');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('block');
@@ -3144,16 +3144,16 @@ describe('Inline Personalization', function () {
       expect(bad.length).toBe(1);
       expect(bad.css('display')).toBe('none');
 
-      $('[data-lioblock="group2"]').remove();
+      $('[data-pfblock="group2"]').remove();
       jasmine.Ajax.uninstall();
     });
 
-    it('should set the background image of a div with liodatatype image or the innerHtml of a div with liodatatype url', function () {
+    it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-lioblock="group3" data-liorecommend="www.example.com/*">' +
-        '<div data-liotype="image"></div>' +
-        '<div data-liotype="url"></div></div>');
+      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
+        '<div data-pftype="image"></div>' +
+        '<div data-pftype="url"></div></div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3165,27 +3165,27 @@ describe('Inline Personalization', function () {
       });
 
 
-      var rec = $('[data-liomodified="true"]'),
-          recImage = rec.find('[data-liotype="image"]'),
-          recUrl = rec.find('[data-liotype="url"]');
+      var rec = $('[data-pfmodified="true"]'),
+          recImage = rec.find('[data-pftype="image"]'),
+          recUrl = rec.find('[data-pftype="url"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
       expect(recImage.css('background-image')).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
       expect(recUrl.html()).toBe('http://www.example.com/1');
 
-      $('[data-lioblock="group3"]').remove();
+      $('[data-pfblock="group3"]').remove();
       jasmine.Ajax.uninstall();
     });
 
     it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-lioblock="group4" data-liorecommend="www.example.com/*">' +
-        '<a data-liotype="url"><h2 data-liotype="title"></h2></a>' +
-        '</div><div data-lioblock="group5" data-liorecommend="www.example.com/*">' +
-        '<h2 data-liotype="title"></h2>' +
-        '<div data-liotype="url"></div></div>');
+      $(document.body).append('<div data-pfblock="group4" data-pfrecommend="www.example.com/*">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '</div><div data-pfblock="group5" data-pfrecommend="www.example.com/*">' +
+        '<h2 data-pftype="title"></h2>' +
+        '<div data-pftype="url"></div></div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3198,26 +3198,26 @@ describe('Inline Personalization', function () {
       });
 
 
-      var recs = $('[data-liomodified="true"]');
+      var recs = $('[data-pfmodified="true"]');
       expect(recs.length).toBe(2);
 
       var rec1 = $(recs[0]),
-          rec1Title = rec1.find('[data-liotype="title"]'),
-          rec1Url = rec1.find('[data-liotype="url"]');
+          rec1Title = rec1.find('[data-pftype="title"]'),
+          rec1Url = rec1.find('[data-pftype="url"]');
 
       expect(rec1.css('display')).toBe('block');
       expect(rec1Title.text()).toBe('Example Title');
       expect(rec1Url.attr('href')).toBe('http://www.example.com/1');
 
       var rec2 = $(recs[1]),
-          rec2Title = rec2.find('[data-liotype="title"]'),
-          rec2Url = rec2.find('[data-liotype="url"]');
+          rec2Title = rec2.find('[data-pftype="title"]'),
+          rec2Url = rec2.find('[data-pftype="url"]');
 
       expect(rec2.css('display')).toBe('block');
       expect(rec2Title.text()).toBe('Another Example Title');
       expect(rec2Url.html()).toBe('http://www.example.com/2');
 
-      $('[data-lioblock="group4"], [data-lioblock="group5"]').remove();
+      $('[data-pfblock="group4"], [data-pfblock="group5"]').remove();
       jasmine.Ajax.uninstall();
     });
 
@@ -3230,10 +3230,10 @@ describe('Inline Personalization', function () {
         }
       };
 
-      $(document.body).append('<div data-liogroup="seg1" data-liotrigger="high_value" data-lioblock="block1" data-liorecommend="www.example.com/*">' +
-        '<a data-liotype="url"><h2 data-liotype="title"></h2></a></div>' +
-        '<div data-lioblock="block1" data-liorecommend="default">default block1</div>' +
-        '<div data-liogroup="seg1" data-liotrigger="default">default seg1</div>');
+      $(document.body).append('<div data-pfgroup="seg1" data-pftrigger="high_value" data-pfblock="block1" data-pfrecommend="www.example.com/*">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>' +
+        '<div data-pfblock="block1" data-pfrecommend="default">default block1</div>' +
+        '<div data-pfgroup="seg1" data-pftrigger="default">default seg1</div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3245,24 +3245,24 @@ describe('Inline Personalization', function () {
       });
 
 
-      var elems = $('[data-liomodified="true"]');
+      var elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
 
       var elem1 = $(elems[0]);
       expect(elem1.css('display')).toBe('none');
-      expect(elem1.attr('data-lioblock')).toBe('block1');
-      expect(elem1.attr('data-liorecommend')).toBe('www.example.com/*');
+      expect(elem1.attr('data-pfblock')).toBe('block1');
+      expect(elem1.attr('data-pfrecommend')).toBe('www.example.com/*');
 
       var elem2 = $(elems[1]);
       expect(elem2.css('display')).toBe('block');
       expect(elem2.html()).toBe('default block1');
 
-      $('[data-liogroup="seg1"], [data-lioblock="block1"]').remove();
+      $('[data-pfgroup="seg1"], [data-pfblock="block1"]').remove();
 
-      $(document.body).append('<div data-liogroup="seg2" data-liotrigger="blah">in blah seg2</div>' +
-        '<div data-liogroup="seg2" data-liotrigger="high_value">in high_value seg2</div>' +
-        '<div data-liogroup="seg2" data-liotrigger="default" data-lioblock="block2" data-liorecommend="www.example.com/*">' +
-        '<a data-liotype="url"><h2 data-liotype="title"></h2></a></div>');
+      $(document.body).append('<div data-pfgroup="seg2" data-pftrigger="blah">in blah seg2</div>' +
+        '<div data-pfgroup="seg2" data-pftrigger="high_value">in high_value seg2</div>' +
+        '<div data-pfgroup="seg2" data-pftrigger="default" data-pfblock="block2" data-pfrecommend="www.example.com/*">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>');
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
@@ -3274,7 +3274,7 @@ describe('Inline Personalization', function () {
       });
 
 
-      elems = $('[data-liomodified="true"]');
+      elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
 
       elem1 = $(elems[0]);
@@ -3283,9 +3283,9 @@ describe('Inline Personalization', function () {
 
       elem2 = $(elems[1]);
       expect(elem2.css('display')).toBe('none');
-      expect(elem2.attr('data-lioblock')).toBe('block2');
+      expect(elem2.attr('data-pfblock')).toBe('block2');
 
-      $('[data-liogroup="seg2"], [data-lioblock="block2"]').remove();
+      $('[data-pfgroup="seg2"], [data-pfblock="block2"]').remove();
       jasmine.Ajax.uninstall();
     });
   });
