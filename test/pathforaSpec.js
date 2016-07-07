@@ -2946,20 +2946,20 @@ describe('Inline Personalization', function () {
 
     window.lio.loaded = true;
 
-    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="smt_new">New</div>');
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="smt_new">New</div>');
 
-    $(document.body).append('<div data-liogroup="testgrp2" data-liotrigger="high_momentum">High Momentum</div>' +
-      '<div data-liogroup="testgrp2" data-liotrigger="email">Has Email</div>' +
-      '<div data-liogroup="testgrp2" data-liotrigger="default">Default</div>');
+    $(document.body).append('<div data-pfgroup="testgrp2" data-pftrigger="high_momentum">High Momentum</div>' +
+      '<div data-pfgroup="testgrp2" data-pftrigger="email">Has Email</div>' +
+      '<div data-pfgroup="testgrp2" data-pftrigger="default">Default</div>');
 
     window.pathfora.inline.procElements();
 
-    var grp1hide = $('[data-liogroup="testgrp"][data-liotrigger]'),
-        grp2hide = $('[data-liogroup="testgrp2"][data-liotrigger]'),
-        grp1show = $('[data-liogroup="testgrp"][data-liomodified="true"]'),
-        grp2show = $('[data-liogroup="testgrp2"][data-liomodified="true"]');
+    var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]'),
+        grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
+        grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
+        grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
 
     expect(grp1show.length).toBe(1);
     expect(grp2show.length).toBe(1);
@@ -2973,7 +2973,7 @@ describe('Inline Personalization', function () {
     expect(grp1hide.css('display')).toBe('none');
     expect(grp2hide.css('display')).toBe('none');
 
-    $('[data-liogroup="testgrp"], [data-liogroup="testgrp2"]').remove();
+    $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
   });
 
 
@@ -2986,14 +2986,14 @@ describe('Inline Personalization', function () {
 
     window.lio.loaded = true;
 
-    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="default">Default</div>');
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="default">Default</div>');
 
     window.pathfora.inline.procElements();
 
-    var def = $('[data-liomodified="true"]'),
-        hidden = $('[data-liotrigger]');
+    var def = $('[data-pfmodified="true"]'),
+        hidden = $('[data-pftrigger]');
 
     expect(def.length).toBe(1);
     expect(def.text()).toBe('Default');
@@ -3002,7 +3002,7 @@ describe('Inline Personalization', function () {
     expect(hidden.length).toBe(2);
     expect(hidden.css('display')).toBe('none');
 
-    $('[data-liogroup="testgrp"]').remove();
+    $('[data-pfgroup="testgrp"]').remove();
   });
 
   it('should not interfere with pathfora targeting', function () {
@@ -3014,9 +3014,9 @@ describe('Inline Personalization', function () {
 
     window.lio.loaded = true;
 
-    $(document.body).append('<div data-liogroup="testgrp" data-liotrigger="high_value">High Value</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="portlanders">Portlander</div>' +
-      '<div data-liogroup="testgrp" data-liotrigger="email">Has Email</div>');
+    $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+      '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>');
 
     var testModule = new pathfora.Message({
       id: '9ec53f71a1514339bb1552280ae76682',
@@ -3042,8 +3042,8 @@ describe('Inline Personalization', function () {
     window.pathfora.inline.procElements();
 
     setTimeout(function () {
-      var shown = $('[data-liomodified="true"]'),
-          hidden = $('[data-liotrigger]'),
+      var shown = $('[data-pfmodified="true"]'),
+          hidden = $('[data-pftrigger]'),
           w1 = $('#' + testModule.id),
           w2 = $('#' + testModule2.id);
 
@@ -3058,7 +3058,7 @@ describe('Inline Personalization', function () {
       expect(w2.length).toBe(0);
     }, 200);
 
-    $('[data-liogroup="testgrp"]').remove();
+    $('[data-pfgroup="testgrp"]').remove();
     pathfora.clearAll();
   });
 });

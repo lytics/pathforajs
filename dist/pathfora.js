@@ -2314,9 +2314,9 @@
       for (var i = 0; i < elements.length; i++) {
         if (elements[i].getAttribute(attr) !== null) {
           var theElement = elements[i],
-              group = theElement.getAttribute('data-liogroup'),
-              type = theElement.getAttribute('data-liotype'),
-              trigger = theElement.getAttribute('data-liotrigger');
+              group = theElement.getAttribute('data-pfgroup'),
+              type = theElement.getAttribute('data-pftype'),
+              trigger = theElement.getAttribute('data-pftrigger');
 
           if (!group) {
             group = 'default';
@@ -2343,7 +2343,7 @@
      * @description Show/hide the elements based on membership
      */
     this.procElements = function () {
-      var elementObj = this.prepElements('data-liotrigger');
+      var elementObj = this.prepElements('data-pftrigger');
 
       var inSegment = function (match) {
         return (api.getUserSegments().indexOf(match) !== -1);
@@ -2359,8 +2359,8 @@
 
             // if we find a match show that and prevent others from showing in same group
             if (inSegment(singleElementObj.trigger) && !matched) {
-              singleElementObj.elem.removeAttribute('data-liotrigger');
-              singleElementObj.elem.setAttribute('data-liomodified', 'true');
+              singleElementObj.elem.removeAttribute('data-pftrigger');
+              singleElementObj.elem.setAttribute('data-pfmodified', 'true');
 
               if (key !== 'default') {
                 matched = true;
@@ -2376,8 +2376,8 @@
 
           // if nothing matched show the default
           if (!matched && key !== 'default' && defaultEl.elem) {
-            defaultEl.elem.removeAttribute('data-liotrigger');
-            defaultEl.elem.setAttribute('data-liomodified', 'true');
+            defaultEl.elem.removeAttribute('data-pftrigger');
+            defaultEl.elem.setAttribute('data-pfmodified', 'true');
           }
         }
       }
@@ -2387,7 +2387,7 @@
 
 
     // ensure they are all trigger elements are hidden by default
-    var css = '[data-liotrigger]{ display: none; }',
+    var css = '[data-pftrigger]{ display: none; }',
         style = document.createElement('style');
 
     style.type = 'text/css';
