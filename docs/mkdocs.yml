@@ -3,7 +3,6 @@ pages:
   - Pathfora JS: index.md
   - API Reference:
     - Methods: api/methods.md
-    - Lytics Account ID: api/acctid.md
     - Generalized Configuration: api/config.md
   - Types:
     - Message: types/message.md

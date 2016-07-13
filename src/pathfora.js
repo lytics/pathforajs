@@ -1740,7 +1740,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array, accountId) {
+    initializeWidgetArray: function (array) {
       var displayWidget = function (w) {
         if (w.displayConditions.showDelay) {
           core.registerDelayedWidget(w);
@@ -1750,24 +1750,30 @@
       };
 
       var recContent = function (w) {
-        api.recommendContent(accountId, w.recommend.ql.raw, function (resp) {
-          if (resp[0]) {
-            var content = resp[0];
-            w.content = {
-              0: {
-                title: content.title,
-                description: content.description,
-                url: 'http://' + content.url,
-                image: content.primary_image
-              }
-            };
+        pathfora.addCallback(function () {
+          if (pathfora.acctid === '') {
+            pathfora.acctid = context.lio.account.id;
           }
 
-          if (!w.content) {
-            throw new Error('Could not get recommendation and no default defined');
-          }
+          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+            if (resp[0]) {
+              var content = resp[0];
+              w.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: 'http://' + content.url,
+                  image: content.primary_image
+                }
+              };
+            }
 
-          displayWidget(w);
+            if (!w.content) {
+              throw new Error('Could not get recommendation and no default defined');
+            }
+
+            displayWidget(w);
+          });
         });
       };
 
@@ -1781,11 +1787,6 @@
         var widgetOnInitCallback = widget.config.onInit,
             defaults = defaultProps[widget.type],
             globals = defaultProps.generic;
-
-
-        if (accountId && accountId.length <= 4) {
-          console.warn('Pathfora: please update credentials to full Acccount ID');
-        }
 
         if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
@@ -2262,9 +2263,8 @@
     },
 
     /**
-     * @description Fetch content to recommend
-     * @throws {Error} error
-     * @param {string} accountId  Lytics account ID
+     * @description Construct filter for inline content recommendations
+     * @param {string} urlPat  pattern of URL to match
      */
     constructRecommendFilter: function (urlPat) {
       return 'FILTER AND(url LIKE "' + urlPat + '") FROM content';
@@ -2280,7 +2280,6 @@
     this.elements = [];
     this.preppedElements = [];
     this.defaultElements = [];
-    this.acctid = '';
 
     /*
      * @description Prepare all the triggered or recommended elements
@@ -2429,7 +2428,7 @@
 
       if (rec !== 'default') {
         // TODO: NEED TO MAKE SURE FILTER IS WORKING, SEEMS BROKEN ATM
-        api.recommendContent(this.acctid, api.constructRecommendFilter(rec), function (resp) {
+        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -2533,6 +2532,12 @@
 
     /**
      * @public
+     * @description Lytics account ID required for content recos
+     */
+    this.acctid = '';
+
+    /**
+     * @public
      * @description Add callbacks to execute once segments load
      */
     this.addCallback = function (cb) {
@@ -2564,7 +2569,10 @@
       if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', function () {
           pf.addCallback(function () {
-            pf.inline.acctid = context.ly_cid;
+            if (pf.acctid === '') {
+              pf.acctid = context.lio.account.id;
+            }
+
             pf.inline.procElements();
           });
         });
@@ -2575,10 +2583,9 @@
      * @public
      * @description Initialize Pathfora widgets from a container
      * @param {object|array}   widgets
-     * @param {string}         lyticsId
      * @param {object}         config
      */
-    this.initializeWidgets = function (widgets, lyticsId, config) {
+    this.initializeWidgets = function (widgets, config) {
       // NOTE IE < 10 not supported
       // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
@@ -2596,12 +2603,12 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets, lyticsId);
+        core.initializeWidgetArray(widgets);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common, lyticsId);
+          core.initializeWidgetArray(widgets.common);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
@@ -2644,11 +2651,11 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets, lyticsId);
+              core.initializeWidgetArray(targetedwidgets);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse, lyticsId);
+              core.initializeWidgetArray(widgets.inverse);
             }
           });
         }

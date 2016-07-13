@@ -1,12 +1,10 @@
 Lytics content recommendations are now supported as a **beta** feature in Pathfora. Instead of hand selecting content to show an audience, you can can create a module that will suggest content at a individual level, based on the viewer's content affinities in Lytics. If you would like to try out this feature _please_ contact your customer success representative `success@lytics.io` to help set this up.
 
-Content recommendations in Pathfora require your [Lytics Account ID](/api/acctid.md) to be used as a parameter to the [initializeWidgets](/api/methods.md#initializewidgets) method. This account id is used to acess the Lytics content recommendation API to return content suggestions from your account.
-
 **Note**: only [Message](/types/message.md) modules using a [slideout](/layouts/slideout.md) or [modal](/layouts/modal.md) layout and a [variant](/layouts/modal.md#variant) of `3` support content recommendations.
 
 ## recommend
 
-Recommend controls any parameters necessary for making a content suggestions to a user using the Lytics content recommendation API. Your Lytics account ID must be present in the call to [initializeWidgets](/api/methods.md#initializewidgets) for content recommendation modules.
+Recommend controls any parameters necessary for making a content suggestions to a user using the Lytics content recommendation API.
 
 
 <table>
@@ -73,7 +71,7 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
   </tr>
 </table>
 
-**Note:** The examples below will show the default content in this case since a valid account ID is not provided.
+**Note:** The examples below will show the default content since the account used does not have content affinity set up.
 
 <h3>Content Recommendation Modal - <a href="../../examples/preview/layouts/modal/contentRecommend.html" target="_blank">Live Preview</a></h3>
 

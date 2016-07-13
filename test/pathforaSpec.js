@@ -38,14 +38,14 @@ describe('Pathfora', function () {
     });
 
     expect(function () {
-      pathfora.initializeWidgets([w1, w2], credentials);
+      pathfora.initializeWidgets([w1, w2]);
     }).toThrow(new Error('Cannot add two widgets with the same id'));
   });
 
   it('should track current time spent on page with 1 second accuracy', function () {
     jasmine.clock().install();
 
-    pathfora.initializeWidgets([], credentials);
+    pathfora.initializeWidgets([]);
 
     var initialTime = pathfora.getData().timeSpentOnPage;
     jasmine.clock().tick(10000);
@@ -69,7 +69,7 @@ describe('Pathfora', function () {
       }
     };
 
-    pathfora.initializeWidgets([messageBar], credentials, config);
+    pathfora.initializeWidgets([messageBar], config);
 
     var bar = $('#' + messageBar.id);
     expect(bar.hasClass('pf-theme-default')).toBe(false);
@@ -94,7 +94,7 @@ describe('Pathfora', function () {
       layout: 'modal'
     });
 
-    pathfora.initializeWidgets([form], credentials);
+    pathfora.initializeWidgets([form]);
 
     var widget = $('#' + form.id);
 
@@ -119,7 +119,7 @@ describe('Pathfora', function () {
       headline: 'Hello'
     });
 
-    pathfora.initializeWidgets([random], credentials);
+    pathfora.initializeWidgets([random]);
 
     var widget = $('#' + random.id);
     expect(widget.find('.pf-widget-slideout')).toBeTruthy();
@@ -151,7 +151,7 @@ describe('Pathfora', function () {
       id: 'interest-widget2',
       msg: 'Message modal - interest test'
     });
-    pathfora.initializeWidgets([messageBar, messageModal], credentials);
+    pathfora.initializeWidgets([messageBar, messageModal]);
 
     var completedActions = pathfora.getData().completedActions.length;
     var closedWidgets = pathfora.getData().closedWidgets.length;
@@ -178,7 +178,7 @@ describe('Pathfora', function () {
 
     spyOn(jstag, 'send');
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
       'pf-widget-id': messageBar.id,
@@ -203,7 +203,7 @@ describe('Pathfora', function () {
       id: 'bar-close-report'
     });
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     spyOn(jstag, 'send');
     $('.pf-widget-close').click();
@@ -239,7 +239,7 @@ describe('Pathfora', function () {
       }
     });
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     var widget = $('#' + messageBar.id);
 
@@ -275,7 +275,7 @@ describe('Pathfora', function () {
       }
     });
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     var widget = $('#' + messageBar.id);
 
@@ -306,7 +306,7 @@ describe('Pathfora', function () {
       id: 'ABCa'
     });
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
 
     spyOn(jstag, 'send');
@@ -334,7 +334,7 @@ describe('Pathfora', function () {
       }
     });
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     var widget = $('#' + messageBar.id);
 
@@ -407,7 +407,7 @@ describe('Pathfora', function () {
       }]
     };
 
-    pathfora.initializeWidgets(widgets, credentials);
+    pathfora.initializeWidgets(widgets);
 
     var widget = $('#' + messageB.id);
     expect(widget).toBeDefined();
@@ -837,7 +837,7 @@ describe('Pathfora', function () {
     };
 
     pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets(widgets, credentials);
+    pathfora.initializeWidgets(widgets);
 
     var w = $('[id*="ab-widget10"]');
     expect(w.length).toBe(1);
@@ -981,7 +981,7 @@ describe('Pathfora', function () {
     });
 
     expect(function () {
-      pathfora.initializeWidgets([brokenLayoutVal], credentials);
+      pathfora.initializeWidgets([brokenLayoutVal]);
     }).toThrow(new Error('Invalid widget layout value'));
   });
 
@@ -997,7 +997,7 @@ describe('Pathfora', function () {
       }
     });
 
-    pathfora.initializeWidgets([form], credentials);
+    pathfora.initializeWidgets([form]);
 
     setTimeout(function () {
       expect($('#' + form.id).length).toBe(0);
@@ -1027,14 +1027,14 @@ describe('Pathfora', function () {
 
     // new user
     localStorage.clear();
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     var visitedPage = pathfora.getData().pageViews;
     pathfora.clearAll();
 
     expect(visitedPage).toBe(1);
 
-    pathfora.initializeWidgets([messageBar], credentials);
+    pathfora.initializeWidgets([messageBar]);
 
     visitedPage = pathfora.getData().pageViews;
     pathfora.clearAll();
@@ -1063,7 +1063,7 @@ describe('Widgets', function () {
       id: 'widget-1'
     });
 
-    pathfora.initializeWidgets([promoWidget], credentials);
+    pathfora.initializeWidgets([promoWidget]);
 
     // should append element to DOM
     var widget = $('#' + promoWidget.id);
@@ -1095,7 +1095,7 @@ describe('Widgets', function () {
       });
     }).toThrow(new Error('All widgets must have an id value'));
 
-    pathfora.initializeWidgets([w1], credentials);
+    pathfora.initializeWidgets([w1]);
 
     setTimeout(function () {
       var right = $('.pf-widget.pf-position-right');
@@ -1112,7 +1112,7 @@ describe('Widgets', function () {
       msg: 'test widget'
     });
 
-    pathfora.initializeWidgets([openedWidget], credentials);
+    pathfora.initializeWidgets([openedWidget]);
 
     var widget = $('#' + openedWidget.id);
 
@@ -1136,7 +1136,7 @@ describe('Widgets', function () {
       id: 'close-widget'
     });
 
-    pathfora.initializeWidgets([promoWidget], credentials);
+    pathfora.initializeWidgets([promoWidget]);
     pathfora.showWidget(promoWidget);
 
     var widget = $('#' + promoWidget.id);
@@ -1157,7 +1157,7 @@ describe('Widgets', function () {
       id: 'close-clear-widget'
     });
 
-    pathfora.initializeWidgets([testWidget], credentials);
+    pathfora.initializeWidgets([testWidget]);
     pathfora.showWidget(testWidget);
 
     var widget = $('#' + testWidget.id);
@@ -1197,7 +1197,7 @@ describe('Widgets', function () {
       theme: 'custom'
     });
 
-    pathfora.initializeWidgets([message, form, subscription], credentials);
+    pathfora.initializeWidgets([message, form, subscription]);
 
     // test message
     var mwidget = $('#' + message.id),
@@ -1224,7 +1224,7 @@ describe('Widgets', function () {
   it('should not allow to be initialized without default properties', function () {
     var missingParams = function () {
       var promoWidget = new pathfora.Message();
-      pathfora.initializeWidgets([promoWidget], credentials);
+      pathfora.initializeWidgets([promoWidget]);
     };
 
     expect(missingParams).toThrow(new Error('Config object is missing'));
@@ -1291,7 +1291,7 @@ describe('Widgets', function () {
       }
     };
 
-    pathfora.initializeWidgets([w1, w2, w3], credentials, config);
+    pathfora.initializeWidgets([w1, w2, w3], config);
 
     var light = $('#' + w1.id),
         dark = $('#' + w2.id),
@@ -1319,7 +1319,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([openedWidget, closedWidget], credentials);
+    pathfora.initializeWidgets([openedWidget, closedWidget]);
 
     expect($('#' + openedWidget.id)[0]).toBeDefined();
     expect($('#' + closedWidget.id)[0]).toBeUndefined();
@@ -1349,7 +1349,7 @@ describe('Widgets', function () {
       }
     };
 
-    pathfora.initializeWidgets([modal], credentials, config);
+    pathfora.initializeWidgets([modal], config);
 
     var widget = $('#' + modal.id);
     var background = widget.find('.pf-widget-content');
@@ -1386,7 +1386,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([modal], credentials);
+    pathfora.initializeWidgets([modal]);
 
     var widget = $('#confirm-action-test');
     spyOn(modal.confirmAction, 'callback');
@@ -1409,7 +1409,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([modal], credentials);
+    pathfora.initializeWidgets([modal]);
 
     var widget = $('#cancel-action-test');
     spyOn(modal.cancelAction, 'callback');
@@ -1440,7 +1440,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([w1, w2], credentials);
+    pathfora.initializeWidgets([w1, w2]);
 
     var widgetA = $('#widget-with-action-callback'),
         widgetB = $('#widget-with-cancel-callback');
@@ -1467,7 +1467,7 @@ describe('Widgets', function () {
       position: 'customPos'
     });
 
-    pathfora.initializeWidgets([w1], credentials);
+    pathfora.initializeWidgets([w1]);
 
     var widget = $('#' + w1.id);
     expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
@@ -1498,7 +1498,7 @@ describe('Widgets', function () {
       layout: 'folding'
     });
 
-    pathfora.initializeWidgets([w1, w2, w3, w4], credentials);
+    pathfora.initializeWidgets([w1, w2, w3, w4]);
 
     var widget1 = $('#' + w1.id),
         widget2 = $('#' + w2.id),
@@ -1517,6 +1517,13 @@ describe('Widgets', function () {
 
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
     jasmine.Ajax.install();
+
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
 
     var modal = new pathfora.Message({
       id: 'recommendation-modal',
@@ -1552,7 +1559,7 @@ describe('Widgets', function () {
     });
 
     // Should show default
-    pathfora.initializeWidgets([defaultModal], 0);
+    pathfora.initializeWidgets([defaultModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1561,8 +1568,10 @@ describe('Widgets', function () {
       'responseText': '{"data": null,"message": "No such account id","status": 400}'
     });
 
+    pathfora.acctid = credentials;
+
     // Should get and show api response
-    pathfora.initializeWidgets([modal], credentials);
+    pathfora.initializeWidgets([modal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1601,6 +1610,7 @@ describe('Widgets', function () {
       expect(img).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
 
       pathfora.clearAll();
+      pathfora.acctid = '';
       done();
     }, 200);
 
@@ -1609,6 +1619,13 @@ describe('Widgets', function () {
 
   it('should throw errors if default content is improperly defined', function (done) {
     jasmine.Ajax.install();
+
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
 
     var errorModal = new pathfora.Message({
       id: 'recommendation-modal4',
@@ -1656,7 +1673,7 @@ describe('Widgets', function () {
 
     // Should error since there is no default defined
     expect(function () {
-      pathfora.initializeWidgets([errorModal], 0);
+      pathfora.initializeWidgets([errorModal]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1666,13 +1683,14 @@ describe('Widgets', function () {
       });
     }).toThrow(new Error('Could not get recommendation and no default defined'));
 
+    pathfora.acctid = credentials;
 
     expect(function () {
-      pathfora.initializeWidgets([errorModal2], credentials);
+      pathfora.initializeWidgets([errorModal2]);
     }).toThrow(new Error('Unsupported layout for content recommendation'));
 
     expect(function () {
-      pathfora.initializeWidgets([errorModal3], credentials);
+      pathfora.initializeWidgets([errorModal3]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1686,6 +1704,7 @@ describe('Widgets', function () {
       done();
     }, 200);
 
+    pathfora.acctid = '';
     jasmine.Ajax.uninstall();
   });
 
@@ -1703,7 +1722,7 @@ describe('Widgets', function () {
       cancelMessage: 'Cancel Here'
     });
 
-    pathfora.initializeWidgets([modal], credentials);
+    pathfora.initializeWidgets([modal]);
 
     var widget = $('#' + modal.id),
         actionBtn = widget.find('.pf-widget-ok'),
@@ -1768,7 +1787,7 @@ describe('Widgets', function () {
       msg: 'Submit this widget to access the website.'
     });
 
-    pathfora.initializeWidgets([gate], credentials);
+    pathfora.initializeWidgets([gate]);
 
     var widget = $('#' + gate.id);
 
@@ -1787,7 +1806,7 @@ describe('Widgets', function () {
 
     pathfora.utils.saveCookie('PathforaUnlocked_' + gate.id, true);
 
-    pathfora.initializeWidgets([gate], credentials);
+    pathfora.initializeWidgets([gate]);
 
     var widget = $('#' + gate.id);
 
@@ -1812,7 +1831,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([delayedWidget], credentials);
+    pathfora.initializeWidgets([delayedWidget]);
     var widget = $('#' + delayedWidget.id);
 
     jasmine.clock().tick(1000);
@@ -2788,13 +2807,13 @@ describe('Widgets', function () {
       position: 'wrong-position'
     });
 
-    pathfora.initializeWidgets([w1], credentials);
+    pathfora.initializeWidgets([w1]);
     // NOTE Will always fail agaist production env
     //    expect(console.warn).not.toHaveBeenCalled();
 
     pathfora.clearAll();
 
-    pathfora.initializeWidgets([w2], credentials);
+    pathfora.initializeWidgets([w2]);
     // NOTE Will always fail agaist production env
     //    expect(console.warn).toHaveBeenCalledWith('wrong-position is not valid position for bar');
   });
@@ -2814,8 +2833,7 @@ describe('API', function () {
   });
 
   xit('should be able call API with credentials', function () {
-    var callback = jasmine.createSpy('success'),
-        cred = {accountId: 'abc123', userId: '123'};
+    var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
       type: 'bar',
@@ -2823,7 +2841,7 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe], cred);
+    pathfora.initializeWidgets([subscribe]);
     pathfora.api.getWidgetData(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
@@ -2837,8 +2855,7 @@ describe('API', function () {
   });
 
   xit('should get data from API and pass it to callback function', function () {
-    var callback = jasmine.createSpy('success'),
-        cred = {accountId: 'abc123', userId: '123'};
+    var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
       type: 'bar',
@@ -2846,7 +2863,7 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe], cred);
+    pathfora.initializeWidgets([subscribe]);
     pathfora.api.getWidgetData(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
@@ -2860,8 +2877,7 @@ describe('API', function () {
   });
 
   xit('should properly handle errors by running onError function', function () {
-    var callback = jasmine.createSpy('success'),
-        cred = {accountId: 'abc123', userId: '123'};
+    var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
       type: 'bar',
@@ -2869,7 +2885,7 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe], cred);
+    pathfora.initializeWidgets([subscribe]);
 
     pathfora.api.getWidgetData(subscribe, function () {
     }, callback);
@@ -2939,16 +2955,16 @@ describe('Inline Personalization', function () {
   describe('pftrigger elements', function () {
     beforeEach(function () {
       window.pathfora.inline.elements = [];
+      window.pathfora.acctid = '';
     });
 
     it('should select to show the first matching element per group', function () {
       window.lio = {
         data: {
           segments: ['all', 'high_value', 'email', 'smt_new']
-        }
+        },
+        loaded: true
       };
-
-      window.lio.loaded = true;
 
       $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
         '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
@@ -2985,10 +3001,9 @@ describe('Inline Personalization', function () {
       window.lio = {
         data: {
           segments: ['all', 'email']
-        }
+        },
+        loaded: true
       };
-
-      window.lio.loaded = true;
 
       $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
         '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
@@ -3013,10 +3028,9 @@ describe('Inline Personalization', function () {
       window.lio = {
         data: {
           segments: ['all', 'portlanders', 'email']
-        }
+        },
+        loaded: true
       };
-
-      window.lio.loaded = true;
 
       $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
         '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
@@ -3072,7 +3086,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
-      pathfora.inline.acctid = credentials;
+      pathfora.acctid = credentials;
       pathfora.inline.elements = [];
     });
 
