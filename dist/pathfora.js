@@ -1788,10 +1788,16 @@
       var recContent = function (w) {
         pathfora.addCallback(function () {
           if (pathfora.acctid === '') {
-            pathfora.acctid = context.lio.account.id;
+            if (context.lio && context.lio.account) {
+              pathfora.acctid = context.lio.account.id;
+            } else {
+              throw new Error('Could not get account id from Lytics Javascript tag.');
+            }
           }
 
           api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+            // if we get a response from the recommend api put it as the first
+            // element in the content object this replaces any default content
             if (resp[0]) {
               var content = resp[0];
               w.content = {
@@ -1804,6 +1810,8 @@
               };
             }
 
+            // if we didn't get a valid response from the api, we check if a default
+            // exists and use that as our content piece instead
             if (!w.content) {
               throw new Error('Could not get recommendation and no default defined');
             }
@@ -2271,6 +2279,9 @@
      * @param {string} accountId  Lytics account ID
      */
     recommendContent: function (accountId, filter, callback) {
+      // Recommendation API:
+      // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
+
       var recommendUrl,
           seerId = utils.readCookie('seerid');
 
@@ -2303,6 +2314,14 @@
      * @param {string} urlPat  pattern of URL to match
      */
     constructRecommendFilter: function (urlPat) {
+      // URL pattern uses wildcards '*'
+      // should not contain http protocol
+      // examples:
+      // www.example.com/blog/posts/*
+      // www.example.com/*
+      // *
+      // (Note: using a single wildcard results in no filtering and can
+      // potentially return any url on your website)
       return 'FILTER AND(url LIKE "' + urlPat + '") FROM content';
     }
   };
@@ -2416,6 +2435,10 @@
 
             // CASE: Content recommendation elements
             case 'data-pfrecommend':
+              if (context.pathfora.acctid === '') {
+                throw new Error('Could not get account id from Lytics Javascript tag.');
+              }
+
               inline.procRecommendElements(elements[key], key, function () {
                 cb(elements);
               });
@@ -2463,13 +2486,15 @@
       var inline = this;
 
       if (rec !== 'default') {
-        // TODO: NEED TO MAKE SURE FILTER IS WORKING, SEEMS BROKEN ATM
+        // call the recommendation API using the url pattern urlPattern as a filter
         api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
               var elems = blocks[block];
 
+              // loop through the results as we loop
+              // through each element with a common liorecommend value
               if (resp[idx]) {
                 var content = resp[idx];
 
@@ -2477,25 +2502,26 @@
                   elems.title.innerHTML = content.title;
                 }
 
-                // If attribute is on image element
+                // if attribute is on image element
                 if (elems.image) {
                   if (typeof elems.image.src !== 'undefined') {
                     elems.image.src = content.primary_image;
-                  // If attribute is on container element, set the background
+                  // if attribute is on container element, set the background
                   } else {
                     elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
                   }
                 }
 
+                // set the description
                 if (elems.description) {
                   elems.description.innerHTML = content.description;
                 }
 
-                // If attribute is on an a (link) element
+                // if attribute is on an a (link) element
                 if (elems.url) {
                   if (typeof elems.url.href !== 'undefined') {
                     elems.url.href = 'http://' + content.url;
-                  // If attribute is on container element
+                  // if attribute is on container element
                   } else {
                     elems.url.innerHTML = 'http://' + content.url;
                   }
@@ -2523,7 +2549,9 @@
     };
 
     this.setDefaultRecommend = function () {
+      // check the default elements
       for (var block in this.defaultElements) {
+        // If we already have an element prepped for this block, don't show the default
         if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
           var def = this.defaultElements[block];
           def.elem.removeAttribute('data-pfrecommend');
@@ -2606,7 +2634,9 @@
         document.addEventListener('DOMContentLoaded', function () {
           pf.addCallback(function () {
             if (pf.acctid === '') {
-              pf.acctid = context.lio.account.id;
+              if (context.lio && context.lio.account) {
+                pf.acctid = context.lio.account.id;
+              }
             }
 
             pf.inline.procElements();
@@ -2621,7 +2651,7 @@
      * @param {object|array}   widgets
      * @param {object}         config
      */
-    this.initializeWidgets = function (widgets, config) {
+    this.initializeWidgets = function (widgets, config, oldConfig) {
       // NOTE IE < 10 not supported
       // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
@@ -2630,6 +2660,11 @@
 
       core.validateWidgetsObject(widgets);
       core.trackTimeOnPage();
+
+      // backwards support for old three-param function
+      if (typeof config === 'string' && typeof oldConfig !== 'undefined') {
+        config = oldConfig;
+      }
 
       if (config) {
         originalConf = JSON.parse(JSON.stringify(defaultProps));
