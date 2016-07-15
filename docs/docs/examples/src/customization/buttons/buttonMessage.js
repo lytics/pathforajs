@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'hide-buttons',
   layout: 'slideout',
   headline: 'Welcome!',
@@ -7,4 +7,4 @@ var module = pathfora.Message({
   cancelMessage: 'No Thanks'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

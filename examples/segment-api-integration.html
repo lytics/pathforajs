@@ -25,19 +25,16 @@
           }
         }
       });
-
       var message2 = new pathfora.Message({
         msg: 'Nice to see you again',
         id: 'seg2',
         layout: 'modal'
       });
-
       var message3 = new pathfora.Message({
         msg: 'Hi, please check our new stuff',
         id: 'seg3',
         layout: 'modal'
       });
-
       // Assign widgets to segments.
       // Widgets with segment wildcard '*' will be assigned to the common
       // group and shown to all users.
@@ -52,17 +49,13 @@
         common: [],
         inverse: [ message3 ]
       };
-
       var lyticsId = 1762;
-
       var defaultConfig = {
         generic: {
           theme: 'dark'
         }
       };
-
       window.pathfora.initializeWidgets(widgetsBySegments, lyticsId, defaultConfig);
-
     </script>
   </body>
 </html>

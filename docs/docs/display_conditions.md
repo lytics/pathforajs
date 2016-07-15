@@ -2,7 +2,7 @@ The `displayConditions` key controls how, when, and for how long any single modu
 
 
 ``` javascript
-var module = pathfora.Message({
+var module = new pathfora.Message({
   displayConditions: {
     showDelay: 10,
     impressions: {
@@ -11,7 +11,7 @@ var module = pathfora.Message({
   }
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 ```
 
 Some display conditions may require that cookies be enabled to work properly.

@@ -3,7 +3,6 @@ pages:
   - Pathfora JS: index.md
   - API Reference:
     - Methods: api/methods.md
-    - Lytics Account ID: api/acctid.md
     - Generalized Configuration: api/config.md
   - Types:
     - Message: types/message.md
@@ -24,6 +23,7 @@ pages:
   - A/B Testing: ab_testing.md
   - Audience Targeting: targeting.md
   - Callbacks: callbacks.md
+  - Content Recommendations: content_recommend.md
   - Display Conditions: display_conditions.md
   - Tracking: tracking.md
 extra_javascript:

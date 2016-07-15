@@ -38,7 +38,7 @@ To see these classes in action, you can view the html [templates](https://github
 All modules use the `pf-widget` class and thus any styles applied to this class and sub-elements will effect all modules used on the page. If you want to select and style a single module without using its `id` as a selector, you can add a custom class name to the `pf-widget` div in your javascript config.
 
 ```javascript
-var module = pathfora.Subscription({
+var module = new pathfora.Subscription({
   id: 'form-css',
   className: 'sign-up-newsletter',
   layout: 'modal',
@@ -46,7 +46,7 @@ var module = pathfora.Subscription({
   msg: 'Submit this form to get updates'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 ```
 
 ## Example

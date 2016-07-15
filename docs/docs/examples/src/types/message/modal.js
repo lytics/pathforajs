@@ -1,8 +1,8 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'message-modal',
   layout: 'modal',
   headline: 'Welcome to our website',
   msg: 'Please enjoy your visit.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

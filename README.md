@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
 
 # Pathfora JS
-Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](#documentation).
+Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](https://lytics.github.io/pathforadocs/).
         
 ## Modules
 There are 4 types of modules and 4 layouts currently supported.
@@ -31,26 +31,26 @@ There are 4 types of modules and 4 layouts currently supported.
   <script src="http://c.lytics.io/static/pathfora.min.js"></script>
   ```
 
-2. Set up your module configuration, a simple example is provided below. See the [documentation](#documentation) for a full list of settings and examples.
+2. Set up your module configuration, a simple example is provided below. See the [documentation](http://lytics.github.io/pathforadocs/) for a full list of settings and examples.
 
   ```javascript
   // example: show a bar module with a button leading to a new products page
 
-  var module = pathfora.Message({
+  var module = new pathfora.Message({
     id: 'bar-valued-customers',
     layout: 'bar',
     msg: 'Thanks for being a valued customer, please check out our new products.',
     cancelShow: false,
     okMessage: 'View Now',
     confirmAction: {
-      name: "view now",
+      name: 'view now',
       callback: function () {
-        window.location.pathname = "/new-products";
+        window.location.pathname = '/new-products';
       }
     }
   });
 
-  pathfora.initializeWidgets([ module ]);
+  pathfora.initializeWidgets([module]);
   ```
 
 ## Development
@@ -65,11 +65,13 @@ $ npm install
 
 Gulp tasks:
 
-- **`gulp build`** - minify `LESS` files and uglify `js` files in the `src` directory, and place output in `dist` directory.
+- **`gulp build`** - minify `LESS` files, lint and uglify `js` files in the `src` directory, and place output in `dist` directory.
 
 - **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
 
 - **`gulp docs`** - [see below](#documentation).
+
+- **`gulp lint`** - lint all the `js` source files with the rules defined in [.eslintrc](https://github.com/lytics/pathforajs/blob/develop/.eslintrc).
 
 - **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL. 
 
@@ -83,7 +85,9 @@ Gulp tasks:
   ```
 
 ### Documentation
-Soon we will be hosting Pathfora documentation externally, for now, documentation can be run locally using the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you must install before running the `gulp docs` task.
+Documentation for the most recent release is available [here](http://lytics.github.io/pathforadocs/).
+
+You can also view and add to the docs by running the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you must install before attempting to run the docs.
 
 ```sh 
 $ pip install mkdocs
@@ -92,14 +96,14 @@ $ gulp docs
 
 Documentation will be served on `localhost` port `8000` while running this task.
 
-The source code for all the examples provided in the documentation can be found in `docs/docs/examples/src`. Preview images for the examples live in `docs/docs/examples/images`.
+The source code for all the examples provided in the documentation can be found in `docs/docs/examples/src`. Preview images for the examples are stored in `docs/docs/examples/images`.
 
 The docs task will walk through every `.js` file in the examples source directory and compile it as a working html example in `docs/docs/examples/preview` using a handlebars template. These js files also get used as the source code to populate the `<pre>` elements within the docs.
 
 This allows us to keep our source code in one place. Changing a js file in the examples source folder will change the code snippet in the docs and update the example .html file.
 
 ### Testing
-Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework, and [Karma](https://github.com/karma-runner/karma/) to run tests. Before running tests, or commiting changes be sure to run `gulp build` instead of `gulp local`, or tests will fail due to mismatching URLs.
+Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework, and [Karma](https://github.com/karma-runner/karma/) to run tests. Before running tests, or commiting changes be sure to run `gulp build` instead of `gulp local`, or tests may fail due to mismatching URLs.
 
 Running tests:
 ``` sh

@@ -2,17 +2,17 @@ Pathfora supports A/B testing on a global level as well as on a targeted audienc
 
 
 ``` javascript
-var moduleTest = pathfora.ABTest({
+var moduleTest = new pathfora.ABTest({
   id: 'ab-test-id',
   type: '50/50',
   groups: [
-    [ moduleA ],
-    [ ]
+    [moduleA],
+    []
   ]
 });
 
-pathfora.initializeABTesting([ moduleTest ]);
-pathfora.initializeWidgets([ moduleA ]);
+pathfora.initializeABTesting([moduleTest]);
+pathfora.initializeWidgets([moduleA]);
 ```
 
 ## ABTest
@@ -69,40 +69,36 @@ In the example below module "A" will be displayed to roughly half of the users i
 ### New Users Message Test
 
 ``` javascript
-var moduleA = pathfora.Message({
+var moduleA = new pathfora.Message({
   id: 'message-a',
   layout: 'slideout',
   msg: 'Message A'
 });
 
-var moduleB = pathfora.Message({
+var moduleB = new pathfora.Message({
   id: 'message-b',
   layout: 'slideout',
   msg: 'Message B'
 });
 
-var ab = pathfora.ABTest({
+var ab = new pathfora.ABTest({
   id: 'targeted-ab-test',
   type: '50/50',
   groups: [
-    [ moduleA ],
-    [ moduleB ]
+    [moduleA],
+    [moduleB]
   ]
 });
 
 var widgets = {
   target: [{
     segment: 'smt_new',
-    widgets: [ moduleA, moduleB ]
+    widgets: [moduleA, moduleB]
   }]
 };
 
-pathfora.initializeABTesting([ ab ]);
-
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){
-  pathfora.initializeWidgets(widgets);
-};
+pathfora.initializeABTesting([ab]);
+pathfora.initializeWidgets(widgets);
 ```
 
 ## Testing

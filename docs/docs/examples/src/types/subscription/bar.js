@@ -1,7 +1,7 @@
-var module = pathfora.Subscription({
+var module = new pathfora.Subscription({
   id: 'subscription-bar',
   layout: 'bar',
   msg: 'Sign up to get newsletter updates.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
