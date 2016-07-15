@@ -139,7 +139,6 @@
   // FUTURE Move to separate files and concat
   /* eslint-disable indent */
   var templates = {
-  'templates': {},
   'subscription': {
     'bar': '<div class=\'pf-widget-body\'></div><a class=\'pf-widget-close\'>&times;</a><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' required></span></form></div>',
     'folding': '<a class=\'pf-widget-caption\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span> </a><a class=\'pf-widget-caption-left\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span></a><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' required></span></form></div>',
@@ -2586,7 +2585,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.04';
+    this.version = '0.0.05';
 
     /**
      * @public
