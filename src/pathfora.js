@@ -2615,20 +2615,24 @@
      * @param {object|array}   widgets
      * @param {object}         config
      */
-    this.initializeWidgets = function (widgets, config, oldConfig) {
+    this.initializeWidgets = function (widgets, config) {
       // NOTE IE < 10 not supported
       // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
         return;
       }
 
+      // support legacy initialize function where we passed account id as
+      // a second parameter and config as third
+      if (arguments.length >= 3) {
+        config = arguments[2];
+      // if the second param is an account id, we need to throw it out
+      } else if (typeof config === 'string') {
+        config = null;
+      }
+
       core.validateWidgetsObject(widgets);
       core.trackTimeOnPage();
-
-      // backwards support for old three-param function
-      if (typeof config === 'string' && typeof oldConfig !== 'undefined') {
-        config = oldConfig;
-      }
 
       if (config) {
         originalConf = JSON.parse(JSON.stringify(defaultProps));
