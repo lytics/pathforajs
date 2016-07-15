@@ -1197,7 +1197,6 @@
       case 'form':
       case 'sitegate':
       case 'subscription':
-
         var widgetForm = widget.querySelector('form');
 
         var widgetOnFormSubmit = function (event) {
@@ -1777,7 +1776,7 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array, accountId) {
+    initializeWidgetArray: function (array) {
       var displayWidget = function (w) {
         if (w.displayConditions.showDelay) {
           core.registerDelayedWidget(w);
@@ -1786,23 +1785,40 @@
         }
       };
 
-      var contentCb = function (content, w) {
-        if (content) {
-          w.content = {
-            0: {
-              title: content.title,
-              description: content.description,
-              url: 'http://' + content.url,
-              image: content.primary_image
+      var recContent = function (w) {
+        pathfora.addCallback(function () {
+          if (pathfora.acctid === '') {
+            if (context.lio && context.lio.account) {
+              pathfora.acctid = context.lio.account.id;
+            } else {
+              throw new Error('Could not get account id from Lytics Javascript tag.');
             }
-          };
-        }
+          }
 
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
+          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+            // if we get a response from the recommend api put it as the first
+            // element in the content object this replaces any default content
+            if (resp[0]) {
+              var content = resp[0];
+              w.content = {
+                0: {
+                  title: content.title,
+                  description: content.description,
+                  url: 'http://' + content.url,
+                  image: content.primary_image
+                }
+              };
+            }
 
-        displayWidget(w);
+            // if we didn't get a valid response from the api, we check if a default
+            // exists and use that as our content piece instead
+            if (!w.content) {
+              throw new Error('Could not get recommendation and no default defined');
+            }
+
+            displayWidget(w);
+          });
+        });
       };
 
       for (var i = 0; i < array.length; i++) {
@@ -1815,11 +1831,6 @@
         var widgetOnInitCallback = widget.config.onInit,
             defaults = defaultProps[widget.type],
             globals = defaultProps.generic;
-
-
-        if (accountId && accountId.length <= 4) {
-          console.warn('Pathfora: please update credentials to full Acccount ID');
-        }
 
         if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
@@ -1844,7 +1855,7 @@
             throw new Error('Cannot define recommended content unless it is a default');
           }
 
-          api.recommendContent(accountId, widget, contentCb);
+          recContent(widget);
 
         } else {
           displayWidget(widget);
@@ -2255,11 +2266,22 @@
     },
 
     /**
+     * @description Check if a user is a member of
+     * @param {match} name of segment to check for match
+     */
+    inSegment: function (match) {
+      return (this.getUserSegments().indexOf(match) !== -1);
+    },
+
+    /**
      * @description Fetch content to recommend
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, widget, callback) {
+    recommendContent: function (accountId, filter, callback) {
+      // Recommendation API:
+      // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
+
       var recommendUrl,
           seerId = utils.readCookie('seerid');
 
@@ -2272,20 +2294,35 @@
         accountId,
         '/user/_uids/',
         seerId,
-        widget.recommend.ql.raw ? '?ql=' + widget.recommend.ql.raw : ''
+        filter ? '?ql=' + filter : ''
       ].join('');
-
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
         if (resp.data && resp.data.length > 0) {
-          callback(resp.data[0], widget);
+          callback(resp.data);
         } else {
-          callback(null, widget);
+          callback([]);
         }
       }, function () {
-        callback(null, widget);
+        callback([]);
       });
+    },
+
+    /**
+     * @description Construct filter for inline content recommendations
+     * @param {string} urlPat  pattern of URL to match
+     */
+    constructRecommendFilter: function (urlPat) {
+      // URL pattern uses wildcards '*'
+      // should not contain http protocol
+      // examples:
+      // www.example.com/blog/posts/*
+      // www.example.com/*
+      // *
+      // (Note: using a single wildcard results in no filtering and can
+      // potentially return any url on your website)
+      return 'FILTER AND(url LIKE "' + urlPat + '") FROM content';
     }
   };
 
@@ -2297,97 +2334,235 @@
   Inline = function () {
     this.elements = [];
     this.preppedElements = [];
+    this.defaultElements = [];
 
     /*
-     * @description Prepare all the elements with the attribute provided
+     * @description Prepare all the triggered or recommended elements
      * @param {attr} name of attribute to select by
      */
     this.prepElements = function (attr) {
-      var dataElements = {};
+      var dataElements = {},
+          elements = document.querySelectorAll('[' + attr + ']');
 
-      if (this.elements.length === 0) {
-        this.elements = document.querySelectorAll('[' + attr + ']');
-      }
-
-      var elements = this.elements;
+      this.elements = this.elements.concat(elements);
 
       for (var i = 0; i < elements.length; i++) {
         if (elements[i].getAttribute(attr) !== null) {
-          var theElement = elements[i],
-              group = theElement.getAttribute('data-pfgroup'),
-              type = theElement.getAttribute('data-pftype'),
-              trigger = theElement.getAttribute('data-pftrigger');
+          var theElement = elements[i];
 
-          if (!group) {
-            group = 'default';
+          switch (attr) {
+          // CASE: Segment triggered elements
+          case 'data-pftrigger':
+            var group = theElement.getAttribute('data-pfgroup');
+
+            if (!group) {
+              group = 'default';
+            }
+
+            if (!dataElements[group]) {
+              dataElements[group] = [];
+            }
+
+            dataElements[group].push({
+              elem: theElement,
+              displayType: theElement.style.display,
+              group: group,
+              trigger: theElement.getAttribute('data-pftrigger')
+            });
+            break;
+
+          // CASE: Content recommendation elements
+          case 'data-pfrecommend':
+            var recommend = theElement.getAttribute('data-pfrecommend'),
+                block = theElement.getAttribute('data-pfblock');
+
+            if (!block) {
+              block = 'default';
+            }
+
+            if (!recommend) {
+              recommend = 'default';
+            }
+
+            if (!dataElements[recommend]) {
+              dataElements[recommend] = [];
+            }
+
+            dataElements[recommend][block] = {
+              elem: theElement,
+              displayType: theElement.style.display,
+              block: block,
+              recommend: recommend,
+              title: theElement.querySelector('[data-pftype="title"]'),
+              image: theElement.querySelector('[data-pftype="image"]'),
+              description: theElement.querySelector('[data-pftype="description"]'),
+              url: theElement.querySelector('[data-pftype="url"]')
+            };
+            break;
           }
-
-          if (!dataElements[group]) {
-            dataElements[group] = [];
-          }
-
-          dataElements[group].push({
-            elem: theElement,
-            displayType: theElement.style.display,
-            group: group,
-            type: type,
-            trigger: trigger
-          });
         }
       }
-
       return dataElements;
     };
 
     /*
-     * @description Show/hide the elements based on membership
+     * @description show/hide the elements based on membership
      */
     this.procElements = function () {
-      var elementObj = this.prepElements('data-pftrigger');
+      var attrs = ['data-pftrigger', 'data-pfrecommend'],
+          inline = this,
+          count = 0;
 
-      var inSegment = function (match) {
-        return (api.getUserSegments().indexOf(match) !== -1);
+      var cb = function (elements) {
+        count++;
+        // After we have processed all elements, proc defaults
+        if (count === Object.keys(elements).length) {
+          inline.setDefaultRecommend(elements);
+        }
       };
 
-      for (var key in elementObj) {
-        if (elementObj.hasOwnProperty(key)) {
-          var matched = false,
-              defaultEl = {};
+      attrs.forEach(function (attr) {
+        var elements = inline.prepElements(attr);
 
-          for (var i = 0; i < elementObj[key].length; i++) {
-            var singleElementObj = elementObj[key][i];
+        for (var key in elements) {
+          if (elements.hasOwnProperty(key)) {
 
-            // if we find a match show that and prevent others from showing in same group
-            if (inSegment(singleElementObj.trigger) && !matched) {
-              singleElementObj.elem.removeAttribute('data-pftrigger');
-              singleElementObj.elem.setAttribute('data-pfmodified', 'true');
+            switch (attr) {
+            // CASE: Segment triggered elements
+            case 'data-pftrigger':
+              inline.procTriggerElements(elements[key], key);
+              break;
 
-              if (key !== 'default') {
-                matched = true;
-                continue;
+            // CASE: Content recommendation elements
+            case 'data-pfrecommend':
+              if (context.pathfora.acctid === '') {
+                throw new Error('Could not get account id from Lytics Javascript tag.');
               }
-            }
 
-            // if this is the default save it
-            if (singleElementObj.trigger === 'default') {
-              defaultEl = singleElementObj;
+              inline.procRecommendElements(elements[key], key, function () {
+                cb(elements);
+              });
+              break;
             }
           }
+        }
+      });
+    };
 
-          // if nothing matched show the default
-          if (!matched && key !== 'default' && defaultEl.elem) {
-            defaultEl.elem.removeAttribute('data-pftrigger');
-            defaultEl.elem.setAttribute('data-pfmodified', 'true');
+    this.procTriggerElements = function (elems, group) {
+      var matched = false,
+          defaultEl = {};
+
+      for (var i = 0; i < elems.length; i++) {
+        var elem = elems[i];
+
+        // if we find a match show that and prevent others from showing in same group
+        if (api.inSegment(elem.trigger) && !matched) {
+          elem.elem.removeAttribute('data-pftrigger');
+          elem.elem.setAttribute('data-pfmodified', 'true');
+          this.preppedElements[group] = elem;
+
+          if (group !== 'default') {
+            matched = true;
+            continue;
           }
+        }
+
+        // if this is the default save it
+        if (elem.trigger === 'default') {
+          defaultEl = elem;
         }
       }
 
-      this.preppedElements = elementObj;
+      // if nothing matched show default
+      if (!matched && group !== 'default' && defaultEl.elem) {
+        defaultEl.elem.removeAttribute('data-pftrigger');
+        defaultEl.elem.setAttribute('data-pfmodified', 'true');
+        this.preppedElements[group] = defaultEl;
+      }
     };
 
+    this.procRecommendElements = function (blocks, rec, cb) {
+      var inline = this;
 
-    // ensure they are all trigger elements are hidden by default
-    var css = '[data-pftrigger]{ display: none; }',
+      if (rec !== 'default') {
+        // call the recommendation API using the url pattern urlPattern as a filter
+        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
+          var idx = 0;
+          for (var block in blocks) {
+            if (blocks.hasOwnProperty(block)) {
+              var elems = blocks[block];
+
+              // loop through the results as we loop
+              // through each element with a common liorecommend value
+              if (resp[idx]) {
+                var content = resp[idx];
+
+                if (elems.title) {
+                  elems.title.innerHTML = content.title;
+                }
+
+                // if attribute is on image element
+                if (elems.image) {
+                  if (typeof elems.image.src !== 'undefined') {
+                    elems.image.src = content.primary_image;
+                  // if attribute is on container element, set the background
+                  } else {
+                    elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
+                  }
+                }
+
+                // set the description
+                if (elems.description) {
+                  elems.description.innerHTML = content.description;
+                }
+
+                // if attribute is on an a (link) element
+                if (elems.url) {
+                  if (typeof elems.url.href !== 'undefined') {
+                    elems.url.href = 'http://' + content.url;
+                  // if attribute is on container element
+                  } else {
+                    elems.url.innerHTML = 'http://' + content.url;
+                  }
+                }
+
+                elems.elem.removeAttribute('data-pfrecommend');
+                elems.elem.setAttribute('data-pfmodified', 'true');
+                inline.preppedElements[block] = elems;
+              } else {
+                break;
+              }
+              idx++;
+            }
+          }
+          cb();
+        });
+      } else {
+        for (var block in blocks) {
+          if (blocks.hasOwnProperty(block)) {
+            inline.defaultElements[block] = blocks[block];
+          }
+        }
+        cb();
+      }
+    };
+
+    this.setDefaultRecommend = function () {
+      // check the default elements
+      for (var block in this.defaultElements) {
+        // If we already have an element prepped for this block, don't show the default
+        if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
+          var def = this.defaultElements[block];
+          def.elem.removeAttribute('data-pfrecommend');
+          def.elem.setAttribute('data-pfmodified', 'true');
+          this.preppedElements[block] = def;
+        }
+      }
+    };
+
+    // for our automatic element handling we need to ensure they are all hidden by default
+    var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
         style = document.createElement('style');
 
     style.type = 'text/css';
@@ -2418,6 +2593,12 @@
      * @description callbacks to execute once segments load
      */
     this.callbacks = [];
+
+    /**
+     * @public
+     * @description Lytics account ID required for content recos
+     */
+    this.acctid = '';
 
     /**
      * @public
@@ -2452,6 +2633,12 @@
       if (document.addEventListener) {
         document.addEventListener('DOMContentLoaded', function () {
           pf.addCallback(function () {
+            if (pf.acctid === '') {
+              if (context.lio && context.lio.account) {
+                pf.acctid = context.lio.account.id;
+              }
+            }
+
             pf.inline.procElements();
           });
         });
@@ -2462,14 +2649,22 @@
      * @public
      * @description Initialize Pathfora widgets from a container
      * @param {object|array}   widgets
-     * @param {string}         lyticsId
      * @param {object}         config
      */
-    this.initializeWidgets = function (widgets, lyticsId, config) {
+    this.initializeWidgets = function (widgets, config) {
       // NOTE IE < 10 not supported
       // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
         return;
+      }
+
+      // support legacy initialize function where we passed account id as
+      // a second parameter and config as third
+      if (arguments.length >= 3) {
+        config = arguments[2];
+      // if the second param is an account id, we need to throw it out
+      } else if (typeof config === 'string') {
+        config = null;
       }
 
       core.validateWidgetsObject(widgets);
@@ -2483,19 +2678,18 @@
       if (widgets instanceof Array) {
 
         // NOTE Simple initialization
-        core.initializeWidgetArray(widgets, lyticsId);
+        core.initializeWidgetArray(widgets);
       } else {
 
         // NOTE Target sensitive widgets
         if (widgets.common) {
-          core.initializeWidgetArray(widgets.common, lyticsId);
+          core.initializeWidgetArray(widgets.common);
           core.updateObject(defaultProps, widgets.common.config);
         }
 
         if (widgets.target || widgets.exclude) {
-
           // Add callback to initialize once we know segments are loaded
-          var cb = function () {
+          this.addCallback(function () {
             var target, ti, tl, exclude, ei, ex, ey, el,
                 targetedwidgets = [],
                 excludematched = false,
@@ -2532,15 +2726,13 @@
             }
 
             if (targetedwidgets.length) {
-              core.initializeWidgetArray(targetedwidgets, lyticsId);
+              core.initializeWidgetArray(targetedwidgets);
             }
 
             if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-              core.initializeWidgetArray(widgets.inverse, lyticsId);
+              core.initializeWidgetArray(widgets.inverse);
             }
-          };
-
-          this.addCallback(cb);
+          });
         }
       }
     };

@@ -22,4 +22,4 @@ var module = new pathfora.Message({
   okShow: false
 });
 
-pathfora.initializeWidgets([module], 'YOUR LYTICS ACCOUNT ID');
+pathfora.initializeWidgets([module]);

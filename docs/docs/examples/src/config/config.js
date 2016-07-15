@@ -81,4 +81,4 @@ var modules = [
   buttonMsg
 ];
 
-pathfora.initializeWidgets(modules, '', config);
+pathfora.initializeWidgets(modules, config);
