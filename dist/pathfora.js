@@ -139,6 +139,7 @@
   // FUTURE Move to separate files and concat
   /* eslint-disable indent */
   var templates = {
+  'templates': {},
   'subscription': {
     'bar': '<div class=\'pf-widget-body\'></div><a class=\'pf-widget-close\'>&times;</a><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' required></span></form></div>',
     'folding': '<a class=\'pf-widget-caption\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span> </a><a class=\'pf-widget-caption-left\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span></a><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' required></span></form></div>',
@@ -2601,6 +2602,12 @@
 
     /**
      * @public
+     * @description Indicates if the DOM has been loaded
+     */
+    this.DOMLoaded = false;
+
+    /**
+     * @public
      * @description Add callbacks to execute once segments load
      */
     this.addCallback = function (cb) {
@@ -2624,24 +2631,45 @@
 
     /**
      * @public
+     * @description Listener to wait until the DOM is ready
+     */
+    this.onDOMready = function (fn) {
+      var handler,
+          pf = this,
+          hack = document.documentElement.doScroll,
+          domContentLoaded = 'DOMContentLoaded',
+          loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
+
+      if (!loaded) {
+        document.addEventListener(domContentLoaded, handler = function () {
+          document.removeEventListener(domContentLoaded, handler);
+          pf.DOMLoaded = true;
+          fn();
+        });
+      } else {
+        pf.DOMLoaded = true;
+        fn();
+      }
+    };
+
+    /**
+     * @public
      * @description Initialize inline personalization
      */
     this.initializeInline = function () {
       var pf = this;
 
-      if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', function () {
-          pf.addCallback(function () {
-            if (pf.acctid === '') {
-              if (context.lio && context.lio.account) {
-                pf.acctid = context.lio.account.id;
-              }
+      pf.onDOMready(function () {
+        pf.addCallback(function () {
+          if (pf.acctid === '') {
+            if (context.lio && context.lio.account) {
+              pf.acctid = context.lio.account.id;
             }
+          }
 
-            pf.inline.procElements();
-          });
+          pf.inline.procElements();
         });
-      }
+      });
     };
 
     /**
