@@ -2550,7 +2550,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.05';
+    this.version = '0.0.6';
 
     /**
      * @public
@@ -2563,6 +2563,12 @@
      * @description Lytics account ID required for content recos
      */
     this.acctid = '';
+
+    /**
+     * @public
+     * @description Indicates if the DOM has been loaded
+     */
+    this.DOMLoaded = false;
 
     /**
      * @public
@@ -2589,24 +2595,45 @@
 
     /**
      * @public
+     * @description Listener to wait until the DOM is ready
+     */
+    this.onDOMready = function (fn) {
+      var handler,
+          pf = this,
+          hack = document.documentElement.doScroll,
+          domContentLoaded = 'DOMContentLoaded',
+          loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
+
+      if (!loaded) {
+        document.addEventListener(domContentLoaded, handler = function () {
+          document.removeEventListener(domContentLoaded, handler);
+          pf.DOMLoaded = true;
+          fn();
+        });
+      } else {
+        pf.DOMLoaded = true;
+        fn();
+      }
+    };
+
+    /**
+     * @public
      * @description Initialize inline personalization
      */
     this.initializeInline = function () {
       var pf = this;
 
-      if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', function () {
-          pf.addCallback(function () {
-            if (pf.acctid === '') {
-              if (context.lio && context.lio.account) {
-                pf.acctid = context.lio.account.id;
-              }
+      pf.onDOMready(function () {
+        pf.addCallback(function () {
+          if (pf.acctid === '') {
+            if (context.lio && context.lio.account) {
+              pf.acctid = context.lio.account.id;
             }
+          }
 
-            pf.inline.procElements();
-          });
+          pf.inline.procElements();
         });
-      }
+      });
     };
 
     /**
