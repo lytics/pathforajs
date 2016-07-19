@@ -16,6 +16,12 @@ $(document).ready(function() {
             case 'sass':
               lang = "css";
               break;
+
+            case 'html':
+              lang = "html";
+              data = data.replace(/</g, '&lt;');
+              data = data.replace(/>/g, '&gt;');
+              break;
           }
 
           pre.html('<code class="' + lang + ' hljs">' + data + '</code>');

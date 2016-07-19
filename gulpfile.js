@@ -138,27 +138,51 @@ gulp.task('preview', function () {
 });
 
 var compileExample = function (root, name) {
-  if (name.split('.').pop() === 'js') {
-    var dest = root.split(EXAMPLESSRC + '/').pop(),
-        contents = {
-          config: fs.readFileSync(root + '/' + name, 'utf8'),
-          css: ''
-        };
+  var out, css, proc,
+      dest = root.split(EXAMPLESSRC + '/').pop(),
+      contents = {
+        config: '',
+        css: '',
+        html: ''
+      };
 
-    // Custom CSS example should load css
-    if (root.indexOf('customization/css') !== -1) {
-      contents.css = fs.readFileSync(root + '/' + name.replace('.js', '.css'), 'utf8');
+  switch (name.split('.').pop()) {
+  case 'js':
+    contents.config = fs.readFileSync(root + '/' + name, 'utf8');
+    css = root + '/' + name.replace('.js', '.css');
+    out = name.replace('.js', '.html');
+    proc = true;
+    break;
+
+  case 'html':
+    contents.html = fs.readFileSync(root + '/' + name, 'utf8');
+    css = root + '/' + name.replace('.html', '.css');
+    out = name;
+    proc = true;
+    break;
+
+  default:
+    proc = false;
+    break;
+  }
+
+  if (proc) {
+    try {
+      fs.statSync(css);
+      contents.css = fs.readFileSync(css, 'utf8');
+    } catch (err) {
+      // do nothing
     }
 
     gulp.src(EXAMPLESSRC + '/template.hbs')
       .pipe(handlebars(contents))
-      .pipe(rename(name.replace('.js', '.html')))
+      .pipe(rename(out))
       .pipe(gulp.dest(EXAMPLESDEST + '/' + dest));
   }
 };
 
 gulp.task('docs:watch', function () {
-  gulp.watch('docs/docs/examples/src/**/*.js', function (event) {
+  gulp.watch('docs/docs/examples/src/**/*', function (event) {
     var p = path.relative(process.cwd(), event.path);
     var root = p.substring(0, p.lastIndexOf('/') + 1);
     var name = p.substring(p.lastIndexOf('/') + 1, p.length);
