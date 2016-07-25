@@ -3007,7 +3007,7 @@
         var parseFBLoginTemplate = function (parentTemplates) {
           Object.keys(parentTemplates).forEach(function (type) {
             parentTemplates[type] = parentTemplates[type].replace(
-              /<p name="fb-login" hidden><\/p>/gm,
+              /<p name='fb-login' hidden><\/p>/gm,
               btn
             );
           });
@@ -3065,7 +3065,7 @@
         var parseGoogleLoginTemplate = function (parentTemplates) {
           Object.keys(parentTemplates).forEach(function (type) {
             parentTemplates[type] = parentTemplates[type].replace(
-              /<p name="google-login" hidden><\/p>/gm,
+              /<p name='google-login' hidden><\/p>/gm,
               btn
             );
           });
