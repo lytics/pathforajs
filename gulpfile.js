@@ -81,18 +81,18 @@ var prepareTemplates = function () {
   };
 
   walk.walkSync(templateDirectory, options);
-  var str = JSON.stringify(templates, null, 2).replace(/\"/g, '\'');
+  var str = JSON.stringify(templates, null, 2);
 
   for (var inc in includes) {
     if (includes.hasOwnProperty(inc)) {
       str = str.replace(
         new RegExp('(\{){2}' + inc + '(\}){2}', 'gm'),
-        includes[inc]
+        includes[inc].replace(/"/g, '\\"')
       );
     }
   }
 
-  return str;
+  return str.replace(/\"/g, '\'');
 };
 
 
