@@ -8,6 +8,7 @@
 @fieldBackground: white;
 @cancelBackground: #f1f1f1;
 @cancelText: #bbb;
+@placeholder: #a9a9a9;
 
 /* Mixin for mobile boundries */
 .mobile(@rules) {
@@ -56,7 +57,7 @@
     text-decoration: none;
   }
 
-  h2, p, input, a, textarea {
+  h2, p, input, a, textarea, select {
     margin: 0;
     padding: 0;
     border: 0;
@@ -75,6 +76,7 @@
 
   input[type=text],
   input[type=email],
+  select,
   textarea {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     border-radius: 3px;
@@ -98,10 +100,41 @@
       border: solid 1px #f00;
       border-color: #f00 !important;
     }
+
+    &::-webkit-input-placeholder {
+      color: @placeholder;
+    }
+
+    &:-moz-placeholder { /* Firefox 18- */
+      color: @placeholder;
+    }
+
+    &::-moz-placeholder {  /* Firefox 19+ */
+      color: @placeholder;
+    }
+
+    &:-ms-input-placeholder {  
+      color: @placeholder;
+    }
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &::-ms-expand {
+      display:none;
+    }
+
+    &.default {
+      color: @placeholder;
+    }
   }
 
   input[type=text],
-  input[type=email] {
+  input[type=email],
+  select {
     clear: both;
   }
 
@@ -246,7 +279,7 @@
 }
 
 .pf-form, .pf-sitegate {
-  input {
+  input, select {
     &.pf-field-half-width {
       width: 49.5%;
       display: block;
