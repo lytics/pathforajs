@@ -54,6 +54,7 @@ gulp.task('build:styles', function () {
 var prepareTemplates = function () {
   var templateDirectory = 'src/templates',
       templates = {},
+      includes = {},
       options = {};
 
   options = {
@@ -68,14 +69,30 @@ var prepareTemplates = function () {
         if (stat.name.charAt(0) !== '.') {
           var markup = fs.readFileSync(root + '/' + stat.name, 'utf-8'),
               file = stat.name.replace('.html', '');
-          templates[dir][file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+
+          if (dir === 'includes') {
+            includes[file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+          } else {
+            templates[dir][file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+          }
         }
       }
     }
   };
 
   walk.walkSync(templateDirectory, options);
-  return JSON.stringify(templates, null, 2).replace(/\"/g, '\'');
+  var str = JSON.stringify(templates, null, 2);
+
+  for (var inc in includes) {
+    if (includes.hasOwnProperty(inc)) {
+      str = str.replace(
+        new RegExp('(\{){2}' + inc + '(\}){2}', 'gm'),
+        includes[inc].replace(/"/g, '\\"')
+      );
+    }
+  }
+
+  return str.replace(/\"/g, '\'');
 };
 
 

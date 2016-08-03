@@ -88,7 +88,8 @@
         email: 'Email',
         message: 'Message',
         company: 'Company',
-        phone: 'Phone Number'
+        phone: 'Phone Number',
+        country: 'Country'
       },
       required: {
         name: true,
@@ -96,7 +97,8 @@
       },
       fields: {
         company: false,
-        phone: false
+        phone: false,
+        country: false
       },
       okMessage: 'Send',
       okShow: true,
@@ -116,7 +118,8 @@
         email: 'Email',
         message: 'Message',
         company: 'Company',
-        phone: 'Phone Number'
+        phone: 'Phone Number',
+        country: 'Country'
       },
       required: {
         name: true,
@@ -124,7 +127,8 @@
       },
       fields: {
         message: false,
-        phone: false
+        phone: false,
+        country: false
       },
       okMessage: 'Submit',
       okShow: true,
@@ -925,7 +929,7 @@
      * @param {object} config
      */
     constructWidgetLayout: function (widget, config) {
-      var node, child,
+      var node, child, i,
           widgetContent = widget.querySelector('.pf-widget-content'),
           widgetCancel = widget.querySelector('.pf-widget-cancel'),
           widgetOk = widget.querySelector('.pf-widget-ok'),
@@ -1034,12 +1038,11 @@
         case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
-            child = node.querySelector('input');
+            child = node.querySelectorAll('input, select, textarea');
 
             if (node) {
-              while (child) {
-                node.removeChild(child);
-                child = node.querySelector('input');
+              for (i = 0; i < child.length; i++) {
+                node.removeChild(child[i]);
               }
 
               child = node.querySelector('.pf-sitegate-clear');
@@ -1057,7 +1060,7 @@
       }
 
       // NOTE Set The headline
-      for (var i = widgetHeadline.length - 1; i >= 0; i--) {
+      for (i = widgetHeadline.length - 1; i >= 0; i--) {
         widgetHeadline[i].innerHTML = config.headline;
       }
 
@@ -1085,12 +1088,11 @@
         }
 
         var getFormElement = function (field) {
-          if (field === 'message') {
-            return widget.querySelector('textarea');
-          } else if (field === 'name') {
+          if (field === 'name') {
             return widget.querySelector('input[name="username"]');
           }
-          return widget.querySelector('input[name="' + field + '"]');
+
+          return widget.querySelector('form [name="' + field + '"]');
         };
 
         // Set placeholders
@@ -1099,6 +1101,8 @@
 
           if (element && typeof element.placeholder !== 'undefined') {
             element.placeholder = config.placeholders[field];
+          } else if (element && typeof element.options !== 'undefined') {
+            element.options[0].innerHTML = config.placeholders[field];
           }
         });
 
@@ -1137,6 +1141,24 @@
             }
           }
         });
+
+        // For select boxes we need to control the color of
+        // the placeholder text
+        var selects = widget.querySelectorAll('select');
+
+        for (i = 0; i < selects.length; i++) {
+          // default class indicates the placeholder text color
+          utils.addClass(selects[i], 'default');
+
+          selects[i].onchange = function () {
+            if (this.selectedIndex !== 0) {
+              utils.removeClass(this, 'default');
+            } else {
+              utils.addClass(this, 'default');
+            }
+          };
+        }
+
         break;
       case 'subscription':
         widget.querySelector('input').placeholder = config.placeholders.email;
@@ -1188,7 +1210,7 @@
               widget: widget,
               event: event,
               data: Array.prototype.slice.call(
-                widgetForm.querySelectorAll('input, textarea')
+                widgetForm.querySelectorAll('input, textarea, select')
               ).map(function (element) {
                 return {
                   name: element.name || element.id,
@@ -1342,7 +1364,7 @@
           var valid = true;
 
           Array.prototype.slice.call(
-            widget.querySelectorAll('input, textarea')
+            widget.querySelectorAll('input, textarea, select')
           ).forEach(function (inputField) {
             if (inputField.hasAttribute('required') && !inputField.value) {
               valid = false;
@@ -1551,7 +1573,7 @@
           arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
           contentUnit = widget.querySelector('.pf-content-unit'),
           contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
-          fields = widget.querySelectorAll('input, textarea'),
+          fields = widget.querySelectorAll('input, textarea, select'),
           branding = widget.querySelector('.branding svg'),
           socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
 
