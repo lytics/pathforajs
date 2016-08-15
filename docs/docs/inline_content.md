@@ -77,8 +77,8 @@ Inside the container element you may have several elements with the `data-pftype
 
 If for some reason the recommendation API returns an error for the user, and cannot fill in recommendation, you can set some default content to show by creating another set of elements with content you've selected filled in and the `data-pfrecommend` value set to default. This content will only show if the any recommendation with a matching `data-pfblock` couldn't be loaded.
 
-<h3>Content Recommendations - <a href="../../examples/preview/inline/content.html" target="_blank">Live Preview</a></h3>
+<h3>Content Recommendations - <a href="../examples/preview/inline/content.html" target="_blank">Live Preview</a></h3>
 
-![Inline Content Recommendation](../examples/img/inline/content.png)
+![Inline Content Recommendation](examples/img/inline/content.png)
 
-<pre data-src="../../examples/src/inline/content.html"></pre>
+<pre data-src="../examples/src/inline/content.html"></pre>
