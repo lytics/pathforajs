@@ -65,6 +65,11 @@
           
             <li>
     <ul class="subnav">
+    <li><span>Modules</span></li>
+
+        
+            
+    <ul class="subnav">
     <li><span>API Reference</span></li>
 
         
@@ -77,22 +82,15 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../api/acctid/">Lytics Account ID</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
         <a class="" href="../api/config/">Generalized Configuration</a>
         
     </li>
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Types</span></li>
 
@@ -126,9 +124,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Layouts</span></li>
 
@@ -162,9 +160,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Customization</span></li>
 
@@ -205,9 +203,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 current">
         <a class="current" href="./">A/B Testing</a>
         
@@ -230,34 +228,66 @@
             </ul>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../targeting/">Audience Targeting</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../callbacks/">Callbacks</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../content_recommend/">Content Recommendations</a>
+        
+    </li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../display_conditions/">Display Conditions</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../tracking/">Tracking</a>
         
     </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Inline Personalization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../toggle/">Element Toggle</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../inline_content/">Inline Content Recommendations</a>
+        
+    </li>
+
+        
+    </ul>
 <li>
           
         </ul>
@@ -281,6 +311,10 @@
     <li><a href="..">Docs</a> &raquo;</li>
     
       
+        
+          <li>Modules &raquo;</li>
+        
+      
     
     <li>A/B Testing</li>
     <li class="wy-breadcrumbs-aside">
@@ -293,17 +327,17 @@
             <div class="section">
               
                 <p>Pathfora supports A/B testing on a global level as well as on a targeted audience. You can split a pool of users to show some proportion of them a group of modules "A" and the other portion a group "B".</p>
-<pre><code class="javascript">var moduleTest = pathfora.ABTest({
+<pre><code class="javascript">var moduleTest = new pathfora.ABTest({
   id: 'ab-test-id',
   type: '50/50',
   groups: [
-    [ moduleA ],
-    [ ]
+    [moduleA],
+    []
   ]
 });
 
-pathfora.initializeABTesting([ moduleTest ]);
-pathfora.initializeWidgets([ moduleA ]);
+pathfora.initializeABTesting([moduleTest]);
+pathfora.initializeWidgets([moduleA]);
 </code></pre>
 
 <h2 id="abtest">ABTest</h2>
@@ -348,40 +382,36 @@ pathfora.initializeWidgets([ moduleA ]);
 <p>A/B Testing can be combined with <a href="../targeting/">audience targeting</a> to divide an audience into a 50/50 split. </p>
 <p>In the example below module "A" will be displayed to roughly half of the users in the <code>smt_new</code> audience, while the other half of the audience will be shown module "B".</p>
 <h3 id="new-users-message-test">New Users Message Test</h3>
-<pre><code class="javascript">var moduleA = pathfora.Message({
+<pre><code class="javascript">var moduleA = new pathfora.Message({
   id: 'message-a',
   layout: 'slideout',
   msg: 'Message A'
 });
 
-var moduleB = pathfora.Message({
+var moduleB = new pathfora.Message({
   id: 'message-b',
   layout: 'slideout',
   msg: 'Message B'
 });
 
-var ab = pathfora.ABTest({
+var ab = new pathfora.ABTest({
   id: 'targeted-ab-test',
   type: '50/50',
   groups: [
-    [ moduleA ],
-    [ moduleB ]
+    [moduleA],
+    [moduleB]
   ]
 });
 
 var widgets = {
   target: [{
     segment: 'smt_new',
-    widgets: [ moduleA, moduleB ]
+    widgets: [moduleA, moduleB]
   }]
 };
 
-pathfora.initializeABTesting([ ab ]);
-
-// using the lytics callback assumes that window.liosetup exists and the lytics js tag is loaded after the pathfora config
-window.liosetup.callback = function(){
-  pathfora.initializeWidgets(widgets, 'YOUR LYTICS ACCOUNT ID');
-};
+pathfora.initializeABTesting([ab]);
+pathfora.initializeWidgets(widgets);
 </code></pre>
 
 <h2 id="testing">Testing</h2>

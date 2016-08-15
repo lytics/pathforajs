@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+var config = {
+  // Most general settings
+  generic: {
+    headline: 'Welcome',
+    theme: 'custom',
+    colors: {
+      background: '#3f4057',
+      text: '#d9daeb',
+      headline: '#fff',
+      close: '#a6a8c7',
+      actionBackground: '#9b9cba',
+      actionText: '#3f4057',
+      fieldBackground: '#cdcee4'
+    }
+  },
+
+  // Message settings will overwrite the "generic"
+  // settings for all message modules
+  message: {
+    cancelShow: false,
+    okMessage: 'View Content'
+  },
+
+  // Form settings will overwrite the "generic"
+  // settings for all form modules
+  form: {
+    okMessage: 'Submit Form',
+    fields: {
+      title: false
+    },
+    colors: {
+      cancelBackground: '#72738a',
+      cancelText: '#fff'
+    }
+  },
+
+  // Subscription settings will overwrite the "generic"
+  // settings for all subscription
+  subscription: {
+    colors: {
+      fieldBackground: '#fff',
+      actionBackground: '#fff'
+    }
+  }
+};
+
+var slideoutMsg = new pathfora.Message({
+  id: 'slideoutMsg',
+  layout: 'slideout',
+  position: 'bottom-right',
+  msg: 'Slideout Message'
+});
+
+var barSub = new pathfora.Subscription({
+  id: 'barSubscription',
+  layout: 'bar',
+  msg: 'Bar Subscription'
+});
+
+var slideoutForm = new pathfora.Form({
+  id: 'slideoutForm',
+  layout: 'slideout',
+  msg: 'Slideout Form'
+});
+
+var buttonMsg = new pathfora.Message({
+  id: 'buttonMsg',
+  layout: 'button',
+  position: 'right',
+  msg: 'Button Module',
+
+  // settings in the module definition will override
+  // anything in generic and the type specific settings
+  theme: 'dark'
+});
+
+var modules = [
+  slideoutMsg,
+  barSub,
+  slideoutForm,
+  buttonMsg
+];
+
+pathfora.initializeWidgets(modules, config);
+
+</script>
+
+
+
+</body>
+</html>

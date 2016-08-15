@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'slideout-content-recommend',
   layout: 'slideout',
   headline: 'Check This Out!',
@@ -22,4 +22,4 @@ var module = pathfora.Message({
   okShow: false
 });
 
-pathfora.initializeWidgets([ module ], 'YOUR LYTICS ACCOUNT ID');
+pathfora.initializeWidgets([module]);

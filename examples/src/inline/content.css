@@ -1,0 +1,57 @@
+body {
+  margin: 0;
+  background-color: #e2e2e2;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  margin: 0;
+}
+
+.myElementClass {
+  display: none;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #2c8a82;
+}
+
+a {
+  text-decoration: none;
+}
+
+body > div {
+  width: 600px;
+  background-color: #fff;
+  display: block;
+  margin: 50px auto 0;
+  padding: 20px;
+  min-height: 150px;
+}
+
+body > div img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  margin-right: 20px;
+  float: left;
+}
+
+body > div > div {
+  width: 200px;
+  height: 150px;
+  display: block;
+  float: left;
+  margin-right: 20px;
+  background-size: cover;
+  background-position: center center;
+}
+
+p.url {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #898989;
+}

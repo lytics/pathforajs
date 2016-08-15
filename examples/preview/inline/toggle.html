@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+.navigation {
+  height: 70px;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0;
+  background-color: #2a2a2a;
+}
+
+.navigation li {
+  list-style-type: none;
+  margin: 0;
+  line-height: 70px;
+  float: right;
+  margin-right: 40px;
+}
+
+.navigation a {
+  color: #e7e7e7;
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  background-color: #e2e2e2;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  margin: 0;
+}
+
+.myElementClass {
+  display: none;
+}
+
+.welcome {
+  width: 600px;
+  margin: 150px auto 40px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: #2c8a82;
+}
+
+.welcome a {
+  display: inline-block;
+  font-size: 16px;
+  width: auto;
+  background-color: #2c8a82;
+  color: #fff;
+  padding: 10px 30px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-top: 20px;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+
+</script>
+
+<!-- Navigation Example: sign in vs sign up -->
+<ul class="navigation">
+  <li data-pfgroup="navigation" data-pftrigger="registered_user">
+    <a href="#signin">Sign In</a>
+  </li>
+
+  <li data-pfgroup="navigation" data-pftrigger="default">
+    <a href="#signup">Sign Up</a>
+  </li>
+</ul>
+
+
+<!-- Content Greeting Example -->
+<div class="welcome">
+  <div data-pfgroup="welcome-msg" data-pftrigger="high_value">
+    <h2>We appreciate your loyalty</h2>
+    <p>Thanks for being such a great customer. We want to reward you with a special offer just for you.</p>
+    <a href="#offer">Check it out!</a>
+  </div>
+
+  <div data-pfgroup="welcome-msg" data-pftrigger="registered_user">
+    <h2>Thanks for shopping with us</h2>
+    <p>We'd love to show you some of our new content.</p>
+    <a href="#new">Check it out!</a>
+  </div>
+
+  <div data-pfgroup="welcome-msg" data-pftrigger="default">
+    <h2>Welcome!</h2>
+    <p>Thanks for visiting! Here are some tools to get your started.</p>
+    <a href="#tools">Check it out!</a>
+  </div>
+</div>
+
+</body>
+</html>

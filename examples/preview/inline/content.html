@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+body {
+  margin: 0;
+  background-color: #e2e2e2;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  margin: 0;
+}
+
+.myElementClass {
+  display: none;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #2c8a82;
+}
+
+a {
+  text-decoration: none;
+}
+
+body > div {
+  width: 600px;
+  background-color: #fff;
+  display: block;
+  margin: 50px auto 0;
+  padding: 20px;
+  min-height: 150px;
+}
+
+body > div img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  margin-right: 20px;
+  float: left;
+}
+
+body > div > div {
+  width: 200px;
+  height: 150px;
+  display: block;
+  float: left;
+  margin-right: 20px;
+  background-size: cover;
+  background-position: center center;
+}
+
+p.url {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #898989;
+}
+
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+
+</script>
+
+<!-- First recommendation -->
+<div data-pfblock="block1" data-pfrecommend="www.getlytics.com/blog/post/*">
+  <div data-pftype="image"></div>
+  <a data-pftype="url"><h2 data-pftype="title"></h2></a>
+  <p data-pftype="description"></p>
+</div>
+
+<!-- Backfill in case we can't load a recommendation 1 -->
+<div data-pfblock="block1" data-pfrecommend="default">
+  <div style="background-image: url('https://www.getlytics.com/img/blog/posts/introducing_lytics_reporting/introducing_lytics_reporting-bg.png');"></div>
+  <a href="http://www.getlytics.com/blog/post/introducing_lytics_reporting">
+    <h2>Introducing: Lytics Journey Reporting</h2>
+  </a>
+  <p>See people move through the customer journey and measure their progress and interactions using Lytics Journey Reporting. Build a customer journey that is measurable, based on your key marketing goals.</p>
+</div>
+
+<!-- Second recommendation -->
+<div data-pfblock="block2" data-pfrecommend="www.getlytics.com/blog/post/*">
+  <img data-pftype="image" alt="recommendation image">
+  <h2 data-pftype="title"></h2>
+  <p class="url" data-pftype="url"></p>
+  <p data-pftype="description"></p>
+</div>
+
+<!-- Backfill in case we can't load a recommendation 2 -->
+<div data-pfblock="block2" data-pfrecommend="default">
+  <img src="https://www.getlytics.com/img/blog/defaults/usecases.gif" alt="recommendation image">
+  <h2>Data Science for Marketing Is More Approachable Than You Think</h2>
+  <p class="url">http://www.getlytics.com/blog/post/smarter_personalized_email</p>
+  <p>If we understand the intent of our customers through how they interact with our brand and web presence, there&#39;s no excuse for us to not send personalized, relevant email. If anything, we can be less annoying with our campaigns.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+var module = new pathfora.SiteGate({
+  id: 'gate-modal',
+  headline: 'Enter Your Info',
+  msg: 'Please enter your information to proceed'
+});
+
+pathfora.initializeWidgets([module]);
+
+</script>
+
+
+
+</body>
+</html>

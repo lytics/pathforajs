@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'slideout-image',
   layout: 'slideout',
   headline: 'Welcome',
@@ -7,4 +7,4 @@ var module = pathfora.Message({
   origin: 'bottom'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

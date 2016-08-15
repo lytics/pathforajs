@@ -1,13 +1,13 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'confirm-callback',
   layout: 'modal',
   msg: 'Click the "confirm" button to see the callback',
   confirmAction: {
     name: 'custom confirm',
-    callback: function() {
+    callback: function () {
       alert('confirm callback');
     }
   }
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

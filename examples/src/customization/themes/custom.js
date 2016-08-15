@@ -1,4 +1,4 @@
-var module = pathfora.Form({
+var module = new pathfora.Form({
   id: 'custom-theme',
   layout: 'modal',
   headline: 'Sign Up!',
@@ -17,4 +17,4 @@ var module = pathfora.Form({
   }
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

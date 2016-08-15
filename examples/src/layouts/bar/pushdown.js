@@ -1,4 +1,4 @@
-var module = pathfora.Message({
+var module = new pathfora.Message({
   id: 'bar-push-down',
   layout: 'bar',
   position: 'top-fixed',
@@ -6,4 +6,4 @@ var module = pathfora.Message({
   pushDown: '.myElementClass'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);

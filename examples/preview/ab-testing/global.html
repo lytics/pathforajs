@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+var moduleA = new pathfora.SiteGate({
+  id: 'gate-a',
+  msg: 'Please submit your information to continue.'
+});
+
+var moduleB = new pathfora.Form({
+  id: 'form-b',
+  layout: 'modal',
+  msg: 'Please submit your information.'
+});
+
+var ab = new pathfora.ABTest({
+  id: 'global-ab-test',
+  type: '50/50',
+  groups: [
+    [moduleA], // modules to be shown to group A (can be left empty to show no modules)
+    [moduleB] // modules to be shown to group B (can be left empty to show no modules)
+  ]
+});
+
+pathfora.initializeABTesting([ab]); // Can define multiple A/B Tests
+pathfora.initializeWidgets([moduleA, moduleB]);
+
+</script>
+
+
+
+</body>
+</html>

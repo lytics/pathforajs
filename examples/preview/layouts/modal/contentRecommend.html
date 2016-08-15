@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+var module = new pathfora.Message({
+  id: 'modal-content-recommend',
+  layout: 'modal',
+  headline: 'Check This Out!',
+  msg: 'Based on your interests we think you will like this content.',
+  variant: 3,
+  recommend: {
+    ql: {
+      raw: 'FILTER AND(url LIKE "www.example.com/blog/*") FROM content'
+    }
+  },
+  content: [
+    {
+      url: 'https://www.getlytics.com/blog/post/know_your_data',
+      title: 'Are You Making the Most of Your First-Party Data?',
+      description: 'Making sense of your first-party data can lead to killer remarketing advantages. Learn more about how the data you collect already can supercharge your ad campaign performance.',
+      image: 'https://www.getlytics.com/img/blog/posts/know_your_data/know_your_data-bg.jpg',
+      default: true
+    }
+  ],
+  cancelShow: false,
+  okShow: false
+});
+
+pathfora.initializeWidgets([module]);
+
+</script>
+
+
+
+</body>
+</html>

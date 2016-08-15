@@ -65,6 +65,11 @@
           
             <li>
     <ul class="subnav">
+    <li><span>Modules</span></li>
+
+        
+            
+    <ul class="subnav">
     <li><span>API Reference</span></li>
 
         
@@ -77,22 +82,15 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../../api/acctid/">Lytics Account ID</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
         <a class="" href="../../api/config/">Generalized Configuration</a>
         
     </li>
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Types</span></li>
 
@@ -136,9 +134,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Layouts</span></li>
 
@@ -172,9 +170,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Customization</span></li>
 
@@ -215,41 +213,73 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../ab_testing/">A/B Testing</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../targeting/">Audience Targeting</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../callbacks/">Callbacks</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../content_recommend/">Content Recommendations</a>
+        
+    </li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../display_conditions/">Display Conditions</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../tracking/">Tracking</a>
         
     </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Inline Personalization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../toggle/">Element Toggle</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../inline_content/">Inline Content Recommendations</a>
+        
+    </li>
+
+        
+    </ul>
 <li>
           
         </ul>
@@ -274,6 +304,10 @@
     
       
         
+          <li>Modules &raquo;</li>
+        
+      
+        
           <li>Types &raquo;</li>
         
       
@@ -289,13 +323,13 @@
             <div class="section">
               
                 <p>Form type modules are used primarily for data collection or user identification. Supporting a variety of form fields and options for passing data to various end-points, this type presents a form for the user to fill out and submit.</p>
-<pre><code class="javascript">var module = pathfora.Form({
+<pre><code class="javascript">var module = new pathfora.Form({
   id: 'my-form-module-id',
   headline: 'My Headline Text',
   msg: 'My message text here.'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 </code></pre>
 
 <h2 id="layout">layout</h2>

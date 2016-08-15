@@ -65,6 +65,11 @@
           
             <li>
     <ul class="subnav">
+    <li><span>Modules</span></li>
+
+        
+            
+    <ul class="subnav">
     <li><span>API Reference</span></li>
 
         
@@ -77,22 +82,15 @@
         
             
     <li class="toctree-l1 ">
-        <a class="" href="../../api/acctid/">Lytics Account ID</a>
-        
-    </li>
-
-        
-            
-    <li class="toctree-l1 ">
         <a class="" href="../../api/config/">Generalized Configuration</a>
         
     </li>
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Types</span></li>
 
@@ -126,9 +124,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Layouts</span></li>
 
@@ -162,9 +160,9 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <ul class="subnav">
     <li><span>Customization</span></li>
 
@@ -224,41 +222,73 @@
 
         
     </ul>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../ab_testing/">A/B Testing</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../targeting/">Audience Targeting</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../callbacks/">Callbacks</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../content_recommend/">Content Recommendations</a>
+        
+    </li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../display_conditions/">Display Conditions</a>
         
     </li>
-<li>
-          
-            <li>
+
+        
+            
     <li class="toctree-l1 ">
         <a class="" href="../../tracking/">Tracking</a>
         
     </li>
+
+        
+    </ul>
+<li>
+          
+            <li>
+    <ul class="subnav">
+    <li><span>Inline Personalization</span></li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../toggle/">Element Toggle</a>
+        
+    </li>
+
+        
+            
+    <li class="toctree-l1 ">
+        <a class="" href="../../inline_content/">Inline Content Recommendations</a>
+        
+    </li>
+
+        
+    </ul>
 <li>
           
         </ul>
@@ -281,6 +311,10 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../..">Docs</a> &raquo;</li>
     
+      
+        
+          <li>Modules &raquo;</li>
+        
       
         
           <li>Customization &raquo;</li>
@@ -382,7 +416,7 @@
 <p>To see these classes in action, you can view the html <a href="https://github.com/lytics/pathforajs/tree/master/src/templates">templates</a> that will be rendered on your website. This is the html that gets minified, and added to a div with the class <code>pf-widget</code>. That div then gets added to the DOM of your website.</p>
 <h2 id="custom-class-name">Custom Class Name</h2>
 <p>All modules use the <code>pf-widget</code> class and thus any styles applied to this class and sub-elements will effect all modules used on the page. If you want to select and style a single module without using its <code>id</code> as a selector, you can add a custom class name to the <code>pf-widget</code> div in your javascript config.</p>
-<pre><code class="javascript">var module = pathfora.Subscription({
+<pre><code class="javascript">var module = new pathfora.Subscription({
   id: 'form-css',
   className: 'sign-up-newsletter',
   layout: 'modal',
@@ -390,7 +424,7 @@
   msg: 'Submit this form to get updates'
 });
 
-pathfora.initializeWidgets([ module ]);
+pathfora.initializeWidgets([module]);
 </code></pre>
 
 <h2 id="example">Example</h2>

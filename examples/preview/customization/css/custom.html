@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pathfora Example</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
+
+<style>
+.pf-widget.pf-twitter-module {
+  background-color: #4a4a4a;
+  color: #fff;
+  border-radius: 0px;
+  box-shadow: none;
+  font-family: Roboto, Arial, 'sans-serif';
+}
+
+/* message paragraph */
+.pf-widget.pf-twitter-module .pf-widget-message {
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* headline */
+.pf-widget.pf-twitter-module .pf-widget-headline {
+  color: #39aec0;
+  font-size: 28px;
+}
+
+/* "x" button */
+.pf-widget.pf-twitter-module .pf-widget-close {
+  color: #39aec0;
+}
+
+/* buttons */
+.pf-widget.pf-twitter-module .pf-widget-btn {
+  border-radius: 0px;
+  padding: 1px 25px;
+}
+
+/* confirm button */
+.pf-widget.pf-twitter-module .pf-widget-btn.pf-widget-ok {
+  background-color: #1b91a7;
+  color: #fff;
+  box-shadow: none;
+}
+
+/* cancel button */
+.pf-widget.pf-twitter-module .pf-widget-btn.pf-widget-cancel {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #6a6a6a;
+}
+
+/* img */
+.pf-widget.pf-twitter-module .pf-widget-img {
+  border-radius: 0px;
+}
+</style>
+
+</head>
+
+<body class="example">
+<h2 class="myElementClass">Pathfora Example</h2>
+
+<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
+
+<script>
+var module = new pathfora.Message({
+  id: 'twitter-module',
+  className: 'pf-twitter-module',
+  layout: 'slideout',
+  headline: 'Thank You!',
+  msg: 'We hope you are enjoying your recent purchase, and we\'d love to hear from you! Send us a tweet and let us know what you think.',
+  okMessage: 'Tweet @ us!',
+  cancelMessage: 'No Thanks',
+  variant: 2,
+  image: '../../../../assets/twitter.png',
+  theme: 'custom',
+  branding: false
+});
+
+pathfora.initializeWidgets([module]);
+
+</script>
+
+
+
+</body>
+</html>
