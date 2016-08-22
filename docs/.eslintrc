@@ -1,0 +1,8 @@
+extends:
+- ../.eslintrc
+globals:
+  hljs: true
+rules:
+  strict: off
+  array-bracket-spacing: off
+  no-console: off

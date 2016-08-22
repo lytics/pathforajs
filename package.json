@@ -26,6 +26,8 @@
     "gulp-open": "^0.3.2",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
+    "gulp-sequence": "^0.4.5",
+    "gulp-series": "^1.0.2",
     "gulp-shell": "^0.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.7",
@@ -40,6 +42,7 @@
     "karma-jasmine-ajax": "^0.1.12",
     "karma-phantomjs-launcher": "^1.0.0",
     "less": "^2.4.0",
+    "lytics-js-styleguide": "^1.0.1",
     "walk": "^2.3.9"
   },
   "scripts": {

@@ -1,10 +1,9 @@
 /* global jstag, ga */
-'use strict';
-
 /**
  * @module Pathfora-API
  */
-(function (context, document) {
+(function(context, document) {
+  'use strict';
   // NOTE Output & processing variables
   var Pathfora, utils, core, api, Inline;
 
@@ -142,7 +141,7 @@
   // NOTE HTML templates
   // FUTURE Move to separate files and concat
   /* eslint-disable indent */
-  var templates = {{templates}};
+  var templates = '{{templates}}';
   /* eslint-enable indent */
 
   // NOTE Event callback types
@@ -161,14 +160,14 @@
    * @description Create an A/B testing object preset from groups list
    * @returns {object} A/B testing object instance
    */
-  var createABTestingModePreset = function () {
+  var createABTestingModePreset = function() {
     var groups = [];
 
     for (var i = 0; i < arguments.length; i++) {
       groups.push(arguments[i]);
     }
 
-    var groupsSum = groups.reduce(function (sum, element) {
+    var groupsSum = groups.reduce(function(sum, element) {
       return sum + element;
     });
 
@@ -176,7 +175,7 @@
     if (groupsSum > 1) {
       var groupsSumRatio = 1 / groupsSum;
 
-      groups = groups.map(function (element) {
+      groups = groups.map(function(element) {
         return element * groupsSumRatio;
       });
     }
@@ -225,9 +224,9 @@
    * @function appendPathforaStylesheet
    * @description Append pathfora stylesheet to document
    */
-  var appendPathforaStylesheet = function () {
-    var head = document.getElementsByTagName('head')[0],
-        link = document.createElement('link');
+  var appendPathforaStylesheet = function() {
+    var head = document.getElementsByTagName('head')[0];
+    var link = document.createElement('link');
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
@@ -248,7 +247,7 @@
      * @param   {object}  DOMNode   DOM element
      * @param   {string}  className class name
      */
-    hasClass: function (DOMNode, className) {
+    hasClass: function(DOMNode, className) {
       return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
     },
 
@@ -257,7 +256,7 @@
      * @param   {object} DOMNode   DOM element
      * @param   {string} className class name(s)
      */
-    addClass: function (DOMNode, className) {
+    addClass: function(DOMNode, className) {
       // NOTE Not necessary, but leaves a clean code after mutations
       this.removeClass(DOMNode, className);
 
@@ -272,7 +271,7 @@
      * @param {object} DOMNode   DOM element
      * @param {string} className class name(s)
      */
-    removeClass: function (DOMNode, className) {
+    removeClass: function(DOMNode, className) {
       var findClassRegexp = new RegExp([
         '(^|\\b)',
         className.split(' ').join('|'),
@@ -287,9 +286,9 @@
      * @param   {string} name cookie name
      * @returns {string} cookie value
      */
-    readCookie: function (name) {
-      var cookies = document.cookie,
-          findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    readCookie: function(name) {
+      var cookies = document.cookie;
+      var findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
       return findCookieRegexp ? findCookieRegexp.pop() : null;
     },
@@ -300,7 +299,7 @@
      * @param {string} value cookie value
      * @param {number} days  days until the cookie expires
      */
-    saveCookie: function (name, value, expiration) {
+    saveCookie: function(name, value, expiration) {
       var expires;
 
       if (expiration) {
@@ -322,11 +321,11 @@
      * @description Generate unique ID
      * @returns {string} unique id
      */
-    generateUniqueId: function () {
+    generateUniqueId: function() {
       var s4;
 
       if (typeof s4 === 'undefined') {
-        s4 = function () {
+        s4 = function() {
           return Math.floor((1 + Math.random()) * 0x10000)
             .toString(16)
             .substring(1);
@@ -350,7 +349,7 @@
      * @description Return the basic object required for targetting
      * @returns {obj}
      */
-    initWidgetScaffold: function () {
+    initWidgetScaffold: function() {
       return {
         target: [],
         exclude: [],
@@ -365,10 +364,10 @@
      * @param {obj} widget
      * @throws {Error} error
      */
-    insertWidget: function (method, segment, widget, config) {
+    insertWidget: function(method, segment, widget, config) {
       // assume that we need to add a new widget until proved otherwise
-      var subject,
-          makeNew = true;
+      var subject;
+      var makeNew = true;
 
       // make sure our scaffold is valid
       if (!config.target) {
@@ -401,7 +400,7 @@
       if (makeNew) {
         subject.push({
           'segment': segment,
-          'widgets': [widget]
+          'widgets': [ widget ]
         });
       }
     },
@@ -414,32 +413,32 @@
      * @param   {boolean} options.keepEscaped  do not double-encode text
      * @returns {string}  uri                  the uri-escaped text
      */
-    escapeURI: function (text, options) {
+    escapeURI: function(text, options) {
       // NOTE This was ported from various bits of C++ code from Chromium
       options || (options = {});
 
-      var length = text.length,
-          escaped = [],
-          usePlus = options.usePlus || false,
-          keepEscaped = options.keepEscaped || false;
+      var length = text.length;
+      var escaped = [];
+      var usePlus = options.usePlus || false;
+      var keepEscaped = options.keepEscaped || false;
 
-      function isHexDigit (c) {
+      function isHexDigit(c) {
         return /[0-9A-Fa-f]/.test(c);
       }
 
-      function toHexDigit (i) {
+      function toHexDigit(i) {
         return '0123456789ABCDEF'[i];
       }
 
-      function containsChar (charMap, charCode) {
+      function containsChar(charMap, charCode) {
         return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
       }
 
-      function isURISeparator (c) {
-        return ['#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '='].indexOf(c) !== -1;
+      function isURISeparator(c) {
+        return [ '#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '=' ].indexOf(c) !== -1;
       }
 
-      function shouldEscape (charText) {
+      function shouldEscape(charText) {
         return !isURISeparator(charText) && containsChar([
           0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
           0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
@@ -447,8 +446,8 @@
       }
 
       for (var index = 0; index < length; index++) {
-        var charText = text[index],
-            charCode = text.charCodeAt(index);
+        var charText = text[index];
+        var charCode = text.charCodeAt(index);
 
         if (usePlus && charText === ' ') {
           escaped.push('+');
@@ -488,9 +487,9 @@
      *              or register a handler for displaying it later
      * @param {object} widget
      */
-    initializeWidget: function (widget) {
-      var watcher,
-          condition = widget.displayConditions;
+    initializeWidget: function(widget) {
+      var watcher;
+      var condition = widget.displayConditions;
 
       core.valid = true;
 
@@ -552,10 +551,9 @@
      *              when user is scrolling the page
      * @param {array} watchers
      */
-    initializeScrollWatchers: function (watchers, widget) {
+    initializeScrollWatchers: function(watchers, widget) {
       if (!core.scrollListener) {
-
-        core.scrollListener = function () {
+        core.scrollListener = function() {
           var valid;
 
           for (var key in watchers) {
@@ -587,9 +585,9 @@
      * @description Parse url queries as an object
      * @param {string} url
      */
-    parseQuery: function (url) {
-      var query = {},
-          pieces = utils.escapeURI(url, { keepEscaped: true }).split('?');
+    parseQuery: function(url) {
+      var query = {};
+      var pieces = utils.escapeURI(url, { keepEscaped: true }).split('?');
 
       if (pieces.length > 1) {
         pieces = pieces[1].split('&');
@@ -617,16 +615,16 @@
      * @param {obj} matchQueries
      * @param {string} rule
      */
-    compareQueries: function (query, matchQuery, rule) {
+    compareQueries: function(query, matchQuery, rule) {
       switch (rule) {
-      case 'exact':
-        if (Object.keys(matchQuery).length !== Object.keys(query).length) {
-          return false;
-        }
-        break;
+        case 'exact':
+          if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+            return false;
+          }
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
 
       for (var key in matchQuery) {
@@ -638,73 +636,76 @@
       return true;
     },
 
-    urlChecker: function (phrases) {
-      var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
-          simpleurl = window.location.hostname + window.location.pathname,
-          queries = core.parseQuery(url),
-          valid = false;
+    urlChecker: function(phrases) {
+      var url = utils.escapeURI(window.location.href, { keepEscaped: true });
+      var simpleurl = window.location.hostname + window.location.pathname;
+      var queries = core.parseQuery(url);
+      var valid = false;
 
       if (!(phrases instanceof Array)) {
-        phrases = Object.keys(phrases).map(function (key) {
+        phrases = Object.keys(phrases).map(function(key) {
           return phrases[key];
         });
       }
 
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
-        phrases.forEach(function (phrase) {
-
+        phrases.forEach(function(phrase) {
           // legacy match allows for an array of strings, check if we are legacy or current object approach
           switch (typeof phrase) {
-          case 'string':
-            if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
-              valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
-            }
-            break;
+            case 'string':
+              if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+                valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
+              }
+              break;
 
-          case 'object':
-            if (phrase.match && phrase.value) {
-              var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+            case 'object':
+              if (phrase.match && phrase.value) {
+                var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
 
-              switch (phrase.match) {
+                switch (phrase.match) {
               // simple match
-              case 'simple':
-                if (simpleurl === phrase.value) {
-                  valid = true;
-                }
-                break;
+                  case 'simple':
+                    if (simpleurl === phrase.value) {
+                      valid = true;
+                    }
+                    break;
 
               // exact match
-              case 'exact':
-                if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                }
-                break;
+                  case 'exact':
+                    if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
+                    }
+                    break;
 
               // regex
-              case 'regex':
-                var re = new RegExp(phrase.value);
+                  case 'regex':
+                    var re = new RegExp(phrase.value);
 
-                if (re.test(url)) {
-                  valid = true;
-                }
-                break;
+                    if (re.test(url)) {
+                      valid = true;
+                    }
+                    break;
 
               // string match (default)
-              default:
-                if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
+                  default:
+                    if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+                      valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
+                    }
+                    break;
                 }
-                break;
+              } else {
+                /* eslint-disable no-console */
+                console.log('invalid display conditions');
+                /* eslint-enable no-console */
               }
-            } else {
-              console.log('invalid display conditions');
-            }
-            break;
+              break;
 
-          default:
-            console.log('invalid display conditions');
-            break;
+            default:
+              /* eslint-disable no-console */
+              console.log('invalid display conditions');
+              /* eslint-enable no-console */
+              break;
           }
         });
       } else {
@@ -714,13 +715,13 @@
       return valid;
     },
 
-    pageVisitsChecker: function (pageVisitsRequired) {
+    pageVisitsChecker: function(pageVisitsRequired) {
       return (core.pageViews >= pageVisitsRequired);
     },
 
-    dateChecker: function (date) {
-      var valid = true,
-          today = Date.now();
+    dateChecker: function(date) {
+      var valid = true;
+      var today = Date.now();
 
       if (date.start_at && today < new Date(date.start_at).getTime()) {
         valid = false;
@@ -733,13 +734,13 @@
       return valid;
     },
 
-    impressionsChecker: function (impressionConstraints, widget) {
-      var parts, totalImpressions,
-          valid = true,
-          id = 'PathforaImpressions_' + widget.id,
-          sessionImpressions = ~~sessionStorage.getItem(id),
-          total = utils.readCookie(id),
-          now = Date.now();
+    impressionsChecker: function(impressionConstraints, widget) {
+      var parts, totalImpressions;
+      var valid = true;
+      var id = 'PathforaImpressions_' + widget.id;
+      var sessionImpressions = ~~sessionStorage.getItem(id);
+      var total = utils.readCookie(id);
+      var now = Date.now();
 
       if (!sessionImpressions) {
         sessionImpressions = 1;
@@ -764,7 +765,6 @@
         valid = false;
       }
 
-
       if (valid && core.valid) {
         sessionStorage.setItem(id, sessionImpressions);
         utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
@@ -773,13 +773,13 @@
       return valid;
     },
 
-    hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
-      var parts,
-          valid = true,
-          now = Date.now(),
-          confirm = utils.readCookie('PathforaConfirm_' + widget.id),
-          cancel = utils.readCookie('PathforaCancel_' + widget.id),
-          closed = utils.readCookie('PathforaClosed_' + widget.id);
+    hideAfterActionChecker: function(hideAfterActionConstraints, widget) {
+      var parts;
+      var valid = true;
+      var now = Date.now();
+      var confirm = utils.readCookie('PathforaConfirm_' + widget.id);
+      var cancel = utils.readCookie('PathforaCancel_' + widget.id);
+      var closed = utils.readCookie('PathforaClosed_' + widget.id);
 
       if (hideAfterActionConstraints.confirm && confirm) {
         parts = confirm.split('|');
@@ -830,8 +830,8 @@
      * @description Take array of watchers and clear it
      * @param {array} watchers
      */
-    removeScrollWatchers: function (watchers) {
-      watchers.forEach(function (watcher) {
+    removeScrollWatchers: function(watchers) {
+      watchers.forEach(function(watcher) {
         core.removeWatcher(watcher);
       });
 
@@ -842,8 +842,8 @@
      * @description Register a time-tiggered widget
      * @param {object} widget
      */
-    registerDelayedWidget: function (widget) {
-      this.delayedWidgets[widget.id] = setTimeout(function () {
+    registerDelayedWidget: function(widget) {
+      this.delayedWidgets[widget.id] = setTimeout(function() {
         core.initializeWidget(widget);
       }, widget.displayConditions.showDelay * 1000);
     },
@@ -852,7 +852,7 @@
      * @description Prevent timely delayed widget from initialization
      * @param {object} widget
      */
-    cancelDelayedWidget: function (widget) {
+    cancelDelayedWidget: function(widget) {
       var delayObj = this.delayedWidgets[widget.id];
 
       if (delayObj) {
@@ -868,11 +868,11 @@
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
      */
-    registerPositionWatcher: function (percent) {
+    registerPositionWatcher: function(percent) {
       var watcher = {
-        check: function () {
-          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
-              offset = document.documentElement.scrollTop || document.body.scrollTop;
+        check: function() {
+          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100;
+          var offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
             core.removeWatcher(watcher);
             return true;
@@ -891,13 +891,13 @@
      * @returns {object} object, containing onscroll callback function 'check', and
      *                   triggering element reference 'elem'
      */
-    registerElementWatcher: function (selector) {
+    registerElementWatcher: function(selector) {
       var watcher = {
         elem: document.querySelector(selector),
 
-        check: function () {
-          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
-              scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+        check: function() {
+          var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+          var scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
 
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
             core.removeWatcher(watcher);
@@ -914,7 +914,7 @@
      * @description Unassign a watcher
      * @param {object} watcher
      */
-    removeWatcher: function (watcher) {
+    removeWatcher: function(watcher) {
       for (var key in core.watchers) {
         if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
           core.watchers.splice(key, 1);
@@ -928,15 +928,15 @@
      * @param {object} widget
      * @param {object} config
      */
-    constructWidgetLayout: function (widget, config) {
-      var node, child, i,
-          widgetContent = widget.querySelector('.pf-widget-content'),
-          widgetCancel = widget.querySelector('.pf-widget-cancel'),
-          widgetOk = widget.querySelector('.pf-widget-ok'),
-          widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
-          widgetBody = widget.querySelector('.pf-widget-body'),
-          widgetMessage = widget.querySelector('.pf-widget-message'),
-          widgetClose = widget.querySelector('.pf-widget-close');
+    constructWidgetLayout: function(widget, config) {
+      var node, child, i;
+      var widgetContent = widget.querySelector('.pf-widget-content');
+      var widgetCancel = widget.querySelector('.pf-widget-cancel');
+      var widgetOk = widget.querySelector('.pf-widget-ok');
+      var widgetHeadline = widget.querySelectorAll('.pf-widget-headline');
+      var widgetBody = widget.querySelector('.pf-widget-body');
+      var widgetMessage = widget.querySelector('.pf-widget-message');
+      var widgetClose = widget.querySelector('.pf-widget-close');
 
       if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
         node = widgetCancel;
@@ -979,84 +979,84 @@
       }
 
       switch (config.layout) {
-      case 'modal':
-      case 'slideout':
-      case 'sitegate':
-        if (widgetContent && config.branding) {
-          var branding = document.createElement('div');
-          branding.className = 'branding';
-          branding.innerHTML = templates.assets.lytics;
-          widgetContent.appendChild(branding);
-        }
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+          if (widgetContent && config.branding) {
+            var branding = document.createElement('div');
+            branding.className = 'branding';
+            branding.innerHTML = templates.assets.lytics;
+            widgetContent.appendChild(branding);
+          }
 
-        break;
+          break;
       }
 
       switch (config.type) {
-      case 'form':
-        switch (config.layout) {
-        case 'folding':
-        case 'modal':
-        case 'slideout':
-        case 'random':
-        case 'inline':
-          break;
-        default:
-          throw new Error('Invalid widget layout value');
-        }
-        break;
-      case 'subscription':
-        switch (config.layout) {
-        case 'folding':
-        case 'modal':
-        case 'bar':
-        case 'slideout':
-        case 'random':
-        case 'inline':
-          break;
-        default:
-          throw new Error('Invalid widget layout value');
-        }
-        break;
-      case 'message':
-        switch (config.layout) {
-        case 'modal':
-        case 'slideout':
-          break;
-        case 'random':
-        case 'bar':
-        case 'button':
-        case 'inline':
-          break;
-        default:
-          throw new Error('Invalid widget layout value');
-        }
-        break;
-      case 'sitegate':
-        switch (config.layout) {
-        case 'modal':
-        case 'inline':
-          if (config.showForm === false) {
-            node = widget.querySelector('form');
-            child = node.querySelectorAll('input, select, textarea');
-
-            if (node) {
-              for (i = 0; i < child.length; i++) {
-                node.removeChild(child[i]);
-              }
-
-              child = node.querySelector('.pf-sitegate-clear');
-
-              if (child) {
-                node.removeChild(child);
-              }
-            }
+        case 'form':
+          switch (config.layout) {
+            case 'folding':
+            case 'modal':
+            case 'slideout':
+            case 'random':
+            case 'inline':
+              break;
+            default:
+              throw new Error('Invalid widget layout value');
           }
           break;
-        default:
-          throw new Error('Invalid widget layout value');
-        }
-        break;
+        case 'subscription':
+          switch (config.layout) {
+            case 'folding':
+            case 'modal':
+            case 'bar':
+            case 'slideout':
+            case 'random':
+            case 'inline':
+              break;
+            default:
+              throw new Error('Invalid widget layout value');
+          }
+          break;
+        case 'message':
+          switch (config.layout) {
+            case 'modal':
+            case 'slideout':
+              break;
+            case 'random':
+            case 'bar':
+            case 'button':
+            case 'inline':
+              break;
+            default:
+              throw new Error('Invalid widget layout value');
+          }
+          break;
+        case 'sitegate':
+          switch (config.layout) {
+            case 'modal':
+            case 'inline':
+              if (config.showForm === false) {
+                node = widget.querySelector('form');
+                child = node.querySelectorAll('input, select, textarea');
+
+                if (node) {
+                  for (i = 0; i < child.length; i++) {
+                    node.removeChild(child[i]);
+                  }
+
+                  child = node.querySelector('.pf-sitegate-clear');
+
+                  if (child) {
+                    node.removeChild(child);
+                  }
+                }
+              }
+              break;
+            default:
+              throw new Error('Invalid widget layout value');
+          }
+          break;
       }
 
       // NOTE Set The headline
@@ -1077,92 +1077,92 @@
       }
 
       switch (config.type) {
-      case 'sitegate':
-      case 'form':
-        if (config.showSocialLogin === false) {
-          node = widget.querySelector('.pf-social-login');
+        case 'sitegate':
+        case 'form':
+          if (config.showSocialLogin === false) {
+            node = widget.querySelector('.pf-social-login');
 
-          if (node && node.parentNode) {
-            node.parentNode.removeChild(node);
-          }
-        }
-
-        var getFormElement = function (field) {
-          if (field === 'name') {
-            return widget.querySelector('input[name="username"]');
-          }
-
-          return widget.querySelector('form [name="' + field + '"]');
-        };
-
-        // Set placeholders
-        Object.keys(config.placeholders).forEach(function (field) {
-          var element = getFormElement(field);
-
-          if (element && typeof element.placeholder !== 'undefined') {
-            element.placeholder = config.placeholders[field];
-          } else if (element && typeof element.options !== 'undefined') {
-            element.options[0].innerHTML = config.placeholders[field];
-          }
-        });
-
-        // Set required Fields
-        Object.keys(config.required).forEach(function (field) {
-          var element = getFormElement(field);
-
-          if (element && config.required[field]) {
-            element.setAttribute('required', '');
-          }
-        });
-
-        // Hide fields
-        Object.keys(config.fields).forEach(function (field) {
-          var parent, prev, next,
-              element = getFormElement(field);
-
-          if (element && !config.fields[field]) {
-            parent = element.parentNode;
-            prev = element.previousElementSibling;
-            next = element.nextElementSibling;
-
-            if (parent) {
-              // NOTE: collapse half-width inputs
-              if (element.className.indexOf('pf-field-half-width') !== -1) {
-                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(prev, 'pf-field-half-width');
-                }
-
-                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(next, 'pf-field-half-width');
-                }
-              }
-
-              parent.removeChild(element);
+            if (node && node.parentNode) {
+              node.parentNode.removeChild(node);
             }
           }
-        });
+
+          var getFormElement = function(field) {
+            if (field === 'name') {
+              return widget.querySelector('input[name="username"]');
+            }
+
+            return widget.querySelector('form [name="' + field + '"]');
+          };
+
+        // Set placeholders
+          Object.keys(config.placeholders).forEach(function(field) {
+            var element = getFormElement(field);
+
+            if (element && typeof element.placeholder !== 'undefined') {
+              element.placeholder = config.placeholders[field];
+            } else if (element && typeof element.options !== 'undefined') {
+              element.options[0].innerHTML = config.placeholders[field];
+            }
+          });
+
+        // Set required Fields
+          Object.keys(config.required).forEach(function(field) {
+            var element = getFormElement(field);
+
+            if (element && config.required[field]) {
+              element.setAttribute('required', '');
+            }
+          });
+
+        // Hide fields
+          Object.keys(config.fields).forEach(function(field) {
+            var parent, prev, next;
+            var element = getFormElement(field);
+
+            if (element && !config.fields[field]) {
+              parent = element.parentNode;
+              prev = element.previousElementSibling;
+              next = element.nextElementSibling;
+
+              if (parent) {
+              // NOTE: collapse half-width inputs
+                if (element.className.indexOf('pf-field-half-width') !== -1) {
+                  if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
+                    utils.removeClass(prev, 'pf-field-half-width');
+                  }
+
+                  if (next && next.className.indexOf('pf-field-half-width') !== -1) {
+                    utils.removeClass(next, 'pf-field-half-width');
+                  }
+                }
+
+                parent.removeChild(element);
+              }
+            }
+          });
 
         // For select boxes we need to control the color of
         // the placeholder text
-        var selects = widget.querySelectorAll('select');
+          var selects = widget.querySelectorAll('select');
 
-        for (i = 0; i < selects.length; i++) {
+          for (i = 0; i < selects.length; i++) {
           // default class indicates the placeholder text color
-          utils.addClass(selects[i], 'default');
+            utils.addClass(selects[i], 'default');
 
-          selects[i].onchange = function () {
-            if (this.selectedIndex !== 0) {
-              utils.removeClass(this, 'default');
-            } else {
-              utils.addClass(this, 'default');
-            }
-          };
-        }
+            selects[i].onchange = function() {
+              if (this.selectedIndex !== 0) {
+                utils.removeClass(this, 'default');
+              } else {
+                utils.addClass(this, 'default');
+              }
+            };
+          }
 
-        break;
-      case 'subscription':
-        widget.querySelector('input').placeholder = config.placeholders.email;
-        break;
+          break;
+        case 'subscription':
+          widget.querySelector('input').placeholder = config.placeholders.email;
+          break;
       }
 
       if (config.msg) {
@@ -1175,159 +1175,159 @@
      * @param {object} widget
      * @param {object} config
      */
-    constructWidgetActions: function (widget, config) {
-      var widgetOnModalClose, updateActionCookie, widgetOnButtonClick,
-          widgetOk = widget.querySelector('.pf-widget-ok');
+    constructWidgetActions: function(widget, config) {
+      var widgetOnModalClose, updateActionCookie, widgetOnButtonClick;
+      var widgetOk = widget.querySelector('.pf-widget-ok');
 
       switch (config.type) {
-      case 'form':
-      case 'sitegate':
-      case 'subscription':
-        var widgetForm = widget.querySelector('form');
+        case 'form':
+        case 'sitegate':
+        case 'subscription':
+          var widgetForm = widget.querySelector('form');
 
-        var widgetOnFormSubmit = function (event) {
-          var widgetAction;
-          event.preventDefault();
+          var widgetOnFormSubmit = function(event) {
+            var widgetAction;
+            event.preventDefault();
 
-          switch (config.type) {
-          case 'form':
-            widgetAction = 'submit';
-            break;
-          case 'subscription':
-            widgetAction = 'subscribe';
-            break;
-          case 'sitegate':
-            widgetAction = 'unlock';
-            break;
-          }
+            switch (config.type) {
+              case 'form':
+                widgetAction = 'submit';
+                break;
+              case 'subscription':
+                widgetAction = 'subscribe';
+                break;
+              case 'sitegate':
+                widgetAction = 'unlock';
+                break;
+            }
 
-          if (widgetAction) {
-            core.trackWidgetAction(widgetAction, config, event.target);
-          }
+            if (widgetAction) {
+              core.trackWidgetAction(widgetAction, config, event.target);
+            }
 
-          if (typeof config.onSubmit === 'function') {
-            config.onSubmit(callbackTypes.FORM_SUBMIT, {
-              widget: widget,
-              event: event,
-              data: Array.prototype.slice.call(
+            if (typeof config.onSubmit === 'function') {
+              config.onSubmit(callbackTypes.FORM_SUBMIT, {
+                widget: widget,
+                event: event,
+                data: Array.prototype.slice.call(
                 widgetForm.querySelectorAll('input, textarea, select')
-              ).map(function (element) {
+              ).map(function(element) {
                 return {
                   name: element.name || element.id,
                   value: element.value
                 };
               })
-            });
-          }
-        };
+              });
+            }
+          };
 
-        if (widgetForm.addEventListener) {
-          widgetForm.addEventListener('submit', widgetOnFormSubmit);
-        } else {
-          widgetForm.attachEvent('submit', widgetOnFormSubmit);
-        }
-        break;
+          if (widgetForm.addEventListener) {
+            widgetForm.addEventListener('submit', widgetOnFormSubmit);
+          } else {
+            widgetForm.attachEvent('submit', widgetOnFormSubmit);
+          }
+          break;
       }
 
       switch (config.layout) {
-      case 'folding':
-        var widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left'),
-            widgetFirstCaption = widget.querySelector('.pf-widget-caption');
+        case 'folding':
+          var widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left');
+          var widgetFirstCaption = widget.querySelector('.pf-widget-caption');
 
-        if (config.position !== 'left') {
-          setTimeout(function () {
-            var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
-            widget.style.bottom = -height + 'px';
-          }, 0);
-        }
+          if (config.position !== 'left') {
+            setTimeout(function() {
+              var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
+              widget.style.bottom = -height + 'px';
+            }, 0);
+          }
 
-        for (var i = widgetAllCaptions.length - 1; i >= 0; i--) {
-          widgetAllCaptions[i].onclick = function () {
-            if (utils.hasClass(widget, 'opened')) {
-              utils.removeClass(widget, 'opened');
-            } else {
-              utils.addClass(widget, 'opened');
+          for (var i = widgetAllCaptions.length - 1; i >= 0; i--) {
+            widgetAllCaptions[i].onclick = function() {
+              if (utils.hasClass(widget, 'opened')) {
+                utils.removeClass(widget, 'opened');
+              } else {
+                utils.addClass(widget, 'opened');
+              }
+            };
+          }
+          break;
+
+        case 'button':
+          if (typeof config.onClick === 'function') {
+            widgetOnButtonClick = function(event) {
+              config.onClick(callbackTypes.CLICK, {
+                widget: widget,
+                event: event
+              });
+            };
+          }
+          break;
+
+        case 'modal':
+        case 'slideout':
+        case 'bar':
+        case 'inline':
+          var widgetCancel = widget.querySelector('.pf-widget-cancel');
+          var widgetClose = widget.querySelector('.pf-widget-close');
+
+          widgetOnModalClose = function(event) {
+            if (typeof config.onModalClose === 'function') {
+              config.onModalClose(callbackTypes.MODAL_CLOSE, {
+                widget: widget,
+                event: event
+              });
             }
           };
-        }
-        break;
 
-      case 'button':
-        if (typeof config.onClick === 'function') {
-          widgetOnButtonClick = function (event) {
-            config.onClick(callbackTypes.CLICK, {
-              widget: widget,
-              event: event
-            });
-          };
-        }
-        break;
+          updateActionCookie = function(name) {
+            var ct;
+            var val = utils.readCookie(name);
+            var duration = Date.now();
 
-      case 'modal':
-      case 'slideout':
-      case 'bar':
-      case 'inline':
-        var widgetCancel = widget.querySelector('.pf-widget-cancel'),
-            widgetClose = widget.querySelector('.pf-widget-close');
-
-        widgetOnModalClose = function (event) {
-          if (typeof config.onModalClose === 'function') {
-            config.onModalClose(callbackTypes.MODAL_CLOSE, {
-              widget: widget,
-              event: event
-            });
-          }
-        };
-
-        updateActionCookie = function (name) {
-          var ct,
-              val = utils.readCookie(name),
-              duration = Date.now();
-
-          if (val) {
-            val = val.split('|');
+            if (val) {
+              val = val.split('|');
             // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-            val = val.length === 1 ? val.split(',') : val;
-            ct = Math.min(parseInt(val[0], 10), 9998) + 1;
-          } else {
-            ct = 1;
-          }
+              val = val.length === 1 ? val.split(',') : val;
+              ct = Math.min(parseInt(val[0], 10), 9998) + 1;
+            } else {
+              ct = 1;
+            }
 
-          utils.saveCookie(name, ct + '|' + duration, core.expiration);
-        };
-
-        if (widgetClose) {
-          widgetClose.onclick = function (event) {
-            context.pathfora.closeWidget(widget.id);
-            updateActionCookie('PathforaClosed_' + widget.id);
-            widgetOnModalClose(event);
+            utils.saveCookie(name, ct + '|' + duration, core.expiration);
           };
-        }
 
-        if (widgetCancel) {
-          if (typeof config.cancelAction === 'object') {
-            widgetCancel.onclick = function (event) {
-              core.trackWidgetAction('cancel', config);
-              if (typeof config.cancelAction.callback === 'function') {
-                config.cancelAction.callback();
-              }
-              updateActionCookie('PathforaCancel_' + widget.id);
-              widgetOnModalClose(event);
-            };
-          } else {
-            widgetCancel.onclick = function (event) {
-              core.trackWidgetAction('cancel', config);
-              updateActionCookie('PathforaCancel_' + widget.id);
+          if (widgetClose) {
+            widgetClose.onclick = function(event) {
+              context.pathfora.closeWidget(widget.id);
+              updateActionCookie('PathforaClosed_' + widget.id);
               widgetOnModalClose(event);
             };
           }
-        }
-      default:
-        break;
+
+          if (widgetCancel) {
+            if (typeof config.cancelAction === 'object') {
+              widgetCancel.onclick = function(event) {
+                core.trackWidgetAction('cancel', config);
+                if (typeof config.cancelAction.callback === 'function') {
+                  config.cancelAction.callback();
+                }
+                updateActionCookie('PathforaCancel_' + widget.id);
+                widgetOnModalClose(event);
+              };
+            } else {
+              widgetCancel.onclick = function(event) {
+                core.trackWidgetAction('cancel', config);
+                updateActionCookie('PathforaCancel_' + widget.id);
+                widgetOnModalClose(event);
+              };
+            }
+          }
+        default:
+          break;
       }
 
       if (typeof config.confirmAction === 'object') {
-        widgetOk.onclick = function () {
+        widgetOk.onclick = function() {
           core.trackWidgetAction('confirm', config);
           if (typeof updateActionCookie === 'function') {
             updateActionCookie('PathforaConfirm_' + widget.id);
@@ -1347,7 +1347,7 @@
           }
         };
       } else if (config.type === 'message') {
-        widgetOk.onclick = function () {
+        widgetOk.onclick = function() {
           core.trackWidgetAction('confirm', config);
           if (typeof updateActionCookie === 'function') {
             updateActionCookie('PathforaConfirm_' + widget.id);
@@ -1360,12 +1360,12 @@
           }
         };
       } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
-        widgetOk.onclick = function () {
+        widgetOk.onclick = function() {
           var valid = true;
 
           Array.prototype.slice.call(
             widget.querySelectorAll('input, textarea, select')
-          ).forEach(function (inputField) {
+          ).forEach(function(inputField) {
             if (inputField.hasAttribute('required') && !inputField.value) {
               valid = false;
             }
@@ -1392,7 +1392,7 @@
      * @param {object} widget
      * @param {object} config
      */
-    setupWidgetColors: function (widget, config) {
+    setupWidgetColors: function(widget, config) {
       if (config.theme) {
         if (config.theme === 'custom') {
           if (config.colors) {
@@ -1409,7 +1409,7 @@
      * @param {object} widget
      * @param {object} config
      */
-    setWidgetClassname: function (widget, config) {
+    setWidgetClassname: function(widget, config) {
       widget.className = [
         'pf-widget ',
         'pf-' + config.type,
@@ -1430,20 +1430,19 @@
      * @param {object} widget
      * @param {object} config
      */
-    setupWidgetContentUnit: function (widget, config) {
+    setupWidgetContentUnit: function(widget, config) {
       var widgetContentUnit = widget.querySelector('.pf-content-unit');
 
       if (config.recommend && config.content) {
         // Make sure we have content to get
         if (Object.keys(config.content).length > 0) {
-
           // The top recommendation should be default if we couldn't
           // get one from the api
-          var rec = config.content[0],
-              recImage = document.createElement('div'),
-              recMeta = document.createElement('div'),
-              recTitle = document.createElement('h4'),
-              recDesc = document.createElement('p');
+          var rec = config.content[0];
+          var recImage = document.createElement('div');
+          var recMeta = document.createElement('div');
+          var recTitle = document.createElement('h4');
+          var recDesc = document.createElement('p');
 
           widgetContentUnit.href = rec.url;
 
@@ -1472,28 +1471,28 @@
      * @param   {object}   widget
      * @param   {object}   config
      */
-    validateWidgetPosition: function (widget, config) {
+    validateWidgetPosition: function(widget, config) {
       var choices;
 
       switch (config.layout) {
-      case 'modal':
-        choices = [''];
-        break;
-      case 'slideout':
-        choices = ['bottom-left', 'bottom-right'];
-        break;
-      case 'bar':
-        choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
-        break;
-      case 'button':
-        choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
-        break;
-      case 'folding':
-        choices = ['left', 'bottom-left', 'bottom-right'];
-        break;
-      case 'inline':
-        choices = [];
-        break;
+        case 'modal':
+          choices = [ '' ];
+          break;
+        case 'slideout':
+          choices = [ 'bottom-left', 'bottom-right' ];
+          break;
+        case 'bar':
+          choices = [ 'top-absolute', 'top-fixed', 'bottom-fixed' ];
+          break;
+        case 'button':
+          choices = [ 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right' ];
+          break;
+        case 'folding':
+          choices = [ 'left', 'bottom-left', 'bottom-right' ];
+          break;
+        case 'inline':
+          choices = [];
+          break;
       }
 
       if (choices.indexOf(config.position) === -1) {
@@ -1506,7 +1505,7 @@
      * @param {object} widget
      * @param {object} config
      */
-    setupWidgetPosition: function (widget, config) {
+    setupWidgetPosition: function(widget, config) {
       if (config.position) {
         this.validateWidgetPosition(widget, config);
       } else {
@@ -1519,7 +1518,7 @@
      * @param   {object} config
      * @returns {object} widget DOM element
      */
-    createWidgetHtml: function (config) {
+    createWidgetHtml: function(config) {
       var widget = document.createElement('div');
 
       widget.innerHTML = templates[config.type][config.layout] || '';
@@ -1540,8 +1539,8 @@
     /**
      * @description Track time spent on page
      */
-    trackTimeOnPage: function () {
-      core.tickHandler = setInterval(function () {
+    trackTimeOnPage: function() {
+      core.tickHandler = setInterval(function() {
         pathforaDataObject.timeSpentOnPage += 1;
       }, 1000);
     },
@@ -1550,7 +1549,7 @@
      * @description Determine whether the user visited the site before (set the cookie)
      * @returns {boolean}
      */
-    checkIfUserJustEntered: function () {
+    checkIfUserJustEntered: function() {
       if (!utils.readCookie('PathforaInit')) {
         utils.saveCookie('PathforaInit', true, core.expiration);
         return true;
@@ -1563,19 +1562,19 @@
      * @param {object} widget
      * @param {object} colors custom theme
      */
-    setCustomColors: function (widget, colors) {
-      var close = widget.querySelector('.pf-widget-close'),
-          headline = widget.querySelector('.pf-widget-headline'),
-          headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
-          cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
-          okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
-          arrow = widget.querySelector('.pf-widget-caption span'),
-          arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
-          contentUnit = widget.querySelector('.pf-content-unit'),
-          contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
-          fields = widget.querySelectorAll('input, textarea, select'),
-          branding = widget.querySelector('.branding svg'),
-          socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
+    setCustomColors: function(widget, colors) {
+      var close = widget.querySelector('.pf-widget-close');
+      var headline = widget.querySelector('.pf-widget-headline');
+      var headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline');
+      var cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel');
+      var okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok');
+      var arrow = widget.querySelector('.pf-widget-caption span');
+      var arrowLeft = widget.querySelector('.pf-widget-caption-left span');
+      var contentUnit = widget.querySelector('.pf-content-unit');
+      var contentUnitMeta = widget.querySelector('.pf-content-unit-meta');
+      var fields = widget.querySelectorAll('input, textarea, select');
+      var branding = widget.querySelector('.branding svg');
+      var socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
 
       if (colors.background) {
         if (utils.hasClass(widget, 'pf-widget-modal')) {
@@ -1651,8 +1650,7 @@
         branding.style.fill = colors.text;
       }
 
-
-      socialBtns.forEach(function (btn) {
+      socialBtns.forEach(function(btn) {
         if (colors.actionText) {
           btn.style.color = colors.actionText;
         }
@@ -1672,9 +1670,9 @@
      * @param {object}  widget      related widget
      * @param {Element} htmlElement related DOM element
      */
-    trackWidgetAction: function (action, widget, htmlElement) {
-      var child, childName, elem,
-          valid = true;
+    trackWidgetAction: function(action, widget, htmlElement) {
+      var child, childName, elem;
+      var valid = true;
 
       var params = {
         'pf-widget-id': widget.id,
@@ -1684,51 +1682,51 @@
       };
 
       switch (action) {
-      case 'show':
-        pathforaDataObject.displayedWidgets.push(params);
-        break;
-      case 'close':
-        pathforaDataObject.closedWidgets.push(params);
-        break;
-      case 'confirm':
-        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
-        pathforaDataObject.completedActions.push(params);
-        break;
-      case 'cancel':
-        params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
-        pathforaDataObject.cancelledActions.push(params);
-        break;
-      case 'submit':
-        for (elem in htmlElement.children) {
-          if (htmlElement.children.hasOwnProperty(elem)) {
-            child = htmlElement.children[elem];
-            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
-              childName = child.getAttribute('name');
-              params['pf-form-' + childName] = child.value;
+        case 'show':
+          pathforaDataObject.displayedWidgets.push(params);
+          break;
+        case 'close':
+          pathforaDataObject.closedWidgets.push(params);
+          break;
+        case 'confirm':
+          params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
+          pathforaDataObject.completedActions.push(params);
+          break;
+        case 'cancel':
+          params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
+          pathforaDataObject.cancelledActions.push(params);
+          break;
+        case 'submit':
+          for (elem in htmlElement.children) {
+            if (htmlElement.children.hasOwnProperty(elem)) {
+              child = htmlElement.children[elem];
+              if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+                childName = child.getAttribute('name');
+                params['pf-form-' + childName] = child.value;
+              }
             }
           }
-        }
-        break;
-      case 'subscribe':
-        params['pf-form-email'] = htmlElement.elements.email.value;
-        break;
-      case 'unlock':
-        for (elem in htmlElement.children) {
-          if (htmlElement.children.hasOwnProperty(elem)) {
-            child = htmlElement.children[elem];
-            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
-              childName = child.getAttribute('name');
-              params['pf-form-' + childName] = child.value;
-            }
+          break;
+        case 'subscribe':
+          params['pf-form-email'] = htmlElement.elements.email.value;
+          break;
+        case 'unlock':
+          for (elem in htmlElement.children) {
+            if (htmlElement.children.hasOwnProperty(elem)) {
+              child = htmlElement.children[elem];
+              if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+                childName = child.getAttribute('name');
+                params['pf-form-' + childName] = child.value;
+              }
 
-            if (typeof child.hasAttribute !== 'undefined' && child.hasAttribute('required') && !params['pf-form-' + childName]) {
-              child.setAttribute('invalid', '');
-              valid = false;
+              if (typeof child.hasAttribute !== 'undefined' && child.hasAttribute('required') && !params['pf-form-' + childName]) {
+                child.setAttribute('invalid', '');
+                valid = false;
+              }
             }
           }
-        }
-        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
-        break;
+          utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
+          break;
       }
 
       params['pf-widget-event'] = action;
@@ -1742,7 +1740,7 @@
      * @param {object} object original object
      * @param {object} config new configuration
      */
-    updateObject: function (object, config) {
+    updateObject: function(object, config) {
       for (var prop in config) {
         if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null) {
           if (config.hasOwnProperty(prop)) {
@@ -1762,8 +1760,8 @@
      * @throws {Error} error
      * @param  {array} array list of widgets to initialize
      */
-    initializeWidgetArray: function (array) {
-      var displayWidget = function (w) {
+    initializeWidgetArray: function(array) {
+      var displayWidget = function(w) {
         if (w.displayConditions.showDelay) {
           core.registerDelayedWidget(w);
         } else {
@@ -1771,8 +1769,8 @@
         }
       };
 
-      var recContent = function (w) {
-        pathfora.addCallback(function () {
+      var recContent = function(w) {
+        pathfora.addCallback(function() {
           if (pathfora.acctid === '') {
             if (context.lio && context.lio.account) {
               pathfora.acctid = context.lio.account.id;
@@ -1781,7 +1779,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function(resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -1814,9 +1812,9 @@
           continue;
         }
 
-        var widgetOnInitCallback = widget.config.onInit,
-            defaults = defaultProps[widget.type],
-            globals = defaultProps.generic;
+        var widgetOnInitCallback = widget.config.onInit;
+        var defaults = defaultProps[widget.type];
+        var globals = defaultProps.generic;
 
         if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
@@ -1842,7 +1840,6 @@
           }
 
           recContent(widget);
-
         } else {
           displayWidget(widget);
         }
@@ -1861,7 +1858,7 @@
      * @throws {Error} error
      * @param {object} widgets
      */
-    validateWidgetsObject: function (widgets) {
+    validateWidgetsObject: function(widgets) {
       if (!widgets) {
         throw new Error('Widgets not specified');
       }
@@ -1887,9 +1884,9 @@
      * @param   {object} config
      * @returns {object} generated widget object
      */
-    prepareWidget: function (type, config) {
-      var props, random,
-          widget = {};
+    prepareWidget: function(type, config) {
+      var props, random;
+      var widget = {};
 
       if (!config) {
         throw new Error('Config object is missing');
@@ -1897,52 +1894,52 @@
 
       if (config.layout === 'random') {
         props = {
-          layout: ['modal', 'slideout', 'bar', 'folding'],
-          variant: ['1', '2'],
-          slideout: ['bottom-left', 'bottom-right'],
-          bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
-          folding: ['left', 'bottom-left', 'bottom-right']
+          layout: [ 'modal', 'slideout', 'bar', 'folding' ],
+          variant: [ '1', '2' ],
+          slideout: [ 'bottom-left', 'bottom-right' ],
+          bar: [ 'top-absolute', 'top-fixed', 'bottom-fixed' ],
+          folding: [ 'left', 'bottom-left', 'bottom-right' ]
         };
 
         // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
         switch (type) {
-        case 'message':
-          random = Math.floor(Math.random() * 4);
-          config.layout = props.layout[random];
-          break;
-        case 'subscription':
-          random = Math.floor(Math.random() * 5);
-          while (random === 3) {
+          case 'message':
+            random = Math.floor(Math.random() * 4);
+            config.layout = props.layout[random];
+            break;
+          case 'subscription':
             random = Math.floor(Math.random() * 5);
-          }
-          config.layout = props.layout[random];
-          break;
-        case 'form':
-          random = Math.floor(Math.random() * 5);
-          while (random === 2 || random === 3) {
+            while (random === 3) {
+              random = Math.floor(Math.random() * 5);
+            }
+            config.layout = props.layout[random];
+            break;
+          case 'form':
             random = Math.floor(Math.random() * 5);
-          }
-          config.layout = props.layout[random];
+            while (random === 2 || random === 3) {
+              random = Math.floor(Math.random() * 5);
+            }
+            config.layout = props.layout[random];
         }
         switch (config.layout) {
-        case 'folding':
-          config.position = props.folding[Math.floor(Math.random() * 3)];
-          config.variant = props.variant[Math.floor(Math.random() * 2)];
-          break;
-        case 'slideout':
-          config.position = props.slideout[Math.floor(Math.random() * 2)];
-          config.variant = props.variant[Math.floor(Math.random() * 2)];
-          break;
-        case 'modal':
-          config.variant = props.variant[Math.floor(Math.random() * 2)];
-          config.position = '';
-          break;
-        case 'bar':
-          config.position = props.bar[Math.floor(Math.random() * 3)];
-          break;
-        case 'inline':
-          config.position = 'body';
-          break;
+          case 'folding':
+            config.position = props.folding[Math.floor(Math.random() * 3)];
+            config.variant = props.variant[Math.floor(Math.random() * 2)];
+            break;
+          case 'slideout':
+            config.position = props.slideout[Math.floor(Math.random() * 2)];
+            config.variant = props.variant[Math.floor(Math.random() * 2)];
+            break;
+          case 'modal':
+            config.variant = props.variant[Math.floor(Math.random() * 2)];
+            config.position = '';
+            break;
+          case 'bar':
+            config.position = props.bar[Math.floor(Math.random() * 3)];
+            break;
+          case 'inline':
+            config.position = 'body';
+            break;
         }
       }
       widget.type = type;
@@ -1957,7 +1954,7 @@
       return widget;
     },
 
-    prepareABTest: function (config) {
+    prepareABTest: function(config) {
       var test = {};
 
       if (!config) {
@@ -1979,18 +1976,18 @@
     /**
      * @description Load callback for facebook integration
      */
-    onFacebookLoad: function () {
+    onFacebookLoad: function() {
       var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
-      FB.getLoginStatus(function (connection) {
+      FB.getLoginStatus(function(connection) {
         if (connection.status === 'connected') {
           core.autoCompleteFacebookData(fbBtns);
         }
       });
 
-      fbBtns.forEach(function (element) {
+      fbBtns.forEach(function(element) {
         if (element.parentElement) {
-          element.parentElement.onclick = function () {
+          element.parentElement.onclick = function() {
             core.onFacebookClick(fbBtns);
           };
         }
@@ -2001,10 +1998,10 @@
      * @description Attempt to load forms data from Facebook API.
      * @param {object} facebook buttons element selector
      */
-    autoCompleteFacebookData: function (elements) {
+    autoCompleteFacebookData: function(elements) {
       FB.api('/me', {
         fields: 'name,email,work'
-      }, function (resp) {
+      }, function(resp) {
         if (resp && !resp.error) {
           core.autoCompleteFormFields({
             type: 'facebook',
@@ -2012,7 +2009,7 @@
             email: resp.email || ''
           });
 
-          elements.forEach(function (item) {
+          elements.forEach(function(item) {
             item.innerHTML = 'Log Out';
           });
         }
@@ -2023,18 +2020,17 @@
      * @description Click handler to log in/log out from facebook.
      * @param {object} facebook buttons element selector
      */
-    onFacebookClick: function (elements) {
-      FB.getLoginStatus(function (connection) {
+    onFacebookClick: function(elements) {
+      FB.getLoginStatus(function(connection) {
         if (connection.status === 'connected') {
-          FB.logout(function () {
-            elements.forEach(function (elem) {
+          FB.logout(function() {
+            elements.forEach(function(elem) {
               elem.innerHTML = 'Log In';
             });
-            core.clearFormFields('facebook', ['username', 'email']);
+            core.clearFormFields('facebook', [ 'username', 'email' ]);
           });
-
         } else {
-          FB.login(function (resp) {
+          FB.login(function(resp) {
             if (resp.authResponse) {
               core.autoCompleteFacebookData(elements);
             }
@@ -2047,8 +2043,8 @@
      * @description Load callback for google integration
      * @param {object} optional widget object
      */
-    onGoogleLoad: function () {
-      gapi.load('auth2', function () {
+    onGoogleLoad: function() {
+      gapi.load('auth2', function() {
         var auth2 = gapi.auth2.init({
           clientId: pathforaDataObject.socialNetworks.googleClientID,
           cookiepolicy: 'single_host_origin',
@@ -2057,13 +2053,13 @@
 
         var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
 
-        auth2.then(function () {
+        auth2.then(function() {
           var user = auth2.currentUser.get();
           core.autoCompleteGoogleData(user, googleBtns);
 
-          googleBtns.forEach(function (element) {
+          googleBtns.forEach(function(element) {
             if (element.parentElement) {
-              element.parentElement.onclick = function () {
+              element.parentElement.onclick = function() {
                 core.onGoogleClick(googleBtns);
               };
             }
@@ -2077,7 +2073,7 @@
      * @param {object} current googleUser
      * @param {object} google buttons element selector
      */
-    autoCompleteGoogleData: function (user, elements) {
+    autoCompleteGoogleData: function(user, elements) {
       if (typeof user !== 'undefined') {
         var profile = user.getBasicProfile();
 
@@ -2088,7 +2084,7 @@
             email: profile.getEmail() || ''
           });
 
-          elements.forEach(function (item) {
+          elements.forEach(function(item) {
             item.innerHTML = 'Sign Out';
           });
         }
@@ -2099,19 +2095,18 @@
      * @description Click handler to sign in/sign out from google.
      * @param {object} google buttons element selector
      */
-    onGoogleClick: function (elements) {
+    onGoogleClick: function(elements) {
       var auth2 = gapi.auth2.getAuthInstance();
 
       if (auth2.isSignedIn.get()) {
-        auth2.signOut().then(function () {
-          elements.forEach(function (elem) {
+        auth2.signOut().then(function() {
+          elements.forEach(function(elem) {
             elem.innerHTML = 'Sign In';
           });
-          core.clearFormFields('google', ['username', 'email']);
+          core.clearFormFields('google', [ 'username', 'email' ]);
         });
-
       } else {
-        auth2.signIn().then(function () {
+        auth2.signIn().then(function() {
           core.autoCompleteGoogleData(auth2.currentUser.get(), elements);
         });
       }
@@ -2121,12 +2116,12 @@
      * @description Fill form DOM objects with user data
      * @param {object} data user data
      */
-    autoCompleteFormFields: function (data) {
+    autoCompleteFormFields: function(data) {
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
-      widgets.forEach(function (widget) {
+      widgets.forEach(function(widget) {
         if (widget.querySelector('.' + data.type + '-login-btn')) {
-          Object.keys(data).forEach(function (inputField) {
+          Object.keys(data).forEach(function(inputField) {
             var field = widget.querySelector('input[name="' + inputField + '"]');
 
             if (field && !field.value) {
@@ -2142,12 +2137,12 @@
      * @param {object} type of integration
      * @param {object} fields to clear
      */
-    clearFormFields: function (type, fields) {
+    clearFormFields: function(type, fields) {
       var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
-      widgets.forEach(function (widget) {
+      widgets.forEach(function(widget) {
         if (widget.querySelector('.' + type + '-login-btn')) {
-          fields.forEach(function (inputField) {
+          fields.forEach(function(inputField) {
             var field = widget.querySelector('input[name="' + inputField + '"]');
 
             if (field) {
@@ -2171,10 +2166,10 @@
      * @param {function} onSuccess success callback
      * @param {function} onError   error callback
      */
-    getData: function (url, onSuccess, onError) {
+    getData: function(url, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
 
-      xhr.onreadystatechange = function () {
+      xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
           onSuccess(xhr.responseText);
         } else if (xhr.readyState === 4) {
@@ -2193,13 +2188,13 @@
      * @param {function} onSuccess success callback
      * @param {function} onError   error callback
      */
-    postData: function (url, data, onSuccess, onError) {
+    postData: function(url, data, onSuccess, onError) {
       var xhr = new XMLHttpRequest();
       xhr.open('POST', url);
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-type', 'application/json');
 
-      xhr.onreadystatechange = function () {
+      xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
           onSuccess(xhr.responseText);
         } else if (xhr.readyState === 4) {
@@ -2215,7 +2210,7 @@
      *              Optionally to Google Analytics (if 'ga' function is available)
      * @param {object} data payload
      */
-    reportData: function (data) {
+    reportData: function(data) {
       var gaLabel;
 
       if (typeof jstag === 'object') {
@@ -2243,11 +2238,11 @@
     /**
      * @description Retrieve user segment data from Lytics
      */
-    getUserSegments: function () {
+    getUserSegments: function() {
       if (context.lio && context.lio.data && context.lio.data.segments) {
         return context.lio.data.segments;
       } else {
-        return ['all'];
+        return [ 'all' ];
       }
     },
 
@@ -2255,7 +2250,7 @@
      * @description Check if a user is a member of
      * @param {match} name of segment to check for match
      */
-    inSegment: function (match) {
+    inSegment: function(match) {
       return (this.getUserSegments().indexOf(match) !== -1);
     },
 
@@ -2264,12 +2259,12 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, filter, callback) {
+    recommendContent: function(accountId, filter, callback) {
       // Recommendation API:
       // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
 
-      var recommendUrl,
-          seerId = utils.readCookie('seerid');
+      var recommendUrl;
+      var seerId = utils.readCookie('seerid');
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
@@ -2283,14 +2278,14 @@
         filter ? '?ql=' + filter : ''
       ].join('');
 
-      this.getData(recommendUrl, function (json) {
+      this.getData(recommendUrl, function(json) {
         var resp = JSON.parse(json);
         if (resp.data && resp.data.length > 0) {
           callback(resp.data);
         } else {
           callback([]);
         }
-      }, function () {
+      }, function() {
         callback([]);
       });
     },
@@ -2299,7 +2294,7 @@
      * @description Construct filter for inline content recommendations
      * @param {string} urlPat  pattern of URL to match
      */
-    constructRecommendFilter: function (urlPat) {
+    constructRecommendFilter: function(urlPat) {
       // URL pattern uses wildcards '*'
       // should not contain http protocol
       // examples:
@@ -2317,7 +2312,7 @@
    * @name Inline
    * @description Inline Personalization
    */
-  Inline = function () {
+  Inline = function() {
     this.elements = [];
     this.preppedElements = [];
     this.defaultElements = [];
@@ -2326,9 +2321,9 @@
      * @description Prepare all the triggered or recommended elements
      * @param {attr} name of attribute to select by
      */
-    this.prepElements = function (attr) {
-      var dataElements = {},
-          elements = document.querySelectorAll('[' + attr + ']');
+    this.prepElements = function(attr) {
+      var dataElements = {};
+      var elements = document.querySelectorAll('[' + attr + ']');
 
       this.elements = this.elements.concat(elements);
 
@@ -2338,53 +2333,53 @@
 
           switch (attr) {
           // CASE: Segment triggered elements
-          case 'data-pftrigger':
-            var group = theElement.getAttribute('data-pfgroup');
+            case 'data-pftrigger':
+              var group = theElement.getAttribute('data-pfgroup');
 
-            if (!group) {
-              group = 'default';
-            }
+              if (!group) {
+                group = 'default';
+              }
 
-            if (!dataElements[group]) {
-              dataElements[group] = [];
-            }
+              if (!dataElements[group]) {
+                dataElements[group] = [];
+              }
 
-            dataElements[group].push({
-              elem: theElement,
-              displayType: theElement.style.display,
-              group: group,
-              trigger: theElement.getAttribute('data-pftrigger')
-            });
-            break;
+              dataElements[group].push({
+                elem: theElement,
+                displayType: theElement.style.display,
+                group: group,
+                trigger: theElement.getAttribute('data-pftrigger')
+              });
+              break;
 
           // CASE: Content recommendation elements
-          case 'data-pfrecommend':
-            var recommend = theElement.getAttribute('data-pfrecommend'),
-                block = theElement.getAttribute('data-pfblock');
+            case 'data-pfrecommend':
+              var recommend = theElement.getAttribute('data-pfrecommend');
+              var block = theElement.getAttribute('data-pfblock');
 
-            if (!block) {
-              block = 'default';
-            }
+              if (!block) {
+                block = 'default';
+              }
 
-            if (!recommend) {
-              recommend = 'default';
-            }
+              if (!recommend) {
+                recommend = 'default';
+              }
 
-            if (!dataElements[recommend]) {
-              dataElements[recommend] = [];
-            }
+              if (!dataElements[recommend]) {
+                dataElements[recommend] = [];
+              }
 
-            dataElements[recommend][block] = {
-              elem: theElement,
-              displayType: theElement.style.display,
-              block: block,
-              recommend: recommend,
-              title: theElement.querySelector('[data-pftype="title"]'),
-              image: theElement.querySelector('[data-pftype="image"]'),
-              description: theElement.querySelector('[data-pftype="description"]'),
-              url: theElement.querySelector('[data-pftype="url"]')
-            };
-            break;
+              dataElements[recommend][block] = {
+                elem: theElement,
+                displayType: theElement.style.display,
+                block: block,
+                recommend: recommend,
+                title: theElement.querySelector('[data-pftype="title"]'),
+                image: theElement.querySelector('[data-pftype="image"]'),
+                description: theElement.querySelector('[data-pftype="description"]'),
+                url: theElement.querySelector('[data-pftype="url"]')
+              };
+              break;
           }
         }
       }
@@ -2394,12 +2389,12 @@
     /*
      * @description show/hide the elements based on membership
      */
-    this.procElements = function () {
-      var attrs = ['data-pftrigger', 'data-pfrecommend'],
-          inline = this,
-          count = 0;
+    this.procElements = function() {
+      var attrs = [ 'data-pftrigger', 'data-pfrecommend' ];
+      var inline = this;
+      var count = 0;
 
-      var cb = function (elements) {
+      var cb = function(elements) {
         count++;
         // After we have processed all elements, proc defaults
         if (count === Object.keys(elements).length) {
@@ -2407,37 +2402,36 @@
         }
       };
 
-      attrs.forEach(function (attr) {
+      attrs.forEach(function(attr) {
         var elements = inline.prepElements(attr);
 
         for (var key in elements) {
           if (elements.hasOwnProperty(key)) {
-
             switch (attr) {
             // CASE: Segment triggered elements
-            case 'data-pftrigger':
-              inline.procTriggerElements(elements[key], key);
-              break;
+              case 'data-pftrigger':
+                inline.procTriggerElements(elements[key], key);
+                break;
 
             // CASE: Content recommendation elements
-            case 'data-pfrecommend':
-              if (context.pathfora.acctid === '') {
-                throw new Error('Could not get account id from Lytics Javascript tag.');
-              }
+              case 'data-pfrecommend':
+                if (context.pathfora.acctid === '') {
+                  throw new Error('Could not get account id from Lytics Javascript tag.');
+                }
 
-              inline.procRecommendElements(elements[key], key, function () {
-                cb(elements);
-              });
-              break;
+                inline.procRecommendElements(elements[key], key, function() {
+                  cb(elements);
+                });
+                break;
             }
           }
         }
       });
     };
 
-    this.procTriggerElements = function (elems, group) {
-      var matched = false,
-          defaultEl = {};
+    this.procTriggerElements = function(elems, group) {
+      var matched = false;
+      var defaultEl = {};
 
       for (var i = 0; i < elems.length; i++) {
         var elem = elems[i];
@@ -2468,12 +2462,12 @@
       }
     };
 
-    this.procRecommendElements = function (blocks, rec, cb) {
+    this.procRecommendElements = function(blocks, rec, cb) {
       var inline = this;
 
       if (rec !== 'default') {
         // call the recommendation API using the url pattern urlPattern as a filter
-        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
+        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function(resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -2534,7 +2528,7 @@
       }
     };
 
-    this.setDefaultRecommend = function () {
+    this.setDefaultRecommend = function() {
       // check the default elements
       for (var block in this.defaultElements) {
         // If we already have an element prepped for this block, don't show the default
@@ -2548,8 +2542,8 @@
     };
 
     // for our automatic element handling we need to ensure they are all hidden by default
-    var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
-        style = document.createElement('style');
+    var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }';
+    var style = document.createElement('style');
 
     style.type = 'text/css';
 
@@ -2567,7 +2561,7 @@
    * @name Pathfora
    * @description Pathfora public API class
    */
-  Pathfora = function () {
+  Pathfora = function() {
     /**
      * @public
      * @description Current version
@@ -2596,7 +2590,7 @@
      * @public
      * @description Add callbacks to execute once segments load
      */
-    this.addCallback = function (cb) {
+    this.addCallback = function(cb) {
       if (context.lio && context.lio.loaded) {
         cb(context.lio.data);
       } else {
@@ -2608,9 +2602,9 @@
      * @public
      * @description Create page view cookie
      */
-    this.initializePageViews = function () {
-      var cookie = utils.readCookie('PathforaPageView'),
-          date = new Date();
+    this.initializePageViews = function() {
+      var cookie = utils.readCookie('PathforaPageView');
+      var date = new Date();
       date.setDate(date.getDate() + 365);
       utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
     };
@@ -2619,15 +2613,15 @@
      * @public
      * @description Listener to wait until the DOM is ready
      */
-    this.onDOMready = function (fn) {
-      var handler,
-          pf = this,
-          hack = document.documentElement.doScroll,
-          domContentLoaded = 'DOMContentLoaded',
-          loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
+    this.onDOMready = function(fn) {
+      var handler;
+      var pf = this;
+      var hack = document.documentElement.doScroll;
+      var domContentLoaded = 'DOMContentLoaded';
+      var loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
 
       if (!loaded) {
-        document.addEventListener(domContentLoaded, handler = function () {
+        document.addEventListener(domContentLoaded, handler = function() {
           document.removeEventListener(domContentLoaded, handler);
           pf.DOMLoaded = true;
           fn();
@@ -2642,11 +2636,11 @@
      * @public
      * @description Initialize inline personalization
      */
-    this.initializeInline = function () {
+    this.initializeInline = function() {
       var pf = this;
 
-      pf.onDOMready(function () {
-        pf.addCallback(function () {
+      pf.onDOMready(function() {
+        pf.addCallback(function() {
           if (pf.acctid === '') {
             if (context.lio && context.lio.account) {
               pf.acctid = context.lio.account.id;
@@ -2664,7 +2658,7 @@
      * @param {object|array}   widgets
      * @param {object}         config
      */
-    this.initializeWidgets = function (widgets, config) {
+    this.initializeWidgets = function(widgets, config) {
       // NOTE IE < 10 not supported
       // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
       if (document.all && !context.atob) {
@@ -2689,11 +2683,9 @@
       }
 
       if (widgets instanceof Array) {
-
         // NOTE Simple initialization
         core.initializeWidgetArray(widgets);
       } else {
-
         // NOTE Target sensitive widgets
         if (widgets.common) {
           core.initializeWidgetArray(widgets.common);
@@ -2702,11 +2694,11 @@
 
         if (widgets.target || widgets.exclude) {
           // Add callback to initialize once we know segments are loaded
-          this.addCallback(function () {
-            var target, ti, tl, exclude, ei, ex, ey, el,
-                targetedwidgets = [],
-                excludematched = false,
-                segments = api.getUserSegments();
+          this.addCallback(function() {
+            var target, ti, tl, exclude, ei, ex, ey, el;
+            var targetedwidgets = [];
+            var excludematched = false;
+            var segments = api.getUserSegments();
 
             // handle inclusions
             if (widgets.target) {
@@ -2756,7 +2748,7 @@
      * @param   {object}   widget
      * @returns {object}   widget DOM element
      */
-    this.previewWidget = function (widget) {
+    this.previewWidget = function(widget) {
       widget.id = utils.generateUniqueId();
       return core.createWidgetHtml(widget);
     };
@@ -2767,12 +2759,12 @@
      * @description Set A/B testing modes for the global Pathfora object
      * @param {string} abTests A/B testing modes array
      */
-    this.initializeABTesting = function (abTests) {
-      abTests.forEach(function (abTest) {
-        var abTestingType = abTest.type,
-            userAbTestingValue = utils.readCookie(abTest.cookieId),
-            userAbTestingGroup = 0,
-            date = new Date();
+    this.initializeABTesting = function(abTests) {
+      abTests.forEach(function(abTest) {
+        var abTestingType = abTest.type;
+        var userAbTestingValue = utils.readCookie(abTest.cookieId);
+        var userAbTestingGroup = 0;
+        var date = new Date();
 
         if (!userAbTestingValue) {
           // Support old cookie name convention
@@ -2800,8 +2792,8 @@
         }
 
         // NOTE Notify widgets about their proper AB groups
-        abTest.groups.forEach(function (group, index) {
-          group.forEach(function (widget) {
+        abTest.groups.forEach(function(group, index) {
+          group.forEach(function(widget) {
             if (typeof widget.abTestingGroup === 'undefined') {
               widget.abTestingGroup = index;
               widget.hiddenViaABTests = userAbTestingGroup === index;
@@ -2825,7 +2817,7 @@
      * @param   {object}   config
      * @returns {object}   Message widget
      */
-    this.Message = function (config) {
+    this.Message = function(config) {
       return core.prepareWidget('message', config);
     };
 
@@ -2835,7 +2827,7 @@
      * @param   {object}   config
      * @returns {object}   Subscription widget
      */
-    this.Subscription = function (config) {
+    this.Subscription = function(config) {
       return core.prepareWidget('subscription', config);
     };
 
@@ -2845,7 +2837,7 @@
      * @param   {object}   config
      * @returns {object}   Form widget
      */
-    this.Form = function (config) {
+    this.Form = function(config) {
       return core.prepareWidget('form', config);
     };
 
@@ -2855,7 +2847,7 @@
      * @param   {object}   config
      * @returns {object}   SiteGate widget
      */
-    this.SiteGate = function (config) {
+    this.SiteGate = function(config) {
       return core.prepareWidget('sitegate', config);
     };
 
@@ -2864,7 +2856,7 @@
      * @description Display a widget
      * @param {object} widget
      */
-    this.showWidget = function (widget) {
+    this.showWidget = function(widget) {
       // FIXME Change to Array#filter and Array#length
       for (var i = 0; i < core.openedWidgets.length; i++) {
         if (core.openedWidgets[i] === widget) {
@@ -2901,7 +2893,7 @@
 
       // NOTE wait for appending to DOM to trigger the animation
       // FIXME 50 - magical number
-      setTimeout(function () {
+      setTimeout(function() {
         var widgetLoadCallback = widget.config.onLoad;
 
         utils.addClass(node, 'opened');
@@ -2919,9 +2911,8 @@
         }
       }, 50);
 
-
       if (widget.displayConditions.hideAfter) {
-        setTimeout(function () {
+        setTimeout(function() {
           context.pathfora.closeWidget(widget.id);
         }, widget.displayConditions.hideAfter * 1000);
       }
@@ -2934,7 +2925,7 @@
      * @param {string}  id      widget it
      * @param {boolean} noTrack if true, closing action will not be recorded
      */
-    this.closeWidget = function (id, noTrack) {
+    this.closeWidget = function(id, noTrack) {
       var node = document.getElementById(id);
 
       // FIXME Change to Array#some or Array#filter
@@ -2958,7 +2949,7 @@
       }
 
       // FIXME 500 - magical number
-      setTimeout(function () {
+      setTimeout(function() {
         if (node && node.parentNode) {
           node.parentNode.removeChild(node);
         }
@@ -2970,7 +2961,7 @@
      * @description Get the current Pathfora data store
      * @returns {object} Pathfora data store
      */
-    this.getData = function () {
+    this.getData = function() {
       return pathforaDataObject;
     };
 
@@ -2978,11 +2969,11 @@
      * @public
      * @description Clean widgets and data state
      */
-    this.clearAll = function () {
-      var opened = core.openedWidgets,
-          delayed = core.delayedWidgets;
+    this.clearAll = function() {
+      var opened = core.openedWidgets;
+      var delayed = core.delayedWidgets;
 
-      opened.forEach(function (widget) {
+      opened.forEach(function(widget) {
         var element = document.getElementById(widget.id);
         utils.removeClass(element, 'opened');
         element.parentNode.removeChild(element);
@@ -3019,15 +3010,15 @@
      * @description Intergrate with Facebook App API
      * @param {string} appId
      */
-    this.integrateWithFacebook = function (appId) {
+    this.integrateWithFacebook = function(appId) {
       if (appId !== '') {
         var btn = templates.social.facebookBtn.replace(
           /(\{){2}facebook-icon(\}){2}/gm,
           templates.assets.facebookIcon
         );
 
-        var parseFBLoginTemplate = function (parentTemplates) {
-          Object.keys(parentTemplates).forEach(function (type) {
+        var parseFBLoginTemplate = function(parentTemplates) {
+          Object.keys(parentTemplates).forEach(function(type) {
             parentTemplates[type] = parentTemplates[type].replace(
               /<p name='fb-login' hidden><\/p>/gm,
               btn
@@ -3035,7 +3026,7 @@
           });
         };
 
-        window.fbAsyncInit = function () {
+        window.fbAsyncInit = function() {
           window.FB.init({
             appId: appId,
             xfbml: true,
@@ -3048,8 +3039,9 @@
         };
 
         // NOTE API initialization
-        (function (d, s, id) {
-          var js, fjs = d.getElementsByTagName(s)[0];
+        (function(d, s, id) {
+          var js;
+          var fjs = d.getElementsByTagName(s)[0];
           if (d.getElementById(id)) {
             return;
           }
@@ -3070,7 +3062,7 @@
      * @description Integrate with Google App API
      * @param {string} clientId
      */
-    this.integrateWithGoogle = function (clientId) {
+    this.integrateWithGoogle = function(clientId) {
       if (clientId !== '') {
         var head = document.querySelector('head');
 
@@ -3084,8 +3076,8 @@
           templates.assets.googleIcon
         );
 
-        var parseGoogleLoginTemplate = function (parentTemplates) {
-          Object.keys(parentTemplates).forEach(function (type) {
+        var parseGoogleLoginTemplate = function(parentTemplates) {
+          Object.keys(parentTemplates).forEach(function(type) {
             parentTemplates[type] = parentTemplates[type].replace(
               /<p name='google-login' hidden><\/p>/gm,
               btn
@@ -3102,8 +3094,9 @@
         window.pathforaGoogleOnLoad = core.onGoogleLoad;
 
         // NOTE Google API
-        (function () {
-          var s, po = document.createElement('script');
+        (function() {
+          var s;
+          var po = document.createElement('script');
           po.type = 'text/javascript';
           po.async = true;
           po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
@@ -3120,7 +3113,7 @@
     /*
      * @public
      */
-    this.ABTest = function (config) {
+    this.ABTest = function(config) {
       return core.prepareABTest(config);
     };
 
@@ -3143,5 +3136,4 @@
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
-
 }(window, document));
