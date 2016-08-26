@@ -1,21 +1,21 @@
+/*eslint strict: ["error", "global"]*/
 'use strict';
 
-var credentials = 123,
-    ga = jasmine.createSpy('ga');
+var credentials = 123;
+var ga = jasmine.createSpy('ga');
 
 var jstag = {
-  send: function () {}
+  send: function() {}
 };
 
 pathfora.utils.saveCookie('seerid', 123);
-
 
 // -------------------------
 // PATHFORA TESTS
 // -------------------------
 
-describe('Pathfora', function () {
-  beforeEach(function () {
+describe('Pathfora', function() {
+  beforeEach(function() {
     localStorage.clear();
     pathfora.clearAll();
   });
@@ -24,7 +24,7 @@ describe('Pathfora', function () {
   // GENERAL
   // -------------------------
 
-  it('should not allow to register 2 widgets with the same id', function () {
+  it('should not allow to register 2 widgets with the same id', function() {
     var w1 = new pathfora.Message({
       msg: 'Duplicate id test1',
       layout: 'modal',
@@ -37,12 +37,12 @@ describe('Pathfora', function () {
       id: 'asd'
     });
 
-    expect(function () {
-      pathfora.initializeWidgets([w1, w2]);
+    expect(function() {
+      pathfora.initializeWidgets([ w1, w2 ]);
     }).toThrow(new Error('Cannot add two widgets with the same id'));
   });
 
-  it('should track current time spent on page with 1 second accuracy', function () {
+  it('should track current time spent on page with 1 second accuracy', function() {
     jasmine.clock().install();
 
     pathfora.initializeWidgets([]);
@@ -56,7 +56,7 @@ describe('Pathfora', function () {
     jasmine.clock().uninstall();
   });
 
-  it('should use specified global config for all widgets', function () {
+  it('should use specified global config for all widgets', function() {
     var messageBar = new pathfora.Message({
       layout: 'bar',
       id: 'global-config-1',
@@ -69,14 +69,14 @@ describe('Pathfora', function () {
       }
     };
 
-    pathfora.initializeWidgets([messageBar], config);
+    pathfora.initializeWidgets([ messageBar ], config);
 
     var bar = $('#' + messageBar.id);
     expect(bar.hasClass('pf-theme-default')).toBe(false);
     expect(bar.hasClass('pf-theme-light')).toBe(true);
   });
 
-  it('should be able to clear all widgets and handlers', function (done) {
+  it('should be able to clear all widgets and handlers', function(done) {
     var clearDataObject = {
       pageViews: 0,
       timeSpentOnPage: 0,
@@ -94,11 +94,11 @@ describe('Pathfora', function () {
       layout: 'modal'
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(pathfora.getData()).not.toEqual(clearDataObject);
 
@@ -109,7 +109,7 @@ describe('Pathfora', function () {
     }, 200);
   });
 
-  it('should be able to set random layout for each widget element', function () {
+  it('should be able to set random layout for each widget element', function() {
     spyOn(Math, 'floor').and.returnValue(1);
 
     var random = new pathfora.Message({
@@ -119,7 +119,7 @@ describe('Pathfora', function () {
       headline: 'Hello'
     });
 
-    pathfora.initializeWidgets([random]);
+    pathfora.initializeWidgets([ random ]);
 
     var widget = $('#' + random.id);
     expect(widget.find('.pf-widget-slideout')).toBeTruthy();
@@ -131,7 +131,7 @@ describe('Pathfora', function () {
   // TRACKING
   // -------------------------
 
-  it('should know if users have interacted in the past', function () {
+  it('should know if users have interacted in the past', function() {
     localStorage.clear();
 
     var messageBar = new pathfora.Message({
@@ -140,7 +140,7 @@ describe('Pathfora', function () {
       msg: 'Message bar  - interest test',
       confirmAction: {
         name: 'Test confirm action',
-        callback: function () {
+        callback: function() {
           // cb here
         }
       }
@@ -151,7 +151,7 @@ describe('Pathfora', function () {
       id: 'interest-widget2',
       msg: 'Message modal - interest test'
     });
-    pathfora.initializeWidgets([messageBar, messageModal]);
+    pathfora.initializeWidgets([ messageBar, messageModal ]);
 
     var completedActions = pathfora.getData().completedActions.length;
     var closedWidgets = pathfora.getData().closedWidgets.length;
@@ -167,7 +167,7 @@ describe('Pathfora', function () {
     expect(closedWidgets).toBe(1);
   });
 
-  it('should report displaying widgets and it\'s variants', function () {
+  it('should report displaying widgets and it\'s variants', function() {
     jasmine.Ajax.install();
 
     var messageBar = new pathfora.Message({
@@ -178,7 +178,7 @@ describe('Pathfora', function () {
 
     spyOn(jstag, 'send');
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
       'pf-widget-id': messageBar.id,
@@ -193,7 +193,7 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('should report closing widgets and it\'s variants', function () {
+  it('should report closing widgets and it\'s variants', function() {
     jasmine.Ajax.install();
     jasmine.clock().install();
 
@@ -203,7 +203,7 @@ describe('Pathfora', function () {
       id: 'bar-close-report'
     });
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     spyOn(jstag, 'send');
     $('.pf-widget-close').click();
@@ -224,7 +224,7 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('should report completed actions to Lytics API', function (done) {
+  it('should report completed actions to Lytics API', function(done) {
     jasmine.Ajax.install();
 
     var messageBar = new pathfora.Message({
@@ -233,17 +233,17 @@ describe('Pathfora', function () {
       msg: 'Message modal - action report test',
       confirmAction: {
         name: 'action test',
-        callback: function () {
+        callback: function() {
           // cb here
         }
       }
     });
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     var widget = $('#' + messageBar.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       spyOn(jstag, 'send');
       expect(jstag.send).not.toHaveBeenCalled();
@@ -260,7 +260,7 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('should report cancelled actions to Lytics API', function (done) {
+  it('should report cancelled actions to Lytics API', function(done) {
     jasmine.Ajax.install();
 
     var messageBar = new pathfora.Message({
@@ -269,17 +269,17 @@ describe('Pathfora', function () {
       msg: 'Message modal - cancel report test',
       cancelAction: {
         name: 'cancel reporting test',
-        callback: function () {
+        callback: function() {
           // cb here
         }
       }
     });
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     var widget = $('#' + messageBar.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
 
       spyOn(jstag, 'send');
@@ -299,15 +299,14 @@ describe('Pathfora', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('should report submitting forms, with form data', function () {
+  it('should report submitting forms, with form data', function() {
     var messageBar = new pathfora.Message({
       layout: 'modal',
       msg: 'Message modal - form submit reports',
       id: 'ABCa'
     });
 
-    pathfora.initializeWidgets([messageBar]);
-
+    pathfora.initializeWidgets([ messageBar ]);
 
     spyOn(jstag, 'send');
     $('.pf-widget-close').click();
@@ -321,24 +320,24 @@ describe('Pathfora', function () {
     }));
   });
 
-  it('should report to Google Analytics API, when available', function (done) {
+  it('should report to Google Analytics API, when available', function(done) {
     var messageBar = new pathfora.Message({
       layout: 'modal',
       id: 'ga-widget',
       msg: 'Message modal - ga test',
       confirmAction: {
         name: 'action test',
-        callback: function () {
+        callback: function() {
           // cb here
         }
       }
     });
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     var widget = $('#' + messageBar.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       widget.find('.pf-widget-ok').click();
 
       expect(ga).toHaveBeenCalled();
@@ -358,10 +357,10 @@ describe('Pathfora', function () {
   // TARGETING
   // -------------------------
 
-  it('should distinguish newcomers, subscribers and common users', function (done) {
+  it('should distinguish newcomers, subscribers and common users', function(done) {
     window.lio = {
       data: {
-        segments: ['all', 'b']
+        segments: [ 'all', 'b' ]
       }
     };
 
@@ -392,19 +391,19 @@ describe('Pathfora', function () {
     });
 
     var widgets = {
-      target: [{
+      target: [ {
         segment: 'a',
-        widgets: [messageA]
+        widgets: [ messageA ]
       }, {
         segment: 'b',
-        widgets: [messageB]
+        widgets: [ messageB ]
       }, {
         segment: 'c',
-        widgets: [messageC]
+        widgets: [ messageC ]
       }, {
         segment: '*',
-        widgets: [messageD]
-      }]
+        widgets: [ messageD ]
+      } ]
     };
 
     pathfora.initializeWidgets(widgets);
@@ -417,7 +416,7 @@ describe('Pathfora', function () {
     var widgetB = $('#' + messageB.id);
     var universalWidget = $('#' + messageD.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(notOpenedA.length).toBe(0);
       expect(notOpenedC.length).toBe(0);
@@ -429,10 +428,10 @@ describe('Pathfora', function () {
     }, 200);
   });
 
-  it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
+  it('should properly exclude users when their segment membership matches that of the exclude settings', function(done) {
     window.lio = {
       data: {
-        segments: ['a', 'b']
+        segments: [ 'a', 'b' ]
       }
     };
 
@@ -451,24 +450,24 @@ describe('Pathfora', function () {
     });
 
     var widgets = {
-      target: [{
+      target: [ {
         segment: 'a',
-        widgets: [messageA, messageB]
-      }],
-      exclude: [{
+        widgets: [ messageA, messageB ]
+      } ],
+      exclude: [ {
         segment: 'b',
-        widgets: [messageA]
-      }]
+        widgets: [ messageA ]
+      } ]
     };
 
     pathfora.initializeWidgets(widgets);
 
-    var widgetA = $('#' + messageA.id),
-        widgetB = $('#' + messageB.id);
+    var widgetA = $('#' + messageA.id);
+    var widgetB = $('#' + messageB.id);
 
     expect(widgetB).toBeDefined();
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widgetB.hasClass('opened')).toBeTruthy();
       expect(widgetA.length).toBe(0);
       pathfora.clearAll();
@@ -480,14 +479,14 @@ describe('Pathfora', function () {
   // SCAFFOLDING
   // -------------------------
 
-  it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
+  it('should create an empty widget config with empty target and inverse arrays ready for construction', function() {
     var scaffold = pathfora.utils.initWidgetScaffold();
     expect(scaffold.target.length).toBe(0);
     expect(scaffold.exclude.length).toBe(0);
     expect(scaffold.inverse.length).toBe(0);
   });
 
-  it('should insert widget into config after building and inserting into scaffold', function () {
+  it('should insert widget into config after building and inserting into scaffold', function() {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
     var tester = new pathfora.Message({
@@ -515,7 +514,7 @@ describe('Pathfora', function () {
     expect(scaffold.inverse.length).toBe(0);
   });
 
-  it('should insert multiple widgets into config binding to the same segment', function () {
+  it('should insert multiple widgets into config binding to the same segment', function() {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
     var tester1 = new pathfora.Message({
@@ -555,7 +554,7 @@ describe('Pathfora', function () {
     expect(scaffold.inverse.length).toBe(0);
   });
 
-  it('should insert multiple widgets into config binding to the same segment but excluding', function () {
+  it('should insert multiple widgets into config binding to the same segment but excluding', function() {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
     var tester1 = new pathfora.Message({
@@ -602,7 +601,7 @@ describe('Pathfora', function () {
   // A/B TESTING
   // -------------------------
 
-  it('should select only one A/B Test group to show', function () {
+  it('should select only one A/B Test group to show', function() {
     var widgetA = new pathfora.Message({
       id: 'ab-widget1-a',
       msg: 'A',
@@ -619,19 +618,19 @@ describe('Pathfora', function () {
       id: 'ab-1',
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widgetA, widgetB ]);
 
     var w = $('[id*="ab-widget1"]');
     expect(w.length).toBe(1);
   });
 
-  it('should show all widgets in an A/B test group', function () {
+  it('should show all widgets in an A/B test group', function() {
     var widget1A = new pathfora.Message({
       id: 'ab-widget2-1a',
       msg: 'A',
@@ -660,13 +659,13 @@ describe('Pathfora', function () {
       id: 'ab-2',
       type: '50/50',
       groups: [
-        [widget1A, widget2A],
-        [widget1B, widget2B]
+        [ widget1A, widget2A ],
+        [ widget1B, widget2B ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widget1A, widget2A, widget1B, widget2B]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widget1A, widget2A, widget1B, widget2B ]);
 
     var w = $('[id*="ab-widget2"]');
     expect(w.length).toBe(2);
@@ -675,7 +674,7 @@ describe('Pathfora', function () {
     expect(first.find('.pf-widget-message').text()).toEqual(first.next().find('.pf-widget-message').text());
   });
 
-  it('should show the second group if the cookie value is < 0.5', function () {
+  it('should show the second group if the cookie value is < 0.5', function() {
     var id = 'ab-3';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.2164252290967852);
 
@@ -695,21 +694,21 @@ describe('Pathfora', function () {
       id: id,
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widgetA, widgetB ]);
 
-    var wB = $('#' + widgetB.id),
-        wA = $('#' + widgetA.id);
+    var wB = $('#' + widgetB.id);
+    var wA = $('#' + widgetA.id);
     expect(wB.length).toBe(1);
     expect(wA.length).toBe(0);
   });
 
-  it('should show the first group if the cookie value is > 0.5', function () {
+  it('should show the first group if the cookie value is > 0.5', function() {
     var id = 'ab-4';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.7077720651868731);
 
@@ -729,22 +728,22 @@ describe('Pathfora', function () {
       id: id,
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widgetA, widgetB ]);
 
-    var wB = $('#' + widgetB.id),
-        wA = $('#' + widgetA.id);
+    var wB = $('#' + widgetB.id);
+    var wA = $('#' + widgetA.id);
 
     expect(wA.length).toBe(1);
     expect(wB.length).toBe(0);
   });
 
-  it('should allow multiple A/B tests per page', function () {
+  it('should allow multiple A/B tests per page', function() {
     var widgetA = new pathfora.Message({
       id: 'ab-widget5-a',
       msg: 'A',
@@ -761,8 +760,8 @@ describe('Pathfora', function () {
       id: 'ab-5',
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
@@ -782,27 +781,27 @@ describe('Pathfora', function () {
       id: 'ab-6',
       type: '50/50',
       groups: [
-        [widgetC],
-        [widgetD]
+        [ widgetC ],
+        [ widgetD ]
       ]
     });
 
-    pathfora.initializeABTesting([ab, ab2]);
-    pathfora.initializeWidgets([widgetA, widgetB, widgetC, widgetD]);
+    pathfora.initializeABTesting([ ab, ab2 ]);
+    pathfora.initializeWidgets([ widgetA, widgetB, widgetC, widgetD ]);
 
-    var w = $('[id*="ab-widget"]'),
-        w5 = $('[id*="ab-widget5"]'),
-        w6 = $('[id*="ab-widget6"]');
+    var w = $('[id*="ab-widget"]');
+    var w5 = $('[id*="ab-widget5"]');
+    var w6 = $('[id*="ab-widget6"]');
 
     expect(w.length).toBe(2);
     expect(w5.length).toBe(1);
     expect(w6.length).toBe(1);
   });
 
-  it('should handle A/B Tests in conjunction with audience targeting', function () {
+  it('should handle A/B Tests in conjunction with audience targeting', function() {
     window.lio = {
       data: {
-        segments: ['all', 'smt_new']
+        segments: [ 'all', 'smt_new' ]
       }
     };
 
@@ -824,26 +823,26 @@ describe('Pathfora', function () {
       id: 'ab-10',
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
     var widgets = {
-      target: [{
+      target: [ {
         segment: 'smt_new',
-        widgets: [widgetA, widgetB]
-      }]
+        widgets: [ widgetA, widgetB ]
+      } ]
     };
 
-    pathfora.initializeABTesting([ab]);
+    pathfora.initializeABTesting([ ab ]);
     pathfora.initializeWidgets(widgets);
 
     var w = $('[id*="ab-widget10"]');
     expect(w.length).toBe(1);
   });
 
-  it('should support the old cookie naming convention for A/B tests', function () {
+  it('should support the old cookie naming convention for A/B tests', function() {
     var id = 'ab-7';
     pathfora.utils.saveCookie('187ef4436122d1cc2f40dc2b92f0eba0' + id, 0.8982240918558091);
 
@@ -863,22 +862,22 @@ describe('Pathfora', function () {
       id: 'ab-7',
       type: '50/50',
       groups: [
-        [widgetA],
-        [widgetB]
+        [ widgetA ],
+        [ widgetB ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widgetA, widgetB ]);
 
-    var wA = $('#' + widgetA.id),
-        wB = $('#' + widgetB.id);
+    var wA = $('#' + widgetA.id);
+    var wB = $('#' + widgetB.id);
 
     expect(wA.length).toBe(1);
     expect(wB.length).toBe(0);
   });
 
-  it('should support "80/20" A/B test type', function () {
+  it('should support "80/20" A/B test type', function() {
     var id = 'ab-11';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.7077720651868731);
 
@@ -893,18 +892,18 @@ describe('Pathfora', function () {
       type: '80/20',
       groups: [
         [],
-        [widget]
+        [ widget ]
       ]
     });
 
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widget]);
+    pathfora.initializeABTesting([ ab ]);
+    pathfora.initializeWidgets([ widget ]);
 
     var w = $('#' + widget.id);
     expect(w.length).toBe(1);
   });
 
-  it('should not allow a widget to be used in more than one A/B test', function () {
+  it('should not allow a widget to be used in more than one A/B test', function() {
     var widgetA = new pathfora.Message({
       id: 'ab-widget8-a',
       msg: 'A',
@@ -915,7 +914,7 @@ describe('Pathfora', function () {
       id: 'ab-7',
       type: '50/50',
       groups: [
-        [widgetA],
+        [ widgetA ],
         []
       ]
     });
@@ -924,17 +923,17 @@ describe('Pathfora', function () {
       id: 'ab-8',
       type: '50/50',
       groups: [
-        [widgetA],
+        [ widgetA ],
         []
       ]
     });
 
-    expect(function () {
-      pathfora.initializeABTesting([ab, ab2]);
+    expect(function() {
+      pathfora.initializeABTesting([ ab, ab2 ]);
     }).toThrow(new Error('Widget #' + widgetA.id + ' is defined in more than one AB test.'));
   });
 
-  it('should not allow a widget to be used in more than one A/B test', function () {
+  it('should not allow a widget to be used in more than one A/B test', function() {
     var widgetA = new pathfora.Message({
       id: 'ab-widget9-a',
       msg: 'A',
@@ -951,7 +950,7 @@ describe('Pathfora', function () {
       id: 'ab-9',
       type: '50/50',
       groups: [
-        [widgetA],
+        [ widgetA ],
         []
       ]
     });
@@ -960,13 +959,13 @@ describe('Pathfora', function () {
       id: 'ab-9',
       type: '50/50',
       groups: [
-        [widgetB],
+        [ widgetB ],
         []
       ]
     });
 
-    expect(function () {
-      pathfora.initializeABTesting([ab, ab2]);
+    expect(function() {
+      pathfora.initializeABTesting([ ab, ab2 ]);
     }).toThrow(new Error('AB test with ID=' + ab.id + ' has been already defined.'));
   });
 
@@ -974,18 +973,18 @@ describe('Pathfora', function () {
   // IGNORED
   // -------------------------
 
-  xit('should throw error when trying to initialize widget with wrong layout value', function () {
+  xit('should throw error when trying to initialize widget with wrong layout value', function() {
     var brokenLayoutVal = new pathfora.Message({
       msg: 'Broken layout value test',
       layout: 'broken'
     });
 
-    expect(function () {
-      pathfora.initializeWidgets([brokenLayoutVal]);
+    expect(function() {
+      pathfora.initializeWidgets([ brokenLayoutVal ]);
     }).toThrow(new Error('Invalid widget layout value'));
   });
 
-  xit('should be able to display widget only on specific page scrolling value', function (done) {
+  xit('should be able to display widget only on specific page scrolling value', function(done) {
     $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
 
     var form = new pathfora.Subscription({
@@ -997,15 +996,15 @@ describe('Pathfora', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect($('#' + form.id).length).toBe(0);
 
       var height = $(document).height();
       $('body').scrollTop(height / 2);
 
-      setTimeout(function () {
+      setTimeout(function() {
         expect($('#' + form.id).length).toBe(1);
         done();
       }, 200);
@@ -1014,12 +1013,12 @@ describe('Pathfora', function () {
     $('#height-element').remove();
   });
 
-  xit('should be able to display widget only if user can see specific DOM element', function () {
+  xit('should be able to display widget only if user can see specific DOM element', function() {
     throw 'pass';
   });
 
   // future functionalities
-  xit('should keep number of page visits for later use', function () {
+  xit('should keep number of page visits for later use', function() {
     var messageBar = new pathfora.Message({
       position: 'bottom-fixed',
       msg: 'hello new user'
@@ -1027,14 +1026,14 @@ describe('Pathfora', function () {
 
     // new user
     localStorage.clear();
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     var visitedPage = pathfora.getData().pageViews;
     pathfora.clearAll();
 
     expect(visitedPage).toBe(1);
 
-    pathfora.initializeWidgets([messageBar]);
+    pathfora.initializeWidgets([ messageBar ]);
 
     visitedPage = pathfora.getData().pageViews;
     pathfora.clearAll();
@@ -1046,8 +1045,8 @@ describe('Pathfora', function () {
 //  WIDGET TESTS
 // -------------------------
 
-describe('Widgets', function () {
-  beforeEach(function () {
+describe('Widgets', function() {
+  beforeEach(function() {
     localStorage.clear();
     pathfora.clearAll();
   });
@@ -1056,14 +1055,14 @@ describe('Widgets', function () {
   //  GENERAL
   // -------------------------
 
-  it('should be able to be displayed on document', function (done) {
+  it('should be able to be displayed on document', function(done) {
     var promoWidget = new pathfora.Message({
       layout: 'bar',
       msg: 'Opening widget',
       id: 'widget-1'
     });
 
-    pathfora.initializeWidgets([promoWidget]);
+    pathfora.initializeWidgets([ promoWidget ]);
 
     // should append element to DOM
     var widget = $('#' + promoWidget.id);
@@ -1072,14 +1071,14 @@ describe('Widgets', function () {
     // should have class 'opened' after while
     pathfora.showWidget(promoWidget);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       pathfora.clearAll();
       done();
     }, 200);
   });
 
-  it('should have proper id specified', function (done) {
+  it('should have proper id specified', function(done) {
     var w1 = new pathfora.Message({
       layout: 'slideout',
       position: 'right',
@@ -1087,7 +1086,7 @@ describe('Widgets', function () {
       id: 'test-id-widget'
     });
 
-    expect(function () {
+    expect(function() {
       return new pathfora.Message({
         layout: 'slideout',
         position: 'left',
@@ -1095,9 +1094,9 @@ describe('Widgets', function () {
       });
     }).toThrow(new Error('All widgets must have an id value'));
 
-    pathfora.initializeWidgets([w1]);
+    pathfora.initializeWidgets([ w1 ]);
 
-    setTimeout(function () {
+    setTimeout(function() {
       var right = $('.pf-widget.pf-position-right');
       expect(right).toBeDefined();
       expect(right.attr('id')).toBe('test-id-widget');
@@ -1105,23 +1104,23 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should not append widget second time if it\'s already opened', function (done) {
+  it('should not append widget second time if it\'s already opened', function(done) {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
       id: 'append-widget',
       msg: 'test widget'
     });
 
-    pathfora.initializeWidgets([openedWidget]);
+    pathfora.initializeWidgets([ openedWidget ]);
 
     var widget = $('#' + openedWidget.id);
 
     // timeouts gives some time for appending to DOM
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       pathfora.showWidget(openedWidget);
 
-      setTimeout(function () {
+      setTimeout(function() {
         expect($('.pf-widget').length).toEqual(1);
         pathfora.clearAll();
         done();
@@ -1129,20 +1128,20 @@ describe('Widgets', function () {
     }, 500);
   });
 
-  it('should be able to close', function (done) {
+  it('should be able to close', function(done) {
     var promoWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Close widget test',
       id: 'close-widget'
     });
 
-    pathfora.initializeWidgets([promoWidget]);
+    pathfora.initializeWidgets([ promoWidget ]);
     pathfora.showWidget(promoWidget);
 
     var widget = $('#' + promoWidget.id);
     expect(widget).toBeDefined();
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       widget.find('.pf-widget-close').click();
       expect(widget.hasClass('opened')).toBeFalsy();
@@ -1150,33 +1149,33 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should not be in DOM when closed', function (done) {
+  it('should not be in DOM when closed', function(done) {
     var testWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Close widget test',
       id: 'close-clear-widget'
     });
 
-    pathfora.initializeWidgets([testWidget]);
+    pathfora.initializeWidgets([ testWidget ]);
     pathfora.showWidget(testWidget);
 
     var widget = $('#' + testWidget.id);
     expect(widget).toBeDefined();
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(widget[0]).toBeDefined();
 
       widget.find('.pf-widget-close').click();
 
-      setTimeout(function () {
+      setTimeout(function() {
         expect($('#' + testWidget.id)[0]).toBeUndefined();
         done();
       }, 600);
     }, 200);
   });
 
-  it('should handle missing values properly and never surface undefined', function () {
+  it('should handle missing values properly and never surface undefined', function() {
     var message = new pathfora.Message({
       id: 'message-test-widget',
       layout: 'slideout',
@@ -1197,20 +1196,20 @@ describe('Widgets', function () {
       theme: 'custom'
     });
 
-    pathfora.initializeWidgets([message, form, subscription]);
+    pathfora.initializeWidgets([ message, form, subscription ]);
 
     // test message
-    var mwidget = $('#' + message.id),
-        mheadline = mwidget.find('.pf-widget-headline'),
-        mtext = mwidget.find('.pf-widget-message');
+    var mwidget = $('#' + message.id);
+    var mheadline = mwidget.find('.pf-widget-headline');
+    var mtext = mwidget.find('.pf-widget-message');
 
     expect(mheadline.html()).not.toEqual('undefined');
     expect(mtext.html()).not.toEqual('undefined');
 
     // test form
-    var fwidget = $('#' + form.id),
-        fheadline = fwidget.find('.pf-widget-headline'),
-        ftext = fwidget.find('.pf-widget-message');
+    var fwidget = $('#' + form.id);
+    var fheadline = fwidget.find('.pf-widget-headline');
+    var ftext = fwidget.find('.pf-widget-message');
 
     expect(fheadline.html()).not.toEqual('undefined');
     expect(ftext.html()).not.toEqual('undefined');
@@ -1221,17 +1220,17 @@ describe('Widgets', function () {
     expect(stext.html()).not.toEqual('undefined');
   });
 
-  it('should not allow to be initialized without default properties', function () {
-    var missingParams = function () {
+  it('should not allow to be initialized without default properties', function() {
+    var missingParams = function() {
       var promoWidget = new pathfora.Message();
-      pathfora.initializeWidgets([promoWidget]);
+      pathfora.initializeWidgets([ promoWidget ]);
     };
 
     expect(missingParams).toThrow(new Error('Config object is missing'));
     pathfora.clearAll();
   });
 
-  it('should show branding assets unless set otherwise', function () {
+  it('should show branding assets unless set otherwise', function() {
     var w1 = new pathfora.Message({
       msg: 'test',
       id: 'branding1',
@@ -1245,10 +1244,10 @@ describe('Widgets', function () {
       branding: false
     });
 
-    pathfora.initializeWidgets([w1, w2]);
+    pathfora.initializeWidgets([ w1, w2 ]);
 
-    var widget1 = $('#' + w1.id),
-        widget2 = $('#' + w2.id);
+    var widget1 = $('#' + w1.id);
+    var widget2 = $('#' + w2.id);
 
     expect(widget1.find('.branding svg').length).toBe(1);
     expect(widget2.find('.branding svg').length).toBe(0);
@@ -1258,7 +1257,7 @@ describe('Widgets', function () {
   //  COLORS/THEME
   // -------------------------
 
-  it('should have correct theme configuration', function () {
+  it('should have correct theme configuration', function() {
     var w1 = new pathfora.Message({
       layout: 'button',
       position: 'left',
@@ -1291,11 +1290,11 @@ describe('Widgets', function () {
       }
     };
 
-    pathfora.initializeWidgets([w1, w2, w3], config);
+    pathfora.initializeWidgets([ w1, w2, w3 ], config);
 
-    var light = $('#' + w1.id),
-        dark = $('#' + w2.id),
-        custom = $('#' + w3.id);
+    var light = $('#' + w1.id);
+    var dark = $('#' + w2.id);
+    var custom = $('#' + w3.id);
 
     expect(light.hasClass('pf-theme-light')).toBeTruthy();
     expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
@@ -1303,7 +1302,7 @@ describe('Widgets', function () {
     expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
   });
 
-  it('can be hidden on initialization', function () {
+  it('can be hidden on initialization', function() {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Displayed on init',
@@ -1319,13 +1318,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([openedWidget, closedWidget]);
+    pathfora.initializeWidgets([ openedWidget, closedWidget ]);
 
     expect($('#' + openedWidget.id)[0]).toBeDefined();
     expect($('#' + closedWidget.id)[0]).toBeUndefined();
   });
 
-  it('should be able to adapt colors', function () {
+  it('should be able to adapt colors', function() {
     var modal = new pathfora.Message({
       id: 'custom-style-test',
       layout: 'modal',
@@ -1349,7 +1348,7 @@ describe('Widgets', function () {
       }
     };
 
-    pathfora.initializeWidgets([modal], config);
+    pathfora.initializeWidgets([ modal ], config);
 
     var widget = $('#' + modal.id);
     var background = widget.find('.pf-widget-content');
@@ -1373,20 +1372,20 @@ describe('Widgets', function () {
   //  CALLBACKS
   // -------------------------
 
-  it('should trigger callback function after pressing action button', function () {
+  it('should trigger callback function after pressing action button', function() {
     var modal = new pathfora.Message({
       id: 'confirm-action-test',
       layout: 'modal',
       msg: 'Confirm action test modal',
       confirmAction: {
         name: 'Test confirm action',
-        callback: function () {
+        callback: function() {
           alert('test confirmation');
         }
       }
     });
 
-    pathfora.initializeWidgets([modal]);
+    pathfora.initializeWidgets([ modal ]);
 
     var widget = $('#confirm-action-test');
     spyOn(modal.confirmAction, 'callback');
@@ -1395,21 +1394,20 @@ describe('Widgets', function () {
     expect(modal.confirmAction.callback).toHaveBeenCalled();
   });
 
-
-  it('should be able to trigger action on cancel', function () {
+  it('should be able to trigger action on cancel', function() {
     var modal = new pathfora.Message({
       id: 'cancel-action-test',
       layout: 'modal',
       msg: 'Welcome to our website',
       cancelAction: {
         name: 'Test cancel action',
-        callback: function () {
+        callback: function() {
           alert('test cancel');
         }
       }
     });
 
-    pathfora.initializeWidgets([modal]);
+    pathfora.initializeWidgets([ modal ]);
 
     var widget = $('#cancel-action-test');
     spyOn(modal.cancelAction, 'callback');
@@ -1417,13 +1415,13 @@ describe('Widgets', function () {
     expect(modal.cancelAction.callback).toHaveBeenCalled();
   });
 
-  it ('shouldn\'t fire submit callbacks on cancel, and cancel callbacks on submit', function () {
+  it('shouldn\'t fire submit callbacks on cancel, and cancel callbacks on submit', function() {
     var w1 = new pathfora.Message({
       id: 'widget-with-action-callback',
       msg: 'Cancel action negative test',
       confirmAction: {
         name: 'Test confirm action',
-        callback: function () {
+        callback: function() {
           alert('test confirmation');
         }
       }
@@ -1434,16 +1432,16 @@ describe('Widgets', function () {
       msg: 'Cancel action negative test',
       cancelAction: {
         name: 'Test cancel action',
-        callback: function () {
+        callback: function() {
           alert('test cancel');
         }
       }
     });
 
-    pathfora.initializeWidgets([w1, w2]);
+    pathfora.initializeWidgets([ w1, w2 ]);
 
-    var widgetA = $('#widget-with-action-callback'),
-        widgetB = $('#widget-with-cancel-callback');
+    var widgetA = $('#widget-with-action-callback');
+    var widgetB = $('#widget-with-cancel-callback');
 
     spyOn(w1.confirmAction, 'callback');
     spyOn(w2.cancelAction, 'callback');
@@ -1459,7 +1457,7 @@ describe('Widgets', function () {
   //  POSITION
   // -------------------------
 
-  it('should display in proper website regions', function () {
+  it('should display in proper website regions', function() {
     var w1 = new pathfora.Message({
       msg: 'Widget positioning test',
       layout: 'modal',
@@ -1467,13 +1465,13 @@ describe('Widgets', function () {
       position: 'customPos'
     });
 
-    pathfora.initializeWidgets([w1]);
+    pathfora.initializeWidgets([ w1 ]);
 
     var widget = $('#' + w1.id);
     expect(widget.hasClass('pf-position-customPos')).toBeTruthy();
   });
 
-  it('should use default position if no position is specified', function () {
+  it('should use default position if no position is specified', function() {
     var w1 = new pathfora.Message({
       msg: 'button - default pos test',
       id: 'position-widget-1',
@@ -1498,12 +1496,12 @@ describe('Widgets', function () {
       layout: 'folding'
     });
 
-    pathfora.initializeWidgets([w1, w2, w3, w4]);
+    pathfora.initializeWidgets([ w1, w2, w3, w4 ]);
 
-    var widget1 = $('#' + w1.id),
-        widget2 = $('#' + w2.id),
-        widget3 = $('#' + w3.id),
-        widget4 = $('#' + w4.id);
+    var widget1 = $('#' + w1.id);
+    var widget2 = $('#' + w2.id);
+    var widget3 = $('#' + w3.id);
+    var widget4 = $('#' + w4.id);
 
     expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
     expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
@@ -1515,7 +1513,7 @@ describe('Widgets', function () {
   //  CONTENT RECOMMENDATIONS
   // -------------------------
 
-  it('should show recommendations returned from the api and default content if there is an error', function (done) {
+  it('should show recommendations returned from the api and default content if there is an error', function(done) {
     jasmine.Ajax.install();
 
     window.lio = {
@@ -1559,7 +1557,7 @@ describe('Widgets', function () {
     });
 
     // Should show default
-    pathfora.initializeWidgets([defaultModal]);
+    pathfora.initializeWidgets([ defaultModal ]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1571,7 +1569,7 @@ describe('Widgets', function () {
     pathfora.acctid = credentials;
 
     // Should get and show api response
-    pathfora.initializeWidgets([modal]);
+    pathfora.initializeWidgets([ modal ]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1585,14 +1583,14 @@ describe('Widgets', function () {
     expect(widget).toBeDefined();
     expect(widget2).toBeDefined();
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(widget2.hasClass('opened')).toBeTruthy();
 
-      var href = widget.find('.pf-content-unit').attr('href'),
-          desc = widget.find('.pf-content-unit p').text(),
-          img = widget.find('.pf-content-unit-img').css('background-image'),
-          title = widget.find('.pf-content-unit h4').text();
+      var href = widget.find('.pf-content-unit').attr('href');
+      var desc = widget.find('.pf-content-unit p').text();
+      var img = widget.find('.pf-content-unit-img').css('background-image');
+      var title = widget.find('.pf-content-unit h4').text();
 
       expect(title).toBe('Example Title');
       expect(href).toBe('http://www.example.com/1');
@@ -1617,7 +1615,7 @@ describe('Widgets', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it('should throw errors if default content is improperly defined', function (done) {
+  it('should throw errors if default content is improperly defined', function(done) {
     jasmine.Ajax.install();
 
     window.lio = {
@@ -1672,8 +1670,8 @@ describe('Widgets', function () {
     });
 
     // Should error since there is no default defined
-    expect(function () {
-      pathfora.initializeWidgets([errorModal]);
+    expect(function() {
+      pathfora.initializeWidgets([ errorModal ]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1685,12 +1683,12 @@ describe('Widgets', function () {
 
     pathfora.acctid = credentials;
 
-    expect(function () {
-      pathfora.initializeWidgets([errorModal2]);
+    expect(function() {
+      pathfora.initializeWidgets([ errorModal2 ]);
     }).toThrow(new Error('Unsupported layout for content recommendation'));
 
-    expect(function () {
-      pathfora.initializeWidgets([errorModal3]);
+    expect(function() {
+      pathfora.initializeWidgets([ errorModal3 ]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -1700,7 +1698,7 @@ describe('Widgets', function () {
       });
     }).toThrow(new Error('Cannot define recommended content unless it is a default'));
 
-    setTimeout(function () {
+    setTimeout(function() {
       done();
     }, 200);
 
@@ -1712,7 +1710,7 @@ describe('Widgets', function () {
   //  CUSTOM BUTTONS
   // -------------------------
 
-  it('should be able to configure custom text', function () {
+  it('should be able to configure custom text', function() {
     var modal = new pathfora.Message({
       id: 'custom-button-text-test',
       layout: 'modal',
@@ -1722,11 +1720,11 @@ describe('Widgets', function () {
       cancelMessage: 'Cancel Here'
     });
 
-    pathfora.initializeWidgets([modal]);
+    pathfora.initializeWidgets([ modal ]);
 
-    var widget = $('#' + modal.id),
-        actionBtn = widget.find('.pf-widget-ok'),
-        cancelBtn = widget.find('.pf-widget-cancel');
+    var widget = $('#' + modal.id);
+    var actionBtn = widget.find('.pf-widget-ok');
+    var cancelBtn = widget.find('.pf-widget-cancel');
 
     expect(actionBtn.html()).toBe('Confirm Here');
     expect(cancelBtn.html()).toBe('Cancel Here');
@@ -1736,7 +1734,7 @@ describe('Widgets', function () {
   //  CUSTOM FIELDS
   // -------------------------
 
-  it('should be able to hide and show fields based on config', function () {
+  it('should be able to hide and show fields based on config', function() {
     pathfora.clearAll();
 
     var formfields = new pathfora.Form({
@@ -1754,15 +1752,15 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([formfields]);
+    pathfora.initializeWidgets([ formfields ]);
 
     var theform = document.getElementsByTagName('form');
     expect(theform.length).toBe(1);
 
     for (var elem in theform[0].children) {
       if (typeof theform[0].children[elem].getAttribute !== 'undefined') {
-        var inputname = theform[0].children[elem].getAttribute('name'),
-            inputrequired = theform[0].children[elem].getAttribute('required');
+        var inputname = theform[0].children[elem].getAttribute('name');
+        var inputrequired = theform[0].children[elem].getAttribute('required');
 
         if (inputname === 'message') {
           expect(inputrequired).toBe('');
@@ -1780,24 +1778,24 @@ describe('Widgets', function () {
   //  GATE
   // -------------------------
 
-  it('should open gate when the cookie is not set', function (done) {
+  it('should open gate when the cookie is not set', function(done) {
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',
       id: 'sitegate-widget-1',
       msg: 'Submit this widget to access the website.'
     });
 
-    pathfora.initializeWidgets([gate]);
+    pathfora.initializeWidgets([ gate ]);
 
     var widget = $('#' + gate.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
   });
 
-  it('should not gate when the cookie is already set', function (done) {
+  it('should not gate when the cookie is already set', function(done) {
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',
       id: 'sitegate-widget-2',
@@ -1806,11 +1804,11 @@ describe('Widgets', function () {
 
     pathfora.utils.saveCookie('PathforaUnlocked_' + gate.id, true);
 
-    pathfora.initializeWidgets([gate]);
+    pathfora.initializeWidgets([ gate ]);
 
     var widget = $('#' + gate.id);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect(widget.hasClass('opened')).toBeFalsy();
       done();
     }, 200);
@@ -1820,7 +1818,7 @@ describe('Widgets', function () {
   //  DISPLAY CONDITIONS
   // -------------------------
 
-  it('should be able to show after specified time', function () {
+  it('should be able to show after specified time', function() {
     jasmine.clock().install();
     var delayedWidget = new pathfora.Message({
       msg: 'Delayed widget test',
@@ -1831,7 +1829,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([delayedWidget]);
+    pathfora.initializeWidgets([ delayedWidget ]);
     var widget = $('#' + delayedWidget.id);
 
     jasmine.clock().tick(1000);
@@ -1843,7 +1841,7 @@ describe('Widgets', function () {
     jasmine.clock().uninstall();
   });
 
-  it('should not show when page views requirement has not been reached', function () {
+  it('should not show when page views requirement has not been reached', function() {
     var form = new pathfora.Form({
       msg: 'subscription',
       id: 'page-view-widget-1',
@@ -1855,13 +1853,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show when page views requirement has been reached', function () {
+  it('should show when page views requirement has been reached', function() {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -1873,13 +1871,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
 
-  it('should if after start_date', function () {
+  it('should if after start_date', function() {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
@@ -1898,13 +1896,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
 
-  it('should not show if after end_date', function () {
+  it('should not show if after end_date', function() {
     var limitDate = new Date();
     limitDate.setDate(14);
     limitDate.setMonth(1);
@@ -1923,13 +1921,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should not show if hideAfterAction duration not met', function () {
+  it('should not show if hideAfterAction duration not met', function() {
     var widgetId = 'hideAfterActionWidget1';
     pathfora.utils.saveCookie('PathforaClosed_' + widgetId, '1|' + Date.now());
 
@@ -1948,13 +1946,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show if hideAfterAction duration met', function () {
+  it('should show if hideAfterAction duration met', function() {
     var widgetId = 'hideAfterActionWidget2';
     pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '1|' + Date.now());
 
@@ -1974,15 +1972,15 @@ describe('Widgets', function () {
       }
     });
 
-    setTimeout(function () {
-      pathfora.initializeWidgets([form]);
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
 
       var widget = $('#' + form.id);
       expect(widget.length).toBe(1);
     }, 3000);
   });
 
-  it('should not show if hideAfterAction count not met', function () {
+  it('should not show if hideAfterAction count not met', function() {
     var widgetId = 'hideAfterActionWidget3';
     pathfora.utils.saveCookie('PathforaCancel_' + widgetId, '2|' + Date.now());
 
@@ -2000,13 +1998,13 @@ describe('Widgets', function () {
         }
       }
     });
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show if hideAfterAction count not met', function () {
+  it('should show if hideAfterAction count not met', function() {
     var widgetId = 'hideAfterActionWidget4';
     pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '2|' + Date.now());
 
@@ -2025,14 +2023,14 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
 
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-  it('should accept and parse hideAfterAction cookies with comma values', function () {
+  it('should accept and parse hideAfterAction cookies with comma values', function() {
     var widgetId = 'hideAfterActionComma';
     pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '2,' + Date.now());
     pathfora.utils.saveCookie('PathforaCancel_' + widgetId, '1,' + Date.now());
@@ -2060,13 +2058,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show if before limited amount of impressions', function () {
+  it('should show if before limited amount of impressions', function() {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
@@ -2084,13 +2082,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(1);
   });
 
-  it('should not show if after limited amount of impressions', function () {
+  it('should not show if after limited amount of impressions', function() {
     var widgetId = 'impressionWidget2';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
 
@@ -2108,13 +2106,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show if impression buffer met', function () {
+  it('should show if impression buffer met', function() {
     var widgetId = 'impressionWidget3';
     pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2|' + Date.now());
 
@@ -2132,15 +2130,15 @@ describe('Widgets', function () {
       }
     });
 
-    setTimeout(function () {
-      pathfora.initializeWidgets([form]);
+    setTimeout(function() {
+      pathfora.initializeWidgets([ form ]);
 
       var widget = $('#' + form.id);
       expect(widget.length).toBe(1);
     }, 3000);
   });
 
-  it('should not show if impression buffer not met', function () {
+  it('should not show if impression buffer not met', function() {
     var widgetId = 'impressionWidget3';
     pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2|' + Date.now());
 
@@ -2158,14 +2156,14 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-  it('should accept and parse impression cookies with comma values', function () {
+  it('should accept and parse impression cookies with comma values', function() {
     var widgetId = 'impressionComma';
     pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2,' + Date.now());
 
@@ -2182,13 +2180,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show when the url matches the display conditions', function () {
+  it('should show when the url matches the display conditions', function() {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -2215,15 +2213,15 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form, form2]);
+    pathfora.initializeWidgets([ form, form2 ]);
 
-    var widget = $('#' + form.id),
-        widget2 = $('#' + form2.id);
+    var widget = $('#' + form.id);
+    var widget2 = $('#' + form2.id);
     expect(widget.length).toBe(1);
     expect(widget2.length).toBe(1);
   });
 
-  it('should not show when the url doesn\'t match the display conditions', function () {
+  it('should not show when the url doesn\'t match the display conditions', function() {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -2237,13 +2235,13 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form]);
+    pathfora.initializeWidgets([ form ]);
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
   });
 
-  it('should show using simple match', function () {
+  it('should show using simple match', function() {
     var form1 = new pathfora.Form({
       id: '88ee86cf72b44e67bf758cc743ac1a5d',
       msg: 'subscription',
@@ -2276,7 +2274,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form1, form2]);
+    pathfora.initializeWidgets([ form1, form2 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2285,7 +2283,7 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should show using exact match', function () {
+  it('should show using exact match', function() {
     var form1 = new pathfora.Form({
       id: 'e71c5416ac7345bcba8c5330d14c4a2e',
       msg: 'subscription',
@@ -2317,7 +2315,7 @@ describe('Widgets', function () {
         ]
       }
     });
-    pathfora.initializeWidgets([form1, form2]);
+    pathfora.initializeWidgets([ form1, form2 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2326,7 +2324,7 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should show using string match', function () {
+  it('should show using string match', function() {
     var form1 = new pathfora.Form({
       id: '3044aae3e5ad463fbd868a626a7998ca',
       msg: 'subscription',
@@ -2375,7 +2373,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form1, form2, form3]);
+    pathfora.initializeWidgets([ form1, form2, form3 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2387,7 +2385,7 @@ describe('Widgets', function () {
     expect(widget.length).toBe(1);
   });
 
-  it('should show using regex match', function () {
+  it('should show using regex match', function() {
     var form1 = new pathfora.Form({
       id: '87a84e6f0d5d480595eebaf5de76693f',
       msg: 'subscription',
@@ -2448,7 +2446,7 @@ describe('Widgets', function () {
         ]
       }
     });
-    pathfora.initializeWidgets([form1, form2, form3, form4]);
+    pathfora.initializeWidgets([ form1, form2, form3, form4 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2463,7 +2461,7 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
-  it('should ignore trailing slashes for the exact match rule', function () {
+  it('should ignore trailing slashes for the exact match rule', function() {
     window.history.pushState({}, '', '/test/');
 
     var form1 = new pathfora.Form({
@@ -2496,7 +2494,7 @@ describe('Widgets', function () {
         ]
       }
     });
-    pathfora.initializeWidgets([form1, form2]);
+    pathfora.initializeWidgets([ form1, form2 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2507,7 +2505,7 @@ describe('Widgets', function () {
     window.history.pushState({}, '', '/context.html');
   });
 
-  it('should ignore order of query params for exact rule', function () {
+  it('should ignore order of query params for exact rule', function() {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1');
 
     var form1 = new pathfora.Form({
@@ -2542,7 +2540,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form1, form2]);
+    pathfora.initializeWidgets([ form1, form2 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2553,7 +2551,7 @@ describe('Widgets', function () {
     window.history.pushState({}, '', window.location.pathname);
   });
 
-  it('should ignore "lytics_variation_preview_id" query in comparison', function () {
+  it('should ignore "lytics_variation_preview_id" query in comparison', function() {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1&lytics_variation_preview_id=7b26ca56afb84669bba0bf0810ec459f');
 
     var form1 = new pathfora.Form({
@@ -2572,7 +2570,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form1]);
+    pathfora.initializeWidgets([ form1 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2580,7 +2578,7 @@ describe('Widgets', function () {
     window.history.pushState({}, '', window.location.pathname);
   });
 
-  it('should ignore order of query params and extra params for string rule', function () {
+  it('should ignore order of query params and extra params for string rule', function() {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1&baz=3');
 
     var form1 = new pathfora.Form({
@@ -2641,7 +2639,7 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form1, form2, form3, form4]);
+    pathfora.initializeWidgets([ form1, form2, form3, form4 ]);
 
     var widget = $('#' + form1.id);
     expect(widget.length).toBe(1);
@@ -2658,7 +2656,7 @@ describe('Widgets', function () {
     window.history.pushState({}, '', window.location.pathname);
   });
 
-  it('should consider multiple display conditions', function () {
+  it('should consider multiple display conditions', function() {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -2698,19 +2696,19 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([form, form2, form3]);
+    pathfora.initializeWidgets([ form, form2, form3 ]);
 
     expect($('#' + form.id).length).toBe(0);
     expect($('#' + form2.id).length).toBe(0);
     expect($('#' + form3.id).length).toBe(1);
   });
 
-  it('should consider multiple display conditions and watchers', function () {
+  it('should consider multiple display conditions and watchers', function() {
     $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
 
-    var id = 'multiple-conditions',
-        id2 = 'multiple-conditions-2',
-        id3 = 'multiple-conditions-3';
+    var id = 'multiple-conditions';
+    var id2 = 'multiple-conditions-2';
+    var id3 = 'multiple-conditions-3';
 
     var form = new pathfora.Form({
       msg: 'subscription',
@@ -2754,9 +2752,9 @@ describe('Widgets', function () {
     sessionStorage.setItem('PathforaImpressions_' + id2, 2);
     sessionStorage.setItem('PathforaImpressions_' + id3, 2);
 
-    pathfora.initializeWidgets([form, form2, form3]);
+    pathfora.initializeWidgets([ form, form2, form3 ]);
 
-    setTimeout(function () {
+    setTimeout(function() {
       expect($('#' + id).length).toBe(0);
       expect($('#' + id2).length).toBe(0);
       expect($('#' + id3).length).toBe(0);
@@ -2764,7 +2762,7 @@ describe('Widgets', function () {
       var height = $(document).height();
       $('body').scrollTop(height / 2);
 
-      setTimeout(function () {
+      setTimeout(function() {
         expect($('#' + id).length).toBe(1);
         expect($('#' + id2).length).toBe(0);
         expect($('#' + id3).length).toBe(0);
@@ -2779,19 +2777,19 @@ describe('Widgets', function () {
   // -------------------------
 
   // Future functionalities
-  xit('should allow custom messages on action buttons', function () {
+  xit('should allow custom messages on action buttons', function() {
     throw 'pass';
   });
 
-  xit('should be able to show after specific number of visits', function () {
+  xit('should be able to show after specific number of visits', function() {
     throw 'pass';
   });
 
-  xit('should be able to randomly choose one of available variations', function () {
+  xit('should be able to randomly choose one of available variations', function() {
     throw 'pass';
   });
 
-  xit('should show warning when user tries to use an invalid position', function () {
+  xit('should show warning when user tries to use an invalid position', function() {
     spyOn(console, 'warn');
 
     var w1 = new pathfora.Message({
@@ -2807,32 +2805,31 @@ describe('Widgets', function () {
       position: 'wrong-position'
     });
 
-    pathfora.initializeWidgets([w1]);
+    pathfora.initializeWidgets([ w1 ]);
     // NOTE Will always fail agaist production env
     //    expect(console.warn).not.toHaveBeenCalled();
 
     pathfora.clearAll();
 
-    pathfora.initializeWidgets([w2]);
+    pathfora.initializeWidgets([ w2 ]);
     // NOTE Will always fail agaist production env
     //    expect(console.warn).toHaveBeenCalledWith('wrong-position is not valid position for bar');
   });
 });
 
-
 // -------------------------
 // API TESTS (IGNORED)
 // -------------------------
 
-describe('API', function () {
-  beforeEach(function () {
+describe('API', function() {
+  beforeEach(function() {
     jasmine.Ajax.install();
   });
-  afterEach(function () {
+  afterEach(function() {
     jasmine.Ajax.uninstall();
   });
 
-  xit('should be able call API with credentials', function () {
+  xit('should be able call API with credentials', function() {
     var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
@@ -2841,7 +2838,7 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe]);
+    pathfora.initializeWidgets([ subscribe ]);
     pathfora.api.getWidgetData(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
@@ -2854,7 +2851,7 @@ describe('API', function () {
     expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
   });
 
-  xit('should get data from API and pass it to callback function', function () {
+  xit('should get data from API and pass it to callback function', function() {
     var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
@@ -2863,7 +2860,7 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe]);
+    pathfora.initializeWidgets([ subscribe ]);
     pathfora.api.getWidgetData(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
@@ -2876,7 +2873,7 @@ describe('API', function () {
     expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
   });
 
-  xit('should properly handle errors by running onError function', function () {
+  xit('should properly handle errors by running onError function', function() {
     var callback = jasmine.createSpy('success');
 
     var subscribe = new pathfora.Subscription({
@@ -2885,9 +2882,9 @@ describe('API', function () {
       msg: 'Signup to get updates right into your inbox'
     });
 
-    pathfora.initializeWidgets([subscribe]);
+    pathfora.initializeWidgets([ subscribe ]);
 
-    pathfora.api.getWidgetData(subscribe, function () {
+    pathfora.api.getWidgetData(subscribe, function() {
     }, callback);
 
     expect(callback).not.toHaveBeenCalled();
@@ -2905,11 +2902,11 @@ describe('API', function () {
 // UTIL TESTS
 // -------------------------
 
-describe('Utils', function () {
-  describe('the escapeURI util', function () {
+describe('Utils', function() {
+  describe('the escapeURI util', function() {
     var escapeURI = pathfora.utils.escapeURI;
 
-    it('should escape non-URI characters', function () {
+    it('should escape non-URI characters', function() {
       // Most of the character space we care about, un-escaped...
       var unescaped =
         '\x02\n\x1d !\"%\'()*-.0123456789' +
@@ -2927,41 +2924,40 @@ describe('Utils', function () {
       expect(escapeURI(unescaped, { usePlus: true })).toBe(escaped);
     });
 
-    it('should not escape URI separators', function () {
+    it('should not escape URI separators', function() {
       var unescaped = 'http://www.getlytics.com/?foo=1&bar=2';
 
       expect(escapeURI(unescaped)).toBe(unescaped);
     });
 
-    it('should not double-encode URIs', function () {
-      var unescaped = 'http://www.getlytics.com/?foo=a b c&bar=d e f',
-          escapedOnce = escapeURI(unescaped, { keepEscaped: true }),
-          escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
+    it('should not double-encode URIs', function() {
+      var unescaped = 'http://www.getlytics.com/?foo=a b c&bar=d e f';
+      var escapedOnce = escapeURI(unescaped, { keepEscaped: true });
+      var escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
 
       expect(escapedTwice).toBe(escapedOnce);
     });
   });
 });
 
-
 // -------------------------
 // INLINE PERSONALIZATION TEST
 // -------------------------
 
-describe('Inline Personalization', function () {
+describe('Inline Personalization', function() {
   // -------------------------
   // TRIGGER ELEMENTS
   // -------------------------
-  describe('pftrigger elements', function () {
-    beforeEach(function () {
+  describe('pftrigger elements', function() {
+    beforeEach(function() {
       window.pathfora.inline.elements = [];
       window.pathfora.acctid = '';
     });
 
-    it('should select to show the first matching element per group', function () {
+    it('should select to show the first matching element per group', function() {
       window.lio = {
         data: {
-          segments: ['all', 'high_value', 'email', 'smt_new']
+          segments: [ 'all', 'high_value', 'email', 'smt_new' ]
         },
         loaded: true
       };
@@ -2976,10 +2972,10 @@ describe('Inline Personalization', function () {
 
       window.pathfora.inline.procElements();
 
-      var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]'),
-          grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
-          grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
-          grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
+      var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]');
+      var grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]');
+      var grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]');
+      var grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
 
       expect(grp1show.length).toBe(1);
       expect(grp2show.length).toBe(1);
@@ -2996,11 +2992,10 @@ describe('Inline Personalization', function () {
       $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
     });
 
-
-    it('should select to show the default if none of the triggers match', function () {
+    it('should select to show the default if none of the triggers match', function() {
       window.lio = {
         data: {
-          segments: ['all', 'email']
+          segments: [ 'all', 'email' ]
         },
         loaded: true
       };
@@ -3011,8 +3006,8 @@ describe('Inline Personalization', function () {
 
       window.pathfora.inline.procElements();
 
-      var def = $('[data-pfmodified="true"]'),
-          hidden = $('[data-pftrigger]');
+      var def = $('[data-pfmodified="true"]');
+      var hidden = $('[data-pftrigger]');
 
       expect(def.length).toBe(1);
       expect(def.text()).toBe('Default');
@@ -3024,10 +3019,10 @@ describe('Inline Personalization', function () {
       $('[data-pfgroup="testgrp"]').remove();
     });
 
-    it('should not interfere with pathfora targeting', function () {
+    it('should not interfere with pathfora targeting', function() {
       window.lio = {
         data: {
-          segments: ['all', 'portlanders', 'email']
+          segments: [ 'all', 'portlanders', 'email' ]
         },
         loaded: true
       };
@@ -3049,21 +3044,21 @@ describe('Inline Personalization', function () {
       });
 
       var widgets = {
-        target: [{
+        target: [ {
           segment: 'email',
-          widgets: [testModule]
-        }],
-        inverse: [testModule2]
+          widgets: [ testModule ]
+        } ],
+        inverse: [ testModule2 ]
       };
 
       pathfora.initializeWidgets(widgets);
       window.pathfora.inline.procElements();
 
-      setTimeout(function () {
-        var shown = $('[data-pfmodified="true"]'),
-            hidden = $('[data-pftrigger]'),
-            w1 = $('#' + testModule.id),
-            w2 = $('#' + testModule2.id);
+      setTimeout(function() {
+        var shown = $('[data-pfmodified="true"]');
+        var hidden = $('[data-pftrigger]');
+        var w1 = $('#' + testModule.id);
+        var w2 = $('#' + testModule2.id);
 
         expect(shown.length).toBe(1);
         expect(shown.text()).toBe('Portlander');
@@ -3084,13 +3079,13 @@ describe('Inline Personalization', function () {
   // -------------------------
   // RECOMMENDATION ELEMENTS
   // -------------------------
-  describe('pfrecommend elements', function () {
-    beforeEach(function () {
+  describe('pfrecommend elements', function() {
+    beforeEach(function() {
       pathfora.acctid = credentials;
       pathfora.inline.elements = [];
     });
 
-    it('should fill pftype elements with content recommendation data', function () {
+    it('should fill pftype elements with content recommendation data', function() {
       jasmine.Ajax.install();
 
       $(document.body).append('<div data-pfblock="group1" data-pfrecommend="www.example.com/*">' +
@@ -3108,13 +3103,12 @@ describe('Inline Personalization', function () {
         'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
 
-
-      var rec = $('[data-pfmodified="true"]'),
-          recImage = rec.find('[data-pftype="image"]'),
-          recUrl = rec.find('[data-pftype="url"]'),
-          recTitle = rec.find('[data-pftype="title"]'),
-          recDesc = rec.find('[data-pftype="description"]'),
-          def = $('[data-pfrecommend="default"]');
+      var rec = $('[data-pfmodified="true"]');
+      var recImage = rec.find('[data-pftype="image"]');
+      var recUrl = rec.find('[data-pftype="url"]');
+      var recTitle = rec.find('[data-pftype="title"]');
+      var recDesc = rec.find('[data-pftype="description"]');
+      var def = $('[data-pfrecommend="default"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -3130,7 +3124,7 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.uninstall();
     });
 
-    it('should show the default content if invalid response from API', function () {
+    it('should show the default content if invalid response from API', function() {
       jasmine.Ajax.install();
 
       $(document.body).append('<div data-pfblock="group2" data-pfrecommend="www.example.com/*">' +
@@ -3148,9 +3142,8 @@ describe('Inline Personalization', function () {
         'responseText': '{"data": null,"message": "No such account id","status": 400}'
       });
 
-
-      var def = $('[data-pfmodified="true"]'),
-          bad = $('[data-pfrecommend="www.example.com/*"]');
+      var def = $('[data-pfmodified="true"]');
+      var bad = $('[data-pfrecommend="www.example.com/*"]');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('block');
@@ -3162,7 +3155,7 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.uninstall();
     });
 
-    it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function () {
+    it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function() {
       jasmine.Ajax.install();
 
       $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
@@ -3178,10 +3171,9 @@ describe('Inline Personalization', function () {
         'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
 
-
-      var rec = $('[data-pfmodified="true"]'),
-          recImage = rec.find('[data-pftype="image"]'),
-          recUrl = rec.find('[data-pftype="url"]');
+      var rec = $('[data-pfmodified="true"]');
+      var recImage = rec.find('[data-pftype="image"]');
+      var recUrl = rec.find('[data-pftype="url"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -3192,7 +3184,7 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.uninstall();
     });
 
-    it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
+    it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function() {
       jasmine.Ajax.install();
 
       $(document.body).append('<div data-pfblock="group4" data-pfrecommend="www.example.com/*">' +
@@ -3211,21 +3203,20 @@ describe('Inline Personalization', function () {
           '{"url": "www.example.com/2","title": "Another Example Title","description": "An second example description","primary_image": "image2.jpg","confidence": 0.23334,"visited": false}]}'
       });
 
-
       var recs = $('[data-pfmodified="true"]');
       expect(recs.length).toBe(2);
 
-      var rec1 = $(recs[0]),
-          rec1Title = rec1.find('[data-pftype="title"]'),
-          rec1Url = rec1.find('[data-pftype="url"]');
+      var rec1 = $(recs[0]);
+      var rec1Title = rec1.find('[data-pftype="title"]');
+      var rec1Url = rec1.find('[data-pftype="url"]');
 
       expect(rec1.css('display')).toBe('block');
       expect(rec1Title.text()).toBe('Example Title');
       expect(rec1Url.attr('href')).toBe('http://www.example.com/1');
 
-      var rec2 = $(recs[1]),
-          rec2Title = rec2.find('[data-pftype="title"]'),
-          rec2Url = rec2.find('[data-pftype="url"]');
+      var rec2 = $(recs[1]);
+      var rec2Title = rec2.find('[data-pftype="title"]');
+      var rec2Url = rec2.find('[data-pftype="url"]');
 
       expect(rec2.css('display')).toBe('block');
       expect(rec2Title.text()).toBe('Another Example Title');
@@ -3235,12 +3226,12 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.uninstall();
     });
 
-    it('should not conflict with segment trigger groups', function () {
+    it('should not conflict with segment trigger groups', function() {
       jasmine.Ajax.install();
 
       window.lio = {
         data: {
-          segments: ['all', 'high_value', 'email', 'smt_new']
+          segments: [ 'all', 'high_value', 'email', 'smt_new' ]
         }
       };
 
@@ -3257,7 +3248,6 @@ describe('Inline Personalization', function () {
         'contentType': 'application/json',
         'responseText': '{"data": null,"message": "No such account id","status": 400}'
       });
-
 
       var elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
@@ -3286,7 +3276,6 @@ describe('Inline Personalization', function () {
         'contentType': 'application/json',
         'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-
 
       elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
