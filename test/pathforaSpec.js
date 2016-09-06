@@ -476,6 +476,56 @@ describe('Pathfora', function () {
     }, 200);
   });
 
+  it('should properly allow for multiple widgets with different segment targets', function (done) {
+    window.lio = {
+      data: {
+        segments: ['a', 'b']
+      }
+    };
+
+    window.lio.loaded = true;
+
+    var messageA = new pathfora.Message({
+      id: 'test-slideout-01',
+      msg: 'A',
+      layout: 'slideout'
+    });
+
+    var messageB = new pathfora.Message({
+      id: 'test-bar-02',
+      msg: 'B',
+      layout: 'modal'
+    });
+
+    var widgets = {
+      target: [
+        {
+          segment: 'a',
+          widgets: [messageA]
+        },
+        {
+          segment: 'b',
+          widgets: [messageB]
+        }
+      ]
+    };
+
+    pathfora.initializeWidgets(widgets);
+
+    var widgetA = $('#' + messageA.id),
+        widgetB = $('#' + messageB.id);
+
+    expect(widgetA).toBeDefined();
+    expect(widgetB).toBeDefined();
+
+    setTimeout(function () {
+      expect(widgetA.hasClass('opened')).toBeTruthy();
+      expect(widgetB.hasClass('opened')).toBeTruthy();
+      pathfora.clearAll();
+      done();
+    }, 200);
+  });
+
   // -------------------------
   // SCAFFOLDING
   // -------------------------

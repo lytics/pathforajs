@@ -2751,7 +2751,7 @@
                 target = widgets.target[ti];
                 if (segments && segments.indexOf(target.segment) !== -1) {
                   // add the widgets with proper targeting to the master list
-                  // ensure we dont overwrite existing widgets in target array
+                  // ensure we dont overwrite existing widgets in target
                   targetedwidgets = targetedwidgets.concat(target.widgets);
                 }
               }
