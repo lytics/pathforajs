@@ -73,15 +73,15 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
 
 **Note:** The examples below will show the default content since the account used does not have content affinity set up.
 
-<h3>Content Recommendation Modal - <a href="../../examples/preview/layouts/modal/contentRecommend.html" target="_blank">Live Preview</a></h3>
+<h3>Content Recommendation Modal - <a href="../examples/preview/layouts/modal/contentRecommend.html" target="_blank">Live Preview</a></h3>
 
-![Content Recommendation Modal Module](../examples/img/layouts/modal/contentRecommend.png)
+![Content Recommendation Modal Module](examples/img/layouts/modal/contentRecommend.png)
 
-<pre data-src="../../examples/src/layouts/modal/contentRecommend.js"></pre>
+<pre data-src="../examples/src/layouts/modal/contentRecommend.js"></pre>
 
-<h3>Content Recommendation Slideout - <a href="../../examples/preview/layouts/slideout/contentRecommend.html" target="_blank">Live Preview</a></h3>
+<h3>Content Recommendation Slideout - <a href="../examples/preview/layouts/slideout/contentRecommend.html" target="_blank">Live Preview</a></h3>
 
 
-![Content Recommendation Modal Module](../examples/img/layouts/slideout/contentRecommend.png)
+![Content Recommendation Modal Module](examples/img/layouts/slideout/contentRecommend.png)
 
-<pre data-src="../../examples/src/layouts/slideout/contentRecommend.js"></pre>
+<pre data-src="../examples/src/layouts/slideout/contentRecommend.js"></pre>

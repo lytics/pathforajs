@@ -2608,7 +2608,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.7';
+    this.version = '0.0.8';
 
     /**
      * @public
@@ -2750,7 +2750,9 @@
               for (ti = 0; ti < tl; ti++) {
                 target = widgets.target[ti];
                 if (segments && segments.indexOf(target.segment) !== -1) {
-                  targetedwidgets = target.widgets;
+                  // add the widgets with proper targeting to the master list
+                  // ensure we dont overwrite existing widgets in target
+                  targetedwidgets = targetedwidgets.concat(target.widgets);
                 }
               }
             }
