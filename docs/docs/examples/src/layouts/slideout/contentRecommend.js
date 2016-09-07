@@ -5,9 +5,9 @@ var module = new pathfora.Message({
   msg: 'Based on your interests we think you will like this content.',
   variant: 3,
   recommend: {
-    ql: {
-      raw: 'FILTER AND(url LIKE "www.example.com/blog/*") FROM content'
-    }
+    path: '/blog/post',
+    domain: 'getlytics.com',
+    rank: 'popular'
   },
   content: [
     {

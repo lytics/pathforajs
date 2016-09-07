@@ -62,7 +62,7 @@
       okShow: true,
       cancelShow: true,
       responsive: true,
-      branding: true
+      branding: 'show'
     },
     subscription: {
       layout: 'modal',
@@ -76,7 +76,7 @@
       okShow: true,
       cancelShow: true,
       responsive: true,
-      branding: true
+      branding: 'show'
     },
     form: {
       layout: 'modal',
@@ -106,7 +106,7 @@
       cancelShow: true,
       showSocialLogin: false,
       responsive: true,
-      branding: true
+      branding: 'show'
     },
     sitegate: {
       layout: 'modal',
@@ -135,7 +135,7 @@
       showSocialLogin: false,
       showForm: true,
       responsive: true,
-      branding: true
+      branding: 'show'
     }
   };
 
@@ -268,7 +268,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -1019,7 +1019,7 @@
       case 'modal':
       case 'slideout':
       case 'sitegate':
-        if (widgetContent && config.branding) {
+        if (widgetContent && config.branding !== 'hide') {
           var branding = document.createElement('div');
           branding.className = 'branding';
           branding.innerHTML = templates.assets.lytics;
@@ -1457,7 +1457,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-        config.branding ? ' pf-widget-has-branding' : '',
+        config.branding !== 'hide' ? ' pf-widget-has-branding' : '',
         !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },
@@ -2312,7 +2312,7 @@
       }
 
       var recommendParts = [
-        'http://api.lytics.io/api/content/recommend/',
+        '//api.lytics.io/api/content/recommend/',
         accountId,
         '/user/_uids/',
         seerId
@@ -2546,7 +2546,13 @@
 
       if (rec !== 'default') {
         // call the recommendation API using the url pattern urlPattern as a filter
-        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
+        var params = {
+          ql: {
+            raw: api.constructRecommendFilter(rec)
+          }
+        };
+
+        api.recommendContent(context.pathfora.acctid, params, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
