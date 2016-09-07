@@ -1781,7 +1781,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+          api.recommendContent(pathfora.acctid, w.recommend, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -1832,7 +1832,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend && widget.recommend.ql || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend || widget.content)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
@@ -2264,24 +2264,60 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, filter, callback) {
+    recommendContent: function (accountId, params, callback) {
       // Recommendation API:
-      // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
+      // https://www.getlytics.com/developers/rest-api#content-recommendation
 
-      var recommendUrl,
-          seerId = utils.readCookie('seerid');
+      var seerId = utils.readCookie('seerid');
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
       }
 
-      recommendUrl = [
+      var recommendParts = [
         '{{apiurl}}/api/content/recommend/',
         accountId,
         '/user/_uids/',
-        seerId,
-        filter ? '?ql=' + filter : ''
-      ].join('');
+        seerId
+      ];
+
+      // construct the query params
+      var count = 0;
+      for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+          if (count !== 0) {
+            recommendParts.push('&');
+          } else {
+            recommendParts.push('?');
+          }
+
+          if (params[key] instanceof Object) {
+
+            // special case for raw FilterQL support
+            if (key === 'ql' && params.ql.raw) {
+              recommendParts.push('ql=' + params.ql.raw);
+
+            // multiple params []string (topics or rollups)
+            } else {
+              for (var i in params[key]) {
+                if (i < Object.keys(params[key]).length && i > 0) {
+                  recommendParts.push('&');
+                }
+
+                recommendParts.push(key + '[]=' + params[key][i]);
+              }
+            }
+
+          // single param
+          } else {
+            recommendParts.push(key + '=' + params[key]);
+          }
+
+          count++;
+        }
+      }
+
+      var recommendUrl = recommendParts.join('');
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
