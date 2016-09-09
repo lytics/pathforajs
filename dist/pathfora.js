@@ -62,7 +62,7 @@
       okShow: true,
       cancelShow: true,
       responsive: true,
-      branding: 'show'
+      branding: true
     },
     subscription: {
       layout: 'modal',
@@ -76,7 +76,7 @@
       okShow: true,
       cancelShow: true,
       responsive: true,
-      branding: 'show'
+      branding: true
     },
     form: {
       layout: 'modal',
@@ -106,7 +106,7 @@
       cancelShow: true,
       showSocialLogin: false,
       responsive: true,
-      branding: 'show'
+      branding: true
     },
     sitegate: {
       layout: 'modal',
@@ -135,7 +135,7 @@
       showSocialLogin: false,
       showForm: true,
       responsive: true,
-      branding: 'show'
+      branding: true
     }
   };
 
@@ -1019,7 +1019,7 @@
       case 'modal':
       case 'slideout':
       case 'sitegate':
-        if (widgetContent && config.branding !== 'hide') {
+        if (widgetContent && config.branding) {
           var branding = document.createElement('div');
           branding.className = 'branding';
           branding.innerHTML = templates.assets.lytics;
@@ -1457,7 +1457,7 @@
         ' pf-widget-variant-' + config.variant,
         config.theme ? ' pf-theme-' + config.theme : '',
         config.className ? ' ' + config.className : '',
-        config.branding !== 'hide' ? ' pf-widget-has-branding' : '',
+        config.branding ? ' pf-widget-has-branding' : '',
         !config.responsive ? ' pf-mobile-hide' : ''
       ].join('');
     },

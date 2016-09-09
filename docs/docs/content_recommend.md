@@ -40,7 +40,7 @@ Recommend controls any parameters necessary for making a content suggestions to 
   <tr>
     <td>visited</td>
     <td>boolean</td>
-    <td>recommend content the user has already viewed (true), or only content they have not viewed (false)</td>
+    <td>if false, only recommend an article the user has not previously visited.</td>
   </tr>
 
   <tr>

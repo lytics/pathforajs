@@ -1292,7 +1292,7 @@ describe('Widgets', function () {
       msg: 'test',
       id: 'branding2',
       layout: 'modal',
-      branding: 'hide'
+      branding: false
     });
 
     pathfora.initializeWidgets([w1, w2]);
