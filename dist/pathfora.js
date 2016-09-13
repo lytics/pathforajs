@@ -143,7 +143,6 @@
   // FUTURE Move to separate files and concat
   /* eslint-disable indent */
   var templates = {
-  'templates': {},
   'subscription': {
     'bar': '<div class=\'pf-widget-body\'></div><a class=\'pf-widget-close\'>&times;</a><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' required></span></form></div>',
     'folding': '<a class=\'pf-widget-caption\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span> </a><a class=\'pf-widget-caption-left\'><p class=\'pf-widget-headline\'></p><span>&rsaquo;</span></a><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' required></span></form></div>',
@@ -503,6 +502,44 @@
       }
 
       return escaped.join('');
+    },
+
+    /**
+     * @description Turn an objects' key/values into a query param string
+     * @param   {obj}     params     object containing query params
+     */
+    constructQueries: function (params) {
+      var count = 0,
+          queries = [];
+
+      for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+          if (count !== 0) {
+            queries.push('&');
+          } else {
+            queries.push('?');
+          }
+
+          if (params[key] instanceof Object) {
+            // multiple params []string (topics or rollups)
+            for (var i in params[key]) {
+              if (i < Object.keys(params[key]).length && i > 0) {
+                queries.push('&');
+              }
+
+              queries.push(key + '[]=' + params[key][i]);
+            }
+
+          // single param
+          } else {
+            queries.push(key + '=' + params[key]);
+          }
+
+          count++;
+        }
+      }
+
+      return queries.join('');
     }
   };
 
@@ -2318,43 +2355,22 @@
         seerId
       ];
 
-      // construct the query params
-      var count = 0;
-      for (var key in params) {
-        if (params.hasOwnProperty(key)) {
-          if (count !== 0) {
-            recommendParts.push('&');
-          } else {
-            recommendParts.push('?');
-          }
+      var ql = params.ql;
+      delete params.ql;
 
-          if (params[key] instanceof Object) {
+      var queries = utils.constructQueries(params);
 
-            // special case for raw FilterQL support
-            if (key === 'ql' && params.ql.raw) {
-              recommendParts.push('ql=' + params.ql.raw);
-
-            // multiple params []string (topics or rollups)
-            } else {
-              for (var i in params[key]) {
-                if (i < Object.keys(params[key]).length && i > 0) {
-                  recommendParts.push('&');
-                }
-
-                recommendParts.push(key + '[]=' + params[key][i]);
-              }
-            }
-
-          // single param
-          } else {
-            recommendParts.push(key + '=' + params[key]);
-          }
-
-          count++;
+      // Special case for FilterQL
+      if (ql && ql.raw) {
+        if (queries.length > 0) {
+          queries += '&';
+        } else {
+          queries += '?';
         }
+        queries += 'ql=' + ql.raw;
       }
 
-      var recommendUrl = recommendParts.join('');
+      var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
