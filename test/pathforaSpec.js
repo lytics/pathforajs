@@ -2991,6 +2991,34 @@ describe('Utils', function () {
       expect(escapedTwice).toBe(escapedOnce);
     });
   });
+
+  describe('constructQueries util', function () {
+    var constructQueries = pathfora.utils.constructQueries;
+
+    it('should handle single value params', function () {
+      var params = {
+        key: 'value',
+        anotherkey: true,
+        athirdkey: 1
+      };
+
+      var expected = '?key=value&anotherkey=true&athirdkey=1';
+
+      expect(constructQueries(params)).toEqual(expected);
+    });
+
+    it('should handle multiple value params', function () {
+      var params = {
+        foo: 'value',
+        bar: [1, 2, 3],
+        baz: ['test']
+      };
+
+      var expected = '?foo=value&bar[]=1&bar[]=2&bar[]=3&baz[]=test';
+
+      expect(constructQueries(params)).toEqual(expected);
+    });
+  });
 });
 
 

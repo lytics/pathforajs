@@ -54,12 +54,15 @@ gulp.task('build:styles', function () {
 var prepareTemplates = function () {
   var templateDirectory = 'src/templates',
       templates = {},
-      includes = {},
-      options = {};
+      includes = {};
 
-  options = {
+  var options = {
     listeners: {
       file: function (root, stat) {
+        if (stat.name === '.DS_Store') {
+          return;
+        }
+
         var dir = root.split('/').pop();
 
         if (!templates[dir]) {

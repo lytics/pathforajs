@@ -466,6 +466,44 @@
       }
 
       return escaped.join('');
+    },
+
+    /**
+     * @description Turn an objects' key/values into a query param string
+     * @param   {obj}     params     object containing query params
+     */
+    constructQueries: function (params) {
+      var count = 0,
+          queries = [];
+
+      for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+          if (count !== 0) {
+            queries.push('&');
+          } else {
+            queries.push('?');
+          }
+
+          if (params[key] instanceof Object) {
+            // multiple params []string (topics or rollups)
+            for (var i in params[key]) {
+              if (i < Object.keys(params[key]).length && i > 0) {
+                queries.push('&');
+              }
+
+              queries.push(key + '[]=' + params[key][i]);
+            }
+
+          // single param
+          } else {
+            queries.push(key + '=' + params[key]);
+          }
+
+          count++;
+        }
+      }
+
+      return queries.join('');
     }
   };
 
@@ -1781,7 +1819,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+          api.recommendContent(pathfora.acctid, w.recommend, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -1832,7 +1870,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend && widget.recommend.ql || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend || widget.content)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
@@ -2264,24 +2302,39 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, filter, callback) {
+    recommendContent: function (accountId, params, callback) {
       // Recommendation API:
-      // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
+      // https://www.getlytics.com/developers/rest-api#content-recommendation
 
-      var recommendUrl,
-          seerId = utils.readCookie('seerid');
+      var seerId = utils.readCookie('seerid');
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
       }
 
-      recommendUrl = [
+      var recommendParts = [
         '{{apiurl}}/api/content/recommend/',
         accountId,
         '/user/_uids/',
-        seerId,
-        filter ? '?ql=' + filter : ''
-      ].join('');
+        seerId
+      ];
+
+      var ql = params.ql;
+      delete params.ql;
+
+      var queries = utils.constructQueries(params);
+
+      // Special case for FilterQL
+      if (ql && ql.raw) {
+        if (queries.length > 0) {
+          queries += '&';
+        } else {
+          queries += '?';
+        }
+        queries += 'ql=' + ql.raw;
+      }
+
+      var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
@@ -2473,7 +2526,13 @@
 
       if (rec !== 'default') {
         // call the recommendation API using the url pattern urlPattern as a filter
-        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
+        var params = {
+          ql: {
+            raw: api.constructRecommendFilter(rec)
+          }
+        };
+
+        api.recommendContent(context.pathfora.acctid, params, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
