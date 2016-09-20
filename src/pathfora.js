@@ -1442,7 +1442,7 @@
               utils.addClass(widget, 'success');
 
               // default to a three second delay if the user has not defined one
-              var delay = config.success && config.success.delay ? config.success.delay * 1000 : 3000;
+              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
 
               if (delay > 0) {
                 setTimeout(function () {
@@ -2980,6 +2980,7 @@
 
       if (widget.showSocialLogin) {
         if (widget.showForm === false) {
+          core.openedWidgets.pop();
           throw new Error('Social login requires a form on the widget');
         }
       }
@@ -2996,6 +2997,7 @@
         if (hostNode) {
           hostNode.appendChild(node);
         } else {
+          core.openedWidgets.pop();
           throw new Error('Inline widget could not be initialized in ' + widget.config.position);
         }
       }

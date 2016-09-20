@@ -1759,6 +1759,128 @@ describe('Widgets', function () {
   });
 
   // -------------------------
+  //  INLINE MODULES
+  // -------------------------
+  it('should throw error if inline position not found', function () {
+    var inline = new pathfora.Message({
+      headline: 'Inline Widget',
+      layout: 'inline',
+      position: '.a-non-existant-div',
+      id: 'inline-1',
+      msg: 'inline'
+    });
+
+    expect(function () {
+      pathfora.initializeWidgets([inline]);
+    }).toThrow(new Error('Inline widget could not be initialized in .a-non-existant-div'));
+  });
+
+  it('should append the inline widget to the position element', function (done) {
+    var div = document.createElement('div');
+    div.id = 'a-real-div';
+    document.body.appendChild(div);
+
+    var inline = new pathfora.Message({
+      headline: 'Inline Widget',
+      layout: 'inline',
+      position: '#a-real-div',
+      id: 'inline-1',
+      msg: 'inline'
+    });
+
+    pathfora.initializeWidgets([inline]);
+
+    var parent = $(inline.position);
+
+    setTimeout(function () {
+      var widget = parent.find('#' + inline.id);
+      expect(widget.length).toBe(1);
+      done();
+    }, 200);
+
+  });
+
+  // -------------------------
+  //  SUCCESS STATE
+  // -------------------------
+
+  it('should show success state if one is set by the user', function (done) {
+
+    var successForm = new pathfora.Subscription({
+      id: 'success-form',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      success: {
+        msg: 'a custom success message',
+        delay: 2
+      }
+    });
+
+    pathfora.initializeWidgets([successForm]);
+
+    var widget = $('#' + successForm.id);
+    var form = widget.find('form');
+    expect(form.length).toBe(1);
+
+    var email = form.find('input[name="email"]');
+    expect(email.length).toBe(1);
+    email.val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = $('.success-state');
+
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeFalsy();
+      done();
+    }, 2000);
+
+  });
+
+  it('should not hide the module if the success state delay is 0', function (done) {
+
+    var successForm2 = new pathfora.Subscription({
+      id: 'success-form-no-delay',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      success: {
+        msg: 'a custom success message',
+        delay: 0
+      }
+    });
+
+    pathfora.initializeWidgets([successForm2]);
+
+    var widget = $('#' + successForm2.id);
+    var form = widget.find('form');
+    expect(form.length).toBe(1);
+
+    var email = form.find('input[name="email"]');
+    expect(email.length).toBe(1);
+    email.val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = $('.success-state');
+
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(widget.hasClass('success')).toBeTruthy();
+
+      done();
+    }, 3000);
+
+  });
+
+  // -------------------------
   //  CUSTOM BUTTONS
   // -------------------------
 
