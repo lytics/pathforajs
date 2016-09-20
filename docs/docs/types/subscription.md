@@ -37,6 +37,10 @@ Define which layout type the form module should use.
     <td>bar</td>
     <td>module uses a <a href="../../layouts/bar">bar layout</a></td>
   </tr>
+  <tr>
+    <td>inline</td>
+    <td>module uses a <a href="../../layouts/inline">inline layout</a></td>
+  </tr>
 </table>
 
 
@@ -59,3 +63,9 @@ Define which layout type the form module should use.
 ![Bar Subscription Module](../examples/img/types/subscription/bar.png)
 
 <pre data-src="../../examples/src/types/subscription/bar.js"></pre>
+
+<h3>Inline - <a href="../../examples/preview/types/subscription/inline.html" target="_blank">Live Preview</a></h3>
+
+![Inline Subscription Module](../examples/img/types/subscription/inline.png)
+
+<pre data-src="../../examples/src/types/subscription/inline.js"></pre>
