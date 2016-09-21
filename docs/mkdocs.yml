@@ -15,6 +15,7 @@ pages:
       - Slideout: layouts/slideout.md
       - Bar: layouts/bar.md
       - Button: layouts/button.md
+      - Inline: layouts/inline.md
     - Customization:
       - Action Buttons: customization/buttons.md
       - Color Themes: customization/themes.md

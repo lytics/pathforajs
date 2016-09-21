@@ -41,6 +41,10 @@ Define which layout type the form module should use.
     <td>button</td>
     <td>module uses a <a href="../../layouts/button">button layout</a></td>
   </tr>
+  <tr>
+    <td>inline</td>
+    <td>module uses a <a href="../../layouts/inline">inline layout</a></td>
+  </tr>
 </table>
 
 <h3>Modal - <a href="../../examples/preview/types/message/modal.html" target="_blank">Live Preview</a></h3>
@@ -69,3 +73,9 @@ Define which layout type the form module should use.
 ![Button Message Module](../examples/img/types/message/button.png)
 
 <pre data-src="../../examples/src/types/message/button.js"></pre>
+
+<h3>Inline - <a href="../../examples/preview/types/message/inline.html" target="_blank">Live Preview</a></h3>
+
+![Inline Message Module](../examples/img/types/message/inline.png)
+
+<pre data-src="../../examples/src/types/message/inline.js"></pre>

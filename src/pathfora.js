@@ -973,19 +973,10 @@
           widgetOk = widget.querySelector('.pf-widget-ok'),
           widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
           widgetBody = widget.querySelector('.pf-widget-body'),
-          widgetMessage = widget.querySelector('.pf-widget-message'),
-          widgetClose = widget.querySelector('.pf-widget-close');
+          widgetMessage = widget.querySelector('.pf-widget-message');
 
-      if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
+      if (widgetCancel !== null && !config.cancelShow) {
         node = widgetCancel;
-
-        if (node.parentNode) {
-          node.parentNode.removeChild(node);
-        }
-      }
-
-      if (config.layout === 'inline') {
-        node = widgetClose;
 
         if (node.parentNode) {
           node.parentNode.removeChild(node);
@@ -1016,10 +1007,37 @@
         widgetCancel.value = config.cancelMessage;
       }
 
+      // Form layouts should have a default success message
+      switch (config.type) {
+      case 'form':
+      case 'subscription':
+      case 'sitegate':
+        switch (config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+        case 'inline':
+
+          var successTitle = document.createElement('div');
+          successTitle.className = 'pf-widget-headline success-state';
+          successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
+          widgetContent.appendChild(successTitle);
+
+          var successMsg = document.createElement('div');
+          successMsg.className = 'pf-widget-message success-state';
+          successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
+          widgetContent.appendChild(successMsg);
+
+          break;
+        }
+        break;
+      }
+
       switch (config.layout) {
       case 'modal':
       case 'slideout':
       case 'sitegate':
+      case 'inline':
         if (widgetContent && config.branding) {
           var branding = document.createElement('div');
           branding.className = 'branding';
@@ -1073,7 +1091,6 @@
       case 'sitegate':
         switch (config.layout) {
         case 'modal':
-        case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
             child = node.querySelectorAll('input, select, textarea');
@@ -1417,8 +1434,21 @@
               widgetOnModalClose(event);
             }
 
-            if (config.layout !== 'inline') {
+            if (config.layout !== 'inline' && typeof config.success === 'undefined') {
               context.pathfora.closeWidget(widget.id);
+
+            // success state
+            } else {
+              utils.addClass(widget, 'success');
+
+              // default to a three second delay if the user has not defined one
+              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
+              if (delay > 0) {
+                setTimeout(function () {
+                  pathfora.closeWidget(widget.id);
+                }, delay);
+              }
             }
           }
         };
@@ -1563,6 +1593,10 @@
       widget.innerHTML = templates[config.type][config.layout] || '';
       widget.id = config.id;
 
+      if (widget.innerHTML === '') {
+        throw new Error('Could not get pathfora template based on type and layout.');
+      }
+
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
       this.setupWidgetContentUnit(widget, config);
@@ -1602,8 +1636,10 @@
      * @param {object} colors custom theme
      */
     setCustomColors: function (widget, colors) {
-      var close = widget.querySelector('.pf-widget-close'),
-          headline = widget.querySelector('.pf-widget-headline'),
+      var i = 0,
+          close = widget.querySelector('.pf-widget-close'),
+          msg = widget.querySelectorAll('.pf-widget-message'),
+          headline = widget.querySelectorAll('.pf-widget-headline'),
           headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
           cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
           okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
@@ -1624,10 +1660,8 @@
       }
 
       if (colors.fieldBackground) {
-        if (fields.length > 0) {
-          for (var i = 0; i < fields.length; i++) {
-            fields[i].style.backgroundColor = colors.fieldBackground;
-          }
+        for (i = 0; i < fields.length; i++) {
+          fields[i].style.backgroundColor = colors.fieldBackground;
         }
       }
 
@@ -1650,7 +1684,9 @@
       }
 
       if (headline && colors.headline) {
-        headline.style.color = colors.headline;
+        for (i = 0; i < headline.length; i++) {
+          headline[i].style.color = colors.headline;
+        }
       }
 
       if (headlineLeft && colors.headline) {
@@ -1700,7 +1736,11 @@
         }
       });
 
-      widget.querySelector('.pf-widget-message').style.color = colors.text;
+      if (msg && colors.text) {
+        for (i = 0; i < msg.length; i++) {
+          msg[i].style.color = colors.text;
+        }
+      }
     },
 
     /**
@@ -2940,6 +2980,7 @@
 
       if (widget.showSocialLogin) {
         if (widget.showForm === false) {
+          core.openedWidgets.pop();
           throw new Error('Social login requires a form on the widget');
         }
       }
@@ -2956,6 +2997,7 @@
         if (hostNode) {
           hostNode.appendChild(node);
         } else {
+          core.openedWidgets.pop();
           throw new Error('Inline widget could not be initialized in ' + widget.config.position);
         }
       }
