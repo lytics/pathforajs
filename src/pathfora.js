@@ -1461,14 +1461,20 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      if (config.theme) {
-        if (config.theme === 'custom') {
-          if (config.colors) {
-            core.setCustomColors(widget, config.colors);
-          }
-        } else {
+      switch (config.theme) {
+      case 'custom':
+        if (config.colors) {
+          core.setCustomColors(widget, config.colors);
+        }
+        break;
+      case 'none':
+        // Do nothing, we will rely on CSS for the colors
+        break;
+      default:
+        if (config.theme) {
           core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
+        break;
       }
     },
 
