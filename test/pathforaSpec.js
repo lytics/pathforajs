@@ -1353,6 +1353,29 @@ describe('Widgets', function () {
     expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
   });
 
+  it('should fallback to CSS if theme value is "none"', function () {
+    var css = document.createElement('style');
+    css.type = 'text/css';
+    css.innerHTML = '.widget-no-theme-class { background-color: #59f442 }';
+    document.body.appendChild(css);
+
+    var w1 = new pathfora.Message({
+      layout: 'button',
+      position: 'left',
+      msg: 'light button',
+      id: 'widget-no-theme',
+      className: 'widget-no-theme-class',
+      theme: 'none'
+    });
+
+    pathfora.initializeWidgets([w1]);
+
+    var w = $('#' + w1.id);
+
+    expect(w.hasClass('pf-theme-none')).toBeTruthy();
+    expect(w.css('background-color')).toBe('rgb(89, 244, 66)');
+  });
+
   it('can be hidden on initialization', function () {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
