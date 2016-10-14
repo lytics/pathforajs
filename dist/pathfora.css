@@ -191,6 +191,21 @@
   opacity: 0.25;
   width: 120px;
 }
+.pf-widget .success-state {
+  display: none;
+}
+.pf-widget.success {
+  transition: opacity 0.3s;
+}
+.pf-widget.success .pf-widget-headline:not(.success-state),
+.pf-widget.success .pf-widget-message:not(.success-state),
+.pf-widget.success form,
+.pf-widget.success .pf-social-login {
+  display: none;
+}
+.pf-widget.success .success-state {
+  display: block;
+}
 /* Variant Styles */
 .pf-widget-variant-2 .pf-widget-img {
   display: block;
@@ -980,5 +995,38 @@
   padding-right: 30px;
 }
 .pf-widget-inline {
-  padding: 10px;
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  transition: all 0s;
+  position: relative;
+  /* variant specific styles */
+  /* type specific styles */
+}
+.pf-widget-inline .pf-widget-message {
+  margin: 0 0 20px 0;
+}
+.pf-widget-inline .pf-widget-btn {
+  transition: all 0s;
+}
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-content {
+  text-align: center;
+}
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-content .pf-widget-headline {
+  margin-top: 110px;
+}
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-img {
+  width: 100px;
+  height: 100px;
+  float: none;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  margin-left: -50px;
+}
+.pf-widget-inline.pf-subscription .pf-widget-btn {
+  line-height: 39px;
+}
+.pf-widget-inline.pf-subscription.pf-widget-has-branding span {
+  margin-bottom: 35px;
 }

@@ -54,12 +54,15 @@ gulp.task('build:styles', function () {
 var prepareTemplates = function () {
   var templateDirectory = 'src/templates',
       templates = {},
-      includes = {},
-      options = {};
+      includes = {};
 
-  options = {
+  var options = {
     listeners: {
       file: function (root, stat) {
+        if (stat.name === '.DS_Store') {
+          return;
+        }
+
         var dir = root.split('/').pop();
 
         if (!templates[dir]) {
@@ -155,7 +158,7 @@ gulp.task('preview', function () {
 });
 
 var compileExample = function (root, name) {
-  var out, css, proc,
+  var out, css, proc, html,
       dest = root.split(EXAMPLESSRC + '/').pop(),
       contents = {
         config: '',
@@ -163,18 +166,13 @@ var compileExample = function (root, name) {
         html: ''
       };
 
+
   switch (name.split('.').pop()) {
   case 'js':
     contents.config = fs.readFileSync(root + '/' + name, 'utf8');
     css = root + '/' + name.replace('.js', '.css');
+    html = root + '/' + name.replace('.js', '.html');
     out = name.replace('.js', '.html');
-    proc = true;
-    break;
-
-  case 'html':
-    contents.html = fs.readFileSync(root + '/' + name, 'utf8');
-    css = root + '/' + name.replace('.html', '.css');
-    out = name;
     proc = true;
     break;
 
@@ -187,6 +185,13 @@ var compileExample = function (root, name) {
     try {
       fs.statSync(css);
       contents.css = fs.readFileSync(css, 'utf8');
+    } catch (err) {
+      // do nothing
+    }
+
+    try {
+      fs.statSync(html);
+      contents.html = fs.readFileSync(html, 'utf8');
     } catch (err) {
       // do nothing
     }

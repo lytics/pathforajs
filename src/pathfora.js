@@ -466,6 +466,44 @@
       }
 
       return escaped.join('');
+    },
+
+    /**
+     * @description Turn an objects' key/values into a query param string
+     * @param   {obj}     params     object containing query params
+     */
+    constructQueries: function (params) {
+      var count = 0,
+          queries = [];
+
+      for (var key in params) {
+        if (params.hasOwnProperty(key)) {
+          if (count !== 0) {
+            queries.push('&');
+          } else {
+            queries.push('?');
+          }
+
+          if (params[key] instanceof Object) {
+            // multiple params []string (topics or rollups)
+            for (var i in params[key]) {
+              if (i < Object.keys(params[key]).length && i > 0) {
+                queries.push('&');
+              }
+
+              queries.push(key + '[]=' + params[key][i]);
+            }
+
+          // single param
+          } else {
+            queries.push(key + '=' + params[key]);
+          }
+
+          count++;
+        }
+      }
+
+      return queries.join('');
     }
   };
 
@@ -935,19 +973,10 @@
           widgetOk = widget.querySelector('.pf-widget-ok'),
           widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
           widgetBody = widget.querySelector('.pf-widget-body'),
-          widgetMessage = widget.querySelector('.pf-widget-message'),
-          widgetClose = widget.querySelector('.pf-widget-close');
+          widgetMessage = widget.querySelector('.pf-widget-message');
 
-      if (widgetCancel !== null && !config.cancelShow || config.layout === 'inline') {
+      if (widgetCancel !== null && !config.cancelShow) {
         node = widgetCancel;
-
-        if (node.parentNode) {
-          node.parentNode.removeChild(node);
-        }
-      }
-
-      if (config.layout === 'inline') {
-        node = widgetClose;
 
         if (node.parentNode) {
           node.parentNode.removeChild(node);
@@ -978,10 +1007,37 @@
         widgetCancel.value = config.cancelMessage;
       }
 
+      // Form layouts should have a default success message
+      switch (config.type) {
+      case 'form':
+      case 'subscription':
+      case 'sitegate':
+        switch (config.layout) {
+        case 'modal':
+        case 'slideout':
+        case 'sitegate':
+        case 'inline':
+
+          var successTitle = document.createElement('div');
+          successTitle.className = 'pf-widget-headline success-state';
+          successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
+          widgetContent.appendChild(successTitle);
+
+          var successMsg = document.createElement('div');
+          successMsg.className = 'pf-widget-message success-state';
+          successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
+          widgetContent.appendChild(successMsg);
+
+          break;
+        }
+        break;
+      }
+
       switch (config.layout) {
       case 'modal':
       case 'slideout':
       case 'sitegate':
+      case 'inline':
         if (widgetContent && config.branding) {
           var branding = document.createElement('div');
           branding.className = 'branding';
@@ -1035,7 +1091,6 @@
       case 'sitegate':
         switch (config.layout) {
         case 'modal':
-        case 'inline':
           if (config.showForm === false) {
             node = widget.querySelector('form');
             child = node.querySelectorAll('input, select, textarea');
@@ -1379,8 +1434,21 @@
               widgetOnModalClose(event);
             }
 
-            if (config.layout !== 'inline') {
+            if (config.layout !== 'inline' && typeof config.success === 'undefined') {
               context.pathfora.closeWidget(widget.id);
+
+            // success state
+            } else {
+              utils.addClass(widget, 'success');
+
+              // default to a three second delay if the user has not defined one
+              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
+              if (delay > 0) {
+                setTimeout(function () {
+                  pathfora.closeWidget(widget.id);
+                }, delay);
+              }
             }
           }
         };
@@ -1393,14 +1461,20 @@
      * @param {object} config
      */
     setupWidgetColors: function (widget, config) {
-      if (config.theme) {
-        if (config.theme === 'custom') {
-          if (config.colors) {
-            core.setCustomColors(widget, config.colors);
-          }
-        } else {
+      switch (config.theme) {
+      case 'custom':
+        if (config.colors) {
+          core.setCustomColors(widget, config.colors);
+        }
+        break;
+      case 'none':
+        // Do nothing, we will rely on CSS for the colors
+        break;
+      default:
+        if (config.theme) {
           core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
         }
+        break;
       }
     },
 
@@ -1525,6 +1599,10 @@
       widget.innerHTML = templates[config.type][config.layout] || '';
       widget.id = config.id;
 
+      if (widget.innerHTML === '') {
+        throw new Error('Could not get pathfora template based on type and layout.');
+      }
+
       this.setupWidgetPosition(widget, config);
       this.constructWidgetActions(widget, config);
       this.setupWidgetContentUnit(widget, config);
@@ -1564,8 +1642,10 @@
      * @param {object} colors custom theme
      */
     setCustomColors: function (widget, colors) {
-      var close = widget.querySelector('.pf-widget-close'),
-          headline = widget.querySelector('.pf-widget-headline'),
+      var i = 0,
+          close = widget.querySelector('.pf-widget-close'),
+          msg = widget.querySelectorAll('.pf-widget-message'),
+          headline = widget.querySelectorAll('.pf-widget-headline'),
           headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
           cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
           okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
@@ -1586,10 +1666,8 @@
       }
 
       if (colors.fieldBackground) {
-        if (fields.length > 0) {
-          for (var i = 0; i < fields.length; i++) {
-            fields[i].style.backgroundColor = colors.fieldBackground;
-          }
+        for (i = 0; i < fields.length; i++) {
+          fields[i].style.backgroundColor = colors.fieldBackground;
         }
       }
 
@@ -1612,7 +1690,9 @@
       }
 
       if (headline && colors.headline) {
-        headline.style.color = colors.headline;
+        for (i = 0; i < headline.length; i++) {
+          headline[i].style.color = colors.headline;
+        }
       }
 
       if (headlineLeft && colors.headline) {
@@ -1662,7 +1742,11 @@
         }
       });
 
-      widget.querySelector('.pf-widget-message').style.color = colors.text;
+      if (msg && colors.text) {
+        for (i = 0; i < msg.length; i++) {
+          msg[i].style.color = colors.text;
+        }
+      }
     },
 
     /**
@@ -1781,7 +1865,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, w.recommend.ql.raw, function (resp) {
+          api.recommendContent(pathfora.acctid, w.recommend, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -1832,7 +1916,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend && widget.recommend.ql || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend || widget.content)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
@@ -2264,24 +2348,39 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, filter, callback) {
+    recommendContent: function (accountId, params, callback) {
       // Recommendation API:
-      // https://www.getlytics.com/developers/rest-api/beta#content-recommendation
+      // https://www.getlytics.com/developers/rest-api#content-recommendation
 
-      var recommendUrl,
-          seerId = utils.readCookie('seerid');
+      var seerId = utils.readCookie('seerid');
 
       if (!seerId) {
         throw new Error('Cannot find SEERID cookie');
       }
 
-      recommendUrl = [
+      var recommendParts = [
         '{{apiurl}}/api/content/recommend/',
         accountId,
         '/user/_uids/',
-        seerId,
-        filter ? '?ql=' + filter : ''
-      ].join('');
+        seerId
+      ];
+
+      var ql = params.ql;
+      delete params.ql;
+
+      var queries = utils.constructQueries(params);
+
+      // Special case for FilterQL
+      if (ql && ql.raw) {
+        if (queries.length > 0) {
+          queries += '&';
+        } else {
+          queries += '?';
+        }
+        queries += 'ql=' + ql.raw;
+      }
+
+      var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
         var resp = JSON.parse(json);
@@ -2473,7 +2572,13 @@
 
       if (rec !== 'default') {
         // call the recommendation API using the url pattern urlPattern as a filter
-        api.recommendContent(context.pathfora.acctid, api.constructRecommendFilter(rec), function (resp) {
+        var params = {
+          ql: {
+            raw: api.constructRecommendFilter(rec)
+          }
+        };
+
+        api.recommendContent(context.pathfora.acctid, params, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -2572,7 +2677,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.8';
+    this.version = '0.0.9';
 
     /**
      * @public
@@ -2881,6 +2986,7 @@
 
       if (widget.showSocialLogin) {
         if (widget.showForm === false) {
+          core.openedWidgets.pop();
           throw new Error('Social login requires a form on the widget');
         }
       }
@@ -2897,6 +3003,7 @@
         if (hostNode) {
           hostNode.appendChild(node);
         } else {
+          core.openedWidgets.pop();
           throw new Error('Inline widget could not be initialized in ' + widget.config.position);
         }
       }

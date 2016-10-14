@@ -1353,6 +1353,29 @@ describe('Widgets', function () {
     expect(custom.css('background-color')).toBe('rgb(255, 255, 255)');
   });
 
+  it('should fallback to CSS if theme value is "none"', function () {
+    var css = document.createElement('style');
+    css.type = 'text/css';
+    css.innerHTML = '.widget-no-theme-class { background-color: #59f442 }';
+    document.body.appendChild(css);
+
+    var w1 = new pathfora.Message({
+      layout: 'button',
+      position: 'left',
+      msg: 'light button',
+      id: 'widget-no-theme',
+      className: 'widget-no-theme-class',
+      theme: 'none'
+    });
+
+    pathfora.initializeWidgets([w1]);
+
+    var w = $('#' + w1.id);
+
+    expect(w.hasClass('pf-theme-none')).toBeTruthy();
+    expect(w.css('background-color')).toBe('rgb(89, 244, 66)');
+  });
+
   it('can be hidden on initialization', function () {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
@@ -1756,6 +1779,128 @@ describe('Widgets', function () {
 
     pathfora.acctid = '';
     jasmine.Ajax.uninstall();
+  });
+
+  // -------------------------
+  //  INLINE MODULES
+  // -------------------------
+  it('should throw error if inline position not found', function () {
+    var inline = new pathfora.Message({
+      headline: 'Inline Widget',
+      layout: 'inline',
+      position: '.a-non-existant-div',
+      id: 'inline-1',
+      msg: 'inline'
+    });
+
+    expect(function () {
+      pathfora.initializeWidgets([inline]);
+    }).toThrow(new Error('Inline widget could not be initialized in .a-non-existant-div'));
+  });
+
+  it('should append the inline widget to the position element', function (done) {
+    var div = document.createElement('div');
+    div.id = 'a-real-div';
+    document.body.appendChild(div);
+
+    var inline = new pathfora.Message({
+      headline: 'Inline Widget',
+      layout: 'inline',
+      position: '#a-real-div',
+      id: 'inline-1',
+      msg: 'inline'
+    });
+
+    pathfora.initializeWidgets([inline]);
+
+    var parent = $(inline.position);
+
+    setTimeout(function () {
+      var widget = parent.find('#' + inline.id);
+      expect(widget.length).toBe(1);
+      done();
+    }, 200);
+
+  });
+
+  // -------------------------
+  //  SUCCESS STATE
+  // -------------------------
+
+  it('should show success state if one is set by the user', function (done) {
+
+    var successForm = new pathfora.Subscription({
+      id: 'success-form',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      success: {
+        msg: 'a custom success message',
+        delay: 2
+      }
+    });
+
+    pathfora.initializeWidgets([successForm]);
+
+    var widget = $('#' + successForm.id);
+    var form = widget.find('form');
+    expect(form.length).toBe(1);
+
+    var email = form.find('input[name="email"]');
+    expect(email.length).toBe(1);
+    email.val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = $('.success-state');
+
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeFalsy();
+      done();
+    }, 2000);
+
+  });
+
+  it('should not hide the module if the success state delay is 0', function (done) {
+
+    var successForm2 = new pathfora.Subscription({
+      id: 'success-form-no-delay',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      success: {
+        msg: 'a custom success message',
+        delay: 0
+      }
+    });
+
+    pathfora.initializeWidgets([successForm2]);
+
+    var widget = $('#' + successForm2.id);
+    var form = widget.find('form');
+    expect(form.length).toBe(1);
+
+    var email = form.find('input[name="email"]');
+    expect(email.length).toBe(1);
+    email.val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = $('.success-state');
+
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(widget.hasClass('success')).toBeTruthy();
+
+      done();
+    }, 3000);
+
   });
 
   // -------------------------
@@ -2989,6 +3134,34 @@ describe('Utils', function () {
           escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
 
       expect(escapedTwice).toBe(escapedOnce);
+    });
+  });
+
+  describe('constructQueries util', function () {
+    var constructQueries = pathfora.utils.constructQueries;
+
+    it('should handle single value params', function () {
+      var params = {
+        key: 'value',
+        anotherkey: true,
+        athirdkey: 1
+      };
+
+      var expected = '?key=value&anotherkey=true&athirdkey=1';
+
+      expect(constructQueries(params)).toEqual(expected);
+    });
+
+    it('should handle multiple value params', function () {
+      var params = {
+        foo: 'value',
+        bar: [1, 2, 3],
+        baz: ['test']
+      };
+
+      var expected = '?foo=value&bar[]=1&bar[]=2&bar[]=3&baz[]=test';
+
+      expect(constructQueries(params)).toEqual(expected);
     });
   });
 });

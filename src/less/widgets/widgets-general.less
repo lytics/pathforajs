@@ -210,6 +210,22 @@
       width: 120px;
     }
   }
+
+  .success-state {
+    display: none;
+  }
+
+  &.success {
+    transition: opacity 0.3s;
+
+    .pf-widget-headline:not(.success-state), .pf-widget-message:not(.success-state), form, .pf-social-login {
+      display: none;
+    }
+
+    .success-state {
+      display: block;
+    }
+  }
 }
 
 /* Variant Styles */

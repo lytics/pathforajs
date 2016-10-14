@@ -21,12 +21,85 @@ Recommend controls any parameters necessary for making a content suggestions to 
   
   <tr>
     <td>ql</td>
+    <td>object</td>
+    <td>additional parameters using FilterQL to filter and select documents (see below)</td>
+  </tr>
+
+  <tr>
+    <td>topics</td>
+    <td>array</td>
+    <td>if supplied, only allow recommendations of documents with the specified topics</td>
+  </tr>
+
+  <tr>
+    <td>rollups</td>
+    <td>array</td>
+    <td>if supplied, only allow recommendations of documents with topics from the specified topic rollups</td>
+  </tr>
+
+  <tr>
+    <td>visited</td>
+    <td>boolean</td>
+    <td>if false, only recommend an article the user has not previously visited.</td>
+  </tr>
+
+  <tr>
+    <td>shuffle</td>
+    <td>boolean</td>
+    <td>if true, randomly shuffle the recommendations to show a different recommendation on each page load</td>
+  </tr>
+
+  <tr>
+    <td>path</td>
     <td>string</td>
-    <td>formatted query to filter based on url, topic or other content variables*</td>
+    <td>url path (excluding domain) to filter recommended documents (ex. "/blog/posts" returns documents with urls containing this path)</td>
+  </tr>
+
+  <tr>
+    <td>domain</td>
+    <td>string</td>
+    <td>domain of acceptable documents to return (ex. "developers.getlytics.com")</td>
+  </tr>
+
+  <tr>
+    <td>from</td>
+    <td>string</td>
+    <td>recommend only documents that were published after this ISO 8601 formatted date</td>
+  </tr>
+
+  <tr>
+    <td>to</td>
+    <td>string</td>
+    <td>recommend only documents that were published before this ISO 8601 formatted date</td>
+  </tr>
+
+  <tr>
+    <td>rank</td>
+    <td>string</td>
+    <td>must be one of <code>popular</code> (prioritizes most popular documents), <code>recent</code> (prioritizes most recent documents), or <code>affinity</code> (prioritizes based on user affinity - default)</td>
   </tr>
 </table>
 
-*Contact your customer success representative `success@lytics.io` for assistance in writing a filter to recommend based on url matching, topic relevance, and/or meta attributes.
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>ql</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>raw</td>
+    <td>string</td>
+    <td>raw FilterQL formatted query (ex. "FILTER AND (global.mobile_experience > 0) FROM content")*</td>
+  </tr>
+</table>
+
+*Contact your customer success representative `success@lytics.io` for assistance in writing a FilterQL statement to recommend based on url matching, topic relevance, and/or meta attributes.
 
 ## content
 

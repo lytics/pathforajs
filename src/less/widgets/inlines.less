@@ -1,3 +1,49 @@
 .pf-widget-inline {
-  padding: 10px;
+  padding: 20px;
+  border-radius: 2px;
+  .pf-box-shadow();
+  transition: all 0s;
+  position: relative;
+
+  .pf-widget-message {
+    margin: 0 0 20px 0;
+  }
+
+  .pf-widget-btn {
+    transition: all 0s;
+  }
+
+  /* variant specific styles */
+  &.pf-widget-variant-2 {
+    .pf-widget-content {
+      text-align: center;
+
+      .pf-widget-headline {
+        margin-top: 110px;
+      }
+    }
+
+    .pf-widget-img {
+      width: 100px;
+      height: 100px;
+      float: none;
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      margin-left: -50px;
+    }
+  }
+
+  /* type specific styles */
+  &.pf-subscription {
+    .pf-widget-btn {
+      line-height: 39px;
+    }
+
+    &.pf-widget-has-branding {
+      span {
+        margin-bottom: 35px;
+      }
+    }
+  }
 }
