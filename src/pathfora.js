@@ -47,6 +47,7 @@
       },
       displayConditions: {
         showOnInit: true,
+        showOnExitIntent: false,
         showDelay: 0,
         hideAfter: 0,
         displayWhenElementVisible: '',
@@ -571,9 +572,13 @@
         core.valid = core.valid && core.urlChecker(condition.urlContains);
       }
 
+      if (condition.showOnExitIntent) {
+        core.initializeExitIntent(widget);
+      }
+
       core.valid = core.valid && condition.showOnInit;
 
-      if (core.watchers.length === 0) {
+      if (core.watchers.length === 0 && !condition.showOnExitIntent) {
         if (condition.impressions) {
           core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
         }
@@ -616,6 +621,61 @@
           context.addEventListener('scroll', core.scrollListener, false);
         } else {
           context.onscroll = core.scrollListener;
+        }
+      }
+      return true;
+    },
+
+    /**
+     * @param widget
+     */
+    initializeExitIntent: function (widget) {
+      var positions = [];
+      if (!core.exitIntentListener) {
+        core.exitIntentListener = function (e) {
+          positions.push({
+            x: e.clientX,
+            y: e.clientY
+          });
+          if (positions.length > 30) {
+            positions.shift();
+          }
+        };
+
+        core.exitIntentTrigger = function (e) {
+          var from = e.relatedTarget || e.toElement;
+
+          // When there is registered movement and leaving the root element
+          if (positions.length > 1 && (!from || from.nodeName === 'HTML')) {
+            var valid;
+
+            var y = positions[positions.length - 1].y;
+            var py = positions[positions.length - 2].y;
+            var ySpeed = Math.abs(y - py);
+
+            // Did the cursor move up?
+            // Is it reasonable to believe that it left the top of the page, given the position and the speed?
+            valid = core.valid && y - ySpeed <= 50 && y < py;
+
+            if (widget.displayConditions.impressions && valid) {
+              valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
+            }
+
+            if (valid) {
+              context.pathfora.showWidget(widget);
+            }
+
+            positions = [];
+          }
+        };
+
+        // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
+        if (typeof document.addEventListener === 'function') {
+          document.addEventListener('mousemove', core.exitIntentListener, false);
+          document.addEventListener('mouseout', core.exitIntentTrigger, false);
+        } else {
+          document.onmousemove = core.exitIntentListener;
+          document.onmouseout = core.exitIntentTrigger;
         }
       }
       return true;
