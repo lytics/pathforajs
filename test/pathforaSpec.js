@@ -3309,7 +3309,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
-      pathfora.acctid = credentials;
+      pathfora.inline.acctid = credentials;
       pathfora.inline.elements = [];
     });
 

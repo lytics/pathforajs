@@ -2420,6 +2420,7 @@
     this.elements = [];
     this.preppedElements = [];
     this.defaultElements = [];
+    this.acctid = '';
 
     /*
      * @description Prepare all the triggered or recommended elements
@@ -2520,7 +2521,7 @@
 
             // CASE: Content recommendation elements
             case 'data-pfrecommend':
-              if (context.pathfora.acctid === '') {
+              if (inline.acctid === '') {
                 throw new Error('Could not get account id from Lytics Javascript tag.');
               }
 
@@ -2578,7 +2579,7 @@
           }
         };
 
-        api.recommendContent(context.pathfora.acctid, params, function (resp) {
+        api.recommendContent(inline.acctid, params, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -2758,6 +2759,7 @@
             }
           }
 
+          pf.inline.acctid = pf.acctid;
           pf.inline.procElements();
         });
       });
