@@ -519,7 +519,6 @@
     initializedWidgets: [],
     watchers: [],
     expiration: null,
-    valid: true,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
     /**
@@ -530,8 +529,6 @@
     initializeWidget: function (widget) {
       var watcher,
           condition = widget.displayConditions;
-
-      core.valid = true;
 
       // NOTE Default cookie expiration is one year from now
       core.expiration = new Date();
@@ -546,7 +543,7 @@
       }
 
       if (condition.date) {
-        core.valid = core.valid && core.dateChecker(condition.date);
+        widget.valid = widget.valid && core.dateChecker(condition.date);
       }
 
       if (condition.displayWhenElementVisible) {
@@ -562,28 +559,28 @@
       }
 
       if (condition.pageVisits) {
-        core.valid = core.valid && core.pageVisitsChecker(condition.pageVisits);
+        widget.valid = widget.valid && core.pageVisitsChecker(condition.pageVisits);
       }
 
       if (condition.hideAfterAction) {
-        core.valid = core.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
+        widget.valid = widget.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
       }
       if (condition.urlContains) {
-        core.valid = core.valid && core.urlChecker(condition.urlContains);
+        widget.valid = widget.valid && core.urlChecker(condition.urlContains);
       }
 
       if (condition.showOnExitIntent) {
         core.initializeExitIntent(widget);
       }
 
-      core.valid = core.valid && condition.showOnInit;
+      widget.valid = widget.valid && condition.showOnInit;
 
       if (core.watchers.length === 0 && !condition.showOnExitIntent) {
         if (condition.impressions) {
-          core.valid = core.valid && core.impressionsChecker(condition.impressions, widget);
+          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
         }
 
-        if (core.valid) {
+        if (widget.valid) {
           context.pathfora.showWidget(widget);
         }
       }
@@ -603,7 +600,7 @@
 
           for (var key in watchers) {
             if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-              valid = core.valid && watchers[key].check();
+              valid = widget.valid && watchers[key].check();
             }
           }
 
@@ -632,7 +629,7 @@
     initializeExitIntent: function (widget) {
       var positions = [];
       if (!core.exitIntentListener) {
-        core.exitIntentListener = function (e) {
+        widget.exitIntentListener = function (e) {
           positions.push({
             x: e.clientX,
             y: e.clientY
@@ -642,7 +639,7 @@
           }
         };
 
-        core.exitIntentTrigger = function (e) {
+        widget.exitIntentTrigger = function (e) {
           var from = e.relatedTarget || e.toElement;
 
           // When there is registered movement and leaving the root element
@@ -655,7 +652,7 @@
 
             // Did the cursor move up?
             // Is it reasonable to believe that it left the top of the page, given the position and the speed?
-            valid = core.valid && y - ySpeed <= 50 && y < py;
+            valid = widget.valid && y - ySpeed <= 50 && y < py;
 
             if (widget.displayConditions.impressions && valid) {
               valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
@@ -663,6 +660,15 @@
 
             if (valid) {
               context.pathfora.showWidget(widget);
+              widget.valid = false;
+
+              if (typeof document.addEventListener === 'function') {
+                document.removeEventListener('mousemove', widget.exitIntentListener);
+                document.removeEventListener('mouseout', widget.exitIntentTrigger);
+              } else {
+                document.onmousemove = null;
+                document.onmouseout = null;
+              }
             }
 
             positions = [];
@@ -671,11 +677,11 @@
 
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
         if (typeof document.addEventListener === 'function') {
-          document.addEventListener('mousemove', core.exitIntentListener, false);
-          document.addEventListener('mouseout', core.exitIntentTrigger, false);
+          document.addEventListener('mousemove', widget.exitIntentListener, false);
+          document.addEventListener('mouseout', widget.exitIntentTrigger, false);
         } else {
-          document.onmousemove = core.exitIntentListener;
-          document.onmouseout = core.exitIntentTrigger;
+          document.onmousemove = widget.exitIntentListener;
+          document.onmouseout = widget.exitIntentTrigger;
         }
       }
       return true;
@@ -863,7 +869,7 @@
       }
 
 
-      if (valid && core.valid) {
+      if (valid && widget.valid) {
         sessionStorage.setItem(id, sessionImpressions);
         utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
       }
@@ -2033,7 +2039,9 @@
      */
     prepareWidget: function (type, config) {
       var props, random,
-          widget = {};
+          widget = {
+            valid: true
+          };
 
       if (!config) {
         throw new Error('Config object is missing');
