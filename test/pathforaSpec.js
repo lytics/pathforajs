@@ -3309,7 +3309,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
-      pathfora.inline.acctid = credentials;
+      pathfora.acctid = credentials;
       pathfora.inline.elements = [];
     });
 
@@ -3319,6 +3319,8 @@ describe('Inline Personalization', function () {
       $(document.body).append('<div data-pfblock="group1" data-pfrecommend="www.example.com/*">' +
         '<img data-pftype="image" alt="My Image">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '<p data-pftype="published"></p>' +
+        '<p data-pftype="author"></p>' +
         '<p data-pftype="description"></p>' +
         '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
 
@@ -3328,7 +3330,7 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
         'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        'responseText': '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
 
 
@@ -3337,6 +3339,8 @@ describe('Inline Personalization', function () {
           recUrl = rec.find('[data-pftype="url"]'),
           recTitle = rec.find('[data-pftype="title"]'),
           recDesc = rec.find('[data-pftype="description"]'),
+          recDate = rec.find('[data-pftype="published"]'),
+          recAuthor = rec.find('[data-pftype="author"]'),
           def = $('[data-pfrecommend="default"]');
 
       expect(rec.length).toBe(1);
@@ -3345,6 +3349,8 @@ describe('Inline Personalization', function () {
       expect(recUrl.attr('href')).toBe('http://www.example.com/1');
       expect(recTitle.text()).toBe('Example Title');
       expect(recDesc.text()).toBe('An example description');
+      expect(recAuthor.text()).toBe('Test User');
+      expect(recDate.text()).toBe('12/03/2013');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('none');
@@ -3410,6 +3416,38 @@ describe('Inline Personalization', function () {
       expect(rec.css('display')).toBe('block');
       expect(recImage.css('background-image')).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
       expect(recUrl.html()).toBe('http://www.example.com/1');
+
+      $('[data-pfblock="group3"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should recognize date formatting set by the user', function () {
+      jasmine.Ajax.install();
+
+      pathfora.locale = 'en-GB';
+      pathfora.dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
+        '<div data-pftype="image"></div>' +
+        '<div data-pftype="published"></div>' +
+        '<div data-pftype="url"></div></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+
+      var rec = $('[data-pfmodified="true"]'),
+          recPublished = rec.find('[data-pftype="published"]');
+
+      expect(rec.length).toBe(1);
+      expect(rec.css('display')).toBe('block');
+      expect(recPublished.html()).toBe('Friday, 7 October 2016');
 
       $('[data-pfblock="group3"]').remove();
       jasmine.Ajax.uninstall();

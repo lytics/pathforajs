@@ -2451,11 +2451,10 @@
    * @name Inline
    * @description Inline Personalization
    */
-  Inline = function () {
+  Inline = function (pathfora) {
     this.elements = [];
     this.preppedElements = [];
     this.defaultElements = [];
-    this.acctid = '';
 
     /*
      * @description Prepare all the triggered or recommended elements
@@ -2517,7 +2516,9 @@
               title: theElement.querySelector('[data-pftype="title"]'),
               image: theElement.querySelector('[data-pftype="image"]'),
               description: theElement.querySelector('[data-pftype="description"]'),
-              url: theElement.querySelector('[data-pftype="url"]')
+              url: theElement.querySelector('[data-pftype="url"]'),
+              published: theElement.querySelector('[data-pftype="published"]'),
+              author: theElement.querySelector('[data-pftype="author"]')
             };
             break;
           }
@@ -2556,7 +2557,7 @@
 
             // CASE: Content recommendation elements
             case 'data-pfrecommend':
-              if (inline.acctid === '') {
+              if (pathfora.acctid === '') {
                 throw new Error('Could not get account id from Lytics Javascript tag.');
               }
 
@@ -2614,7 +2615,7 @@
           }
         };
 
-        api.recommendContent(inline.acctid, params, function (resp) {
+        api.recommendContent(pathfora.acctid, params, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -2652,6 +2653,17 @@
                   } else {
                     elems.url.innerHTML = 'http://' + content.url;
                   }
+                }
+
+                // set the date published
+                if (elems.published && content.created) {
+                  var published = new Date(content.created);
+                  elems.published.innerHTML = published.toLocaleDateString(pathfora.locale, pathfora.dateOptions);
+                }
+
+                // set the author
+                if (elems.author) {
+                  elems.author.innerHTML = content.author;
                 }
 
                 elems.elem.removeAttribute('data-pfrecommend');
@@ -2729,6 +2741,18 @@
 
     /**
      * @public
+     * @description Locale for formatting dates
+     */
+    this.locale = 'en-US';
+
+    /**
+     * @public
+     * @description Additional options for formatting dates
+     */
+    this.dateOptions = {};
+
+    /**
+     * @public
      * @description Indicates if the DOM has been loaded
      */
     this.DOMLoaded = false;
@@ -2794,7 +2818,6 @@
             }
           }
 
-          pf.inline.acctid = pf.acctid;
           pf.inline.procElements();
         });
       });
@@ -3280,10 +3303,10 @@
      * @public
      * @description Inline personalization class
      */
-    this.inline = new Inline();
+    this.inline = new Inline(this);
+    this.initializeInline();
 
     this.initializePageViews();
-    this.initializeInline();
   };
 
   // NOTE Initialize context

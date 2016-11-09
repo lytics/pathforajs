@@ -9,7 +9,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine-ajax', 'jasmine'],
+    frameworks: ['jasmine-ajax', 'jasmine', 'intl-shim'],
 
 
     // list of files / patterns to load in the browser
@@ -17,7 +17,8 @@ module.exports = function(config) {
         'node_modules/jquery/dist/jquery.min.js',
         'dist/pathfora.js',
         'test/*.js',
-        'dist/pathfora.min.css'
+        'dist/pathfora.min.css',
+        'node_modules/karma-intl-shim/node_modules/intl/locale-data/jsonp/en-GB.js'
     ],
 
 
@@ -60,6 +61,9 @@ module.exports = function(config) {
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: ['Chrome'],
 
+    // plugins: [
+    //     require('intl')
+    // ],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
