@@ -266,7 +266,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
+    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -2394,7 +2394,7 @@
       }
 
       var recommendParts = [
-        '//api.lytics.io/api/content/recommend/',
+        'http://api.lytics.io/api/content/recommend/',
         accountId,
         '/user/_uids/',
         seerId

@@ -3350,7 +3350,11 @@ describe('Inline Personalization', function () {
       expect(recTitle.text()).toBe('Example Title');
       expect(recDesc.text()).toBe('An example description');
       expect(recAuthor.text()).toBe('Test User');
-      expect(recDate.text()).toBe('12/03/2013');
+
+      var date = recDate.text().split('/');
+      expect(date.length).toBe(3);
+      expect(date[0]).toBe('3');
+      expect(date[2]).toBe('2013');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('none');
@@ -3447,7 +3451,11 @@ describe('Inline Personalization', function () {
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
-      expect(recPublished.html()).toBe('Friday, 7 October 2016');
+
+      var date = recPublished.html().split(' ');
+      expect(date.length).toBe(4);
+      expect(date[2]).toBe('October');
+      expect(date[3]).toBe('2016');
 
       $('[data-pfblock="group3"]').remove();
       jasmine.Ajax.uninstall();

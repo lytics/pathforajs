@@ -33,7 +33,7 @@ body > div {
 
 body > div img {
   width: 200px;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
   display: block;
   margin-right: 20px;
@@ -51,6 +51,12 @@ body > div > div {
 }
 
 p.url {
+  font-size: 12px;
+  margin-bottom: 5px;
+  color: #898989;
+}
+
+p.info {
   font-size: 12px;
   margin-bottom: 5px;
   color: #898989;
