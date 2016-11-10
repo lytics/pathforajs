@@ -9,6 +9,33 @@ var jstag = {
 
 pathfora.utils.saveCookie('seerid', 123);
 
+function makeMouseEvent (type, params) {
+  var evt;
+  try {
+    evt = new MouseEvent(type, params);
+  } catch (e) {
+    evt = document.createEvent('MouseEvents');
+    params = params || {};
+    evt.initMouseEvent(type,
+      params.canBubble,
+      params.cancelable,
+      params.view || window,
+      params.detail || 0,
+      params.screenX || 0,
+      params.screenY || 0,
+      params.clientX || 0,
+      params.clientY || 0,
+      params.ctrlKey || false,
+      params.altKey || false,
+      params.shiftKey || false,
+      params.metaKey || false,
+      params.button || 0,
+      params.relatedTarget
+    );
+  }
+
+  return evt;
+}
 
 // -------------------------
 // PATHFORA TESTS
@@ -2967,6 +2994,92 @@ describe('Widgets', function () {
     }, 200);
 
     $('#height-element').remove();
+  });
+
+  describe('when showOnExitIntent is set', function () {
+    var id = 'exit-intent-test';
+    var subscription;
+
+    function moveTo (x, y) {
+      var evt = makeMouseEvent('mousemove', {
+        clientX: x,
+        clientY: y
+      });
+      document.dispatchEvent(evt);
+    }
+
+    function exit () {
+      var evt = makeMouseEvent('mouseout', {
+        relatedTarget: document.body.parentElement
+      });
+      document.dispatchEvent(evt);
+    }
+
+    beforeEach(function () {
+      subscription = new pathfora.Message({
+        layout: 'modal',
+        id: id,
+        headline: "Don't leave yet!",
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          showOnExitIntent: true
+        }
+      });
+      pathfora.initializeWidgets([subscription]);
+    });
+
+    it('should not show immediately', function () {
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the left', function () {
+      moveTo(500, 500);
+      moveTo(300, 500);
+      moveTo(100, 500);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the right', function () {
+      moveTo(500, 500);
+      moveTo(800, 500);
+      moveTo(1000, 500);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the bottom', function () {
+      moveTo(500, 500);
+      moveTo(500, 800);
+      moveTo(500, 1000);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse is moving down before exiting, even if exiting near the top of the screen', function () {
+      moveTo(500, 10);
+      moveTo(800, 20);
+      moveTo(1000, 30);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should be triggered when the mouse is moving up and exits from the top', function () {
+      moveTo(500, 200);
+      moveTo(500, 150);
+      moveTo(500, 100);
+      moveTo(500, 0);
+      exit();
+
+      expect($('#' + id).length).toBe(1);
+    });
   });
 
   // -------------------------
