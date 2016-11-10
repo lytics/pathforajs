@@ -29,7 +29,7 @@ Determines if the rendered module is displayed as soon as it is initialized or w
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>true</td>
     <td><code>default</code> module will be displayed as soon as it has been loaded</td>
@@ -61,7 +61,7 @@ Adds a delay, in seconds, that must be completed before module is loaded.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>0</td>
     <td><code>default</code> using 0 disables the showDelay property and will show immediately</td>
@@ -94,7 +94,7 @@ Adds a countdown, in seconds, that must hides module on expiration.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>0</td>
     <td><code>default</code> using 0 disables the showDelay property and will not be hidden</td>
@@ -124,7 +124,7 @@ Triggers the module when a specific DOM element enters the viewport.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>displayWhenElementVisible</td>
     <td>string</td>
@@ -140,7 +140,7 @@ displayConditions: {
   displayWhenElementVisible: '.footer'
 }
 ```
-  
+
 ## scrollPercentageToDisplay
 Triggers the modal after a percentage of the page scroll has been performed.
 
@@ -154,7 +154,7 @@ Triggers the modal after a percentage of the page scroll has been performed.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>0</td>
     <td><code>default</code> using 0 disables the property and will show immediately</td>
@@ -172,7 +172,7 @@ displayConditions: {
   scrollPercentageToDisplay: 50
 }
 ```
-  
+
 ## pageVisits
 Triggers the module when the user visits the page a certain amount of times. The total number of page visits is saved in cookie `PathforaPageView` to compare against this value.
 
@@ -186,7 +186,7 @@ Triggers the module when the user visits the page a certain amount of times. The
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>0</td>
     <td><code>default</code> using 0 disables the property and will show on all visits</td>
@@ -219,7 +219,7 @@ Display the module in a specified interval of time.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>start_at</td>
     <td>string</td>
@@ -231,7 +231,7 @@ Display the module in a specified interval of time.
     <td><code>optional</code> valid ISO 8601 formatted date for date to stop showing module</td>
   </tr>
 </table>
-  
+
 ``` javascript
 // example: show module starting February 12, 2017
 
@@ -241,7 +241,7 @@ displayConditions: {
   }
 }
 ```
-  
+
 ``` javascript
 // example: hide module starting February 12, 2017
 
@@ -250,7 +250,7 @@ displayConditions: {
     end_at: '2017-02-12T11:00:00.000Z'
   }
 }
-```   
+```
 
 ``` javascript
 // example: show module between February 12, 2017 and March 12, 2017
@@ -262,7 +262,7 @@ displayConditions: {
   }
 }
 ```
-  
+
 ## impressions
 Hide the module after a certain number of impressions. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
 
@@ -277,7 +277,7 @@ Hide the module after a certain number of impressions. The current number of imp
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>session</td>
     <td>int</td>
@@ -308,7 +308,7 @@ displayConditions: {
     total: 5
   }
 }
-```   
+```
 
 ``` javascript
 // example: hide the module after the second impression in the same session
@@ -321,8 +321,8 @@ displayConditions: {
   }
 }
 ```
-  
-  
+
+
 ## hideAfterAction
 Hide the module after a particular action has been taken (`closed`, `cancel`, or `confirm`). The current number of impressions is saved in a cookie `Pathfora[action]_[module id]` to compare against this value.
 
@@ -337,7 +337,7 @@ Hide the module after a particular action has been taken (`closed`, `cancel`, or
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>closed</td>
     <td>object</td>
@@ -438,6 +438,40 @@ displayConditions: {
 }
 ```
 
+## showOnExitIntent
+
+Only display the module when the user is about to leave the page.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showOnExitIntent</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>true</td>
+    <td>module will be displayed as soon as the user is about to leave the page.</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td><code>default</code> module will be displayed either on init or when manually invoked, depending on <code>showOnInit</code></td>
+  </tr>
+</table>
+
+``` javascript
+// example: loads immediately after initializing the module
+
+displayConditions: {
+  showOnExitIntent: true
+}
+```
+
+<h3>Exit Intent Modal - <a href="../examples/preview/config/exitIntentModal.html" target="_blank">Live Preview</a></h3>
 
 ## urlContains
 
@@ -454,7 +488,7 @@ Only display the module on pages that match the url conditions defined.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>match</td>
     <td>string</td>
@@ -478,7 +512,7 @@ Only display the module on pages that match the url conditions defined.
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>simple</td>
     <td>string</td>
