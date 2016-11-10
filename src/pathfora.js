@@ -1857,7 +1857,7 @@
 
       var recContent = function (w) {
         pathfora.addCallback(function () {
-          if (pathfora.acctid === '') {
+          if (typeof pathfora.acctid !== 'undefined' && pathfora.acctid === '') {
             if (context.lio && context.lio.account) {
               pathfora.acctid = context.lio.account.id;
             } else {
@@ -2522,7 +2522,7 @@
 
             // CASE: Content recommendation elements
             case 'data-pfrecommend':
-              if (pathfora.acctid === '') {
+              if (typeof pathfora.acctid !== 'undefined' && pathfora.acctid === '') {
                 throw new Error('Could not get account id from Lytics Javascript tag.');
               }
 
