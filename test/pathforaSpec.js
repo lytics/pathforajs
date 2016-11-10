@@ -9,6 +9,33 @@ var jstag = {
 
 pathfora.utils.saveCookie('seerid', 123);
 
+function makeMouseEvent (type, params) {
+  var evt;
+  try {
+    evt = new MouseEvent(type, params);
+  } catch (e) {
+    evt = document.createEvent('MouseEvents');
+    params = params || {};
+    evt.initMouseEvent(type,
+      params.canBubble,
+      params.cancelable,
+      params.view || window,
+      params.detail || 0,
+      params.screenX || 0,
+      params.screenY || 0,
+      params.clientX || 0,
+      params.clientY || 0,
+      params.ctrlKey || false,
+      params.altKey || false,
+      params.shiftKey || false,
+      params.metaKey || false,
+      params.button || 0,
+      params.relatedTarget
+    );
+  }
+
+  return evt;
+}
 
 // -------------------------
 // PATHFORA TESTS
@@ -2969,6 +2996,92 @@ describe('Widgets', function () {
     $('#height-element').remove();
   });
 
+  describe('when showOnExitIntent is set', function () {
+    var id = 'exit-intent-test';
+    var subscription;
+
+    function moveTo (x, y) {
+      var evt = makeMouseEvent('mousemove', {
+        clientX: x,
+        clientY: y
+      });
+      document.dispatchEvent(evt);
+    }
+
+    function exit () {
+      var evt = makeMouseEvent('mouseout', {
+        relatedTarget: document.body.parentElement
+      });
+      document.dispatchEvent(evt);
+    }
+
+    beforeEach(function () {
+      subscription = new pathfora.Message({
+        layout: 'modal',
+        id: id,
+        headline: "Don't leave yet!",
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          showOnExitIntent: true
+        }
+      });
+      pathfora.initializeWidgets([subscription]);
+    });
+
+    it('should not show immediately', function () {
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the left', function () {
+      moveTo(500, 500);
+      moveTo(300, 500);
+      moveTo(100, 500);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the right', function () {
+      moveTo(500, 500);
+      moveTo(800, 500);
+      moveTo(1000, 500);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse exits from the bottom', function () {
+      moveTo(500, 500);
+      moveTo(500, 800);
+      moveTo(500, 1000);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should not be triggered when the mouse is moving down before exiting, even if exiting near the top of the screen', function () {
+      moveTo(500, 10);
+      moveTo(800, 20);
+      moveTo(1000, 30);
+      exit();
+
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should be triggered when the mouse is moving up and exits from the top', function () {
+      moveTo(500, 200);
+      moveTo(500, 150);
+      moveTo(500, 100);
+      moveTo(500, 0);
+      exit();
+
+      expect($('#' + id).length).toBe(1);
+    });
+  });
+
   // -------------------------
   //  IGNORED
   // -------------------------
@@ -3319,6 +3432,8 @@ describe('Inline Personalization', function () {
       $(document.body).append('<div data-pfblock="group1" data-pfrecommend="www.example.com/*">' +
         '<img data-pftype="image" alt="My Image">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '<p data-pftype="published"></p>' +
+        '<p data-pftype="author"></p>' +
         '<p data-pftype="description"></p>' +
         '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
 
@@ -3328,7 +3443,7 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
         'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        'responseText': '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
 
 
@@ -3337,6 +3452,8 @@ describe('Inline Personalization', function () {
           recUrl = rec.find('[data-pftype="url"]'),
           recTitle = rec.find('[data-pftype="title"]'),
           recDesc = rec.find('[data-pftype="description"]'),
+          recDate = rec.find('[data-pftype="published"]'),
+          recAuthor = rec.find('[data-pftype="author"]'),
           def = $('[data-pfrecommend="default"]');
 
       expect(rec.length).toBe(1);
@@ -3345,6 +3462,12 @@ describe('Inline Personalization', function () {
       expect(recUrl.attr('href')).toBe('http://www.example.com/1');
       expect(recTitle.text()).toBe('Example Title');
       expect(recDesc.text()).toBe('An example description');
+      expect(recAuthor.text()).toBe('Test User');
+
+      var date = recDate.text().split('/');
+      expect(date.length).toBe(3);
+      expect(date[0]).toBe('3');
+      expect(date[2]).toBe('2013');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('none');
@@ -3410,6 +3533,42 @@ describe('Inline Personalization', function () {
       expect(rec.css('display')).toBe('block');
       expect(recImage.css('background-image')).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
       expect(recUrl.html()).toBe('http://www.example.com/1');
+
+      $('[data-pfblock="group3"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
+    it('should recognize date formatting set by the user', function () {
+      jasmine.Ajax.install();
+
+      pathfora.locale = 'en-GB';
+      pathfora.dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
+        '<div data-pftype="image"></div>' +
+        '<div data-pftype="published"></div>' +
+        '<div data-pftype="url"></div></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        'status': 200,
+        'contentType': 'application/json',
+        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+
+      var rec = $('[data-pfmodified="true"]'),
+          recPublished = rec.find('[data-pftype="published"]');
+
+      expect(rec.length).toBe(1);
+      expect(rec.css('display')).toBe('block');
+
+      var date = recPublished.html().split(' ');
+      expect(date.length).toBe(4);
+      expect(date[2]).toBe('October');
+      expect(date[3]).toBe('2016');
 
       $('[data-pfblock="group3"]').remove();
       jasmine.Ajax.uninstall();
