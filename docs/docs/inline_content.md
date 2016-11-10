@@ -73,9 +73,27 @@ Inside the container element you may have several elements with the `data-pftype
     <td>description</td>
     <td>set the innerHTML of this element to be the meta description of the document</td>
   </tr>
+
+  <tr>
+    <td>author</td>
+    <td>set the innerHTML of this element to be the author of the document</td>
+  </tr>
+
+  <tr>
+    <td>published</td>
+    <td>set the innerHTML of this element to be the date this article was published, see below for formatting</td>
+  </tr>
 </table>
 
 If for some reason the recommendation API returns an error for the user, and cannot fill in recommendation, you can set some default content to show by creating another set of elements with content you've selected filled in and the `data-pfrecommend` value set to default. This content will only show if the any recommendation with a matching `data-pfblock` couldn't be loaded.
+
+## Date formatting
+
+Pathfora uses [toLocaleDateString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString) to format the date published of an article. You can set the locale and options for this function on the pathfora object.
+
+<pre data-src="../examples/src/inline/content.js"></pre>
+
+If unset by the user, the locale will default to `en-US`.
 
 <h3>Content Recommendations - <a href="../examples/preview/inline/content.html" target="_blank">Live Preview</a></h3>
 
