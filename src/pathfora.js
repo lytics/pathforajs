@@ -22,6 +22,8 @@
   var defaultProps = {
     generic: {
       className: 'pathfora',
+      branding: true,
+      responsive: true,
       headline: '',
       themes: {
         dark: {
@@ -61,9 +63,7 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true,
-      responsive: true,
-      branding: true
+      cancelShow: true
     },
     subscription: {
       layout: 'modal',
@@ -75,9 +75,7 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true,
-      responsive: true,
-      branding: true
+      cancelShow: true
     },
     form: {
       layout: 'modal',
@@ -105,9 +103,7 @@
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false,
-      responsive: true,
-      branding: true
+      showSocialLogin: false
     },
     sitegate: {
       layout: 'modal',
@@ -134,9 +130,7 @@
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
-      showForm: true,
-      responsive: true,
-      branding: true
+      showForm: true
     }
   };
 
@@ -1306,6 +1300,29 @@
       case 'subscription':
         var widgetForm = widget.querySelector('form');
 
+        var onInputChange = function (event) {
+          if (event.target.value && event.target.value.length > 0) {
+            core.trackWidgetAction('form_start', config, event.target);
+          }
+        };
+
+        var onInputFocus = function (event) {
+          core.trackWidgetAction('focus', config, event.target);
+        };
+
+        for (var elem in widgetForm.childNodes) {
+          if (widgetForm.children.hasOwnProperty(elem)) {
+            var child = widgetForm.children[elem];
+            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+              // Track focus of form elements
+              child.addEventListener('focus', onInputFocus);
+
+              // Track input to indicate they've begun to interact with the form
+              child.addEventListener('change', onInputChange);
+            }
+          }
+        }
+
         var widgetOnFormSubmit = function (event) {
           var widgetAction;
           event.preventDefault();
@@ -1344,9 +1361,11 @@
 
         if (widgetForm.addEventListener) {
           widgetForm.addEventListener('submit', widgetOnFormSubmit);
+
         } else {
           widgetForm.attachEvent('submit', widgetOnFormSubmit);
         }
+
         break;
       }
 
@@ -1418,6 +1437,10 @@
         };
 
         if (widgetClose) {
+          widgetClose.onmouseover = function (event) {
+            core.trackWidgetAction('hover', config, event.target);
+          };
+
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
             updateActionCookie('PathforaClosed_' + widget.id);
@@ -1426,6 +1449,10 @@
         }
 
         if (widgetCancel) {
+          widgetCancel.onmouseover = function (event) {
+            core.trackWidgetAction('hover', config, event.target);
+          };
+
           if (typeof config.cancelAction === 'object') {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
@@ -1447,77 +1474,83 @@
         break;
       }
 
-      if (typeof config.confirmAction === 'object') {
-        widgetOk.onclick = function () {
-          core.trackWidgetAction('confirm', config);
-          if (typeof updateActionCookie === 'function') {
-            updateActionCookie('PathforaConfirm_' + widget.id);
-          }
-          if (typeof config.confirmAction.callback === 'function') {
-            config.confirmAction.callback();
-          }
-          if (typeof widgetOnButtonClick === 'function') {
-            widgetOnButtonClick(event);
-          }
-          if (typeof widgetOnModalClose === 'function') {
-            widgetOnModalClose(event);
-          }
-
-          if (config.layout !== 'inline') {
-            context.pathfora.closeWidget(widget.id, true);
-          }
+      if (widgetOk) {
+        widgetOk.onmouseover = function (event) {
+          core.trackWidgetAction('hover', config, event.target);
         };
-      } else if (config.type === 'message') {
-        widgetOk.onclick = function () {
-          core.trackWidgetAction('confirm', config);
-          if (typeof updateActionCookie === 'function') {
-            updateActionCookie('PathforaConfirm_' + widget.id);
-          }
-          if (typeof widgetOnButtonClick === 'function') {
-            widgetOnButtonClick(event);
-          }
-          if (config.layout !== 'inline') {
-            context.pathfora.closeWidget(widget.id);
-          }
-        };
-      } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
-        widgetOk.onclick = function () {
-          var valid = true;
 
-          Array.prototype.slice.call(
-            widget.querySelectorAll('input, textarea, select')
-          ).forEach(function (inputField) {
-            if (inputField.hasAttribute('required') && !inputField.value) {
-              valid = false;
-            }
-          });
-
-          if (valid) {
+        if (typeof config.confirmAction === 'object') {
+          widgetOk.onclick = function () {
+            core.trackWidgetAction('confirm', config);
             if (typeof updateActionCookie === 'function') {
               updateActionCookie('PathforaConfirm_' + widget.id);
+            }
+            if (typeof config.confirmAction.callback === 'function') {
+              config.confirmAction.callback();
+            }
+            if (typeof widgetOnButtonClick === 'function') {
+              widgetOnButtonClick(event);
             }
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
 
-            if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+            if (config.layout !== 'inline') {
+              context.pathfora.closeWidget(widget.id, true);
+            }
+          };
+        } else if (config.type === 'message') {
+          widgetOk.onclick = function () {
+            core.trackWidgetAction('confirm', config);
+            if (typeof updateActionCookie === 'function') {
+              updateActionCookie('PathforaConfirm_' + widget.id);
+            }
+            if (typeof widgetOnButtonClick === 'function') {
+              widgetOnButtonClick(event);
+            }
+            if (config.layout !== 'inline') {
               context.pathfora.closeWidget(widget.id);
+            }
+          };
+        } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
+          widgetOk.onclick = function () {
+            var valid = true;
 
-            // success state
-            } else {
-              utils.addClass(widget, 'success');
+            Array.prototype.slice.call(
+              widget.querySelectorAll('input, textarea, select')
+            ).forEach(function (inputField) {
+              if (inputField.hasAttribute('required') && !inputField.value) {
+                valid = false;
+              }
+            });
 
-              // default to a three second delay if the user has not defined one
-              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+            if (valid) {
+              if (typeof updateActionCookie === 'function') {
+                updateActionCookie('PathforaConfirm_' + widget.id);
+              }
+              if (typeof widgetOnModalClose === 'function') {
+                widgetOnModalClose(event);
+              }
 
-              if (delay > 0) {
-                setTimeout(function () {
-                  pathfora.closeWidget(widget.id);
-                }, delay);
+              if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+                context.pathfora.closeWidget(widget.id);
+
+              // success state
+              } else {
+                utils.addClass(widget, 'success');
+
+                // default to a three second delay if the user has not defined one
+                var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
+                if (delay > 0) {
+                  setTimeout(function () {
+                    pathfora.closeWidget(widget.id);
+                  }, delay);
+                }
               }
             }
-          }
-        };
+          };
+        }
       }
     },
 
@@ -1878,6 +1911,25 @@
           }
         }
         utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
+        break;
+      case 'hover':
+        if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
+          params['pf-widget-action'] = 'confirm';
+        } else if (utils.hasClass(htmlElement, 'pf-widget-cancel')) {
+          params['pf-widget-action'] = 'cancel';
+        } else if (utils.hasClass(htmlElement, 'pf-widget-close')) {
+          params['pf-widget-action'] = 'close';
+        }
+        break;
+      case 'focus':
+        if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+          params['pf-widget-action'] = htmlElement.getAttribute('name');
+        }
+        break;
+      case 'form_start':
+        if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+          params['pf-widget-action'] = htmlElement.getAttribute('name');
+        }
         break;
       }
 
