@@ -381,6 +381,159 @@ describe('Pathfora', function () {
     }, 200);
   });
 
+  it('should report hover actions to Lytics API', function (done) {
+    jasmine.Ajax.install();
+
+    var messageModal = new pathfora.Message({
+      layout: 'modal',
+      id: 'tracking-widget3',
+      msg: 'Message modal - report test'
+    });
+
+    pathfora.initializeWidgets([messageModal]);
+
+    var widget = $('#' + messageModal.id);
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      spyOn(jstag, 'send');
+      expect(jstag.send).not.toHaveBeenCalled();
+
+      widget.find('.pf-widget-ok').mouseenter().mouseleave();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'confirm',
+        'pf-widget-event': 'hover'
+      }));
+
+      widget.find('.pf-widget-cancel').mouseenter().mouseleave();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'cancel',
+        'pf-widget-event': 'hover'
+      }));
+
+      widget.find('.pf-widget-close').mouseenter().mouseleave();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'close',
+        'pf-widget-event': 'hover'
+      }));
+
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should report form focus actions to Lytics API', function (done) {
+    jasmine.Ajax.install();
+
+    var formModal = new pathfora.Form({
+      layout: 'modal',
+      id: 'tracking-widget4',
+      msg: 'Form modal - report test'
+    });
+
+    pathfora.initializeWidgets([formModal]);
+
+    var widget = $('#' + formModal.id);
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      var form = widget.find('form');
+
+      spyOn(jstag, 'send');
+      expect(jstag.send).not.toHaveBeenCalled();
+
+      form.find('[name="username"]').focus();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'username',
+        'pf-widget-event': 'focus'
+      }));
+
+      form.find('[name="email"]').focus();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'email',
+        'pf-widget-event': 'focus'
+      }));
+
+      form.find('[name="message"]').focus();
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'message',
+        'pf-widget-event': 'focus'
+      }));
+
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should report form started actions to Lytics API', function (done) {
+    jasmine.Ajax.install();
+
+    var formModal = new pathfora.Form({
+      layout: 'modal',
+      id: 'tracking-widget5',
+      msg: 'Form modal - report test'
+    });
+
+    pathfora.initializeWidgets([formModal]);
+
+    var widget = $('#' + formModal.id);
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      var form = widget.find('form');
+
+      spyOn(jstag, 'send');
+      expect(jstag.send).not.toHaveBeenCalled();
+
+      form.find('[name="username"]').val('a').change();
+
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'username',
+        'pf-widget-event': 'form_start'
+      }));
+
+      form.find('[name="email"]').val('a').change();
+
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'email',
+        'pf-widget-event': 'form_start'
+      }));
+
+      form.find('[name="message"]').val('a').change();
+
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-action': 'message',
+        'pf-widget-event': 'form_start'
+      }));
+
+      done();
+    }, 200);
+
+    jasmine.Ajax.uninstall();
+  });
+
+
   // -------------------------
   // TARGETING
   // -------------------------

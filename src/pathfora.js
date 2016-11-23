@@ -1315,10 +1315,10 @@
             var child = widgetForm.children[elem];
             if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
               // Track focus of form elements
-              child.addEventListener('focus', onInputFocus);
+              child.onfocus = onInputFocus;
 
               // Track input to indicate they've begun to interact with the form
-              child.addEventListener('change', onInputChange);
+              child.onchange = onInputChange;
             }
           }
         }
@@ -1437,7 +1437,7 @@
         };
 
         if (widgetClose) {
-          widgetClose.onmouseover = function (event) {
+          widgetClose.onmouseenter = function (event) {
             core.trackWidgetAction('hover', config, event.target);
           };
 
@@ -1449,7 +1449,7 @@
         }
 
         if (widgetCancel) {
-          widgetCancel.onmouseover = function (event) {
+          widgetCancel.onmouseenter = function (event) {
             core.trackWidgetAction('hover', config, event.target);
           };
 
@@ -1475,7 +1475,7 @@
       }
 
       if (widgetOk) {
-        widgetOk.onmouseover = function (event) {
+        widgetOk.onmouseenter = function (event) {
           core.trackWidgetAction('hover', config, event.target);
         };
 
