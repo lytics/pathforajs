@@ -511,7 +511,6 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
-    watchers: [],
     expiration: null,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
@@ -523,6 +522,8 @@
     initializeWidget: function (widget) {
       var watcher,
           condition = widget.displayConditions;
+
+      widget.watchers = [];
 
       // NOTE Default cookie expiration is one year from now
       core.expiration = new Date();
@@ -536,20 +537,9 @@
         }
       }
 
+      // display conditions based on page load
       if (condition.date) {
         widget.valid = widget.valid && core.dateChecker(condition.date);
-      }
-
-      if (condition.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(condition.displayWhenElementVisible);
-        core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers, widget);
-      }
-
-      if (condition.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay);
-        core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers, widget);
       }
 
       if (condition.pageVisits) {
@@ -563,13 +553,26 @@
         widget.valid = widget.valid && core.urlChecker(condition.urlContains);
       }
 
+      widget.valid = widget.valid && condition.showOnInit;
+
+      // display conditions based on page interaction
       if (condition.showOnExitIntent) {
         core.initializeExitIntent(widget);
       }
 
-      widget.valid = widget.valid && condition.showOnInit;
+      if (condition.displayWhenElementVisible) {
+        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+        widget.watchers.push(watcher);
+        core.initializeScrollWatchers(widget);
+      }
 
-      if (core.watchers.length === 0 && !condition.showOnExitIntent) {
+      if (condition.scrollPercentageToDisplay) {
+        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+        widget.watchers.push(watcher);
+        core.initializeScrollWatchers(widget);
+      }
+
+      if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
         if (condition.impressions) {
           widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
         }
@@ -586,15 +589,15 @@
      *              when user is scrolling the page
      * @param {array} watchers
      */
-    initializeScrollWatchers: function (watchers, widget) {
+    initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
 
-        core.scrollListener = function () {
+        widget.scrollListener = function () {
           var valid;
 
-          for (var key in watchers) {
-            if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-              valid = widget.valid && watchers[key].check();
+          for (var key in widget.watchers) {
+            if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+              valid = widget.valid && widget.watchers[key].check();
             }
           }
 
@@ -604,14 +607,23 @@
 
           if (valid) {
             context.pathfora.showWidget(widget);
+            widget.valid = false;
+
+            if (typeof document.addEventListener === 'function') {
+              document.removeEventListener('scroll', widget.scrollListener);
+              document.removeEventListener('mouseout', widget.scrollListener);
+            } else {
+              context.onscroll = null;
+              context.onscroll = null;
+            }
           }
         };
 
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
         if (typeof context.addEventListener === 'function') {
-          context.addEventListener('scroll', core.scrollListener, false);
+          context.addEventListener('scroll', widget.scrollListener, false);
         } else {
-          context.onscroll = core.scrollListener;
+          context.onscroll = widget.scrollListener;
         }
       }
       return true;
@@ -925,18 +937,6 @@
     },
 
     /**
-     * @description Take array of watchers and clear it
-     * @param {array} watchers
-     */
-    removeScrollWatchers: function (watchers) {
-      watchers.forEach(function (watcher) {
-        core.removeWatcher(watcher);
-      });
-
-      context.removeEventListener('scroll', core.scrollListener, false);
-    },
-
-    /**
      * @description Register a time-tiggered widget
      * @param {object} widget
      */
@@ -966,13 +966,13 @@
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
      */
-    registerPositionWatcher: function (percent) {
+    registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
               offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
-            core.removeWatcher(watcher);
+            core.removeWatcher(watcher, widget);
             return true;
           }
           return false;
@@ -989,7 +989,7 @@
      * @returns {object} object, containing onscroll callback function 'check', and
      *                   triggering element reference 'elem'
      */
-    registerElementWatcher: function (selector) {
+    registerElementWatcher: function (selector, widget) {
       var watcher = {
         elem: document.querySelector(selector),
 
@@ -998,7 +998,7 @@
               scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
 
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-            core.removeWatcher(watcher);
+            core.removeWatcher(watcher, widget);
             return true;
           }
           return false;
@@ -1012,10 +1012,11 @@
      * @description Unassign a watcher
      * @param {object} watcher
      */
-    removeWatcher: function (watcher) {
-      for (var key in core.watchers) {
-        if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
-          core.watchers.splice(key, 1);
+    removeWatcher: function (watcher, widget) {
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && watcher === widget.watchers[key]) {
+          widget.watchers.splice(key, 1);
+          console.log(key);
         }
       }
     },
@@ -3250,7 +3251,6 @@
 
       core.openedWidgets = [];
       core.initializedWidgets = [];
-      core.removeScrollWatchers(core.watchers);
 
       pathforaDataObject = {
         pageViews: 0,
