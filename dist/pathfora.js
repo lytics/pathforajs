@@ -1051,7 +1051,6 @@
       for (var key in widget.watchers) {
         if (widget.watchers.hasOwnProperty(key) && watcher === widget.watchers[key]) {
           widget.watchers.splice(key, 1);
-          console.log(key);
         }
       }
     },
