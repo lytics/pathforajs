@@ -22,6 +22,8 @@
   var defaultProps = {
     generic: {
       className: 'pathfora',
+      branding: true,
+      responsive: true,
       headline: '',
       themes: {
         dark: {
@@ -61,9 +63,7 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true,
-      responsive: true,
-      branding: true
+      cancelShow: true
     },
     subscription: {
       layout: 'modal',
@@ -75,9 +75,7 @@
       okMessage: 'Confirm',
       cancelMessage: 'Cancel',
       okShow: true,
-      cancelShow: true,
-      responsive: true,
-      branding: true
+      cancelShow: true
     },
     form: {
       layout: 'modal',
@@ -105,9 +103,7 @@
       okShow: true,
       cancelMessage: 'Cancel',
       cancelShow: true,
-      showSocialLogin: false,
-      responsive: true,
-      branding: true
+      showSocialLogin: false
     },
     sitegate: {
       layout: 'modal',
@@ -134,9 +130,7 @@
       okMessage: 'Submit',
       okShow: true,
       showSocialLogin: false,
-      showForm: true,
-      responsive: true,
-      branding: true
+      showForm: true
     }
   };
 
@@ -552,7 +546,6 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
-    watchers: [],
     expiration: null,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
@@ -564,6 +557,8 @@
     initializeWidget: function (widget) {
       var watcher,
           condition = widget.displayConditions;
+
+      widget.watchers = [];
 
       // NOTE Default cookie expiration is one year from now
       core.expiration = new Date();
@@ -577,20 +572,9 @@
         }
       }
 
+      // display conditions based on page load
       if (condition.date) {
         widget.valid = widget.valid && core.dateChecker(condition.date);
-      }
-
-      if (condition.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(condition.displayWhenElementVisible);
-        core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers, widget);
-      }
-
-      if (condition.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay);
-        core.watchers.push(watcher);
-        core.initializeScrollWatchers(core.watchers, widget);
       }
 
       if (condition.pageVisits) {
@@ -604,13 +588,26 @@
         widget.valid = widget.valid && core.urlChecker(condition.urlContains);
       }
 
+      widget.valid = widget.valid && condition.showOnInit;
+
+      // display conditions based on page interaction
       if (condition.showOnExitIntent) {
         core.initializeExitIntent(widget);
       }
 
-      widget.valid = widget.valid && condition.showOnInit;
+      if (condition.displayWhenElementVisible) {
+        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+        widget.watchers.push(watcher);
+        core.initializeScrollWatchers(widget);
+      }
 
-      if (core.watchers.length === 0 && !condition.showOnExitIntent) {
+      if (condition.scrollPercentageToDisplay) {
+        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+        widget.watchers.push(watcher);
+        core.initializeScrollWatchers(widget);
+      }
+
+      if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
         if (condition.impressions) {
           widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
         }
@@ -627,15 +624,15 @@
      *              when user is scrolling the page
      * @param {array} watchers
      */
-    initializeScrollWatchers: function (watchers, widget) {
+    initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
 
-        core.scrollListener = function () {
+        widget.scrollListener = function () {
           var valid;
 
-          for (var key in watchers) {
-            if (watchers.hasOwnProperty(key) && watchers[key] !== null) {
-              valid = widget.valid && watchers[key].check();
+          for (var key in widget.watchers) {
+            if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+              valid = widget.valid && widget.watchers[key].check();
             }
           }
 
@@ -645,14 +642,23 @@
 
           if (valid) {
             context.pathfora.showWidget(widget);
+            widget.valid = false;
+
+            if (typeof document.addEventListener === 'function') {
+              document.removeEventListener('scroll', widget.scrollListener);
+              document.removeEventListener('mouseout', widget.scrollListener);
+            } else {
+              context.onscroll = null;
+              context.onscroll = null;
+            }
           }
         };
 
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
         if (typeof context.addEventListener === 'function') {
-          context.addEventListener('scroll', core.scrollListener, false);
+          context.addEventListener('scroll', widget.scrollListener, false);
         } else {
-          context.onscroll = core.scrollListener;
+          context.onscroll = widget.scrollListener;
         }
       }
       return true;
@@ -966,18 +972,6 @@
     },
 
     /**
-     * @description Take array of watchers and clear it
-     * @param {array} watchers
-     */
-    removeScrollWatchers: function (watchers) {
-      watchers.forEach(function (watcher) {
-        core.removeWatcher(watcher);
-      });
-
-      context.removeEventListener('scroll', core.scrollListener, false);
-    },
-
-    /**
      * @description Register a time-tiggered widget
      * @param {object} widget
      */
@@ -1007,13 +1001,13 @@
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
      */
-    registerPositionWatcher: function (percent) {
+    registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
               offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
-            core.removeWatcher(watcher);
+            core.removeWatcher(watcher, widget);
             return true;
           }
           return false;
@@ -1030,7 +1024,7 @@
      * @returns {object} object, containing onscroll callback function 'check', and
      *                   triggering element reference 'elem'
      */
-    registerElementWatcher: function (selector) {
+    registerElementWatcher: function (selector, widget) {
       var watcher = {
         elem: document.querySelector(selector),
 
@@ -1039,7 +1033,7 @@
               scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
 
           if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-            core.removeWatcher(watcher);
+            core.removeWatcher(watcher, widget);
             return true;
           }
           return false;
@@ -1053,10 +1047,10 @@
      * @description Unassign a watcher
      * @param {object} watcher
      */
-    removeWatcher: function (watcher) {
-      for (var key in core.watchers) {
-        if (core.watchers.hasOwnProperty(key) && watcher === core.watchers[key]) {
-          core.watchers.splice(key, 1);
+    removeWatcher: function (watcher, widget) {
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && watcher === widget.watchers[key]) {
+          widget.watchers.splice(key, 1);
         }
       }
     },
@@ -1341,6 +1335,29 @@
       case 'subscription':
         var widgetForm = widget.querySelector('form');
 
+        var onInputChange = function (event) {
+          if (event.target.value && event.target.value.length > 0) {
+            core.trackWidgetAction('form_start', config, event.target);
+          }
+        };
+
+        var onInputFocus = function (event) {
+          core.trackWidgetAction('focus', config, event.target);
+        };
+
+        for (var elem in widgetForm.childNodes) {
+          if (widgetForm.children.hasOwnProperty(elem)) {
+            var child = widgetForm.children[elem];
+            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+              // Track focus of form elements
+              child.onfocus = onInputFocus;
+
+              // Track input to indicate they've begun to interact with the form
+              child.onchange = onInputChange;
+            }
+          }
+        }
+
         var widgetOnFormSubmit = function (event) {
           var widgetAction;
           event.preventDefault();
@@ -1379,9 +1396,11 @@
 
         if (widgetForm.addEventListener) {
           widgetForm.addEventListener('submit', widgetOnFormSubmit);
+
         } else {
           widgetForm.attachEvent('submit', widgetOnFormSubmit);
         }
+
         break;
       }
 
@@ -1453,6 +1472,10 @@
         };
 
         if (widgetClose) {
+          widgetClose.onmouseenter = function (event) {
+            core.trackWidgetAction('hover', config, event.target);
+          };
+
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
             updateActionCookie('PathforaClosed_' + widget.id);
@@ -1461,6 +1484,10 @@
         }
 
         if (widgetCancel) {
+          widgetCancel.onmouseenter = function (event) {
+            core.trackWidgetAction('hover', config, event.target);
+          };
+
           if (typeof config.cancelAction === 'object') {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
@@ -1482,77 +1509,83 @@
         break;
       }
 
-      if (typeof config.confirmAction === 'object') {
-        widgetOk.onclick = function () {
-          core.trackWidgetAction('confirm', config);
-          if (typeof updateActionCookie === 'function') {
-            updateActionCookie('PathforaConfirm_' + widget.id);
-          }
-          if (typeof config.confirmAction.callback === 'function') {
-            config.confirmAction.callback();
-          }
-          if (typeof widgetOnButtonClick === 'function') {
-            widgetOnButtonClick(event);
-          }
-          if (typeof widgetOnModalClose === 'function') {
-            widgetOnModalClose(event);
-          }
-
-          if (config.layout !== 'inline') {
-            context.pathfora.closeWidget(widget.id, true);
-          }
+      if (widgetOk) {
+        widgetOk.onmouseenter = function (event) {
+          core.trackWidgetAction('hover', config, event.target);
         };
-      } else if (config.type === 'message') {
-        widgetOk.onclick = function () {
-          core.trackWidgetAction('confirm', config);
-          if (typeof updateActionCookie === 'function') {
-            updateActionCookie('PathforaConfirm_' + widget.id);
-          }
-          if (typeof widgetOnButtonClick === 'function') {
-            widgetOnButtonClick(event);
-          }
-          if (config.layout !== 'inline') {
-            context.pathfora.closeWidget(widget.id);
-          }
-        };
-      } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
-        widgetOk.onclick = function () {
-          var valid = true;
 
-          Array.prototype.slice.call(
-            widget.querySelectorAll('input, textarea, select')
-          ).forEach(function (inputField) {
-            if (inputField.hasAttribute('required') && !inputField.value) {
-              valid = false;
-            }
-          });
-
-          if (valid) {
+        if (typeof config.confirmAction === 'object') {
+          widgetOk.onclick = function () {
+            core.trackWidgetAction('confirm', config);
             if (typeof updateActionCookie === 'function') {
               updateActionCookie('PathforaConfirm_' + widget.id);
+            }
+            if (typeof config.confirmAction.callback === 'function') {
+              config.confirmAction.callback();
+            }
+            if (typeof widgetOnButtonClick === 'function') {
+              widgetOnButtonClick(event);
             }
             if (typeof widgetOnModalClose === 'function') {
               widgetOnModalClose(event);
             }
 
-            if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+            if (config.layout !== 'inline') {
+              context.pathfora.closeWidget(widget.id, true);
+            }
+          };
+        } else if (config.type === 'message') {
+          widgetOk.onclick = function () {
+            core.trackWidgetAction('confirm', config);
+            if (typeof updateActionCookie === 'function') {
+              updateActionCookie('PathforaConfirm_' + widget.id);
+            }
+            if (typeof widgetOnButtonClick === 'function') {
+              widgetOnButtonClick(event);
+            }
+            if (config.layout !== 'inline') {
               context.pathfora.closeWidget(widget.id);
+            }
+          };
+        } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
+          widgetOk.onclick = function () {
+            var valid = true;
 
-            // success state
-            } else {
-              utils.addClass(widget, 'success');
+            Array.prototype.slice.call(
+              widget.querySelectorAll('input, textarea, select')
+            ).forEach(function (inputField) {
+              if (inputField.hasAttribute('required') && !inputField.value) {
+                valid = false;
+              }
+            });
 
-              // default to a three second delay if the user has not defined one
-              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+            if (valid) {
+              if (typeof updateActionCookie === 'function') {
+                updateActionCookie('PathforaConfirm_' + widget.id);
+              }
+              if (typeof widgetOnModalClose === 'function') {
+                widgetOnModalClose(event);
+              }
 
-              if (delay > 0) {
-                setTimeout(function () {
-                  pathfora.closeWidget(widget.id);
-                }, delay);
+              if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+                context.pathfora.closeWidget(widget.id);
+
+              // success state
+              } else {
+                utils.addClass(widget, 'success');
+
+                // default to a three second delay if the user has not defined one
+                var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
+                if (delay > 0) {
+                  setTimeout(function () {
+                    pathfora.closeWidget(widget.id);
+                  }, delay);
+                }
               }
             }
-          }
-        };
+          };
+        }
       }
     },
 
@@ -1913,6 +1946,25 @@
           }
         }
         utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
+        break;
+      case 'hover':
+        if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
+          params['pf-widget-action'] = 'confirm';
+        } else if (utils.hasClass(htmlElement, 'pf-widget-cancel')) {
+          params['pf-widget-action'] = 'cancel';
+        } else if (utils.hasClass(htmlElement, 'pf-widget-close')) {
+          params['pf-widget-action'] = 'close';
+        }
+        break;
+      case 'focus':
+        if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+          params['pf-widget-action'] = htmlElement.getAttribute('name');
+        }
+        break;
+      case 'form_start':
+        if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+          params['pf-widget-action'] = htmlElement.getAttribute('name');
+        }
         break;
       }
 
@@ -3233,7 +3285,6 @@
 
       core.openedWidgets = [];
       core.initializedWidgets = [];
-      core.removeScrollWatchers(core.watchers);
 
       pathforaDataObject = {
         pageViews: 0,
