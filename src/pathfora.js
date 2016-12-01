@@ -1480,7 +1480,7 @@
         };
 
         if (typeof config.confirmAction === 'object') {
-          widgetOk.onclick = function () {
+          widgetOk.onclick = function (event) {
             core.trackWidgetAction('confirm', config);
             if (typeof updateActionCookie === 'function') {
               updateActionCookie('PathforaConfirm_' + widget.id);
@@ -1500,7 +1500,7 @@
             }
           };
         } else if (config.type === 'message') {
-          widgetOk.onclick = function () {
+          widgetOk.onclick = function (event) {
             core.trackWidgetAction('confirm', config);
             if (typeof updateActionCookie === 'function') {
               updateActionCookie('PathforaConfirm_' + widget.id);
@@ -1513,7 +1513,7 @@
             }
           };
         } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
-          widgetOk.onclick = function () {
+          widgetOk.onclick = function (event) {
             var valid = true;
 
             Array.prototype.slice.call(
@@ -2810,7 +2810,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.11';
+    this.version = '0.0.12';
 
     /**
      * @public
