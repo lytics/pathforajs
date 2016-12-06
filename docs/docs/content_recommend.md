@@ -78,6 +78,13 @@ Recommend controls any parameters necessary for making a content suggestions to 
     <td>string</td>
     <td>must be one of <code>popular</code> (prioritizes most popular documents), <code>recent</code> (prioritizes most recent documents), or <code>affinity</code> (prioritizes based on user affinity - default)</td>
   </tr>
+
+  <tr>
+    <td>collection</td>
+    <td>string</td>
+    <td>id or slug of a content collection (segment on the content table) to filter content</td>
+  </tr>
+
 </table>
 
 <table>
