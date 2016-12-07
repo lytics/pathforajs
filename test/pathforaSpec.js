@@ -2137,10 +2137,10 @@ describe('Widgets', function () {
     for (var elem in theform[0].children) {
       if (typeof theform[0].children[elem].getAttribute !== 'undefined') {
         var inputname = theform[0].children[elem].getAttribute('name'),
-            inputrequired = theform[0].children[elem].getAttribute('required');
+            inputrequired = theform[0].children[elem].getAttribute('data-required');
 
         if (inputname === 'message') {
-          expect(inputrequired).toBe('');
+          expect(inputrequired).toBe('true');
         } else if (inputname !== null) {
           expect(inputrequired).toBe(null);
         }

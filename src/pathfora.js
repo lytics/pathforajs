@@ -1226,7 +1226,7 @@
           var element = getFormElement(field);
 
           if (element && config.required[field]) {
-            element.setAttribute('required', '');
+            element.setAttribute('data-required', 'true');
           }
         });
 
@@ -1291,9 +1291,36 @@
      * @param {object} config
      */
     constructWidgetActions: function (widget, config) {
-      var widgetOnModalClose, updateActionCookie, widgetOnButtonClick,
+      var widgetOnButtonClick, widgetOnFormSubmit,
           widgetOk = widget.querySelector('.pf-widget-ok');
 
+      var widgetOnModalClose = function (event) {
+        if (typeof config.onModalClose === 'function') {
+          config.onModalClose(callbackTypes.MODAL_CLOSE, {
+            widget: widget,
+            event: event
+          });
+        }
+      };
+
+      var updateActionCookie = function (name) {
+        var ct,
+            val = utils.readCookie(name),
+            duration = Date.now();
+
+        if (val) {
+          val = val.split('|');
+          // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+          val = val.length === 1 ? val.split(',') : val;
+          ct = Math.min(parseInt(val[0], 10), 9998) + 1;
+        } else {
+          ct = 1;
+        }
+
+        utils.saveCookie(name, ct + '|' + duration, core.expiration);
+      };
+
+      // Tracking for widgets with a form element
       switch (config.type) {
       case 'form':
       case 'sitegate':
@@ -1310,6 +1337,7 @@
           core.trackWidgetAction('focus', config, event.target);
         };
 
+        // Additional tracking for input focus and entering text into the form
         for (var elem in widgetForm.childNodes) {
           if (widgetForm.children.hasOwnProperty(elem)) {
             var child = widgetForm.children[elem];
@@ -1323,7 +1351,8 @@
           }
         }
 
-        var widgetOnFormSubmit = function (event) {
+        // Form submit handler
+        widgetOnFormSubmit = function (event) {
           var widgetAction;
           event.preventDefault();
 
@@ -1339,32 +1368,49 @@
             break;
           }
 
-          if (widgetAction) {
-            core.trackWidgetAction(widgetAction, config, event.target);
+          // Validate that the form is filled out correctly
+          var valid = true,
+              formElements = Array.prototype.slice.call(widgetForm.querySelectorAll('input, textarea, select'));
+
+          for (var i = 0; i < formElements.length; i++) {
+            var inputField = formElements[i];
+
+            if (inputField.hasAttribute('data-required')) {
+              inputField.setAttribute('data-required', 'true');
+
+              // Check for required field and email validation
+              if (!inputField.value || (inputField.getAttribute('type') === 'email' && inputField.value.indexOf('@') === -1)) {
+                valid = false;
+                inputField.setAttribute('data-required', 'active');
+                inputField.focus();
+                break;
+              }
+            }
           }
 
-          if (typeof config.onSubmit === 'function') {
-            config.onSubmit(callbackTypes.FORM_SUBMIT, {
-              widget: widget,
-              event: event,
-              data: Array.prototype.slice.call(
-                widgetForm.querySelectorAll('input, textarea, select')
-              ).map(function (element) {
-                return {
-                  name: element.name || element.id,
-                  value: element.value
-                };
-              })
-            });
+          if (valid && widgetAction) {
+            core.trackWidgetAction(widgetAction, config, widgetForm);
+
+            if (typeof config.onSubmit === 'function') {
+              config.onSubmit(callbackTypes.FORM_SUBMIT, {
+                widget: widget,
+                event: event,
+                data: Array.prototype.slice.call(
+                  widgetForm.querySelectorAll('input, textarea, select')
+                ).map(function (element) {
+                  return {
+                    name: element.name || element.id,
+                    value: element.value
+                  };
+                })
+              });
+            }
+
+            return true;
           }
+
+          return false;
         };
-
-        if (widgetForm.addEventListener) {
-          widgetForm.addEventListener('submit', widgetOnFormSubmit);
-
-        } else {
-          widgetForm.attachEvent('submit', widgetOnFormSubmit);
-        }
 
         break;
       }
@@ -1410,32 +1456,6 @@
         var widgetCancel = widget.querySelector('.pf-widget-cancel'),
             widgetClose = widget.querySelector('.pf-widget-close');
 
-        widgetOnModalClose = function (event) {
-          if (typeof config.onModalClose === 'function') {
-            config.onModalClose(callbackTypes.MODAL_CLOSE, {
-              widget: widget,
-              event: event
-            });
-          }
-        };
-
-        updateActionCookie = function (name) {
-          var ct,
-              val = utils.readCookie(name),
-              duration = Date.now();
-
-          if (val) {
-            val = val.split('|');
-            // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-            val = val.length === 1 ? val.split(',') : val;
-            ct = Math.min(parseInt(val[0], 10), 9998) + 1;
-          } else {
-            ct = 1;
-          }
-
-          utils.saveCookie(name, ct + '|' + duration, core.expiration);
-        };
-
         if (widgetClose) {
           widgetClose.onmouseenter = function (event) {
             core.trackWidgetAction('hover', config, event.target);
@@ -1460,12 +1480,14 @@
                 config.cancelAction.callback();
               }
               updateActionCookie('PathforaCancel_' + widget.id);
+              context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
               updateActionCookie('PathforaCancel_' + widget.id);
+              context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
           }
@@ -1479,78 +1501,40 @@
           core.trackWidgetAction('hover', config, event.target);
         };
 
-        if (typeof config.confirmAction === 'object') {
-          widgetOk.onclick = function (event) {
+        widgetOk.onclick = function (event) {
+          if (typeof widgetOnFormSubmit === 'function' && !widgetOnFormSubmit(event)) {
+            // invalid form, do not submit
+          } else {
             core.trackWidgetAction('confirm', config);
-            if (typeof updateActionCookie === 'function') {
-              updateActionCookie('PathforaConfirm_' + widget.id);
-            }
-            if (typeof config.confirmAction.callback === 'function') {
+            updateActionCookie('PathforaConfirm_' + widget.id);
+
+            if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
               config.confirmAction.callback();
             }
             if (typeof widgetOnButtonClick === 'function') {
               widgetOnButtonClick(event);
             }
-            if (typeof widgetOnModalClose === 'function') {
-              widgetOnModalClose(event);
-            }
 
-            if (config.layout !== 'inline') {
+            widgetOnModalClose(event);
+
+            if (config.layout !== 'inline' && typeof config.success === 'undefined') {
               context.pathfora.closeWidget(widget.id, true);
-            }
-          };
-        } else if (config.type === 'message') {
-          widgetOk.onclick = function (event) {
-            core.trackWidgetAction('confirm', config);
-            if (typeof updateActionCookie === 'function') {
-              updateActionCookie('PathforaConfirm_' + widget.id);
-            }
-            if (typeof widgetOnButtonClick === 'function') {
-              widgetOnButtonClick(event);
-            }
-            if (config.layout !== 'inline') {
-              context.pathfora.closeWidget(widget.id);
-            }
-          };
-        } else if (config.type === 'form' || config.type === 'sitegate' || config.type === 'subscription') {
-          widgetOk.onclick = function (event) {
-            var valid = true;
 
-            Array.prototype.slice.call(
-              widget.querySelectorAll('input, textarea, select')
-            ).forEach(function (inputField) {
-              if (inputField.hasAttribute('required') && !inputField.value) {
-                valid = false;
-              }
-            });
+            // show success state
+            } else {
+              utils.addClass(widget, 'success');
 
-            if (valid) {
-              if (typeof updateActionCookie === 'function') {
-                updateActionCookie('PathforaConfirm_' + widget.id);
-              }
-              if (typeof widgetOnModalClose === 'function') {
-                widgetOnModalClose(event);
-              }
+              // default to a three second delay if the user has not defined one
+              var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
 
-              if (config.layout !== 'inline' && typeof config.success === 'undefined') {
-                context.pathfora.closeWidget(widget.id);
-
-              // success state
-              } else {
-                utils.addClass(widget, 'success');
-
-                // default to a three second delay if the user has not defined one
-                var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
-
-                if (delay > 0) {
-                  setTimeout(function () {
-                    pathfora.closeWidget(widget.id);
-                  }, delay);
-                }
+              if (delay > 0) {
+                setTimeout(function () {
+                  pathfora.closeWidget(widget.id, true);
+                }, delay);
               }
             }
-          };
-        }
+          }
+        };
       }
     },
 
@@ -1856,8 +1840,7 @@
      * @param {Element} htmlElement related DOM element
      */
     trackWidgetAction: function (action, widget, htmlElement) {
-      var child, childName, elem,
-          valid = true;
+      var child, childName, elem;
 
       var params = {
         'pf-widget-id': widget.id,
@@ -1903,14 +1886,9 @@
               childName = child.getAttribute('name');
               params['pf-form-' + childName] = child.value;
             }
-
-            if (typeof child.hasAttribute !== 'undefined' && child.hasAttribute('required') && !params['pf-form-' + childName]) {
-              child.setAttribute('invalid', '');
-              valid = false;
-            }
           }
         }
-        utils.saveCookie('PathforaUnlocked_' + widget.id, valid, core.expiration);
+        utils.saveCookie('PathforaUnlocked_' + widget.id, true, core.expiration);
         break;
       case 'hover':
         if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
@@ -1934,9 +1912,7 @@
       }
 
       params['pf-widget-event'] = action;
-      if (valid === true) {
-        api.reportData(params);
-      }
+      api.reportData(params);
     },
 
     /**
@@ -3176,7 +3152,7 @@
 
       if (widget.displayConditions.hideAfter) {
         setTimeout(function () {
-          context.pathfora.closeWidget(widget.id);
+          context.pathfora.closeWidget(widget.id, true);
         }, widget.displayConditions.hideAfter * 1000);
       }
     };
