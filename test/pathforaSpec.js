@@ -2137,10 +2137,10 @@ describe('Widgets', function () {
     for (var elem in theform[0].children) {
       if (typeof theform[0].children[elem].getAttribute !== 'undefined') {
         var inputname = theform[0].children[elem].getAttribute('name'),
-            inputrequired = theform[0].children[elem].getAttribute('required');
+            inputrequired = theform[0].children[elem].getAttribute('data-required');
 
         if (inputname === 'message') {
-          expect(inputrequired).toBe('');
+          expect(inputrequired).toBe('true');
         } else if (inputname !== null) {
           expect(inputrequired).toBe(null);
         }
@@ -3582,7 +3582,7 @@ describe('Inline Personalization', function () {
     it('should fill pftype elements with content recommendation data', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="my_collection">' +
         '<img data-pftype="image" alt="My Image">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
         '<p data-pftype="published"></p>' +
@@ -3591,7 +3591,7 @@ describe('Inline Personalization', function () {
         '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -3632,14 +3632,14 @@ describe('Inline Personalization', function () {
     it('should show the default content if invalid response from API', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-pfblock="group2" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfblock="group2" data-pfrecommend="bad_collection">' +
         '<img data-pftype="image" alt="My Image">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
         '<p data-pftype="description"></p>' +
         '</div><div data-pfblock="group2" data-pfrecommend="default"></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 400,
@@ -3649,7 +3649,7 @@ describe('Inline Personalization', function () {
 
 
       var def = $('[data-pfmodified="true"]'),
-          bad = $('[data-pfrecommend="www.example.com/*"]');
+          bad = $('[data-pfrecommend="bad_collection"]');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('block');
@@ -3664,12 +3664,12 @@ describe('Inline Personalization', function () {
     it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="my_collection">' +
         '<div data-pftype="image"></div>' +
         '<div data-pftype="url"></div></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -3697,13 +3697,13 @@ describe('Inline Personalization', function () {
       pathfora.locale = 'en-GB';
       pathfora.dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="my_collection">' +
         '<div data-pftype="image"></div>' +
         '<div data-pftype="published"></div>' +
         '<div data-pftype="url"></div></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -3730,14 +3730,14 @@ describe('Inline Personalization', function () {
     it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
       jasmine.Ajax.install();
 
-      $(document.body).append('<div data-pfblock="group4" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfblock="group4" data-pfrecommend="my_collection">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
-        '</div><div data-pfblock="group5" data-pfrecommend="www.example.com/*">' +
+        '</div><div data-pfblock="group5" data-pfrecommend="my_collection">' +
         '<h2 data-pftype="title"></h2>' +
         '<div data-pftype="url"></div></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -3779,13 +3779,13 @@ describe('Inline Personalization', function () {
         }
       };
 
-      $(document.body).append('<div data-pfgroup="seg1" data-pftrigger="high_value" data-pfblock="block1" data-pfrecommend="www.example.com/*">' +
+      $(document.body).append('<div data-pfgroup="seg1" data-pftrigger="high_value" data-pfblock="block1" data-pfrecommend="my_collection">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>' +
         '<div data-pfblock="block1" data-pfrecommend="default">default block1</div>' +
         '<div data-pfgroup="seg1" data-pftrigger="default">default seg1</div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,
@@ -3800,7 +3800,7 @@ describe('Inline Personalization', function () {
       var elem1 = $(elems[0]);
       expect(elem1.css('display')).toBe('none');
       expect(elem1.attr('data-pfblock')).toBe('block1');
-      expect(elem1.attr('data-pfrecommend')).toBe('www.example.com/*');
+      expect(elem1.attr('data-pfrecommend')).toBe('my_collection');
 
       var elem2 = $(elems[1]);
       expect(elem2.css('display')).toBe('block');
@@ -3810,11 +3810,11 @@ describe('Inline Personalization', function () {
 
       $(document.body).append('<div data-pfgroup="seg2" data-pftrigger="blah">in blah seg2</div>' +
         '<div data-pfgroup="seg2" data-pftrigger="high_value">in high_value seg2</div>' +
-        '<div data-pfgroup="seg2" data-pftrigger="default" data-pfblock="block2" data-pfrecommend="www.example.com/*">' +
+        '<div data-pfgroup="seg2" data-pftrigger="default" data-pfblock="block2" data-pfrecommend="my_collection">' +
         '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>');
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         'status': 200,

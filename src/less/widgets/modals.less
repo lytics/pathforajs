@@ -71,6 +71,11 @@
     input[type="email"],
     select {
       height: 45px;
+
+      &[data-required="active"]:focus {
+        margin-top: 1px;
+        margin-bottom: 10px;
+      }
     }
   }
 
