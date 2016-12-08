@@ -61,32 +61,30 @@
 .pf-widget textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border-radius: 3px;
-  border: 0 none;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin: 1px 1px 10px 1px;
   width: 100%;
   padding: 10px 20px;
   background: white;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
+  position: relative;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-sizing: border-box;
+}
+.pf-widget input[type=text][data-required="active"]:focus,
+.pf-widget input[type=email][data-required="active"]:focus,
+.pf-widget select[data-required="active"]:focus,
+.pf-widget textarea[data-required="active"]:focus {
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  margin: 0 0 9px 0;
 }
 .pf-widget input[type=text]:focus,
 .pf-widget input[type=email]:focus,
 .pf-widget select:focus,
 .pf-widget textarea:focus {
   outline: none;
-}
-.pf-widget input[type=text]:focus:invalid,
-.pf-widget input[type=email]:focus:invalid,
-.pf-widget select:focus:invalid,
-.pf-widget textarea:focus:invalid {
-  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px #ff0000;
-}
-.pf-widget input[type=text][invalid],
-.pf-widget input[type=email][invalid],
-.pf-widget select[invalid],
-.pf-widget textarea[invalid] {
-  border: solid 1px #f00;
-  border-color: #f00 !important;
 }
 .pf-widget input[type=text]::-webkit-input-placeholder,
 .pf-widget input[type=email]::-webkit-input-placeholder,
@@ -244,7 +242,13 @@
 .pf-subscription form input[type=text],
 .pf-subscription form input[type=email] {
   width: 100%;
-  margin-bottom: 0;
+  margin-bottom: 1px;
+}
+.pf-subscription form input[type=text][data-required="active"]:focus,
+.pf-subscription form input[type=email][data-required="active"]:focus {
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
+  border: 1px solid rgba(255, 0, 0, 0.5);
+  margin: 0;
 }
 .pf-subscription form .pf-widget-btn {
   float: right;
@@ -375,6 +379,12 @@
 .pf-widget-modal form input[type="email"],
 .pf-widget-modal form select {
   height: 45px;
+}
+.pf-widget-modal form input[type="text"][data-required="active"]:focus,
+.pf-widget-modal form input[type="email"][data-required="active"]:focus,
+.pf-widget-modal form select[data-required="active"]:focus {
+  margin-top: 1px;
+  margin-bottom: 10px;
 }
 .pf-widget-modal.opened .pf-widget-container {
   top: 0;
@@ -640,7 +650,7 @@
 }
 .pf-widget-bar .pf-bar-content input[type=text],
 .pf-widget-bar .pf-bar-content input[type=email] {
-  margin: 0;
+  margin: 0 1px;
   max-width: 200px;
 }
 .pf-widget-bar .pf-bar-content > * {

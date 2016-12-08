@@ -9,6 +9,7 @@
 @cancelBackground: #f1f1f1;
 @cancelText: #bbb;
 @placeholder: #a9a9a9;
+@required: rgba(255,0,0,.5);
 
 /* Mixin for mobile boundries */
 .mobile(@rules) {
@@ -80,25 +81,25 @@
   textarea {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     border-radius: 3px;
-    border: 0 none;
     font-size: 14px;
-    margin-bottom: 10px;
+    margin: 1px 1px 10px 1px;
     width: 100%;
     padding: 10px 20px;
     background: white;
     box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
+    position: relative;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-sizing: border-box;
+
+    &[data-required="active"]:focus {
+      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 0px 2px rgba(255,0,0,.4);
+      border: 1px solid @required;
+      margin: 0 0 9px 0;
+    }
 
     &:focus {
       outline:none;
-    }
-
-    &:focus:invalid {
-      box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 0px 2px rgba(255,0,0,1);
-    }
-
-    &[invalid] {
-      border: solid 1px #f00;
-      border-color: #f00 !important;
     }
 
     &::-webkit-input-placeholder {
@@ -277,7 +278,13 @@
     input[type=text],
     input[type=email] {
       width: 100%;
-      margin-bottom: 0;
+      margin-bottom: 1px;
+
+      &[data-required="active"]:focus {
+        box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2), 0px 0px 2px rgba(255,0,0,.4);
+        border: 1px solid @required;
+        margin: 0;
+      }
     }
 
     .pf-widget-btn {
