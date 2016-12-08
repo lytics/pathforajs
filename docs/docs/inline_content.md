@@ -1,7 +1,7 @@
 Pathfora also supports "fill in the blank" style inline content recommendations. That is, you can set up your html elements to match the look and feel of your website, and add attributes which will signal to pathfora to fill in the content with results from the Lytics content recommendation API.
 
 ``` html
-<div data-pfblock="my-recommendation" data-pfrecommend="www.example.com/blog/*">
+<div data-pfblock="my-recommendation" data-pfrecommend="recent_articles">
   <div data-pftype="image"></div>
   <a data-pftype="url"><h2 data-pftype="title"></h2></a>
   <p data-pftype="description"></p>
@@ -35,7 +35,7 @@ Each toggleable content recomendation block should have a surrounding container 
   <tr>
     <td>data-pfrecommend</td>
     <td>string</td>
-    <td>url pattern to filter results from the recommendation API</td>
+    <td>id or slug of a content collection (segment on the content table) to filter content</td>
   </tr>
 </table>
 

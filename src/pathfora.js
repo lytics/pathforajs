@@ -1949,7 +1949,7 @@
         }
       };
 
-      var recContent = function (w) {
+      var recContent = function (w, params) {
         pathfora.addCallback(function () {
           if (typeof pathfora.acctid !== 'undefined' && pathfora.acctid === '') {
             if (context.lio && context.lio.account) {
@@ -1959,7 +1959,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, w.recommend, function (resp) {
+          api.recommendContent(pathfora.acctid, params, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -2019,7 +2019,14 @@
             throw new Error('Cannot define recommended content unless it is a default');
           }
 
-          recContent(widget);
+          var params = widget.recommend;
+
+          if (widget.recommend.collection) {
+            params.contentsegment = widget.recommend.collection;
+            delete params.collection;
+          }
+
+          recContent(widget, params);
 
         } else {
           displayWidget(widget);
@@ -2461,19 +2468,22 @@
         seerId
       ];
 
+
       var ql = params.ql;
       delete params.ql;
 
       var queries = utils.constructQueries(params);
 
-      // Special case for FilterQL
-      if (ql && ql.raw) {
-        if (queries.length > 0) {
-          queries += '&';
-        } else {
-          queries += '?';
+      if (!params.contentsegment) {
+        // Special case for FilterQL
+        if (ql && ql.raw) {
+          if (queries.length > 0) {
+            queries += '&';
+          } else {
+            queries += '?';
+          }
+          queries += 'ql=' + ql.raw;
         }
-        queries += 'ql=' + ql.raw;
       }
 
       var recommendUrl = recommendParts.join('') + queries;
@@ -2671,9 +2681,7 @@
       if (rec !== 'default') {
         // call the recommendation API using the url pattern urlPattern as a filter
         var params = {
-          ql: {
-            raw: api.constructRecommendFilter(rec)
-          }
+          contentsegment: rec
         };
 
         api.recommendContent(pathfora.acctid, params, function (resp) {
