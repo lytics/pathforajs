@@ -12,14 +12,27 @@
       id: 'sample-form',
       msg: 'subscription',
       headline: 'Header',
-      layout: 'slideout',
-      fields: {
-        'email':false,
-        'name':false
-      },
+      layout: 'modal',
       required: {
-        'email':false,
-        'name':false
+        "company": true,
+        "email": false,
+        "name": true,
+        "title": false
+      },
+      fields: {
+        "company": true,
+        "email": true,
+        "message": true,
+        "name": true,
+        "phone": true,
+        "title": true,
+        "country": true
+      },
+      placeholders: {
+        "company": "Company",
+        "email": "e-mail",
+        "name": "Name",
+        "title": "Job"
       }
     });
 
