@@ -264,7 +264,7 @@
 .pf-sitegate input.pf-field-half-width,
 .pf-form select.pf-field-half-width,
 .pf-sitegate select.pf-field-half-width {
-  width: 49.5%;
+  width: 49%;
   display: block;
   clear: none;
   float: left;
@@ -279,6 +279,12 @@
 .pf-sitegate .pf-widget-btn {
   clear: both;
   margin-top: 5px;
+}
+.pf-form.pf-widget-slideout input.pf-field-half-width,
+.pf-sitegate.pf-widget-slideout input.pf-field-half-width,
+.pf-form.pf-widget-slideout select.pf-field-half-width,
+.pf-sitegate.pf-widget-slideout select.pf-field-half-width {
+  width: 48%;
 }
 .pf-social-login {
   text-align: right;
