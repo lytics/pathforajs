@@ -787,7 +787,7 @@
       var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
           simpleurl = window.location.hostname + window.location.pathname,
           queries = core.parseQuery(url),
-          valid = false;
+          valid, fail = false;
 
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
@@ -842,6 +842,14 @@
                 }
                 break;
               }
+
+              if (phrase.exclude === true) {
+                if (valid) {
+                  fail = true;
+                } else {
+                  valid = true;
+                }
+              }
             } else {
               console.log('invalid display conditions');
             }
@@ -854,6 +862,10 @@
         });
       } else {
         valid = true;
+      }
+
+      if (fail) {
+        return false;
       }
 
       return valid;

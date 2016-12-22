@@ -2618,6 +2618,75 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should show respect excluded matching rule', function () {
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: 'exclude-widget',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/context',
+            exclude: true
+          }
+        ]
+      }
+    });
+
+    var form1 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: 'exclude-widget-1',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/context.html',
+            exclude: true
+          }
+        ]
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: 'exclude-widget-2',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'bad',
+            exclude: true
+          },
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html',
+            exclude: true
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([form, form1, form2]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+
+    widget = $('#' + form1.id);
+    expect(widget.length).toBe(0);
+
+    widget = $('#' + form2.id);
+    expect(widget.length).toBe(0);
+  });
+
   it('should show using simple match', function () {
     var form1 = new pathfora.Form({
       id: '88ee86cf72b44e67bf758cc743ac1a5d',
