@@ -88,7 +88,8 @@
         message: 'Message',
         company: 'Company',
         phone: 'Phone Number',
-        country: 'Country'
+        country: 'Country',
+        referrer: 'Referrer'
       },
       required: {
         name: true,
@@ -97,7 +98,8 @@
       fields: {
         company: false,
         phone: false,
-        country: false
+        country: false,
+        referrer: false
       },
       okMessage: 'Send',
       okShow: true,
@@ -116,7 +118,8 @@
         message: 'Message',
         company: 'Company',
         phone: 'Phone Number',
-        country: 'Country'
+        country: 'Country',
+        referrer: 'Referrer'
       },
       required: {
         name: true,
@@ -125,7 +128,8 @@
       fields: {
         message: false,
         phone: false,
-        country: false
+        country: false,
+        referrer: false,
       },
       okMessage: 'Submit',
       okShow: true,
@@ -1232,27 +1236,34 @@
 
         // Hide fields
         Object.keys(config.fields).forEach(function (field) {
-          var parent, prev, next,
-              element = getFormElement(field);
+          var element = getFormElement(field),
+              parent = element.parentNode;
 
-          if (element && !config.fields[field]) {
-            parent = element.parentNode;
-            prev = element.previousElementSibling;
-            next = element.nextElementSibling;
+          if (element && !config.fields[field] && parent) {
+            parent.removeChild(element);
+          }
+        });
 
-            if (parent) {
-              // NOTE: collapse half-width inputs
-              if (element.className.indexOf('pf-field-half-width') !== -1) {
-                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(prev, 'pf-field-half-width');
+        // NOTE: collapse half-width inputs
+        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function(element, halfcount) {
+          var parent = element.parentNode,
+              prev = element.previousElementSibling,
+              next = element.nextElementSibling;
+
+          if (parent) {
+            if (element.className.indexOf('pf-field-half-width') !== -1) {
+
+              if (halfcount % 2) { // odd
+                utils.addClass(element, 'right');
+                if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                  utils.removeClass(element, 'pf-field-half-width');
                 }
 
-                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(next, 'pf-field-half-width');
+              } else { // even
+                if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) {
+                  utils.removeClass(element, 'pf-field-half-width');
                 }
               }
-
-              parent.removeChild(element);
             }
           }
         });
