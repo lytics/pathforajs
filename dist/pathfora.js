@@ -129,7 +129,7 @@
         message: false,
         phone: false,
         country: false,
-        referrer: false,
+        referrer: false
       },
       okMessage: 'Submit',
       okShow: true,
@@ -265,7 +265,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -1280,7 +1280,7 @@
         });
 
         // NOTE: collapse half-width inputs
-        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function(element, halfcount) {
+        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
           var parent = element.parentNode,
               prev = element.previousElementSibling,
               next = element.nextElementSibling;
@@ -1290,14 +1290,13 @@
 
               if (halfcount % 2) { // odd
                 utils.addClass(element, 'right');
+
                 if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
                   utils.removeClass(element, 'pf-field-half-width');
                 }
 
-              } else { // even
-                if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) {
-                  utils.removeClass(element, 'pf-field-half-width');
-                }
+              } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
+                utils.removeClass(element, 'pf-field-half-width');
               }
             }
           }
@@ -2508,7 +2507,7 @@
       }
 
       var recommendParts = [
-        'http://api.lytics.io/api/content/recommend/',
+        '//api.lytics.io/api/content/recommend/',
         accountId,
         '/user/_uids/',
         seerId

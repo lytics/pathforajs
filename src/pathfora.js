@@ -129,7 +129,7 @@
         message: false,
         phone: false,
         country: false,
-        referrer: false,
+        referrer: false
       },
       okMessage: 'Submit',
       okShow: true,
@@ -1245,7 +1245,7 @@
         });
 
         // NOTE: collapse half-width inputs
-        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function(element, halfcount) {
+        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
           var parent = element.parentNode,
               prev = element.previousElementSibling,
               next = element.nextElementSibling;
@@ -1255,14 +1255,13 @@
 
               if (halfcount % 2) { // odd
                 utils.addClass(element, 'right');
+
                 if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
                   utils.removeClass(element, 'pf-field-half-width');
                 }
 
-              } else { // even
-                if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) {
-                  utils.removeClass(element, 'pf-field-half-width');
-                }
+              } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
+                utils.removeClass(element, 'pf-field-half-width');
               }
             }
           }
