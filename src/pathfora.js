@@ -578,7 +578,7 @@
         widget.watchers.push(watcher);
         core.readyWidgets.push(widget);
 
-        // if we've already triggered the widget 
+        // if we've already triggered the widget
         // before initializing lets initialize right away
         core.triggerWidget(widget);
       }
@@ -2979,7 +2979,7 @@
       if (typeof widgetIds === 'undefined') {
         pf.triggeredWidgets['*'] = true;
 
-        core.readyWidgets.forEach(function (widget, i) {
+        core.readyWidgets.forEach(function (widget) {
           core.triggerWidget(widget);
         });
 
@@ -2990,7 +2990,7 @@
             pf.triggeredWidgets[id] = true;
           }
 
-          core.readyWidgets.forEach(function (widget, i) {
+          core.readyWidgets.forEach(function (widget) {
             if (id === widget.id) {
               core.triggerWidget(widget);
             }

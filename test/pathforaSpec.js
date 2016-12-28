@@ -2195,6 +2195,49 @@ describe('Widgets', function () {
   //  DISPLAY CONDITIONS
   // -------------------------
 
+  it('should show when all customTrigger widgets are triggered', function () {
+    $(document.body).append('<div class=\'hover-elem\'>Test</div>');
+
+    $('.hover-elem').hover(function () {
+      pathfora.triggerWidgets();
+    });
+
+
+    var customWidget = new pathfora.Message({
+      msg: 'custom trigger test',
+      id: 'custom-widget',
+      layout: 'modal',
+      displayConditions: {
+        customTrigger: true
+      }
+    });
+
+    var customWidget2 = new pathfora.Message({
+      msg: 'custom trigger test2',
+      id: 'custom-widget2',
+      layout: 'modal',
+      displayConditions: {
+        customTrigger: true
+      }
+    });
+
+    pathfora.initializeWidgets([customWidget, customWidget2]);
+    var widget1 = $('#' + customWidget.id);
+    var widget2 = $('#' + customWidget2.id);
+    expect(widget1.length).toBe(0);
+    expect(widget2.length).toBe(0);
+
+    $('.hover-elem').mouseenter().mouseleave();
+
+    widget1 = $('#' + customWidget.id);
+    widget2 = $('#' + customWidget2.id);
+    expect(widget1.length).toBe(1);
+    expect(widget2.length).toBe(1);
+
+    $('.hover-elem').remove();
+  });
+
+
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
     var delayedWidget = new pathfora.Message({
