@@ -574,9 +574,13 @@
       }
 
       if (condition.customTrigger) {
-        watcher = core.registerCustomWatcher(condition.customTrigger, widget);
+        watcher = core.registerCustomTriggerWatcher(condition.customTrigger, widget);
         widget.watchers.push(watcher);
         core.readyWidgets.push(widget);
+
+        // if we've already triggered the widget 
+        // before initializing lets initialize right away
+        core.triggerWidget(widget);
       }
 
       if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
@@ -700,6 +704,11 @@
       return true;
     },
 
+    /**
+     * @description check if a customTrigger widget
+     * is ready to be displayed, and if so display the widget
+     * @param {object} widget
+     */
     triggerWidget: function (widget) {
       var valid;
 
@@ -716,6 +725,14 @@
       if (valid) {
         context.pathfora.showWidget(widget);
         widget.valid = false;
+        context.pathfora.triggeredWidgets[widget.id] = false;
+
+        // remove from the ready widgets list
+        core.readyWidgets.forEach(function (w, i) {
+          if (w.id === widget.id) {
+            core.readyWidgets.splice(i, 1);
+          }
+        });
       }
 
       return valid;
@@ -1018,10 +1035,10 @@
      * @param   {object} widget
      * @returns {object} object, containing onscroll callback function 'check'
      */
-    registerCustomWatcher: function (value, widget) {
+    registerCustomTriggerWatcher: function (value, widget) {
       var watcher = {
         check: function () {
-          if (value && context.pathfora && context.pathfora.readyWidget) {
+          if (value && context.pathfora && context.pathfora.triggeredWidgets[widget.id] || context.pathfora.triggeredWidgets['*']) {
             core.removeWatcher(watcher, widget);
             return true;
           }
@@ -2876,7 +2893,12 @@
      */
     this.DOMLoaded = false;
 
-    this.readyWidget = false;
+    /**
+     * @public
+     * @description A list of widgets that have been triggered manually
+     * using the customTrigger display condition
+     */
+    this.triggeredWidgets = {};
 
     /**
      * @public
@@ -2944,25 +2966,37 @@
       });
     };
 
+    /**
+     * @public
+     * @description public method to trigger widgets
+     * with the customTrigger display condition
+     * @param {array}   widgetsIds (optional)
+     */
     this.triggerWidgets = function (widgetIds) {
-      this.readyWidget = true;
+      var pf = this;
+
+      // no widget ids provided, trigger all ready widgets
       if (typeof widgetIds === 'undefined') {
+        pf.triggeredWidgets['*'] = true;
+
         core.readyWidgets.forEach(function (widget, i) {
           core.triggerWidget(widget);
-          core.readyWidgets.splice(i, 1);
         });
+
+      // trigger all widget ids provided
       } else {
         widgetIds.forEach(function (id) {
+          if (pf.triggeredWidgets[id] !== false) {
+            pf.triggeredWidgets[id] = true;
+          }
+
           core.readyWidgets.forEach(function (widget, i) {
             if (id === widget.id) {
               core.triggerWidget(widget);
-              core.readyWidgets.splice(i, 1);
             }
           });
         });
       }
-
-      this.readyWidget = false;
     };
 
     /**
