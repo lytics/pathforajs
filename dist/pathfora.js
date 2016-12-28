@@ -546,6 +546,7 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
+    readyWidgets: [],
     expiration: null,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
@@ -605,6 +606,12 @@
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         widget.watchers.push(watcher);
         core.initializeScrollWatchers(widget);
+      }
+
+      if (condition.customTrigger) {
+        watcher = core.registerCustomWatcher(condition.customTrigger, widget);
+        widget.watchers.push(watcher);
+        core.readyWidgets.push(widget);
       }
 
       if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
@@ -726,6 +733,27 @@
         }
       }
       return true;
+    },
+
+    triggerWidget: function (widget) {
+      var valid;
+
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+          valid = widget.valid && widget.watchers[key].check();
+        }
+      }
+
+      if (widget.displayConditions.impressions && valid) {
+        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+        widget.valid = false;
+      }
+
+      return valid;
     },
 
     /**
@@ -1007,6 +1035,28 @@
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
               offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
+            core.removeWatcher(watcher, widget);
+            return true;
+          }
+          return false;
+        }
+      };
+
+      return watcher;
+    },
+
+
+    /**
+     * @description Register a scroll position-triggered widget
+     * @param   {number} percent scroll percentage at
+     *                   which the widget should be displayed
+     * @param   {object} widget
+     * @returns {object} object, containing onscroll callback function 'check'
+     */
+    registerCustomWatcher: function (value, widget) {
+      var watcher = {
+        check: function () {
+          if (value && context.pathfora && context.pathfora.readyWidget) {
             core.removeWatcher(watcher, widget);
             return true;
           }
@@ -2861,6 +2911,8 @@
      */
     this.DOMLoaded = false;
 
+    this.readyWidget = false;
+
     /**
      * @public
      * @description Add callbacks to execute once segments load
@@ -2925,6 +2977,27 @@
           pf.inline.procElements();
         });
       });
+    };
+
+    this.triggerWidgets = function (widgetIds) {
+      this.readyWidget = true;
+      if (typeof widgetIds === 'undefined') {
+        core.readyWidgets.forEach(function (widget, i) {
+          core.triggerWidget(widget);
+          core.readyWidgets.splice(i, 1);
+        });
+      } else {
+        widgetIds.forEach(function (id) {
+          core.readyWidgets.forEach(function (widget, i) {
+            if (id === widget.id) {
+              core.triggerWidget(widget);
+              core.readyWidgets.splice(i, 1);
+            }
+          });
+        });
+      }
+
+      this.readyWidget = false;
     };
 
     /**
