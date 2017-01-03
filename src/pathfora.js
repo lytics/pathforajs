@@ -89,7 +89,7 @@
         company: 'Company',
         phone: 'Phone Number',
         country: 'Country',
-        referrer: 'Referrer'
+        referralEmail: 'Referral Email'
       },
       required: {
         name: true,
@@ -99,7 +99,7 @@
         company: false,
         phone: false,
         country: false,
-        referrer: false
+        referralEmail: false
       },
       okMessage: 'Send',
       okShow: true,
@@ -119,7 +119,7 @@
         company: 'Company',
         phone: 'Phone Number',
         country: 'Country',
-        referrer: 'Referrer'
+        referralEmail: 'Referral Email'
       },
       required: {
         name: true,
@@ -129,7 +129,7 @@
         message: false,
         phone: false,
         country: false,
-        referrer: false
+        referralEmail: false
       },
       okMessage: 'Submit',
       okShow: true,
