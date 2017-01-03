@@ -473,14 +473,14 @@ displayConditions: {
 
 <h3>Exit Intent Modal - <a href="../examples/preview/config/exitIntentModal.html" target="_blank">Live Preview</a></h3>
 
-## customTrigger
+## manualTrigger
 
 Control when a module is triggered with javascript. Use this displayCondition in conjunction with the [triggerWidgets](api/methods.md#triggerWidgets).
 
 <table>
   <thead>
     <tr>
-      <td colspan="2" align="center"><code>customTrigger</code> boolean</td>
+      <td colspan="2" align="center"><code>manualTrigger</code> boolean</td>
     </tr>
     <tr>
       <th>Value</th>
@@ -502,11 +502,11 @@ Control when a module is triggered with javascript. Use this displayCondition in
 // example: this script alone will not display the module
 
 var module = new pathfora.Message({
-  id: 'custom-trigger-message',
+  id: 'trigger-message',
   layout: 'modal',
   msg: 'You clicked the button!',
   displayConditions: {
-    customTrigger: true
+    manualTrigger: true
   }
 });
 
@@ -515,7 +515,7 @@ pathfora.initializeWidgets([module]);
 
 ```html
 <!-- module will display when the user clicks this button -->
-<input type="submit" value="Click to display module" onclick="pathfora.triggerWidgets(['custom-trigger-message'])">
+<input type="submit" value="Click to display module" onclick="pathfora.triggerWidgets(['trigger-message'])">
 ```
 
 

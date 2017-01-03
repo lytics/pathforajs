@@ -104,7 +104,7 @@ A/B Tests have their own configuration method `ABTest`. We cover this configurat
 
 ## triggerWidgets
 
-triggerWidgets is a helper method for widgets with the [customTrigger](/display_conditions.md#customTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathora.triggerWidgets` has been called. This method similar to `initializeWidgets`,  useful when you want to trigger a module on a custom event with javascript but you don't necessarily have access to the widget object, or it's being called before the config has been defined.
+triggerWidgets is a helper method for widgets with the [manualTrigger](/display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathora.triggerWidgets` has been called. This method similar to `initializeWidgets`,  useful when you want to trigger a module on a custom event with javascript but you don't necessarily have access to the widget object, or it's being called before the config has been defined.
 
 <table>
   <thead>
@@ -121,7 +121,7 @@ triggerWidgets is a helper method for widgets with the [customTrigger](/display_
   <tr>
     <td>widgetIds</td>
     <td>array</td>
-    <td><code>optional</code> list of ids of widgets to display, if empty this method will trigger all widgets with the <a href="../../display_conditions#customTrigger">customTrigger</a> displayCondition</td>
+    <td><code>optional</code> list of ids of widgets to display, if empty this method will trigger all widgets with the <a href="../../display_conditions#manualTrigger">manualTrigger</a> displayCondition</td>
   </tr>
 </table>
 
