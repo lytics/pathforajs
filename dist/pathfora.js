@@ -608,8 +608,8 @@
         core.initializeScrollWatchers(widget);
       }
 
-      if (condition.customTrigger) {
-        watcher = core.registerCustomTriggerWatcher(condition.customTrigger, widget);
+      if (condition.manualTrigger) {
+        watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
         widget.watchers.push(watcher);
         core.readyWidgets.push(widget);
 
@@ -740,7 +740,7 @@
     },
 
     /**
-     * @description check if a customTrigger widget
+     * @description check if a manualTrigger widget
      * is ready to be displayed, and if so display the widget
      * @param {object} widget
      */
@@ -1040,7 +1040,7 @@
     },
 
     /**
-     * @description Register a scroll position-triggered widget
+     * @description Register a custom javascript watcher
      * @param   {number} percent scroll percentage at
      *                   which the widget should be displayed
      * @param   {object} widget
@@ -1064,13 +1064,12 @@
 
 
     /**
-     * @description Register a scroll position-triggered widget
-     * @param   {number} percent scroll percentage at
-     *                   which the widget should be displayed
-     * @param   {object} widget
-     * @returns {object} object, containing onscroll callback function 'check'
+     * @description Register a manual js triggered widget listener
+     * @param   {boolean} value of the manualTrigger condition
+     * @param   {object}  widget
+     * @returns {object}  object, containing callback function 'check'
      */
-    registerCustomTriggerWatcher: function (value, widget) {
+    registerManualTriggerWatcher: function (value, widget) {
       var watcher = {
         check: function () {
           if (value && context.pathfora && context.pathfora.triggeredWidgets[widget.id] || context.pathfora.triggeredWidgets['*']) {
@@ -2931,7 +2930,7 @@
     /**
      * @public
      * @description A list of widgets that have been triggered manually
-     * using the customTrigger display condition
+     * using the manualrigger display condition
      */
     this.triggeredWidgets = {};
 
@@ -3004,7 +3003,7 @@
     /**
      * @public
      * @description public method to trigger widgets
-     * with the customTrigger display condition
+     * with the manualTrigger display condition
      * @param {array}   widgetsIds (optional)
      */
     this.triggerWidgets = function (widgetIds) {

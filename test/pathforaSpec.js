@@ -2195,7 +2195,7 @@ describe('Widgets', function () {
   //  DISPLAY CONDITIONS
   // -------------------------
 
-  it('should show when all customTrigger widgets are triggered', function () {
+  it('should show when all manualTrigger widgets are triggered', function () {
     $(document.body).append('<div class=\'hover-elem\'>Test</div>');
 
     $('.hover-elem').hover(function () {
@@ -2208,7 +2208,7 @@ describe('Widgets', function () {
       id: 'custom-widget',
       layout: 'modal',
       displayConditions: {
-        customTrigger: true
+        manualTrigger: true
       }
     });
 
@@ -2217,7 +2217,7 @@ describe('Widgets', function () {
       id: 'custom-widget2',
       layout: 'modal',
       displayConditions: {
-        customTrigger: true
+        manualTrigger: true
       }
     });
 
