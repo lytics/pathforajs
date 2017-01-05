@@ -2930,7 +2930,7 @@
     /**
      * @public
      * @description A list of widgets that have been triggered manually
-     * using the manualrigger display condition
+     * using the manualTrigger display condition
      */
     this.triggeredWidgets = {};
 
