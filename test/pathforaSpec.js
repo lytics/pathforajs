@@ -2228,6 +2228,35 @@ describe('Widgets', function () {
     expect(widget2.length).toBe(1);
   });
 
+  it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
+    var customWidget3 = new pathfora.Message({
+      msg: 'custom trigger test3',
+      id: 'custom-widget3',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    pathfora.triggerWidgets();
+    pathfora.initializeWidgets([customWidget3]);
+    var widget = $('#' + customWidget3.id);
+    expect(widget.length).toBe(1);
+
+
+    var customWidget4 = new pathfora.Message({
+      msg: 'custom trigger test4',
+      id: 'custom-widget4',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    pathfora.initializeWidgets([customWidget4]);
+    widget = $('#' + customWidget4.id);
+    expect(widget.length).toBe(1);
+  });
 
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
