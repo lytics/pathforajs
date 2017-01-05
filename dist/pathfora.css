@@ -269,10 +269,10 @@
   clear: none;
   float: left;
 }
-.pf-form input.pf-field-half-width + .pf-field-half-width,
-.pf-sitegate input.pf-field-half-width + .pf-field-half-width,
-.pf-form select.pf-field-half-width + .pf-field-half-width,
-.pf-sitegate select.pf-field-half-width + .pf-field-half-width {
+.pf-form input.pf-field-half-width.right,
+.pf-sitegate input.pf-field-half-width.right,
+.pf-form select.pf-field-half-width.right,
+.pf-sitegate select.pf-field-half-width.right {
   float: right;
 }
 .pf-form .pf-widget-btn,

@@ -2195,6 +2195,69 @@ describe('Widgets', function () {
   //  DISPLAY CONDITIONS
   // -------------------------
 
+  it('should show when all manualTrigger widgets are triggered', function () {
+    var customWidget = new pathfora.Message({
+      msg: 'custom trigger test',
+      id: 'custom-widget',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    var customWidget2 = new pathfora.Message({
+      msg: 'custom trigger test2',
+      id: 'custom-widget2',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    pathfora.initializeWidgets([customWidget, customWidget2]);
+    var widget1 = $('#' + customWidget.id);
+    var widget2 = $('#' + customWidget2.id);
+    expect(widget1.length).toBe(0);
+    expect(widget2.length).toBe(0);
+
+    pathfora.triggerWidgets();
+
+    widget1 = $('#' + customWidget.id);
+    widget2 = $('#' + customWidget2.id);
+    expect(widget1.length).toBe(1);
+    expect(widget2.length).toBe(1);
+  });
+
+  it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
+    var customWidget3 = new pathfora.Message({
+      msg: 'custom trigger test3',
+      id: 'custom-widget3',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    pathfora.triggerWidgets();
+    pathfora.initializeWidgets([customWidget3]);
+    var widget = $('#' + customWidget3.id);
+    expect(widget.length).toBe(1);
+
+
+    var customWidget4 = new pathfora.Message({
+      msg: 'custom trigger test4',
+      id: 'custom-widget4',
+      layout: 'modal',
+      displayConditions: {
+        manualTrigger: true
+      }
+    });
+
+    pathfora.initializeWidgets([customWidget4]);
+    widget = $('#' + customWidget4.id);
+    expect(widget.length).toBe(1);
+  });
+
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
     var delayedWidget = new pathfora.Message({
