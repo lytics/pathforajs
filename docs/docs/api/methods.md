@@ -102,6 +102,30 @@ This method is used to initialize [A/B Tests](/ab_testing.md) modules. If you're
 A/B Tests have their own configuration method `ABTest`. We cover this configuration in detail in the [A/B Testing](/ab_testing.md) section of this documentation.
 
 
+## triggerWidgets
+
+triggerWidgets is a helper method for widgets with the [manualTrigger](/display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathora.triggerWidgets` has been called. This method similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with javascript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>initializeWidgets</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>widgetIds</td>
+    <td>array</td>
+    <td><code>optional</code> list of ids of widgets to display, if empty this method will trigger all widgets with the <a href="../../display_conditions#manualTrigger">manualTrigger</a> displayCondition</td>
+  </tr>
+</table>
+
+
 ## integrateWithFacebook
 
 Pathfora can integrate with your Facebook App to allow users to autofill the fields of [form](/types/form.md) or [gate](/types/gate.md) modules with their facebook profile information. This method is used to authenticate this integration with Facebook. This method should be called **before** the `initializeWidgets` method.
