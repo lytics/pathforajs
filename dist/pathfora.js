@@ -763,9 +763,10 @@
         context.pathfora.triggeredWidgets[widget.id] = false;
 
         // remove from the ready widgets list
-        core.readyWidgets.forEach(function (w, i) {
+        core.readyWidgets.some(function (w, i) {
           if (w.id === widget.id) {
             core.readyWidgets.splice(i, 1);
+            return true;
           }
         });
       }
@@ -3008,14 +3009,18 @@
      */
     this.triggerWidgets = function (widgetIds) {
       var pf = this;
+      var i, valid;
 
       // no widget ids provided, trigger all ready widgets
       if (typeof widgetIds === 'undefined') {
         pf.triggeredWidgets['*'] = true;
 
-        core.readyWidgets.forEach(function (widget) {
-          core.triggerWidget(widget);
-        });
+        for (i = 0; i < core.readyWidgets.length; i++) {
+          valid = core.triggerWidget(core.readyWidgets[i]);
+          if (valid) {
+            i--;
+          }
+        }
 
       // trigger all widget ids provided
       } else {
@@ -3024,11 +3029,12 @@
             pf.triggeredWidgets[id] = true;
           }
 
-          core.readyWidgets.forEach(function (widget) {
-            if (id === widget.id) {
-              core.triggerWidget(widget);
+          for (i = 0; i < core.readyWidgets.length; i++) {
+            valid = core.triggerWidget(core.readyWidgets[i]);
+            if (valid) {
+              i--;
             }
-          });
+          }
         });
       }
     };

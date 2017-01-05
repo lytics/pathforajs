@@ -2196,13 +2196,6 @@ describe('Widgets', function () {
   // -------------------------
 
   it('should show when all manualTrigger widgets are triggered', function () {
-    $(document.body).append('<div class=\'hover-elem\'>Test</div>');
-
-    $('.hover-elem').hover(function () {
-      pathfora.triggerWidgets();
-    });
-
-
     var customWidget = new pathfora.Message({
       msg: 'custom trigger test',
       id: 'custom-widget',
@@ -2227,14 +2220,12 @@ describe('Widgets', function () {
     expect(widget1.length).toBe(0);
     expect(widget2.length).toBe(0);
 
-    $('.hover-elem').mouseenter().mouseleave();
+    pathfora.triggerWidgets();
 
     widget1 = $('#' + customWidget.id);
     widget2 = $('#' + customWidget2.id);
     expect(widget1.length).toBe(1);
     expect(widget2.length).toBe(1);
-
-    $('.hover-elem').remove();
   });
 
 
