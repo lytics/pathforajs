@@ -2122,7 +2122,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
