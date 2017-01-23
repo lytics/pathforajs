@@ -42,6 +42,11 @@ Select which fields should be a part of the module's form. By default, a [form](
     <td><code>optional</code> show or hide input for the user's phone number</td>
   </tr>
   <tr>
+    <td>referralEmail</td>
+    <td>boolean</td>
+    <td><code>optional</code> show or hide input for a referral email</td>
+  </tr>
+  <tr>
     <td>message</td>
     <td>boolean</td>
     <td><code>optional</code> show or hide texarea field for comments or a longer form message</td>
@@ -94,6 +99,11 @@ Set which fields are required to be filled out by the user to submit the form. B
     <td>phone</td>
     <td>boolean</td>
     <td><code>optional</code> set the required status for the phone number field</td>
+  </tr>
+  <tr>
+    <td>referralEmail</td>
+    <td>boolean</td>
+    <td><code>optional</code> set the required status for the referral email field</td>
   </tr>
   <tr>
     <td>message</td>
@@ -150,6 +160,11 @@ Set the placeholder text for form elements.
     <td>phone</td>
     <td>string</td>
     <td><code>optional</code> set the placeholder text for the phone number field</td>
+  </tr>
+  <tr>
+    <td>referralEmail</td>
+    <td>string</td>
+    <td><code>optional</code> set the placeholder text for the referral email field</td>
   </tr>
   <tr>
     <td>message</td>

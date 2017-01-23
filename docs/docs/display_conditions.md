@@ -473,6 +473,52 @@ displayConditions: {
 
 <h3>Exit Intent Modal - <a href="../examples/preview/config/exitIntentModal.html" target="_blank">Live Preview</a></h3>
 
+## manualTrigger
+
+Control when a module is triggered with javascript. Use this displayCondition in conjunction with the [triggerWidgets](api/methods.md#triggerWidgets).
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>manualTrigger</code> boolean</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>true</td>
+    <td>module will be displayed when <a href="../api/methods/#triggerWidgets">triggerWidgets</a> method is called.</td>
+  </tr>
+  <tr>
+    <td>false</td>
+    <td><code>default</code> module will be displayed either on init or when manually invoked, depending on <code>showOnInit</code></td>
+  </tr>
+</table>
+
+``` javascript
+// example: this script alone will not display the module
+
+var module = new pathfora.Message({
+  id: 'trigger-message',
+  layout: 'modal',
+  msg: 'You clicked the button!',
+  displayConditions: {
+    manualTrigger: true
+  }
+});
+
+pathfora.initializeWidgets([module]);
+```
+
+```html
+<!-- module will display when the user clicks this button -->
+<input type="submit" value="Click to display module" onclick="pathfora.triggerWidgets(['trigger-message'])">
+```
+
+
 ## urlContains
 
 Only display the module on pages that match the url conditions defined.

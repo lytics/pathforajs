@@ -88,7 +88,8 @@
         message: 'Message',
         company: 'Company',
         phone: 'Phone Number',
-        country: 'Country'
+        country: 'Country',
+        referralEmail: 'Referral Email'
       },
       required: {
         name: true,
@@ -97,7 +98,8 @@
       fields: {
         company: false,
         phone: false,
-        country: false
+        country: false,
+        referralEmail: false
       },
       okMessage: 'Send',
       okShow: true,
@@ -116,7 +118,8 @@
         message: 'Message',
         company: 'Company',
         phone: 'Phone Number',
-        country: 'Country'
+        country: 'Country',
+        referralEmail: 'Referral Email'
       },
       required: {
         name: true,
@@ -125,7 +128,8 @@
       fields: {
         message: false,
         phone: false,
-        country: false
+        country: false,
+        referralEmail: false
       },
       okMessage: 'Submit',
       okShow: true,
@@ -511,6 +515,7 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
+    readyWidgets: [],
     expiration: null,
     pageViews: ~~utils.readCookie('PathforaPageView'),
 
@@ -570,6 +575,16 @@
         watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
         widget.watchers.push(watcher);
         core.initializeScrollWatchers(widget);
+      }
+
+      if (condition.manualTrigger) {
+        watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
+        widget.watchers.push(watcher);
+        core.readyWidgets.push(widget);
+
+        // if we've already triggered the widget
+        // before initializing lets initialize right away
+        core.triggerWidget(widget);
       }
 
       if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
@@ -691,6 +706,41 @@
         }
       }
       return true;
+    },
+
+    /**
+     * @description check if a manualTrigger widget
+     * is ready to be displayed, and if so display the widget
+     * @param {object} widget
+     */
+    triggerWidget: function (widget) {
+      var valid;
+
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+          valid = widget.valid && widget.watchers[key].check();
+        }
+      }
+
+      if (widget.displayConditions.impressions && valid) {
+        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+        widget.valid = false;
+        context.pathfora.triggeredWidgets[widget.id] = false;
+
+        // remove from the ready widgets list
+        core.readyWidgets.some(function (w, i) {
+          if (w.id === widget.id) {
+            core.readyWidgets.splice(i, 1);
+            return true;
+          }
+        });
+      }
+
+      return valid;
     },
 
     /**
@@ -972,7 +1022,7 @@
     },
 
     /**
-     * @description Register a scroll position-triggered widget
+     * @description Register a custom javascript watcher
      * @param   {number} percent scroll percentage at
      *                   which the widget should be displayed
      * @param   {object} widget
@@ -984,6 +1034,27 @@
           var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
               offset = document.documentElement.scrollTop || document.body.scrollTop;
           if (offset >= positionInPixels) {
+            core.removeWatcher(watcher, widget);
+            return true;
+          }
+          return false;
+        }
+      };
+
+      return watcher;
+    },
+
+
+    /**
+     * @description Register a manual js triggered widget listener
+     * @param   {boolean} value of the manualTrigger condition
+     * @param   {object}  widget
+     * @returns {object}  object, containing callback function 'check'
+     */
+    registerManualTriggerWatcher: function (value, widget) {
+      var watcher = {
+        check: function () {
+          if (value && context.pathfora && context.pathfora.triggeredWidgets[widget.id] || context.pathfora.triggeredWidgets['*']) {
             core.removeWatcher(watcher, widget);
             return true;
           }
@@ -1244,27 +1315,33 @@
 
         // Hide fields
         Object.keys(config.fields).forEach(function (field) {
-          var parent, prev, next,
-              element = getFormElement(field);
+          var element = getFormElement(field),
+              parent = element.parentNode;
 
-          if (element && !config.fields[field]) {
-            parent = element.parentNode;
-            prev = element.previousElementSibling;
-            next = element.nextElementSibling;
+          if (element && !config.fields[field] && parent) {
+            parent.removeChild(element);
+          }
+        });
 
-            if (parent) {
-              // NOTE: collapse half-width inputs
-              if (element.className.indexOf('pf-field-half-width') !== -1) {
-                if (prev && prev.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(prev, 'pf-field-half-width');
+        // NOTE: collapse half-width inputs
+        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
+          var parent = element.parentNode,
+              prev = element.previousElementSibling,
+              next = element.nextElementSibling;
+
+          if (parent) {
+            if (element.className.indexOf('pf-field-half-width') !== -1) {
+
+              if (halfcount % 2) { // odd
+                utils.addClass(element, 'right');
+
+                if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                  utils.removeClass(element, 'pf-field-half-width');
                 }
 
-                if (next && next.className.indexOf('pf-field-half-width') !== -1) {
-                  utils.removeClass(next, 'pf-field-half-width');
-                }
+              } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
+                utils.removeClass(element, 'pf-field-half-width');
               }
-
-              parent.removeChild(element);
             }
           }
         });
@@ -2022,7 +2099,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
@@ -2806,7 +2883,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.14';
+    this.version = '0.0.15';
 
     /**
      * @public
@@ -2837,6 +2914,13 @@
      * @description Indicates if the DOM has been loaded
      */
     this.DOMLoaded = false;
+
+    /**
+     * @public
+     * @description A list of widgets that have been triggered manually
+     * using the manualTrigger display condition
+     */
+    this.triggeredWidgets = {};
 
     /**
      * @public
@@ -2902,6 +2986,44 @@
           pf.inline.procElements();
         });
       });
+    };
+
+    /**
+     * @public
+     * @description public method to trigger widgets
+     * with the manualTrigger display condition
+     * @param {array}   widgetsIds (optional)
+     */
+    this.triggerWidgets = function (widgetIds) {
+      var pf = this;
+      var i, valid;
+
+      // no widget ids provided, trigger all ready widgets
+      if (typeof widgetIds === 'undefined') {
+        pf.triggeredWidgets['*'] = true;
+
+        for (i = 0; i < core.readyWidgets.length; i++) {
+          valid = core.triggerWidget(core.readyWidgets[i]);
+          if (valid) {
+            i--;
+          }
+        }
+
+      // trigger all widget ids provided
+      } else {
+        widgetIds.forEach(function (id) {
+          if (pf.triggeredWidgets[id] !== false) {
+            pf.triggeredWidgets[id] = true;
+          }
+
+          for (i = 0; i < core.readyWidgets.length; i++) {
+            valid = core.triggerWidget(core.readyWidgets[i]);
+            if (valid) {
+              i--;
+            }
+          }
+        });
+      }
     };
 
     /**
