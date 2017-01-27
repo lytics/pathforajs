@@ -2691,62 +2691,30 @@ describe('Widgets', function () {
       displayConditions: {
         urlContains: [
           {
-            match: 'simple',
-            value: 'localhost/context',
-            exclude: true
-          }
-        ]
-      }
-    });
-
-    var form1 = new pathfora.Form({
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      id: 'exclude-widget-1',
-      position: 'bottom-right',
-      displayConditions: {
-        urlContains: [
+            match: 'exact',
+            value: 'http://localhost:9876/context.html'
+          },
           {
-            match: 'simple',
-            value: 'localhost/context.html',
-            exclude: true
-          }
-        ]
-      }
-    });
-
-    var form2 = new pathfora.Form({
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      id: 'exclude-widget-2',
-      position: 'bottom-right',
-      displayConditions: {
-        urlContains: [
-          {
-            match: 'simple',
-            value: 'bad',
-            exclude: true
+            match: 'exact',
+            value: 'bad'
           },
           {
             match: 'exact',
             value: 'http://localhost:9876/context.html',
             exclude: true
+          },
+          {
+            match: 'exact',
+            value: 'bad',
+            exclude: true
           }
         ]
       }
     });
 
-    pathfora.initializeWidgets([form, form1, form2]);
+    pathfora.initializeWidgets([form]);
 
     var widget = $('#' + form.id);
-    expect(widget.length).toBe(1);
-
-    widget = $('#' + form1.id);
-    expect(widget.length).toBe(0);
-
-    widget = $('#' + form2.id);
     expect(widget.length).toBe(0);
   });
 
