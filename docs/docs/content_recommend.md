@@ -127,7 +127,7 @@ Recommend controls any parameters necessary for making a content suggestions to 
   <tr>
     <td>args</td>
     <td>array</td>
-    <td>list of arguments to be evaluated with the operator, these arguments may be identifiers, literals, or further expressions*</td>
+    <td>list of arguments to be evaluated with the operator. These arguments may be identifiers, literals, or further expressions*</td>
   </tr>
 
   <tr>
