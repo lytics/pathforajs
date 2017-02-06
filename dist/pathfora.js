@@ -2034,7 +2034,7 @@
      */
     updateObject: function (object, config) {
       for (var prop in config) {
-        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null) {
+        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
           if (config.hasOwnProperty(prop)) {
             if (typeof object[prop] === 'undefined') {
               object[prop] = {};
@@ -2076,14 +2076,14 @@
             // element in the content object this replaces any default content
             if (resp[0]) {
               var content = resp[0];
-              w.content = {
-                0: {
+              w.content = [
+                {
                   title: content.title,
                   description: content.description,
                   url: 'http://' + content.url,
                   image: content.primary_image
                 }
-              };
+              ];
             }
 
             // if we didn't get a valid response from the api, we check if a default
@@ -2604,14 +2604,6 @@
 
           // Segment JSON (usually segment AST)
           } else {
-
-            // convert args back to array
-            if (ast.args) {
-              ast.args = Object.keys(ast.args).map(function (val) {
-                return ast.args[val];
-              });
-            }
-
             var contentSegment = {table: 'content', ast: ast};
             queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
           }
