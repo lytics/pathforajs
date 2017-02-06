@@ -2546,20 +2546,40 @@
       ];
 
 
-      var ql = params.ql;
+      var ql = params.ql,
+          ast = params.ast;
+
       delete params.ql;
+      delete params.ast;
 
       var queries = utils.constructQueries(params);
 
       if (!params.contentsegment) {
-        // Special case for FilterQL
-        if (ql && ql.raw) {
+        // Special case for Adhoc Segments
+        if (ql && ql.raw || ast) {
           if (queries.length > 0) {
             queries += '&';
           } else {
             queries += '?';
           }
-          queries += 'ql=' + ql.raw;
+
+          // Filter QL
+          if (ql && ql.raw) {
+            queries += 'ql=' + ql.raw;
+
+          // Segment JSON (usually segment AST)
+          } else {
+
+            // convert args back to array
+            if (ast.args) {
+              ast.args = Object.keys(ast.args).map(function (val) {
+                return ast.args[val];
+              });
+            }
+
+            var contentSegment = {table: 'content', ast: ast};
+            queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+          }
         }
       }
 
