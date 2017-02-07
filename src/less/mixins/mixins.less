@@ -1,0 +1,14 @@
+.transform(@string){
+  transform:         @string;
+  -webkit-transform: @string;
+  -moz-transform:    @string;
+  -ms-transform:     @string;
+  -o-transform:      @string;
+}
+
+/* Mixin for mobile boundries */
+.mobile(@rules) {
+  @media screen and (max-width: 736px) , screen and (max-height: 640px) {
+    @rules();
+  }
+}

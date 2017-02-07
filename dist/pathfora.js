@@ -1772,7 +1772,7 @@
         choices = [''];
         break;
       case 'slideout':
-        choices = ['bottom-left', 'bottom-right'];
+        choices = ['bottom-left', 'bottom-right', 'left', 'right', 'top-left', 'top-right'];
         break;
       case 'bar':
         choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
@@ -2057,7 +2057,7 @@
      */
     updateObject: function (object, config) {
       for (var prop in config) {
-        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null) {
+        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
           if (config.hasOwnProperty(prop)) {
             if (typeof object[prop] === 'undefined') {
               object[prop] = {};
@@ -2099,14 +2099,14 @@
             // element in the content object this replaces any default content
             if (resp[0]) {
               var content = resp[0];
-              w.content = {
-                0: {
+              w.content = [
+                {
                   title: content.title,
                   description: content.description,
                   url: 'http://' + content.url,
                   image: content.primary_image
                 }
-              };
+              ];
             }
 
             // if we didn't get a valid response from the api, we check if a default
@@ -2604,20 +2604,32 @@
       ];
 
 
-      var ql = params.ql;
+      var ql = params.ql,
+          ast = params.ast;
+
       delete params.ql;
+      delete params.ast;
 
       var queries = utils.constructQueries(params);
 
       if (!params.contentsegment) {
-        // Special case for FilterQL
-        if (ql && ql.raw) {
+        // Special case for Adhoc Segments
+        if (ql && ql.raw || ast) {
           if (queries.length > 0) {
             queries += '&';
           } else {
             queries += '?';
           }
-          queries += 'ql=' + ql.raw;
+
+          // Filter QL
+          if (ql && ql.raw) {
+            queries += 'ql=' + ql.raw;
+
+          // Segment JSON (usually segment AST)
+          } else {
+            var contentSegment = {table: 'content', ast: ast};
+            queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+          }
         }
       }
 
