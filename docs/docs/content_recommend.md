@@ -85,6 +85,12 @@ Recommend controls any parameters necessary for making a content suggestions to 
     <td>id or slug of a content collection (segment on the content table) to filter content</td>
   </tr>
 
+  <tr>
+    <td>ast</td>
+    <td>object</td>
+    <td>Content segment AST expression to filter documents (see below)</td>
+  </tr>
+
 </table>
 
 <table>
@@ -102,11 +108,36 @@ Recommend controls any parameters necessary for making a content suggestions to 
   <tr>
     <td>raw</td>
     <td>string</td>
-    <td>raw FilterQL formatted query (ex. "FILTER AND (global.mobile_experience > 0) FROM content")*</td>
+    <td>raw FilterQL formatted query ex. <code>FILTER AND (global.mobile_experience > 0) FROM content</code>*</td>
   </tr>
 </table>
 
-*Contact your customer success representative `success@lytics.io` for assistance in writing a FilterQL statement to recommend based on url matching, topic relevance, and/or meta attributes.
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>ast</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>args</td>
+    <td>array</td>
+    <td>list of arguments to be evaluated with the operator. These arguments may be identifiers, literals, or further expressions*</td>
+  </tr>
+
+  <tr>
+    <td>op</td>
+    <td>string</td>
+    <td>operator to be used to evaluate the arguments of the expression</td>
+  </tr>
+</table>
+
+*Contact your customer success representative `success@lytics.io` for assistance in writing a FilterQL statement or Segment AST expression to recommend based on url matching, topic relevance, and/or meta attributes.
 
 ## content
 
