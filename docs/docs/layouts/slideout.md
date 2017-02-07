@@ -23,6 +23,22 @@ Positition of the slideout module relative to the browser window.
     <td>bottom-right</td>
     <td>display the module in the bottom right corner of the window</td>
   </tr>
+  <tr>
+    <td>left</td>
+    <td>display the module in the center left of the window</td>
+  </tr>
+  <tr>
+    <td>right</td>
+    <td>display the module in the center right of the window</td>
+  </tr>
+  <tr>
+    <td>top-left</td>
+    <td>display the module in the top left corner of the window</td>
+  </tr>
+  <tr>
+    <td>top-right</td>
+    <td>display the module in the top right corner of the window</td>
+  </tr>
 </table>
 
 
