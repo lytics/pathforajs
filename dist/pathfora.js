@@ -833,11 +833,72 @@
       return true;
     },
 
+    phraseChecker: function (phrase, url, simpleurl, queries) {
+      var valid = false;
+
+      // legacy match allows for an array of strings, check if we are legacy or current object approach
+      switch (typeof phrase) {
+      case 'string':
+        if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+          valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring');
+        }
+        break;
+
+      case 'object':
+        if (phrase.match && phrase.value) {
+          var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+
+          switch (phrase.match) {
+          // simple match
+          case 'simple':
+            if (simpleurl === phrase.value) {
+              valid = true;
+            }
+            break;
+
+          // exact match
+          case 'exact':
+            if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+              valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match);
+            }
+            break;
+
+          // regex
+          case 'regex':
+            var re = new RegExp(phrase.value);
+
+            if (re.test(url)) {
+              valid = true;
+            }
+            break;
+
+          // string match (default)
+          default:
+            if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+              valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match);
+            }
+            break;
+          }
+
+        } else {
+          console.log('invalid display conditions');
+        }
+        break;
+
+      default:
+        console.log('invalid display conditions');
+        break;
+      }
+
+      return valid;
+    },
+
     urlChecker: function (phrases) {
       var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
           simpleurl = window.location.hostname + window.location.pathname,
           queries = core.parseQuery(url),
-          valid = false;
+          valid, excludeValid = false,
+          matchCt, excludeCt = 0;
 
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
@@ -848,65 +909,27 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
-
-          // legacy match allows for an array of strings, check if we are legacy or current object approach
-          switch (typeof phrase) {
-          case 'string':
-            if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
-              valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
-            }
-            break;
-
-          case 'object':
-            if (phrase.match && phrase.value) {
-              var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
-
-              switch (phrase.match) {
-              // simple match
-              case 'simple':
-                if (simpleurl === phrase.value) {
-                  valid = true;
-                }
-                break;
-
-              // exact match
-              case 'exact':
-                if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                }
-                break;
-
-              // regex
-              case 'regex':
-                var re = new RegExp(phrase.value);
-
-                if (re.test(url)) {
-                  valid = true;
-                }
-                break;
-
-              // string match (default)
-              default:
-                if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                }
-                break;
-              }
-            } else {
-              console.log('invalid display conditions');
-            }
-            break;
-
-          default:
-            console.log('invalid display conditions');
-            break;
+          if (phrase.exclude) {
+            excludeValid = core.phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
+            excludeCt++;
+          } else {
+            valid = core.phraseChecker(phrase, url, simpleurl, queries) || valid;
+            matchCt++;
           }
         });
       } else {
         valid = true;
       }
 
-      return valid;
+      if (matchCt === 0) {
+        return !excludeValid;
+      }
+
+      if (excludeCt === 0) {
+        return valid;
+      }
+
+      return valid && !excludeValid;
     },
 
     pageVisitsChecker: function (pageVisitsRequired) {

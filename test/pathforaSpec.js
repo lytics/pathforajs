@@ -2727,6 +2727,43 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should show respect excluded matching rule', function () {
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: 'exclude-widget',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html'
+          },
+          {
+            match: 'exact',
+            value: 'bad'
+          },
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html',
+            exclude: true
+          },
+          {
+            match: 'exact',
+            value: 'bad',
+            exclude: true
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
   it('should show using simple match', function () {
     var form1 = new pathfora.Form({
       id: '88ee86cf72b44e67bf758cc743ac1a5d',

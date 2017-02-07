@@ -545,6 +545,11 @@ Only display the module on pages that match the url conditions defined.
     <td>string</td>
     <td>value to match the current page url against</td>
   </tr>
+  <tr>
+    <td>exclude</td>
+    <td>boolean</td>
+    <td><code>optional</code> if true, the module will not display on any page that matches this rule</td>
+  </tr>
 </table>
 
 <table>
