@@ -798,11 +798,72 @@
       return true;
     },
 
+    phraseChecker: function (phrase, url, simpleurl, queries) {
+      var valid = false;
+
+      // legacy match allows for an array of strings, check if we are legacy or current object approach
+      switch (typeof phrase) {
+      case 'string':
+        if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+          valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring');
+        }
+        break;
+
+      case 'object':
+        if (phrase.match && phrase.value) {
+          var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+
+          switch (phrase.match) {
+          // simple match
+          case 'simple':
+            if (simpleurl === phrase.value) {
+              valid = true;
+            }
+            break;
+
+          // exact match
+          case 'exact':
+            if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+              valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match);
+            }
+            break;
+
+          // regex
+          case 'regex':
+            var re = new RegExp(phrase.value);
+
+            if (re.test(url)) {
+              valid = true;
+            }
+            break;
+
+          // string match (default)
+          default:
+            if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+              valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match);
+            }
+            break;
+          }
+
+        } else {
+          console.log('invalid display conditions');
+        }
+        break;
+
+      default:
+        console.log('invalid display conditions');
+        break;
+      }
+
+      return valid;
+    },
+
     urlChecker: function (phrases) {
       var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
           simpleurl = window.location.hostname + window.location.pathname,
           queries = core.parseQuery(url),
-          valid = false;
+          valid, excludeValid = false,
+          matchCt, excludeCt = 0;
 
       if (!(phrases instanceof Array)) {
         phrases = Object.keys(phrases).map(function (key) {
@@ -813,65 +874,27 @@
       // array of urlContains params is an or list, so if any are true evaluate valid to true
       if (phrases.indexOf('*') === -1) {
         phrases.forEach(function (phrase) {
-
-          // legacy match allows for an array of strings, check if we are legacy or current object approach
-          switch (typeof phrase) {
-          case 'string':
-            if (url.indexOf(utils.escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
-              valid = core.compareQueries(queries, core.parseQuery(phrase), 'substring') && true;
-            }
-            break;
-
-          case 'object':
-            if (phrase.match && phrase.value) {
-              var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
-
-              switch (phrase.match) {
-              // simple match
-              case 'simple':
-                if (simpleurl === phrase.value) {
-                  valid = true;
-                }
-                break;
-
-              // exact match
-              case 'exact':
-                if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                }
-                break;
-
-              // regex
-              case 'regex':
-                var re = new RegExp(phrase.value);
-
-                if (re.test(url)) {
-                  valid = true;
-                }
-                break;
-
-              // string match (default)
-              default:
-                if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
-                  valid = core.compareQueries(queries, core.parseQuery(phraseValue), phrase.match) && true;
-                }
-                break;
-              }
-            } else {
-              console.log('invalid display conditions');
-            }
-            break;
-
-          default:
-            console.log('invalid display conditions');
-            break;
+          if (phrase.exclude) {
+            excludeValid = core.phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
+            excludeCt++;
+          } else {
+            valid = core.phraseChecker(phrase, url, simpleurl, queries) || valid;
+            matchCt++;
           }
         });
       } else {
         valid = true;
       }
 
-      return valid;
+      if (matchCt === 0) {
+        return !excludeValid;
+      }
+
+      if (excludeCt === 0) {
+        return valid;
+      }
+
+      return valid && !excludeValid;
     },
 
     pageVisitsChecker: function (pageVisitsRequired) {
@@ -1714,7 +1737,7 @@
         choices = [''];
         break;
       case 'slideout':
-        choices = ['bottom-left', 'bottom-right'];
+        choices = ['bottom-left', 'bottom-right', 'left', 'right', 'top-left', 'top-right'];
         break;
       case 'bar':
         choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
@@ -1999,7 +2022,7 @@
      */
     updateObject: function (object, config) {
       for (var prop in config) {
-        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null) {
+        if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
           if (config.hasOwnProperty(prop)) {
             if (typeof object[prop] === 'undefined') {
               object[prop] = {};
@@ -2041,14 +2064,14 @@
             // element in the content object this replaces any default content
             if (resp[0]) {
               var content = resp[0];
-              w.content = {
-                0: {
+              w.content = [
+                {
                   title: content.title,
                   description: content.description,
                   url: 'http://' + content.url,
                   image: content.primary_image
                 }
-              };
+              ];
             }
 
             // if we didn't get a valid response from the api, we check if a default
@@ -2087,7 +2110,7 @@
         this.updateObject(widget, defaults);
         this.updateObject(widget, widget.config);
 
-        if (widget.type === 'message' && (widget.recommend || widget.content)) {
+        if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
           if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
             throw new Error('Unsupported layout for content recommendation');
           }
@@ -2546,20 +2569,32 @@
       ];
 
 
-      var ql = params.ql;
+      var ql = params.ql,
+          ast = params.ast;
+
       delete params.ql;
+      delete params.ast;
 
       var queries = utils.constructQueries(params);
 
       if (!params.contentsegment) {
-        // Special case for FilterQL
-        if (ql && ql.raw) {
+        // Special case for Adhoc Segments
+        if (ql && ql.raw || ast) {
           if (queries.length > 0) {
             queries += '&';
           } else {
             queries += '?';
           }
-          queries += 'ql=' + ql.raw;
+
+          // Filter QL
+          if (ql && ql.raw) {
+            queries += 'ql=' + ql.raw;
+
+          // Segment JSON (usually segment AST)
+          } else {
+            var contentSegment = {table: 'content', ast: ast};
+            queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+          }
         }
       }
 
@@ -2871,7 +2906,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.15';
+    this.version = '0.0.16';
 
     /**
      * @public

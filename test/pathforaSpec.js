@@ -1961,6 +1961,52 @@ describe('Widgets', function () {
     jasmine.Ajax.uninstall();
   });
 
+  it('should accept segment AST definition', function (done) {
+    jasmine.Ajax.install();
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
+    var astModal = new pathfora.Message({
+      id: 'ast-modal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ast: {
+          args: [
+            {
+              ident: 'author'
+            }
+          ],
+          op: 'exists'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([astModal]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+    });
+
+    var widget = $('#' + astModal.id);
+    expect(widget).toBeDefined();
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+
+    pathfora.acctid = '';
+    jasmine.Ajax.uninstall();
+  });
+
   // -------------------------
   //  INLINE MODULES
   // -------------------------
@@ -2671,6 +2717,43 @@ describe('Widgets', function () {
       displayConditions: {
         urlContains: [
           'notlocalhost'
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
+  it('should show respect excluded matching rule', function () {
+    var form = new pathfora.Form({
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      id: 'exclude-widget',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html'
+          },
+          {
+            match: 'exact',
+            value: 'bad'
+          },
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html',
+            exclude: true
+          },
+          {
+            match: 'exact',
+            value: 'bad',
+            exclude: true
+          }
         ]
       }
     });

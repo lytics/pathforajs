@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Content Recommendation Widget</title>
+  </head>
+  <body>
+    <h1>Action widget example</h1>
+    <script src="http://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.js"></script>
+    <script>
+      var modal = new pathfora.Message({
+        id: 'modal1',
+        layout: 'slideout',
+        headline: "Check this out!",
+        variant: 3,
+        msg: "Here is some cool content we know you'll be interested in",
+        confirmAction: {
+          callback: function() {
+            window.location.pathname = "/examples";
+          }
+        }
+      });
+      window.pathfora.initializeWidgets([ modal ]);
+    </script>
+  </body>
+</html>

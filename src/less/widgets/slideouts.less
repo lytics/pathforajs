@@ -32,10 +32,10 @@
     font-size: 20px;
   }
 
-
   /* Position Styles */
   &.pf-position-bottom-left,
-  &.pf-position-left {
+  &.pf-position-left,
+  &.pf-position-top-left {
     left: -100%;
 
     .mobile({
@@ -52,7 +52,8 @@
   }
 
   &.pf-position-bottom-right,
-  &.pf-position-right {
+  &.pf-position-right,
+  &.pf-position-top-right {
     left: auto;
     right: -100%;
 
@@ -70,6 +71,24 @@
     }
   }
 
+  &.pf-position-left,
+  &.pf-position-right {
+    bottom: auto;
+    top: 50%;
+    .transform(translateY(-50%));
+  }
+
+  &.pf-position-top-left,
+  &.pf-position-top-right {
+    bottom: auto;
+    top: 50px;
+
+    .mobile({
+      top: 0;
+    });
+  }
+
+
   &.pf-origin-bottom {
     bottom: -100%;
   }
@@ -78,7 +97,8 @@
   /* Opened State Styles */
   &.opened {
     &.pf-position-bottom-left,
-    &.pf-position-left {
+    &.pf-position-left,
+    &.pf-position-top-left {
       left: 50px;
 
       .mobile({
@@ -87,7 +107,8 @@
     }
 
     &.pf-position-bottom-right,
-    &.pf-position-right {
+    &.pf-position-right,
+    &.pf-position-top-right {
       right: 50px;
 
       .mobile({
