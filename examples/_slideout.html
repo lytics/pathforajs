@@ -11,41 +11,8 @@
     <h1>Action widget example</h1>
 
     <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
-    <script src="../dist/pathfora.min.js"></script>
+    <script src="../dist/pathfora.js"></script>
     <script>
-      // var messageBar = pathfora.Message({
-      //   id: 'asd',
-      //   layout: 'slideout',
-      //   headline: 'Aenean leo malesuada',
-      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
-      //   variant: '2',
-      //   image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-      // });
-      // window.pathfora.initializeWidgets([ messageBar ]);
-      // var messageBar = pathfora.Message({
-      //   id: 'asd',
-      //   layout: 'slideout',
-      //   headline: 'Aenean leo malesuada',
-      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
-      //   variant: '1',
-      //   // image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-      // });
-      // window.pathfora.initializeWidgets([ messageBar ]);
-      // var subscription = pathfora.Subscription({
-      //   id: 'asd',
-      //   layout: 'slideout',
-      //   headline: 'Aenean leo malesuada',
-      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
-      //   variant: '1',
-      //   theme: 'light',
-      //   placeholders: {
-      //     email: "Email",
-      //     title: "Title"
-      //   },
-      //   okMessage: 'Hoop',
-      //   okShow: true,
-      // });
-      // window.pathfora.initializeWidgets([ subscription ]);
       var form = pathfora.Form({
         id: 'asd',
         layout: 'slideout',
@@ -53,29 +20,92 @@
         msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
         variant: '2',
         image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-        placeholders: {
-          name: 'Name',
-          title: 'Title',
-          email: 'Email',
-          message: 'Message'
-        },
+        formElements: [
+          {
+            "type": "radio-group",
+            "label": "Radio Group",
+            "name": "radio-group-1486504919079",
+            "values": [
+              {
+                "label": "Option 1",
+                "value": "option-1",
+              },
+              {
+                "label": "Option 2",
+                "value": "option-2"
+              },
+              {
+                "label": "Option 3",
+                "value": "option-3"
+              }
+            ]
+          },
+          {
+            "type": "select",
+            "placeholder": "test",
+            "name": "select-1486510469792",
+            "values": [
+              {
+                "label": "Option 1",
+                "value": "option-1",
+              },
+              {
+                "label": "Option 2",
+                "value": "option-2"
+              },
+              {
+                "label": "Option 3",
+                "value": "option-3"
+              }
+            ]
+          },
+          {
+            "type": "checkbox-group",
+            "label": "Checkbox Group",
+            "name": "checkbox-group-1486514014260",
+            "values": [
+              {
+                "label": "Option 1",
+                "value": "option-1",
+              },
+              {
+                "label": "Option 2",
+                "value": "option-2"
+              },
+              {
+                "label": "Option 3",
+                "value": "option-3"
+              }
+            ]
+          },
+          {
+            "type": "textarea",
+            "name": "textarea-1486515934797",
+            "placeholder": 'message'
+          },
+          {
+            "type": "input",
+            "name": "textarea-1486515934797",
+            "placeholder": 'so cool'
+          }
+        ],
         okMessage: 'Send',
         cancelMessage: 'Cancel',
         okShow: true,
         cancelShow: true,
         // theme: 'dark'
       });
-      var shortmessage = pathfora.Message({
-        id: 'adga',
-        layout: 'slideout',
-        position: 'top-right',
-        headline: 'I Am',
-        image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
-        msg: 'Short',
-        variant: '1',
-        cancelShow: false
-      });
-      window.pathfora.initializeWidgets([ form, shortmessage ]);
+      // var shortmessage = pathfora.Message({
+      //   id: 'adga',
+      //   layout: 'slideout',
+      //   position: 'top-right',
+      //   headline: 'I Am',
+      //   image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      //   msg: 'Short',
+      //   variant: '1',
+      //   cancelShow: false
+      // });
+      window.pathfora.initializeWidgets([ form ]);
     </script>
   </body>
 </html>

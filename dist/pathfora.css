@@ -20,6 +20,7 @@
   -webkit-sizing: border-box;
   background-color: #f1f1f1;
   color: #888;
+  font-size: 15px;
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget.pf-mobile-hide {
@@ -279,6 +280,34 @@
 .pf-sitegate .pf-widget-btn {
   clear: both;
   margin-top: 5px;
+}
+.pf-form .pf-widget-radio-group,
+.pf-sitegate .pf-widget-radio-group,
+.pf-form .pf-widget-checkbox-group,
+.pf-sitegate .pf-widget-checkbox-group {
+  text-align: left;
+  margin: 0 3px 10px;
+}
+.pf-form .pf-widget-radio-group span.pf-widget-radio-label,
+.pf-sitegate .pf-widget-radio-group span.pf-widget-radio-label {
+  font-weight: bold;
+}
+.pf-form .pf-widget-checkbox-group span.pf-widget-checkbox-label,
+.pf-sitegate .pf-widget-checkbox-group span.pf-widget-checkbox-label {
+  font-weight: bold;
+}
+.pf-form .pf-widget-radio,
+.pf-sitegate .pf-widget-radio,
+.pf-form .pf-widget-checkbox,
+.pf-sitegate .pf-widget-checkbox {
+  display: block;
+  margin: 7px 0;
+}
+.pf-form .pf-widget-radio input,
+.pf-sitegate .pf-widget-radio input,
+.pf-form .pf-widget-checkbox input,
+.pf-sitegate .pf-widget-checkbox input {
+  margin-right: 10px;
 }
 .pf-form.pf-widget-slideout input.pf-field-half-width,
 .pf-sitegate.pf-widget-slideout input.pf-field-half-width,

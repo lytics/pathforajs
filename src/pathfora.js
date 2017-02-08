@@ -1114,6 +1114,170 @@
       }
     },
 
+    insertFormElement: function (form, node) {
+      var btn = form.querySelector('.pf-widget-ok');
+
+      if (btn) {
+        form.insertBefore(node, btn);
+      } else {
+        form.appendChild(node);
+      }
+    },
+
+    buildWidgetForm: function (formElements, form) {
+      var i, val;
+
+      for (var j = 0; j < formElements.length; j++) {
+        var elem = formElements[j];
+
+        switch (elem.type) {
+
+        // Radio Button Group
+        case 'radio-group':
+          var radioGroup = document.createElement('div');
+          radioGroup.className = 'pf-widget-radio-group';
+
+          if (elem.required === true) {
+            radioGroup.setAttribute('data-required', 'true');
+          }
+
+          if (elem.label) {
+            var radioGroupLabel = document.createElement('span');
+            radioGroupLabel.className = 'pf-widget-radio-label';
+            radioGroupLabel.innerHTML = elem.label;
+            radioGroup.appendChild(radioGroupLabel);
+          }
+
+
+          for (i = 0; i < elem.values.length; i++) {
+            val = elem.values[i];
+
+            var radio = document.createElement('input');
+            radio.setAttribute('type', 'radio');
+            radio.setAttribute('value', val.value);
+            radio.setAttribute('name', elem.name);
+
+            if (val.label) {
+              var label = document.createElement('label');
+              label.className = 'pf-widget-radio';
+              label.appendChild(radio);
+              label.appendChild(document.createTextNode(val.label));
+              radioGroup.appendChild(label);
+            } else {
+              throw new Error('radio button must contain label');
+            }
+          }
+
+          core.insertFormElement(form, radioGroup);
+          break;
+
+        // Select Drop Down
+        case 'select':
+          var select = document.createElement('select');
+          select.className = 'pf-widget-select';
+
+          if (elem.required === true) {
+            select.setAttribute('data-required', 'true');
+          }
+
+          if (elem.placeholder) {
+            var placeholder = document.createElement('option');
+            placeholder.setAttribute('value', '');
+            placeholder.innerHTML = elem.placeholder;
+
+            select.appendChild(placeholder);
+          }
+
+          for (i = 0; i < elem.values.length; i++) {
+            val = elem.values[i];
+
+            var option = document.createElement('option');
+            option.setAttribute('value', val.value);
+            option.innerHTML = val.label;
+
+            select.appendChild(option);
+          }
+
+          core.insertFormElement(form, select);
+          break;
+
+        // Checkbox Input Box
+        case 'checkbox-group':
+          var checkboxGroup = document.createElement('div');
+          checkboxGroup.className = 'pf-widget-checkbox-group';
+
+          if (elem.required === true) {
+            checkboxGroup.setAttribute('data-required', 'true');
+          }
+
+          if (elem.label) {
+            var checkboxGroupLabel = document.createElement('span');
+            checkboxGroupLabel.className = 'pf-widget-checkbox-label';
+            checkboxGroupLabel.innerHTML = elem.label;
+            checkboxGroup.appendChild(checkboxGroupLabel);
+          }
+
+
+          for (var i = 0; i < elem.values.length; i++) {
+            var val = elem.values[i];
+
+            var checkbox = document.createElement('input');
+            checkbox.setAttribute('type', 'checkbox');
+            checkbox.setAttribute('value', val.value);
+            checkbox.setAttribute('name', elem.name);
+
+            if (val.label) {
+              var label = document.createElement('label');
+              label.className = 'pf-widget-checkbox';
+              label.appendChild(checkbox);
+              label.appendChild(document.createTextNode(val.label));
+              checkboxGroup.appendChild(label);
+            } else {
+              throw new Error('checkbox button must contain label');
+            }
+          }
+
+          core.insertFormElement(form, checkboxGroup);
+          break;
+
+        // Textarea
+        case 'textarea':
+          var textarea = document.createElement('textarea');
+          textarea.setAttribute('name', elem.name);
+          textarea.setAttribute('rows', 5);
+
+          if (elem.required === true) {
+            textarea.setAttribute('data-required', 'true');
+          }
+
+          if (elem.placeholder) {
+            textarea.placeholder = elem.placeholder;
+          }
+
+          core.insertFormElement(form, textarea);
+          break;
+
+        // input
+        case 'input':
+          var input = document.createElement('input');
+          input.setAttribute('type', 'text');
+          input.setAttribute('name', elem.name);
+
+          if (elem.required === true) {
+            input.setAttribute('data-required', 'true');
+          }
+
+          if (elem.placeholder) {
+           input.placeholder = elem.placeholder;
+          }
+
+          core.insertFormElement(form, input);
+          break;
+
+        }
+      }
+    },
+
     /**
      * @description Construct DOM layout for the widget
      * @throws {Error} error
@@ -1296,66 +1460,91 @@
           }
         }
 
-        var getFormElement = function (field) {
-          if (field === 'name') {
-            return widget.querySelector('input[name="username"]');
-          }
+        if (config.formElements) {
+          // remove the existing form fields
+          var form = widget.querySelector('form');
+          var childName, elem;
 
-          return widget.querySelector('form [name="' + field + '"]');
-        };
+          for (elem in form.children) {
+            if (form.children.hasOwnProperty(elem)) {
+              child = form.children[elem];
 
-        // Set placeholders
-        Object.keys(config.placeholders).forEach(function (field) {
-          var element = getFormElement(field);
+              if (typeof child.getAttribute !== 'undefined') {
+                childName = child.getAttribute('name');
 
-          if (element && typeof element.placeholder !== 'undefined') {
-            element.placeholder = config.placeholders[field];
-          } else if (element && typeof element.options !== 'undefined') {
-            element.options[0].innerHTML = config.placeholders[field];
-          }
-        });
-
-        // Set required Fields
-        Object.keys(config.required).forEach(function (field) {
-          var element = getFormElement(field);
-
-          if (element && config.required[field]) {
-            element.setAttribute('data-required', 'true');
-          }
-        });
-
-        // Hide fields
-        Object.keys(config.fields).forEach(function (field) {
-          var element = getFormElement(field),
-              parent = element.parentNode;
-
-          if (element && !config.fields[field] && parent) {
-            parent.removeChild(element);
-          }
-        });
-
-        // NOTE: collapse half-width inputs
-        Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
-          var parent = element.parentNode,
-              prev = element.previousElementSibling,
-              next = element.nextElementSibling;
-
-          if (parent) {
-            if (element.className.indexOf('pf-field-half-width') !== -1) {
-
-              if (halfcount % 2) { // odd
-                utils.addClass(element, 'right');
-
-                if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
-                  utils.removeClass(element, 'pf-field-half-width');
+                if (childName != null) {
+                  form.removeChild(child);
                 }
-
-              } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
-                utils.removeClass(element, 'pf-field-half-width');
               }
             }
           }
-        });
+
+          // TODO: go to form builder func
+          core.buildWidgetForm(config.formElements, form);
+
+        } else {
+          // suport old form functions
+          var getFormElement = function (field) {
+            if (field === 'name') {
+              return widget.querySelector('input[name="username"]');
+            }
+
+            return widget.querySelector('form [name="' + field + '"]');
+          };
+
+          // Set placeholders
+          Object.keys(config.placeholders).forEach(function (field) {
+            var element = getFormElement(field);
+
+            if (element && typeof element.placeholder !== 'undefined') {
+              element.placeholder = config.placeholders[field];
+            } else if (element && typeof element.options !== 'undefined') {
+              element.options[0].innerHTML = config.placeholders[field];
+            }
+          });
+
+          // Set required Fields
+          Object.keys(config.required).forEach(function (field) {
+            var element = getFormElement(field);
+
+            if (element && config.required[field]) {
+              element.setAttribute('data-required', 'true');
+            }
+          });
+
+          // Hide fields
+          Object.keys(config.fields).forEach(function (field) {
+            var element = getFormElement(field),
+                parent = element.parentNode;
+
+            if (element && !config.fields[field] && parent) {
+              parent.removeChild(element);
+            }
+          });
+
+          // NOTE: collapse half-width inputs
+          Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
+            var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
+            if (parent) {
+              if (element.className.indexOf('pf-field-half-width') !== -1) {
+
+                if (halfcount % 2) { // odd
+                  utils.addClass(element, 'right');
+
+                  if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                    utils.removeClass(element, 'pf-field-half-width');
+                  }
+
+                } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
+                  utils.removeClass(element, 'pf-field-half-width');
+                }
+              }
+            }
+          });
+        }
 
         // For select boxes we need to control the color of
         // the placeholder text
