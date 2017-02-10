@@ -39,9 +39,7 @@ Each toggleable content recomendation block should have a surrounding container 
   </tr>
 </table>
 
-The `pfrecommend` attribute value may contain wildcards in the url, and should not include the http protocol in the url. This value gets used to formulate the filter we pass to the recommendation API. If you do not want to set a filter this value should be `*`.
-
-Inside the container element you may have several elements with the `data-pftype` attribute. Based on the value of this attribute, Pathfora will set the innerHTML or an attribute of this element to contain a content recommendation for the user.
+Inside the container element you may have several elements with the `data-pfblock` attribute. Based on the value of this attribute, Pathfora will set the innerHTML or an attribute of this element to contain a content recommendation for the user.
 
 <table>
   <thead>

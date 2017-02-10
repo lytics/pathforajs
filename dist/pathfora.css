@@ -1,4 +1,6 @@
 /* Mixin for mobile boundries */
+/* Mixin for mobile boundries */
+/* Mixin for left aligned widgets */
 /* Default/light color theme */
 .pf-box-shadow,
 .pf-widget-folding {
@@ -65,21 +67,13 @@
   font-size: 14px;
   margin: 1px 1px 10px 1px;
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 15px;
   background: white;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
   position: relative;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
-}
-.pf-widget input[type=text][data-required="active"]:focus,
-.pf-widget input[type=email][data-required="active"]:focus,
-.pf-widget select[data-required="active"]:focus,
-.pf-widget textarea[data-required="active"]:focus {
-  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  margin: 0 0 9px 0;
 }
 .pf-widget input[type=text]:focus,
 .pf-widget input[type=email]:focus,
@@ -245,12 +239,6 @@
   width: 100%;
   margin-bottom: 1px;
 }
-.pf-subscription form input[type=text][data-required="active"]:focus,
-.pf-subscription form input[type=email][data-required="active"]:focus {
-  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  margin: 0;
-}
 .pf-subscription form .pf-widget-btn {
   float: right;
   margin-left: 5px;
@@ -286,7 +274,75 @@
 .pf-form .pf-widget-checkbox-group,
 .pf-sitegate .pf-widget-checkbox-group {
   text-align: left;
-  margin: 0 3px 10px;
+  padding: 0 3px;
+  margin-bottom: 10px;
+}
+.pf-form form > label,
+.pf-sitegate form > label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 7px;
+  margin-left: 3px;
+  text-align: left;
+}
+.pf-form div.pf-form-required,
+.pf-sitegate div.pf-form-required {
+  position: relative;
+}
+@media screen and (max-width: 736px), screen and (max-height: 640px) {
+  .pf-form div.pf-form-required.invalid.pf-widget-radio-group,
+  .pf-sitegate div.pf-form-required.invalid.pf-widget-radio-group,
+  .pf-form div.pf-form-required.invalid.pf-widget-checkbox-group,
+  .pf-sitegate div.pf-form-required.invalid.pf-widget-checkbox-group {
+    box-shadow: 0 0 0 1px #f12626;
+    border-radius: 3px;
+  }
+  .pf-form div.pf-form-required.invalid [data-required=true],
+  .pf-sitegate div.pf-form-required.invalid [data-required=true] {
+    box-shadow: inset 0 0 0 1px #f12626;
+  }
+}
+.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-sitegate div.pf-form-required.invalid div.pf-required-flag {
+  right: -83px;
+  opacity: 1;
+}
+.pf-form div.pf-form-required div.pf-required-flag,
+.pf-sitegate div.pf-form-required div.pf-required-flag {
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  padding: 5px 10px;
+  top: 7px;
+  right: -80px;
+  width: auto;
+  color: white;
+  background-color: #f12626;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  transition: all .3s;
+  opacity: 0;
+}
+@media screen and (max-width: 736px), screen and (max-height: 640px) {
+  .pf-form div.pf-form-required div.pf-required-flag,
+  .pf-sitegate div.pf-form-required div.pf-required-flag {
+    display: none;
+  }
+}
+.pf-form div.pf-form-required div.pf-required-flag:before,
+.pf-sitegate div.pf-form-required div.pf-required-flag:before {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 7px;
+  left: -5px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  content: '';
+  border-right: 5px solid #f12626;
+}
+.pf-form span.required,
+.pf-sitegate span.required {
+  color: #f12626;
 }
 .pf-form .pf-widget-radio-group span.pf-widget-radio-label,
 .pf-sitegate .pf-widget-radio-group span.pf-widget-radio-label {
@@ -308,6 +364,96 @@
 .pf-form .pf-widget-checkbox input,
 .pf-sitegate .pf-widget-checkbox input {
   margin-right: 10px;
+}
+.pf-position-right.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required.invalid div.pf-required-flag {
+  left: -83px;
+}
+.pf-position-right.pf-form div.pf-form-required div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required div.pf-required-flag {
+  left: -80px;
+  right: auto;
+}
+.pf-position-right.pf-form div.pf-form-required div.pf-required-flag:before,
+.pf-position-bottom-right.pf-form div.pf-form-required div.pf-required-flag:before,
+.pf-position-top-right.pf-form div.pf-form-required div.pf-required-flag:before,
+.pf-widget-modal.pf-form div.pf-form-required div.pf-required-flag:before,
+.pf-position-right.pf-sitegate div.pf-form-required div.pf-required-flag:before,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required div.pf-required-flag:before,
+.pf-position-top-right.pf-sitegate div.pf-form-required div.pf-required-flag:before,
+.pf-widget-modal.pf-sitegate div.pf-form-required div.pf-required-flag:before {
+  border-left: 5px solid #f12626;
+  border-right: none;
+  left: auto;
+  right: -5px;
+}
+.pf-position-right.pf-form div.pf-form-required.pf-widget-radio-group,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-radio-group,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-radio-group,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-radio-group,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-position-right.pf-form div.pf-form-required.pf-widget-checkbox-group,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-checkbox-group,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-checkbox-group,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-checkbox-group,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-checkbox-group {
+  position: relative;
+}
+.pf-position-right.pf-form div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-radio-group.invalid div.pf-required-flag,
+.pf-position-right.pf-form div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-checkbox-group.invalid div.pf-required-flag {
+  right: auto;
+  left: -86px;
+}
+.pf-position-right.pf-form div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-radio-group div.pf-required-flag,
+.pf-position-right.pf-form div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-position-bottom-right.pf-form div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-position-top-right.pf-form div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-widget-modal.pf-form div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-position-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-position-bottom-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-position-top-right.pf-sitegate div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag,
+.pf-widget-modal.pf-sitegate div.pf-form-required.pf-widget-checkbox-group div.pf-required-flag {
+  right: auto;
+  left: -83px;
 }
 .pf-form.pf-widget-slideout input.pf-field-half-width,
 .pf-sitegate.pf-widget-slideout input.pf-field-half-width,

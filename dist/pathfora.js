@@ -287,6 +287,15 @@
     },
 
     /**
+     * @description Insert a new DOMNode after an existing node
+     * @param   {object}  newNode       new DOM element
+     * @param   {string}  referenceNode existing DOM Element
+     */
+    insertAfter: function (newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    },
+
+    /**
      * @description Add new classes to the DOM node (removes duplicates)
      * @param   {object} DOMNode   DOM element
      * @param   {string} className class name(s)
@@ -970,8 +979,6 @@
       } else {
         parts = total.split('|');
         totalImpressions = parseInt(parts[0], 10) + 1;
-        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? total.split(',') : parts;
 
         if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
           valid = false;
@@ -1001,8 +1008,6 @@
 
       if (hideAfterActionConstraints.confirm && confirm) {
         parts = confirm.split('|');
-        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? confirm.split(',') : parts;
 
         if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
           valid = false;
@@ -1015,8 +1020,6 @@
 
       if (hideAfterActionConstraints.cancel && cancel) {
         parts = cancel.split('|');
-        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? cancel.split(',') : parts;
 
         if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
           valid = false;
@@ -1029,8 +1032,6 @@
 
       if (hideAfterActionConstraints.closed && closed) {
         parts = closed.split('|');
-        // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-        parts = parts.length === 1 ? closed.split(',') : parts;
 
         if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
           valid = false;
@@ -1180,7 +1181,22 @@
             var radioGroupLabel = document.createElement('span');
             radioGroupLabel.className = 'pf-widget-radio-label';
             radioGroupLabel.innerHTML = elem.label;
+
+            if (elem.required === true) {
+              radioGroupLabel.innerHTML += ' <span class="required">*</span>'
+            }
+
             radioGroup.appendChild(radioGroupLabel);
+          }
+
+          if (elem.required === true) {
+            utils.addClass(radioGroup, 'pf-form-required');
+            select.setAttribute('data-required', 'true');
+
+            var reqLabel = document.createElement('div');
+            reqLabel.className = 'pf-required-flag';
+            reqLabel.innerHTML = 'required';
+            radioGroup.appendChild(reqLabel);
           }
 
 
@@ -1210,9 +1226,32 @@
         case 'select':
           var select = document.createElement('select');
           select.className = 'pf-widget-select';
+          select.setAttribute('name', elem.name);
+          select.setAttribute('id', elem.name);
+          var parent = select;
 
           if (elem.required === true) {
+            parent = document.createElement('div');
+            parent.className = 'pf-form-required';
             select.setAttribute('data-required', 'true');
+            parent.appendChild(select);
+
+            var reqLabel = document.createElement('div');
+            reqLabel.className = 'pf-required-flag';
+            reqLabel.innerHTML = 'required';
+            parent.appendChild(reqLabel);
+          }
+
+          if (elem.label) {
+            var selectLabel = document.createElement('label');
+            selectLabel.innerHTML = elem.label;
+            selectLabel.setAttribute('for', elem.name);
+
+            if (elem.required === true) {
+              selectLabel.innerHTML += ' <span class="required">*</span>'
+            }
+
+            core.insertFormElement(form, selectLabel);
           }
 
           if (elem.placeholder) {
@@ -1233,7 +1272,7 @@
             select.appendChild(option);
           }
 
-          core.insertFormElement(form, select);
+          core.insertFormElement(form, parent);
           break;
 
         // Checkbox Input Box
@@ -1241,17 +1280,27 @@
           var checkboxGroup = document.createElement('div');
           checkboxGroup.className = 'pf-widget-checkbox-group';
 
-          if (elem.required === true) {
-            checkboxGroup.setAttribute('data-required', 'true');
-          }
-
           if (elem.label) {
             var checkboxGroupLabel = document.createElement('span');
             checkboxGroupLabel.className = 'pf-widget-checkbox-label';
             checkboxGroupLabel.innerHTML = elem.label;
+
+            if (elem.required === true) {
+              checkboxGroupLabel.innerHTML += ' <span class="required">*</span>'
+            }
+
             checkboxGroup.appendChild(checkboxGroupLabel);
           }
 
+          if (elem.required === true) {
+            utils.addClass(checkboxGroup, 'pf-form-required');
+            checkboxGroup.setAttribute('data-required', 'true');
+
+            var reqLabel = document.createElement('div');
+            reqLabel.className = 'pf-required-flag';
+            reqLabel.innerHTML = 'required';
+            checkboxGroup.appendChild(reqLabel);
+          }
 
           for (var i = 0; i < elem.values.length; i++) {
             var val = elem.values[i];
@@ -1279,17 +1328,39 @@
         case 'textarea':
           var textarea = document.createElement('textarea');
           textarea.setAttribute('name', elem.name);
+          textarea.setAttribute('id', elem.name);
           textarea.setAttribute('rows', 5);
+          parent = textarea;
 
           if (elem.required === true) {
+            parent = document.createElement('div');
+            parent.className = 'pf-form-required';
             textarea.setAttribute('data-required', 'true');
+            parent.appendChild(textarea);
+
+            var reqLabel = document.createElement('div');
+            reqLabel.className = 'pf-required-flag';
+            reqLabel.innerHTML = 'required';
+            parent.appendChild(reqLabel);
+          }
+
+          if (elem.label) {
+            var textareaLabel = document.createElement('label');
+            textareaLabel.innerHTML = elem.label;
+            textareaLabel.setAttribute('for', elem.name);
+
+            if (elem.required === true) {
+              textareaLabel.innerHTML += ' <span class="required">*</span>'
+            }
+
+            core.insertFormElement(form, textareaLabel);
           }
 
           if (elem.placeholder) {
             textarea.placeholder = elem.placeholder;
           }
 
-          core.insertFormElement(form, textarea);
+          core.insertFormElement(form, parent);
           break;
 
         // input
@@ -1297,16 +1368,38 @@
           var input = document.createElement('input');
           input.setAttribute('type', 'text');
           input.setAttribute('name', elem.name);
+          input.setAttribute('id', elem.name);
+          var parent = input;
+
+          if (elem.label) {
+            var inputLabel = document.createElement('label');
+            inputLabel.innerHTML = elem.label;
+            inputLabel.setAttribute('for', elem.name);
+
+            if (elem.required === true) {
+              inputLabel.innerHTML += ' <span class="required">*</span>'
+            }
+
+            core.insertFormElement(form, inputLabel);
+          }
 
           if (elem.required === true) {
+            parent = document.createElement('div');
+            parent.className = 'pf-form-required';
             input.setAttribute('data-required', 'true');
+            parent.appendChild(input);
+
+            var reqLabel = document.createElement('div');
+            reqLabel.className = 'pf-required-flag';
+            reqLabel.innerHTML = 'required';
+            parent.appendChild(reqLabel);
           }
 
           if (elem.placeholder) {
            input.placeholder = elem.placeholder;
           }
 
-          core.insertFormElement(form, input);
+          core.insertFormElement(form, parent);
           break;
 
         }
@@ -1498,18 +1591,19 @@
         if (config.formElements) {
           // remove the existing form fields
           var form = widget.querySelector('form');
+          utils.addClass(form, 'pf-custom-form');
           var childName, elem;
+          var arr = form.children;
 
-          for (elem in form.children) {
-            if (form.children.hasOwnProperty(elem)) {
-              child = form.children[elem];
+          for (var k = 0; k < arr.length; k++) {
+            child = arr[k];
 
-              if (typeof child.getAttribute !== 'undefined') {
-                childName = child.getAttribute('name');
+            if (typeof child.getAttribute !== 'undefined') {
+              childName = child.getAttribute('name');
 
-                if (childName != null) {
-                  form.removeChild(child);
-                }
+              if (childName != null) {
+                form.removeChild(child);
+                k--;
               }
             }
           }
@@ -1634,8 +1728,6 @@
 
         if (val) {
           val = val.split('|');
-          // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-          val = val.length === 1 ? val.split(',') : val;
           ct = Math.min(parseInt(val[0], 10), 9998) + 1;
         } else {
           ct = 1;
@@ -1694,20 +1786,43 @@
 
           // Validate that the form is filled out correctly
           var valid = true,
-              formElements = Array.prototype.slice.call(widgetForm.querySelectorAll('input, textarea, select'));
+              requiredElements = Array.prototype.slice.call(widgetForm.querySelectorAll('[data-required=true]'));
 
-          for (var i = 0; i < formElements.length; i++) {
-            var inputField = formElements[i];
+          for (var i = 0; i < requiredElements.length; i++) {
+            var field = requiredElements[i];
+            var parent = field.parentNode;
 
-            if (inputField.hasAttribute('data-required')) {
-              inputField.setAttribute('data-required', 'true');
 
-              // Check for required field and email validation
-              if (!inputField.value || (inputField.getAttribute('type') === 'email' && inputField.value.indexOf('@') === -1)) {
+            // Check for required field and email validation
+
+            if (utils.hasClass(field, 'pf-widget-radio-group') || utils.hasClass(field, 'pf-widget-checkbox-group')) {
+              utils.removeClass(field, 'invalid');
+
+              var inputs = field.querySelectorAll('input');
+              var count = 0;
+
+              for (var j = 0; j < inputs.length; j++) {
+                var input = inputs[j];
+                if (input.checked) {
+                  count++;
+                }
+              }
+
+              if (count === 0) {
                 valid = false;
-                inputField.setAttribute('data-required', 'active');
-                inputField.focus();
-                break;
+                utils.addClass(field, 'invalid');
+              }
+
+            } else if (parent) {
+              utils.removeClass(parent, 'invalid');
+
+              if (!field.value) {
+                valid = false;
+                utils.addClass(parent, 'invalid');
+
+                if (i === 0) {
+                  field.focus();
+                }
               }
             }
           }
@@ -2164,7 +2279,7 @@
      * @param {Element} htmlElement related DOM element
      */
     trackWidgetAction: function (action, widget, htmlElement) {
-      var child, childName, elem;
+      var child, childName, elem, i;
 
       var params = {
         'pf-widget-id': widget.id,
@@ -2189,12 +2304,36 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
+        if (utils.hasClass(htmlElement, 'pf-custom-form')) {
+          params['pf-custom-form'] = {};
+        }
+
         for (elem in htmlElement.children) {
           if (htmlElement.children.hasOwnProperty(elem)) {
             child = htmlElement.children[elem];
+            childName = child.getAttribute('name');
             if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
-              childName = child.getAttribute('name');
-              params['pf-form-' + childName] = child.value;
+              if (utils.hasClass(htmlElement, 'pf-custom-form')) {
+                params['pf-custom-form'][childName] = child.value;
+              } else {
+                params['pf-form-' + childName] = child.value;
+              }
+            } else if (utils.hasClass(child, 'pf-widget-radio-group') || utils.hasClass(child, 'pf-widget-checkbox-group')) {
+              var values = [],
+                  name = "",
+                  inputs = child.querySelectorAll('input');
+
+              for (i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                if (input.checked) {
+                  name = input.getAttribute('name');
+                  values.push(input.value);
+                }
+              }
+
+              if (name !== "") {
+                params['pf-custom-form'][name] = values;
+              }
             }
           }
         }
@@ -2236,7 +2375,7 @@
       }
 
       params['pf-widget-event'] = action;
-      api.reportData(params);
+      // api.reportData(params);
     },
 
     /**

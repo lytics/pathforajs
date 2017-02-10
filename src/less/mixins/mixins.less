@@ -12,3 +12,18 @@
     @rules();
   }
 }
+
+/* Mixin for mobile boundries */
+.desktop(@rules) {
+  @media screen and (min-width: 736px) , screen and (min-height: 640px) {
+    @rules();
+  }
+}
+
+
+/* Mixin for left aligned widgets */
+.right-widgets(@rules) {
+  .pf-position-right, .pf-position-bottom-right, .pf-position-top-right {
+    @rules();
+  }
+}
