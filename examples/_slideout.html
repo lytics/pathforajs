@@ -15,10 +15,11 @@
     <script>
       var form = pathfora.Form({
         id: 'survey',
-        layout: 'slideout',
+        layout: 'modal',
         position: 'left',
         headline: 'Please complete this survey',
         msg: 'Tell us about yourself and some of your favorite things.',
+        theme: 'custom',
         formElements: [
           {
             'type': 'input',
@@ -99,7 +100,38 @@
         okMessage: 'Send',
         cancelMessage: 'Cancel',
       });
-      window.pathfora.initializeWidgets([form]);
+
+      var form2 = pathfora.Form({
+        id: 'terms',
+        layout: 'slideout',
+        position: 'right',
+        headline: 'Please Agree to our terms',
+        msg: 'blah blah blah',
+        theme: 'custom',
+        formElements: [
+          {
+            'type': 'input',
+            'name': 'name',
+            'placeholder': 'Your Name',
+            'required': true
+          },
+          {
+            'type': 'checkbox-group',
+            'name': 'ice_cream_flavors',
+            'required': true,
+            'values': [
+              {
+                'label': 'I agree',
+                'value': 'agree',
+              }
+            ]
+          }
+        ],
+        okMessage: 'Send',
+        cancelMessage: 'Cancel',
+      });
+
+      window.pathfora.initializeWidgets([form, form2]);
     </script>
   </body>
 </html>

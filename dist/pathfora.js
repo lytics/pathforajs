@@ -44,7 +44,7 @@
           actionText: '#444',
           actionBackground: '#fff',
           cancelText: '#bbb',
-          cancelBackground: '#f1f1f1'
+          cancelBackground: '#f1f1f1',
         }
       },
       displayConditions: {
@@ -1172,15 +1172,13 @@
         case 'radio-group':
           var radioGroup = document.createElement('div');
           radioGroup.className = 'pf-widget-radio-group';
-
-          if (elem.required === true) {
-            radioGroup.setAttribute('data-required', 'true');
-          }
+          var parent = document.createElement('div');
 
           if (elem.label) {
             var radioGroupLabel = document.createElement('span');
             radioGroupLabel.className = 'pf-widget-radio-label';
             radioGroupLabel.innerHTML = elem.label;
+            utils.addClass(parent, 'pf-has-label');
 
             if (elem.required === true) {
               radioGroupLabel.innerHTML += ' <span class="required">*</span>'
@@ -1191,12 +1189,17 @@
 
           if (elem.required === true) {
             utils.addClass(radioGroup, 'pf-form-required');
-            select.setAttribute('data-required', 'true');
+            parent.setAttribute('data-required', 'true');
 
-            var reqLabel = document.createElement('div');
-            reqLabel.className = 'pf-required-flag';
-            reqLabel.innerHTML = 'required';
-            radioGroup.appendChild(reqLabel);
+            if (elem.label) {
+              var reqLabel = document.createElement('div');
+              reqLabel.className = 'pf-required-flag';
+              reqLabel.innerHTML = 'required';
+
+              var reqTriange = document.createElement('span');
+              reqLabel.appendChild(reqTriange);
+              radioGroup.appendChild(reqLabel);
+            }
           }
 
 
@@ -1213,45 +1216,51 @@
               label.className = 'pf-widget-radio';
               label.appendChild(radio);
               label.appendChild(document.createTextNode(val.label));
-              radioGroup.appendChild(label);
+              parent.appendChild(label);
             } else {
               throw new Error('radio button must contain label');
             }
           }
 
+          radioGroup.appendChild(parent);
           core.insertFormElement(form, radioGroup);
           break;
 
         // Select Drop Down
         case 'select':
+          var parent = document.createElement('div');
           var select = document.createElement('select');
           select.className = 'pf-widget-select';
           select.setAttribute('name', elem.name);
           select.setAttribute('id', elem.name);
-          var parent = select;
-
-          if (elem.required === true) {
-            parent = document.createElement('div');
-            parent.className = 'pf-form-required';
-            select.setAttribute('data-required', 'true');
-            parent.appendChild(select);
-
-            var reqLabel = document.createElement('div');
-            reqLabel.className = 'pf-required-flag';
-            reqLabel.innerHTML = 'required';
-            parent.appendChild(reqLabel);
-          }
 
           if (elem.label) {
             var selectLabel = document.createElement('label');
             selectLabel.innerHTML = elem.label;
             selectLabel.setAttribute('for', elem.name);
+            utils.addClass(select, 'pf-has-label');
 
             if (elem.required === true) {
               selectLabel.innerHTML += ' <span class="required">*</span>'
             }
 
-            core.insertFormElement(form, selectLabel);
+            parent.appendChild(selectLabel);
+          }
+
+
+          if (elem.required === true) {
+            parent.className = 'pf-form-required';
+            select.setAttribute('data-required', 'true');
+
+            if (elem.label) {
+              var reqLabel = document.createElement('div');
+              reqLabel.className = 'pf-required-flag';
+              reqLabel.innerHTML = 'required';
+
+              var reqTriange = document.createElement('span');
+              reqLabel.appendChild(reqTriange);
+              parent.appendChild(reqLabel);
+            }
           }
 
           if (elem.placeholder) {
@@ -1272,6 +1281,7 @@
             select.appendChild(option);
           }
 
+          parent.appendChild(select);
           core.insertFormElement(form, parent);
           break;
 
@@ -1279,11 +1289,13 @@
         case 'checkbox-group':
           var checkboxGroup = document.createElement('div');
           checkboxGroup.className = 'pf-widget-checkbox-group';
+          var parent = document.createElement('div');
 
           if (elem.label) {
             var checkboxGroupLabel = document.createElement('span');
             checkboxGroupLabel.className = 'pf-widget-checkbox-label';
             checkboxGroupLabel.innerHTML = elem.label;
+            utils.addClass(parent, 'pf-has-label');
 
             if (elem.required === true) {
               checkboxGroupLabel.innerHTML += ' <span class="required">*</span>'
@@ -1294,12 +1306,17 @@
 
           if (elem.required === true) {
             utils.addClass(checkboxGroup, 'pf-form-required');
-            checkboxGroup.setAttribute('data-required', 'true');
+            parent.setAttribute('data-required', 'true');
 
-            var reqLabel = document.createElement('div');
-            reqLabel.className = 'pf-required-flag';
-            reqLabel.innerHTML = 'required';
-            checkboxGroup.appendChild(reqLabel);
+            if (elem.label) {
+              var reqLabel = document.createElement('div');
+              reqLabel.className = 'pf-required-flag';
+              reqLabel.innerHTML = 'required';
+
+              var reqTriange = document.createElement('span');
+              reqLabel.appendChild(reqTriange);
+              checkboxGroup.appendChild(reqLabel);
+            }
           }
 
           for (var i = 0; i < elem.values.length; i++) {
@@ -1315,90 +1332,102 @@
               label.className = 'pf-widget-checkbox';
               label.appendChild(checkbox);
               label.appendChild(document.createTextNode(val.label));
-              checkboxGroup.appendChild(label);
+              parent.appendChild(label);
             } else {
               throw new Error('checkbox button must contain label');
             }
           }
 
+          checkboxGroup.appendChild(parent);
           core.insertFormElement(form, checkboxGroup);
           break;
 
         // Textarea
         case 'textarea':
+          var parent = document.createElement('div');
           var textarea = document.createElement('textarea');
           textarea.setAttribute('name', elem.name);
           textarea.setAttribute('id', elem.name);
           textarea.setAttribute('rows', 5);
-          parent = textarea;
-
-          if (elem.required === true) {
-            parent = document.createElement('div');
-            parent.className = 'pf-form-required';
-            textarea.setAttribute('data-required', 'true');
-            parent.appendChild(textarea);
-
-            var reqLabel = document.createElement('div');
-            reqLabel.className = 'pf-required-flag';
-            reqLabel.innerHTML = 'required';
-            parent.appendChild(reqLabel);
-          }
 
           if (elem.label) {
             var textareaLabel = document.createElement('label');
             textareaLabel.innerHTML = elem.label;
             textareaLabel.setAttribute('for', elem.name);
+            utils.addClass(textarea, 'pf-has-label');
 
             if (elem.required === true) {
               textareaLabel.innerHTML += ' <span class="required">*</span>'
             }
 
-            core.insertFormElement(form, textareaLabel);
+            parent.appendChild(textareaLabel);
           }
+
+          if (elem.required === true) {
+            parent.className = 'pf-form-required';
+            textarea.setAttribute('data-required', 'true');
+
+            if (elem.label) {
+              var reqLabel = document.createElement('div');
+              reqLabel.className = 'pf-required-flag';
+              reqLabel.innerHTML = 'required';
+
+              var reqTriange = document.createElement('span');
+              reqLabel.appendChild(reqTriange);
+              parent.appendChild(reqLabel);
+            }
+          }
+
 
           if (elem.placeholder) {
             textarea.placeholder = elem.placeholder;
           }
 
+          parent.appendChild(textarea);
           core.insertFormElement(form, parent);
           break;
 
         // input
         case 'input':
+          var parent = document.createElement('div');
           var input = document.createElement('input');
           input.setAttribute('type', 'text');
           input.setAttribute('name', elem.name);
           input.setAttribute('id', elem.name);
-          var parent = input;
 
           if (elem.label) {
             var inputLabel = document.createElement('label');
             inputLabel.innerHTML = elem.label;
             inputLabel.setAttribute('for', elem.name);
+            utils.addClass(input, 'pf-has-label');
 
             if (elem.required === true) {
               inputLabel.innerHTML += ' <span class="required">*</span>'
             }
 
-            core.insertFormElement(form, inputLabel);
+            parent.appendChild(inputLabel);
           }
 
           if (elem.required === true) {
-            parent = document.createElement('div');
             parent.className = 'pf-form-required';
             input.setAttribute('data-required', 'true');
-            parent.appendChild(input);
 
-            var reqLabel = document.createElement('div');
-            reqLabel.className = 'pf-required-flag';
-            reqLabel.innerHTML = 'required';
-            parent.appendChild(reqLabel);
+            if (elem.label) {
+              var reqLabel = document.createElement('div');
+              reqLabel.className = 'pf-required-flag';
+              reqLabel.innerHTML = 'required';
+
+              var reqTriange = document.createElement('span');
+              reqLabel.appendChild(reqTriange);
+              parent.appendChild(reqLabel);
+            }
           }
 
           if (elem.placeholder) {
            input.placeholder = elem.placeholder;
           }
 
+          parent.appendChild(input);
           core.insertFormElement(form, parent);
           break;
 
@@ -1792,36 +1821,32 @@
             var field = requiredElements[i];
             var parent = field.parentNode;
 
-
-            // Check for required field and email validation
-
-            if (utils.hasClass(field, 'pf-widget-radio-group') || utils.hasClass(field, 'pf-widget-checkbox-group')) {
-              utils.removeClass(field, 'invalid');
-
-              var inputs = field.querySelectorAll('input');
-              var count = 0;
-
-              for (var j = 0; j < inputs.length; j++) {
-                var input = inputs[j];
-                if (input.checked) {
-                  count++;
-                }
-              }
-
-              if (count === 0) {
-                valid = false;
-                utils.addClass(field, 'invalid');
-              }
-
-            } else if (parent) {
+            if (parent) {
               utils.removeClass(parent, 'invalid');
 
-              if (!field.value) {
-                valid = false;
-                utils.addClass(parent, 'invalid');
+              if (utils.hasClass(parent, 'pf-widget-radio-group') || utils.hasClass(parent, 'pf-widget-checkbox-group'))  {
+                var inputs = field.querySelectorAll('input');
+                var count = 0;
 
-                if (i === 0) {
-                  field.focus();
+                for (var j = 0; j < inputs.length; j++) {
+                  var input = inputs[j];
+                  if (input.checked) {
+                    count++;
+                  }
+                }
+
+                if (count === 0) {
+                  valid = false;
+                  utils.addClass(parent, 'invalid');
+                }
+              } else {
+                if (!field.value) {
+                  valid = false;
+                  utils.addClass(parent, 'invalid');
+
+                  if (i === 0) {
+                    field.focus();
+                  }
                 }
               }
             }
@@ -2177,6 +2202,10 @@
           contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
           fields = widget.querySelectorAll('input, textarea, select'),
           branding = widget.querySelector('.branding svg'),
+          required = widget.querySelectorAll('.pf-required-flag'),
+          requiredAsterisk = widget.querySelectorAll('span.required'),
+          requiredTriange = widget.querySelectorAll('.pf-required-flag:before'),
+          requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
           socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
 
       if (colors.background) {
@@ -2190,6 +2219,29 @@
       if (colors.fieldBackground) {
         for (i = 0; i < fields.length; i++) {
           fields[i].style.backgroundColor = colors.fieldBackground;
+        }
+      }
+
+      if (colors.required) {
+        for (i = 0; i < required.length; i++) {
+          required[i].style.backgroundColor = colors.required;
+
+          var triange = required[i].querySelector('span');
+          triange.style.borderRightColor = colors.required;
+        }
+
+        for (i = 0; i < requiredInline.length; i++) {
+          requiredInline[i].style.borderColor = colors.required;
+        }
+
+        for (i = 0; i < requiredAsterisk.length; i++) {
+          requiredAsterisk[i].style.color = colors.required;
+        }
+      }
+
+      if (colors.requiredText) {
+        for (i = 0; i < required.length; i++) {
+          required[i].style.color = colors.requiredText;
         }
       }
 
