@@ -1739,10 +1739,8 @@
                 })
               });
             }
-
             return true;
           }
-
           return false;
         };
 
@@ -2232,14 +2230,8 @@
         for (elem in htmlElement.children) {
           if (htmlElement.children.hasOwnProperty(elem)) {
             child = htmlElement.children[elem];
-            childName = child.getAttribute('name');
-            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
-              if (utils.hasClass(htmlElement, 'pf-custom-form')) {
-                params['pf-custom-form'][childName] = child.value;
-              } else {
-                params['pf-form-' + childName] = child.value;
-              }
-            } else if (utils.hasClass(child, 'pf-widget-radio-group') || utils.hasClass(child, 'pf-widget-checkbox-group')) {
+
+            if (utils.hasClass(child, 'pf-widget-radio-group') || utils.hasClass(child, 'pf-widget-checkbox-group')) {
               var values = [],
                   name = '',
                   inputs = child.querySelectorAll('input');
@@ -2254,6 +2246,14 @@
 
               if (name !== '') {
                 params['pf-custom-form'][name] = values;
+              }
+            } else if (child && typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+              params['pf-form-' + child.getAttribute('name')] = child.value;
+            } else if (utils.hasClass(htmlElement, 'pf-custom-form')) {
+              var val = child.firstChild;
+
+              if (val && typeof val.getAttribute !== 'undefined' && val.getAttribute('name') !== null) {
+                params['pf-custom-form'][val.getAttribute('name')] = val.value;
               }
             }
           }
