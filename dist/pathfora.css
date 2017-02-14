@@ -117,6 +117,16 @@
 .pf-widget select.default {
   color: #a9a9a9;
 }
+.pf-widget form:not(.pf-custom-form) input[type=text],
+.pf-widget form:not(.pf-custom-form) input[type=email],
+.pf-widget form:not(.pf-custom-form) select,
+.pf-widget form:not(.pf-custom-form) textarea {
+  margin-bottom: 10px;
+}
+.pf-widget form:not(.pf-custom-form) [data-required=true].invalid {
+  border: 1px solid #f12626;
+  margin: -1px -1px 9px -1px;
+}
 .pf-widget input[type=text],
 .pf-widget input[type=email],
 .pf-widget select {
@@ -227,9 +237,6 @@
   background-position: center center;
   background-repeat: no-repeat;
 }
-.pf-custom-form {
-  text-align: left;
-}
 /* Type Styles */
 .pf-subscription form {
   width: 100%;
@@ -271,24 +278,31 @@
   clear: both;
   margin-top: 5px;
 }
+.pf-form form.pf-custom-form > div,
+.pf-sitegate form.pf-custom-form > div {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.pf-form .pf-form-label,
+.pf-sitegate .pf-form-label {
+  font-weight: bold;
+}
+.pf-form .pf-widget-radio,
+.pf-sitegate .pf-widget-radio,
+.pf-form .pf-widget-checkbox,
+.pf-sitegate .pf-widget-checkbox {
+  display: block;
+  padding: 4px 4px;
+}
+.pf-form .pf-widget-radio input,
+.pf-sitegate .pf-widget-radio input,
+.pf-form .pf-widget-checkbox input,
+.pf-sitegate .pf-widget-checkbox input {
+  margin-right: 10px;
+}
 .pf-form .pf-has-label,
 .pf-sitegate .pf-has-label {
   margin-top: 7px;
-}
-.pf-form .pf-widget-radio-group,
-.pf-sitegate .pf-widget-radio-group,
-.pf-form .pf-widget-checkbox-group,
-.pf-sitegate .pf-widget-checkbox-group {
-  text-align: left;
-}
-.pf-form form > div,
-.pf-sitegate form > div {
-  margin-bottom: 10px;
-}
-.pf-form form > div > label,
-.pf-sitegate form > div > label {
-  font-weight: bold;
-  text-align: left;
 }
 .pf-form div.pf-form-required,
 .pf-sitegate div.pf-form-required {
@@ -337,33 +351,9 @@
   content: '';
   border-right: 6px solid #f12626;
 }
-.pf-form span.required,
-.pf-sitegate span.required {
+.pf-form div.pf-form-required span.required,
+.pf-sitegate div.pf-form-required span.required {
   color: #f12626;
-}
-.pf-form .pf-widget-radio-group span.pf-widget-radio-label,
-.pf-sitegate .pf-widget-radio-group span.pf-widget-radio-label {
-  font-weight: bold;
-  display: inline-block;
-  margin-bottom: 4px;
-}
-.pf-form .pf-widget-checkbox-group span.pf-widget-checkbox-label,
-.pf-sitegate .pf-widget-checkbox-group span.pf-widget-checkbox-label {
-  font-weight: bold;
-  display: inline;
-}
-.pf-form .pf-widget-radio,
-.pf-sitegate .pf-widget-radio,
-.pf-form .pf-widget-checkbox,
-.pf-sitegate .pf-widget-checkbox {
-  display: block;
-  padding: 4px 4px;
-}
-.pf-form .pf-widget-radio input,
-.pf-sitegate .pf-widget-radio input,
-.pf-form .pf-widget-checkbox input,
-.pf-sitegate .pf-widget-checkbox input {
-  margin-right: 10px;
 }
 .pf-form.pf-widget-slideout input.pf-field-half-width,
 .pf-sitegate.pf-widget-slideout input.pf-field-half-width,

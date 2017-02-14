@@ -44,7 +44,7 @@
           actionText: '#444',
           actionBackground: '#fff',
           cancelText: '#bbb',
-          cancelBackground: '#f1f1f1',
+          cancelBackground: '#f1f1f1'
         }
       },
       displayConditions: {
@@ -249,15 +249,6 @@
      */
     hasClass: function (DOMNode, className) {
       return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
-    },
-
-    /**
-     * @description Insert a new DOMNode after an existing node
-     * @param   {object}  newNode       new DOM element
-     * @param   {string}  referenceNode existing DOM Element
-     */
-    insertAfter: function (newNode, referenceNode) {
-        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     },
 
     /**
@@ -1122,12 +1113,12 @@
      * @param {object} elem
      * @param {object} form
      */
-    buildFormElement: function(elem, form) {
-      var content, i, val,
+    buildFormElement: function (elem, form) {
+      var content, i, val, label,
           wrapper = document.createElement('div'),
-          isGroup = elem.hasOwnProperty('groupType'); 
-      // group elements include: checkbox groups 
+          isGroup = elem.hasOwnProperty('groupType');
 
+      // group elements include: checkbox groups
       if (isGroup) {
         wrapper.className = 'pf-widget-' + elem.type;
         content = document.createElement('div');
@@ -1147,21 +1138,19 @@
       }
 
       if (elem.label) {
-        var label;
-
         if (isGroup) {
           label = document.createElement('span');
-          label.className = 'pf-widget-' + elem.groupType +'-label';
         } else {
           label = document.createElement('label');
           label.setAttribute('for', elem.name);
         }
 
         label.innerHTML = elem.label;
+        label.className = 'pf-form-label';
         utils.addClass(content, 'pf-has-label');
 
         if (elem.required === true) {
-          label.innerHTML += ' <span class="required">*</span>'
+          label.innerHTML += ' <span class="required">*</span>';
         }
 
         wrapper.appendChild(label);
@@ -1206,7 +1195,7 @@
             input.setAttribute('name', elem.name);
 
             if (val.label) {
-              var label = document.createElement('label');
+              label = document.createElement('label');
               label.className = 'pf-widget-' + elem.groupType;
               label.appendChild(input);
               label.appendChild(document.createTextNode(val.label));
@@ -1455,7 +1444,7 @@
           // remove the existing form fields
           var form = widget.querySelector('form');
           utils.addClass(form, 'pf-custom-form');
-          var childName, elem;
+          var childName;
           var arr = form.children;
 
           for (var k = 0; k < arr.length; k++) {
@@ -1543,7 +1532,7 @@
 
         for (i = 0; i < selects.length; i++) {
           // default class indicates the placeholder text color
-          if (selects[i].value === "") {
+          if (selects[i].value === '') {
             utils.addClass(selects[i], 'default');
           }
 
@@ -1656,32 +1645,43 @@
             var field = requiredElements[i];
             var parent = field.parentNode;
 
-            if (parent) {
-              utils.removeClass(parent, 'invalid');
+            if (utils.hasClass(widgetForm, 'pf-custom-form')) {
+              if (parent) {
+                utils.removeClass(parent, 'invalid');
 
-              if (utils.hasClass(parent, 'pf-widget-radio-group') || utils.hasClass(parent, 'pf-widget-checkbox-group'))  {
-                var inputs = field.querySelectorAll('input');
-                var count = 0;
+                if (utils.hasClass(parent, 'pf-widget-radio-group') || utils.hasClass(parent, 'pf-widget-checkbox-group')) {
+                  var inputs = field.querySelectorAll('input');
+                  var count = 0;
 
-                for (var j = 0; j < inputs.length; j++) {
-                  var input = inputs[j];
-                  if (input.checked) {
-                    count++;
+                  for (var j = 0; j < inputs.length; j++) {
+                    var input = inputs[j];
+                    if (input.checked) {
+                      count++;
+                    }
                   }
-                }
 
-                if (count === 0) {
-                  valid = false;
-                  utils.addClass(parent, 'invalid');
-                }
-              } else {
-                if (!field.value) {
+                  if (count === 0) {
+                    valid = false;
+                    utils.addClass(parent, 'invalid');
+                  }
+                } else if (!field.value) {
                   valid = false;
                   utils.addClass(parent, 'invalid');
 
                   if (i === 0) {
                     field.focus();
                   }
+                }
+              }
+            // legacy support old, non-custom forms
+            } else if (field.hasAttribute('data-required')) {
+              utils.removeClass(field, 'invalid');
+
+              if (!field.value || (field.getAttribute('type') === 'email' && field.value.indexOf('@') === -1)) {
+                valid = false;
+                utils.addClass(field, 'invalid');
+                if (i === 0) {
+                  field.focus();
                 }
               }
             }
@@ -2039,7 +2039,6 @@
           branding = widget.querySelector('.branding svg'),
           required = widget.querySelectorAll('.pf-required-flag'),
           requiredAsterisk = widget.querySelectorAll('span.required'),
-          requiredTriange = widget.querySelectorAll('.pf-required-flag:before'),
           requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
           socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
 
@@ -2207,7 +2206,7 @@
               }
             } else if (utils.hasClass(child, 'pf-widget-radio-group') || utils.hasClass(child, 'pf-widget-checkbox-group')) {
               var values = [],
-                  name = "",
+                  name = '',
                   inputs = child.querySelectorAll('input');
 
               for (i = 0; i < inputs.length; i++) {
@@ -2218,7 +2217,7 @@
                 }
               }
 
-              if (name !== "") {
+              if (name !== '') {
                 params['pf-custom-form'][name] = values;
               }
             }
@@ -2262,7 +2261,7 @@
       }
 
       params['pf-widget-event'] = action;
-      // api.reportData(params);
+      api.reportData(params);
     },
 
     /**

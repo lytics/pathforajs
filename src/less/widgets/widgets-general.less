@@ -76,7 +76,6 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     border-radius: 3px;
     font-size: 14px;
-    // margin: 1px 1px 10px 1px;
     width: 100%;
     padding: 10px 15px;
     background: white;
@@ -118,6 +117,19 @@
 
     &.default {
       color: @placeholder;
+    }
+  }
+
+  form:not(.pf-custom-form) {
+    input[type=text],
+    input[type=email],
+    select, textarea {
+      margin-bottom: 10px;
+    }
+
+    [data-required=true].invalid {
+      border: 1px solid @required;
+      margin: -1px -1px 9px -1px;
     }
   }
 
@@ -256,10 +268,6 @@
   }
 }
 
-.pf-custom-form {
-  text-align: left;
-}
-
 /* Type Styles */
 .pf-subscription {
   form {
@@ -307,21 +315,28 @@
     margin-top: 5px;
   }
 
+  form.pf-custom-form {
+    & > div {
+      text-align: left;
+      margin-bottom: 10px;
+    }
+  }
+
+  .pf-form-label {
+    font-weight: bold;
+  }
+
+  .pf-widget-radio, .pf-widget-checkbox {
+    display: block;
+    padding: 4px 4px;
+  
+    input {
+      margin-right: 10px;
+    }
+  }
+
   .pf-has-label {
     margin-top: 7px;
-  }
-
-  .pf-widget-radio-group, .pf-widget-checkbox-group {
-    text-align: left;
-  }
-
-  form > div {
-    margin-bottom: 10px;
-  }
-
-  form > div > label {
-    font-weight: bold;
-    text-align: left;
   }
 
   div.pf-form-required {
@@ -369,35 +384,9 @@
         border-right: 6px solid @required;
       }
     }
-  }
 
-  span.required {
-    color: @required;
-  }
-
-  .pf-widget-radio-group {
-    span.pf-widget-radio-label {
-      font-weight: bold;
-      display: inline-block;
-      margin-bottom: 4px;
-    }
-  }
-
-  .pf-widget-checkbox-group {
-    span.pf-widget-checkbox-label {
-      font-weight: bold;
-      display: inline;
-    }
-  }
-
-  .pf-widget-radio, .pf-widget-checkbox {
-    display: block;
-    padding: 4px 4px;
-  }
-
-  .pf-widget-radio, .pf-widget-checkbox {
-    input {
-      margin-right: 10px;
+    span.required {
+      color: @required;
     }
   }
 }

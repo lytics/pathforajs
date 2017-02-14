@@ -131,7 +131,26 @@
         cancelMessage: 'Cancel',
       });
 
-      window.pathfora.initializeWidgets([form, form2]);
+      var form3 = pathfora.Form({
+        id: 'default',
+        layout: 'slideout',
+        position: 'left',
+        headline: 'Please Agree to our terms',
+        msg: 'blah blah blah',
+        okMessage: 'Send',
+        cancelMessage: 'Cancel',
+        fields: {
+          phone: true
+        },
+        required: {
+          phone: true
+        },
+        placeholders: {
+          name: "your name"
+        }
+      });
+
+      window.pathfora.initializeWidgets([form, form2, form3]);
     </script>
   </body>
 </html>
