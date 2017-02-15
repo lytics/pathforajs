@@ -2198,7 +2198,7 @@
      * @param {Element} htmlElement related DOM element
      */
     trackWidgetAction: function (action, widget, htmlElement) {
-      var child, childName, elem, i;
+      var child, elem, i;
 
       var params = {
         'pf-widget-id': widget.id,
@@ -2223,6 +2223,7 @@
         pathforaDataObject.cancelledActions.push(params);
         break;
       case 'submit':
+      case 'unlock':
         if (utils.hasClass(htmlElement, 'pf-custom-form')) {
           params['pf-custom-form'] = {};
         }
@@ -2249,8 +2250,8 @@
               }
             } else if (child && typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
               params['pf-form-' + child.getAttribute('name')] = child.value;
-            } else if (utils.hasClass(htmlElement, 'pf-custom-form')) {
-              var val = child.firstChild;
+            } else if (utils.hasClass(htmlElement, 'pf-custom-form') && child && child.querySelector) {
+              var val = child.querySelector('input, select, textarea');
 
               if (val && typeof val.getAttribute !== 'undefined' && val.getAttribute('name') !== null) {
                 params['pf-custom-form'][val.getAttribute('name')] = val.value;
@@ -2258,21 +2259,14 @@
             }
           }
         }
+
+        if (action === 'unlock') {
+          utils.saveCookie('PathforaUnlocked_' + widget.id, true, core.expiration);
+        }
+
         break;
       case 'subscribe':
         params['pf-form-email'] = htmlElement.elements.email.value;
-        break;
-      case 'unlock':
-        for (elem in htmlElement.children) {
-          if (htmlElement.children.hasOwnProperty(elem)) {
-            child = htmlElement.children[elem];
-            if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
-              childName = child.getAttribute('name');
-              params['pf-form-' + childName] = child.value;
-            }
-          }
-        }
-        utils.saveCookie('PathforaUnlocked_' + widget.id, true, core.expiration);
         break;
       case 'hover':
         if (utils.hasClass(htmlElement, 'pf-widget-ok')) {

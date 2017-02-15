@@ -1622,6 +1622,62 @@ describe('Widgets', function () {
     expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
   });
 
+  it('should account for required colors on validation', function () {
+    var modal = new pathfora.Form({
+      id: 'required-color-modal',
+      layout: 'modal',
+      msg: 'Custom style test',
+      headline: 'Hello',
+      theme: 'custom',
+      colors: {
+        required: '#ba00a6',
+        requiredText: '#ebcee8'
+      },
+      formElements: [
+        {
+          'type': 'radio-group',
+          'label': 'What\'s your favorite color?',
+          'name': 'favorite_color',
+          'required': true,
+          'values': [
+            {
+              'label': 'Red',
+              'value': 'red'
+            },
+            {
+              'label': 'Blue',
+              'value': 'blue'
+            },
+            {
+              'label': 'Green',
+              'value': 'green'
+            }
+          ]
+        },
+        {
+          'type': 'input',
+          'name': 'name',
+          'placeholder': 'Your Name',
+          'required': true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    var asterisk = widget.find('.pf-form-label span.required');
+    var flag = widget.find('.pf-required-flag');
+
+    expect(asterisk.css('color')).toBe('rgb(186, 0, 166)');
+    expect(flag.css('background-color')).toBe('rgb(186, 0, 166)');
+    expect(flag.find('span').css('border-right-color')).toBe('rgb(186, 0, 166)');
+    expect(flag.css('color')).toBe('rgb(235, 206, 232)');
+
+    var input = widget.find('input[data-required=true]:not(.pf-has-label)');
+    expect(input.css('border-color')).toBe('rgb(186, 0, 166)');
+  });
+
   // -------------------------
   //  CALLBACKS
   // -------------------------

@@ -13,10 +13,8 @@
     <script src='https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js'></script>
     <script src='../dist/pathfora.js'></script>
     <script>
-      var form = pathfora.Form({
+      var form = pathfora.SiteGate({
         id: 'survey',
-        layout: 'modal',
-        position: 'left',
         headline: 'Please complete this survey',
         msg: 'Tell us about yourself and some of your favorite things.',
         theme: 'custom',
@@ -150,7 +148,7 @@
         }
       });
 
-      window.pathfora.initializeWidgets([form, form2, form3]);
+      window.pathfora.initializeWidgets([form]);
     </script>
   </body>
 </html>
