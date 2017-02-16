@@ -1,13 +1,17 @@
-Pathfora allows for some customization on form elements including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
+Pathfora now allows for fully customized form fields for modules of type [form](/types/form.md) and [gate](/types/form.md). These fields includs text inputs, texarea, select boxes, checkboxes, and radio buttons.
 
-## fields
+Try out our [form schema builder](/customization/form_builder.md) to easily build forms with a drag and drop interface, and output a `formElements` object for your module config.
 
-Select which fields should be a part of the module's form. By default, a [form](/types/form.md) module has the name, email, title, and message fields. And a [gate](/types/form.md) module has the name, email, company, and title fields. 
+Legacy form documentation is also available [here](/customization/form_lagacy.md)
+
+## formElements
+
+This is a list of form element objects to include in the module's form. The order of these elements determines the order in which they render in the module.
 
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>fields</code> object</td>
+      <td colspan="3" align="center">object in <code>formElements</code> array</td>
     </tr>
     <tr>
       <th>Key</th>
@@ -17,56 +21,37 @@ Select which fields should be a part of the module's form. By default, a [form](
   </thead>
 
   <tr>
+    <td>type</td>
+    <td>string</td>
+    <td>type of form element: checkbox-group, radio-group, select, text, or textarea</td>
+  </tr>
+  <tr>
     <td>name</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for the user's full name</td>
+    <td>string</td>
+    <td>name attribute of the field, this is the primary identifier used in tracking</td>
   </tr>
   <tr>
-    <td>email</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for the user's email address</td>
+    <td>label</td>
+    <td>string</td>
+    <td><code>optional</code> label to give the field context to the user/td>
   </tr>
   <tr>
-    <td>title</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for the user's job title</td>
+    <td>placeholder</td>
+    <td>string</td>
+    <td><code>optional</code> placeholder text for text input, textarea, and select fields</td>
   </tr>
   <tr>
-    <td>company</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for the user's company of employment</td>
-  </tr>
-  <tr>
-    <td>phone</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for the user's phone number</td>
-  </tr>
-  <tr>
-    <td>referralEmail</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide input for a referral email</td>
-  </tr>
-  <tr>
-    <td>message</td>
-    <td>boolean</td>
-    <td><code>optional</code> show or hide texarea field for comments or a longer form message</td>
+    <td>values</td>
+    <td>array</td>
+    <td><code>optional</code> list of options for checkbox, radio, or select elements.</td>
   </tr>
 </table>
 
-<h3>Show/Hide Fields - <a href="../../examples/preview/customization/form/fields.html" target="_blank">Live Preview</a></h3>
-
-![Form Fields](../examples/img/customization/form/fields.png)
-
-<pre data-src="../../examples/src/customization/form/fields.js"></pre>
-
-## required
-
-Set which fields are required to be filled out by the user to submit the form. By default only name and email fields are required for all modules with forms.
 
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>required</code> object</td>
+      <td colspan="3" align="center">object in <code>values</code> array</td>
     </tr>
     <tr>
       <th>Key</th>
@@ -76,108 +61,22 @@ Set which fields are required to be filled out by the user to submit the form. B
   </thead>
 
   <tr>
-    <td>name</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the name field</td>
+    <td>label</td>
+    <td>string</td>
+    <td>the value of the option shown in the form to the user</td>
   </tr>
   <tr>
-    <td>email</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the email address field</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the job title field</td>
-  </tr>
-  <tr>
-    <td>company</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the company of employment field</td>
-  </tr>
-  <tr>
-    <td>phone</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the phone number field</td>
-  </tr>
-  <tr>
-    <td>referralEmail</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the referral email field</td>
-  </tr>
-  <tr>
-    <td>message</td>
-    <td>boolean</td>
-    <td><code>optional</code> set the required status for the long form message field</td>
+    <td>value</td>
+    <td>string</td>
+    <td>the value attribute of the option or input element, used in tracking</td>
   </tr>
 </table>
 
+<h3>Custom Forms - <a href="../../examples/preview/customization/form/custom.html" target="_blank">Live Preview</a></h3>
 
-<h3>Required Fields - <a href="../../examples/preview/customization/form/required.html" target="_blank">Live Preview</a></h3>
+![Form Fields](../examples/img/customization/form/custom.png)
 
-![Required Form Fields](../examples/img/customization/form/required.png)
-
-<pre data-src="../../examples/src/customization/form/required.js"></pre>
-
-
-## placeholders
-
-Set the placeholder text for form elements.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="3" align="center"><code>placeholders</code> object</td>
-    </tr>
-    <tr>
-      <th>Key</th>
-      <th>Type</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-
-  <tr>
-    <td>name</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the name field</td>
-  </tr>
-  <tr>
-    <td>email</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the email address field</td>
-  </tr>
-  <tr>
-    <td>title</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the job title field</td>
-  </tr>
-  <tr>
-    <td>company</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the company of employment field</td>
-  </tr>
-  <tr>
-    <td>phone</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the phone number field</td>
-  </tr>
-  <tr>
-    <td>referralEmail</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the referral email field</td>
-  </tr>
-  <tr>
-    <td>message</td>
-    <td>string</td>
-    <td><code>optional</code> set the placeholder text for the long form message field</td>
-  </tr>
-</table>
-
-<h3>Placeholders - <a href="../../examples/preview/customization/form/placeholders.html" target="_blank">Live Preview</a></h3>
-
-![Form Field Placeholders](../examples/img/customization/form/placeholders.png)
-
-<pre data-src="../../examples/src/customization/form/placeholders.js"></pre>
+<pre data-src="../../examples/src/customization/form/custom.js"></pre>
 
 
 ## success

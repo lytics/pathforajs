@@ -21,6 +21,8 @@ pages:
       - Color Themes: customization/themes.md
       - Custom CSS: customization/css.md
       - Form Elements: customization/form.md
+      - Form Schema Builder: customization/form_builder.md
+      - Form Elements (Legacy): customization/form_legacy.md
       - Responsive Styles: customization/responsive.md
     - A/B Testing: ab_testing.md
     - Audience Targeting: targeting.md
@@ -32,8 +34,12 @@ pages:
     - Element Toggle: toggle.md
     - Inline Content Recommendations: inline_content.md
 extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
   - assets/pre.js
+  - assets/builder.js
+  - assets/vendor/formbuilder.js
 extra_css:
   - assets/examples.css
+  - assets/vendor/formbuilder.min.css
 
 theme: readthedocs
