@@ -3184,7 +3184,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.0.15';
+    this.version = '0.0.16';
 
     /**
      * @public
