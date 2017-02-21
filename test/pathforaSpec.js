@@ -2257,7 +2257,7 @@ describe('Widgets', function () {
   //  FORM BUILDER
   // -------------------------
 
-  it('should track custom fields via the custom', function () {
+  it('should track custom fields to lytics', function () {
     var customForm = new pathfora.Form({
       id: 'custom-form-1',
       msg: 'custom form',

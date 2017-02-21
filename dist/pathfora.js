@@ -1475,7 +1475,7 @@
         }
 
         // Check if custom form is defined
-        if (config.formElements) {
+        if (config.formElements && config.formElements.length) {
           // remove the existing form fields
           var form = widget.querySelector('form');
           utils.addClass(form, 'pf-custom-form');
@@ -1529,11 +1529,10 @@
 
           // Hide fields
           Object.keys(config.fields).forEach(function (field) {
-            var element = getFormElement(field),
-                parent = element.parentNode;
+            var element = getFormElement(field);
 
-            if (element && !config.fields[field] && parent) {
-              parent.removeChild(element);
+            if (element && !config.fields[field] && element.parentNode) {
+              element.parentNode.removeChild(element);
             }
           });
 
@@ -1678,10 +1677,10 @@
 
           for (var i = 0; i < requiredElements.length; i++) {
             var field = requiredElements[i];
-            var parent = field.parentNode;
 
             if (utils.hasClass(widgetForm, 'pf-custom-form')) {
-              if (parent) {
+              if (field.parentNode) {
+                var parent = field.parentNode;
                 utils.removeClass(parent, 'invalid');
 
                 if (utils.hasClass(parent, 'pf-widget-radio-group') || utils.hasClass(parent, 'pf-widget-checkbox-group')) {

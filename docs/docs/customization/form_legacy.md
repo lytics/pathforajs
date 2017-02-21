@@ -1,4 +1,4 @@
- Pathfora allows for some customization on form elements including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
+Pathfora now supports fully customizable [form elements](/types/form.md). This doc outlines the customization options for deprecated forms including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
 
 ## fields
 
@@ -178,44 +178,3 @@ Set the placeholder text for form elements.
 ![Form Field Placeholders](../examples/img/customization/form/placeholders.png)
 
 <pre data-src="../../examples/src/customization/form/placeholders.js"></pre>
-
-
-## success
-
-Set a custom success/confirmation message to show after the user submits a form before hiding the module.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="3" align="center"><code>success</code> object</td>
-    </tr>
-    <tr>
-      <th>Key</th>
-      <th>Type</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-
-  <tr>
-    <td>headline</td>
-    <td>string</td>
-    <td>header or title text for the success state</td>
-  </tr>
-  <tr>
-    <td>msg</td>
-    <td>string</td>
-    <td>text message content of the success state</td>
-  </tr>
-  <tr>
-    <td>delay</td>
-    <td>int</td>
-    <td>how long in seconds to show the success state before hiding the module. if 0, the module will not hide until the user closes it.</td>
-  </tr>
-</table>
-
-<h3>Success State - <a href="../../examples/preview/customization/form/success.html" target="_blank">Live Preview</a></h3>
-
-![Form Field Placeholders](../examples/img/customization/form/success.png)
-
-<pre data-src="../../examples/src/customization/form/success.js"></pre>
-

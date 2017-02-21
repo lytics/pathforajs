@@ -1,6 +1,6 @@
-Pathfora now allows for fully customized form fields for modules of type [form](/types/form.md) and [gate](/types/form.md). These fields includs text inputs, texarea, select boxes, checkboxes, and radio buttons.
+Pathfora now allows for fully customized form fields for modules of type [form](/types/form.md) and [gate](/types/form.md). These input fields include text, texarea, select, checkbox, and radio button.
 
-Try out our [form schema builder](/customization/form_builder.md) to easily build forms with a drag and drop interface, and output a `formElements` object for your module config.
+Try out our [form schema builder](/customization/form_builder.md) to easily build forms with a drag and drop interface and output a `formElements` object for your module config.
 
 Legacy form documentation is also available [here](/customization/form_lagacy.md)
 

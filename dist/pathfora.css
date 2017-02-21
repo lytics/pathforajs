@@ -185,10 +185,13 @@
   visibility: visible;
   opacity: 1;
 }
+.pf-widget .branding {
+  position: relative;
+}
 .pf-widget .branding svg {
   position: absolute;
-  bottom: 11px;
-  right: 15px;
+  bottom: -25px;
+  right: -25px;
   fill: #888;
   opacity: 0.25;
   width: 120px;
@@ -292,7 +295,7 @@
 .pf-form .pf-widget-checkbox,
 .pf-sitegate .pf-widget-checkbox {
   display: block;
-  padding: 4px 4px;
+  padding: 4px;
 }
 .pf-form .pf-widget-radio input,
 .pf-sitegate .pf-widget-radio input,
@@ -653,8 +656,8 @@
   }
 }
 .pf-widget-slideout .branding svg {
-  bottom: 7px;
-  right: 10px;
+  bottom: -22px;
+  right: -20px;
   width: 100px;
 }
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {
