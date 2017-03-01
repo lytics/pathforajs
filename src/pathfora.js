@@ -816,6 +816,14 @@
           switch (phrase.match) {
           // simple match
           case 'simple':
+            if (simpleurl.slice(-1) === '/') {
+              simpleurl = simpleurl.slice(0, -1);
+            }
+
+            if (phrase.value.slice(-1) === '/') {
+              phrase.value = phrase.value.slice(0, -1);
+            }
+
             if (simpleurl === phrase.value) {
               valid = true;
             }
