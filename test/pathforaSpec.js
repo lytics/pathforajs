@@ -3280,6 +3280,53 @@ describe('Widgets', function () {
     window.history.pushState({}, '', '/context.html');
   });
 
+  it('should ignore trailing slashes in the simple match rule', function () {
+    window.history.pushState({}, '', '/test/');
+
+    var form1 = new pathfora.Form({
+      id: 'simple-match1',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/test'
+          }
+        ]
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      id: 'simple-match2',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/test/'
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([form1, form2]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    widget = $('#' + form2.id);
+    expect(widget.length).toBe(1);
+
+    window.history.pushState({}, '', '/context.html');
+  });
+
+
   it('should ignore order of query params for exact rule', function () {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1');
 
