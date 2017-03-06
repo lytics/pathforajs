@@ -1622,6 +1622,62 @@ describe('Widgets', function () {
     expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
   });
 
+  it('should account for required colors on validation', function () {
+    var modal = new pathfora.Form({
+      id: 'required-color-modal',
+      layout: 'modal',
+      msg: 'Custom style test',
+      headline: 'Hello',
+      theme: 'custom',
+      colors: {
+        required: '#ba00a6',
+        requiredText: '#ebcee8'
+      },
+      formElements: [
+        {
+          'type': 'radio-group',
+          'label': 'What\'s your favorite color?',
+          'name': 'favorite_color',
+          'required': true,
+          'values': [
+            {
+              'label': 'Red',
+              'value': 'red'
+            },
+            {
+              'label': 'Blue',
+              'value': 'blue'
+            },
+            {
+              'label': 'Green',
+              'value': 'green'
+            }
+          ]
+        },
+        {
+          'type': 'input',
+          'name': 'name',
+          'placeholder': 'Your Name',
+          'required': true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    var asterisk = widget.find('.pf-form-label span.required');
+    var flag = widget.find('.pf-required-flag');
+
+    expect(asterisk.css('color')).toBe('rgb(186, 0, 166)');
+    expect(flag.css('background-color')).toBe('rgb(186, 0, 166)');
+    expect(flag.find('span').css('border-right-color')).toBe('rgb(186, 0, 166)');
+    expect(flag.css('color')).toBe('rgb(235, 206, 232)');
+
+    var input = widget.find('input[data-required=true]:not(.pf-has-label)');
+    expect(input.css('border-color')).toBe('rgb(186, 0, 166)');
+  });
+
   // -------------------------
   //  CALLBACKS
   // -------------------------
@@ -2154,7 +2210,7 @@ describe('Widgets', function () {
   });
 
   // -------------------------
-  //  CUSTOM FIELDS
+  //  OLD CUSTOM FIELDS
   // -------------------------
 
   it('should be able to hide and show fields based on config', function () {
@@ -2196,6 +2252,202 @@ describe('Widgets', function () {
       }
     }
   });
+
+  // -------------------------
+  //  FORM BUILDER
+  // -------------------------
+
+  it('should track custom fields to lytics', function () {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-1',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          'type': 'input',
+          'name': 'name',
+          'placeholder': 'Your Name',
+          'required': true
+        },
+        {
+          'type': 'checkbox-group',
+          'name': 'terms_agreement',
+          'required': true,
+          'values': [
+            {
+              'label': 'I agree',
+              'value': 'agree'
+            }
+          ]
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    widget.find('[name=terms_agreement]').click();
+    widget.find('[name=name]').val('my name here');
+    spyOn(jstag, 'send');
+
+    widget.find('form').find('.pf-widget-ok').click();
+
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': customForm.id,
+      'pf-widget-type': 'form',
+      'pf-widget-layout': 'slideout',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'submit',
+      'pf-custom-form': {
+        'terms_agreement': ['agree'],
+        'name': 'my name here'
+      }
+    }));
+  });
+
+  it('should add labels and placeholders for custom fields if defined', function () {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-2',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          'type': 'select',
+          'label': 'What\'s your favorite animal?',
+          'placeholder': 'Select an animal...',
+          'name': 'favorite_animal',
+          'required': true,
+          'values': [
+            {
+              'label': 'Cat',
+              'value': 'cat'
+            },
+            {
+              'label': 'Dog',
+              'value': 'dog'
+            },
+            {
+              'label': 'Horse',
+              'value': 'horse'
+            }
+          ]
+        },
+        {
+          'type': 'checkbox-group',
+          'label': 'Which ice cream flavors do you like the most?',
+          'name': 'ice_cream_flavors',
+          'required': true,
+          'values': [
+            {
+              'label': 'Vanilla',
+              'value': 'vanilla'
+            },
+            {
+              'label': 'Chocolate',
+              'value': 'chocolate'
+            },
+            {
+              'label': 'Strawberry',
+              'value': 'strawberry'
+            }
+          ]
+        },
+        {
+          'type': 'textarea',
+          'label': 'Comments',
+          'name': 'comments',
+          'placeholder': 'Any more comments?',
+          'required': true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    var labels = widget.find('.pf-form-label');
+    var divs = widget.find('.pf-has-label');
+
+    expect(labels.length).toBe(customForm.formElements.length);
+    expect(divs.length).toBe(customForm.formElements.length);
+
+    var i;
+
+    for (i = 0; i < labels.length; i++) {
+      expect(labels[i].innerHTML.indexOf(customForm.formElements[i].label) !== -1).toBeTruthy();
+    }
+
+    for (i = 0; i < divs.length; i++) {
+      var field = divs[i];
+      var configElem = customForm.formElements[i];
+      if (field.placeholder && configElem.placeholder) {
+        expect(field.placeholder).toBe(configElem.placeholder);
+      }
+
+      if (configElem.type === 'select') {
+        expect(field.children[0].innerHTML).toBe(configElem.placeholder);
+      }
+    }
+  });
+
+
+  it('should not submit the form if required fields are not filled out', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-3',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          'type': 'input',
+          'placeholder': 'What\'s your favorite animal?',
+          'name': 'favorite_animal',
+          'required': true
+        },
+        {
+          'type': 'radio-group',
+          'label': 'Which ice cream flavors do you like the most?',
+          'name': 'ice_cream_flavors',
+          'required': true,
+          'values': [
+            {
+              'label': 'Vanilla',
+              'value': 'vanilla'
+            },
+            {
+              'label': 'Chocolate',
+              'value': 'chocolate'
+            },
+            {
+              'label': 'Strawberry',
+              'value': 'strawberry'
+            }
+          ]
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      widget.find('form').find('.pf-widget-ok').click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var required = widget.find('[data-required=true]');
+      expect(required.length).toBe(customForm.formElements.length);
+
+      for (var i = 0; i < required.length; i++) {
+        var req = required[i].parentNode;
+        expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
+        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+      }
+      done();
+    }, 200);
+  });
+
 
   // -------------------------
   //  GATE
@@ -3027,6 +3279,53 @@ describe('Widgets', function () {
 
     window.history.pushState({}, '', '/context.html');
   });
+
+  it('should ignore trailing slashes in the simple match rule', function () {
+    window.history.pushState({}, '', '/test/');
+
+    var form1 = new pathfora.Form({
+      id: 'simple-match1',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/test'
+          }
+        ]
+      }
+    });
+
+    var form2 = new pathfora.Form({
+      id: 'simple-match2',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'localhost/test/'
+          }
+        ]
+      }
+    });
+
+    pathfora.initializeWidgets([form1, form2]);
+
+    var widget = $('#' + form1.id);
+    expect(widget.length).toBe(1);
+
+    widget = $('#' + form2.id);
+    expect(widget.length).toBe(1);
+
+    window.history.pushState({}, '', '/context.html');
+  });
+
 
   it('should ignore order of query params for exact rule', function () {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1');
