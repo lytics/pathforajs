@@ -37,3 +37,15 @@ a.toctree-l4 {
 img.full {
   width: 100%;
 }
+
+#custom-form-builder li {
+  list-style-type: none;
+}
+
+#custom-form-builder label {
+  display: inline;
+}
+
+.btn {
+  background-color: transparent;
+}

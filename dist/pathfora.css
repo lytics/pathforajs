@@ -1,4 +1,6 @@
 /* Mixin for mobile boundries */
+/* Mixin for mobile boundries */
+/* Mixin for left aligned widgets */
 /* Default/light color theme */
 .pf-box-shadow,
 .pf-widget-folding {
@@ -20,6 +22,7 @@
   -webkit-sizing: border-box;
   background-color: #f1f1f1;
   color: #888;
+  font-size: 15px;
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget.pf-mobile-hide {
@@ -62,23 +65,14 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   border-radius: 3px;
   font-size: 14px;
-  margin: 1px 1px 10px 1px;
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 15px;
   background: white;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
   position: relative;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
-}
-.pf-widget input[type=text][data-required="active"]:focus,
-.pf-widget input[type=email][data-required="active"]:focus,
-.pf-widget select[data-required="active"]:focus,
-.pf-widget textarea[data-required="active"]:focus {
-  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  margin: 0 0 9px 0;
 }
 .pf-widget input[type=text]:focus,
 .pf-widget input[type=email]:focus,
@@ -122,6 +116,16 @@
 }
 .pf-widget select.default {
   color: #a9a9a9;
+}
+.pf-widget form:not(.pf-custom-form) input[type=text],
+.pf-widget form:not(.pf-custom-form) input[type=email],
+.pf-widget form:not(.pf-custom-form) select,
+.pf-widget form:not(.pf-custom-form) textarea {
+  margin-bottom: 10px;
+}
+.pf-widget form:not(.pf-custom-form) [data-required=true].invalid {
+  border: 1px solid #f12626;
+  margin: -1px -1px 9px -1px;
 }
 .pf-widget input[type=text],
 .pf-widget input[type=email],
@@ -181,10 +185,13 @@
   visibility: visible;
   opacity: 1;
 }
+.pf-widget .branding {
+  position: relative;
+}
 .pf-widget .branding svg {
   position: absolute;
-  bottom: 11px;
-  right: 15px;
+  bottom: -25px;
+  right: -25px;
   fill: #888;
   opacity: 0.25;
   width: 120px;
@@ -244,12 +251,6 @@
   width: 100%;
   margin-bottom: 1px;
 }
-.pf-subscription form input[type=text][data-required="active"]:focus,
-.pf-subscription form input[type=email][data-required="active"]:focus {
-  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), 0px 0px 2px rgba(255, 0, 0, 0.4);
-  border: 1px solid rgba(255, 0, 0, 0.5);
-  margin: 0;
-}
 .pf-subscription form .pf-widget-btn {
   float: right;
   margin-left: 5px;
@@ -279,6 +280,83 @@
 .pf-sitegate .pf-widget-btn {
   clear: both;
   margin-top: 5px;
+}
+.pf-form form.pf-custom-form > div,
+.pf-sitegate form.pf-custom-form > div {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.pf-form .pf-form-label,
+.pf-sitegate .pf-form-label {
+  font-weight: bold;
+}
+.pf-form .pf-widget-radio,
+.pf-sitegate .pf-widget-radio,
+.pf-form .pf-widget-checkbox,
+.pf-sitegate .pf-widget-checkbox {
+  display: block;
+  padding: 4px;
+}
+.pf-form .pf-widget-radio input,
+.pf-sitegate .pf-widget-radio input,
+.pf-form .pf-widget-checkbox input,
+.pf-sitegate .pf-widget-checkbox input {
+  margin-right: 10px;
+}
+.pf-form .pf-has-label,
+.pf-sitegate .pf-has-label {
+  margin-top: 7px;
+}
+.pf-form div.pf-form-required,
+.pf-sitegate div.pf-form-required {
+  position: relative;
+}
+.pf-form div.pf-form-required.invalid [data-required=true]:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.invalid [data-required=true]:not(.pf-has-label) {
+  border: 1px solid #f12626;
+  margin: -1px;
+}
+.pf-form div.pf-form-required.pf-widget-radio-group,
+.pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-form div.pf-form-required.pf-widget-checkbox-group [data-required=true],
+.pf-sitegate div.pf-form-required.pf-widget-checkbox-group [data-required=true] {
+  border-radius: 3px;
+}
+.pf-form div.pf-form-required.invalid div.pf-required-flag,
+.pf-sitegate div.pf-form-required.invalid div.pf-required-flag {
+  opacity: 1;
+  margin-left: 10px;
+}
+.pf-form div.pf-form-required div.pf-required-flag,
+.pf-sitegate div.pf-form-required div.pf-required-flag {
+  font-size: 12px;
+  font-weight: bold;
+  position: relative;
+  padding: 3px 7px;
+  display: inline;
+  width: auto;
+  color: white;
+  background-color: #f12626;
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  transition: all .3s;
+  margin-left: 5px;
+  opacity: 0;
+}
+.pf-form div.pf-form-required div.pf-required-flag span,
+.pf-sitegate div.pf-form-required div.pf-required-flag span {
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 6px;
+  left: -6px;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  content: '';
+  border-right: 6px solid #f12626;
+}
+.pf-form div.pf-form-required span.required,
+.pf-sitegate div.pf-form-required span.required {
+  color: #f12626;
 }
 .pf-form.pf-widget-slideout input.pf-field-half-width,
 .pf-sitegate.pf-widget-slideout input.pf-field-half-width,
@@ -578,8 +656,8 @@
   }
 }
 .pf-widget-slideout .branding svg {
-  bottom: 7px;
-  right: 10px;
+  bottom: -22px;
+  right: -20px;
   width: 100px;
 }
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {

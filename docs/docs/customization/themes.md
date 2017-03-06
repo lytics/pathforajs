@@ -95,6 +95,16 @@ Define a set of custom colors for each element of the module.
     <td>string</td>
     <td><code>optional</code> hex color code for the background of field elements</td>
   </tr>
+  <tr>
+    <td>required</td>
+    <td>string</td>
+    <td><code>optional</code> hex color code for the flag and/outline on required form fields</td>
+  </tr>
+  <tr>
+    <td>requiredText</td>
+    <td>string</td>
+    <td><code>optional</code> hex color code for the flag text on required form fields</td>
+  </tr>
 </table>
 
 <h3>Custom Theme - <a href="../../examples/preview/customization/themes/custom.html" target="_blank">Live Preview</a></h3>
