@@ -1570,7 +1570,8 @@
      */
     constructWidgetActions: function (widget, config) {
       var widgetOnButtonClick, widgetOnFormSubmit,
-          widgetOk = widget.querySelector('.pf-widget-ok');
+          widgetOk = widget.querySelector('.pf-widget-ok'),
+          widgetReco = widget.querySelector('.pf-content-unit');
 
       var widgetOnModalClose = function (event) {
         if (typeof config.onModalClose === 'function') {
@@ -1838,6 +1839,18 @@
               }
             }
           }
+        };
+      }
+
+
+      if (widgetReco) {
+        widgetReco.onmouseenter = function (event) {
+          core.trackWidgetAction('hover', config, event.target);
+        };
+
+        widgetReco.onclick = function (event) {
+          core.trackWidgetAction('confirm', config, event.target);
+          updateActionCookie('PathforaConfirm_' + widget.id);
         };
       }
     },
@@ -2179,6 +2192,10 @@
         'pf-widget-variant': widget.variant
       };
 
+      if (widget.recommend && widget.content) {
+        params['pf-widget-content'] = widget.content[0];
+      }
+
       switch (action) {
       case 'show':
         pathforaDataObject.displayedWidgets.push(params);
@@ -2187,8 +2204,12 @@
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
-        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
-        pathforaDataObject.completedActions.push(params);
+        if (htmlElement && utils.hasClass(htmlElement, 'pf-content-unit') && widget.content) {
+          params['pf-widget-action'] = 'content recommendation';
+        } else {
+          params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
+          pathforaDataObject.completedActions.push(params);
+        }
         break;
       case 'cancel':
         params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
@@ -2241,7 +2262,9 @@
         params['pf-form-email'] = htmlElement.elements.email.value;
         break;
       case 'hover':
-        if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
+        if (utils.hasClass(htmlElement, 'pf-content-unit') && widget.content) {
+          params['pf-widget-action'] = 'content recommendation';
+        } else if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
           params['pf-widget-action'] = 'confirm';
         } else if (utils.hasClass(htmlElement, 'pf-widget-cancel')) {
           params['pf-widget-action'] = 'cancel';
