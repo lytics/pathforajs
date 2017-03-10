@@ -2227,7 +2227,7 @@
         'pf-widget-variant': widget.variant
       };
 
-      if (widget.recommend && widget.content) {
+      if (widget.recommend && widget.content && widget.content.length > 0) {
         params['pf-widget-content'] = widget.content[0];
       }
 
@@ -2239,7 +2239,7 @@
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
-        if (htmlElement && utils.hasClass(htmlElement, 'pf-content-unit') && widget.content) {
+        if (htmlElement && utils.hasClass(htmlElement, 'pf-content-unit')) {
           params['pf-widget-action'] = 'content recommendation';
         } else {
           params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
@@ -2297,7 +2297,7 @@
         params['pf-form-email'] = htmlElement.elements.email.value;
         break;
       case 'hover':
-        if (utils.hasClass(htmlElement, 'pf-content-unit') && widget.content) {
+        if (utils.hasClass(htmlElement, 'pf-content-unit')) {
           params['pf-widget-action'] = 'content recommendation';
         } else if (utils.hasClass(htmlElement, 'pf-widget-ok')) {
           params['pf-widget-action'] = 'confirm';
