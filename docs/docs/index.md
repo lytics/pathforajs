@@ -1,7 +1,7 @@
 Lytics Pathfora JS is a lightweight SDK for displaying personalized modules on your website. It integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. This documentation will walk you through everything you need to create your own highly customized and personalized module. Code and live preview examples are provided along the way.
 
 ## Getting Started
-Before you begin creating modules with Pathfora you must add the [Lytics javascript tag](https://activate.getlytics.com/#/documentation/jstag_anon) to your website. If you are using [Lytics Personalization](https://activate.getlytics.com/resources/documentation/campaigns_introduction) to power your modules, Pathfora will be automatically loaded through your Lytics javascript tag. If you're creating a custom module, you will need to load pathfora as well as [your Lytics javascript tag](https://activate.getlytics.com/data/integrations/lytics_external).
+Before you begin creating modules with Pathfora you must add the [Lytics javascript tag](https://activate.getlytics.com/resources/documentation/getting_started_web) to your website. If you are using [Lytics Personalization](https://activate.getlytics.com/resources/documentation/campaigns_introduction) to power your modules, Pathfora will be automatically loaded through your Lytics javascript tag. If you're creating a custom module, you will need to load pathfora as well as [your Lytics javascript tag](https://activate.getlytics.com/resources/documentation/getting_started_web).
 
 ``` html
 <!-- Pathfora Tag -->

@@ -2909,7 +2909,15 @@
       var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
-        var resp = JSON.parse(json);
+        var resp;
+
+        try {
+          resp = JSON.parse(json);
+        } catch (e) {
+          console.warn('Could not parse json response:' + e);
+          callback([]);
+          return;
+        }
 
         if (resp.data && resp.data.length > 0) {
           // append a protocol for urls that are absolute
