@@ -2376,7 +2376,7 @@
                 {
                   title: content.title,
                   description: content.description,
-                  url: 'http://' + content.url,
+                  url: content.url,
                   image: content.primary_image
                 }
               ];
@@ -2909,8 +2909,28 @@
       var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
-        var resp = JSON.parse(json);
+        var resp;
+
+        try {
+          resp = JSON.parse(json);
+        } catch (e) {
+          console.warn('Could not parse json response:' + e);
+          callback([]);
+          return;
+        }
+
         if (resp.data && resp.data.length > 0) {
+          // append a protocol for urls that are absolute
+          for (var i = 0; i < resp.data.length; i++) {
+            var url = resp.data[i].url;
+            if (url) {
+              var split = url.split('/')[0].split('.');
+              if (split.length > 1) {
+                resp.data[i].url = 'http://' + url;
+              }
+            }
+          }
+
           callback(resp.data);
         } else {
           callback([]);
@@ -3137,10 +3157,10 @@
                 // if attribute is on an a (link) element
                 if (elems.url) {
                   if (typeof elems.url.href !== 'undefined') {
-                    elems.url.href = 'http://' + content.url;
+                    elems.url.href = content.url;
                   // if attribute is on container element
                   } else {
-                    elems.url.innerHTML = 'http://' + content.url;
+                    elems.url.innerHTML = content.url;
                   }
                 }
 
