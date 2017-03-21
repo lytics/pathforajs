@@ -109,7 +109,7 @@ Variant determines any extra content that may be used by the module.
   </tr>
   <tr>
     <td>3</td>
-    <td>module includes a <a href="../../content_recommend">content recommendation</a> (this feature is in <b>beta</b>)</td>
+    <td>module includes a <a href="../../content_recommend">content recommendation</a></td>
   </tr>
 </table>
 

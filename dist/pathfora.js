@@ -17,7 +17,8 @@
       PREFIX_CONFIRM = 'PathforaConfirm_',
       PREFIX_CANCEL = 'PathforaCancel_',
       PREFIX_CLOSE = 'PathforaClosed_',
-      PF_PAGEVIEWS = 'PathforaPageView';
+      PF_PAGEVIEWS = 'PathforaPageView',
+      WIDTH_BREAKPOINT = 650;
 
   var defaultPositions = {
     modal: '',
@@ -168,9 +169,9 @@
   'message': {
     'bar': '<a class=\'pf-widget-body\'></a> <a class=\'pf-widget-close\'>&times;</a><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><span><a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a> <a class=\'pf-widget-btn pf-widget-cancel\'>Cancel</a></span></div>',
     'button': '<p class=\'pf-widget-message pf-widget-ok\'></p>',
-    'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a></div></div></div></div></div>',
+    'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><a class=\'pf-content-unit\'></a> <a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a></div></div></div></div></div>',
     'modal': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><a class=\'pf-widget-close\'>&times;</a><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><a class=\'pf-content-unit\'></a> <a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a> <a class=\'pf-widget-btn pf-widget-cancel\'>Cancel</a></div></div></div></div></div>',
-    'slideout': '<a class=\'pf-widget-close\'>&times;</a><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><p class=\'pf-widget-message\'></p><a class=\'pf-content-unit\'></a> <a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a> <a class=\'pf-widget-btn pf-widget-cancel\'>Cancel</a></div>'
+    'slideout': '<a class=\'pf-widget-close\'>&times;</a><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><p class=\'pf-widget-message\'></p><a class=\'pf-content-unit stack\'></a> <a class=\'pf-widget-btn pf-widget-ok\'>Confirm</a> <a class=\'pf-widget-btn pf-widget-cancel\'>Cancel</a></div>'
   },
   'includes': {},
   'form': {
@@ -2515,7 +2516,7 @@
         this.updateObject(widget, widget.config);
 
         if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-          if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
+          if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
             throw new Error('Unsupported layout for content recommendation');
           }
 
@@ -2847,6 +2848,19 @@
           });
         }
       });
+    },
+
+    widgetResizeListener: function (widget, node) {
+      if (widget.layout === 'inline' && widget.recommend) {
+        var rec = node.querySelector('.pf-content-unit');
+        if (rec) {
+          if (node.offsetWidth < WIDTH_BREAKPOINT && !utils.hasClass(rec, 'stack')) {
+            utils.addClass(rec, 'stack');
+          } else if (node.offsetWidth >= WIDTH_BREAKPOINT) {
+            utils.removeClass(rec, 'stack');
+          }
+        }
+      }
     }
   };
 
@@ -3781,6 +3795,12 @@
           context.pathfora.closeWidget(widget.id, true);
         }, widget.displayConditions.hideAfter * 1000);
       }
+
+      core.widgetResizeListener(widget, node);
+
+      window.addEventListener('resize', function () {
+        core.widgetResizeListener(widget, node);
+      });
     };
 
     /**
