@@ -585,59 +585,88 @@
         }
       }
 
-      // display conditions based on page load
-      if (condition.date) {
-        widget.valid = widget.valid && core.dateChecker(condition.date);
-      }
-
-      if (condition.pageVisits) {
-        widget.valid = widget.valid && core.pageVisitsChecker(condition.pageVisits);
-      }
-
-      if (condition.hideAfterAction) {
-        widget.valid = widget.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
-      }
-      if (condition.urlContains) {
-        widget.valid = widget.valid && core.urlChecker(condition.urlContains);
-      }
-
-      widget.valid = widget.valid && condition.showOnInit;
-
-      // display conditions based on page interaction
-      if (condition.showOnExitIntent) {
-        core.initializeExitIntent(widget);
-      }
-
-      if (condition.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
-        widget.watchers.push(watcher);
-        core.initializeScrollWatchers(widget);
-      }
-
-      if (condition.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
-        widget.watchers.push(watcher);
-        core.initializeScrollWatchers(widget);
-      }
-
-      if (condition.manualTrigger) {
-        watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
-        widget.watchers.push(watcher);
-        core.readyWidgets.push(widget);
-
-        // if we've already triggered the widget
-        // before initializing lets initialize right away
-        core.triggerWidget(widget);
-      }
-
-      if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-        if (condition.impressions) {
-          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+      var evalDisplayConditions = function () {
+        // display conditions based on page load
+        if (condition.date) {
+          widget.valid = widget.valid && core.dateChecker(condition.date);
         }
 
-        if (widget.valid) {
-          context.pathfora.showWidget(widget);
+        if (condition.pageVisits) {
+          widget.valid = widget.valid && core.pageVisitsChecker(condition.pageVisits);
         }
+
+        if (condition.hideAfterAction) {
+          widget.valid = widget.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
+        }
+        if (condition.urlContains) {
+          widget.valid = widget.valid && core.urlChecker(condition.urlContains);
+        }
+
+        widget.valid = widget.valid && condition.showOnInit;
+
+        // display conditions based on page interaction
+        if (condition.showOnExitIntent) {
+          core.initializeExitIntent(widget);
+        }
+
+        if (condition.displayWhenElementVisible) {
+          watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+          widget.watchers.push(watcher);
+          core.initializeScrollWatchers(widget);
+        }
+
+        if (condition.scrollPercentageToDisplay) {
+          watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+          widget.watchers.push(watcher);
+          core.initializeScrollWatchers(widget);
+        }
+
+        if (condition.manualTrigger) {
+          watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
+          widget.watchers.push(watcher);
+          core.readyWidgets.push(widget);
+
+          // if we've already triggered the widget
+          // before initializing lets initialize right away
+          core.triggerWidget(widget);
+        }
+
+        if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
+          if (condition.impressions) {
+            widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+          }
+
+          if (widget.valid) {
+            context.pathfora.showWidget(widget);
+          }
+        }
+      };
+
+      var regex = /\{{2}.*?\}{2}/g;
+      var foundMsg, foundHeadline, foundImage;
+
+      if (typeof widget.msg === 'string') {
+        foundMsg = widget.msg.match(regex);
+      }
+
+      if (typeof widget.headline === 'string') {
+        foundHeadline = widget.headline.match(regex);
+      }
+
+
+      if (typeof widget.image === 'string') {
+        foundImage = widget.image.match(regex);
+      }
+
+      if ((foundMsg && foundMsg.length > 0) || (foundHeadline && foundHeadline.length > 0) || (foundImage && foundImage.length > 0)) {
+        pathfora.addCallback(function () {
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'msg', foundMsg);
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'headline', foundHeadline);
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'image', foundImage);
+          evalDisplayConditions();
+        });
+      } else {
+        evalDisplayConditions();
       }
     },
 
@@ -907,6 +936,65 @@
       }
 
       return valid;
+    },
+
+    entityFieldChecker: function (widget, fieldName, found) {
+      if (!found || !found.length) {
+        return true;
+      }
+
+      // for each template found...
+      for (var f = 0; f < found.length; f++) {
+        // parse the field name
+        var dataval = found[f].slice(2).slice(0, -2),
+            parts = dataval.split('|'),
+            def;
+
+        // get the default (fallback) value
+        if (parts.length > 1) {
+          def = parts[1].trim();
+        }
+
+        // check for subfields if the value is an object
+        var split = parts[0].trim().split('.');
+
+        dataval = context.lio.data;
+        var s;
+
+        for (s = 0; s < split.length; s++) {
+          if (typeof dataval !== 'undefined') {
+            dataval = dataval[split[s]];
+          }
+        }
+
+        // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
+        if (typeof dataval === 'undefined') {
+          dataval = context.pathfora.customData;
+
+          for (s = 0; s < split.length; s++) {
+            if (typeof dataval !== 'undefined') {
+              dataval = dataval[split[s]];
+            }
+          }
+        }
+
+        // replace the template with the lytics data value
+        if (typeof dataval !== 'undefined') {
+          widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+        // if there's no default and we should error
+        } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
+          return false;
+        // replace with the default option, or empty string if not found
+        } else {
+          if (typeof def === 'undefined') {
+            def = '';
+          }
+
+          widget[fieldName] = widget[fieldName].replace(found[f], def);
+        }
+      }
+
+      return true;
     },
 
     urlChecker: function (phrases) {
@@ -3310,6 +3398,13 @@
      * using the manualTrigger display condition
      */
     this.triggeredWidgets = {};
+
+    /**
+     * @public
+     * @description A list of widgets that have been triggered manually
+     * using the manualTrigger display condition
+     */
+    this.customData = {};
 
     /**
      * @public
