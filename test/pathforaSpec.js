@@ -3769,6 +3769,118 @@ describe('Widgets', function () {
   });
 
   // -------------------------
+  //  ENTITY FIELD TEMPLATES
+  // -------------------------
+
+  it('should replace dynamic templates with entity fields', function (done) {
+    window.lio = {
+      data: {
+        promoCode: '123FREE',
+        email: 'fake@gmail.com'
+      }
+    };
+
+    window.lio.loaded = true;
+
+    pathfora.customData = {
+      customField: 'test'
+    };
+
+    var fieldWidget1 = new pathfora.Message({
+      id: 'field-widget-1',
+      layout: 'slideout',
+      headline: 'Free shipping on your next purchase',
+      msg: 'Enter this promo code: {{promoCode}}'
+    });
+
+    var fieldWidget2 = new pathfora.Form({
+      id: 'field-widget-2',
+      layout: 'slideout',
+      headline: '{{email | no email provided}}',
+      msg: 'Sign up with your email.'
+    });
+
+    var fieldWidget3 = new pathfora.Form({
+      id: 'field-widget-3',
+      layout: 'slideout',
+      headline: 'Hi {{name}}',
+      msg: 'Sign up with your email.'
+    });
+
+    var fieldWidget4 = new pathfora.Form({
+      id: 'field-widget-4',
+      layout: 'slideout',
+      headline: 'Hi {{name}}',
+      msg: 'Sign up with your email.',
+      displayConditions: {
+        showOnMissingFields: true
+      }
+    });
+
+    var fieldWidget5 = new pathfora.Form({
+      id: 'field-widget-5',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{name | No Name}}!'
+    });
+
+    var fieldWidget6 = new pathfora.Form({
+      id: 'field-widget-6',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{myUrl | https://www.google.com/}}!'
+    });
+
+    var fieldWidget7 = new pathfora.Form({
+      id: 'field-widget-7',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{customField | fail}}!'
+    });
+
+    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7]);
+
+    var w1 = $('#' + fieldWidget1.id);
+    expect(w1.length).toBe(1);
+    expect(fieldWidget1.msg).toBe('Enter this promo code: 123FREE');
+
+    var w2 = $('#' + fieldWidget2.id);
+    expect(w2.length).toBe(1);
+    expect(fieldWidget2.headline).toBe('fake@gmail.com');
+
+    var w3 = $('#' + fieldWidget3.id);
+    expect(w3.length).toBe(0);
+
+    var w4 = $('#' + fieldWidget4.id);
+    expect(w4.length).toBe(1);
+    expect(fieldWidget4.headline).toBe('Hi ');
+
+    var w5 = $('#' + fieldWidget5.id);
+    expect(w5.length).toBe(1);
+    expect(fieldWidget5.msg).toBe('Welcome No Name!');
+
+    var w6 = $('#' + fieldWidget6.id);
+    expect(w6.length).toBe(1);
+    expect(fieldWidget6.msg).toBe('Welcome https://www.google.com/!');
+
+    var w7 = $('#' + fieldWidget7.id);
+    expect(w7.length).toBe(1);
+    expect(fieldWidget7.msg).toBe('Welcome test!');
+
+    setTimeout(function () {
+      expect(w1.hasClass('opened')).toBeTruthy();
+      expect(w2.hasClass('opened')).toBeTruthy();
+      expect(w3.hasClass('opened')).toBeFalsy();
+      expect(w4.hasClass('opened')).toBeTruthy();
+      expect(w5.hasClass('opened')).toBeTruthy();
+      expect(w6.hasClass('opened')).toBeTruthy();
+      expect(w7.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+
+  });
+
+  // -------------------------
   //  IGNORED
   // -------------------------
 

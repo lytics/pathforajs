@@ -24,6 +24,7 @@ pages:
       - Form Schema Builder: customization/form_builder.md
       - Form Elements (Legacy): customization/form_legacy.md
       - Responsive Styles: customization/responsive.md
+      - Entity Fields: customization/entity_fields.md
     - A/B Testing: ab_testing.md
     - Audience Targeting: targeting.md
     - Callbacks: callbacks.md
