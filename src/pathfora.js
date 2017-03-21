@@ -3763,9 +3763,11 @@
 
       core.widgetResizeListener(widget, node);
 
-      window.addEventListener('resize', function () {
-        core.widgetResizeListener(widget, node);
-      });
+      if (typeof context.addEventListener === 'function') {
+        context.addEventListener('resize', function () {
+          core.widgetResizeListener(widget, node);
+        });
+      }
     };
 
     /**
