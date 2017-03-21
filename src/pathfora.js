@@ -11,6 +11,14 @@
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
 
+  var PREFIX_REC = 'PathforaRecommend_',
+      PREFIX_UNLOCK = 'PathforaUnlocked_',
+      PREFIX_IMPRESSION = 'PathforaImpressions_',
+      PREFIX_CONFIRM = 'PathforaConfirm_',
+      PREFIX_CANCEL = 'PathforaCancel_',
+      PREFIX_CLOSE = 'PathforaClosed_',
+      PF_PAGEVIEWS = 'PathforaPageView';
+
   var defaultPositions = {
     modal: '',
     slideout: 'bottom-left',
@@ -305,7 +313,7 @@
       if (expiration) {
         expires = '; expires=' + expiration.toUTCString();
       } else {
-        expires = '';
+        expires = '; expires=0';
       }
 
       context.document.cookie = [
@@ -517,7 +525,7 @@
     initializedWidgets: [],
     readyWidgets: [],
     expiration: null,
-    pageViews: ~~utils.readCookie('PathforaPageView'),
+    pageViews: ~~utils.readCookie(PF_PAGEVIEWS),
 
     /**
      * @description Display a single widget
@@ -927,7 +935,7 @@
     impressionsChecker: function (impressionConstraints, widget) {
       var parts, totalImpressions,
           valid = true,
-          id = 'PathforaImpressions_' + widget.id,
+          id = PREFIX_IMPRESSION + widget.id,
           sessionImpressions = ~~sessionStorage.getItem(id),
           total = utils.readCookie(id),
           now = Date.now();
@@ -966,9 +974,9 @@
       var parts,
           valid = true,
           now = Date.now(),
-          confirm = utils.readCookie('PathforaConfirm_' + widget.id),
-          cancel = utils.readCookie('PathforaCancel_' + widget.id),
-          closed = utils.readCookie('PathforaClosed_' + widget.id);
+          confirm = utils.readCookie(PREFIX_CONFIRM + widget.id),
+          cancel = utils.readCookie(PREFIX_CANCEL + widget.id),
+          closed = utils.readCookie(PREFIX_CLOSE + widget.id);
 
       if (hideAfterActionConstraints.confirm && confirm) {
         parts = confirm.split('|');
@@ -1768,7 +1776,7 @@
 
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
-            updateActionCookie('PathforaClosed_' + widget.id);
+            updateActionCookie(PREFIX_CLOSE + widget.id);
             widgetOnModalClose(event);
           };
         }
@@ -1784,14 +1792,14 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              updateActionCookie('PathforaCancel_' + widget.id);
+              updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              updateActionCookie('PathforaCancel_' + widget.id);
+              updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
@@ -1811,7 +1819,7 @@
             // invalid form, do not submit
           } else {
             core.trackWidgetAction('confirm', config);
-            updateActionCookie('PathforaConfirm_' + widget.id);
+            updateActionCookie(PREFIX_CONFIRM + widget.id);
 
             if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
               config.confirmAction.callback();
@@ -1850,7 +1858,7 @@
 
         widgetReco.onclick = function (event) {
           core.trackWidgetAction('confirm', config, event.target);
-          updateActionCookie('PathforaConfirm_' + widget.id);
+          updateActionCookie(PREFIX_CONFIRM + widget.id);
         };
       }
     },
@@ -2254,7 +2262,7 @@
         }
 
         if (action === 'unlock') {
-          utils.saveCookie('PathforaUnlocked_' + widget.id, true, core.expiration);
+          utils.saveCookie(PREFIX_UNLOCK + widget.id, true, core.expiration);
         }
 
         break;
@@ -2332,7 +2340,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, params, function (resp) {
+          api.recommendContent(pathfora.acctid, params, w.id, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -2369,7 +2377,7 @@
             defaults = defaultProps[widget.type],
             globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
+        if (widget.type === 'sitegate' && utils.readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -2824,9 +2832,36 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, params, callback) {
+    recommendContent: function (accountId, params, id, callback) {
       // Recommendation API:
       // https://www.getlytics.com/developers/rest-api#content-recommendation
+
+      // if we have the recommendation response cached in session storage
+      // use that instead of making a new API request
+      var storedRec = sessionStorage.getItem(PREFIX_REC + id);
+
+      if (typeof storedRec === 'string' && params.visited !== false) {
+        var rec;
+
+        try {
+          rec = JSON.parse(storedRec);
+        } catch (e) {
+          console.warn('Could not parse json stored response:' + e);
+        }
+
+        if (rec && rec.data) {
+          // special case: shuffle param
+          if (params.shuffle === true) {
+            rec.data.shift();
+          }
+
+          if (rec.data.length > 0) {
+            sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+            callback(rec.data);
+          }
+          return;
+        }
+      }
 
       var seerId = utils.readCookie('seerid');
 
@@ -2874,6 +2909,9 @@
       var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
+
+        // set the session storage.
+        sessionStorage.setItem(PREFIX_REC + id, json);
         var resp;
 
         try {
@@ -3089,7 +3127,7 @@
           contentsegment: rec
         };
 
-        api.recommendContent(pathfora.acctid, params, function (resp) {
+        api.recommendContent(pathfora.acctid, params, rec, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -3255,10 +3293,10 @@
      * @description Create page view cookie
      */
     this.initializePageViews = function () {
-      var cookie = utils.readCookie('PathforaPageView'),
+      var cookie = utils.readCookie(PF_PAGEVIEWS),
           date = new Date();
       date.setDate(date.getDate() + 365);
-      utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
+      utils.saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
     };
 
     /**
