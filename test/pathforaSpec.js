@@ -44,6 +44,7 @@ function makeMouseEvent (type, params) {
 describe('Pathfora', function () {
   beforeEach(function () {
     localStorage.clear();
+    sessionStorage.clear();
     pathfora.clearAll();
   });
 
@@ -1279,6 +1280,7 @@ describe('Pathfora', function () {
 describe('Widgets', function () {
   beforeEach(function () {
     localStorage.clear();
+    sessionStorage.clear();
     pathfora.clearAll();
   });
 
@@ -4106,6 +4108,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
+      sessionStorage.clear();
       pathfora.acctid = credentials;
       pathfora.inline.elements = [];
     });
