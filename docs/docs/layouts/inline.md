@@ -53,6 +53,10 @@ Variant determines any extra content that may be used by the module.
     <td>2</td>
     <td>module includes an image</td>
   </tr>
+  <tr>
+    <td>3</td>
+     <td>module includes a <a href="../../content_recommend">content recommendation</a></td>
+  </tr>
 </table>
 
 ## image
