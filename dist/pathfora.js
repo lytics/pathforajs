@@ -2051,7 +2051,8 @@
               recImage = document.createElement('div'),
               recMeta = document.createElement('div'),
               recTitle = document.createElement('h4'),
-              recDesc = document.createElement('p');
+              recDesc = document.createElement('p'),
+              recInfo = document.createElement('span');
 
           widgetContentUnit.href = rec.url;
 
@@ -2064,11 +2065,34 @@
 
           recMeta.className = 'pf-content-unit-meta';
 
-
           // title h4
           if (rec.title && (!settings.display || settings.display.title !== false)) {
             recTitle.innerHTML = rec.title;
             recMeta.appendChild(recTitle);
+          }
+
+          if (rec.author && (settings.display && settings.display.author === true)) {
+            recInfo.innerHTML = 'by ' + rec.author;
+          }
+
+          if (rec.date && (settings.display && settings.display.date === true)) {
+            var published = new Date(rec.date),
+                locale = settings.display.locale ? settings.display.locale : context.pathfora.locale,
+                dateOptions = settings.display.dateOptions ? settings.display.dateOptions : context.pathfora.dateOptions;
+
+
+            published = published.toLocaleDateString(locale, dateOptions);
+
+            if (!recInfo.innerHTML) {
+              recInfo.innerHTML = published;
+            } else {
+              recInfo.innerHTML += ' | ' + published;
+            }
+          }
+
+          if (recInfo.innerHTML) {
+            recInfo.className = 'pf-content-unit-info';
+            recMeta.appendChild(recInfo);
           }
 
           // description p
@@ -2086,7 +2110,7 @@
               settings.display.descriptionLimit = limit;
             }
 
-            if (desc.length > settings.display.descriptionLimit) {
+            if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
               desc = desc.substring(0, settings.display.descriptionLimit);
               desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
             }
@@ -2501,7 +2525,9 @@
                   title: content.title,
                   description: content.description,
                   url: content.url,
-                  image: content.primary_image
+                  image: content.primary_image,
+                  date: content.created,
+                  author: content.author
                 }
               ];
             }

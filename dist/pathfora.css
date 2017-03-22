@@ -225,6 +225,12 @@
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta {
   padding: 10px 15px;
 }
+.pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta span.pf-content-unit-info {
+  font-size: 12px;
+  display: block;
+  margin-bottom: 5px;
+  color: #444;
+}
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta h4 {
   font-weight: 500;
   margin: 0 0 5px;
@@ -504,6 +510,9 @@
   display: block;
   width: 100%;
   margin: 0 0 0 auto;
+}
+.pf-widget-modal.pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta span.pf-content-unit-info {
+  font-size: 13px;
 }
 .pf-widget-modal.pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta h4 {
   font-size: 18px;
