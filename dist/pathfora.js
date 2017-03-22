@@ -3055,12 +3055,16 @@
 
 
       var ql = params.ql,
-          ast = params.ast;
+          ast = params.ast,
+          display = params.display;
 
       delete params.ql;
       delete params.ast;
+      delete params.display;
 
       var queries = utils.constructQueries(params);
+
+      params.display = display;
 
       if (!params.contentsegment) {
         // Special case for Adhoc Segments

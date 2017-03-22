@@ -2151,6 +2151,93 @@ describe('Widgets', function () {
     jasmine.Ajax.uninstall();
   });
 
+  it('should account for display options for content recommendations', function () {
+    jasmine.Ajax.install();
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
+    var displayModal = new pathfora.Message({
+      id: 'recDisplayModal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: '*'
+        },
+        display: {
+          author: true,
+          date: true,
+          descriptionLimit: 100,
+          dateOptions: {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+          }
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([displayModal]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+    });
+
+    var widget = $('#' + displayModal.id);
+    expect(widget).toBeDefined();
+
+    var info = widget.find('.pf-content-unit-meta span.pf-content-unit-info'),
+        desc = widget.find('.pf-content-unit-meta p');
+
+    expect(info.html()).toBe('by Test Example | January 1, 2017');
+    expect(desc.html().length < 103).toBeTruthy();
+
+    var displayModal2 = new pathfora.Message({
+      id: 'recDisplayModal2',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: '*'
+        },
+        display: {
+          image: false,
+          description: false
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([displayModal2]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+    });
+
+    widget = $('#' + displayModal2.id);
+    expect(widget).toBeDefined();
+
+    var image = widget.find('.pf-content-unit-metadiv.pf-content-unit-img');
+    desc = widget.find('.pf-content-unit-meta p');
+
+    expect(desc.length).toBe(0);
+    expect(image.length).toBe(0);
+
+    pathfora.acctid = '';
+    jasmine.Ajax.uninstall();
+  });
+
   // -------------------------
   //  INLINE MODULES
   // -------------------------
