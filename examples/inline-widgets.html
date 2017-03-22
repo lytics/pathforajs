@@ -51,14 +51,13 @@
       var inlineMessage = new pathfora.Message({
         msg: 'Welcome to our website',
         id: 'inline2',
-        confirmAction: {
-          name: 'Confirm action',
-          callback: function() {
-            alert('Test - confirmed');
-          }
-        },
         layout: 'inline',
-        position: '.inline-widget-host2'
+        variant: 3,
+        position: '.inline-widget-host2',
+        recommend: {
+          path: '/blog/post',
+          domain: 'getlytics.com',
+        }
       });
 
       window.pathfora.initializeWidgets([ inlineForm, inlineMessage ]);

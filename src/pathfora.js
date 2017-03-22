@@ -19,7 +19,8 @@
       PREFIX_CLOSE = 'PathforaClosed_',
       PF_PAGEVIEWS = 'PathforaPageView',
       DEFAULT_CHAR_LIMIT = 220,
-      DEFAULT_CHAR_LIMIT_STACK = 160;
+      DEFAULT_CHAR_LIMIT_STACK = 160,
+      WIDTH_BREAKPOINT = 650;
 
   var defaultPositions = {
     modal: '',
@@ -2534,7 +2535,7 @@
         this.updateObject(widget, widget.config);
 
         if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-          if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
+          if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
             throw new Error('Unsupported layout for content recommendation');
           }
 
@@ -2866,6 +2867,19 @@
           });
         }
       });
+    },
+
+    widgetResizeListener: function (widget, node) {
+      if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
+        var rec = node.querySelector('.pf-content-unit');
+        if (rec) {
+          if (node.offsetWidth < WIDTH_BREAKPOINT && !utils.hasClass(rec, 'stack')) {
+            utils.addClass(rec, 'stack');
+          } else if (node.offsetWidth >= WIDTH_BREAKPOINT) {
+            utils.removeClass(rec, 'stack');
+          }
+        }
+      }
     }
   };
 
@@ -3803,6 +3817,14 @@
         setTimeout(function () {
           context.pathfora.closeWidget(widget.id, true);
         }, widget.displayConditions.hideAfter * 1000);
+      }
+
+      core.widgetResizeListener(widget, node);
+
+      if (typeof context.addEventListener === 'function') {
+        context.addEventListener('resize', function () {
+          core.widgetResizeListener(widget, node);
+        });
       }
     };
 
