@@ -17,7 +17,9 @@
       PREFIX_CONFIRM = 'PathforaConfirm_',
       PREFIX_CANCEL = 'PathforaCancel_',
       PREFIX_CLOSE = 'PathforaClosed_',
-      PF_PAGEVIEWS = 'PathforaPageView';
+      PF_PAGEVIEWS = 'PathforaPageView',
+      DEFAULT_CHAR_LIMIT = 220,
+      DEFAULT_CHAR_LIMIT_STACK = 160;
 
   var defaultPositions = {
     modal: '',
@@ -273,7 +275,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
+    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -2052,20 +2054,47 @@
 
           widgetContentUnit.href = rec.url;
 
+          console.log(rec.image);
+
           // image div
-          recImage.className = 'pf-content-unit-img';
-          recImage.style.backgroundImage = "url('" + rec.image + "')";
-          widgetContentUnit.appendChild(recImage);
+          if (rec.image) {
+            recImage.className = 'pf-content-unit-img';
+            recImage.style.backgroundImage = "url('" + rec.image + "')";
+            widgetContentUnit.appendChild(recImage);
+          }
 
           recMeta.className = 'pf-content-unit-meta';
 
+
           // title h4
-          recTitle.innerHTML = rec.title;
-          recMeta.appendChild(recTitle);
+          if (rec.title) {
+            recTitle.innerHTML = rec.title;
+            recMeta.appendChild(recTitle);
+          }
 
           // description p
-          recDesc.innerHTML = rec.description;
-          recMeta.appendChild(recDesc);
+          if (rec.description) {
+            var desc = rec.description;
+
+            // set the default character limit for descriptions
+            if (!config.recommend.appearance) {
+              var limit = config.layout == 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
+
+              config.recommend.appearance = {
+                descriptionSummary: limit
+              };
+            } else if (!config.recommend.appearance.descriptionSummary) {
+              config.recommend.appearance = limit;
+            }
+
+            if (desc.length > config.recommend.appearance.descriptionSummary) {
+              desc = desc.substring(0, config.recommend.appearance.descriptionSummary);
+              desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
+            }
+
+            recDesc.innerHTML = desc;
+            recMeta.appendChild(recDesc);
+          }
 
           widgetContentUnit.appendChild(recMeta);
         }
@@ -2993,7 +3022,7 @@
       }
 
       var recommendParts = [
-        '//api.lytics.io/api/content/recommend/',
+        'http://api.lytics.io/api/content/recommend/',
         accountId,
         '/user/_uids/',
         seerId

@@ -107,19 +107,23 @@
     .pf-content-unit {
       width: 95%;
       margin: 0 auto 30px;
-      min-height: 135px;
 
       .pf-content-unit-img {
         position: absolute;
         display: block;
         height: 100%;
         width: 40%;
+
+        & + .pf-content-unit-meta {
+          width: 60%;
+          min-height: 135px;
+        }
       }
 
       .pf-content-unit-meta {
         padding: 15px 15px;
         display: block;
-        width: 60%;
+        width: 100%;
         margin: 0 0 0 auto;
 
         h4 {
