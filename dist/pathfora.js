@@ -275,7 +275,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', 'http://localhost:8080/dist/pathfora.min.css');
+    link.setAttribute('href', '//c.lytics.io/static/pathfora.min.css');
 
     head.appendChild(link);
   };
@@ -2038,7 +2038,8 @@
      * @param {object} config
      */
     setupWidgetContentUnit: function (widget, config) {
-      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+      var widgetContentUnit = widget.querySelector('.pf-content-unit'),
+          settings = config.recommend;
 
       if (config.recommend && config.content) {
         // Make sure we have content to get
@@ -2054,10 +2055,8 @@
 
           widgetContentUnit.href = rec.url;
 
-          console.log(rec.image);
-
           // image div
-          if (rec.image) {
+          if (rec.image && (!settings.display || settings.display.image !== false)) {
             recImage.className = 'pf-content-unit-img';
             recImage.style.backgroundImage = "url('" + rec.image + "')";
             widgetContentUnit.appendChild(recImage);
@@ -2067,28 +2066,28 @@
 
 
           // title h4
-          if (rec.title) {
+          if (rec.title && (!settings.display || settings.display.title !== false)) {
             recTitle.innerHTML = rec.title;
             recMeta.appendChild(recTitle);
           }
 
           // description p
-          if (rec.description) {
-            var desc = rec.description;
+          if (rec.description && (!settings.display || settings.display.description !== false)) {
+            var desc = rec.description,
+                limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
+
 
             // set the default character limit for descriptions
-            if (!config.recommend.appearance) {
-              var limit = config.layout == 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
-
-              config.recommend.appearance = {
-                descriptionSummary: limit
+            if (!settings.display) {
+              settings.display = {
+                descriptionLimit: limit
               };
-            } else if (!config.recommend.appearance.descriptionSummary) {
-              config.recommend.appearance = limit;
+            } else if (!settings.display.descriptionLimit) {
+              settings.display.descriptionLimit = limit;
             }
 
-            if (desc.length > config.recommend.appearance.descriptionSummary) {
-              desc = desc.substring(0, config.recommend.appearance.descriptionSummary);
+            if (desc.length > settings.display.descriptionLimit) {
+              desc = desc.substring(0, settings.display.descriptionLimit);
               desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
             }
 
@@ -3022,7 +3021,7 @@
       }
 
       var recommendParts = [
-        'http://api.lytics.io/api/content/recommend/',
+        '//api.lytics.io/api/content/recommend/',
         accountId,
         '/user/_uids/',
         seerId
