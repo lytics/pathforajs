@@ -4,7 +4,7 @@
 Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](https://lytics.github.io/pathforadocs/).
         
 ## Modules
-There are 4 types of modules and 4 layouts currently supported.
+There are 4 types of modules and 5 layouts currently supported.
 
 **Modules can be of the following types:**
 
@@ -19,14 +19,12 @@ There are 4 types of modules and 4 layouts currently supported.
   - **Slideout** - A medium module which slides from either side into the window.
   - **Bar** - A thin module which appears at the top or bottom of the browser window.
   - **Button** - A small module which only allows for a short call to action and a single click action.
+  - **Inline** - A module which can be inserted into an existing div on a page.
 
 ## General Usage
 1. Add [Lytics tracking tag](https://activate.getlytics.com/#/documentation/jstag_anon) to your website, and import pathfora.js file.
 
   ``` html
-  <!-- Your Lytics JS Tag -->
-  <script src="https://c.lytics.io/api/tag/YOUR LYTICS API KEY/lio.js"></script>
-
   <!-- Pathfora Tag -->
   <script src="http://c.lytics.io/static/pathfora.min.js"></script>
   ```
