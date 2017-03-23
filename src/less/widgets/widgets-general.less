@@ -247,6 +247,13 @@
     background-color: @actionBackground;
 
     .pf-content-unit-meta {
+      span.pf-content-unit-info {
+        font-size: 12px;
+        display: block;
+        margin-bottom: 5px;
+        color: @headline;
+      }
+
       padding: 10px 15px;
 
       h4 {
@@ -272,20 +279,27 @@
   .pf-content-unit:not(.stack) {
     width: 95%;
     margin: 0 auto 30px;
-    min-height: 135px;
 
     .pf-content-unit-img {
       position: absolute;
       display: block;
       height: 100%;
       width: 40%;
+
+      & + .pf-content-unit-meta {
+        width: 60%;
+        min-height: 135px;
+      }
     }
 
     .pf-content-unit-meta {
       padding: 15px 15px;
       display: block;
-      width: 60%;
       margin: 0 0 0 auto;
+
+      span.pf-content-unit-info {
+        font-size: 13px;
+      }
 
       h4 {
         font-size: 18px;

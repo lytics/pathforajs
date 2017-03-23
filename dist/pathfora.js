@@ -18,6 +18,8 @@
       PREFIX_CANCEL = 'PathforaCancel_',
       PREFIX_CLOSE = 'PathforaClosed_',
       PF_PAGEVIEWS = 'PathforaPageView',
+      DEFAULT_CHAR_LIMIT = 220,
+      DEFAULT_CHAR_LIMIT_STACK = 160,
       WIDTH_BREAKPOINT = 650;
 
   var defaultPositions = {
@@ -2037,7 +2039,8 @@
      * @param {object} config
      */
     setupWidgetContentUnit: function (widget, config) {
-      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+      var widgetContentUnit = widget.querySelector('.pf-content-unit'),
+          settings = config.recommend;
 
       if (config.recommend && config.content) {
         // Make sure we have content to get
@@ -2049,24 +2052,73 @@
               recImage = document.createElement('div'),
               recMeta = document.createElement('div'),
               recTitle = document.createElement('h4'),
-              recDesc = document.createElement('p');
+              recDesc = document.createElement('p'),
+              recInfo = document.createElement('span');
 
           widgetContentUnit.href = rec.url;
 
           // image div
-          recImage.className = 'pf-content-unit-img';
-          recImage.style.backgroundImage = "url('" + rec.image + "')";
-          widgetContentUnit.appendChild(recImage);
+          if (rec.image && (!settings.display || settings.display.image !== false)) {
+            recImage.className = 'pf-content-unit-img';
+            recImage.style.backgroundImage = "url('" + rec.image + "')";
+            widgetContentUnit.appendChild(recImage);
+          }
 
           recMeta.className = 'pf-content-unit-meta';
 
           // title h4
-          recTitle.innerHTML = rec.title;
-          recMeta.appendChild(recTitle);
+          if (rec.title && (!settings.display || settings.display.title !== false)) {
+            recTitle.innerHTML = rec.title;
+            recMeta.appendChild(recTitle);
+          }
+
+          if (rec.author && (settings.display && settings.display.author === true)) {
+            recInfo.innerHTML = 'by ' + rec.author;
+          }
+
+          if (rec.date && (settings.display && settings.display.date === true)) {
+            var published = new Date(rec.date),
+                locale = settings.display.locale ? settings.display.locale : context.pathfora.locale,
+                dateOptions = settings.display.dateOptions ? settings.display.dateOptions : context.pathfora.dateOptions;
+
+
+            published = published.toLocaleDateString(locale, dateOptions);
+
+            if (!recInfo.innerHTML) {
+              recInfo.innerHTML = published;
+            } else {
+              recInfo.innerHTML += ' | ' + published;
+            }
+          }
+
+          if (recInfo.innerHTML) {
+            recInfo.className = 'pf-content-unit-info';
+            recMeta.appendChild(recInfo);
+          }
 
           // description p
-          recDesc.innerHTML = rec.description;
-          recMeta.appendChild(recDesc);
+          if (rec.description && (!settings.display || settings.display.description !== false)) {
+            var desc = rec.description,
+                limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
+
+
+            // set the default character limit for descriptions
+            if (!settings.display) {
+              settings.display = {
+                descriptionLimit: limit
+              };
+            } else if (!settings.display.descriptionLimit) {
+              settings.display.descriptionLimit = limit;
+            }
+
+            if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
+              desc = desc.substring(0, settings.display.descriptionLimit);
+              desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
+            }
+
+            recDesc.innerHTML = desc;
+            recMeta.appendChild(recDesc);
+          }
 
           widgetContentUnit.appendChild(recMeta);
         }
@@ -2474,7 +2526,9 @@
                   title: content.title,
                   description: content.description,
                   url: content.url,
-                  image: content.primary_image
+                  image: content.primary_image,
+                  date: content.created,
+                  author: content.author
                 }
               ];
             }
@@ -2851,7 +2905,7 @@
     },
 
     widgetResizeListener: function (widget, node) {
-      if (widget.layout === 'inline' && widget.recommend) {
+      if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
         var rec = node.querySelector('.pf-content-unit');
         if (rec) {
           if (node.offsetWidth < WIDTH_BREAKPOINT && !utils.hasClass(rec, 'stack')) {
@@ -3015,12 +3069,16 @@
 
 
       var ql = params.ql,
-          ast = params.ast;
+          ast = params.ast,
+          display = params.display;
 
       delete params.ql;
       delete params.ast;
+      delete params.display;
 
       var queries = utils.constructQueries(params);
+
+      params.display = display;
 
       if (!params.contentsegment) {
         // Special case for Adhoc Segments
@@ -3798,9 +3856,11 @@
 
       core.widgetResizeListener(widget, node);
 
-      window.addEventListener('resize', function () {
-        core.widgetResizeListener(widget, node);
-      });
+      if (typeof context.addEventListener === 'function') {
+        context.addEventListener('resize', function () {
+          core.widgetResizeListener(widget, node);
+        });
+      }
     };
 
     /**
