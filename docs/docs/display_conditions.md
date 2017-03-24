@@ -81,6 +81,39 @@ displayConditions: {
 }
 ```
 
+## showOnMissingFields
+By default, a module will be hidden if tried to include an [entity field](customization/entity_fields.md) that the user does not have. showOnMissingFields can override this beahvior.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>showDelay</code> int</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>false</td>
+    <td><code>default</code> module will be hidden if the field does not exist and no fallback is defined</td>
+  </tr>
+  <tr>
+    <td>true</td>
+    <td>module will show regardless of the missing field value, and the template will be replaced by an empty string.</td>
+  </tr>
+</table>
+
+
+``` javascript
+// example: loads after a 10 second delay
+
+displayConditions: {
+  showDelay: 10
+}
+```
+
 ## hideAfter
 Adds a countdown, in seconds, that must hides module on expiration.
 

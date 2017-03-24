@@ -5,7 +5,8 @@
   </head>
   <body>
     <h1>Action widget example</h1>
-    <script src="http://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="https://c.lytics.io/api/tag/4f7b525bdba058fc096757a6/lio.js"></script>
+
     <script src="../dist/pathfora.js"></script>
     <script>
     var config = {
@@ -23,7 +24,7 @@
     }
       var modal = new pathfora.Message({
         id: 'modal1',
-        layout: 'slideout',
+        layout: 'modal',
         headline: "Check this out!",
         variant: 3,
         okShow: false,
@@ -31,7 +32,8 @@
         msg: "Here is some cool content we know you'll be interested in",
         recommend: {
           rank: "popular",
-          path: "/blog/post"
+          path: "/blog/post",
+          shuffle: true,
         }
       });
       var lyticsId = "";

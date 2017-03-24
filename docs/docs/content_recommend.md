@@ -1,6 +1,6 @@
 Lytics content recommendations are now supported as a **beta** feature in Pathfora. Instead of hand selecting content to show an audience, you can can create a module that will suggest content at a individual level, based on the viewer's content affinities in Lytics. If you would like to try out this feature _please_ contact your customer success representative `success@lytics.io` to help set this up.
 
-**Note**: only [Message](/types/message.md) modules using a [slideout](/layouts/slideout.md) or [modal](/layouts/modal.md) layout and a [variant](/layouts/modal.md#variant) of `3` support content recommendations.
+**Note**: only [Message](/types/message.md) modules using a [slideout](/layouts/slideout.md), [modal](/layouts/modal.md) or [modal](/layouts/inline.md) layout and a [variant](/layouts/modal.md#variant) of `3` support content recommendations.
 
 ## recommend
 
@@ -91,6 +91,12 @@ Recommend controls any parameters necessary for making a content suggestions to 
     <td>Content segment AST expression to filter documents (see below)</td>
   </tr>
 
+  <tr>
+    <td>display</td>
+    <td>object</td>
+    <td>additional settings to control the appearance of the recommendation (see below)</td>
+  </tr>
+
 </table>
 
 <table>
@@ -137,6 +143,67 @@ Recommend controls any parameters necessary for making a content suggestions to 
   </tr>
 </table>
 
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>display</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>title</td>
+    <td>boolean</td>
+    <td>if false, do not show the title of the recommended content</td>
+  </tr>
+
+  <tr>
+    <td>image</td>
+    <td>boolean</td>
+    <td>if false, do not show the meta image of the recommended content</td>
+  </tr>
+
+  <tr>
+    <td>description</td>
+    <td>boolean</td>
+    <td>if false, do not show the meta description of the recommended content</td>
+  </tr>
+
+  <tr>
+    <td>author</td>
+    <td>boolean</td>
+    <td>if true, display the author of the recommended content</td>
+  </tr>
+
+  <tr>
+    <td>date</td>
+    <td>boolean</td>
+    <td>if false, display the published date of the recommended content</td>
+  </tr>
+
+  <tr>
+    <td>descriptionLimit</td>
+    <td>int</td>
+    <td>limit the number of characters in the meta description preview, a value of -1 removes the limit</td>
+  </tr>
+
+  <tr>
+    <td>locale</td>
+    <td>string</td>
+    <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString#Using_locales">locale</a> to be used to format the published date</td>
+  </tr>
+
+  <tr>
+    <td>dateOptions</td>
+    <td>object</td>
+    <td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString#Using_options">options</a> to be used to format the published date</td>
+  </tr>
+</table>
+
 *Contact your customer success representative `success@lytics.io` for assistance in writing a FilterQL statement or Segment AST expression to recommend based on url matching, topic relevance, and/or meta attributes.
 
 ## content
@@ -174,6 +241,16 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
     <td>image</td>
     <td>string</td>
     <td>url of the meta image of the default document</td>
+  </tr>
+  <tr>
+    <td>author</td>
+    <td>string</td>
+    <td>full name of the author of the document</td>
+  </tr>
+  <tr>
+    <td>date</td>
+    <td>string</td>
+    <td>ISO 8601 formatted date that the document was published</td>
   </tr>
   <tr>
     <td>default</td>

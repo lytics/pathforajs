@@ -11,6 +11,17 @@
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
 
+  var PREFIX_REC = 'PathforaRecommend_',
+      PREFIX_UNLOCK = 'PathforaUnlocked_',
+      PREFIX_IMPRESSION = 'PathforaImpressions_',
+      PREFIX_CONFIRM = 'PathforaConfirm_',
+      PREFIX_CANCEL = 'PathforaCancel_',
+      PREFIX_CLOSE = 'PathforaClosed_',
+      PF_PAGEVIEWS = 'PathforaPageView',
+      DEFAULT_CHAR_LIMIT = 220,
+      DEFAULT_CHAR_LIMIT_STACK = 160,
+      WIDTH_BREAKPOINT = 650;
+
   var defaultPositions = {
     modal: '',
     slideout: 'bottom-left',
@@ -305,7 +316,7 @@
       if (expiration) {
         expires = '; expires=' + expiration.toUTCString();
       } else {
-        expires = '';
+        expires = '; expires=0';
       }
 
       context.document.cookie = [
@@ -517,7 +528,7 @@
     initializedWidgets: [],
     readyWidgets: [],
     expiration: null,
-    pageViews: ~~utils.readCookie('PathforaPageView'),
+    pageViews: ~~utils.readCookie(PF_PAGEVIEWS),
 
     /**
      * @description Display a single widget
@@ -542,59 +553,88 @@
         }
       }
 
-      // display conditions based on page load
-      if (condition.date) {
-        widget.valid = widget.valid && core.dateChecker(condition.date);
-      }
-
-      if (condition.pageVisits) {
-        widget.valid = widget.valid && core.pageVisitsChecker(condition.pageVisits);
-      }
-
-      if (condition.hideAfterAction) {
-        widget.valid = widget.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
-      }
-      if (condition.urlContains) {
-        widget.valid = widget.valid && core.urlChecker(condition.urlContains);
-      }
-
-      widget.valid = widget.valid && condition.showOnInit;
-
-      // display conditions based on page interaction
-      if (condition.showOnExitIntent) {
-        core.initializeExitIntent(widget);
-      }
-
-      if (condition.displayWhenElementVisible) {
-        watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
-        widget.watchers.push(watcher);
-        core.initializeScrollWatchers(widget);
-      }
-
-      if (condition.scrollPercentageToDisplay) {
-        watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
-        widget.watchers.push(watcher);
-        core.initializeScrollWatchers(widget);
-      }
-
-      if (condition.manualTrigger) {
-        watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
-        widget.watchers.push(watcher);
-        core.readyWidgets.push(widget);
-
-        // if we've already triggered the widget
-        // before initializing lets initialize right away
-        core.triggerWidget(widget);
-      }
-
-      if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-        if (condition.impressions) {
-          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+      var evalDisplayConditions = function () {
+        // display conditions based on page load
+        if (condition.date) {
+          widget.valid = widget.valid && core.dateChecker(condition.date);
         }
 
-        if (widget.valid) {
-          context.pathfora.showWidget(widget);
+        if (condition.pageVisits) {
+          widget.valid = widget.valid && core.pageVisitsChecker(condition.pageVisits);
         }
+
+        if (condition.hideAfterAction) {
+          widget.valid = widget.valid && core.hideAfterActionChecker(condition.hideAfterAction, widget);
+        }
+        if (condition.urlContains) {
+          widget.valid = widget.valid && core.urlChecker(condition.urlContains);
+        }
+
+        widget.valid = widget.valid && condition.showOnInit;
+
+        // display conditions based on page interaction
+        if (condition.showOnExitIntent) {
+          core.initializeExitIntent(widget);
+        }
+
+        if (condition.displayWhenElementVisible) {
+          watcher = core.registerElementWatcher(condition.displayWhenElementVisible, widget);
+          widget.watchers.push(watcher);
+          core.initializeScrollWatchers(widget);
+        }
+
+        if (condition.scrollPercentageToDisplay) {
+          watcher = core.registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+          widget.watchers.push(watcher);
+          core.initializeScrollWatchers(widget);
+        }
+
+        if (condition.manualTrigger) {
+          watcher = core.registerManualTriggerWatcher(condition.manualTrigger, widget);
+          widget.watchers.push(watcher);
+          core.readyWidgets.push(widget);
+
+          // if we've already triggered the widget
+          // before initializing lets initialize right away
+          core.triggerWidget(widget);
+        }
+
+        if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
+          if (condition.impressions) {
+            widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+          }
+
+          if (widget.valid) {
+            context.pathfora.showWidget(widget);
+          }
+        }
+      };
+
+      var regex = /\{{2}.*?\}{2}/g;
+      var foundMsg, foundHeadline, foundImage;
+
+      if (typeof widget.msg === 'string') {
+        foundMsg = widget.msg.match(regex);
+      }
+
+      if (typeof widget.headline === 'string') {
+        foundHeadline = widget.headline.match(regex);
+      }
+
+
+      if (typeof widget.image === 'string') {
+        foundImage = widget.image.match(regex);
+      }
+
+      if ((foundMsg && foundMsg.length > 0) || (foundHeadline && foundHeadline.length > 0) || (foundImage && foundImage.length > 0)) {
+        pathfora.addCallback(function () {
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'msg', foundMsg);
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'headline', foundHeadline);
+          widget.valid = widget.valid && core.entityFieldChecker(widget, 'image', foundImage);
+          evalDisplayConditions();
+        });
+      } else {
+        evalDisplayConditions();
       }
     },
 
@@ -866,6 +906,65 @@
       return valid;
     },
 
+    entityFieldChecker: function (widget, fieldName, found) {
+      if (!found || !found.length) {
+        return true;
+      }
+
+      // for each template found...
+      for (var f = 0; f < found.length; f++) {
+        // parse the field name
+        var dataval = found[f].slice(2).slice(0, -2),
+            parts = dataval.split('|'),
+            def;
+
+        // get the default (fallback) value
+        if (parts.length > 1) {
+          def = parts[1].trim();
+        }
+
+        // check for subfields if the value is an object
+        var split = parts[0].trim().split('.');
+
+        dataval = context.lio.data;
+        var s;
+
+        for (s = 0; s < split.length; s++) {
+          if (typeof dataval !== 'undefined') {
+            dataval = dataval[split[s]];
+          }
+        }
+
+        // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
+        if (typeof dataval === 'undefined') {
+          dataval = context.pathfora.customData;
+
+          for (s = 0; s < split.length; s++) {
+            if (typeof dataval !== 'undefined') {
+              dataval = dataval[split[s]];
+            }
+          }
+        }
+
+        // replace the template with the lytics data value
+        if (typeof dataval !== 'undefined') {
+          widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+        // if there's no default and we should error
+        } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
+          return false;
+        // replace with the default option, or empty string if not found
+        } else {
+          if (typeof def === 'undefined') {
+            def = '';
+          }
+
+          widget[fieldName] = widget[fieldName].replace(found[f], def);
+        }
+      }
+
+      return true;
+    },
+
     urlChecker: function (phrases) {
       var url = utils.escapeURI(window.location.href, { keepEscaped: true }),
           simpleurl = window.location.hostname + window.location.pathname,
@@ -927,7 +1026,7 @@
     impressionsChecker: function (impressionConstraints, widget) {
       var parts, totalImpressions,
           valid = true,
-          id = 'PathforaImpressions_' + widget.id,
+          id = PREFIX_IMPRESSION + widget.id,
           sessionImpressions = ~~sessionStorage.getItem(id),
           total = utils.readCookie(id),
           now = Date.now();
@@ -966,9 +1065,9 @@
       var parts,
           valid = true,
           now = Date.now(),
-          confirm = utils.readCookie('PathforaConfirm_' + widget.id),
-          cancel = utils.readCookie('PathforaCancel_' + widget.id),
-          closed = utils.readCookie('PathforaClosed_' + widget.id);
+          confirm = utils.readCookie(PREFIX_CONFIRM + widget.id),
+          cancel = utils.readCookie(PREFIX_CANCEL + widget.id),
+          closed = utils.readCookie(PREFIX_CLOSE + widget.id);
 
       if (hideAfterActionConstraints.confirm && confirm) {
         parts = confirm.split('|');
@@ -1768,7 +1867,7 @@
 
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
-            updateActionCookie('PathforaClosed_' + widget.id);
+            updateActionCookie(PREFIX_CLOSE + widget.id);
             widgetOnModalClose(event);
           };
         }
@@ -1784,14 +1883,14 @@
               if (typeof config.cancelAction.callback === 'function') {
                 config.cancelAction.callback();
               }
-              updateActionCookie('PathforaCancel_' + widget.id);
+              updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
           } else {
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
-              updateActionCookie('PathforaCancel_' + widget.id);
+              updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
               widgetOnModalClose(event);
             };
@@ -1811,7 +1910,7 @@
             // invalid form, do not submit
           } else {
             core.trackWidgetAction('confirm', config);
-            updateActionCookie('PathforaConfirm_' + widget.id);
+            updateActionCookie(PREFIX_CONFIRM + widget.id);
 
             if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
               config.confirmAction.callback();
@@ -1850,7 +1949,7 @@
 
         widgetReco.onclick = function (event) {
           core.trackWidgetAction('confirm', config, event.target);
-          updateActionCookie('PathforaConfirm_' + widget.id);
+          updateActionCookie(PREFIX_CONFIRM + widget.id);
         };
       }
     },
@@ -1905,7 +2004,8 @@
      * @param {object} config
      */
     setupWidgetContentUnit: function (widget, config) {
-      var widgetContentUnit = widget.querySelector('.pf-content-unit');
+      var widgetContentUnit = widget.querySelector('.pf-content-unit'),
+          settings = config.recommend;
 
       if (config.recommend && config.content) {
         // Make sure we have content to get
@@ -1917,24 +2017,73 @@
               recImage = document.createElement('div'),
               recMeta = document.createElement('div'),
               recTitle = document.createElement('h4'),
-              recDesc = document.createElement('p');
+              recDesc = document.createElement('p'),
+              recInfo = document.createElement('span');
 
           widgetContentUnit.href = rec.url;
 
           // image div
-          recImage.className = 'pf-content-unit-img';
-          recImage.style.backgroundImage = "url('" + rec.image + "')";
-          widgetContentUnit.appendChild(recImage);
+          if (rec.image && (!settings.display || settings.display.image !== false)) {
+            recImage.className = 'pf-content-unit-img';
+            recImage.style.backgroundImage = "url('" + rec.image + "')";
+            widgetContentUnit.appendChild(recImage);
+          }
 
           recMeta.className = 'pf-content-unit-meta';
 
           // title h4
-          recTitle.innerHTML = rec.title;
-          recMeta.appendChild(recTitle);
+          if (rec.title && (!settings.display || settings.display.title !== false)) {
+            recTitle.innerHTML = rec.title;
+            recMeta.appendChild(recTitle);
+          }
+
+          if (rec.author && (settings.display && settings.display.author === true)) {
+            recInfo.innerHTML = 'by ' + rec.author;
+          }
+
+          if (rec.date && (settings.display && settings.display.date === true)) {
+            var published = new Date(rec.date),
+                locale = settings.display.locale ? settings.display.locale : context.pathfora.locale,
+                dateOptions = settings.display.dateOptions ? settings.display.dateOptions : context.pathfora.dateOptions;
+
+
+            published = published.toLocaleDateString(locale, dateOptions);
+
+            if (!recInfo.innerHTML) {
+              recInfo.innerHTML = published;
+            } else {
+              recInfo.innerHTML += ' | ' + published;
+            }
+          }
+
+          if (recInfo.innerHTML) {
+            recInfo.className = 'pf-content-unit-info';
+            recMeta.appendChild(recInfo);
+          }
 
           // description p
-          recDesc.innerHTML = rec.description;
-          recMeta.appendChild(recDesc);
+          if (rec.description && (!settings.display || settings.display.description !== false)) {
+            var desc = rec.description,
+                limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
+
+
+            // set the default character limit for descriptions
+            if (!settings.display) {
+              settings.display = {
+                descriptionLimit: limit
+              };
+            } else if (!settings.display.descriptionLimit) {
+              settings.display.descriptionLimit = limit;
+            }
+
+            if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
+              desc = desc.substring(0, settings.display.descriptionLimit);
+              desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
+            }
+
+            recDesc.innerHTML = desc;
+            recMeta.appendChild(recDesc);
+          }
 
           widgetContentUnit.appendChild(recMeta);
         }
@@ -2254,7 +2403,7 @@
         }
 
         if (action === 'unlock') {
-          utils.saveCookie('PathforaUnlocked_' + widget.id, true, core.expiration);
+          utils.saveCookie(PREFIX_UNLOCK + widget.id, true, core.expiration);
         }
 
         break;
@@ -2332,7 +2481,7 @@
             }
           }
 
-          api.recommendContent(pathfora.acctid, params, function (resp) {
+          api.recommendContent(pathfora.acctid, params, w.id, function (resp) {
             // if we get a response from the recommend api put it as the first
             // element in the content object this replaces any default content
             if (resp[0]) {
@@ -2341,8 +2490,10 @@
                 {
                   title: content.title,
                   description: content.description,
-                  url: 'http://' + content.url,
-                  image: content.primary_image
+                  url: content.url,
+                  image: content.primary_image,
+                  date: content.created,
+                  author: content.author
                 }
               ];
             }
@@ -2369,7 +2520,7 @@
             defaults = defaultProps[widget.type],
             globals = defaultProps.generic;
 
-        if (widget.type === 'sitegate' && utils.readCookie('PathforaUnlocked_' + widget.id) === 'true' || widget.hiddenViaABTests === true) {
+        if (widget.type === 'sitegate' && utils.readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
           continue;
         }
 
@@ -2384,7 +2535,7 @@
         this.updateObject(widget, widget.config);
 
         if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-          if (widget.layout !== 'slideout' && widget.layout !== 'modal') {
+          if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
             throw new Error('Unsupported layout for content recommendation');
           }
 
@@ -2716,6 +2867,19 @@
           });
         }
       });
+    },
+
+    widgetResizeListener: function (widget, node) {
+      if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
+        var rec = node.querySelector('.pf-content-unit');
+        if (rec) {
+          if (node.offsetWidth < WIDTH_BREAKPOINT && !utils.hasClass(rec, 'stack')) {
+            utils.addClass(rec, 'stack');
+          } else if (node.offsetWidth >= WIDTH_BREAKPOINT) {
+            utils.removeClass(rec, 'stack');
+          }
+        }
+      }
     }
   };
 
@@ -2824,9 +2988,36 @@
      * @throws {Error} error
      * @param {string} accountId  Lytics account ID
      */
-    recommendContent: function (accountId, params, callback) {
+    recommendContent: function (accountId, params, id, callback) {
       // Recommendation API:
       // https://www.getlytics.com/developers/rest-api#content-recommendation
+
+      // if we have the recommendation response cached in session storage
+      // use that instead of making a new API request
+      var storedRec = sessionStorage.getItem(PREFIX_REC + id);
+
+      if (typeof storedRec === 'string' && params.visited !== false) {
+        var rec;
+
+        try {
+          rec = JSON.parse(storedRec);
+        } catch (e) {
+          console.warn('Could not parse json stored response:' + e);
+        }
+
+        if (rec && rec.data) {
+          // special case: shuffle param
+          if (params.shuffle === true) {
+            rec.data.shift();
+          }
+
+          if (rec.data.length > 0) {
+            sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+            callback(rec.data);
+          }
+          return;
+        }
+      }
 
       var seerId = utils.readCookie('seerid');
 
@@ -2843,12 +3034,16 @@
 
 
       var ql = params.ql,
-          ast = params.ast;
+          ast = params.ast,
+          display = params.display;
 
       delete params.ql;
       delete params.ast;
+      delete params.display;
 
       var queries = utils.constructQueries(params);
+
+      params.display = display;
 
       if (!params.contentsegment) {
         // Special case for Adhoc Segments
@@ -2874,8 +3069,31 @@
       var recommendUrl = recommendParts.join('') + queries;
 
       this.getData(recommendUrl, function (json) {
-        var resp = JSON.parse(json);
+
+        // set the session storage.
+        sessionStorage.setItem(PREFIX_REC + id, json);
+        var resp;
+
+        try {
+          resp = JSON.parse(json);
+        } catch (e) {
+          console.warn('Could not parse json response:' + e);
+          callback([]);
+          return;
+        }
+
         if (resp.data && resp.data.length > 0) {
+          // append a protocol for urls that are absolute
+          for (var i = 0; i < resp.data.length; i++) {
+            var url = resp.data[i].url;
+            if (url) {
+              var split = url.split('/')[0].split('.');
+              if (split.length > 1) {
+                resp.data[i].url = 'http://' + url;
+              }
+            }
+          }
+
           callback(resp.data);
         } else {
           callback([]);
@@ -3069,7 +3287,7 @@
           contentsegment: rec
         };
 
-        api.recommendContent(pathfora.acctid, params, function (resp) {
+        api.recommendContent(pathfora.acctid, params, rec, function (resp) {
           var idx = 0;
           for (var block in blocks) {
             if (blocks.hasOwnProperty(block)) {
@@ -3102,10 +3320,10 @@
                 // if attribute is on an a (link) element
                 if (elems.url) {
                   if (typeof elems.url.href !== 'undefined') {
-                    elems.url.href = 'http://' + content.url;
+                    elems.url.href = content.url;
                   // if attribute is on container element
                   } else {
-                    elems.url.innerHTML = 'http://' + content.url;
+                    elems.url.innerHTML = content.url;
                   }
                 }
 
@@ -3179,7 +3397,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.1.1';
+    this.version = '0.1.2';
 
     /**
      * @public
@@ -3220,6 +3438,13 @@
 
     /**
      * @public
+     * @description A list of widgets that have been triggered manually
+     * using the manualTrigger display condition
+     */
+    this.customData = {};
+
+    /**
+     * @public
      * @description Add callbacks to execute once segments load
      */
     this.addCallback = function (cb) {
@@ -3235,10 +3460,10 @@
      * @description Create page view cookie
      */
     this.initializePageViews = function () {
-      var cookie = utils.readCookie('PathforaPageView'),
+      var cookie = utils.readCookie(PF_PAGEVIEWS),
           date = new Date();
       date.setDate(date.getDate() + 365);
-      utils.saveCookie('PathforaPageView', Math.min(~~cookie, 9998) + 1, date);
+      utils.saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
     };
 
     /**
@@ -3592,6 +3817,14 @@
         setTimeout(function () {
           context.pathfora.closeWidget(widget.id, true);
         }, widget.displayConditions.hideAfter * 1000);
+      }
+
+      core.widgetResizeListener(widget, node);
+
+      if (typeof context.addEventListener === 'function') {
+        context.addEventListener('resize', function () {
+          core.widgetResizeListener(widget, node);
+        });
       }
     };
 

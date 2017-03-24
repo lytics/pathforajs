@@ -25,7 +25,7 @@ Variant determines any extra content (dictated by extra keys in the config) that
   </tr>
   <tr>
     <td>3</td>
-    <td>module includes a <a href="../../content_recommend">content recommendation</a> (this feature is in <strong>beta</strong>)</td>
+    <td>module includes a <a href="../../content_recommend">content recommendation</a></td>
   </tr>
 </table>
 

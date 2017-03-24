@@ -44,6 +44,7 @@ function makeMouseEvent (type, params) {
 describe('Pathfora', function () {
   beforeEach(function () {
     localStorage.clear();
+    sessionStorage.clear();
     pathfora.clearAll();
   });
 
@@ -1279,6 +1280,7 @@ describe('Pathfora', function () {
 describe('Widgets', function () {
   beforeEach(function () {
     localStorage.clear();
+    sessionStorage.clear();
     pathfora.clearAll();
   });
 
@@ -2058,6 +2060,179 @@ describe('Widgets', function () {
       expect(widget.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
+
+    pathfora.acctid = '';
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should accept segment AST definition', function (done) {
+    jasmine.Ajax.install();
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
+    var astModal = new pathfora.Message({
+      id: 'ast-modal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ast: {
+          args: [
+            {
+              ident: 'author'
+            }
+          ],
+          op: 'exists'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([astModal]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+    });
+
+    var widget = $('#' + astModal.id);
+    expect(widget).toBeDefined();
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+
+    pathfora.acctid = '';
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should not append protocol to relative urls', function () {
+    jasmine.Ajax.install();
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
+    var relativeModal = new pathfora.Message({
+      id: 'relative-modal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: '*'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([relativeModal]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+    });
+
+    var widget = $('#' + relativeModal.id);
+    expect(widget).toBeDefined();
+
+    var href = widget.find('.pf-content-unit').attr('href');
+    expect(href).toBe('this/is/a/path');
+
+    pathfora.acctid = '';
+    jasmine.Ajax.uninstall();
+  });
+
+  it('should account for display options for content recommendations', function () {
+    jasmine.Ajax.install();
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
+    var displayModal = new pathfora.Message({
+      id: 'recDisplayModal',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: '*'
+        },
+        display: {
+          author: true,
+          date: true,
+          descriptionLimit: 100,
+          dateOptions: {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+          }
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([displayModal]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+    });
+
+    var widget = $('#' + displayModal.id);
+    expect(widget).toBeDefined();
+
+    var info = widget.find('.pf-content-unit-meta span.pf-content-unit-info'),
+        desc = widget.find('.pf-content-unit-meta p');
+
+    expect(info.html()).toBe('by Test Example | January 1, 2017');
+    expect(desc.html().length < 103).toBeTruthy();
+
+    var displayModal2 = new pathfora.Message({
+      id: 'recDisplayModal2',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: '*'
+        },
+        display: {
+          image: false,
+          description: false
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([displayModal2]);
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      'status': 200,
+      'contentType': 'application/json',
+      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+    });
+
+    widget = $('#' + displayModal2.id);
+    expect(widget).toBeDefined();
+
+    var image = widget.find('.pf-content-unit-metadiv.pf-content-unit-img');
+    desc = widget.find('.pf-content-unit-meta p');
+
+    expect(desc.length).toBe(0);
+    expect(image.length).toBe(0);
 
     pathfora.acctid = '';
     jasmine.Ajax.uninstall();
@@ -3681,6 +3856,118 @@ describe('Widgets', function () {
   });
 
   // -------------------------
+  //  ENTITY FIELD TEMPLATES
+  // -------------------------
+
+  it('should replace dynamic templates with entity fields', function (done) {
+    window.lio = {
+      data: {
+        promoCode: '123FREE',
+        email: 'fake@gmail.com'
+      }
+    };
+
+    window.lio.loaded = true;
+
+    pathfora.customData = {
+      customField: 'test'
+    };
+
+    var fieldWidget1 = new pathfora.Message({
+      id: 'field-widget-1',
+      layout: 'slideout',
+      headline: 'Free shipping on your next purchase',
+      msg: 'Enter this promo code: {{promoCode}}'
+    });
+
+    var fieldWidget2 = new pathfora.Form({
+      id: 'field-widget-2',
+      layout: 'slideout',
+      headline: '{{email | no email provided}}',
+      msg: 'Sign up with your email.'
+    });
+
+    var fieldWidget3 = new pathfora.Form({
+      id: 'field-widget-3',
+      layout: 'slideout',
+      headline: 'Hi {{name}}',
+      msg: 'Sign up with your email.'
+    });
+
+    var fieldWidget4 = new pathfora.Form({
+      id: 'field-widget-4',
+      layout: 'slideout',
+      headline: 'Hi {{name}}',
+      msg: 'Sign up with your email.',
+      displayConditions: {
+        showOnMissingFields: true
+      }
+    });
+
+    var fieldWidget5 = new pathfora.Form({
+      id: 'field-widget-5',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{name | No Name}}!'
+    });
+
+    var fieldWidget6 = new pathfora.Form({
+      id: 'field-widget-6',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{myUrl | https://www.google.com/}}!'
+    });
+
+    var fieldWidget7 = new pathfora.Form({
+      id: 'field-widget-7',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'Welcome {{customField | fail}}!'
+    });
+
+    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7]);
+
+    var w1 = $('#' + fieldWidget1.id);
+    expect(w1.length).toBe(1);
+    expect(fieldWidget1.msg).toBe('Enter this promo code: 123FREE');
+
+    var w2 = $('#' + fieldWidget2.id);
+    expect(w2.length).toBe(1);
+    expect(fieldWidget2.headline).toBe('fake@gmail.com');
+
+    var w3 = $('#' + fieldWidget3.id);
+    expect(w3.length).toBe(0);
+
+    var w4 = $('#' + fieldWidget4.id);
+    expect(w4.length).toBe(1);
+    expect(fieldWidget4.headline).toBe('Hi ');
+
+    var w5 = $('#' + fieldWidget5.id);
+    expect(w5.length).toBe(1);
+    expect(fieldWidget5.msg).toBe('Welcome No Name!');
+
+    var w6 = $('#' + fieldWidget6.id);
+    expect(w6.length).toBe(1);
+    expect(fieldWidget6.msg).toBe('Welcome https://www.google.com/!');
+
+    var w7 = $('#' + fieldWidget7.id);
+    expect(w7.length).toBe(1);
+    expect(fieldWidget7.msg).toBe('Welcome test!');
+
+    setTimeout(function () {
+      expect(w1.hasClass('opened')).toBeTruthy();
+      expect(w2.hasClass('opened')).toBeTruthy();
+      expect(w3.hasClass('opened')).toBeFalsy();
+      expect(w4.hasClass('opened')).toBeTruthy();
+      expect(w5.hasClass('opened')).toBeTruthy();
+      expect(w6.hasClass('opened')).toBeTruthy();
+      expect(w7.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+
+  });
+
+  // -------------------------
   //  IGNORED
   // -------------------------
 
@@ -4020,6 +4307,7 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
+      sessionStorage.clear();
       pathfora.acctid = credentials;
       pathfora.inline.elements = [];
     });
