@@ -144,6 +144,7 @@
       },
       okMessage: 'Submit',
       okShow: true,
+      cancelShow: false,
       showSocialLogin: false,
       showForm: true
     }
