@@ -3925,7 +3925,17 @@ describe('Widgets', function () {
       msg: 'Welcome {{customField | fail}}!'
     });
 
-    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7]);
+    var fieldWidget8 = new pathfora.Form({
+      id: 'fieldWidget8',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'my {{data | string}} will get {{data2}} defaulted wrong',
+      displayConditions: {
+        showOnMissingFields: true
+      }
+    });
+
+    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7, fieldWidget8]);
 
     var w1 = $('#' + fieldWidget1.id);
     expect(w1.length).toBe(1);
@@ -3954,6 +3964,10 @@ describe('Widgets', function () {
     expect(w7.length).toBe(1);
     expect(fieldWidget7.msg).toBe('Welcome test!');
 
+    var w8 = $('#' + fieldWidget8.id);
+    expect(w8.length).toBe(1);
+    expect(fieldWidget8.msg).toBe('my string will get  defaulted wrong');
+
     setTimeout(function () {
       expect(w1.hasClass('opened')).toBeTruthy();
       expect(w2.hasClass('opened')).toBeTruthy();
@@ -3962,6 +3976,7 @@ describe('Widgets', function () {
       expect(w5.hasClass('opened')).toBeTruthy();
       expect(w6.hasClass('opened')).toBeTruthy();
       expect(w7.hasClass('opened')).toBeTruthy();
+      expect(w8.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
 

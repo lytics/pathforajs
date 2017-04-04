@@ -952,7 +952,7 @@
         // parse the field name
         var dataval = found[f].slice(2).slice(0, -2),
             parts = dataval.split('|'),
-            def;
+            def = '';
 
         // get the default (fallback) value
         if (parts.length > 1) {
@@ -990,10 +990,6 @@
           return false;
         // replace with the default option, or empty string if not found
         } else {
-          if (typeof def === 'undefined') {
-            def = '';
-          }
-
           widget[fieldName] = widget[fieldName].replace(found[f], def);
         }
       }
