@@ -144,6 +144,7 @@
       },
       okMessage: 'Submit',
       okShow: true,
+      cancelShow: false,
       showSocialLogin: false,
       showForm: true
     }
@@ -916,7 +917,7 @@
         // parse the field name
         var dataval = found[f].slice(2).slice(0, -2),
             parts = dataval.split('|'),
-            def;
+            def = '';
 
         // get the default (fallback) value
         if (parts.length > 1) {
@@ -954,10 +955,6 @@
           return false;
         // replace with the default option, or empty string if not found
         } else {
-          if (typeof def === 'undefined') {
-            def = '';
-          }
-
           widget[fieldName] = widget[fieldName].replace(found[f], def);
         }
       }
@@ -2211,115 +2208,113 @@
 
       if (colors.background) {
         if (utils.hasClass(widget, 'pf-widget-modal')) {
-          widget.querySelector('.pf-widget-content').style.backgroundColor = colors.background;
+          widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
         } else {
-          widget.style.backgroundColor = colors.background;
+          widget.style.setProperty('background-color', colors.background, 'important');
         }
       }
 
       if (colors.fieldBackground) {
         for (i = 0; i < fields.length; i++) {
-          fields[i].style.backgroundColor = colors.fieldBackground;
+          fields[i].style.setProperty('background-color', colors.fieldBackground, 'important');
         }
       }
 
       if (colors.required) {
         for (i = 0; i < required.length; i++) {
-          required[i].style.backgroundColor = colors.required;
-
-          var triange = required[i].querySelector('span');
-          triange.style.borderRightColor = colors.required;
+          required[i].style.setProperty('background-color', colors.required, 'important');
+          required[i].querySelector('span').style.setProperty('border-right-color', colors.required, 'important');
         }
 
         for (i = 0; i < requiredInline.length; i++) {
-          requiredInline[i].style.borderColor = colors.required;
+          requiredInline[i].style.setProperty('border-color', colors.required, 'important');
         }
 
         for (i = 0; i < requiredAsterisk.length; i++) {
-          requiredAsterisk[i].style.color = colors.required;
+          requiredAsterisk[i].style.setProperty('color', colors.required, 'important');
         }
       }
 
       if (colors.requiredText) {
         for (i = 0; i < required.length; i++) {
-          required[i].style.color = colors.requiredText;
+          required[i].style.setProperty('color', colors.requiredText, 'important');
         }
       }
 
       if (contentUnit && contentUnitMeta) {
         if (colors.actionBackground) {
-          contentUnit.style.backgroundColor = colors.actionBackground;
+          contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
         }
 
         if (colors.actionText) {
-          contentUnitMeta.querySelector('h4').style.color = colors.actionText;
+          contentUnitMeta.querySelector('h4').style.setProperty('color', colors.actionText, 'important');
         }
 
         if (colors.text) {
-          contentUnitMeta.querySelector('p').style.color = colors.text;
+          contentUnitMeta.querySelector('p').style.setProperty('color', colors.text, 'important');
         }
       }
 
       if (close && colors.close) {
-        close.style.color = colors.close;
+        close.style.setProperty('color', colors.close, 'important');
       }
 
       if (headline && colors.headline) {
         for (i = 0; i < headline.length; i++) {
-          headline[i].style.color = colors.headline;
+          headline[i].style.setProperty('color', colors.headline, 'important');
         }
       }
 
       if (headlineLeft && colors.headline) {
-        headlineLeft.style.color = colors.headline;
+        headlineLeft.style.setProperty('color', colors.headline, 'important');
       }
 
       if (arrow && colors.close) {
-        arrow.style.color = colors.close;
+        arrow.style.setProperty('color', colors.close, 'important');
       }
 
       if (arrowLeft && colors.close) {
-        arrowLeft.style.color = colors.close;
+        arrowLeft.style.setProperty('color', colors.close, 'important');
       }
 
       if (cancelBtn) {
         if (colors.cancelText) {
-          cancelBtn.style.color = colors.cancelText;
+          cancelBtn.style.setProperty('color', colors.cancelText, 'important');
         }
 
         if (colors.cancelBackground) {
-          cancelBtn.style.backgroundColor = colors.cancelBackground;
+          cancelBtn.style.setProperty('background-color', colors.cancelBackground, 'important');
         }
       }
 
       if (okBtn) {
         if (colors.actionText) {
-          okBtn.style.color = colors.actionText;
+          okBtn.style.setProperty('color', colors.actionText, 'important');
         }
 
         if (colors.actionBackground) {
-          okBtn.style.backgroundColor = colors.actionBackground;
+          okBtn.style.setProperty('background-color', colors.actionBackground, 'important');
         }
       }
 
       if (colors.text && branding) {
-        branding.style.fill = colors.text;
+        branding.style.setProperty('fill', colors.text, 'important');
       }
 
 
       socialBtns.forEach(function (btn) {
         if (colors.actionText) {
-          btn.style.color = colors.actionText;
+          btn.style.setProperty('color', colors.actionText, 'important');
         }
 
         if (colors.actionBackground) {
-          btn.style.backgroundColor = colors.actionBackground;
+          btn.style.setProperty('background-color', colors.actionBackground, 'important');
         }
       });
 
       if (msg && colors.text) {
         for (i = 0; i < msg.length; i++) {
-          msg[i].style.color = colors.text;
+          msg[i].style.setProperty('color', colors.text, 'important');
         }
       }
     },
@@ -3397,7 +3392,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.1.2';
+    this.version = '0.1.3';
 
     /**
      * @public
