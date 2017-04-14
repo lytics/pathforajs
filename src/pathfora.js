@@ -578,7 +578,7 @@
           widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
         }
 
-        if (typeof condition.prioritization !== 'undefined' && widget.valid && core.prioritizedWidgets.indexOf(widget) === -1) {
+        if (typeof condition.priority !== 'undefined' && widget.valid && core.prioritizedWidgets.indexOf(widget) === -1) {
           core.prioritizedWidgets.push(widget);
           return;
         }
@@ -653,7 +653,6 @@
      */
     initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
-
         widget.scrollListener = function () {
           var valid;
 
@@ -668,8 +667,7 @@
             widget.valid = false;
 
             if (typeof document.addEventListener === 'function') {
-              document.removeEventListener('scroll', widget.scrollListener);
-              document.removeEventListener('mouseout', widget.scrollListener);
+              context.removeEventListener('scroll', widget.scrollListener);
             } else {
               context.onscroll = null;
               context.onscroll = null;
@@ -1148,8 +1146,10 @@
     registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
-          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
+          var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
+              positionInPixels = height * (percent / 100),
               offset = document.documentElement.scrollTop || document.body.scrollTop;
+
           if (offset >= positionInPixels) {
             core.removeWatcher(watcher, widget);
             return true;
@@ -4033,6 +4033,27 @@
       return core.prepareABTest(config);
     };
 
+    this.reinitializePrioritizedWidgets = function () {
+      if (core.prioritizedWidgets.length > 0) {
+        var highest = [core.prioritizedWidgets[0]];
+
+        for (var i = 1; i < core.prioritizedWidgets.length; i++) {
+          var widget = core.prioritizedWidgets[i];
+          var highestWidget = highest[0];
+
+          if (widget.displayConditions.priority < highestWidget.displayConditions.priority) {
+            highest = [widget];
+          } else if (widget.displayConditions.priority === highestWidget.displayConditions.priority) {
+            highest.push(widget);
+          }
+        }
+
+        for (var j = 0; j < highest.length; j++) {
+          core.initializeWidget(highest[j]);
+        }
+      }
+    };
+
     /*
      * @public
      * @description Get utils object
@@ -4055,24 +4076,7 @@
 
 
   context.addEventListener('load', function () {
-    if (core.prioritizedWidgets.length > 0) {
-      var highest = [core.prioritizedWidgets[0]];
-
-      for (var i = 1; i < core.prioritizedWidgets.length; i++) {
-        var widget = core.prioritizedWidgets[i];
-        var highestWidget = highest[0];
-
-        if (widget.displayConditions.prioritization < highestWidget.displayConditions.prioritization) {
-          highest = [widget];
-        } else if (widget.displayConditions.prioritization === highestWidget.displayConditions.prioritization) {
-          highest.push(widget);
-        }
-      }
-
-      for (var j = 0; j < highest.length; j++) {
-        core.initializeWidget(highest[j]);
-      }
-    }
+    context.pathfora.reinitializePrioritizedWidgets();
   });
 
 
