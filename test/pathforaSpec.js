@@ -2845,6 +2845,83 @@ describe('Widgets', function () {
     expect(widget.length).toBe(0);
   });
 
+  it('should correctly prioritize which widgets to show', function (done) {
+    var p1 = new pathfora.Message({
+      layout: 'modal',
+      id: 'p1',
+      msg: 'priority = 2',
+      displayConditions: {
+        priority: 0
+      }
+    });
+
+    var p2 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'bottom-left',
+      id: 'p2',
+      msg: 'priority = 0',
+      displayConditions: {
+        priority: 2,
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'blah'
+          }
+        ]
+      }
+    });
+
+    var p3 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'bottom-right',
+      id: 'p3',
+      msg: 'priority = 1',
+      displayConditions: {
+        priority: 1,
+        impressions: {
+          total: 1
+        }
+      }
+    });
+
+    var p4 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'top-right',
+      id: 'p4',
+      msg: 'priority = 1',
+      displayConditions: {
+        priority: 1
+      }
+    });
+
+    var modules = {
+      target: [{
+        segment: 'all',
+        widgets: [p4]
+      }]
+    };
+
+    pathfora.initializeWidgets(modules);
+    pathfora.initializeWidgets([p1, p2, p3]);
+
+    setTimeout(function () {
+      expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p3.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p4.id).hasClass('opened')).toBeFalsy();
+
+      pathfora.reinitializePrioritizedWidgets();
+
+      setTimeout(function () {
+        expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
+        expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
+        expect($('#' + p3.id).hasClass('opened')).toBeTruthy();
+        expect($('#' + p4.id).hasClass('opened')).toBeTruthy();
+        done();
+      }, 200);
+    }, 200);
+  });
+
   it('should not show if hideAfterAction duration not met', function () {
     var widgetId = 'hideAfterActionWidget1';
     pathfora.utils.saveCookie('PathforaClosed_' + widgetId, '1|' + Date.now());
@@ -4178,90 +4255,6 @@ describe('Utils', function () {
 
       expect(constructQueries(params)).toEqual(expected);
     });
-  });
-});
-
-
-describe('Widget Priority', function () {
-  // beforeEach(function () {
-  //   spyOn(window.pathfora, 'reinitializePrioritizedWidgets').and.callThrough();
-  // });
-
-  it('should correctly select which widgets to show', function (done) {
-    var p1 = new pathfora.Message({
-      layout: 'modal',
-      id: 'p1',
-      msg: 'priority = 2',
-      displayConditions: {
-        priority: 2
-      }
-    });
-
-    var p2 = new pathfora.Message({
-      layout: 'slideout',
-      position: 'bottom-left',
-      id: 'p2',
-      msg: 'priority = 0',
-      displayConditions: {
-        priority: 0,
-        urlContains: [
-          {
-            match: 'simple',
-            value: 'blah'
-          }
-        ]
-      }
-    });
-
-    var p3 = new pathfora.Message({
-      layout: 'slideout',
-      position: 'bottom-right',
-      id: 'p3',
-      msg: 'priority = 1',
-      displayConditions: {
-        priority: 1,
-        impressions: {
-          total: 1
-        }
-      }
-    });
-
-    var p4 = new pathfora.Message({
-      layout: 'slideout',
-      position: 'top-right',
-      id: 'p4',
-      msg: 'priority = 1',
-      displayConditions: {
-        priority: 1
-      }
-    });
-
-    var modules = {
-      target: [{
-        segment: 'all',
-        widgets: [p4]
-      }]
-    };
-
-    pathfora.initializeWidgets(modules);
-    pathfora.initializeWidgets([p1, p2, p3]);
-
-    setTimeout(function () {
-      expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
-      expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
-      expect($('#' + p3.id).hasClass('opened')).toBeFalsy();
-      expect($('#' + p4.id).hasClass('opened')).toBeFalsy();
-
-      pathfora.reinitializePrioritizedWidgets();
-
-      setTimeout(function () {
-        expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
-        expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
-        expect($('#' + p3.id).hasClass('opened')).toBeTruthy();
-        expect($('#' + p4.id).hasClass('opened')).toBeTruthy();
-        done();
-      }, 200);
-    }, 200);
   });
 });
 

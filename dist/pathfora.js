@@ -4076,7 +4076,7 @@
           var widget = core.prioritizedWidgets[i];
           var highestWidget = highest[0];
 
-          if (widget.displayConditions.priority < highestWidget.displayConditions.priority) {
+          if (widget.displayConditions.priority > highestWidget.displayConditions.priority) {
             highest = [widget];
           } else if (widget.displayConditions.priority === highestWidget.displayConditions.priority) {
             highest.push(widget);
