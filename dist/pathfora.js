@@ -562,6 +562,7 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
+    prioritizedWidgets: [],
     readyWidgets: [],
     expiration: null,
     pageViews: ~~utils.readCookie(PF_PAGEVIEWS),
@@ -608,6 +609,15 @@
 
         widget.valid = widget.valid && condition.showOnInit;
 
+        if (condition.impressions) {
+          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+        }
+
+        if (typeof condition.prioritization !== 'undefined' && widget.valid && core.prioritizedWidgets.indexOf(widget) === -1) {
+          core.prioritizedWidgets.push(widget);
+          return;
+        }
+
         // display conditions based on page interaction
         if (condition.showOnExitIntent) {
           core.initializeExitIntent(widget);
@@ -636,10 +646,6 @@
         }
 
         if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-          if (condition.impressions) {
-            widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
-          }
-
           if (widget.valid) {
             context.pathfora.showWidget(widget);
           }
@@ -690,10 +696,6 @@
             if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
               valid = widget.valid && widget.watchers[key].check();
             }
-          }
-
-          if (widget.displayConditions.impressions && valid) {
-            valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
           }
 
           if (valid) {
@@ -751,10 +753,6 @@
             // Is it reasonable to believe that it left the top of the page, given the position and the speed?
             valid = widget.valid && y - ySpeed <= 50 && y < py;
 
-            if (widget.displayConditions.impressions && valid) {
-              valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
-            }
-
             if (valid) {
               context.pathfora.showWidget(widget);
               widget.valid = false;
@@ -796,10 +794,6 @@
         if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
           valid = widget.valid && widget.watchers[key].check();
         }
-      }
-
-      if (widget.displayConditions.impressions && valid) {
-        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
       }
 
       if (valid) {
@@ -1064,6 +1058,35 @@
           now = Date.now();
 
       if (!sessionImpressions) {
+        sessionImpressions = 0;
+      }
+
+      if (!total) {
+        totalImpressions = 0;
+      } else {
+        parts = total.split('|');
+        totalImpressions = parseInt(parts[0], 10);
+
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+          valid = false;
+        }
+      }
+
+      if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
+        valid = false;
+      }
+
+      return valid;
+    },
+
+    incrementImpressions: function (widget) {
+      var parts, totalImpressions,
+          id = PREFIX_IMPRESSION + widget.id,
+          sessionImpressions = ~~sessionStorage.getItem(id),
+          total = utils.readCookie(id),
+          now = Date.now();
+
+      if (!sessionImpressions) {
         sessionImpressions = 1;
       } else {
         sessionImpressions += 1;
@@ -1074,23 +1097,10 @@
       } else {
         parts = total.split('|');
         totalImpressions = parseInt(parts[0], 10) + 1;
-
-        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
-          valid = false;
-        }
       }
 
-      if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
-        valid = false;
-      }
-
-
-      if (valid && widget.valid) {
-        sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
-      }
-
-      return valid;
+      sessionStorage.setItem(id, sessionImpressions);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
     },
 
     hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
@@ -3796,6 +3806,10 @@
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
 
+      if (widget.displayConditions.impressions) {
+        core.incrementImpressions(widget);
+      }
+
       var node = core.createWidgetHtml(widget);
 
       if (widget.showSocialLogin) {
@@ -4073,5 +4087,28 @@
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
+
+
+  context.addEventListener('load', function () {
+    if (core.prioritizedWidgets.length > 0) {
+      var highest = [core.prioritizedWidgets[0]];
+
+      for (var i = 1; i < core.prioritizedWidgets.length; i++) {
+        var widget = core.prioritizedWidgets[i];
+        var highestWidget = highest[0];
+
+        if (widget.displayConditions.prioritization < highestWidget.displayConditions.prioritization) {
+          highest = [widget];
+        } else if (widget.displayConditions.prioritization === highestWidget.displayConditions.prioritization) {
+          highest.push(widget);
+        }
+      }
+
+      for (var j = 0; j < highest.length; j++) {
+        core.initializeWidget(highest[j]);
+      }
+    }
+  });
+
 
 }(window, document));
