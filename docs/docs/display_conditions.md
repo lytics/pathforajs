@@ -87,7 +87,7 @@ By default, a module will be hidden if tried to include an [entity field](custom
 <table>
   <thead>
     <tr>
-      <td colspan="2" align="center"><code>showDelay</code> int</td>
+      <td colspan="2" align="center"><code>showOnMissingFields</code> int</td>
     </tr>
     <tr>
       <th>Value</th>
@@ -107,10 +107,8 @@ By default, a module will be hidden if tried to include an [entity field](custom
 
 
 ``` javascript
-// example: loads after a 10 second delay
-
 displayConditions: {
-  showDelay: 10
+  showOnMissingFields: true
 }
 ```
 
