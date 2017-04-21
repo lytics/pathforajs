@@ -562,6 +562,7 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
+    prioritizedWidgets: [],
     readyWidgets: [],
     expiration: null,
     pageViews: ~~utils.readCookie(PF_PAGEVIEWS),
@@ -608,6 +609,15 @@
 
         widget.valid = widget.valid && condition.showOnInit;
 
+        if (condition.impressions) {
+          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+        }
+
+        if (typeof condition.priority !== 'undefined' && widget.valid && core.prioritizedWidgets.indexOf(widget) === -1) {
+          core.prioritizedWidgets.push(widget);
+          return;
+        }
+
         // display conditions based on page interaction
         if (condition.showOnExitIntent) {
           core.initializeExitIntent(widget);
@@ -636,10 +646,6 @@
         }
 
         if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-          if (condition.impressions) {
-            widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
-          }
-
           if (widget.valid) {
             context.pathfora.showWidget(widget);
           }
@@ -714,7 +720,6 @@
      */
     initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
-
         widget.scrollListener = function () {
           core.validateWatchers(widget, function () {
             if (typeof document.addEventListener === 'function') {
@@ -1058,6 +1063,35 @@
           now = Date.now();
 
       if (!sessionImpressions) {
+        sessionImpressions = 0;
+      }
+
+      if (!total) {
+        totalImpressions = 0;
+      } else {
+        parts = total.split('|');
+        totalImpressions = parseInt(parts[0], 10);
+
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+          valid = false;
+        }
+      }
+
+      if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
+        valid = false;
+      }
+
+      return valid;
+    },
+
+    incrementImpressions: function (widget) {
+      var parts, totalImpressions,
+          id = PREFIX_IMPRESSION + widget.id,
+          sessionImpressions = ~~sessionStorage.getItem(id),
+          total = utils.readCookie(id),
+          now = Date.now();
+
+      if (!sessionImpressions) {
         sessionImpressions = 1;
       } else {
         sessionImpressions += 1;
@@ -1068,23 +1102,10 @@
       } else {
         parts = total.split('|');
         totalImpressions = parseInt(parts[0], 10) + 1;
-
-        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
-          valid = false;
-        }
       }
 
-      if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
-        valid = false;
-      }
-
-
-      if (valid && widget.valid) {
-        sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
-      }
-
-      return valid;
+      sessionStorage.setItem(id, sessionImpressions);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
     },
 
     hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
@@ -1167,8 +1188,10 @@
     registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
-          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
+          var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
+              positionInPixels = height * (percent / 100),
               offset = document.documentElement.scrollTop || document.body.scrollTop;
+
           if (offset >= positionInPixels) {
             core.removeWatcher(watcher, widget);
             return true;
@@ -3790,6 +3813,10 @@
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
 
+      if (widget.displayConditions.impressions) {
+        core.incrementImpressions(widget);
+      }
+
       var node = core.createWidgetHtml(widget);
 
       if (widget.showSocialLogin) {
@@ -4048,6 +4075,25 @@
       return core.prepareABTest(config);
     };
 
+    this.reinitializePrioritizedWidgets = function () {
+      if (core.prioritizedWidgets.length > 0) {
+
+        core.prioritizedWidgets.sort(function (a, b) {
+          return a.displayConditions.priority - b.displayConditions.priority;
+        }).reverse();
+
+        var highest = core.prioritizedWidgets[0].displayConditions.priority;
+
+        for (var j = 0; j < core.prioritizedWidgets.length; j++) {
+          if (core.prioritizedWidgets[j].displayConditions.priority === highest) {
+            core.initializeWidget(core.prioritizedWidgets[j]);
+          } else {
+            break;
+          }
+        }
+      }
+    };
+
     /*
      * @public
      * @description Get utils object
@@ -4067,5 +4113,11 @@
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
+
+
+  context.addEventListener('load', function () {
+    context.pathfora.reinitializePrioritizedWidgets();
+  });
+
 
 }(window, document));

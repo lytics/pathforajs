@@ -2699,6 +2699,9 @@ describe('Widgets', function () {
     widget2 = $('#' + customWidget2.id);
     expect(widget1.length).toBe(1);
     expect(widget2.length).toBe(1);
+
+    pathfora.triggeredWidgets['*'] = false;
+
   });
 
   it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
@@ -2729,6 +2732,8 @@ describe('Widgets', function () {
     pathfora.initializeWidgets([customWidget4]);
     widget = $('#' + customWidget4.id);
     expect(widget.length).toBe(1);
+
+    pathfora.triggeredWidgets['*'] = false;
   });
 
   it('should be able to show after specified time', function () {
@@ -2838,6 +2843,83 @@ describe('Widgets', function () {
 
     var widget = $('#' + form.id);
     expect(widget.length).toBe(0);
+  });
+
+  it('should correctly prioritize which widgets to show', function (done) {
+    var p1 = new pathfora.Message({
+      layout: 'modal',
+      id: 'p1',
+      msg: 'priority = 2',
+      displayConditions: {
+        priority: 0
+      }
+    });
+
+    var p2 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'bottom-left',
+      id: 'p2',
+      msg: 'priority = 0',
+      displayConditions: {
+        priority: 2,
+        urlContains: [
+          {
+            match: 'simple',
+            value: 'blah'
+          }
+        ]
+      }
+    });
+
+    var p3 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'bottom-right',
+      id: 'p3',
+      msg: 'priority = 1',
+      displayConditions: {
+        priority: 1,
+        impressions: {
+          total: 1
+        }
+      }
+    });
+
+    var p4 = new pathfora.Message({
+      layout: 'slideout',
+      position: 'top-right',
+      id: 'p4',
+      msg: 'priority = 1',
+      displayConditions: {
+        priority: 1
+      }
+    });
+
+    var modules = {
+      target: [{
+        segment: 'all',
+        widgets: [p4]
+      }]
+    };
+
+    pathfora.initializeWidgets(modules);
+    pathfora.initializeWidgets([p1, p2, p3]);
+
+    setTimeout(function () {
+      expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p3.id).hasClass('opened')).toBeFalsy();
+      expect($('#' + p4.id).hasClass('opened')).toBeFalsy();
+
+      pathfora.reinitializePrioritizedWidgets();
+
+      setTimeout(function () {
+        expect($('#' + p1.id).hasClass('opened')).toBeFalsy();
+        expect($('#' + p2.id).hasClass('opened')).toBeFalsy();
+        expect($('#' + p3.id).hasClass('opened')).toBeTruthy();
+        expect($('#' + p4.id).hasClass('opened')).toBeTruthy();
+        done();
+      }, 200);
+    }, 200);
   });
 
   it('should not show if hideAfterAction duration not met', function () {
@@ -3700,9 +3782,8 @@ describe('Widgets', function () {
     expect($('#' + form3.id).length).toBe(1);
   });
 
-  it('should consider multiple display conditions and watchers', function () {
-    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
 
+  it('should consider multiple display conditions and watchers', function (done) {
     var id = 'multiple-conditions',
         id2 = 'multiple-conditions-2',
         id3 = 'multiple-conditions-3';
@@ -3716,7 +3797,7 @@ describe('Widgets', function () {
         impressions: {
           session: 3
         },
-        scrollPercentageToDisplay: 20
+        manualTrigger: true
       }
     });
 
@@ -3729,7 +3810,7 @@ describe('Widgets', function () {
         impressions: {
           session: 1
         },
-        scrollPercentageToDisplay: 20
+        manualTrigger: true
       }
     });
 
@@ -3742,7 +3823,7 @@ describe('Widgets', function () {
         impressions: {
           session: 3
         },
-        scrollPercentageToDisplay: 75
+        manualTrigger: true
       }
     });
     sessionStorage.setItem('PathforaImpressions_' + id, 2);
@@ -3756,17 +3837,15 @@ describe('Widgets', function () {
       expect($('#' + id2).length).toBe(0);
       expect($('#' + id3).length).toBe(0);
 
-      var height = $(document).height();
-      $('body').scrollTop(height / 2);
+      pathfora.triggerWidgets([id, id2]);
 
       setTimeout(function () {
         expect($('#' + id).length).toBe(1);
         expect($('#' + id2).length).toBe(0);
         expect($('#' + id3).length).toBe(0);
+        done();
       }, 200);
     }, 200);
-
-    $('#height-element').remove();
   });
 
   describe('when showOnExitIntent is set', function () {

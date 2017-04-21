@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Exit Intent Modal</title>
+  </head>
+  <body>
+    <script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="../dist/pathfora.js"></script>
+    <script>
+      var subscription = pathfora.Message({
+        layout: "modal",
+        id: 'modal-subscription',
+        headline: 'Don\'t leave yet!',
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          priority: 0
+        }
+      });
+
+      var another = pathfora.Message({
+        layout: "slideout",
+        position: 'bottom-left',
+        id: 'modal-subscription2',
+        headline: 'Don\'t leave yet!',
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          priority: 2,
+          urlContains: [
+            {
+              match: 'simple',
+              value: 'www.getlytics.com'
+            }
+          ]
+        }
+      });
+
+      var another2 = pathfora.Message({
+        layout: "slideout",
+        position: 'bottom-right',
+        id: 'modal-subscription3',
+        headline: 'Don\'t leave yet!',
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          priority: 1,
+          impressions: {
+            total: 1
+          }
+        }
+      });
+
+      var another3 = pathfora.Message({
+        layout: "slideout",
+        position: 'top-right',
+        id: 'modal-subscription4',
+        headline: 'Don\'t leave yet!',
+        msg: 'Please, anything but that.',
+        theme: 'dark',
+        okMessage: 'Sure, whatever',
+        okShow: true,
+        displayConditions: {
+          priority: 1
+        }
+      });
+
+    var modules = {
+      target: [{
+        segment: 'all',
+        widgets: [another3]
+      }],
+    };
+
+      pathfora.initializeWidgets(modules);
+      pathfora.initializeWidgets([subscription, another, another2]);
+
+    </script>
+  </body>
+</html>
