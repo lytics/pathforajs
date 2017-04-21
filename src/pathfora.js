@@ -4035,21 +4035,19 @@
 
     this.reinitializePrioritizedWidgets = function () {
       if (core.prioritizedWidgets.length > 0) {
-        var highest = [core.prioritizedWidgets[0]];
 
-        for (var i = 1; i < core.prioritizedWidgets.length; i++) {
-          var widget = core.prioritizedWidgets[i];
-          var highestWidget = highest[0];
+        core.prioritizedWidgets.sort(function (a, b) {
+          return a.displayConditions.priority - b.displayConditions.priority;
+        }).reverse();
 
-          if (widget.displayConditions.priority > highestWidget.displayConditions.priority) {
-            highest = [widget];
-          } else if (widget.displayConditions.priority === highestWidget.displayConditions.priority) {
-            highest.push(widget);
+        var highest = core.prioritizedWidgets[0].displayConditions.priority;
+
+        for (var j = 0; j < core.prioritizedWidgets.length; j++) {
+          if (core.prioritizedWidgets[j].displayConditions.priority === highest) {
+            core.initializeWidget(core.prioritizedWidgets[j]);
+          } else {
+            break;
           }
-        }
-
-        for (var j = 0; j < highest.length; j++) {
-          core.initializeWidget(highest[j]);
         }
       }
     };
