@@ -681,6 +681,38 @@
     },
 
     /**
+     * @description Validate that all of the watchers have
+     *              been checked, and show the widget if
+     *              it's ready.
+     * @param {obj} widget
+     * @param {function} cb
+     */
+
+    validateWatchers: function (widget, cb) {
+      var valid = true;
+
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+          valid = widget.valid && widget.watchers[key].check();
+        }
+      }
+
+      if (widget.displayConditions.impressions && valid) {
+        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+        widget.valid = false;
+        cb();
+
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
      * @description Take array of scroll aware elements
      *              and check if it should display any
      *              when user is scrolling the page
@@ -689,25 +721,13 @@
     initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
         widget.scrollListener = function () {
-          var valid;
-
-          for (var key in widget.watchers) {
-            if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-              valid = widget.valid && widget.watchers[key].check();
-            }
-          }
-
-          if (valid) {
-            context.pathfora.showWidget(widget);
-            widget.valid = false;
-
+          core.validateWatchers(widget, function () {
             if (typeof document.addEventListener === 'function') {
-              context.removeEventListener('scroll', widget.scrollListener);
+              document.removeEventListener('scroll', widget.scrollListener);
             } else {
               context.onscroll = null;
-              context.onscroll = null;
             }
-          }
+          });
         };
 
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
@@ -752,16 +772,15 @@
             valid = widget.valid && y - ySpeed <= 50 && y < py;
 
             if (valid) {
-              context.pathfora.showWidget(widget);
-              widget.valid = false;
-
-              if (typeof document.addEventListener === 'function') {
-                document.removeEventListener('mousemove', widget.exitIntentListener);
-                document.removeEventListener('mouseout', widget.exitIntentTrigger);
-              } else {
-                document.onmousemove = null;
-                document.onmouseout = null;
-              }
+              core.validateWatchers(widget, function () {
+                if (typeof document.addEventListener === 'function') {
+                  document.removeEventListener('mousemove', widget.exitIntentListener);
+                  document.removeEventListener('mouseout', widget.exitIntentTrigger);
+                } else {
+                  document.onmousemove = null;
+                  document.onmouseout = null;
+                }
+              });
             }
 
             positions = [];
@@ -786,17 +805,7 @@
      * @param {object} widget
      */
     triggerWidget: function (widget) {
-      var valid;
-
-      for (var key in widget.watchers) {
-        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-          valid = widget.valid && widget.watchers[key].check();
-        }
-      }
-
-      if (valid) {
-        context.pathfora.showWidget(widget);
-        widget.valid = false;
+      return core.validateWatchers(widget, function () {
         context.pathfora.triggeredWidgets[widget.id] = false;
 
         // remove from the ready widgets list
@@ -806,9 +815,7 @@
             return true;
           }
         });
-      }
-
-      return valid;
+      });
     },
 
     /**
