@@ -304,7 +304,7 @@ Javascript callback function for when a module is closed, this will fire anytime
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>onSubmit</code>function</td>
+      <td colspan="3" align="center"><code>onModalClose</code>function</td>
     </tr>
     <tr>
       <th>Parameter</th>
@@ -325,6 +325,6 @@ Javascript callback function for when a module is closed, this will fire anytime
   </tr>
 </table>
 
-<h3><a href="../examples/preview/callbacks/onSubmit.html" target="_blank">Live Preview</a></h3>
+<h3><a href="../examples/preview/callbacks/onModalClose.html" target="_blank">Live Preview</a></h3>
 
-<pre data-src="../examples/src/callbacks/onSubmit.js"></pre>
+<pre data-src="../examples/src/callbacks/onModalClose.js"></pre>
