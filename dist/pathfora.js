@@ -198,7 +198,9 @@
     CLICK: 'buttonClicked',
     FORM_SUBMIT: 'formSubmitted',
     MODAL_OPEN: 'modalOpened',
-    MODAL_CLOSE: 'modalClosed'
+    MODAL_CLOSE: 'modalClosed',
+    MODAL_CONFIRM: 'modalConfirm',
+    MODAL_CANCEL: 'modalCancel'
   };
 
   // NOTE AB testing types
@@ -562,6 +564,7 @@
     delayedWidgets: {},
     openedWidgets: [],
     initializedWidgets: [],
+    prioritizedWidgets: [],
     readyWidgets: [],
     expiration: null,
     pageViews: ~~utils.readCookie(PF_PAGEVIEWS),
@@ -608,6 +611,15 @@
 
         widget.valid = widget.valid && condition.showOnInit;
 
+        if (condition.impressions) {
+          widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
+        }
+
+        if (typeof condition.priority !== 'undefined' && widget.valid && core.prioritizedWidgets.indexOf(widget) === -1) {
+          core.prioritizedWidgets.push(widget);
+          return;
+        }
+
         // display conditions based on page interaction
         if (condition.showOnExitIntent) {
           core.initializeExitIntent(widget);
@@ -636,10 +648,6 @@
         }
 
         if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-          if (condition.impressions) {
-            widget.valid = widget.valid && core.impressionsChecker(condition.impressions, widget);
-          }
-
           if (widget.valid) {
             context.pathfora.showWidget(widget);
           }
@@ -675,6 +683,38 @@
     },
 
     /**
+     * @description Validate that all of the watchers have
+     *              been checked, and show the widget if
+     *              it's ready.
+     * @param {obj} widget
+     * @param {function} cb
+     */
+
+    validateWatchers: function (widget, cb) {
+      var valid = true;
+
+      for (var key in widget.watchers) {
+        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+          valid = widget.valid && widget.watchers[key].check();
+        }
+      }
+
+      if (widget.displayConditions.impressions && valid) {
+        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
+      }
+
+      if (valid) {
+        context.pathfora.showWidget(widget);
+        widget.valid = false;
+        cb();
+
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
      * @description Take array of scroll aware elements
      *              and check if it should display any
      *              when user is scrolling the page
@@ -682,32 +722,14 @@
      */
     initializeScrollWatchers: function (widget) {
       if (!core.scrollListener) {
-
         widget.scrollListener = function () {
-          var valid;
-
-          for (var key in widget.watchers) {
-            if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-              valid = widget.valid && widget.watchers[key].check();
-            }
-          }
-
-          if (widget.displayConditions.impressions && valid) {
-            valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
-          }
-
-          if (valid) {
-            context.pathfora.showWidget(widget);
-            widget.valid = false;
-
+          core.validateWatchers(widget, function () {
             if (typeof document.addEventListener === 'function') {
               document.removeEventListener('scroll', widget.scrollListener);
-              document.removeEventListener('mouseout', widget.scrollListener);
             } else {
               context.onscroll = null;
-              context.onscroll = null;
             }
-          }
+          });
         };
 
         // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
@@ -751,21 +773,16 @@
             // Is it reasonable to believe that it left the top of the page, given the position and the speed?
             valid = widget.valid && y - ySpeed <= 50 && y < py;
 
-            if (widget.displayConditions.impressions && valid) {
-              valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
-            }
-
             if (valid) {
-              context.pathfora.showWidget(widget);
-              widget.valid = false;
-
-              if (typeof document.addEventListener === 'function') {
-                document.removeEventListener('mousemove', widget.exitIntentListener);
-                document.removeEventListener('mouseout', widget.exitIntentTrigger);
-              } else {
-                document.onmousemove = null;
-                document.onmouseout = null;
-              }
+              core.validateWatchers(widget, function () {
+                if (typeof document.addEventListener === 'function') {
+                  document.removeEventListener('mousemove', widget.exitIntentListener);
+                  document.removeEventListener('mouseout', widget.exitIntentTrigger);
+                } else {
+                  document.onmousemove = null;
+                  document.onmouseout = null;
+                }
+              });
             }
 
             positions = [];
@@ -790,21 +807,7 @@
      * @param {object} widget
      */
     triggerWidget: function (widget) {
-      var valid;
-
-      for (var key in widget.watchers) {
-        if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-          valid = widget.valid && widget.watchers[key].check();
-        }
-      }
-
-      if (widget.displayConditions.impressions && valid) {
-        valid = core.impressionsChecker(widget.displayConditions.impressions, widget);
-      }
-
-      if (valid) {
-        context.pathfora.showWidget(widget);
-        widget.valid = false;
+      return core.validateWatchers(widget, function () {
         context.pathfora.triggeredWidgets[widget.id] = false;
 
         // remove from the ready widgets list
@@ -814,9 +817,7 @@
             return true;
           }
         });
-      }
-
-      return valid;
+      });
     },
 
     /**
@@ -1064,6 +1065,35 @@
           now = Date.now();
 
       if (!sessionImpressions) {
+        sessionImpressions = 0;
+      }
+
+      if (!total) {
+        totalImpressions = 0;
+      } else {
+        parts = total.split('|');
+        totalImpressions = parseInt(parts[0], 10);
+
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+          valid = false;
+        }
+      }
+
+      if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
+        valid = false;
+      }
+
+      return valid;
+    },
+
+    incrementImpressions: function (widget) {
+      var parts, totalImpressions,
+          id = PREFIX_IMPRESSION + widget.id,
+          sessionImpressions = ~~sessionStorage.getItem(id),
+          total = utils.readCookie(id),
+          now = Date.now();
+
+      if (!sessionImpressions) {
         sessionImpressions = 1;
       } else {
         sessionImpressions += 1;
@@ -1074,23 +1104,10 @@
       } else {
         parts = total.split('|');
         totalImpressions = parseInt(parts[0], 10) + 1;
-
-        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
-          valid = false;
-        }
       }
 
-      if (sessionImpressions > impressionConstraints.session || totalImpressions > impressionConstraints.total) {
-        valid = false;
-      }
-
-
-      if (valid && widget.valid) {
-        sessionStorage.setItem(id, sessionImpressions);
-        utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
-      }
-
-      return valid;
+      sessionStorage.setItem(id, sessionImpressions);
+      utils.saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
     },
 
     hideAfterActionChecker: function (hideAfterActionConstraints, widget) {
@@ -1173,8 +1190,10 @@
     registerPositionWatcher: function (percent, widget) {
       var watcher = {
         check: function () {
-          var positionInPixels = (document.body.offsetHeight - window.innerHeight) * percent / 100,
+          var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
+              positionInPixels = height * (percent / 100),
               offset = document.documentElement.scrollTop || document.body.scrollTop;
+
           if (offset >= positionInPixels) {
             core.removeWatcher(watcher, widget);
             return true;
@@ -1708,6 +1727,7 @@
         if (typeof config.onModalClose === 'function') {
           config.onModalClose(callbackTypes.MODAL_CLOSE, {
             widget: widget,
+            config: config,
             event: event
           });
         }
@@ -1832,6 +1852,7 @@
             if (typeof config.onSubmit === 'function') {
               config.onSubmit(callbackTypes.FORM_SUBMIT, {
                 widget: widget,
+                config: config,
                 event: event,
                 data: Array.prototype.slice.call(
                   widgetForm.querySelectorAll('input, textarea, select')
@@ -1879,6 +1900,7 @@
           widgetOnButtonClick = function (event) {
             config.onClick(callbackTypes.CLICK, {
               widget: widget,
+              config: config,
               event: event
             });
           };
@@ -1900,6 +1922,15 @@
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
             updateActionCookie(PREFIX_CLOSE + widget.id);
+
+            if (typeof config.closeAction === 'object' && typeof config.closeAction.callback === 'function') {
+              config.closeAction.callback(callbackTypes.MODAL_CLOSE, {
+                widget: widget,
+                config: config,
+                event: event
+              });
+            }
+
             widgetOnModalClose(event);
           };
         }
@@ -1913,7 +1944,11 @@
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
               if (typeof config.cancelAction.callback === 'function') {
-                config.cancelAction.callback();
+                config.cancelAction.callback(callbackTypes.MODAL_CANCEL, {
+                  widget: widget,
+                  config: config,
+                  event: event
+                });
               }
               updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
@@ -1945,7 +1980,11 @@
             updateActionCookie(PREFIX_CONFIRM + widget.id);
 
             if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
-              config.confirmAction.callback();
+              config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
+                widget: widget,
+                config: config,
+                event: event
+              });
             }
             if (typeof widgetOnButtonClick === 'function') {
               widgetOnButtonClick(event);
@@ -2380,6 +2419,7 @@
         pathforaDataObject.displayedWidgets.push(params);
         break;
       case 'close':
+        params['pf-widget-action'] = !!widget.closeAction && widget.closeAction.name || 'close';
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
@@ -2589,7 +2629,7 @@
         // NOTE onInit feels better here
         if (typeof widgetOnInitCallback === 'function') {
           widgetOnInitCallback(callbackTypes.INIT, {
-            widget: widget
+            config: widget
           });
         }
       }
@@ -3427,7 +3467,7 @@
      * @public
      * @description Current version
      */
-    this.version = '0.1.3';
+    this.version = '0.1.4';
 
     /**
      * @public
@@ -3796,6 +3836,10 @@
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
 
+      if (widget.displayConditions.impressions) {
+        core.incrementImpressions(widget);
+      }
+
       var node = core.createWidgetHtml(widget);
 
       if (widget.showSocialLogin) {
@@ -3831,13 +3875,14 @@
 
         if (typeof widgetLoadCallback === 'function') {
           widgetLoadCallback(callbackTypes.LOAD, {
-            widget: widget,
-            node: node
+            config: widget,
+            widget: node
           });
         }
         if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
           widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
-            widget: widget
+            config: widget,
+            widget: node
           });
         }
       }, 50);
@@ -3867,9 +3912,10 @@
      */
     this.closeWidget = function (id, noTrack) {
       var node = document.getElementById(id);
+      var i;
 
       // FIXME Change to Array#some or Array#filter
-      for (var i = 0; i < core.openedWidgets.length; i++) {
+      for (i = 0; i < core.openedWidgets.length; i++) {
         if (core.openedWidgets[i].id === id) {
           if (!noTrack) {
             core.trackWidgetAction('close', core.openedWidgets[i]);
@@ -3892,6 +3938,12 @@
       setTimeout(function () {
         if (node && node.parentNode) {
           node.parentNode.removeChild(node);
+
+          for (i = 0; i < core.initializedWidgets.length; i++) {
+            if (core.initializedWidgets[i] === id) {
+              core.initializedWidgets.splice(i, 1);
+            }
+          }
         }
       }, 500);
     };
@@ -4054,6 +4106,25 @@
       return core.prepareABTest(config);
     };
 
+    this.reinitializePrioritizedWidgets = function () {
+      if (core.prioritizedWidgets.length > 0) {
+
+        core.prioritizedWidgets.sort(function (a, b) {
+          return a.displayConditions.priority - b.displayConditions.priority;
+        }).reverse();
+
+        var highest = core.prioritizedWidgets[0].displayConditions.priority;
+
+        for (var j = 0; j < core.prioritizedWidgets.length; j++) {
+          if (core.prioritizedWidgets[j].displayConditions.priority === highest) {
+            core.initializeWidget(core.prioritizedWidgets[j]);
+          } else {
+            break;
+          }
+        }
+      }
+    };
+
     /*
      * @public
      * @description Get utils object
@@ -4073,5 +4144,11 @@
   // NOTE Initialize context
   appendPathforaStylesheet();
   context.pathfora = new Pathfora();
+
+
+  context.addEventListener('load', function () {
+    context.pathfora.reinitializePrioritizedWidgets();
+  });
+
 
 }(window, document));

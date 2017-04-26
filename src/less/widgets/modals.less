@@ -7,8 +7,6 @@
   background: rgba(0,0,0,.5);
   z-index: 9999;
   text-align: center;
-  overflow-y: auto;
-  overflow-x: hidden;
 
   .pf-va-middle {
     display: table-cell;
@@ -39,6 +37,9 @@
     padding: 40px;
     border-radius: 5px;
     .pf-box-shadow();
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 100%;
 
     .mobile ({
       padding: 40px 20px;

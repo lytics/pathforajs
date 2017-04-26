@@ -87,7 +87,7 @@ By default, a module will be hidden if tried to include an [entity field](custom
 <table>
   <thead>
     <tr>
-      <td colspan="2" align="center"><code>showDelay</code> int</td>
+      <td colspan="2" align="center"><code>showOnMissingFields</code> int</td>
     </tr>
     <tr>
       <th>Value</th>
@@ -107,10 +107,8 @@ By default, a module will be hidden if tried to include an [entity field](custom
 
 
 ``` javascript
-// example: loads after a 10 second delay
-
 displayConditions: {
-  showDelay: 10
+  showOnMissingFields: true
 }
 ```
 
@@ -296,6 +294,42 @@ displayConditions: {
 }
 ```
 
+## priority
+Module priority helps prevent overlap between multiple modules on a page. If unset, the module will show as normal, regardless of other modules priorities.
+
+**For example**: module A has a priority of 1 and is targeted to show to the audience "High Value Users".
+
+module B has a priority of 0 is targeted to "Returning Users".
+
+If the user is a member of both audiences, only module A will show assuming all of it's other display conditions are met, because module B is lower priority.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>priority</code> int</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td style="min-width: 97px;">0 – ∞</td>
+    <td>modules with a higher value will be prioritized to show instead of modules with lower numbers assuming targetting requirements and all other page-load level display conditions are met</td>
+  </tr>
+</table>
+
+``` javascript
+// example: module is higher priority than any other module with a priority less than 2.
+
+displayConditions: {
+  priority: 2
+}
+```
+
+
+
 ## impressions
 Hide the module after a certain number of impressions. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
 
@@ -324,7 +358,7 @@ Hide the module after a certain number of impressions. The current number of imp
 </table>
 
 ``` javascript
-// example: hide module after the second impressions in the same session
+// example: hide module after the second impression in the same session
 
 displayConditions: {
   impressions: {

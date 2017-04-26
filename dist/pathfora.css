@@ -453,8 +453,6 @@
   background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
   text-align: center;
-  overflow-y: auto;
-  overflow-x: hidden;
   /* Opened State Styles */
   /* Variant Styles */
   /* Type Styles */
@@ -485,6 +483,9 @@
   padding: 40px;
   border-radius: 5px;
   box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget-modal .pf-widget-content {
