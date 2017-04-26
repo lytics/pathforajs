@@ -163,7 +163,9 @@
     CLICK: 'buttonClicked',
     FORM_SUBMIT: 'formSubmitted',
     MODAL_OPEN: 'modalOpened',
-    MODAL_CLOSE: 'modalClosed'
+    MODAL_CLOSE: 'modalClosed',
+    MODAL_CONFIRM: 'modalConfirm',
+    MODAL_CANCEL: 'modalCancel'
   };
 
   // NOTE AB testing types
@@ -1690,6 +1692,7 @@
         if (typeof config.onModalClose === 'function') {
           config.onModalClose(callbackTypes.MODAL_CLOSE, {
             widget: widget,
+            config: config,
             event: event
           });
         }
@@ -1814,6 +1817,7 @@
             if (typeof config.onSubmit === 'function') {
               config.onSubmit(callbackTypes.FORM_SUBMIT, {
                 widget: widget,
+                config: config,
                 event: event,
                 data: Array.prototype.slice.call(
                   widgetForm.querySelectorAll('input, textarea, select')
@@ -1861,6 +1865,7 @@
           widgetOnButtonClick = function (event) {
             config.onClick(callbackTypes.CLICK, {
               widget: widget,
+              config: config,
               event: event
             });
           };
@@ -1882,6 +1887,15 @@
           widgetClose.onclick = function (event) {
             context.pathfora.closeWidget(widget.id);
             updateActionCookie(PREFIX_CLOSE + widget.id);
+
+            if (typeof config.closeAction === 'object' && typeof config.closeAction.callback === 'function') {
+              config.closeAction.callback(callbackTypes.MODAL_CLOSE, {
+                widget: widget,
+                config: config,
+                event: event
+              });
+            }
+
             widgetOnModalClose(event);
           };
         }
@@ -1895,7 +1909,11 @@
             widgetCancel.onclick = function (event) {
               core.trackWidgetAction('cancel', config);
               if (typeof config.cancelAction.callback === 'function') {
-                config.cancelAction.callback();
+                config.cancelAction.callback(callbackTypes.MODAL_CANCEL, {
+                  widget: widget,
+                  config: config,
+                  event: event
+                });
               }
               updateActionCookie(PREFIX_CANCEL + widget.id);
               context.pathfora.closeWidget(widget.id, true);
@@ -1927,7 +1945,11 @@
             updateActionCookie(PREFIX_CONFIRM + widget.id);
 
             if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
-              config.confirmAction.callback();
+              config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
+                widget: widget,
+                config: config,
+                event: event
+              });
             }
             if (typeof widgetOnButtonClick === 'function') {
               widgetOnButtonClick(event);
@@ -2362,6 +2384,7 @@
         pathforaDataObject.displayedWidgets.push(params);
         break;
       case 'close':
+        params['pf-widget-action'] = !!widget.closeAction && widget.closeAction.name || 'close';
         pathforaDataObject.closedWidgets.push(params);
         break;
       case 'confirm':
@@ -2571,7 +2594,7 @@
         // NOTE onInit feels better here
         if (typeof widgetOnInitCallback === 'function') {
           widgetOnInitCallback(callbackTypes.INIT, {
-            widget: widget
+            config: widget
           });
         }
       }
@@ -3817,13 +3840,14 @@
 
         if (typeof widgetLoadCallback === 'function') {
           widgetLoadCallback(callbackTypes.LOAD, {
-            widget: widget,
-            node: node
+            config: widget,
+            widget: node
           });
         }
         if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
           widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
-            widget: widget
+            config: widget,
+            widget: node
           });
         }
       }, 50);
@@ -3853,9 +3877,10 @@
      */
     this.closeWidget = function (id, noTrack) {
       var node = document.getElementById(id);
+      var i;
 
       // FIXME Change to Array#some or Array#filter
-      for (var i = 0; i < core.openedWidgets.length; i++) {
+      for (i = 0; i < core.openedWidgets.length; i++) {
         if (core.openedWidgets[i].id === id) {
           if (!noTrack) {
             core.trackWidgetAction('close', core.openedWidgets[i]);
@@ -3878,6 +3903,12 @@
       setTimeout(function () {
         if (node && node.parentNode) {
           node.parentNode.removeChild(node);
+
+          for (i = 0; i < core.initializedWidgets.length; i++) {
+            if (core.initializedWidgets[i] === id) {
+              core.initializedWidgets.splice(i, 1);
+            }
+          }
         }
       }, 500);
     };
