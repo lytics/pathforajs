@@ -196,6 +196,11 @@
   opacity: 0.25;
   width: 120px;
 }
+@media screen and (max-width: 736px), screen and (max-height: 640px) {
+  .pf-widget .branding svg {
+    right: -8px;
+  }
+}
 .pf-widget .success-state {
   display: none;
 }
@@ -476,8 +481,8 @@
 .pf-widget-modal .pf-widget-content {
   background-color: #f1f1f1;
   color: #888;
-  width: auto;
-  position: relative;
+  width: 100%;
+  position: fixed;
   max-width: 780px;
   margin: 0 auto;
   padding: 40px;
@@ -486,6 +491,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget-modal .pf-widget-content {

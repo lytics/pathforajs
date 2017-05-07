@@ -30,8 +30,8 @@
   .pf-widget-content {
     background-color: @background;
     color: @text;
-    width: auto;
-    position: relative;
+    width: 100%;
+    position: fixed;
     max-width: 780px;
     margin: 0 auto;
     padding: 40px;
@@ -40,6 +40,9 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     .mobile ({
       padding: 40px 20px;
