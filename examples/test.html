@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+<<<<<<< Updated upstream
     <title>Content Recommendation Widget</title>
   </head>
   <body>
@@ -24,3 +25,95 @@
     </script>
   </body>
 </html>
+=======
+    <title>Exit Intent Modal</title>
+  </head>
+  <body>
+    <h1>Exit Intent Modal Example</h1>
+    <script src="https://c.lytics.io/api/tag/4f7b525bdba058fc096757a6/lio.js"></script>
+    <script src="../dist/pathfora.js"></script>
+    <script>
+(function(w) {
+  var lyticsId = "31be5a88de55de45f0c33d270c3d30ec";
+  var widgetConfig = w.pathfora.utils.initWidgetScaffold();
+     
+     
+     var pfa_10d46f837b91a5831dc46f97e0e06bfe = w.pathfora.Message({
+      
+          "id": "10d46f837b91a5831dc46f97e0e06bfe",
+          "headline": "Did you catch our Members-Only Call?",
+          "msg": "On the April 26th Member’s-Only Call Jim shared his take on the market and discussed the new AAP Club experience.  NOT ABLE TO JOIN US LIVE?  CLICK BELOW TO WATCH THE VIDEO REPLAY. ",
+          "layout": "modal",
+          "position": "middle-center",
+          "variant": "1",
+          "okShow": true,
+          "okMessage": "WATCH NOW",
+          "cancelMessage": "No Thanks",
+          "confirmAction": {
+            "name": "Confirm Action",
+            "callback": function() { window.location.href = "http://aap.thestreet.com/videos"; }
+          },
+          "cancelShow": false,
+          "theme": "custom",
+          "colors": {
+               "actionBackground": "#0077ff",
+               "actionText": "#ffffff",
+               "background": "#ffffff",
+               "cancelBackground": "#f1f1f1",
+               "cancelText": "#bbb",
+               "close": "#000000",
+               "headline": "#070169",
+               "text": "#444"
+          },
+          "displayConditions": {
+               "hideAfterAction": {
+                    "cancel": {
+                         "duration": 1
+                    },
+                    "closed": {
+                         "duration": 1
+                    },
+                    "confirm": {
+                         "duration": 1
+                    }
+               },
+               "impressions": {
+                    "session": 1,
+                    "total": 1
+               },
+               "showDelay": 3,
+               "urlContains": [
+                    {
+                         "match": "substring",
+                         "value": "http://localhost:8080/"
+                    },
+                    {
+                         "match": "substring",
+                         "value": "http://localhost:8080/"
+                    },
+                    {
+                         "match": "substring",
+                         "value": "http://localhost:8080"
+                    }
+               ]
+          }
+     });
+    w.pathfora.utils.insertWidget("target", "all", pfa_10d46f837b91a5831dc46f97e0e06bfe, widgetConfig)
+
+     
+
+  var acctConfig = {
+      generic: {
+      
+          "branding": false,
+          "displayConditions": {}
+      }
+  };
+
+          w.pathfora.initializeWidgets(widgetConfig, acctConfig);
+
+}(window));
+    </script>
+  </body>
+</html>
+>>>>>>> Stashed changes

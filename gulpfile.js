@@ -14,6 +14,7 @@ var gulp = require('gulp'),
     fs = require('fs'),
     handlebars = require('gulp-compile-handlebars'),
     shell = require('gulp-shell'),
+    rollup = require('rollup'),
     eslint = require('gulp-eslint'),
     gutil = require('gulp-util'),
     TESTAPIURL = '//api.lytics.io',
@@ -139,6 +140,17 @@ gulp.task('build:testjs', function () {
     }))
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
+});
+
+gulp.task('build:rollup', function() {
+  return rollup.rollup({
+    entry: 'src/rollup/pathfora/pathfora.js',
+  }).then(function (bundle) {
+    bundle.write({
+      format: 'iife',
+      dest: 'dist/pathfora.js'
+    })
+  });
 });
 
 gulp.task('watch', function () {

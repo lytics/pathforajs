@@ -3777,6 +3777,7 @@
 
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
+      console.log('show');
 
       if (widget.displayConditions.impressions) {
         core.incrementImpressions(widget);
