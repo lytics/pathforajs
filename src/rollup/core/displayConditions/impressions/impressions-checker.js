@@ -1,6 +1,6 @@
 /** @module core/impressions-checker */
 
-import { PREFIX_IMPRESSION } from '../../../config'
+import { PREFIX_IMPRESSION } from '../../../config/config'
 import readCookie from '../../../utils/cookies/read-cookie'
 
 export default function impressionsChecker (impressionConstraints, widget) {

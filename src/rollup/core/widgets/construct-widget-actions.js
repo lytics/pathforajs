@@ -6,6 +6,7 @@ import trackWidgetAction from '../tracking/track-widget-action'
 import hasClass from '../../utils/class/has-class'
 import removeClass from '../../utils/class/remove-class'
 import closeWidget from '../../pathfora/widgets/close-widget'
+import { callbackTypes } from '../../config/callbacks'
 
 export default function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,

@@ -1,5 +1,6 @@
 /** @module core/setup-widget-position */
 
+import { defaultPositions } from '../../config/positions'
 import validateWidgetPosition from './validate-widget-position'
 
 export default function setupWidgetPosition (widget, config) {

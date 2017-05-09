@@ -4,9 +4,11 @@ import registerDelayedWidget from '../displayConditions/delay/register-delayed-w
 import initializeWidget from './init-widget'
 import readCookie from '../../utils/cookies/read-cookie'
 import updateObject from '../../utils/update-object'
-import { PREFIX_UNLOCK } from '../../config'
+import { PREFIX_UNLOCK } from '../../config/config'
 import recommendContent from '../../api/recommend/recommend-content'
 import addCallback from '../../pathfora/add-callback'
+import { callbackTypes } from '../../config/callbacks'
+import { defaultProps } from '../../config/default-props'
 
 
 export default function initializeWidgetArray (array) {

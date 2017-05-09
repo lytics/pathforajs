@@ -1,6 +1,6 @@
 /** @module core/track-widget-action */
 
-import { PREFIX_UNLOCK } from '../../config'
+import { PREFIX_UNLOCK } from '../../config/config'
 import reportData from '../../api/request/report-data'
 
 

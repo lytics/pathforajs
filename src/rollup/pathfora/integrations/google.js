@@ -2,6 +2,7 @@
 
 import window from '../../globals/window'
 import document from '../../globals/document'
+import { templates } from '../../config/templates'
 
 export default function integrateWithGoogle (clientId) {
   if (clientId !== '') {

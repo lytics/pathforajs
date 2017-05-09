@@ -1,6 +1,6 @@
 /** @module pathfora/ab-test/ab-test */
 
-import { PREFIX_AB_TEST } from '../../config'
+import { PREFIX_AB_TEST } from '../../config/config'
 
 export default function ABTest (config) {
   var test = {};

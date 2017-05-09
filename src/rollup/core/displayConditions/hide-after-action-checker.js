@@ -1,6 +1,6 @@
 /** @module core/hide-after-action-checker */
 
-import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../../config'
+import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../../config/config'
 
 export default function hideAfterActionChecker (hideAfterActionConstraints, widget) {
   var parts,

@@ -1,6 +1,6 @@
 /** @module core/increment-impressions */
 
-import { PREFIX_IMPRESSION } from '../../../config'
+import { PREFIX_IMPRESSION } from '../../../config/config'
 import readCookie from '../../../utils/cookies/read-cookie'
 import saveCookie from '../../../utils/cookies/save-cookie'
 

@@ -780,6 +780,16 @@ function incrementImpressions (widget) {
   saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, core.expiration);
 }
 
+/** @module config/positions */
+
+var defaultPositions = {
+  modal: '',
+  slideout: 'bottom-left',
+  button: 'top-left',
+  bar: 'top-absolute',
+  folding: 'bottom-left'
+};
+
 /** @module core/validate-widget-position */
 
 function validateWidgetPosition (widget, config) {
@@ -871,6 +881,17 @@ function closeWidget$1 (id, noTrack) {
     }
   }, 500);
 }
+
+/** @module config/callbacks */
+
+var callbackTypes = {
+  INIT: 'widgetInitialized',
+  LOAD: 'widgetLoaded',
+  CLICK: 'buttonClicked',
+  FORM_SUBMIT: 'formSubmitted',
+  MODAL_OPEN: 'modalOpened',
+  MODAL_CLOSE: 'modalClosed'
+};
 
 /** @module core/construct-widget-actions */
 
@@ -1441,6 +1462,10 @@ function addClass (DOMNode, className) {
   ].join(' ');
 }
 
+/** @module config/templates */
+
+var templates$1;
+
 /** @module core/construct-widget-layout */
 
 function constructWidgetLayout (widget, config) {
@@ -1518,7 +1543,7 @@ function constructWidgetLayout (widget, config) {
     if (widgetContent && config.branding) {
       var branding = document.createElement('div');
       branding.className = 'branding';
-      branding.innerHTML = templates.assets.lytics;
+      branding.innerHTML = templates$1.assets.lytics;
       widgetContent.appendChild(branding);
     }
 
@@ -1735,13 +1760,269 @@ function constructWidgetLayout (widget, config) {
   }
 }
 
+/** @module core/set-custom-colors*/
+
+function setCustomColors (widget, colors) {
+  var i = 0,
+      close = widget.querySelector('.pf-widget-close'),
+      msg = widget.querySelectorAll('.pf-widget-message'),
+      headline = widget.querySelectorAll('.pf-widget-headline'),
+      headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
+      cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
+      okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
+      arrow = widget.querySelector('.pf-widget-caption span'),
+      arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
+      contentUnit = widget.querySelector('.pf-content-unit'),
+      contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
+      fields = widget.querySelectorAll('input, textarea, select'),
+      branding = widget.querySelector('.branding svg'),
+      required = widget.querySelectorAll('.pf-required-flag'),
+      requiredAsterisk = widget.querySelectorAll('span.required'),
+      requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
+      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
+
+  if (colors.background) {
+    if (utils.hasClass(widget, 'pf-widget-modal')) {
+      widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
+    } else {
+      widget.style.setProperty('background-color', colors.background, 'important');
+    }
+  }
+
+  if (colors.fieldBackground) {
+    for (i = 0; i < fields.length; i++) {
+      fields[i].style.setProperty('background-color', colors.fieldBackground, 'important');
+    }
+  }
+
+  if (colors.required) {
+    for (i = 0; i < required.length; i++) {
+      required[i].style.setProperty('background-color', colors.required, 'important');
+      required[i].querySelector('span').style.setProperty('border-right-color', colors.required, 'important');
+    }
+
+    for (i = 0; i < requiredInline.length; i++) {
+      requiredInline[i].style.setProperty('border-color', colors.required, 'important');
+    }
+
+    for (i = 0; i < requiredAsterisk.length; i++) {
+      requiredAsterisk[i].style.setProperty('color', colors.required, 'important');
+    }
+  }
+
+  if (colors.requiredText) {
+    for (i = 0; i < required.length; i++) {
+      required[i].style.setProperty('color', colors.requiredText, 'important');
+    }
+  }
+
+  if (contentUnit && contentUnitMeta) {
+    if (colors.actionBackground) {
+      contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
+    }
+
+    if (colors.actionText) {
+      contentUnitMeta.querySelector('h4').style.setProperty('color', colors.actionText, 'important');
+    }
+
+    if (colors.text) {
+      contentUnitMeta.querySelector('p').style.setProperty('color', colors.text, 'important');
+    }
+  }
+
+  if (close && colors.close) {
+    close.style.setProperty('color', colors.close, 'important');
+  }
+
+  if (headline && colors.headline) {
+    for (i = 0; i < headline.length; i++) {
+      headline[i].style.setProperty('color', colors.headline, 'important');
+    }
+  }
+
+  if (headlineLeft && colors.headline) {
+    headlineLeft.style.setProperty('color', colors.headline, 'important');
+  }
+
+  if (arrow && colors.close) {
+    arrow.style.setProperty('color', colors.close, 'important');
+  }
+
+  if (arrowLeft && colors.close) {
+    arrowLeft.style.setProperty('color', colors.close, 'important');
+  }
+
+  if (cancelBtn) {
+    if (colors.cancelText) {
+      cancelBtn.style.setProperty('color', colors.cancelText, 'important');
+    }
+
+    if (colors.cancelBackground) {
+      cancelBtn.style.setProperty('background-color', colors.cancelBackground, 'important');
+    }
+  }
+
+  if (okBtn) {
+    if (colors.actionText) {
+      okBtn.style.setProperty('color', colors.actionText, 'important');
+    }
+
+    if (colors.actionBackground) {
+      okBtn.style.setProperty('background-color', colors.actionBackground, 'important');
+    }
+  }
+
+  if (colors.text && branding) {
+    branding.style.setProperty('fill', colors.text, 'important');
+  }
+
+
+  socialBtns.forEach(function (btn) {
+    if (colors.actionText) {
+      btn.style.setProperty('color', colors.actionText, 'important');
+    }
+
+    if (colors.actionBackground) {
+      btn.style.setProperty('background-color', colors.actionBackground, 'important');
+    }
+  });
+
+  if (msg && colors.text) {
+    for (i = 0; i < msg.length; i++) {
+      msg[i].style.setProperty('color', colors.text, 'important');
+    }
+  }
+}
+
+/** @module config/default-props */
+
+var defaultProps$1 = {
+  generic: {
+    className: 'pathfora',
+    branding: true,
+    responsive: true,
+    headline: '',
+    themes: {
+      dark: {
+        background: '#333',
+        headline: '#fefefe',
+        text: '#aaa',
+        close: '#888',
+        actionText: '#fff',
+        actionBackground: '#444',
+        cancelText: '#888',
+        cancelBackground: '#333'
+      },
+      light: {
+        background: '#f1f1f1',
+        headline: '#444',
+        text: '#888',
+        close: '#bbb',
+        actionText: '#444',
+        actionBackground: '#fff',
+        cancelText: '#bbb',
+        cancelBackground: '#f1f1f1'
+      }
+    },
+    displayConditions: {
+      showOnInit: true,
+      showOnExitIntent: false,
+      showDelay: 0,
+      hideAfter: 0,
+      displayWhenElementVisible: '',
+      scrollPercentageToDisplay: 0
+    }
+  },
+  message: {
+    layout: 'modal',
+    position: '',
+    variant: '1',
+    okMessage: 'Confirm',
+    cancelMessage: 'Cancel',
+    okShow: true,
+    cancelShow: true
+  },
+  subscription: {
+    layout: 'modal',
+    position: '',
+    variant: '1',
+    placeholders: {
+      email: 'Email'
+    },
+    okMessage: 'Confirm',
+    cancelMessage: 'Cancel',
+    okShow: true,
+    cancelShow: true
+  },
+  form: {
+    layout: 'modal',
+    position: '',
+    variant: '1',
+    placeholders: {
+      name: 'Name',
+      title: 'Title',
+      email: 'Email',
+      message: 'Message',
+      company: 'Company',
+      phone: 'Phone Number',
+      country: 'Country',
+      referralEmail: 'Referral Email'
+    },
+    required: {
+      name: true,
+      email: true
+    },
+    fields: {
+      company: false,
+      phone: false,
+      country: false,
+      referralEmail: false
+    },
+    okMessage: 'Send',
+    okShow: true,
+    cancelMessage: 'Cancel',
+    cancelShow: true,
+    showSocialLogin: false
+  },
+  sitegate: {
+    layout: 'modal',
+    position: '',
+    variant: '1',
+    placeholders: {
+      name: 'Name',
+      title: 'Title',
+      email: 'Email',
+      message: 'Message',
+      company: 'Company',
+      phone: 'Phone Number',
+      country: 'Country',
+      referralEmail: 'Referral Email'
+    },
+    required: {
+      name: true,
+      email: true
+    },
+    fields: {
+      message: false,
+      phone: false,
+      country: false,
+      referralEmail: false
+    },
+    okMessage: 'Submit',
+    okShow: true,
+    cancelShow: false,
+    showSocialLogin: false,
+    showForm: true
+  }
+};
+
 /** @module core/setup-widget-colors */
 
 function setupWidgetColors (widget, config) {
   switch (config.theme) {
   case 'custom':
     if (config.colors) {
-      core.setCustomColors(widget, config.colors);
+      csetCustomColors(widget, config.colors);
     }
     break;
   case 'none':
@@ -1749,7 +2030,7 @@ function setupWidgetColors (widget, config) {
     break;
   default:
     if (config.theme) {
-      core.setCustomColors(widget, defaultProps.generic.themes[config.theme]);
+      setCustomColors(widget, defaultProps$1.generic.themes[config.theme]);
     }
     break;
   }
@@ -2217,8 +2498,8 @@ function initializeWidgetArray (array) {
     }
 
     var widgetOnInitCallback = widget.config.onInit,
-        defaults = defaultProps[widget.type],
-        globals = defaultProps.generic;
+        defaults = defaultProps$1[widget.type],
+        globals = defaultProps$1.generic;
 
     if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
       continue;
@@ -2297,8 +2578,8 @@ function initializeWidgets (widgets, config) {
   trackTimeOnPage();
 
   if (config) {
-    originalConf = JSON.parse(JSON.stringify(defaultProps));
-    updateObject(defaultProps, config);
+    originalConf = JSON.parse(JSON.stringify(defaultProps$1));
+    updateObject(defaultProps$1, config);
   }
 
   if (widgets instanceof Array) {
@@ -2310,7 +2591,7 @@ function initializeWidgets (widgets, config) {
     // NOTE Target sensitive widgets
     if (widgets.common) {
       initializeWidgetArray(widgets.common);
-      updateObject(defaultProps, widgets.common.config);
+      updateObject(defaultProps$1, widgets.common.config);
     }
 
     if (widgets.target || widgets.exclude) {
@@ -2931,9 +3212,9 @@ function ABTest (config) {
 
 function integrateWithFacebook (appId) {
   if (appId !== '') {
-    var btn = templates.social.facebookBtn.replace(
+    var btn = templates$1.social.facebookBtn.replace(
       /(\{){2}facebook-icon(\}){2}/gm,
-      templates.assets.facebookIcon
+      templates$1.assets.facebookIcon
     );
 
     var parseFBLoginTemplate = function (parentTemplates) {
@@ -2968,8 +3249,8 @@ function integrateWithFacebook (appId) {
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
 
-    parseFBLoginTemplate(templates.form);
-    parseFBLoginTemplate(templates.sitegate);
+    parseFBLoginTemplate(templates$1.form);
+    parseFBLoginTemplate(templates$1.sitegate);
 
     pathforaDataObject.socialNetworks.facebookAppId = appId;
   }
@@ -2981,14 +3262,14 @@ function integrateWithGoogle (clientId) {
   if (clientId !== '') {
     var head = document.querySelector('head');
 
-    var appMetaTag = templates.social.googleMeta.replace(
+    var appMetaTag = templates$1.social.googleMeta.replace(
       /(\{){2}google-clientId(\}){2}/gm,
       clientId
     );
 
-    var btn = templates.social.googleBtn.replace(
+    var btn = templates$1.social.googleBtn.replace(
       /(\{){2}google-icon(\}){2}/gm,
-      templates.assets.googleIcon
+      templates$1.assets.googleIcon
     );
 
     var parseGoogleLoginTemplate = function (parentTemplates) {
@@ -3019,8 +3300,8 @@ function integrateWithGoogle (clientId) {
     }());
 
     pathforaDataObject.socialNetworks.googleClientID = clientId;
-    parseGoogleLoginTemplate(templates.form);
-    parseGoogleLoginTemplate(templates.sitegate);
+    parseGoogleLoginTemplate(templates$1.form);
+    parseGoogleLoginTemplate(templates$1.sitegate);
   }
 }
 

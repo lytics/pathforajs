@@ -5,6 +5,7 @@ import trackTimeOnPage from '../../core/tracking/track-time-on-page'
 import initializeWidgetArray from '../../core/widgets/init-widget-array'
 import updateObject from '../../utils/update-object'
 import getUserSegments from '../../api/segments/get-user-segments'
+import { defaultProps } from '../../config/default-props'
 
 export default function initializeWidgets (widgets, config) {
   // NOTE IE < 10 not supported

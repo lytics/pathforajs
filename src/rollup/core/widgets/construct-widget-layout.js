@@ -3,6 +3,7 @@
 import buildWidgetForm from '../form/build-widget-form'
 import addClass from '../../utils/class/add-class'
 import removeClass from '../../utils/class/remove-class'
+import { templates } from '../../config/templates'
 
 export default function constructWidgetLayout (widget, config) {
   var node, child, i,

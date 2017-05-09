@@ -5,6 +5,7 @@ import incrementImpressions from '../../core/displayConditions/impressions/incre
 import createWidgetHtml from '../../core/widgets/create-widget-html'
 import addClass from '../../utils/class/add-class'
 import widgetResizeListener from '../../core/widgets/widget-resize-listener'
+import { callbackTypes } from '../../config/callbacks'
 
 
 export default function showWidget () {
