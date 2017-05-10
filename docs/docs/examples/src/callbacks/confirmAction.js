@@ -4,8 +4,9 @@ var module = new pathfora.Message({
   msg: 'Click the "confirm" button to see the callback',
   confirmAction: {
     name: 'custom confirm',
-    callback: function () {
+    callback: function (event, payload) {
       alert('confirm callback');
+      console.log(payload);
     }
   }
 });

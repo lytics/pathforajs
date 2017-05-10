@@ -12,9 +12,10 @@ import { widgetTracker } from '../globals/config';
 
 export default function closeWidget (id, noTrack) {
   var node = document.getElementById(id);
+  var i;
 
   // FIXME Change to Array#some or Array#filter
-  for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
+  for (i = 0; i < widgetTracker.openedWidgets.length; i++) {
     if (widgetTracker.openedWidgets[i].id === id) {
       if (!noTrack) {
         trackWidgetAction('close', widgetTracker.openedWidgets[i]);
@@ -37,6 +38,12 @@ export default function closeWidget (id, noTrack) {
   setTimeout(function () {
     if (node && node.parentNode) {
       node.parentNode.removeChild(node);
+
+      for (i = 0; i < widgetTracker.initializedWidgets.length; i++) {
+        if (widgetTracker.initializedWidgets[i] === id) {
+          widgetTracker.initializedWidgets.splice(i, 1);
+        }
+      }
     }
   }, 500);
 }

@@ -1,9 +1,9 @@
 var module = new pathfora.Message({
-  id: 'cancel-callback',
+  id: 'close-callback',
   layout: 'modal',
-  msg: 'Click the "cancel" button to see the callback',
-  cancelAction: {
-    name: 'custom cancel',
+  msg: 'Click the "close" button to see the callback',
+  closeAction: {
+    name: 'custom close',
     callback: function (event, payload) {
       alert('cancel callback');
       console.log(payload);

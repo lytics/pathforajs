@@ -65,13 +65,14 @@ export default function showWidget (widget) {
 
     if (typeof widgetLoadCallback === 'function') {
       widgetLoadCallback(callbackTypes.LOAD, {
-        widget: widget,
-        node: node
+        config: widget,
+        widget: node
       });
     }
     if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
       widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
-        widget: widget
+        config: widget,
+        widget: node
       });
     }
   }, 50);
