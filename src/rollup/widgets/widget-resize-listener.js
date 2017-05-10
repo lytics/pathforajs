@@ -1,9 +1,10 @@
-/** @module core/widget-resize-listener */
+/** @module pathfora/widgets/widget-resize-listener */
 
-import addClass from '../utils/class/add-class'
-import removeClass from '../utils/class/remove-class'
-import hasClass from '../utils/class/has-class'
-import { WIDTH_BREAKPOINT } from '../globals/config'
+import addClass from '../utils/class/add-class';
+import removeClass from '../utils/class/remove-class';
+import hasClass from '../utils/class/has-class';
+
+import { WIDTH_BREAKPOINT } from '../globals/config';
 
 export default function widgetResizeListener (widget, node) {
   if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
@@ -16,4 +17,4 @@ export default function widgetResizeListener (widget, node) {
       }
     }
   }
-};
+}

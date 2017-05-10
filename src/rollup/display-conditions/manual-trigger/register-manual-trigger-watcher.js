@@ -1,7 +1,8 @@
-/** @module core/register-manual-trigger-watcher */
+/** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
-import { widgetTracker } from '../../globals/config'
-import removeWatcher from '../watchers/remove-watcher'
+import { widgetTracker } from '../../globals/config';
+
+import removeWatcher from '../watchers/remove-watcher';
 
 export default function registerManualTriggerWatcher (value, widget) {
   var watcher = {
@@ -15,4 +16,4 @@ export default function registerManualTriggerWatcher (value, widget) {
   };
 
   return watcher;
-};
+}

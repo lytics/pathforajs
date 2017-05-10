@@ -1,6 +1,6 @@
-/** @module api/segments/get-user-segments */
+/** @module pathfora/data/segments/get-user-segments */
 
-import window from '../../dom/window'
+import window from '../../dom/window';
 
 export default function getUserSegments () {
   if (window.lio && window.lio.data && window.lio.data.segments) {
@@ -8,4 +8,4 @@ export default function getUserSegments () {
   } else {
     return ['all'];
   }
-};
+}

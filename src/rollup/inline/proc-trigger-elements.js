@@ -1,6 +1,6 @@
 /** @module pathfora/inline/proc-trigger-elements */
 
-import inSegment from '../data/segments/in-segment'
+import inSegment from '../data/segments/in-segment';
 
 export default function procTriggerElements (elems, group) {
   var matched = false,
@@ -33,4 +33,4 @@ export default function procTriggerElements (elems, group) {
     defaultEl.elem.setAttribute('data-pfmodified', 'true');
     this.preppedElements[group] = defaultEl;
   }
-};
+}

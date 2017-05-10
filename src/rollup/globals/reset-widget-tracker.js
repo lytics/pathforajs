@@ -1,4 +1,4 @@
-/** @module config/default-props */
+/** @module pathfora/globals/reset-widget-tracker */
 
 export default function resetWidgetTracker (obj) {
   obj.delayedWidgets = {};
@@ -9,4 +9,4 @@ export default function resetWidgetTracker (obj) {
   obj.triggeredWidgets = {};
 
   return obj;
-};
+}

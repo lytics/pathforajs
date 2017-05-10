@@ -1,13 +1,15 @@
-/** @module core/create-widget-html */
+/** @module pathfora/widgets/create-widget-html */
 
-import setupWidgetPosition from './setup-widget-position'
-import constructWidgetActions from './construct-widget-actions'
-import setupWidgetContentUnit from './setup-widget-content-unit'
-import setWidgetClassname from './set-widget-classname'
-import constructWidgetLayout from './construct-widget-layout'
-import setupWidgetColors from './colors/setup-widget-colors'
-import document from '../dom/document'
-import { templates } from '../globals/config'
+import setupWidgetPosition from './setup-widget-position';
+import constructWidgetActions from './construct-widget-actions';
+import setupWidgetContentUnit from './setup-widget-content-unit';
+import setWidgetClassname from './set-widget-classname';
+import constructWidgetLayout from './construct-widget-layout';
+import setupWidgetColors from './colors/setup-widget-colors';
+
+import document from '../dom/document';
+
+import { templates } from '../globals/config';
 
 export default function createWidgetHtml (config) {
   var widget = document.createElement('div');
@@ -27,4 +29,4 @@ export default function createWidgetHtml (config) {
   setupWidgetColors(widget, config);
 
   return widget;
-};
+}

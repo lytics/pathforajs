@@ -1,6 +1,6 @@
-/** @module pathfora/proc-recommend-elements */
+/** @module pathfora/inline/proc-recommend-elements */
 
-import recommendContent from '../recommendations/recommend-content'
+import recommendContent from '../recommendations/recommend-content';
 
 export default function procRecommendElements (blocks, rec, cb) {
   var inline = this;
@@ -11,7 +11,7 @@ export default function procRecommendElements (blocks, rec, cb) {
       contentsegment: rec
     };
 
-    recommendContent(pathfora.acctid, params, rec, function (resp) {
+    recommendContent(inline.parent.acctid, params, rec, function (resp) {
       var idx = 0;
       for (var block in blocks) {
         if (blocks.hasOwnProperty(block)) {
@@ -54,7 +54,7 @@ export default function procRecommendElements (blocks, rec, cb) {
             // set the date published
             if (elems.published && content.created) {
               var published = new Date(content.created);
-              elems.published.innerHTML = published.toLocaleDateString(pathfora.locale, pathfora.dateOptions);
+              elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
             }
 
             // set the author
@@ -81,4 +81,4 @@ export default function procRecommendElements (blocks, rec, cb) {
     }
     cb();
   }
-};
+}

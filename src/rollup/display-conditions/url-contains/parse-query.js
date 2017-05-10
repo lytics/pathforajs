@@ -1,6 +1,6 @@
-/** @module core/parse-query */
+/** @module pathfora/display-conditions/url-contains/parse-query */
 
-import escapeURI from '../../utils/url/escape-uri'
+import escapeURI from '../../utils/url/escape-uri';
 
 export default function parseQuery (url) {
   var query = {},
@@ -22,4 +22,4 @@ export default function parseQuery (url) {
   }
 
   return query;
-};
+}

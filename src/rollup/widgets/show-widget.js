@@ -1,15 +1,19 @@
 /** @module pathfora/widgets/show-widget */
 
-import trackWidgetAction from '../data/tracking/track-widget-action'
-import incrementImpressions from '../display-conditions/impressions/increment-impressions'
-import createWidgetHtml from './create-widget-html'
-import addClass from '../utils/class/add-class'
-import closeWidget from './close-widget'
-import widgetResizeListener from './widget-resize-listener'
-import window from '../dom/window'
-import document from '../dom/document'
-import { callbackTypes, widgetTracker } from '../globals/config'
+import trackWidgetAction from '../data/tracking/track-widget-action';
 
+import incrementImpressions from '../display-conditions/impressions/increment-impressions';
+
+import createWidgetHtml from './create-widget-html';
+import closeWidget from './close-widget';
+import widgetResizeListener from './widget-resize-listener';
+
+import addClass from '../utils/class/add-class';
+
+import window from '../dom/window';
+import document from '../dom/document';
+
+import { callbackTypes, widgetTracker } from '../globals/config';
 
 export default function showWidget (widget) {
   // FIXME Change to Array#filter and Array#length
@@ -86,4 +90,4 @@ export default function showWidget (widget) {
       widgetResizeListener(widget, node);
     });
   }
-};
+}

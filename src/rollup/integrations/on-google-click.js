@@ -1,8 +1,10 @@
-/** @module core/auto-complete-google-data */
+/** @module pathfora/integrations/on-google-click */
 
-import autoCompleteGoogleData from './auto-complete-google-data'
-import clearFormFields from '../form/clear-form-fields'
-import window from '../dom/window'
+import autoCompleteGoogleData from './auto-complete-google-data';
+
+import clearFormFields from '../form/clear-form-fields';
+
+import window from '../dom/window';
 
 export default function onGoogleClick (elements) {
   var auth2 = window.gapi.auth2.getAuthInstance();
@@ -20,4 +22,4 @@ export default function onGoogleClick (elements) {
       autoCompleteGoogleData(auth2.currentUser.get(), elements);
     });
   }
-};
+}

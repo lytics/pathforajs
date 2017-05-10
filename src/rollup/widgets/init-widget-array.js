@@ -1,12 +1,13 @@
-/** @module core/initialize-widget-array */
+/** @module pathfora/widgets/initialize-widget-array */
 
-import registerDelayedWidget from '../display-conditions/delay/register-delayed-widget'
-import readCookie from '../utils/cookies/read-cookie'
-import updateObject from '../utils/update-object'
-import recommendContent from '../recommendations/recommend-content'
-import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config'
-import window from '../dom/window'
+import readCookie from '../utils/cookies/read-cookie';
+import updateObject from '../utils/update-object';
 
+import recommendContent from '../recommendations/recommend-content';
+
+import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config';
+
+import window from '../dom/window';
 
 export default function initializeWidgetArray (array) {
   var pf = this;
@@ -111,4 +112,4 @@ export default function initializeWidgetArray (array) {
       });
     }
   }
-};
+}

@@ -1,7 +1,8 @@
-/** @module core/impressions-checker */
+/** @module pathfora/display-conditions/impressions/impressions-checker */
 
-import { PREFIX_IMPRESSION } from '../../globals/config'
-import readCookie from '../../utils/cookies/read-cookie'
+import { PREFIX_IMPRESSION } from '../../globals/config';
+
+import readCookie from '../../utils/cookies/read-cookie';
 
 export default function impressionsChecker (impressionConstraints, widget) {
   var parts, totalImpressions,
@@ -31,4 +32,4 @@ export default function impressionsChecker (impressionConstraints, widget) {
   }
 
   return valid;
-};
+}

@@ -1,7 +1,8 @@
-/** @module pathfora/trigger-widgets */
+/** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
 
-import { widgetTracker } from '../../globals/config'
-import triggerWidget from './trigger-widget'
+import { widgetTracker } from '../../globals/config';
+
+import triggerWidget from './trigger-widget';
 
 export default function triggerWidgets (widgetIds) {
   var i, valid;
@@ -32,4 +33,4 @@ export default function triggerWidgets (widgetIds) {
       }
     });
   }
-};
+}

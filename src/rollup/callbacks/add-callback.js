@@ -1,6 +1,6 @@
-/** @module pathfora/add-callback */
+/** @module pathfora/callbacks/add-callback */
 
-import window from '../dom/window'
+import window from '../dom/window';
 
 export default function addCallback (cb) {
   if (window.lio && window.lio.loaded) {
@@ -8,4 +8,4 @@ export default function addCallback (cb) {
   } else {
     this.callbacks.push(cb);
   }
-};
+}

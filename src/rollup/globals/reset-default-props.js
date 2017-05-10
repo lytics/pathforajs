@@ -1,4 +1,4 @@
-/** @module config/default-props */
+/** @module pathfora/globals/reset-default-props */
 
 export default function resetDefaultProps (obj) {
   obj.generic = {
@@ -125,4 +125,4 @@ export default function resetDefaultProps (obj) {
   };
 
   return obj;
-};
+}

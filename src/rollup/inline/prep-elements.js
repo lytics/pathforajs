@@ -1,6 +1,6 @@
 /** @module pathfora/inline/prep-elements */
 
-import document from '../dom/document'
+import document from '../dom/document';
 
 export default function prepElements (attr) {
   var dataElements = {},
@@ -67,4 +67,4 @@ export default function prepElements (attr) {
     }
   }
   return dataElements;
-};
+}

@@ -1,12 +1,15 @@
 /** @module pathfora/widgets/clear-all */
 
-import document from '../dom/document'
-import removeClass from '../utils/class/remove-class'
-import cancelDelayedWidget from '../display-conditions/delay/cancel-delayed-widget'
-import { widgetTracker, pathforaDataObject, defaultProps } from '../globals/config'
-import resetDataObject from '../globals/reset-data-object'
-import resetWidgetTracker from '../globals/reset-widget-tracker'
-import resetDefaultProps from '../globals/reset-default-props'
+import document from '../dom/document';
+
+import removeClass from '../utils/class/remove-class';
+
+import cancelDelayedWidget from '../display-conditions/delay/cancel-delayed-widget';
+
+import { widgetTracker, pathforaDataObject, defaultProps } from '../globals/config';
+import resetDataObject from '../globals/reset-data-object';
+import resetWidgetTracker from '../globals/reset-widget-tracker';
+import resetDefaultProps from '../globals/reset-default-props';
 
 
 export default function clearAll () {
@@ -28,4 +31,4 @@ export default function clearAll () {
   resetWidgetTracker(widgetTracker);
   resetDataObject(pathforaDataObject);
   resetDefaultProps(defaultProps);
-};
+}

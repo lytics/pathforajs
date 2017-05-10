@@ -1,6 +1,6 @@
-/** @module pathfora/initialize-inline */
+/** @module pathfora/inline/init-inline */
 
-import window from '../dom/window'
+import window from '../dom/window';
 
 export default function initializeInline () {
   var pf = this;
@@ -16,4 +16,4 @@ export default function initializeInline () {
       pf.inline.procElements();
     });
   });
-};
+}

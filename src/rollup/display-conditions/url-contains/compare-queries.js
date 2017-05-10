@@ -1,4 +1,4 @@
-/** @module core/compare-queries */
+/** @module pathfora/display-conditions/url-contains/compare-queries */
 
 export default function compareQueries (query, matchQuery, rule) {
   switch (rule) {
@@ -19,4 +19,4 @@ export default function compareQueries (query, matchQuery, rule) {
   }
 
   return true;
-};
+}

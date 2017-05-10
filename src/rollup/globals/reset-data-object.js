@@ -1,4 +1,4 @@
-/** @module config/default-props */
+/** @module pathfora/globals/reset-data-object */
 
 export default function resetDataObject (obj) {
   obj.pageViews = 0;
@@ -11,4 +11,4 @@ export default function resetDataObject (obj) {
   obj.socialNetworks = {};
 
   return obj;
-};
+}

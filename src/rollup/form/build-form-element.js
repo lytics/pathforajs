@@ -1,7 +1,8 @@
-/** @module core/build-form-element */
+/** @module pathfora/form/build-form-element */
 
-import document from '../dom/document'
-import addClass from '../utils/class/add-class'
+import document from '../dom/document';
+
+import addClass from '../utils/class/add-class';
 
 export default function buildFormElement (elem, form) {
   var content, i, val, label,
@@ -112,4 +113,4 @@ export default function buildFormElement (elem, form) {
   } else {
     form.appendChild(wrapper);
   }
-};
+}

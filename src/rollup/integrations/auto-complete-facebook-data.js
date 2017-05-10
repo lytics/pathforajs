@@ -1,7 +1,7 @@
-/** @module core/auto-complete-facebook-data */
+/** @module pathfora/integrations/auto-complete-facebook-data */
 
-import autoCompleteFormFields from '../form/auto-complete-form-fields'
-import window from '../dom/window'
+import autoCompleteFormFields from '../form/auto-complete-form-fields';
+import window from '../dom/window';
 
 export default function autoCompleteFacebookData (elements) {
   window.FB.api('/me', {
@@ -19,4 +19,4 @@ export default function autoCompleteFacebookData (elements) {
       });
     }
   });
-};
+}

@@ -1,4 +1,4 @@
-/** @module utils/construct-queries */
+/** @module pafthroa/utils/url/construct-queries */
 
 export default function constructQueries (params) {
   var count = 0,
@@ -32,4 +32,4 @@ export default function constructQueries (params) {
   }
 
   return queries.join('');
-};
+}

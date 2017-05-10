@@ -1,4 +1,4 @@
-/** @module api/request/post-data */
+/** @module pathfora/data/request/post-data */
 
 export default function postData (url, data, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
@@ -15,4 +15,4 @@ export default function postData (url, data, onSuccess, onError) {
   };
 
   xhr.send(data);
-};
+}

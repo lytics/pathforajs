@@ -1,10 +1,13 @@
 /** @module pathfora/widgets/close-widget */
 
-import document from '../dom/document'
-import trackWidgetAction from '../data/tracking/track-widget-action'
-import removeClass from'../utils/class/remove-class'
-import hasClass from'../utils/class/has-class'
-import { widgetTracker } from '../globals/config'
+import document from '../dom/document';
+
+import trackWidgetAction from '../data/tracking/track-widget-action';
+
+import removeClass from '../utils/class/remove-class';
+import hasClass from '../utils/class/has-class';
+
+import { widgetTracker } from '../globals/config';
 
 
 export default function closeWidget (id, noTrack) {
@@ -36,4 +39,4 @@ export default function closeWidget (id, noTrack) {
       node.parentNode.removeChild(node);
     }
   }, 500);
-};
+}

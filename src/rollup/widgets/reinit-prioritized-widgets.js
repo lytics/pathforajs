@@ -1,8 +1,8 @@
 /** @module pathfora/widgets/reinit-prioritized-widgets */
 
-import { widgetTracker } from '../globals/config'
+import { widgetTracker } from '../globals/config';
 
-export default function reinitializePrioritizedWidgets() {
+export default function reinitializePrioritizedWidgets () {
   if (widgetTracker.prioritizedWidgets.length > 0) {
 
     widgetTracker.prioritizedWidgets.sort(function (a, b) {
@@ -19,4 +19,5 @@ export default function reinitializePrioritizedWidgets() {
       }
     }
   }
-};
+}
+

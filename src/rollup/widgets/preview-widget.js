@@ -1,9 +1,10 @@
-/** @module pathfora/preview-widget */
+/** @module pathfora/widgets/preview-widget */
 
-import generateUniqueId from '../utils/generate-unique-id'
-import createWidgetHtml from './create-widget-html'
+import generateUniqueId from '../utils/generate-unique-id';
+
+import createWidgetHtml from './create-widget-html';
 
 export default function previewWidget (widget) {
   widget.id = generateUniqueId();
   return createWidgetHtml(widget);
-};
+}

@@ -1,6 +1,6 @@
-/** @module core/build-widget-form */
+/** @module pathfora/form/build-widget-form */
 
-import buildFormElement from './build-form-element'
+import buildFormElement from './build-form-element';
 
 export default function buildWidgetForm (formElements, form) {
   for (var i = 0; i < formElements.length; i++) {
@@ -26,4 +26,4 @@ export default function buildWidgetForm (formElements, form) {
       throw new Error('unrecognized form element type: ' + elem.type);
     }
   }
-};
+}

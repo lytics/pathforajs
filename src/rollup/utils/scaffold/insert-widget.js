@@ -1,4 +1,4 @@
-/** @module utils/insert-widget */
+/** @module pathfora/utils/scaffold/insert-widget */
 
 export default function insertWidget (method, segment, widget, config) {
   // assume that we need to add a new widget until proved otherwise
@@ -39,4 +39,4 @@ export default function insertWidget (method, segment, widget, config) {
       'widgets': [widget]
     });
   }
-};
+}

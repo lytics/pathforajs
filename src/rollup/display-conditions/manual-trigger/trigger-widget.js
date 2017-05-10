@@ -1,7 +1,8 @@
-/** @module core/displayConditions/manualTrigger/trigger-widget */
+/** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
-import validateWatchers from '../watchers/validate-watchers'
-import { widgetTracker } from '../../globals/config'
+import validateWatchers from '../watchers/validate-watchers';
+
+import { widgetTracker } from '../../globals/config';
 
 export default function triggerWidget (widget) {
   return validateWatchers(widget, function () {
@@ -15,4 +16,4 @@ export default function triggerWidget (widget) {
       }
     });
   });
-};
+}

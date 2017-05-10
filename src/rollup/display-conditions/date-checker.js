@@ -1,4 +1,4 @@
-/** @module core/date-checker */
+/** @module pathfora/display-conditions/date-checker */
 
 export default function dateChecker (date) {
   var valid = true,
@@ -13,4 +13,4 @@ export default function dateChecker (date) {
   }
 
   return valid;
-};
+}

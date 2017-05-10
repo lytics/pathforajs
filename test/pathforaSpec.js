@@ -3,7 +3,7 @@
 var credentials = 123,
     ga = jasmine.createSpy('ga');
 
-window.jstag = {
+var jstag = {
   send: function () {}
 };
 

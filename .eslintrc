@@ -11,6 +11,13 @@
     "FB": true,
     "gapi": true
   },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "rules": {
     "block-scoped-var": "error",
     "camelcase": "error",

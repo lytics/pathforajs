@@ -1,10 +1,12 @@
-/** @module core/on-google-load */
+/** @module pathfora/integrations/on-google-load */
 
-import autoCompleteGoogleData from './auto-complete-google-data'
-import onGoogleClick from './on-google-click'
-import window from '../dom/window'
-import document from '../dom/document'
-import { pathforaDataObject } from '../globals/config' 
+import autoCompleteGoogleData from './auto-complete-google-data';
+import onGoogleClick from './on-google-click';
+
+import window from '../dom/window';
+import document from '../dom/document';
+
+import { pathforaDataObject } from '../globals/config';
 
 export default function onGoogleLoad () {
   window.gapi.load('auth2', function () {
@@ -29,4 +31,4 @@ export default function onGoogleLoad () {
       });
     });
   });
-};
+}

@@ -1,8 +1,9 @@
-/** @module core/register-element-watcher */
+/** @module pathfora/display-conditions/scroll/register-element-watcher */
 
-import document from '../../dom/document'
-import window from '../../dom/window'
-import removeWatcher from '../watchers/remove-watcher'
+import document from '../../dom/document';
+import window from '../../dom/window';
+
+import removeWatcher from '../watchers/remove-watcher';
 
 export default function registerElementWatcher (selector, widget) {
   var watcher = {
@@ -21,4 +22,4 @@ export default function registerElementWatcher (selector, widget) {
   };
 
   return watcher;
-};
+}

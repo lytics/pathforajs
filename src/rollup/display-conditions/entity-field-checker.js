@@ -1,6 +1,6 @@
-/** @module core/entity-field-checker */
+/** @module pathfora/display-conditions/entity-field-checker */
 
-import window from '../dom/window'
+import window from '../dom/window';
 
 export default function entityFieldChecker (widget, fieldName, found) {
   if (!found || !found.length) {
@@ -55,4 +55,4 @@ export default function entityFieldChecker (widget, fieldName, found) {
   }
 
   return true;
-};
+}

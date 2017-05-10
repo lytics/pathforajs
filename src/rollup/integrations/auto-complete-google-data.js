@@ -1,6 +1,6 @@
-/** @module core/auto-complete-google-data */
+/** @module pathfora/integrations/auto-complete-google-data */
 
-import autoCompleteFormFields from '../form/auto-complete-form-fields'
+import autoCompleteFormFields from '../form/auto-complete-form-fields';
 
 export default function autoCompleteGoogleData (user, elements) {
   if (typeof user !== 'undefined') {
@@ -18,4 +18,4 @@ export default function autoCompleteGoogleData (user, elements) {
       });
     }
   }
-};
+}

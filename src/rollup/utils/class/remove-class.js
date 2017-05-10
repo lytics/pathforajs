@@ -1,4 +1,4 @@
-/** @module utils/remove-class */
+/** @module pathfora/utils/class/remove-class */
 
 export default function removeClass (DOMNode, className) {
   var findClassRegexp = new RegExp([
@@ -8,4 +8,4 @@ export default function removeClass (DOMNode, className) {
   ].join(''), 'gi');
 
   DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
-};
+}

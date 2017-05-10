@@ -1,13 +1,16 @@
-/** @module core/construct-widget-actions */
+/** @module pathfora/widgets/construct-widget-actions */
 
-import readCookie from '../utils/cookies/read-cookie'
-import saveCookie from '../utils/cookies/save-cookie'
-import trackWidgetAction from '../data/tracking/track-widget-action'
-import hasClass from '../utils/class/has-class'
-import addClass from '../utils/class/add-class'
-import removeClass from '../utils/class/remove-class'
-import closeWidget from './close-widget'
-import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config'
+import readCookie from '../utils/cookies/read-cookie';
+import saveCookie from '../utils/cookies/save-cookie';
+import hasClass from '../utils/class/has-class';
+import addClass from '../utils/class/add-class';
+import removeClass from '../utils/class/remove-class';
+
+import trackWidgetAction from '../data/tracking/track-widget-action';
+
+import closeWidget from './close-widget';
+
+import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config';
 
 export default function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
@@ -314,4 +317,4 @@ export default function constructWidgetActions (widget, config) {
       updateActionCookie(PREFIX_CONFIRM + widget.id);
     };
   }
-};
+}

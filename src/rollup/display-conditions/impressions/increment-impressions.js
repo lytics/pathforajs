@@ -1,8 +1,9 @@
-/** @module core/increment-impressions */
+/** @module pathfora/display-conditions/impressions/increment-impressions */
 
-import { PREFIX_IMPRESSION } from '../../globals/config'
-import readCookie from '../../utils/cookies/read-cookie'
-import saveCookie from '../../utils/cookies/save-cookie'
+import { PREFIX_IMPRESSION } from '../../globals/config';
+
+import readCookie from '../../utils/cookies/read-cookie';
+import saveCookie from '../../utils/cookies/save-cookie';
 
 export default function incrementImpressions (widget) {
   var parts, totalImpressions,
@@ -26,4 +27,4 @@ export default function incrementImpressions (widget) {
 
   sessionStorage.setItem(id, sessionImpressions);
   saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
-};
+}

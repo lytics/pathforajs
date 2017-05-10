@@ -1,9 +1,10 @@
-/** @module core/track-widget-action */
+/** @module pathfora/data/tracking/track-widget-action */
 
-import { PREFIX_UNLOCK, pathforaDataObject } from '../../globals/config'
-import reportData from '../request/report-data'
-import saveCookie from '../../utils/cookies/save-cookie'
-import hasClass from '../../utils/class/has-class'
+import { PREFIX_UNLOCK, pathforaDataObject } from '../../globals/config';
+
+import reportData from '../request/report-data';
+import saveCookie from '../../utils/cookies/save-cookie';
+import hasClass from '../../utils/class/has-class';
 
 export default function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;
@@ -110,4 +111,4 @@ export default function trackWidgetAction (action, widget, htmlElement) {
 
   params['pf-widget-event'] = action;
   reportData(params);
-};
+}

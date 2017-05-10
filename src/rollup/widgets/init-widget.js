@@ -1,21 +1,24 @@
-/** @module core/init-widget */
+/** @module pathfora/widgets/init-widget */
 
-import dateChecker from '../display-conditions/date-checker'
-import pageVisitsChecker from '../display-conditions/pageviews/page-visits-checker'
-import hideAfterActionChecker from '../display-conditions/hide-after-action-checker'
-import urlChecker from '../display-conditions/url-contains/url-checker'
-import impressionsChecker from '../display-conditions/impressions/impressions-checker'
-import initializeExitIntent from '../display-conditions/init-exit-intent'
-import registerElementWatcher from '../display-conditions/scroll/register-element-watcher'
-import initializeScrollWatchers from '../display-conditions/scroll/init-scroll-watchers'
-import registerPositionWatcher from '../display-conditions/scroll/register-position-watcher'
-import registerManualTriggerWatcher from '../display-conditions/manual-trigger/register-manual-trigger-watcher'
-import triggerWidget from '../display-conditions/manual-trigger/trigger-widget'
-import addCallback from '../callbacks/add-callback'
-import showWidget from './show-widget'
-import { widgetTracker } from '../globals/config'
-import document from '../dom/document'
-import entityFieldChecker from '../display-conditions/entity-field-checker'
+import dateChecker from '../display-conditions/date-checker';
+import pageVisitsChecker from '../display-conditions/pageviews/page-visits-checker';
+import hideAfterActionChecker from '../display-conditions/hide-after-action-checker';
+import urlChecker from '../display-conditions/url-contains/url-checker';
+import impressionsChecker from '../display-conditions/impressions/impressions-checker';
+import initializeExitIntent from '../display-conditions/init-exit-intent';
+import registerElementWatcher from '../display-conditions/scroll/register-element-watcher';
+import initializeScrollWatchers from '../display-conditions/scroll/init-scroll-watchers';
+import registerPositionWatcher from '../display-conditions/scroll/register-position-watcher';
+import registerManualTriggerWatcher from '../display-conditions/manual-trigger/register-manual-trigger-watcher';
+import triggerWidget from '../display-conditions/manual-trigger/trigger-widget';
+
+import showWidget from './show-widget';
+
+import { widgetTracker } from '../globals/config';
+
+import document from '../dom/document';
+
+import addClass from '../utils/class/add-class';
 
 export default function initializeWidget (widget) {
   var watcher,
@@ -30,7 +33,7 @@ export default function initializeWidget (widget) {
 
   if (widget.pushDown) {
     if (widget.layout === 'bar' && (widget.position === 'top-fixed' || widget.position === 'top-absolute')) {
-      utils.addClass(document.querySelector(widget.pushDown), 'pf-push-down');
+      addClass(document.querySelector(widget.pushDown), 'pf-push-down');
     } else {
       throw new Error('Only top positioned bar widgets may have a pushDown property');
     }
@@ -124,4 +127,4 @@ export default function initializeWidget (widget) {
   } else {
     evalDisplayConditions();
   }
-};
+}

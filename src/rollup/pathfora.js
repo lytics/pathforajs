@@ -1,41 +1,43 @@
 /** @module pathfora */
-import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config'
-import window from './dom/window'
-import document from './dom/document'
 
-import addCallback from './callbacks/add-callback'
-import onDOMready from './dom/on-dom-ready'
-import initializePageViews from './display-conditions/pageviews/init-pageviews'
-import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets'
+import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config';
 
-import initializeWidgets from './widgets/init-widgets'
-import initializeWidgetArray from './widgets/init-widget-array'
-import initializeWidget from './widgets/init-widget'
-import previewWidget from './widgets/preview-widget'
-import showWidget from './widgets/show-widget'
-import closeWidget from './widgets/close-widget'
-import clearAll from './widgets/clear-all'
-import reinitializePrioritizedWidgets from './widgets/reinit-prioritized-widgets'
-import Message from './widgets/message'
-import Subscription from './widgets/subscription'
-import Form from './widgets/form'
-import SiteGate from './widgets/gate'
+import window from './dom/window';
+import document from './dom/document';
+import onDOMready from './dom/on-dom-ready';
 
-import registerDelayedWidget from './display-conditions/delay/register-delayed-widget'
-import entityFieldChecker from './display-conditions/entity-field-checker'
+import addCallback from './callbacks/add-callback';
 
-import Inline from './inline/inline'
-import initializeInline from './inline/init-inline'
+import initializeWidgets from './widgets/init-widgets';
+import initializeWidgetArray from './widgets/init-widget-array';
+import initializeWidget from './widgets/init-widget';
+import previewWidget from './widgets/preview-widget';
+import showWidget from './widgets/show-widget';
+import closeWidget from './widgets/close-widget';
+import clearAll from './widgets/clear-all';
+import reinitializePrioritizedWidgets from './widgets/reinit-prioritized-widgets';
+import Message from './widgets/message';
+import Subscription from './widgets/subscription';
+import Form from './widgets/form';
+import SiteGate from './widgets/gate';
 
-import initializeABTesting from './ab-test/init-ab-test'
-import ABTest from './ab-test/ab-test'
+import initializePageViews from './display-conditions/pageviews/init-pageviews';
+import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
+import registerDelayedWidget from './display-conditions/delay/register-delayed-widget';
+import entityFieldChecker from './display-conditions/entity-field-checker';
 
-import integrateWithFacebook from './integrations/facebook'
-import integrateWithGoogle from './integrations/google'
+import Inline from './inline/inline';
+import initializeInline from './inline/init-inline';
 
-import getData from './data/tracking/get-data'
+import initializeABTesting from './ab-test/init-ab-test';
+import ABTest from './ab-test/ab-test';
 
-import { utils } from './utils/utils'
+import integrateWithFacebook from './integrations/facebook';
+import integrateWithGoogle from './integrations/google';
+
+import getData from './data/tracking/get-data';
+
+import { utils } from './utils/utils';
 
 var Pathfora = function () {
   this.version = PF_VERSION;
@@ -46,20 +48,13 @@ var Pathfora = function () {
   this.DOMLoaded = false;
   this.customData = {};
 
-  this.addCallback = addCallback;
-  this.initializePageViews = initializePageViews;
   this.onDOMready = onDOMready;
 
-  this.initializeInline = initializeInline;
+  this.addCallback = addCallback;
 
-  this.triggerWidgets = triggerWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
-
-  this.registerDelayedWidget = registerDelayedWidget;
-  this.entityFieldChecker = entityFieldChecker;
-
   this.previewWidget = previewWidget;
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
@@ -69,6 +64,13 @@ var Pathfora = function () {
   this.Subscription = Subscription;
   this.Form = Form;
   this.SiteGate = SiteGate;
+
+  this.initializePageViews = initializePageViews;
+  this.triggerWidgets = triggerWidgets;
+  this.registerDelayedWidget = registerDelayedWidget;
+  this.entityFieldChecker = entityFieldChecker;
+
+  this.initializeInline = initializeInline;
 
   this.initializeABTesting = initializeABTesting;
   this.ABTest = ABTest;

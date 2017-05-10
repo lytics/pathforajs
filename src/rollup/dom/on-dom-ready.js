@@ -1,6 +1,6 @@
-/** @module pathfora/on-dom-ready */
+/** @module pathfora/dom/on-dom-ready */
 
-import document from './document'
+import document from './document';
 
 export default function onDOMready (fn) {
   var handler,
@@ -19,4 +19,4 @@ export default function onDOMready (fn) {
     pf.DOMLoaded = true;
     fn();
   }
-};
+}

@@ -1,11 +1,11 @@
-/** @module pathfora/inline */
+/** @module pathfora/inline/inline */
 
-import document from '../dom/document'
-import prepElements from './prep-elements'
-import procElements from './proc-elements'
-import procRecommendElements from './proc-recommend-elements'
-import procTriggerElements from './proc-trigger-elements'
-import setDefaultRecommend from'./set-default-recommend'
+import document from '../dom/document';
+import prepElements from './prep-elements';
+import procElements from './proc-elements';
+import procRecommendElements from './proc-recommend-elements';
+import procTriggerElements from './proc-trigger-elements';
+import setDefaultRecommend from './set-default-recommend';
 
 
 export default function Inline (pf) {
@@ -33,4 +33,4 @@ export default function Inline (pf) {
   }
 
   document.getElementsByTagName('head')[0].appendChild(style);
-};
+}

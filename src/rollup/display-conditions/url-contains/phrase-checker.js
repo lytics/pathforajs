@@ -1,8 +1,9 @@
-/** @module core/phrase-checker */
+/** @module pathfora/display-conditions/url-contains/phrase-checker */
 
-import compareQueries from './compare-queries'
-import parseQuery from './parse-query'
-import escapeURI from '../../utils/url/escape-uri'
+import compareQueries from './compare-queries';
+import parseQuery from './parse-query';
+
+import escapeURI from '../../utils/url/escape-uri';
 
 export default function phraseChecker (phrase, url, simpleurl, queries) {
   var valid = false;
@@ -70,4 +71,4 @@ export default function phraseChecker (phrase, url, simpleurl, queries) {
   }
 
   return valid;
-};
+}

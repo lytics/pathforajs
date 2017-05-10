@@ -1,4 +1,4 @@
-/** @module core/prepare-widget */
+/** @module pathfora/widgets/prepare-widget */
 
 export default function prepareWidget (type, config) {
   var props, random,
@@ -70,4 +70,4 @@ export default function prepareWidget (type, config) {
   widget.id = config.id;
 
   return widget;
-};
+}

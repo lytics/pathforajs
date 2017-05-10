@@ -1,6 +1,6 @@
-/** @module core/auto-complete-form-fields */
+/** @module pathfora/form/auto-complete-form-fields */
 
-import document from '../dom/document'
+import document from '../dom/document';
 
 export default function autoCompleteFormFields (data) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
@@ -16,4 +16,4 @@ export default function autoCompleteFormFields (data) {
       });
     }
   });
-};
+}

@@ -1,4 +1,4 @@
-/** @module core/validate-widget-position */
+/** @module pathfora/widgets/validate-widget-position */
 
 export default function validateWidgetPosition (widget, config) {
   var choices;
@@ -27,4 +27,4 @@ export default function validateWidgetPosition (widget, config) {
   if (choices.indexOf(config.position) === -1) {
     // NOTE config.position + ' is not valid position for ' + config.layout
   }
-};
+}

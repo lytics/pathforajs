@@ -1,7 +1,8 @@
-/** @module core/setup-widget-colors */
+/** @module pathfora/wodgets/colors/setup-widget-colors */
 
-import setCustomColors from './set-custom-colors'
-import { defaultProps } from '../../globals/config'
+import setCustomColors from './set-custom-colors';
+
+import { defaultProps } from '../../globals/config';
 
 export default function setupWidgetColors (widget, config) {
   switch (config.theme) {
@@ -19,4 +20,4 @@ export default function setupWidgetColors (widget, config) {
     }
     break;
   }
-};
+}

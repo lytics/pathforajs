@@ -1,4 +1,4 @@
-/** @module utils/generate-unique-id */
+/** @module pathfora/utils/generate-unique-id */
 
 export default function generateUniqueId () {
   var s4;
@@ -22,4 +22,4 @@ export default function generateUniqueId () {
     '-',
     s4(), s4(), s4()
   ].join('');
-};
+}

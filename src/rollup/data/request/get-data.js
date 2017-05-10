@@ -1,4 +1,4 @@
-/** @module api/request/get-data */
+/** @module pathfora/data/request/get-data */
 
 export default function getData (url, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
@@ -13,4 +13,4 @@ export default function getData (url, onSuccess, onError) {
 
   xhr.open('GET', url);
   xhr.send();
-};
+}

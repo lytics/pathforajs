@@ -1,4 +1,4 @@
-/* module ab-test/create-preset */
+/* module pathfora/ab-test/create-preset */
 
 export default function createABTestingModePreset () {
   var groups = [];

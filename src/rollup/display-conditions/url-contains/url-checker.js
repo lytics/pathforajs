@@ -1,8 +1,9 @@
-/** @module core/url-checker */
+/** @module pathfora/display-conditions/url-contains/url-checker */
 
-import escapeURI from '../../utils/url/escape-uri'
-import parseQuery from './parse-query'
-import phraseChecker from './phrase-checker'
+import escapeURI from '../../utils/url/escape-uri';
+
+import parseQuery from './parse-query';
+import phraseChecker from './phrase-checker';
 
 export default function urlChecker (phrases) {
   var url = escapeURI(window.location.href, { keepEscaped: true }),
@@ -41,4 +42,4 @@ export default function urlChecker (phrases) {
   }
 
   return valid && !excludeValid;
-};
+}

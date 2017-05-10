@@ -1,6 +1,6 @@
-/** @module utils/read-cookie */
+/** @module pathfora/utils/cookie/read-cookie */
 
-import document from '../../dom/document'
+import document from '../../dom/document';
 
 export default function readCookie (name) {
   var cookies = document.cookie,

@@ -1,6 +1,6 @@
-/** @module api/request/report-data */
+/** @module pathfora/data/request/report-data */
 
-import window from '../../dom/window'
+import window from '../../dom/window';
 
 export default function reportData (data) {
   var gaLabel;
@@ -25,4 +25,4 @@ export default function reportData (data) {
       }
     );
   }
-};
+}

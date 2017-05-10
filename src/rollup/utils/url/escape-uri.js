@@ -1,4 +1,4 @@
-/** @module utils/escape-uri */
+/** @module pathfora/utils/url/escape-uri */
 
 export default function escapeURI (text, options) {
   // NOTE This was ported from various bits of C++ code from Chromium
@@ -52,4 +52,4 @@ export default function escapeURI (text, options) {
   }
 
   return escaped.join('');
-};
+}

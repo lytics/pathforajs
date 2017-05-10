@@ -1,6 +1,6 @@
 /** @module core/cancel-delayed-widget */
 
-import { widgetTracker } from '../../globals/config'
+import { widgetTracker } from '../../globals/config';
 
 export default function cancelDelayedWidget (widget) {
   var delayObj = widgetTracker.delayedWidgets[widget.id];
@@ -9,4 +9,4 @@ export default function cancelDelayedWidget (widget) {
     clearTimeout(delayObj);
     delete widgetTracker.delayedWidgets[widget.id];
   }
-};
+}

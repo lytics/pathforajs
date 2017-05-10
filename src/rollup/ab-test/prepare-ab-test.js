@@ -1,6 +1,6 @@
-/** @module core/prepare-ab-test */
+/** @module pathfora/ab-test/prepare-ab-test */
 
-import { PREFIX_AB_TEST, abTestingTypes } from '../globals/config'
+import { PREFIX_AB_TEST, abTestingTypes } from '../globals/config';
 
 export default function prepareABTest (config) {
   var test = {};
@@ -20,4 +20,4 @@ export default function prepareABTest (config) {
   test.type = abTestingTypes[config.type];
 
   return test;
-};
+}

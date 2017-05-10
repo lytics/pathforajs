@@ -1,4 +1,4 @@
-/** @module utils/update-object */
+/** @module pathfora/utils/update-object */
 
 export default function updateObject (object, config) {
   for (var prop in config) {
@@ -13,4 +13,4 @@ export default function updateObject (object, config) {
       object[prop] = config[prop];
     }
   }
-};
+}

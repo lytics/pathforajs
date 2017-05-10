@@ -1,4 +1,4 @@
-/** @module core/validate-widgets-object */
+/** @module pathfora/widgets/validate-widgets-object */
 
 export default function validateWidgetsObject (widgets) {
   if (!widgets) {
@@ -17,4 +17,4 @@ export default function validateWidgetsObject (widgets) {
       }
     }
   }
-};
+}

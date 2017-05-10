@@ -1,4 +1,4 @@
-/** @module utils/init-scaffold */
+/** @module pathfora/utils/scaffold/init-scaffold */
 
 export default function initWidgetScaffold () {
   return {
@@ -6,4 +6,4 @@ export default function initWidgetScaffold () {
     exclude: [],
     inverse: []
   };
-};
+}

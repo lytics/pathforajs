@@ -1,8 +1,10 @@
-/** @module core/on-facebook-click */
+/** @module pathfora/integrations/on-facebook-click */
 
-import autoCompleteFacebookData from './auto-complete-facebook-data'
-import clearFormFields from '../form/clear-form-fields'
-import window from '../dom/window'
+import autoCompleteFacebookData from './auto-complete-facebook-data';
+
+import clearFormFields from '../form/clear-form-fields';
+
+import window from '../dom/window';
 
 export default function onFacebookClick (elements) {
   window.FB.getLoginStatus(function (connection) {
@@ -22,4 +24,4 @@ export default function onFacebookClick (elements) {
       });
     }
   });
-};
+}

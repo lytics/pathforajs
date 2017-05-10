@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-/** @module config/default-props */
+/** @module pathfora/globals/reset-default-props */
 
 function resetDefaultProps (obj) {
   obj.generic = {
@@ -130,7 +130,7 @@ function resetDefaultProps (obj) {
   return obj;
 }
 
-/** @module config/default-props */
+/** @module pathfora/globals/reset-widget-tracker */
 
 function resetWidgetTracker (obj) {
   obj.delayedWidgets = {};
@@ -143,7 +143,7 @@ function resetWidgetTracker (obj) {
   return obj;
 }
 
-/** @module config/default-props */
+/** @module pathfora/globals/reset-data-object */
 
 function resetDataObject (obj) {
   obj.pageViews = 0;
@@ -158,7 +158,7 @@ function resetDataObject (obj) {
   return obj;
 }
 
-/* module ab-test/create-preset */
+/* module pathfora/ab-test/create-preset */
 
 function createABTestingModePreset () {
   var groups = [];
@@ -186,7 +186,7 @@ function createABTestingModePreset () {
   };
 }
 
-/** @module config */
+/** @module pathfora/globals/config */
 
 var PF_VERSION = '0.1.5';
 var PF_LOCALE = 'en-US';
@@ -232,6 +232,7 @@ var abTestingTypes = {
   '80/20': createABTestingModePreset(80, 20)
 };
 
+/* eslint-disable quotes */
 var templates = {
   'subscription': {
     'bar': '<div class=\'pf-widget-body\'></div><a class=\'pf-widget-close\'>&times;</a><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>X</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' data-required=\'true\'></span></form></div>',
@@ -268,20 +269,11 @@ var templates = {
     'lytics': '<a href=\'https://www.getlytics.com?utm_source=pathfora&amp;utm_medium=web&amp;utm_campaign=personalization\' target=\'_blank\'><svg width=\'120\' height=\'30\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 143.97 36.85\'><title>lytics</title><path d=\'M122.26 11.36h.1c1.41-.39 2.33-1 2.2-2.94 0-.7-.28-1.06-.69-1.06-.7 0-1.3 1.38-1.37 1.53l-.09.21a3.22 3.22 0 0 0-.5 2 .38.38 0 0 0 .36.25\' transform=\'translate(-.85)\'/><path d=\'M88 5.27a.76.76 0 0 0-1.09.73v.18a1.57 1.57 0 0 0 .45.93 8.78 8.78 0 0 0 6 2.6h.21a.12.12 0 0 1 .13.14 32 32 0 0 1-2 8 1.76 1.76 0 0 1-1 1.17.6.6 0 0 1-.26-.07c-.32-.16-.74-.41-1.18-.67a13.8 13.8 0 0 0-1.72-.93 15.11 15.11 0 0 0-3.88-1.22c-1.81-.2-4.09.56-4.47 2.52a4.7 4.7 0 0 0 2 4.47 10 10 0 0 0 5.19 1.75 6.34 6.34 0 0 0 3.74-1.24l.47-.39c.27-.23.82-.69 1.13-.9a.12.12 0 0 1 .15 0l.5.41a7.84 7.84 0 0 0 .62.5 7.72 7.72 0 0 0 3.54 1.33h.58a5.21 5.21 0 0 0 2.62-.66.12.12 0 0 1 .15 0 2.19 2.19 0 0 0 1.6.68c1.75 0 3.76-1.83 5.06-3.29v.1a8.92 8.92 0 0 1-.83 2.69 7.53 7.53 0 0 1-1.06 1.33l-.47.52a35.84 35.84 0 0 0-3 4.07c-.9 1.43-1.67 2.95-1.31 4.35a3.2 3.2 0 0 0 1.65 2 3.39 3.39 0 0 0 1.67.49c2.09 0 3.25-2.42 3.75-3.86a16.38 16.38 0 0 0 .82-4c.07-.6.14-1.22.25-1.94l.08-.59a3.35 3.35 0 0 1 .8-2.22c.64-.57 1.28-1.17 1.89-1.74l.09-.09.72-.67.28-.25a.12.12 0 0 1 .2.06 4.52 4.52 0 0 0 .71 1.61 3.32 3.32 0 0 0 2.73 1.36 4 4 0 0 0 2.76-1.15 5.29 5.29 0 0 0 .53-.72.12.12 0 0 1 .2 0 2.1 2.1 0 0 0 .47.49 3.52 3.52 0 0 0 2.05.91c.87 0 1.54-.6 2.48-1.5a2.14 2.14 0 0 0 .29-.4.12.12 0 0 1 .21 0l.23.39a4.53 4.53 0 0 0 3.12 2 9.87 9.87 0 0 0 1.46.12 5.58 5.58 0 0 0 4.47-2.09.12.12 0 0 1 .19 0 5.41 5.41 0 0 0 .84.93 5.35 5.35 0 0 0 3.32 1.21 3 3 0 0 0 3.05-2.22 1.33 1.33 0 0 1 1.23-1.29c.67-.25 2.25-.95 2.45-2.16a.77.77 0 0 0-.14-.66.69.69 0 0 0-.55-.23 5.83 5.83 0 0 0-2.08.81 10.5 10.5 0 0 1-1 .46.12.12 0 0 1-.14 0 2.78 2.78 0 0 1-.24-.67 3.12 3.12 0 0 0-.12-.4 32.49 32.49 0 0 0-1.77-3.46 4.53 4.53 0 0 1-.25-.57 3 3 0 0 0-.61-1.1 2.89 2.89 0 0 0-1.53-.45.74.74 0 0 0-.8.42 1.23 1.23 0 0 0 .07.9l.08.26a2.77 2.77 0 0 1-.06.76 3.65 3.65 0 0 1-.69 1.44l-.14.18c-.3.37-.52.65-.67.87a.68.68 0 0 0-.28-.06.67.67 0 0 0-.52.25 3.21 3.21 0 0 0-.47 1.67v.06a13.23 13.23 0 0 0-.76 1.12c-.16.26-.31.5-.42.63a3.3 3.3 0 0 1-2.47 1 3.65 3.65 0 0 1-2.42-.95 1.76 1.76 0 0 1-.56-1.35 6.7 6.7 0 0 1 1.92-4.19 2.4 2.4 0 0 1 1.44-.77.66.66 0 0 1 .32-.02c.4.21.38.32.07.91a1.77 1.77 0 0 0-.3 1.26.48.48 0 0 0 .24.3l.72.4a.51.51 0 0 0 .63-.1 3.19 3.19 0 0 0 .83-3.35c-.48-1.07-1.71-1.59-3.25-1.34a6.61 6.61 0 0 0-4.9 5l-.09.44-.38.66c-.52.92-1.16 2.06-2 2.37a2.1 2.1 0 0 1-.68.17h-.06a3.3 3.3 0 0 1 .12-1.07l.08-.39a15.21 15.21 0 0 1 .78-2.53 12.54 12.54 0 0 0 .91-3.4 1.45 1.45 0 0 0-.4-1.11 1.2 1.2 0 0 0-.86-.41.94.94 0 0 0-.82.51 22.22 22.22 0 0 0-2.13 6.27v.06l-.28.37a7 7 0 0 1-2.37 2.32 1 1 0 0 1-1.22-.23 2 2 0 0 1-.21-1.7c.35-1.23.66-2.49 1-3.75a34.52 34.52 0 0 0 1.23-3.54l.1-.08c.85-.15 1.72-.3 2.56-.41.28 0 .56-.05.85-.07h.63a.5.5 0 0 0 .42-.31 1 1 0 0 0-.07-.88 1.79 1.79 0 0 0-1.4-.74h-.08c-.61 0-1.31 0-2 .08l-.13-.17a8.47 8.47 0 0 0 .46-2.67 2.68 2.68 0 0 0-.32-1.49 1.38 1.38 0 0 0-1.5-.67 2.07 2.07 0 0 0-1.13 1.48 14.92 14.92 0 0 0-.41 1.59c-.27.62-.56 1.33-.85 2.1l-.28.22h-.84a17.31 17.31 0 0 0-2.62.32 1.21 1.21 0 0 0-.91.76.81.81 0 0 0 .08.66 2.49 2.49 0 0 0 1.37 1 2 2 0 0 0 .49.06 8.68 8.68 0 0 0 1.61-.23h.14c-.12.41-.24.83-.35 1.26-.21.82-.37 1.58-.48 2.3-.29.51-.6 1-.94 1.49a12.48 12.48 0 0 1-1.83 1.9l-.23.38a39.76 39.76 0 0 1 .76-5.35.49.49 0 0 0-.16-.46l-.69-.59a.51.51 0 0 0-.33-.12h-.25a.38.38 0 0 0-.33.19c-.51.9-.9 1.7-1.27 2.47a23.51 23.51 0 0 1-2.07 3.66 2.8 2.8 0 0 1-2.05 1 1.06 1.06 0 0 1-.72-.23v-.08a1.38 1.38 0 0 0-.12-.41l-.15-.25v-.14a21.73 21.73 0 0 1 1.38-6.69 1.88 1.88 0 0 0 .15-1.67 1 1 0 0 0-.9-.39h-.25c-1.18.12-2.27 2.69-2.28 2.72a15.2 15.2 0 0 0-1 6.62.12.12 0 0 1-.06.12 3.83 3.83 0 0 1-2 .58c-.76-.06-1.72-.25-3.45-1.72a.12.12 0 0 1 0-.15 27 27 0 0 0 2.88-9.57 1.32 1.32 0 0 1 .28-.87 3.25 3.25 0 0 1 .87-.11h.14a17 17 0 0 0 2.8-.36 11.86 11.86 0 0 0 3.94-1.74 5.54 5.54 0 0 0 2.72-3.76 3.2 3.2 0 0 0-.85-2.5 3.83 3.83 0 0 0-3.09-1.2 8.54 8.54 0 0 0-5.3 2.31 21.6 21.6 0 0 0-2.48 3.16 6.87 6.87 0 0 0-.37.7 2 2 0 0 1-.92 1.19 6.38 6.38 0 0 1-4.63-1.36 5 5 0 0 0-.77-.52l-.43-.21zm14.3-2.93l.34-.11a2.16 2.16 0 0 1 2 .23.69.69 0 0 1 .1.6 4 4 0 0 1-1.64 2.3 11.44 11.44 0 0 1-5.63 1.88.12.12 0 0 1-.12-.18 9.82 9.82 0 0 1 5-4.73zm-17.3 19.95a4.36 4.36 0 0 1-3.39-2.16 1.22 1.22 0 0 1 .1-1.34 1.67 1.67 0 0 1 1.29-.44c2 0 5.08 1.71 6.41 2.47a.12.12 0 0 1 0 .18c-.74 1-2.16 1.42-4.44 1.29zm20.4 6.43c-.17 1-.35 1.94-.52 2.67-.33 1.4-.82 2.36-2.2 2.8h-.35a.39.39 0 0 1-.41-.14c-.09-.17-.25-1 1.71-3.86l.07-.1c.51-.76 1.1-1.54 1.65-2.23a.12.12 0 0 1 .22.1zm31.7-11.51h.2a9.64 9.64 0 0 1 1.55 2.64.12.12 0 0 1-.11.17 4.59 4.59 0 0 1-2.08-.47.72.72 0 0 1-.42-.43 3.23 3.23 0 0 1 .86-1.9zm1.85 5a.73.73 0 0 1-.88.61 3.3 3.3 0 0 1-1.65-.5 2.36 2.36 0 0 1-.65-1.05.12.12 0 0 1 .23-.17 6.66 6.66 0 0 0 2.42.9h.58v.18zM.85 21.74v-8h3.52a2.51 2.51 0 1 1 0 5h-2.12v3h-1.4zm4.69-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3zM7.79 17.74a4 4 0 0 1 4.09-4.14 4 4 0 0 1 4.12 4.14 4 4 0 0 1-4.09 4.14 4 4 0 0 1-4.12-4.14zm6.74 0a2.66 2.66 0 1 0-5.3 0 2.66 2.66 0 1 0 5.3 0z\' transform=\'translate(-.85)\'/><path d=\'M22.35 21.74l-1.56-5.9-1.55 5.9h-1.49l-2.29-8h1.57l1.56 6.16 1.66-6.16h1.12l1.66 6.16 1.55-6.16h1.57l-2.28 8h-1.52zM27.07 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.07v1.24h-5.48z\'/><path d=\'M39.42 21.74l-1.77-3h-1.4v3h-1.4v-8h3.51a2.43 2.43 0 0 1 2.64 2.5 2.24 2.24 0 0 1-1.9 2.35l2 3.14h-1.68zm.12-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3z\' transform=\'translate(-.85)\'/><path d=\'M41.53 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.08v1.24h-5.49z\'/><path d=\'M49.31 21.74v-8h3a3.91 3.91 0 0 1 4.19 4 3.9 3.9 0 0 1-4.19 4h-3zm5.72-4a2.59 2.59 0 0 0-2.75-2.74h-1.57v5.5h1.57a2.63 2.63 0 0 0 2.72-2.76zM60.91 21.74v-8h3.93a2 2 0 0 1 2.28 2 1.8 1.8 0 0 1-1.39 1.83 2 2 0 0 1 1.55 2 2.1 2.1 0 0 1-2.28 2.17h-4zm4.77-5.74a1 1 0 0 0-1.13-1h-2.24v2h2.24a1 1 0 0 0 1.13-1zm.16 3.37a1.1 1.1 0 0 0-1.22-1.1h-2.3v2.23h2.3a1.08 1.08 0 0 0 1.22-1.12z\' transform=\'translate(-.85)\'/><path d=\'M69.74 21.74v-3.33l-3.11-4.68h1.61l2.21 3.43 2.18-3.43h1.61l-3.09 4.68v3.32h-1.4z\'/></svg></a>'
   }
 };
+/* eslint-enable quotes */
 
 var document = window.document;
 
-/** @module pathfora/add-callback */
-
-function addCallback (cb) {
-  if (window.lio && window.lio.loaded) {
-    cb(window.lio.data);
-  } else {
-    this.callbacks.push(cb);
-  }
-}
-
-/** @module pathfora/on-dom-ready */
+/** @module pathfora/dom/on-dom-ready */
 
 function onDOMready (fn) {
   var handler,
@@ -302,7 +294,163 @@ function onDOMready (fn) {
   }
 }
 
-/** @module utils/read-cookie */
+/** @module pathfora/callbacks/add-callback */
+
+function addCallback (cb) {
+  if (window.lio && window.lio.loaded) {
+    cb(window.lio.data);
+  } else {
+    this.callbacks.push(cb);
+  }
+}
+
+/** @module pathfora/widgets/validate-widgets-object */
+
+function validateWidgetsObject (widgets) {
+  if (!widgets) {
+    throw new Error('Widgets not specified');
+  }
+
+  if (!(widgets instanceof Array) && widgets.target) {
+    widgets.common = widgets.common || [];
+
+    for (var i = 0; i < widgets.target.length; i++) {
+      if (!widgets.target[i].segment) {
+        throw new Error('All targeted widgets should have segment specified');
+      } else if (widgets.target[i].segment === '*') {
+        widgets.common = widgets.common.concat(widgets.target[i].widgets);
+        widgets.target.splice(i, 1);
+      }
+    }
+  }
+}
+
+/** @module pathfora/data/tracking/track-time-on-page */
+
+function trackTimeOnPage () {
+  setInterval(function () {
+    pathforaDataObject.timeSpentOnPage += 1;
+  }, 1000);
+}
+
+/** @module pathfora/data/segments/get-user-segments */
+
+function getUserSegments () {
+  if (window.lio && window.lio.data && window.lio.data.segments) {
+    return window.lio.data.segments;
+  } else {
+    return ['all'];
+  }
+}
+
+/** @module pathfora/utils/update-object */
+
+function updateObject (object, config) {
+  for (var prop in config) {
+    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
+      if (config.hasOwnProperty(prop)) {
+        if (typeof object[prop] === 'undefined') {
+          object[prop] = {};
+        }
+        updateObject(object[prop], config[prop]);
+      }
+    } else if (config.hasOwnProperty(prop)) {
+      object[prop] = config[prop];
+    }
+  }
+}
+
+/** @module pathfora/widgets/init-widgets */
+
+function initializeWidgets (widgets, config) {
+  // NOTE IE < 10 not supported
+  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
+  var pf = this;
+  if (document.all && !window.atob) {
+    return;
+  }
+
+  // support legacy initialize function where we passed account id as
+  // a second parameter and config as third
+  if (arguments.length >= 3) {
+    config = arguments[2];
+  // if the second param is an account id, we need to throw it out
+  } else if (typeof config === 'string') {
+    config = null;
+  }
+
+  validateWidgetsObject(widgets);
+  trackTimeOnPage();
+
+  if (config) {
+    updateObject(defaultProps, config);
+  }
+
+  if (widgets instanceof Array) {
+
+    // NOTE Simple initialization
+    pf.initializeWidgetArray(widgets);
+  } else {
+
+    // NOTE Target sensitive widgets
+    if (widgets.common) {
+      pf.initializeWidgetArray(widgets.common);
+      updateObject(defaultProps, widgets.common.config);
+    }
+
+    if (widgets.target || widgets.exclude) {
+      // Add callback to initialize once we know segments are loaded
+      pf.addCallback(function () {
+        var target, ti, tl, exclude, ei, ex, ey, el,
+            targetedwidgets = [],
+            excludematched = false,
+            segments = getUserSegments();
+
+        // handle inclusions
+        if (widgets.target) {
+          tl = widgets.target.length;
+          for (ti = 0; ti < tl; ti++) {
+            target = widgets.target[ti];
+            if (segments && segments.indexOf(target.segment) !== -1) {
+              // add the widgets with proper targeting to the master list
+              // ensure we dont overwrite existing widgets in target
+              targetedwidgets = targetedwidgets.concat(target.widgets);
+            }
+          }
+        }
+
+        // handle exclusions
+        if (widgets.exclude) {
+          el = widgets.exclude.length;
+          for (ei = 0; ei < el; ei++) {
+            exclude = widgets.exclude[ei];
+            if (segments && segments.indexOf(exclude.segment) !== -1) {
+              // we found a match, ensure the corresponding segment(s) are not in the
+              // targetted widgets array
+              for (ex = 0; ex < targetedwidgets.length; ex++) {
+                for (ey = 0; ey < exclude.widgets.length; ey++) {
+                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
+                    targetedwidgets.splice(ex, 1);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (targetedwidgets.length) {
+          pf.initializeWidgetArray(targetedwidgets);
+        }
+
+        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
+          pf.initializeWidgetArray(widgets.inverse);
+        }
+      });
+    }
+  }
+}
+
+/** @module pathfora/utils/cookie/read-cookie */
 
 function readCookie (name) {
   var cookies = document.cookie,
@@ -311,16 +459,602 @@ function readCookie (name) {
   return findCookieRegexp ? findCookieRegexp.pop() : null;
 }
 
-/** @module pathfora/init-pageviews */
+/** @module pafthroa/utils/url/construct-queries */
 
-function initializePageViews () {
-  var cookie = readCookie(PF_PAGEVIEWS),
-      date = new Date();
-  date.setDate(date.getDate() + 365);
-  readCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+function constructQueries (params) {
+  var count = 0,
+      queries = [];
+
+  for (var key in params) {
+    if (params.hasOwnProperty(key)) {
+      if (count !== 0) {
+        queries.push('&');
+      } else {
+        queries.push('?');
+      }
+
+      if (params[key] instanceof Object) {
+        // multiple params []string (topics or rollups)
+        for (var i in params[key]) {
+          if (i < Object.keys(params[key]).length && i > 0) {
+            queries.push('&');
+          }
+
+          queries.push(key + '[]=' + params[key][i]);
+        }
+
+      // single param
+      } else {
+        queries.push(key + '=' + params[key]);
+      }
+
+      count++;
+    }
+  }
+
+  return queries.join('');
 }
 
-/** @module api/request/report-data */
+/** @module pathfora/data/request/get-data */
+
+function getData (url, onSuccess, onError) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      onSuccess(xhr.responseText);
+    } else if (xhr.readyState === 4) {
+      onError(xhr.responseText);
+    }
+  };
+
+  xhr.open('GET', url);
+  xhr.send();
+}
+
+/** @module pathfora/recommendations/recommend-content */
+
+function recommendContent (accountId, params, id, callback) {
+  // Recommendation API:
+  // https://www.getlytics.com/developers/rest-api#content-recommendation
+
+  // if we have the recommendation response cached in session storage
+  // use that instead of making a new API request
+  var storedRec = sessionStorage.getItem(PREFIX_REC + id);
+
+  if (typeof storedRec === 'string' && params.visited !== false) {
+    var rec;
+
+    try {
+      rec = JSON.parse(storedRec);
+    } catch (e) {
+      console.warn('Could not parse json stored response:' + e);
+    }
+
+    if (rec && rec.data) {
+      // special case: shuffle param
+      if (params.shuffle === true) {
+        rec.data.shift();
+      }
+
+      if (rec.data.length > 0) {
+        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+        callback(rec.data);
+      }
+      return;
+    }
+  }
+
+  var seerId = readCookie('seerid');
+
+  if (!seerId) {
+    throw new Error('Cannot find SEERID cookie');
+  }
+
+  var recommendParts = [
+    API_URL + '/api/content/recommend/',
+    accountId,
+    '/user/_uids/',
+    seerId
+  ];
+
+
+  var ql = params.ql,
+      ast = params.ast,
+      display = params.display;
+
+  delete params.ql;
+  delete params.ast;
+  delete params.display;
+
+  var queries = constructQueries(params);
+
+  params.display = display;
+
+  if (!params.contentsegment) {
+    // Special case for Adhoc Segments
+    if (ql && ql.raw || ast) {
+      if (queries.length > 0) {
+        queries += '&';
+      } else {
+        queries += '?';
+      }
+
+      // Filter QL
+      if (ql && ql.raw) {
+        queries += 'ql=' + ql.raw;
+
+      // Segment JSON (usually segment AST)
+      } else {
+        var contentSegment = {table: 'content', ast: ast};
+        queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+      }
+    }
+  }
+
+  var recommendUrl = recommendParts.join('') + queries;
+
+  getData(recommendUrl, function (json) {
+
+    // set the session storage.
+    sessionStorage.setItem(PREFIX_REC + id, json);
+    var resp;
+
+    try {
+      resp = JSON.parse(json);
+    } catch (e) {
+      console.warn('Could not parse json response:' + e);
+      callback([]);
+      return;
+    }
+
+    if (resp.data && resp.data.length > 0) {
+      // append a protocol for urls that are absolute
+      for (var i = 0; i < resp.data.length; i++) {
+        var url = resp.data[i].url;
+        if (url) {
+          var split = url.split('/')[0].split('.');
+          if (split.length > 1) {
+            resp.data[i].url = 'http://' + url;
+          }
+        }
+      }
+
+      callback(resp.data);
+    } else {
+      callback([]);
+    }
+  }, function () {
+    callback([]);
+  });
+}
+
+/** @module pathfora/widgets/initialize-widget-array */
+
+function initializeWidgetArray (array) {
+  var pf = this;
+
+  var displayWidget = function (w) {
+    if (w.displayConditions.showDelay) {
+      pf.registerDelayedWidget(w);
+    } else {
+      pf.initializeWidget(w);
+    }
+  };
+
+  var recContent = function (w, params) {
+    pf.addCallback(function () {
+      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
+        if (window.lio && window.lio.account) {
+          pf.acctid = window.lio.account.id;
+        } else {
+          throw new Error('Could not get account id from Lytics Javascript tag.');
+        }
+      }
+
+      recommendContent(pf.acctid, params, w.id, function (resp) {
+        // if we get a response from the recommend api put it as the first
+        // element in the content object this replaces any default content
+        if (resp[0]) {
+          var content = resp[0];
+          w.content = [
+            {
+              title: content.title,
+              description: content.description,
+              url: content.url,
+              image: content.primary_image,
+              date: content.created,
+              author: content.author
+            }
+          ];
+        }
+
+        // if we didn't get a valid response from the api, we check if a default
+        // exists and use that as our content piece instead
+        if (!w.content) {
+          throw new Error('Could not get recommendation and no default defined');
+        }
+
+        displayWidget(w);
+      });
+    });
+  };
+
+  for (var i = 0; i < array.length; i++) {
+    var widget = array[i];
+
+    if (!widget || !widget.config) {
+      continue;
+    }
+
+    var widgetOnInitCallback = widget.config.onInit,
+        defaults = defaultProps[widget.type],
+        globals = defaultProps.generic;
+
+    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
+      continue;
+    }
+
+    if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
+      widgetTracker.initializedWidgets.push(widget.id);
+    } else {
+      throw new Error('Cannot add two widgets with the same id');
+    }
+
+    updateObject(widget, globals);
+    updateObject(widget, defaults);
+    updateObject(widget, widget.config);
+
+    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
+      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
+        throw new Error('Unsupported layout for content recommendation');
+      }
+
+      if (widget.content && widget.content[0] && !widget.content[0].default) {
+        throw new Error('Cannot define recommended content unless it is a default');
+      }
+
+      var params = widget.recommend;
+
+      if (widget.recommend.collection) {
+        params.contentsegment = widget.recommend.collection;
+        delete params.collection;
+      }
+
+      recContent(widget, params);
+
+    } else {
+      displayWidget(widget);
+    }
+
+    // NOTE onInit feels better here
+    if (typeof widgetOnInitCallback === 'function') {
+      widgetOnInitCallback(callbackTypes.INIT, {
+        config: widget
+      });
+    }
+  }
+}
+
+/** @module pathfora/display-conditions/date-checker */
+
+function dateChecker (date) {
+  var valid = true,
+      today = Date.now();
+
+  if (date.start_at && today < new Date(date.start_at).getTime()) {
+    valid = false;
+  }
+
+  if (date.end_at && today > new Date(date.end_at).getTime()) {
+    valid = false;
+  }
+
+  return valid;
+}
+
+/** @module pathfora/display-conditions/pageviews/page-visits-checker */
+
+function pageVisitsChecker (pageVisitsRequired) {
+  return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
+}
+
+/** @module pathfora/display-conditions/hide-after-action-checker */
+
+function hideAfterActionChecker (hideAfterActionConstraints, widget) {
+  var parts,
+      valid = true,
+      now = Date.now(),
+      confirm = readCookie(PREFIX_CONFIRM + widget.id),
+      cancel = readCookie(PREFIX_CANCEL + widget.id),
+      closed = readCookie(PREFIX_CLOSE + widget.id);
+
+  if (hideAfterActionConstraints.confirm && confirm) {
+    parts = confirm.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+      valid = false;
+    }
+  }
+
+  if (hideAfterActionConstraints.cancel && cancel) {
+    parts = cancel.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+      valid = false;
+    }
+  }
+
+  if (hideAfterActionConstraints.closed && closed) {
+    parts = closed.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+      valid = false;
+    }
+  }
+
+  return valid;
+}
+
+/** @module pathfora/utils/url/escape-uri */
+
+function escapeURI (text, options) {
+  // NOTE This was ported from various bits of C++ code from Chromium
+  options || (options = {});
+
+  var length = text.length,
+      escaped = [],
+      usePlus = options.usePlus || false,
+      keepEscaped = options.keepEscaped || false;
+
+  function isHexDigit (c) {
+    return /[0-9A-Fa-f]/.test(c);
+  }
+
+  function toHexDigit (i) {
+    return '0123456789ABCDEF'[i];
+  }
+
+  function containsChar (charMap, charCode) {
+    return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
+  }
+
+  function isURISeparator (c) {
+    return ['#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '='].indexOf(c) !== -1;
+  }
+
+  function shouldEscape (charText) {
+    return !isURISeparator(charText) && containsChar([
+      0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
+      0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+    ], charText.charCodeAt(0));
+  }
+
+  for (var index = 0; index < length; index++) {
+    var charText = text[index],
+        charCode = text.charCodeAt(index);
+
+    if (usePlus && charText === ' ') {
+      escaped.push('+');
+    } else if (keepEscaped && charText === '%' && length >= index + 2 &&
+        isHexDigit(text[index + 1]) &&
+        isHexDigit(text[index + 2])) {
+      escaped.push('%');
+    } else if (shouldEscape(charText)) {
+      escaped.push('%',
+        toHexDigit(charCode >> 4),
+        toHexDigit(charCode & 0xf));
+    } else {
+      escaped.push(charText);
+    }
+  }
+
+  return escaped.join('');
+}
+
+/** @module pathfora/display-conditions/url-contains/parse-query */
+
+function parseQuery (url) {
+  var query = {},
+      pieces = escapeURI(url, { keepEscaped: true }).split('?');
+
+  if (pieces.length > 1) {
+    pieces = pieces[1].split('&');
+
+    for (var i = 0; i < pieces.length; i++) {
+      var pair = pieces[i].split('=');
+
+      if (pair.length > 1) {
+        // NOTE We should not account for the preview id
+        if (pair[0] !== 'lytics_variation_preview_id') {
+          query[pair[0]] = pair[1];
+        }
+      }
+    }
+  }
+
+  return query;
+}
+
+/** @module pathfora/display-conditions/url-contains/compare-queries */
+
+function compareQueries (query, matchQuery, rule) {
+  switch (rule) {
+  case 'exact':
+    if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+      return false;
+    }
+    break;
+
+  default:
+    break;
+  }
+
+  for (var key in matchQuery) {
+    if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/** @module pathfora/display-conditions/url-contains/phrase-checker */
+
+function phraseChecker (phrase, url, simpleurl, queries) {
+  var valid = false;
+
+  // legacy match allows for an array of strings, check if we are legacy or current object approach
+  switch (typeof phrase) {
+  case 'string':
+    if (url.indexOf(escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+      valid = compareQueries(queries, parseQuery(phrase), 'substring');
+    }
+    break;
+
+  case 'object':
+    if (phrase.match && phrase.value) {
+      var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
+
+      switch (phrase.match) {
+      // simple match
+      case 'simple':
+        if (simpleurl.slice(-1) === '/') {
+          simpleurl = simpleurl.slice(0, -1);
+        }
+
+        if (phrase.value.slice(-1) === '/') {
+          phrase.value = phrase.value.slice(0, -1);
+        }
+
+        if (simpleurl === phrase.value) {
+          valid = true;
+        }
+        break;
+
+      // exact match
+      case 'exact':
+        if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+        }
+        break;
+
+      // regex
+      case 'regex':
+        var re = new RegExp(phrase.value);
+
+        if (re.test(url)) {
+          valid = true;
+        }
+        break;
+
+      // string match (default)
+      default:
+        if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+        }
+        break;
+      }
+
+    } else {
+      console.log('invalid display conditions');
+    }
+    break;
+
+  default:
+    console.log('invalid display conditions');
+    break;
+  }
+
+  return valid;
+}
+
+/** @module pathfora/display-conditions/url-contains/url-checker */
+
+function urlChecker (phrases) {
+  var url = escapeURI(window.location.href, { keepEscaped: true }),
+      simpleurl = window.location.hostname + window.location.pathname,
+      queries = parseQuery(url),
+      valid, excludeValid = false,
+      matchCt, excludeCt = 0;
+
+  if (!(phrases instanceof Array)) {
+    phrases = Object.keys(phrases).map(function (key) {
+      return phrases[key];
+    });
+  }
+
+  // array of urlContains params is an or list, so if any are true evaluate valid to true
+  if (phrases.indexOf('*') === -1) {
+    phrases.forEach(function (phrase) {
+      if (phrase.exclude) {
+        excludeValid = phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
+        excludeCt++;
+      } else {
+        valid = phraseChecker(phrase, url, simpleurl, queries) || valid;
+        matchCt++;
+      }
+    });
+  } else {
+    valid = true;
+  }
+
+  if (matchCt === 0) {
+    return !excludeValid;
+  }
+
+  if (excludeCt === 0) {
+    return valid;
+  }
+
+  return valid && !excludeValid;
+}
+
+/** @module pathfora/display-conditions/impressions/impressions-checker */
+
+function impressionsChecker (impressionConstraints, widget) {
+  var parts, totalImpressions,
+      valid = true,
+      id = PREFIX_IMPRESSION + widget.id,
+      sessionImpressions = ~~sessionStorage.getItem(id),
+      total = readCookie(id),
+      now = Date.now();
+
+  if (!sessionImpressions) {
+    sessionImpressions = 0;
+  }
+
+  if (!total) {
+    totalImpressions = 0;
+  } else {
+    parts = total.split('|');
+    totalImpressions = parseInt(parts[0], 10);
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+      valid = false;
+    }
+  }
+
+  if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
+    valid = false;
+  }
+
+  return valid;
+}
+
+/** @module pathfora/data/request/report-data */
 
 function reportData (data) {
   var gaLabel;
@@ -347,7 +1081,7 @@ function reportData (data) {
   }
 }
 
-/** @module utils/save-cookie */
+/** @module pathfora/utils/cookie/save-cookie */
 
 function saveCookie (name, value, expiration) {
   var expires;
@@ -367,13 +1101,13 @@ function saveCookie (name, value, expiration) {
   ].join('');
 }
 
-/** @module utils/has-class */
+/** @module pathfora/utils/class/has-class */
 
 function hasClass (DOMNode, className) {
   return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
 }
 
-/** @module core/track-widget-action */
+/** @module pathfora/data/tracking/track-widget-action */
 
 function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;
@@ -482,7 +1216,7 @@ function trackWidgetAction (action, widget, htmlElement) {
   reportData(params);
 }
 
-/** @module core/increment-impressions */
+/** @module pathfora/display-conditions/impressions/increment-impressions */
 
 function incrementImpressions (widget) {
   var parts, totalImpressions,
@@ -508,7 +1242,7 @@ function incrementImpressions (widget) {
   saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
 }
 
-/** @module core/validate-widget-position */
+/** @module pathfora/widgets/validate-widget-position */
 
 function validateWidgetPosition (widget, config) {
   var choices;
@@ -539,7 +1273,7 @@ function validateWidgetPosition (widget, config) {
   }
 }
 
-/** @module core/setup-widget-position */
+/** @module pathfora/widgets/setup-widget-position */
 
 function setupWidgetPosition (widget, config) {
   if (config.position) {
@@ -549,7 +1283,7 @@ function setupWidgetPosition (widget, config) {
   }
 }
 
-/** @module utils/remove-class */
+/** @module pathfora/utils/class/remove-class */
 
 function removeClass (DOMNode, className) {
   var findClassRegexp = new RegExp([
@@ -561,7 +1295,7 @@ function removeClass (DOMNode, className) {
   DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
 }
 
-/** @module utils/add-class */
+/** @module pathfora/utils/class/add-class */
 
 function addClass (DOMNode, className) {
   removeClass(DOMNode, className);
@@ -605,7 +1339,7 @@ function closeWidget (id, noTrack) {
   }, 500);
 }
 
-/** @module core/construct-widget-actions */
+/** @module pathfora/widgets/construct-widget-actions */
 
 function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
@@ -914,7 +1648,7 @@ function constructWidgetActions (widget, config) {
   }
 }
 
-/** @module core/setup-widget-content-unit */
+/** @module pathfora/widgets/setup-widget-content-unit */
 
 function setupWidgetContentUnit (widget, config) {
   var widgetContentUnit = widget.querySelector('.pf-content-unit'),
@@ -1032,7 +1766,7 @@ function setWidgetClassname (widget, config) {
   ].join('');
 }
 
-/** @module core/build-form-element */
+/** @module pathfora/form/build-form-element */
 
 function buildFormElement (elem, form) {
   var content, i, val, label,
@@ -1145,7 +1879,7 @@ function buildFormElement (elem, form) {
   }
 }
 
-/** @module core/build-widget-form */
+/** @module pathfora/form/build-widget-form */
 
 function buildWidgetForm (formElements, form) {
   for (var i = 0; i < formElements.length; i++) {
@@ -1173,7 +1907,7 @@ function buildWidgetForm (formElements, form) {
   }
 }
 
-/** @module core/construct-widget-layout */
+/** @module pathfora/widgets/construct-widget-layout */
 
 function constructWidgetLayout (widget, config) {
   var node, child, i,
@@ -1467,7 +2201,7 @@ function constructWidgetLayout (widget, config) {
   }
 }
 
-/** @module core/set-custom-colors*/
+/** @module pathfora/widgets/colors/set-custom-colors */
 
 function setCustomColors (widget, colors) {
   var i = 0,
@@ -1601,7 +2335,7 @@ function setCustomColors (widget, colors) {
   }
 }
 
-/** @module core/setup-widget-colors */
+/** @module pathfora/wodgets/colors/setup-widget-colors */
 
 function setupWidgetColors (widget, config) {
   switch (config.theme) {
@@ -1621,7 +2355,7 @@ function setupWidgetColors (widget, config) {
   }
 }
 
-/** @module core/create-widget-html */
+/** @module pathfora/widgets/create-widget-html */
 
 function createWidgetHtml (config) {
   var widget = document.createElement('div');
@@ -1643,7 +2377,7 @@ function createWidgetHtml (config) {
   return widget;
 }
 
-/** @module core/widget-resize-listener */
+/** @module pathfora/widgets/widget-resize-listener */
 
 function widgetResizeListener (widget, node) {
   if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
@@ -1737,39 +2471,7 @@ function showWidget (widget) {
   }
 }
 
-/** @module core/impressions-checker */
-
-function impressionsChecker (impressionConstraints, widget) {
-  var parts, totalImpressions,
-      valid = true,
-      id = PREFIX_IMPRESSION + widget.id,
-      sessionImpressions = ~~sessionStorage.getItem(id),
-      total = readCookie(id),
-      now = Date.now();
-
-  if (!sessionImpressions) {
-    sessionImpressions = 0;
-  }
-
-  if (!total) {
-    totalImpressions = 0;
-  } else {
-    parts = total.split('|');
-    totalImpressions = parseInt(parts[0], 10);
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
-      valid = false;
-    }
-  }
-
-  if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
-    valid = false;
-  }
-
-  return valid;
-}
-
-/** @module core/validate-watchers */
+/** @module pathfora/display-conditions/watchers/core/validate-watchers */
 
 function validateWatchers (widget, cb) {
   var valid = true;
@@ -1795,774 +2497,7 @@ function validateWatchers (widget, cb) {
   return false;
 }
 
-/** @module core/displayConditions/manualTrigger/trigger-widget */
-
-function triggerWidget (widget) {
-  return validateWatchers(widget, function () {
-    widgetTracker.triggeredWidgets[widget.id] = false;
-
-    // remove from the ready widgets list
-    widgetTracker.readyWidgets.some(function (w, i) {
-      if (w.id === widget.id) {
-        widgetTracker.readyWidgets.splice(i, 1);
-        return true;
-      }
-    });
-  });
-}
-
-/** @module pathfora/trigger-widgets */
-
-function triggerWidgets (widgetIds) {
-  var i, valid;
-
-  // no widget ids provided, trigger all ready widgets
-  if (typeof widgetIds === 'undefined') {
-    widgetTracker.triggeredWidgets['*'] = true;
-
-    for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
-      valid = triggerWidget(widgetTracker.readyWidgets[i]);
-      if (valid) {
-        i--;
-      }
-    }
-
-  // trigger all widget ids provided
-  } else {
-    widgetIds.forEach(function (id) {
-      if (widgetTracker.triggeredWidgets[id] !== false) {
-        widgetTracker.triggeredWidgets[id] = true;
-      }
-
-      for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
-        valid = triggerWidget(widgetTracker.readyWidgets[i]);
-        if (valid) {
-          i--;
-        }
-      }
-    });
-  }
-}
-
-/** @module core/validate-widgets-object */
-
-function validateWidgetsObject (widgets) {
-  if (!widgets) {
-    throw new Error('Widgets not specified');
-  }
-
-  if (!(widgets instanceof Array) && widgets.target) {
-    widgets.common = widgets.common || [];
-
-    for (var i = 0; i < widgets.target.length; i++) {
-      if (!widgets.target[i].segment) {
-        throw new Error('All targeted widgets should have segment specified');
-      } else if (widgets.target[i].segment === '*') {
-        widgets.common = widgets.common.concat(widgets.target[i].widgets);
-        widgets.target.splice(i, 1);
-      }
-    }
-  }
-}
-
-/** @module core/track-time-on-page */
-
-function trackTimeOnPage () {
-  setInterval(function () {
-    pathforaDataObject.timeSpentOnPage += 1;
-  }, 1000);
-}
-
-/** @module utils/update-object */
-
-function updateObject (object, config) {
-  for (var prop in config) {
-    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
-      if (config.hasOwnProperty(prop)) {
-        if (typeof object[prop] === 'undefined') {
-          object[prop] = {};
-        }
-        updateObject(object[prop], config[prop]);
-      }
-    } else if (config.hasOwnProperty(prop)) {
-      object[prop] = config[prop];
-    }
-  }
-}
-
-/** @module api/segments/get-user-segments */
-
-function getUserSegments () {
-  if (window.lio && window.lio.data && window.lio.data.segments) {
-    return window.lio.data.segments;
-  } else {
-    return ['all'];
-  }
-}
-
-/** @module pathfora/widgets/init-widgets */
-
-function initializeWidgets (widgets, config) {
-  // NOTE IE < 10 not supported
-  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
-  var pf = this;
-  if (document.all && !window.atob) {
-    return;
-  }
-
-  // support legacy initialize function where we passed account id as
-  // a second parameter and config as third
-  if (arguments.length >= 3) {
-    config = arguments[2];
-  // if the second param is an account id, we need to throw it out
-  } else if (typeof config === 'string') {
-    config = null;
-  }
-
-  validateWidgetsObject(widgets);
-  trackTimeOnPage();
-
-  if (config) {
-    updateObject(defaultProps, config);
-  }
-
-  if (widgets instanceof Array) {
-
-    // NOTE Simple initialization
-    pf.initializeWidgetArray(widgets);
-  } else {
-
-    // NOTE Target sensitive widgets
-    if (widgets.common) {
-      pf.initializeWidgetArray(widgets.common);
-      updateObject(defaultProps, widgets.common.config);
-    }
-
-    if (widgets.target || widgets.exclude) {
-      // Add callback to initialize once we know segments are loaded
-      pf.addCallback(function () {
-        var target, ti, tl, exclude, ei, ex, ey, el,
-            targetedwidgets = [],
-            excludematched = false,
-            segments = getUserSegments();
-
-        // handle inclusions
-        if (widgets.target) {
-          tl = widgets.target.length;
-          for (ti = 0; ti < tl; ti++) {
-            target = widgets.target[ti];
-            if (segments && segments.indexOf(target.segment) !== -1) {
-              // add the widgets with proper targeting to the master list
-              // ensure we dont overwrite existing widgets in target
-              targetedwidgets = targetedwidgets.concat(target.widgets);
-            }
-          }
-        }
-
-        // handle exclusions
-        if (widgets.exclude) {
-          el = widgets.exclude.length;
-          for (ei = 0; ei < el; ei++) {
-            exclude = widgets.exclude[ei];
-            if (segments && segments.indexOf(exclude.segment) !== -1) {
-              // we found a match, ensure the corresponding segment(s) are not in the
-              // targetted widgets array
-              for (ex = 0; ex < targetedwidgets.length; ex++) {
-                for (ey = 0; ey < exclude.widgets.length; ey++) {
-                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                    targetedwidgets.splice(ex, 1);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (targetedwidgets.length) {
-          pf.initializeWidgetArray(targetedwidgets);
-        }
-
-        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-          pf.initializeWidgetArray(widgets.inverse);
-        }
-      });
-    }
-  }
-}
-
-/** @module core/register-delayed-widget */
-
-function registerDelayedWidget (widget) {
-  var pf = this;
-  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-     pf.initializeWidget(widget);
-  }, widget.displayConditions.showDelay * 1000);
-}
-
-/** @module utils/construct-queries */
-
-function constructQueries (params) {
-  var count = 0,
-      queries = [];
-
-  for (var key in params) {
-    if (params.hasOwnProperty(key)) {
-      if (count !== 0) {
-        queries.push('&');
-      } else {
-        queries.push('?');
-      }
-
-      if (params[key] instanceof Object) {
-        // multiple params []string (topics or rollups)
-        for (var i in params[key]) {
-          if (i < Object.keys(params[key]).length && i > 0) {
-            queries.push('&');
-          }
-
-          queries.push(key + '[]=' + params[key][i]);
-        }
-
-      // single param
-      } else {
-        queries.push(key + '=' + params[key]);
-      }
-
-      count++;
-    }
-  }
-
-  return queries.join('');
-}
-
-/** @module api/request/get-data */
-
-function getData (url, onSuccess, onError) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      onSuccess(xhr.responseText);
-    } else if (xhr.readyState === 4) {
-      onError(xhr.responseText);
-    }
-  };
-
-  xhr.open('GET', url);
-  xhr.send();
-}
-
-/** @module api/recommend/recommend-content */
-
-function recommendContent (accountId, params, id, callback) {
-  // Recommendation API:
-  // https://www.getlytics.com/developers/rest-api#content-recommendation
-
-  // if we have the recommendation response cached in session storage
-  // use that instead of making a new API request
-  var storedRec = sessionStorage.getItem(PREFIX_REC + id);
-
-  if (typeof storedRec === 'string' && params.visited !== false) {
-    var rec;
-
-    try {
-      rec = JSON.parse(storedRec);
-    } catch (e) {
-      console.warn('Could not parse json stored response:' + e);
-    }
-
-    if (rec && rec.data) {
-      // special case: shuffle param
-      if (params.shuffle === true) {
-        rec.data.shift();
-      }
-
-      if (rec.data.length > 0) {
-        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
-        callback(rec.data);
-      }
-      return;
-    }
-  }
-
-  var seerId = readCookie('seerid');
-
-  if (!seerId) {
-    throw new Error('Cannot find SEERID cookie');
-  }
-
-  var recommendParts = [
-    API_URL + '/api/content/recommend/',
-    accountId,
-    '/user/_uids/',
-    seerId
-  ];
-
-
-  var ql = params.ql,
-      ast = params.ast,
-      display = params.display;
-
-  delete params.ql;
-  delete params.ast;
-  delete params.display;
-
-  var queries = constructQueries(params);
-
-  params.display = display;
-
-  if (!params.contentsegment) {
-    // Special case for Adhoc Segments
-    if (ql && ql.raw || ast) {
-      if (queries.length > 0) {
-        queries += '&';
-      } else {
-        queries += '?';
-      }
-
-      // Filter QL
-      if (ql && ql.raw) {
-        queries += 'ql=' + ql.raw;
-
-      // Segment JSON (usually segment AST)
-      } else {
-        var contentSegment = {table: 'content', ast: ast};
-        queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
-      }
-    }
-  }
-
-  var recommendUrl = recommendParts.join('') + queries;
-
-  getData(recommendUrl, function (json) {
-
-    // set the session storage.
-    sessionStorage.setItem(PREFIX_REC + id, json);
-    var resp;
-
-    try {
-      resp = JSON.parse(json);
-    } catch (e) {
-      console.warn('Could not parse json response:' + e);
-      callback([]);
-      return;
-    }
-
-    if (resp.data && resp.data.length > 0) {
-      // append a protocol for urls that are absolute
-      for (var i = 0; i < resp.data.length; i++) {
-        var url = resp.data[i].url;
-        if (url) {
-          var split = url.split('/')[0].split('.');
-          if (split.length > 1) {
-            resp.data[i].url = 'http://' + url;
-          }
-        }
-      }
-
-      callback(resp.data);
-    } else {
-      callback([]);
-    }
-  }, function () {
-    callback([]);
-  });
-}
-
-/** @module core/initialize-widget-array */
-
-function initializeWidgetArray (array) {
-  var pf = this;
-
-  var displayWidget = function (w) {
-    if (w.displayConditions.showDelay) {
-      pf.registerDelayedWidget(w);
-    } else {
-      pf.initializeWidget(w);
-    }
-  };
-
-  var recContent = function (w, params) {
-    pf.addCallback(function () {
-      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        } else {
-          throw new Error('Could not get account id from Lytics Javascript tag.');
-        }
-      }
-
-      recommendContent(pf.acctid, params, w.id, function (resp) {
-        // if we get a response from the recommend api put it as the first
-        // element in the content object this replaces any default content
-        if (resp[0]) {
-          var content = resp[0];
-          w.content = [
-            {
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              image: content.primary_image,
-              date: content.created,
-              author: content.author
-            }
-          ];
-        }
-
-        // if we didn't get a valid response from the api, we check if a default
-        // exists and use that as our content piece instead
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
-
-        displayWidget(w);
-      });
-    });
-  };
-
-  for (var i = 0; i < array.length; i++) {
-    var widget = array[i];
-
-    if (!widget || !widget.config) {
-      continue;
-    }
-
-    var widgetOnInitCallback = widget.config.onInit,
-        defaults = defaultProps[widget.type],
-        globals = defaultProps.generic;
-
-    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
-      continue;
-    }
-
-    if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
-      widgetTracker.initializedWidgets.push(widget.id);
-    } else {
-      throw new Error('Cannot add two widgets with the same id');
-    }
-
-    updateObject(widget, globals);
-    updateObject(widget, defaults);
-    updateObject(widget, widget.config);
-
-    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
-        throw new Error('Unsupported layout for content recommendation');
-      }
-
-      if (widget.content && widget.content[0] && !widget.content[0].default) {
-        throw new Error('Cannot define recommended content unless it is a default');
-      }
-
-      var params = widget.recommend;
-
-      if (widget.recommend.collection) {
-        params.contentsegment = widget.recommend.collection;
-        delete params.collection;
-      }
-
-      recContent(widget, params);
-
-    } else {
-      displayWidget(widget);
-    }
-
-    // NOTE onInit feels better here
-    if (typeof widgetOnInitCallback === 'function') {
-      widgetOnInitCallback(callbackTypes.INIT, {
-        config: widget
-      });
-    }
-  }
-}
-
-/** @module core/date-checker */
-
-function dateChecker (date) {
-  var valid = true,
-      today = Date.now();
-
-  if (date.start_at && today < new Date(date.start_at).getTime()) {
-    valid = false;
-  }
-
-  if (date.end_at && today > new Date(date.end_at).getTime()) {
-    valid = false;
-  }
-
-  return valid;
-}
-
-/** @module core/page-visits-checker */
-
-function pageVisitsChecker (pageVisitsRequired) {
-  return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
-}
-
-/** @module core/hide-after-action-checker */
-
-function hideAfterActionChecker (hideAfterActionConstraints, widget) {
-  var parts,
-      valid = true,
-      now = Date.now(),
-      confirm = readCookie(PREFIX_CONFIRM + widget.id),
-      cancel = readCookie(PREFIX_CANCEL + widget.id),
-      closed = readCookie(PREFIX_CLOSE + widget.id);
-
-  if (hideAfterActionConstraints.confirm && confirm) {
-    parts = confirm.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
-      valid = false;
-    }
-  }
-
-  if (hideAfterActionConstraints.cancel && cancel) {
-    parts = cancel.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
-      valid = false;
-    }
-  }
-
-  if (hideAfterActionConstraints.closed && closed) {
-    parts = closed.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
-      valid = false;
-    }
-  }
-
-  return valid;
-}
-
-/** @module utils/escape-uri */
-
-function escapeURI (text, options) {
-  // NOTE This was ported from various bits of C++ code from Chromium
-  options || (options = {});
-
-  var length = text.length,
-      escaped = [],
-      usePlus = options.usePlus || false,
-      keepEscaped = options.keepEscaped || false;
-
-  function isHexDigit (c) {
-    return /[0-9A-Fa-f]/.test(c);
-  }
-
-  function toHexDigit (i) {
-    return '0123456789ABCDEF'[i];
-  }
-
-  function containsChar (charMap, charCode) {
-    return (charMap[charCode >> 5] & (1 << (charCode & 31))) !== 0;
-  }
-
-  function isURISeparator (c) {
-    return ['#', ':', ';', '/', '?', '$', '&', '+', ',', '@', '='].indexOf(c) !== -1;
-  }
-
-  function shouldEscape (charText) {
-    return !isURISeparator(charText) && containsChar([
-      0xffffffff, 0xf80008fd, 0x78000001, 0xb8000001,
-      0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
-    ], charText.charCodeAt(0));
-  }
-
-  for (var index = 0; index < length; index++) {
-    var charText = text[index],
-        charCode = text.charCodeAt(index);
-
-    if (usePlus && charText === ' ') {
-      escaped.push('+');
-    } else if (keepEscaped && charText === '%' && length >= index + 2 &&
-        isHexDigit(text[index + 1]) &&
-        isHexDigit(text[index + 2])) {
-      escaped.push('%');
-    } else if (shouldEscape(charText)) {
-      escaped.push('%',
-        toHexDigit(charCode >> 4),
-        toHexDigit(charCode & 0xf));
-    } else {
-      escaped.push(charText);
-    }
-  }
-
-  return escaped.join('');
-}
-
-/** @module core/parse-query */
-
-function parseQuery (url) {
-  var query = {},
-      pieces = escapeURI(url, { keepEscaped: true }).split('?');
-
-  if (pieces.length > 1) {
-    pieces = pieces[1].split('&');
-
-    for (var i = 0; i < pieces.length; i++) {
-      var pair = pieces[i].split('=');
-
-      if (pair.length > 1) {
-        // NOTE We should not account for the preview id
-        if (pair[0] !== 'lytics_variation_preview_id') {
-          query[pair[0]] = pair[1];
-        }
-      }
-    }
-  }
-
-  return query;
-}
-
-/** @module core/compare-queries */
-
-function compareQueries (query, matchQuery, rule) {
-  switch (rule) {
-  case 'exact':
-    if (Object.keys(matchQuery).length !== Object.keys(query).length) {
-      return false;
-    }
-    break;
-
-  default:
-    break;
-  }
-
-  for (var key in matchQuery) {
-    if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/** @module core/phrase-checker */
-
-function phraseChecker (phrase, url, simpleurl, queries) {
-  var valid = false;
-
-  // legacy match allows for an array of strings, check if we are legacy or current object approach
-  switch (typeof phrase) {
-  case 'string':
-    if (url.indexOf(escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
-      valid = compareQueries(queries, parseQuery(phrase), 'substring');
-    }
-    break;
-
-  case 'object':
-    if (phrase.match && phrase.value) {
-      var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
-
-      switch (phrase.match) {
-      // simple match
-      case 'simple':
-        if (simpleurl.slice(-1) === '/') {
-          simpleurl = simpleurl.slice(0, -1);
-        }
-
-        if (phrase.value.slice(-1) === '/') {
-          phrase.value = phrase.value.slice(0, -1);
-        }
-
-        if (simpleurl === phrase.value) {
-          valid = true;
-        }
-        break;
-
-      // exact match
-      case 'exact':
-        if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
-          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
-        }
-        break;
-
-      // regex
-      case 'regex':
-        var re = new RegExp(phrase.value);
-
-        if (re.test(url)) {
-          valid = true;
-        }
-        break;
-
-      // string match (default)
-      default:
-        if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
-          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
-        }
-        break;
-      }
-
-    } else {
-      console.log('invalid display conditions');
-    }
-    break;
-
-  default:
-    console.log('invalid display conditions');
-    break;
-  }
-
-  return valid;
-}
-
-/** @module core/url-checker */
-
-function urlChecker (phrases) {
-  var url = escapeURI(window.location.href, { keepEscaped: true }),
-      simpleurl = window.location.hostname + window.location.pathname,
-      queries = parseQuery(url),
-      valid, excludeValid = false,
-      matchCt, excludeCt = 0;
-
-  if (!(phrases instanceof Array)) {
-    phrases = Object.keys(phrases).map(function (key) {
-      return phrases[key];
-    });
-  }
-
-  // array of urlContains params is an or list, so if any are true evaluate valid to true
-  if (phrases.indexOf('*') === -1) {
-    phrases.forEach(function (phrase) {
-      if (phrase.exclude) {
-        excludeValid = phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
-        excludeCt++;
-      } else {
-        valid = phraseChecker(phrase, url, simpleurl, queries) || valid;
-        matchCt++;
-      }
-    });
-  } else {
-    valid = true;
-  }
-
-  if (matchCt === 0) {
-    return !excludeValid;
-  }
-
-  if (excludeCt === 0) {
-    return valid;
-  }
-
-  return valid && !excludeValid;
-}
-
-/** @module core/init-exit-intent */
+/** @module pathfora/display-conditions/init-exit-intent */
 
 function initializeExitIntent (widget) {
   var positions = [];
@@ -2620,7 +2555,7 @@ function initializeExitIntent (widget) {
   return true;
 }
 
-/** @module core/remove-watcher */
+/** @module pathfora/display-conditions/watchers/remove-watcher */
 
 function removeWatcher (watcher, widget) {
   for (var key in widget.watchers) {
@@ -2630,7 +2565,7 @@ function removeWatcher (watcher, widget) {
   }
 }
 
-/** @module core/register-element-watcher */
+/** @module pathfora/display-conditions/scroll/register-element-watcher */
 
 function registerElementWatcher (selector, widget) {
   var watcher = {
@@ -2651,10 +2586,9 @@ function registerElementWatcher (selector, widget) {
   return watcher;
 }
 
-/** @module core/init-scroll-watchers */
+/** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
 function initializeScrollWatchers (widget) {
-  var core = this;
   widget.scrollListener = function () {
     validateWatchers(widget, function () {
       if (typeof window.addEventListener === 'function') {
@@ -2674,7 +2608,7 @@ function initializeScrollWatchers (widget) {
   return true;
 }
 
-/** @module core/register-position-watcher */
+/** @module pathfora/display-conditions/scroll/register-position-watcher */
 
 function registerPositionWatcher (percent, widget) {
   var watcher = {
@@ -2694,7 +2628,7 @@ function registerPositionWatcher (percent, widget) {
   return watcher;
 }
 
-/** @module core/register-manual-trigger-watcher */
+/** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
 function registerManualTriggerWatcher (value, widget) {
   var watcher = {
@@ -2710,64 +2644,23 @@ function registerManualTriggerWatcher (value, widget) {
   return watcher;
 }
 
-/** @module core/entity-field-checker */
+/** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
-function entityFieldChecker (widget, fieldName, found) {
-  if (!found || !found.length) {
-    return true;
-  }
+function triggerWidget (widget) {
+  return validateWatchers(widget, function () {
+    widgetTracker.triggeredWidgets[widget.id] = false;
 
-  // for each template found...
-  for (var f = 0; f < found.length; f++) {
-    // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
-        def = '';
-
-    // get the default (fallback) value
-    if (parts.length > 1) {
-      def = parts[1].trim();
-    }
-
-    // check for subfields if the value is an object
-    var split = parts[0].trim().split('.');
-
-    dataval = window.lio.data;
-    var s;
-
-    for (s = 0; s < split.length; s++) {
-      if (typeof dataval !== 'undefined') {
-        dataval = dataval[split[s]];
+    // remove from the ready widgets list
+    widgetTracker.readyWidgets.some(function (w, i) {
+      if (w.id === widget.id) {
+        widgetTracker.readyWidgets.splice(i, 1);
+        return true;
       }
-    }
-
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
-    if (typeof dataval === 'undefined') {
-      dataval = this.customData;
-
-      for (s = 0; s < split.length; s++) {
-        if (typeof dataval !== 'undefined') {
-          dataval = dataval[split[s]];
-        }
-      }
-    }
-
-    // replace the template with the lytics data value
-    if (typeof dataval !== 'undefined') {
-      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
-      return false;
-    // replace with the default option, or empty string if not found
-    } else {
-      widget[fieldName] = widget[fieldName].replace(found[f], def);
-    }
-  }
-
-  return true;
+    });
+  });
 }
 
-/** @module core/init-widget */
+/** @module pathfora/widgets/init-widget */
 
 function initializeWidget (widget) {
   var watcher,
@@ -2782,7 +2675,7 @@ function initializeWidget (widget) {
 
   if (widget.pushDown) {
     if (widget.layout === 'bar' && (widget.position === 'top-fixed' || widget.position === 'top-absolute')) {
-      utils.addClass(document.querySelector(widget.pushDown), 'pf-push-down');
+      addClass(document.querySelector(widget.pushDown), 'pf-push-down');
     } else {
       throw new Error('Only top positioned bar widgets may have a pushDown property');
     }
@@ -2878,7 +2771,7 @@ function initializeWidget (widget) {
   }
 }
 
-/** @module utils/generate-unique-id */
+/** @module pathfora/utils/generate-unique-id */
 
 function generateUniqueId () {
   var s4;
@@ -2904,7 +2797,7 @@ function generateUniqueId () {
   ].join('');
 }
 
-/** @module pathfora/preview-widget */
+/** @module pathfora/widgets/preview-widget */
 
 function previewWidget (widget) {
   widget.id = generateUniqueId();
@@ -2947,7 +2840,7 @@ function clearAll () {
 
 /** @module pathfora/widgets/reinit-prioritized-widgets */
 
-function reinitializePrioritizedWidgets() {
+function reinitializePrioritizedWidgets () {
   if (widgetTracker.prioritizedWidgets.length > 0) {
 
     widgetTracker.prioritizedWidgets.sort(function (a, b) {
@@ -2966,7 +2859,7 @@ function reinitializePrioritizedWidgets() {
   }
 }
 
-/** @module core/prepare-widget */
+/** @module pathfora/widgets/prepare-widget */
 
 function prepareWidget (type, config) {
   var props, random,
@@ -3062,6 +2955,114 @@ function Form (config) {
 
 function SiteGate (config) {
   return prepareWidget('sitegate', config);
+}
+
+/** @module pathfora/display-conditions/pageviews/init-pageviews */
+
+function initializePageViews () {
+  var cookie = readCookie(PF_PAGEVIEWS),
+      date = new Date();
+  date.setDate(date.getDate() + 365);
+  readCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+}
+
+/** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
+
+function triggerWidgets (widgetIds) {
+  var i, valid;
+
+  // no widget ids provided, trigger all ready widgets
+  if (typeof widgetIds === 'undefined') {
+    widgetTracker.triggeredWidgets['*'] = true;
+
+    for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+      valid = triggerWidget(widgetTracker.readyWidgets[i]);
+      if (valid) {
+        i--;
+      }
+    }
+
+  // trigger all widget ids provided
+  } else {
+    widgetIds.forEach(function (id) {
+      if (widgetTracker.triggeredWidgets[id] !== false) {
+        widgetTracker.triggeredWidgets[id] = true;
+      }
+
+      for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+        valid = triggerWidget(widgetTracker.readyWidgets[i]);
+        if (valid) {
+          i--;
+        }
+      }
+    });
+  }
+}
+
+/** @module pathfora/display-conditions/delay/register-delayed-widget */
+
+function registerDelayedWidget (widget) {
+  var pf = this;
+  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
+    pf.initializeWidget(widget);
+  }, widget.displayConditions.showDelay * 1000);
+}
+
+/** @module pathfora/display-conditions/entity-field-checker */
+
+function entityFieldChecker (widget, fieldName, found) {
+  if (!found || !found.length) {
+    return true;
+  }
+
+  // for each template found...
+  for (var f = 0; f < found.length; f++) {
+    // parse the field name
+    var dataval = found[f].slice(2).slice(0, -2),
+        parts = dataval.split('|'),
+        def = '';
+
+    // get the default (fallback) value
+    if (parts.length > 1) {
+      def = parts[1].trim();
+    }
+
+    // check for subfields if the value is an object
+    var split = parts[0].trim().split('.');
+
+    dataval = window.lio.data;
+    var s;
+
+    for (s = 0; s < split.length; s++) {
+      if (typeof dataval !== 'undefined') {
+        dataval = dataval[split[s]];
+      }
+    }
+
+    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
+    if (typeof dataval === 'undefined') {
+      dataval = this.customData;
+
+      for (s = 0; s < split.length; s++) {
+        if (typeof dataval !== 'undefined') {
+          dataval = dataval[split[s]];
+        }
+      }
+    }
+
+    // replace the template with the lytics data value
+    if (typeof dataval !== 'undefined') {
+      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+    // if there's no default and we should error
+    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
+      return false;
+    // replace with the default option, or empty string if not found
+    } else {
+      widget[fieldName] = widget[fieldName].replace(found[f], def);
+    }
+  }
+
+  return true;
 }
 
 /** @module pathfora/inline/prep-elements */
@@ -3176,7 +3177,7 @@ function procElements () {
   });
 }
 
-/** @module pathfora/proc-recommend-elements */
+/** @module pathfora/inline/proc-recommend-elements */
 
 function procRecommendElements (blocks, rec, cb) {
   var inline = this;
@@ -3187,7 +3188,7 @@ function procRecommendElements (blocks, rec, cb) {
       contentsegment: rec
     };
 
-    recommendContent(pathfora.acctid, params, rec, function (resp) {
+    recommendContent(inline.parent.acctid, params, rec, function (resp) {
       var idx = 0;
       for (var block in blocks) {
         if (blocks.hasOwnProperty(block)) {
@@ -3230,7 +3231,7 @@ function procRecommendElements (blocks, rec, cb) {
             // set the date published
             if (elems.published && content.created) {
               var published = new Date(content.created);
-              elems.published.innerHTML = published.toLocaleDateString(pathfora.locale, pathfora.dateOptions);
+              elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
             }
 
             // set the author
@@ -3259,7 +3260,7 @@ function procRecommendElements (blocks, rec, cb) {
   }
 }
 
-/** @module api/segments/in-segment */
+/** @module pathfora/data/segments/in-segment */
 
 function inSegment (match) {
   return (getUserSegments().indexOf(match) !== -1);
@@ -3315,7 +3316,7 @@ function setDefaultRecommend () {
   }
 }
 
-/** @module pathfora/inline */
+/** @module pathfora/inline/inline */
 
 function Inline (pf) {
   this.elements = [];
@@ -3344,7 +3345,7 @@ function Inline (pf) {
   document.getElementsByTagName('head')[0].appendChild(style);
 }
 
-/** @module pathfora/initialize-inline */
+/** @module pathfora/inline/init-inline */
 
 function initializeInline () {
   var pf = this;
@@ -3362,7 +3363,7 @@ function initializeInline () {
   });
 }
 
-/** @module pathfora/ab-testing/init-ab-test */
+/** @module pathfora/ab-test/init-ab-test */
 
 function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
@@ -3411,7 +3412,7 @@ function initializeABTesting (abTests) {
   });
 }
 
-/** @module core/prepare-ab-test */
+/** @module pathfora/ab-test/prepare-ab-test */
 
 function prepareABTest (config) {
   var test = {};
@@ -3439,7 +3440,7 @@ function ABTest (config) {
   return prepareABTest(config);
 }
 
-/** @module core/auto-complete-form-fields */
+/** @module pathfora/form/auto-complete-form-fields */
 
 function autoCompleteFormFields (data) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
@@ -3457,7 +3458,7 @@ function autoCompleteFormFields (data) {
   });
 }
 
-/** @module core/auto-complete-facebook-data */
+/** @module pathfora/integrations/auto-complete-facebook-data */
 
 function autoCompleteFacebookData (elements) {
   window.FB.api('/me', {
@@ -3477,7 +3478,7 @@ function autoCompleteFacebookData (elements) {
   });
 }
 
-/** @module core/auto-complete-form-fields */
+/** @module pathfora/form/auto-complete-form-fields */
 
 function clearFormFields (type, fields) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
@@ -3495,7 +3496,7 @@ function clearFormFields (type, fields) {
   });
 }
 
-/** @module core/on-facebook-click */
+/** @module pathfora/integrations/on-facebook-click */
 
 function onFacebookClick (elements) {
   window.FB.getLoginStatus(function (connection) {
@@ -3517,7 +3518,7 @@ function onFacebookClick (elements) {
   });
 }
 
-/** @module core/on-facebook-load */
+/** @module pathfora/integrations/on-facebook-load */
 
 function onFacebookLoad () {
   var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
@@ -3537,7 +3538,7 @@ function onFacebookLoad () {
   });
 }
 
-/** @module pathfora/facebook */
+/** @module pathfora/integrations/facebook */
 
 function integrateWithFacebook (appId) {
   if (appId !== '') {
@@ -3585,7 +3586,7 @@ function integrateWithFacebook (appId) {
   }
 }
 
-/** @module core/auto-complete-google-data */
+/** @module pathfora/integrations/auto-complete-google-data */
 
 function autoCompleteGoogleData (user, elements) {
   if (typeof user !== 'undefined') {
@@ -3605,7 +3606,7 @@ function autoCompleteGoogleData (user, elements) {
   }
 }
 
-/** @module core/auto-complete-google-data */
+/** @module pathfora/integrations/on-google-click */
 
 function onGoogleClick (elements) {
   var auth2 = window.gapi.auth2.getAuthInstance();
@@ -3625,7 +3626,7 @@ function onGoogleClick (elements) {
   }
 }
 
-/** @module core/on-google-load */
+/** @module pathfora/integrations/on-google-load */
 
 function onGoogleLoad () {
   window.gapi.load('auth2', function () {
@@ -3701,13 +3702,13 @@ function integrateWithGoogle (clientId) {
   }
 }
 
-/** @module core/track-time-on-page */
+/** @module pathfora/data/tracking/get-data */
 
 function getData$1 () {
   return pathforaDataObject;
 }
 
-/** @module utils/init-scaffold */
+/** @module pathfora/utils/scaffold/init-scaffold */
 
 function initWidgetScaffold () {
   return {
@@ -3717,7 +3718,7 @@ function initWidgetScaffold () {
   };
 }
 
-/** @module utils/insert-widget */
+/** @module pathfora/utils/scaffold/insert-widget */
 
 function insertWidget (method, segment, widget, config) {
   // assume that we need to add a new widget until proved otherwise
@@ -3760,9 +3761,9 @@ function insertWidget (method, segment, widget, config) {
   }
 }
 
-/** @module utils */
+/** @module pathfora/utils */
 
-var utils$1 = {
+var utils = {
   generateUniqueId: generateUniqueId,
   updateObject: updateObject,
   addClass: addClass,
@@ -3777,6 +3778,7 @@ var utils$1 = {
 };
 
 /** @module pathfora */
+
 var Pathfora = function () {
   this.version = PF_VERSION;
   this.callbacks = [];
@@ -3786,20 +3788,13 @@ var Pathfora = function () {
   this.DOMLoaded = false;
   this.customData = {};
 
-  this.addCallback = addCallback;
-  this.initializePageViews = initializePageViews;
   this.onDOMready = onDOMready;
 
-  this.initializeInline = initializeInline;
+  this.addCallback = addCallback;
 
-  this.triggerWidgets = triggerWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
-
-  this.registerDelayedWidget = registerDelayedWidget;
-  this.entityFieldChecker = entityFieldChecker;
-
   this.previewWidget = previewWidget;
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
@@ -3810,6 +3805,13 @@ var Pathfora = function () {
   this.Form = Form;
   this.SiteGate = SiteGate;
 
+  this.initializePageViews = initializePageViews;
+  this.triggerWidgets = triggerWidgets;
+  this.registerDelayedWidget = registerDelayedWidget;
+  this.entityFieldChecker = entityFieldChecker;
+
+  this.initializeInline = initializeInline;
+
   this.initializeABTesting = initializeABTesting;
   this.ABTest = ABTest;
 
@@ -3818,7 +3820,7 @@ var Pathfora = function () {
 
   this.getData = getData$1;
 
-  this.utils = utils$1;
+  this.utils = utils;
 
   this.inline = new Inline(this);
   this.initializeInline();

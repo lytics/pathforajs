@@ -1,7 +1,8 @@
-/** @module core/hide-after-action-checker */
+/** @module pathfora/display-conditions/hide-after-action-checker */
 
-import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config'
-import readCookie from '../utils/cookies/read-cookie'
+import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config';
+
+import readCookie from '../utils/cookies/read-cookie';
 
 export default function hideAfterActionChecker (hideAfterActionConstraints, widget) {
   var parts,
@@ -48,4 +49,4 @@ export default function hideAfterActionChecker (hideAfterActionConstraints, widg
   }
 
   return valid;
-};
+}

@@ -1,9 +1,11 @@
 /** @module pathfora/integrations/google */
 
-import window from '../dom/window'
-import document from '../dom/document'
-import { templates, pathforaDataObject } from '../globals/config'
-import onGoogleLoad from './on-google-load'
+import window from '../dom/window';
+import document from '../dom/document';
+
+import { templates, pathforaDataObject } from '../globals/config';
+
+import onGoogleLoad from './on-google-load';
 
 export default function integrateWithGoogle (clientId) {
   if (clientId !== '') {
@@ -50,4 +52,4 @@ export default function integrateWithGoogle (clientId) {
     parseGoogleLoginTemplate(templates.form);
     parseGoogleLoginTemplate(templates.sitegate);
   }
-};
+}

@@ -1,9 +1,11 @@
-/** @module api/recommend/recommend-content */
+/** @module pathfora/recommendations/recommend-content */
 
-import readCookie from '../utils/cookies/read-cookie'
-import constructQueries from '../utils/url/construct-queries'
-import getData from '../data/request/get-data'
-import { PREFIX_REC, API_URL } from '../globals/config'
+import readCookie from '../utils/cookies/read-cookie';
+import constructQueries from '../utils/url/construct-queries';
+
+import getData from '../data/request/get-data';
+
+import { PREFIX_REC, API_URL } from '../globals/config';
 
 export default function recommendContent (accountId, params, id, callback) {
   // Recommendation API:
@@ -118,4 +120,4 @@ export default function recommendContent (accountId, params, id, callback) {
   }, function () {
     callback([]);
   });
-};
+}

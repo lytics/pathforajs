@@ -1,7 +1,8 @@
-/** @module core/register-position-watcher */
+/** @module pathfora/display-conditions/scroll/register-position-watcher */
 
-import document from '../../dom/document'
-import removeWatcher from '../watchers/remove-watcher'
+import document from '../../dom/document';
+
+import removeWatcher from '../watchers/remove-watcher';
 
 export default function registerPositionWatcher (percent, widget) {
   var watcher = {
@@ -19,4 +20,4 @@ export default function registerPositionWatcher (percent, widget) {
   };
 
   return watcher;
-};
+}

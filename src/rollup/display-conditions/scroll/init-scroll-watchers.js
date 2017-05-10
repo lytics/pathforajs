@@ -1,10 +1,10 @@
-/** @module core/init-scroll-watchers */
+/** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
-import validateWatchers from '../watchers/validate-watchers'
-import window from '../../dom/window'
+import validateWatchers from '../watchers/validate-watchers';
+
+import window from '../../dom/window';
 
 export default function initializeScrollWatchers (widget) {
-  var core = this;
   widget.scrollListener = function () {
     validateWatchers(widget, function () {
       if (typeof window.addEventListener === 'function') {
@@ -22,4 +22,4 @@ export default function initializeScrollWatchers (widget) {
     window.onscroll = widget.scrollListener;
   }
   return true;
-};
+}

@@ -1,4 +1,4 @@
-/** @module core/remove-watcher */
+/** @module pathfora/display-conditions/watchers/remove-watcher */
 
 export default function removeWatcher (watcher, widget) {
   for (var key in widget.watchers) {
@@ -6,4 +6,4 @@ export default function removeWatcher (watcher, widget) {
       widget.watchers.splice(key, 1);
     }
   }
-};
+}

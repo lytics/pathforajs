@@ -14,4 +14,4 @@ export default function setWidgetClassname (widget, config) {
     config.branding ? ' pf-widget-has-branding' : '',
     !config.responsive ? ' pf-mobile-hide' : ''
   ].join('');
-};
+}

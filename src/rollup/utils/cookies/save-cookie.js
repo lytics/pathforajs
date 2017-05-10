@@ -1,6 +1,6 @@
-/** @module utils/save-cookie */
+/** @module pathfora/utils/cookie/save-cookie */
 
-import document from '../../dom/document'
+import document from '../../dom/document';
 
 export default function saveCookie (name, value, expiration) {
   var expires;
@@ -18,4 +18,4 @@ export default function saveCookie (name, value, expiration) {
     expires,
     '; path = /'
   ].join('');
-};
+}

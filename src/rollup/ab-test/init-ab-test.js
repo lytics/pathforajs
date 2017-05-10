@@ -1,8 +1,9 @@
-/** @module pathfora/ab-testing/init-ab-test */
+/** @module pathfora/ab-test/init-ab-test */
 
-import saveCookie from '../utils/cookies/save-cookie'
-import readCookie from '../utils/cookies/read-cookie'
-import { pathforaDataObject } from '../globals/config'
+import saveCookie from '../utils/cookies/save-cookie';
+import readCookie from '../utils/cookies/read-cookie';
+
+import { pathforaDataObject } from '../globals/config';
 
 export default function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
@@ -49,4 +50,4 @@ export default function initializeABTesting (abTests) {
 
     pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
   });
-};
+}

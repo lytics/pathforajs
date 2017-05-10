@@ -1,7 +1,8 @@
-/** @module core/init-exit-intent */
+/** @module pathfora/display-conditions/init-exit-intent */
 
-import validateWatchers from './watchers/validate-watchers'
-import document from '../dom/document'
+import validateWatchers from './watchers/validate-watchers';
+
+import document from '../dom/document';
 
 export default function initializeExitIntent (widget) {
   var positions = [];
@@ -57,4 +58,4 @@ export default function initializeExitIntent (widget) {
     }
   }
   return true;
-};
+}

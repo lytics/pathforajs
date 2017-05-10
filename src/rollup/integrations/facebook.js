@@ -1,9 +1,11 @@
-/** @module pathfora/facebook */
+/** @module pathfora/integrations/facebook */
 
-import window from '../dom/window'
-import document from '../dom/document'
-import { templates, pathforaDataObject } from '../globals/config'
-import onFacebookLoad from './on-facebook-load'
+import window from '../dom/window';
+import document from '../dom/document';
+
+import { templates, pathforaDataObject } from '../globals/config';
+
+import onFacebookLoad from './on-facebook-load';
 
 export default function integrateWithFacebook (appId) {
   if (appId !== '') {
@@ -49,4 +51,4 @@ export default function integrateWithFacebook (appId) {
 
     pathforaDataObject.socialNetworks.facebookAppId = appId;
   }
-};
+}

@@ -1,8 +1,9 @@
-/** @module core/setup-widget-content-unit */
+/** @module pathfora/widgets/setup-widget-content-unit */
 
-import window from '../dom/window'
-import document from '../dom/document'
-import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../globals/config'
+import window from '../dom/window';
+import document from '../dom/document';
+
+import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../globals/config';
 
 export default function setupWidgetContentUnit (widget, config) {
   var widgetContentUnit = widget.querySelector('.pf-content-unit'),
@@ -100,4 +101,4 @@ export default function setupWidgetContentUnit (widget, config) {
       widgetContentUnit.appendChild(recMeta);
     }
   }
-};
+}

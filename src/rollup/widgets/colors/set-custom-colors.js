@@ -1,6 +1,6 @@
-/** @module core/set-custom-colors*/
+/** @module pathfora/widgets/colors/set-custom-colors */
 
-import hasClass from '../../utils/class/has-class'
+import hasClass from '../../utils/class/has-class';
 
 export default function setCustomColors (widget, colors) {
   var i = 0,
@@ -132,4 +132,4 @@ export default function setCustomColors (widget, colors) {
       msg[i].style.setProperty('color', colors.text, 'important');
     }
   }
-};
+}
