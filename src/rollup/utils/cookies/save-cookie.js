@@ -1,5 +1,7 @@
 /** @module utils/save-cookie */
 
+import document from '../../dom/document'
+
 export default function saveCookie (name, value, expiration) {
   var expires;
 
@@ -9,7 +11,7 @@ export default function saveCookie (name, value, expiration) {
     expires = '; expires=0';
   }
 
-  context.document.cookie = [
+  document.cookie = [
     name,
     '=',
     value,

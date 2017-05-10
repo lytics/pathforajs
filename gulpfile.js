@@ -144,7 +144,7 @@ gulp.task('build:testjs', function () {
 
 gulp.task('build:rollup', function() {
   return rollup.rollup({
-    entry: 'src/rollup/pathfora/pathfora.js',
+    entry: 'src/rollup/pathfora.js',
   }).then(function (bundle) {
     bundle.write({
       format: 'iife',

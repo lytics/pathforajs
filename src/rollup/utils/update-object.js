@@ -7,7 +7,7 @@ export default function updateObject (object, config) {
         if (typeof object[prop] === 'undefined') {
           object[prop] = {};
         }
-        core.updateObject(object[prop], config[prop]);
+        updateObject(object[prop], config[prop]);
       }
     } else if (config.hasOwnProperty(prop)) {
       object[prop] = config[prop];
