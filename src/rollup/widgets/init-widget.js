@@ -14,6 +14,7 @@ import triggerWidget from '../display-conditions/manual-trigger/trigger-widget'
 import addCallback from '../callbacks/add-callback'
 import showWidget from './show-widget'
 import { widgetTracker } from '../globals/config'
+import document from '../dom/document'
 import entityFieldChecker from '../display-conditions/entity-field-checker'
 
 export default function initializeWidget (widget) {

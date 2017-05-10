@@ -5,6 +5,7 @@ import trackTimeOnPage from '../data/tracking/track-time-on-page'
 import updateObject from '../utils/update-object'
 import getUserSegments from '../data/segments/get-user-segments'
 import { defaultProps } from '../globals/config'
+import document from '../dom/document'
 
 export default function initializeWidgets (widgets, config) {
   // NOTE IE < 10 not supported

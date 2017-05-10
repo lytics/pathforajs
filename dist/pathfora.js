@@ -224,7 +224,7 @@ var callbackTypes = {
 
 var widgetTracker = resetWidgetTracker({});
 var defaultProps = resetDefaultProps({});
-var pathforaDataObject$1 = resetDataObject({});
+var pathforaDataObject = resetDataObject({});
 
 var abTestingTypes = {
   '100': createABTestingModePreset(100),
@@ -269,6 +269,8 @@ var templates = {
   }
 };
 
+var document = window.document;
+
 /** @module pathfora/add-callback */
 
 function addCallback (cb) {
@@ -279,20 +281,18 @@ function addCallback (cb) {
   }
 }
 
-var document$1 = window.document;
-
 /** @module pathfora/on-dom-ready */
 
 function onDOMready (fn) {
   var handler,
       pf = this,
-      hack = document$1.documentElement.doScroll,
+      hack = document.documentElement.doScroll,
       domContentLoaded = 'DOMContentLoaded',
-      loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document$1.readyState);
+      loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
 
   if (!loaded) {
-    document$1.addEventListener(domContentLoaded, handler = function () {
-      document$1.removeEventListener(domContentLoaded, handler);
+    document.addEventListener(domContentLoaded, handler = function () {
+      document.removeEventListener(domContentLoaded, handler);
       pf.DOMLoaded = true;
       fn();
     });
@@ -305,7 +305,7 @@ function onDOMready (fn) {
 /** @module utils/read-cookie */
 
 function readCookie (name) {
-  var cookies = document$1.cookie,
+  var cookies = document.cookie,
       findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
 
   return findCookieRegexp ? findCookieRegexp.pop() : null;
@@ -358,7 +358,7 @@ function saveCookie (name, value, expiration) {
     expires = '; expires=0';
   }
 
-  document$1.cookie = [
+  document.cookie = [
     name,
     '=',
     value,
@@ -391,23 +391,23 @@ function trackWidgetAction (action, widget, htmlElement) {
 
   switch (action) {
   case 'show':
-    pathforaDataObject$1.displayedWidgets.push(params);
+    pathforaDataObject.displayedWidgets.push(params);
     break;
   case 'close':
     params['pf-widget-action'] = !!widget.closeAction && widget.closeAction.name || 'close';
-    pathforaDataObject$1.closedWidgets.push(params);
+    pathforaDataObject.closedWidgets.push(params);
     break;
   case 'confirm':
     if (htmlElement && hasClass(htmlElement, 'pf-content-unit')) {
       params['pf-widget-action'] = 'content recommendation';
     } else {
       params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
-      pathforaDataObject$1.completedActions.push(params);
+      pathforaDataObject.completedActions.push(params);
     }
     break;
   case 'cancel':
     params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
-    pathforaDataObject$1.cancelledActions.push(params);
+    pathforaDataObject.cancelledActions.push(params);
     break;
   case 'submit':
   case 'unlock':
@@ -575,7 +575,7 @@ function addClass (DOMNode, className) {
 /** @module pathfora/widgets/close-widget */
 
 function closeWidget (id, noTrack) {
-  var node = document$1.getElementById(id);
+  var node = document.getElementById(id);
 
   // FIXME Change to Array#some or Array#filter
   for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
@@ -591,7 +591,7 @@ function closeWidget (id, noTrack) {
   removeClass(node, 'opened');
 
   if (hasClass(node, 'pf-has-push-down')) {
-    var pushDown = document$1.querySelector('.pf-push-down');
+    var pushDown = document.querySelector('.pf-push-down');
     if (pushDown) {
       removeClass(pushDown, 'opened');
     }
@@ -1036,15 +1036,15 @@ function setWidgetClassname (widget, config) {
 
 function buildFormElement (elem, form) {
   var content, i, val, label,
-      wrapper = document$1.createElement('div'),
+      wrapper = document.createElement('div'),
       isGroup = elem.hasOwnProperty('groupType');
 
   // group elements include: checkbox groups
   if (isGroup) {
     wrapper.className = 'pf-widget-' + elem.type;
-    content = document$1.createElement('div');
+    content = document.createElement('div');
   } else {
-    content = document$1.createElement(elem.type);
+    content = document.createElement(elem.type);
     content.setAttribute('name', elem.name);
     content.setAttribute('id', elem.name);
 
@@ -1060,9 +1060,9 @@ function buildFormElement (elem, form) {
 
   if (elem.label) {
     if (isGroup) {
-      label = document$1.createElement('span');
+      label = document.createElement('span');
     } else {
-      label = document$1.createElement('label');
+      label = document.createElement('label');
       label.setAttribute('for', elem.name);
     }
 
@@ -1082,11 +1082,11 @@ function buildFormElement (elem, form) {
     content.setAttribute('data-required', 'true');
 
     if (elem.label) {
-      var reqFlag = document$1.createElement('div');
+      var reqFlag = document.createElement('div');
       reqFlag.className = 'pf-required-flag';
       reqFlag.innerHTML = 'required';
 
-      var reqTriange = document$1.createElement('span');
+      var reqTriange = document.createElement('span');
       reqFlag.appendChild(reqTriange);
 
       wrapper.appendChild(reqFlag);
@@ -1096,7 +1096,7 @@ function buildFormElement (elem, form) {
   if (elem.placeholder) {
     // select element has first option as placeholder
     if (elem.type === 'select') {
-      var placeholder = document$1.createElement('option');
+      var placeholder = document.createElement('option');
       placeholder.setAttribute('value', '');
       placeholder.innerHTML = elem.placeholder;
       content.appendChild(placeholder);
@@ -1110,22 +1110,22 @@ function buildFormElement (elem, form) {
       val = elem.values[i];
 
       if (isGroup) {
-        var input = document$1.createElement('input');
+        var input = document.createElement('input');
         input.setAttribute('type', elem.groupType);
         input.setAttribute('value', val.value);
         input.setAttribute('name', elem.name);
 
         if (val.label) {
-          label = document$1.createElement('label');
+          label = document.createElement('label');
           label.className = 'pf-widget-' + elem.groupType;
           label.appendChild(input);
-          label.appendChild(document$1.createTextNode(val.label));
+          label.appendChild(document.createTextNode(val.label));
           content.appendChild(label);
         } else {
           throw new Error(elem.groupType + 'form group values must contain labels');
         }
       } else if (elem.type === 'select') {
-        var option = document$1.createElement('option');
+        var option = document.createElement('option');
         option.setAttribute('value', val.value);
         option.innerHTML = val.label;
 
@@ -1624,7 +1624,7 @@ function setupWidgetColors (widget, config) {
 /** @module core/create-widget-html */
 
 function createWidgetHtml (config) {
-  var widget = document$1.createElement('div');
+  var widget = document.createElement('div');
 
   widget.innerHTML = templates[config.type][config.layout] || '';
   widget.id = config.id;
@@ -1869,7 +1869,7 @@ function validateWidgetsObject (widgets) {
 
 function trackTimeOnPage () {
   setInterval(function () {
-    pathforaDataObject$1.timeSpentOnPage += 1;
+    pathforaDataObject.timeSpentOnPage += 1;
   }, 1000);
 }
 
@@ -2594,12 +2594,12 @@ function initializeExitIntent (widget) {
 
         if (valid) {
           validateWatchers(widget, function () {
-            if (typeof document$1.addEventListener === 'function') {
-              document$1.removeEventListener('mousemove', widget.exitIntentListener);
-              document$1.removeEventListener('mouseout', widget.exitIntentTrigger);
+            if (typeof document.addEventListener === 'function') {
+              document.removeEventListener('mousemove', widget.exitIntentListener);
+              document.removeEventListener('mouseout', widget.exitIntentTrigger);
             } else {
-              document$1.onmousemove = null;
-              document$1.onmouseout = null;
+              document.onmousemove = null;
+              document.onmouseout = null;
             }
           });
         }
@@ -2609,12 +2609,12 @@ function initializeExitIntent (widget) {
     };
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
-    if (typeof document$1.addEventListener === 'function') {
-      document$1.addEventListener('mousemove', widget.exitIntentListener, false);
-      document$1.addEventListener('mouseout', widget.exitIntentTrigger, false);
+    if (typeof document.addEventListener === 'function') {
+      document.addEventListener('mousemove', widget.exitIntentListener, false);
+      document.addEventListener('mouseout', widget.exitIntentTrigger, false);
     } else {
-      document$1.onmousemove = widget.exitIntentListener;
-      document$1.onmouseout = widget.exitIntentTrigger;
+      document.onmousemove = widget.exitIntentListener;
+      document.onmouseout = widget.exitIntentTrigger;
     }
   }
   return true;
@@ -2634,11 +2634,11 @@ function removeWatcher (watcher, widget) {
 
 function registerElementWatcher (selector, widget) {
   var watcher = {
-    elem: document$1.querySelector(selector),
+    elem: document.querySelector(selector),
 
     check: function () {
-      var scrollTop = document$1.body.scrollTop || document$1.documentElement.scrollTop,
-          scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
+      var scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
+          scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
 
       if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
         removeWatcher(watcher, widget);
@@ -2679,9 +2679,9 @@ function initializeScrollWatchers (widget) {
 function registerPositionWatcher (percent, widget) {
   var watcher = {
     check: function () {
-      var height = Math.max(document$1.body.scrollHeight, document$1.body.offsetHeight, document$1.documentElement.clientHeight, document$1.documentElement.scrollHeight, document$1.documentElement.offsetHeight),
+      var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
           positionInPixels = height * (percent / 100),
-          offset = document$1.documentElement.scrollTop || document$1.body.scrollTop;
+          offset = document.documentElement.scrollTop || document.body.scrollTop;
 
       if (offset >= positionInPixels) {
         removeWatcher(watcher, widget);
@@ -2929,7 +2929,7 @@ function clearAll () {
       delayed = widgetTracker.delayedWidgets;
 
   opened.forEach(function (widget) {
-    var element = document$1.getElementById(widget.id);
+    var element = document.getElementById(widget.id);
     removeClass(element, 'opened');
     element.parentNode.removeChild(element);
   });
@@ -2941,7 +2941,7 @@ function clearAll () {
   }
 
   resetWidgetTracker(widgetTracker);
-  resetDataObject(pathforaDataObject$1);
+  resetDataObject(pathforaDataObject);
   resetDefaultProps(defaultProps);
 }
 
@@ -3331,17 +3331,17 @@ function Inline (pf) {
 
   // for our automatic element handling we need to ensure they are all hidden by default
   var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
-      style = document$1.createElement('style');
+      style = document.createElement('style');
 
   style.type = 'text/css';
 
   if (style.styleSheet) { // handle ie
     style.styleSheet.cssText = css;
   } else {
-    style.appendChild(document$1.createTextNode(css));
+    style.appendChild(document.createTextNode(css));
   }
 
-  document$1.getElementsByTagName('head')[0].appendChild(style);
+  document.getElementsByTagName('head')[0].appendChild(style);
 }
 
 /** @module pathfora/initialize-inline */
@@ -3403,11 +3403,11 @@ function initializeABTesting (abTests) {
       });
     });
 
-    if (typeof pathforaDataObject$1.abTestingGroups[abTest.id] !== 'undefined') {
+    if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
       throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
     }
 
-    pathforaDataObject$1.abTestingGroups[abTest.id] = userAbTestingGroup;
+    pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
   });
 }
 
@@ -3442,7 +3442,7 @@ function ABTest (config) {
 /** @module core/auto-complete-form-fields */
 
 function autoCompleteFormFields (data) {
-  var widgets = Array.prototype.slice.call(document$1.querySelectorAll('.pf-widget-content'));
+  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
   widgets.forEach(function (widget) {
     if (widget.querySelector('.' + data.type + '-login-btn')) {
@@ -3480,7 +3480,7 @@ function autoCompleteFacebookData (elements) {
 /** @module core/auto-complete-form-fields */
 
 function clearFormFields (type, fields) {
-  var widgets = Array.prototype.slice.call(document$1.querySelectorAll('.pf-widget-content'));
+  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
   widgets.forEach(function (widget) {
     if (widget.querySelector('.' + type + '-login-btn')) {
@@ -3520,7 +3520,7 @@ function onFacebookClick (elements) {
 /** @module core/on-facebook-load */
 
 function onFacebookLoad () {
-  var fbBtns = Array.prototype.slice.call(document$1.querySelectorAll('.social-login-btn.facebook-login-btn span'));
+  var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
   window.FB.getLoginStatus(function (connection) {
     if (connection.status === 'connected') {
@@ -3576,12 +3576,12 @@ function integrateWithFacebook (appId) {
       js = d.createElement(s); js.id = id;
       js.src = '//connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
-    }(document$1, 'script', 'facebook-jssdk'));
+    }(document, 'script', 'facebook-jssdk'));
 
     parseFBLoginTemplate(templates.form);
     parseFBLoginTemplate(templates.sitegate);
 
-    pathforaDataObject$1.socialNetworks.facebookAppId = appId;
+    pathforaDataObject.socialNetworks.facebookAppId = appId;
   }
 }
 
@@ -3656,7 +3656,7 @@ function onGoogleLoad () {
 
 function integrateWithGoogle (clientId) {
   if (clientId !== '') {
-    var head = document$1.querySelector('head');
+    var head = document.querySelector('head');
 
     var appMetaTag = templates.social.googleMeta.replace(
       /(\{){2}google-clientId(\}){2}/gm,
@@ -3687,15 +3687,15 @@ function integrateWithGoogle (clientId) {
 
     // NOTE Google API
     (function () {
-      var s, po = document$1.createElement('script');
+      var s, po = document.createElement('script');
       po.type = 'text/javascript';
       po.async = true;
       po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
-      s = document$1.getElementsByTagName('script')[0];
+      s = document.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(po, s);
     }());
 
-    pathforaDataObject$1.socialNetworks.googleClientID = clientId;
+    pathforaDataObject.socialNetworks.googleClientID = clientId;
     parseGoogleLoginTemplate(templates.form);
     parseGoogleLoginTemplate(templates.sitegate);
   }
@@ -3704,7 +3704,7 @@ function integrateWithGoogle (clientId) {
 /** @module core/track-time-on-page */
 
 function getData$1 () {
-  return pathforaDataObject$1;
+  return pathforaDataObject;
 }
 
 /** @module utils/init-scaffold */

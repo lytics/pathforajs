@@ -1,5 +1,7 @@
 /** @module pathfora/inline/prep-elements */
 
+import document from '../dom/document'
+
 export default function prepElements (attr) {
   var dataElements = {},
       elements = document.querySelectorAll('[' + attr + ']');

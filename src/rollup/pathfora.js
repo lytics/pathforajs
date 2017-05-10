@@ -1,6 +1,7 @@
 /** @module pathfora */
 import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config'
 import window from './dom/window'
+import document from './dom/document'
 
 import addCallback from './callbacks/add-callback'
 import onDOMready from './dom/on-dom-ready'

@@ -11,7 +11,8 @@
   // NOTE Default configuration object (originalConf is used when default data gets overriden)
   var originalConf;
 
-  var PREFIX_REC = 'PathforaRecommend_',
+  var PF_VERSION = '0.1.5',
+    PREFIX_REC = 'PathforaRecommend_',
       PREFIX_UNLOCK = 'PathforaUnlocked_',
       PREFIX_IMPRESSION = 'PathforaImpressions_',
       PREFIX_CONFIRM = 'PathforaConfirm_',
@@ -20,7 +21,8 @@
       PF_PAGEVIEWS = 'PathforaPageView',
       DEFAULT_CHAR_LIMIT = 220,
       DEFAULT_CHAR_LIMIT_STACK = 160,
-      WIDTH_BREAKPOINT = 650;
+      WIDTH_BREAKPOINT = 650,
+      PF_VERSION = '0.1.5';
 
   var defaultPositions = {
     modal: '',
@@ -3777,7 +3779,6 @@
 
       core.openedWidgets.push(widget);
       core.trackWidgetAction('show', widget);
-      console.log('show');
 
       if (widget.displayConditions.impressions) {
         core.incrementImpressions(widget);

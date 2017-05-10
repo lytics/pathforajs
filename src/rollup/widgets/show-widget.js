@@ -7,6 +7,7 @@ import addClass from '../utils/class/add-class'
 import closeWidget from './close-widget'
 import widgetResizeListener from './widget-resize-listener'
 import window from '../dom/window'
+import document from '../dom/document'
 import { callbackTypes, widgetTracker } from '../globals/config'
 
 
