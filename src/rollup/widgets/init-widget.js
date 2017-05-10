@@ -18,7 +18,8 @@ import entityFieldChecker from '../display-conditions/entity-field-checker'
 
 export default function initializeWidget (widget) {
   var watcher,
-      condition = widget.displayConditions;
+      condition = widget.displayConditions,
+      pf = this;
 
   widget.watchers = [];
 
@@ -113,10 +114,10 @@ export default function initializeWidget (widget) {
   }
 
   if ((foundMsg && foundMsg.length > 0) || (foundHeadline && foundHeadline.length > 0) || (foundImage && foundImage.length > 0)) {
-    addCallback(function () {
-      widget.valid = widget.valid && entityFieldChecker(widget, 'msg', foundMsg);
-      widget.valid = widget.valid && entityFieldChecker(widget, 'headline', foundHeadline);
-      widget.valid = widget.valid && entityFieldChecker(widget, 'image', foundImage);
+    pf.addCallback(function () {
+      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'msg', foundMsg);
+      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'headline', foundHeadline);
+      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'image', foundImage);
       evalDisplayConditions();
     });
   } else {

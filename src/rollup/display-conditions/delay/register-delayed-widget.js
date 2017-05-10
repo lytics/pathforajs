@@ -3,7 +3,8 @@
 import { widgetTracker } from '../../globals/config'
 
 export default function registerDelayedWidget (widget) {
+  var pf = this;
   widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-     this.initializeWidget(widget);
+     pf.initializeWidget(widget);
   }, widget.displayConditions.showDelay * 1000);
 };

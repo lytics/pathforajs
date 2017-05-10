@@ -8,7 +8,7 @@ export default function triggerWidgets (widgetIds) {
 
   // no widget ids provided, trigger all ready widgets
   if (typeof widgetIds === 'undefined') {
-    widgetTracker.triggeredWidgets.triggeredWidgets['*'] = true;
+    widgetTracker.triggeredWidgets['*'] = true;
 
     for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
       valid = triggerWidget(widgetTracker.readyWidgets[i]);

@@ -1,22 +1,18 @@
 /** @module pathfora/ab-testing/init-ab-test */
 
 import saveCookie from '../utils/cookies/save-cookie'
+import readCookie from '../utils/cookies/read-cookie'
 import { pathforaDataObject } from '../globals/config'
 
 export default function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
     var abTestingType = abTest.type,
-        userAbTestingValue = utils.readCookie(abTest.cookieId),
+        userAbTestingValue = readCookie(abTest.cookieId),
         userAbTestingGroup = 0,
         date = new Date();
 
     if (!userAbTestingValue) {
-      // Support old cookie name convention
-      userAbTestingValue = utils.readCookie(abHashMD5 + abTest.id);
-
-      if (!userAbTestingValue) {
-        userAbTestingValue = Math.random();
-      }
+      userAbTestingValue = Math.random();
     }
 
     // NOTE Always update the cookie to get the new exp date.

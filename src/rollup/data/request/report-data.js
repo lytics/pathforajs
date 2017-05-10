@@ -1,13 +1,12 @@
 /** @module api/request/report-data */
 
-import jstag from '../../globals/jstag'
-import ga from '../../globals/ga'
+import window from '../../dom/window'
 
 export default function reportData (data) {
   var gaLabel;
 
   if (typeof jstag === 'object') {
-    jstag.send(data);
+    window.jstag.send(data);
   } else {
     // NOTE Cannot find Lytics tag, reporting disabled
   }
@@ -15,7 +14,7 @@ export default function reportData (data) {
   if (typeof ga === 'function') {
     gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
 
-    ga(
+    window.ga(
       'send',
       'event',
       'Lytics',

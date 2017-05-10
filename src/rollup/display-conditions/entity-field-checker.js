@@ -1,6 +1,5 @@
 /** @module core/entity-field-checker */
 
-import lio from '../globals/lio'
 import window from '../dom/window'
 
 export default function entityFieldChecker (widget, fieldName, found) {
@@ -23,7 +22,7 @@ export default function entityFieldChecker (widget, fieldName, found) {
     // check for subfields if the value is an object
     var split = parts[0].trim().split('.');
 
-    dataval = lio.data;
+    dataval = window.lio.data;
     var s;
 
     for (s = 0; s < split.length; s++) {

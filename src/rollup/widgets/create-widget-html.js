@@ -7,6 +7,7 @@ import setWidgetClassname from './set-widget-classname'
 import constructWidgetLayout from './construct-widget-layout'
 import setupWidgetColors from './colors/setup-widget-colors'
 import document from '../dom/document'
+import { templates } from '../globals/config'
 
 export default function createWidgetHtml (config) {
   var widget = document.createElement('div');

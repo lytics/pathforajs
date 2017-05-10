@@ -7,7 +7,7 @@ import hasClass from '../utils/class/has-class'
 import addClass from '../utils/class/add-class'
 import removeClass from '../utils/class/remove-class'
 import closeWidget from './close-widget'
-import { callbackTypes } from '../globals/config'
+import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config'
 
 export default function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,

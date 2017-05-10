@@ -1,14 +1,15 @@
 /** @module core/hide-after-action-checker */
 
 import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config'
+import readCookie from '../utils/cookies/read-cookie'
 
 export default function hideAfterActionChecker (hideAfterActionConstraints, widget) {
   var parts,
       valid = true,
       now = Date.now(),
-      confirm = utils.readCookie(PREFIX_CONFIRM + widget.id),
-      cancel = utils.readCookie(PREFIX_CANCEL + widget.id),
-      closed = utils.readCookie(PREFIX_CLOSE + widget.id);
+      confirm = readCookie(PREFIX_CONFIRM + widget.id),
+      cancel = readCookie(PREFIX_CANCEL + widget.id),
+      closed = readCookie(PREFIX_CLOSE + widget.id);
 
   if (hideAfterActionConstraints.confirm && confirm) {
     parts = confirm.split('|');

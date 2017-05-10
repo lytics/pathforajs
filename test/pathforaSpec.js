@@ -3,7 +3,7 @@
 var credentials = 123,
     ga = jasmine.createSpy('ga');
 
-var jstag = {
+window.jstag = {
   send: function () {}
 };
 
@@ -1072,41 +1072,6 @@ describe('Pathfora', function () {
 
     var w = $('[id*="ab-widget10"]');
     expect(w.length).toBe(1);
-  });
-
-  it('should support the old cookie naming convention for A/B tests', function () {
-    var id = 'ab-7';
-    pathfora.utils.saveCookie('187ef4436122d1cc2f40dc2b92f0eba0' + id, 0.8982240918558091);
-
-    var widgetA = new pathfora.Message({
-      id: 'ab-widget7-a',
-      msg: 'A',
-      layout: 'slideout'
-    });
-
-    var widgetB = new pathfora.Message({
-      id: 'ab-widget7-b',
-      msg: 'B',
-      layout: 'slideout'
-    });
-
-    var ab = new pathfora.ABTest({
-      id: 'ab-7',
-      type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
-    });
-
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
-
-    var wA = $('#' + widgetA.id),
-        wB = $('#' + widgetB.id);
-
-    expect(wA.length).toBe(1);
-    expect(wB.length).toBe(0);
   });
 
   it('should support "80/20" A/B test type', function () {
@@ -2700,8 +2665,7 @@ describe('Widgets', function () {
     expect(widget1.length).toBe(1);
     expect(widget2.length).toBe(1);
 
-    pathfora.triggeredWidgets['*'] = false;
-
+    pathfora.clearAll();
   });
 
   it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
@@ -2733,7 +2697,7 @@ describe('Widgets', function () {
     widget = $('#' + customWidget4.id);
     expect(widget.length).toBe(1);
 
-    pathfora.triggeredWidgets['*'] = false;
+    pathfora.clearAll();
   });
 
   it('should be able to show after specified time', function () {

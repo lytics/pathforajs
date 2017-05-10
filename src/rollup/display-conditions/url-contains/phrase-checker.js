@@ -17,7 +17,7 @@ export default function phraseChecker (phrase, url, simpleurl, queries) {
 
   case 'object':
     if (phrase.match && phrase.value) {
-      var phraseValue = utils.escapeURI(phrase.value, { keepEscaped: true });
+      var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
 
       switch (phrase.match) {
       // simple match

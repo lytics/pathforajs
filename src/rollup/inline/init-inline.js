@@ -1,6 +1,6 @@
 /** @module pathfora/initialize-inline */
 
-import lio from '../globals/lio'
+import window from '../dom/window'
 
 export default function initializeInline () {
   var pf = this;
@@ -8,8 +8,8 @@ export default function initializeInline () {
   this.onDOMready(function () {
     pf.addCallback(function () {
       if (pf.acctid === '') {
-        if (lio && lio.account) {
-          pf.acctid = lio.account.id;
+        if (window.lio && window.lio.account) {
+          pf.acctid = window.lio.account.id;
         }
       }
 

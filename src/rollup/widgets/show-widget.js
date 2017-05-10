@@ -10,7 +10,7 @@ import window from '../dom/window'
 import { callbackTypes, widgetTracker } from '../globals/config'
 
 
-export default function showWidget () {
+export default function showWidget (widget) {
   // FIXME Change to Array#filter and Array#length
   for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
     if (widgetTracker.openedWidgets[i] === widget) {

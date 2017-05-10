@@ -1,6 +1,6 @@
 /** @module core/track-widget-action */
 
-import { PREFIX_UNLOCK } from '../../globals/config'
+import { PREFIX_UNLOCK, pathforaDataObject } from '../../globals/config'
 import reportData from '../request/report-data'
 import saveCookie from '../../utils/cookies/save-cookie'
 import hasClass from '../../utils/class/has-class'

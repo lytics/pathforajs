@@ -27,7 +27,6 @@ export default function initializeWidgets (widgets, config) {
   trackTimeOnPage();
 
   if (config) {
-    originalConf = JSON.parse(JSON.stringify(defaultProps));
     updateObject(defaultProps, config);
   }
 

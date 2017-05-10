@@ -1,7 +1,7 @@
 /** @module core/setup-widget-content-unit */
 
 import window from '../dom/window'
-import { PF_LOCALE, PF_DATE_OPTIONS } from '../globals/config'
+import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../globals/config'
 
 export default function setupWidgetContentUnit (widget, config) {
   var widgetContentUnit = widget.querySelector('.pf-content-unit'),
@@ -43,7 +43,7 @@ export default function setupWidgetContentUnit (widget, config) {
 
       if (rec.date && (settings.display && settings.display.date === true)) {
         var published = new Date(rec.date),
-            locale = settings.display.locale;
+            locale = settings.display.locale,
             dateOptions = settings.display.dateOptions;
 
         if (!locale && window.pathfora && window.pathfora.locale) {

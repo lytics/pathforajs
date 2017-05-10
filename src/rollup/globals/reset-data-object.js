@@ -1,20 +1,14 @@
 /** @module config/default-props */
 
 export default function resetDataObject (obj) {
-  if (!obj) {
-    obj = {};
-  }
-
-  obj = {
-    pageViews: 0,
-    timeSpentOnPage: 0,
-    closedWidgets: [],
-    completedActions: [],
-    cancelledActions: [],
-    displayedWidgets: [],
-    abTestingGroups: [],
-    socialNetworks: {}
-  };
+  obj.pageViews = 0;
+  obj.timeSpentOnPage = 0;
+  obj.closedWidgets = [];
+  obj.completedActions = [];
+  obj.cancelledActions = [];
+  obj.displayedWidgets = [];
+  obj.abTestingGroups = [];
+  obj.socialNetworks = {};
 
   return obj;
 };

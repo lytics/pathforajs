@@ -3,6 +3,7 @@
 import readCookie from '../utils/cookies/read-cookie'
 import constructQueries from '../utils/url/construct-queries'
 import getData from '../data/request/get-data'
+import { PREFIX_REC, API_URL } from '../globals/config'
 
 export default function recommendContent (accountId, params, id, callback) {
   // Recommendation API:
@@ -42,7 +43,7 @@ export default function recommendContent (accountId, params, id, callback) {
   }
 
   var recommendParts = [
-    '{{apiurl}}/api/content/recommend/',
+    API_URL + '/api/content/recommend/',
     accountId,
     '/user/_uids/',
     seerId

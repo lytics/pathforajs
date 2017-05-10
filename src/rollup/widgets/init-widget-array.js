@@ -5,7 +5,7 @@ import readCookie from '../utils/cookies/read-cookie'
 import updateObject from '../utils/update-object'
 import recommendContent from '../recommendations/recommend-content'
 import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config'
-import lio from '../globals/lio'
+import window from '../dom/window'
 
 
 export default function initializeWidgetArray (array) {
@@ -13,7 +13,7 @@ export default function initializeWidgetArray (array) {
 
   var displayWidget = function (w) {
     if (w.displayConditions.showDelay) {
-      registerDelayedWidget(w);
+      pf.registerDelayedWidget(w);
     } else {
       pf.initializeWidget(w);
     }
@@ -22,8 +22,8 @@ export default function initializeWidgetArray (array) {
   var recContent = function (w, params) {
     pf.addCallback(function () {
       if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (lio && lio.account) {
-          pf.acctid = lio.account.id;
+        if (window.lio && window.lio.account) {
+          pf.acctid = window.lio.account.id;
         } else {
           throw new Error('Could not get account id from Lytics Javascript tag.');
         }

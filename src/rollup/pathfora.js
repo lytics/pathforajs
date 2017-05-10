@@ -1,5 +1,5 @@
 /** @module pathfora */
-import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS } from './globals/config'
+import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config'
 import window from './dom/window'
 
 import addCallback from './callbacks/add-callback'
@@ -31,6 +31,8 @@ import ABTest from './ab-test/ab-test'
 
 import integrateWithFacebook from './integrations/facebook'
 import integrateWithGoogle from './integrations/google'
+
+import getData from './data/tracking/get-data'
 
 import { utils } from './utils/utils'
 
@@ -73,6 +75,8 @@ var Pathfora = function () {
   this.integrateWithFacebook = integrateWithFacebook;
   this.integrateWithGoogle = integrateWithGoogle;
 
+  this.getData = getData;
+
   this.utils = utils;
 
   this.inline = new Inline(this);
@@ -84,12 +88,13 @@ var Pathfora = function () {
 
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
-  link.setAttribute('href', '{{cssurl}}');
+  link.setAttribute('href', CSS_URL);
 
   head.appendChild(link);
 
+  var pf = this;
   window.addEventListener('load', function () {
-    this.reinitializePrioritizedWidgets();
+    pf.reinitializePrioritizedWidgets();
   });
 };
 

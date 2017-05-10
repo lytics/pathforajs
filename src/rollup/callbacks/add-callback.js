@@ -1,10 +1,10 @@
 /** @module pathfora/add-callback */
 
-import lio from '../globals/lio'
+import window from '../dom/window'
 
 export default function addCallback (cb) {
-  if (lio && lio.loaded) {
-    cb(lio.data);
+  if (window.lio && window.lio.loaded) {
+    cb(window.lio.data);
   } else {
     this.callbacks.push(cb);
   }
