@@ -9,6 +9,13 @@ import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../gl
 
 import window from '../dom/window';
 
+/**
+ * Given an array of widgets, begin off the initialization
+ * process for each
+ *
+ * @exports initializeWidgetArray
+ * @params {array} array
+ */
 export default function initializeWidgetArray (array) {
   var pf = this;
 

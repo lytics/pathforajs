@@ -1,5 +1,12 @@
 /** @module pathfora/utils/update-object */
 
+/**
+ * Merge two objects while preserving original fields
+ *
+ * @exports updateObject
+ * @params {object} object
+ * @params {object} config
+ */
 export default function updateObject (object, config) {
   for (var prop in config) {
     if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {

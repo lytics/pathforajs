@@ -4,6 +4,15 @@ import document from '../../dom/document';
 
 import removeWatcher from '../watchers/remove-watcher';
 
+/**
+ * Setup watcher for scrollPercentageToDisplay
+ * display condition
+ *
+ * @exports registerPositionWatcher
+ * @params {int} percent
+ * @params {object} widget
+ * @returns {object} watcher
+ */
 export default function registerPositionWatcher (percent, widget) {
   var watcher = {
     check: function () {

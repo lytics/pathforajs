@@ -5,6 +5,17 @@ import parseQuery from './parse-query';
 
 import escapeURI from '../../utils/url/escape-uri';
 
+/**
+ * Evaluate if the current URL matches a single urlContains
+ * rule provided
+ *
+ * @exports phraseChecker
+ * @params {object} phrase
+ * @params {string} url
+ * @params {string} simpleurl
+ * @params {object} queries
+ * @returns {boolean}
+ */
 export default function phraseChecker (phrase, url, simpleurl, queries) {
   var valid = false;
 

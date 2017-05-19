@@ -2,6 +2,13 @@
 
 import document from '../dom/document';
 
+/**
+ * Build a list of all elements to be personalized
+ *
+ * @exports prepElements
+ * @params {string} attr
+ * @returns {object} dataElements
+ */
 export default function prepElements (attr) {
   var dataElements = {},
       elements = document.querySelectorAll('[' + attr + ']');

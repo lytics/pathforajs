@@ -8,6 +8,13 @@ import document from '../dom/document';
 
 import { pathforaDataObject } from '../globals/config';
 
+/**
+ * Check if the user is already logged in once
+ * the google library is loaded and setup the click
+ * listener for the social button
+ *
+ * @exports onGoogleLoad
+ */
 export default function onGoogleLoad () {
   window.gapi.load('auth2', function () {
     var auth2 = gapi.auth2.init({

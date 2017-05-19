@@ -1,5 +1,13 @@
 /** @module pathfora/utils/url/escape-uri */
 
+/**
+ * Escape URIs optionally without double-encoding
+ *
+ * @exports escapeURI
+ * @params {string} text
+ * @returns {object} options
+ * @returns {string} uri
+ */
 export default function escapeURI (text, options) {
   // NOTE This was ported from various bits of C++ code from Chromium
   options || (options = {});

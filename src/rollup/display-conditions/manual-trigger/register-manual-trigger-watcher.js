@@ -4,6 +4,14 @@ import { widgetTracker } from '../../globals/config';
 
 import removeWatcher from '../watchers/remove-watcher';
 
+/**
+ * Begin watching for a custom javascript trigger
+ *
+ * @exports registerManualTriggerWatcher
+ * @params {obj} widget
+ * @params {boolean} value
+ * @returns {obj} watcher
+ */
 export default function registerManualTriggerWatcher (value, widget) {
   var watcher = {
     check: function () {

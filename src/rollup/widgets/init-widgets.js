@@ -11,6 +11,14 @@ import { defaultProps } from '../globals/config';
 
 import document from '../dom/document';
 
+/**
+ * Public method used to initialize widgets once
+ * the individual configs have been created
+ *
+ * @exports initializeWidgets
+ * @params {object} widgets
+ * @params {object} config
+ */
 export default function initializeWidgets (widgets, config) {
   // NOTE IE < 10 not supported
   // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?

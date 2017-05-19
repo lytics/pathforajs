@@ -3,6 +3,12 @@
 import autoCompleteFormFields from '../form/auto-complete-form-fields';
 import window from '../dom/window';
 
+/**
+ * Fill in widget form with data from facebook login
+ *
+ * @exports autoCompleteFacebookData
+ * @params {array} elements
+ */
 export default function autoCompleteFacebookData (elements) {
   window.FB.api('/me', {
     fields: 'name,email,work'

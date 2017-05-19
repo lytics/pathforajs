@@ -2,6 +2,14 @@
 
 import document from '../../dom/document';
 
+/**
+ * Set the value of a cookie
+ *
+ * @exports saveCookie
+ * @params {string} name
+ * @params {string} value
+ * @params {object} expiration
+ */
 export default function saveCookie (name, value, expiration) {
   var expires;
 

@@ -4,6 +4,13 @@ import validateWatchers from './watchers/validate-watchers';
 
 import document from '../dom/document';
 
+/**
+ * Setup exitIntent for a widget
+ *
+ * @exports initExitIntent
+ * @params {object} widget
+ * @returns {boolean}
+ */
 export default function initializeExitIntent (widget) {
   var positions = [];
   if (!widget.exitIntentListener) {

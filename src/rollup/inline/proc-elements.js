@@ -1,5 +1,11 @@
 /** @module pathfora/inline/proc-elements */
 
+/**
+ * Kick off the personalization process for inline trigger fields
+ * and inline content recommendations
+ *
+ * @exports procElements
+ */
 export default function procElements () {
   var attrs = ['data-pftrigger', 'data-pfrecommend'],
       inline = this,

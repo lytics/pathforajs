@@ -2,6 +2,15 @@
 
 import recommendContent from '../recommendations/recommend-content';
 
+/**
+ * Make recommendation and fill in the appropriate inline
+ * recommendation elements
+ *
+ * @exports procRecommendElements
+ * @params {object} blocks
+ * @params {string} rec
+ * @params {function} cb
+ */
 export default function procRecommendElements (blocks, rec, cb) {
   var inline = this;
 

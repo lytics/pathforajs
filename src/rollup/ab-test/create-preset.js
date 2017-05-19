@@ -1,5 +1,12 @@
 /* module pathfora/ab-test/create-preset */
 
+/**
+ * Creates A/B test group distrubutions
+ *
+ * @exports createABTestingModePreset
+ * @params {int} a/b values
+ * @returns {obj}
+ */
 export default function createABTestingModePreset () {
   var groups = [];
 

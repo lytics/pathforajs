@@ -19,7 +19,7 @@ import reinitializePrioritizedWidgets from './widgets/reinit-prioritized-widgets
 import Message from './widgets/message';
 import Subscription from './widgets/subscription';
 import Form from './widgets/form';
-import SiteGate from './widgets/gate';
+import SiteGate from './widgets/site-gate';
 
 import initializePageViews from './display-conditions/pageviews/init-pageviews';
 import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
@@ -39,6 +39,12 @@ import getData from './data/tracking/get-data';
 
 import { utils } from './utils/utils';
 
+/**
+ * Creates a new Pathfora instance
+ *
+ * @exports Pathfora
+ * @class {function} Pathfora
+ */
 var Pathfora = function () {
   this.version = PF_VERSION;
   this.callbacks = [];

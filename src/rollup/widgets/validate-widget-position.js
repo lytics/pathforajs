@@ -1,5 +1,13 @@
 /** @module pathfora/widgets/validate-widget-position */
 
+/**
+ * Validate that the widget has correct position field
+ * for its layout and type
+ *
+ * @exports validateWidgetPosition
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function validateWidgetPosition (widget, config) {
   var choices;
 

@@ -7,6 +7,16 @@ import getData from '../data/request/get-data';
 
 import { PREFIX_REC, API_URL } from '../globals/config';
 
+/**
+ * Make the request to the Lytics content recommendation API
+ * and return a list of recommended documents
+ *
+ * @exports recommendContent
+ * @params {string} accountId
+ * @params {object} params
+ * @params {string} id
+ * @params {function} callback
+ */
 export default function recommendContent (accountId, params, id, callback) {
   // Recommendation API:
   // https://www.getlytics.com/developers/rest-api#content-recommendation
@@ -88,6 +98,9 @@ export default function recommendContent (accountId, params, id, callback) {
   var recommendUrl = recommendParts.join('') + queries;
 
   getData(recommendUrl, function (json) {
+
+    // set the session storage.
+    sessionStorage.setItem(PREFIX_REC + id, json);
     var resp;
 
     try {
@@ -109,9 +122,6 @@ export default function recommendContent (accountId, params, id, callback) {
           }
         }
       }
-
-      // set the session storage.
-      sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(resp));
 
       callback(resp.data);
     } else {

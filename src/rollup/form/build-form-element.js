@@ -4,6 +4,14 @@ import document from '../dom/document';
 
 import addClass from '../utils/class/add-class';
 
+/**
+ * Build and insert a custom form element into
+ * the widget's form
+ *
+ * @exports buildFormElement
+ * @params {object} elem
+ * @params {object} form
+ */
 export default function buildFormElement (elem, form) {
   var content, i, val, label,
       wrapper = document.createElement('div'),

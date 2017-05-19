@@ -1,5 +1,13 @@
 /** @module pafthroa/utils/url/construct-queries */
 
+/**
+ * Construct the params string for a url from an
+ * object containing key/values
+ *
+ * @exports constructQueries
+ * @params {object} params
+ * @returns {string}
+ */
 export default function constructQueries (params) {
   var count = 0,
       queries = [];

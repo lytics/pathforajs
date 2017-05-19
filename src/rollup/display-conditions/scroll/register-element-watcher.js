@@ -5,6 +5,15 @@ import window from '../../dom/window';
 
 import removeWatcher from '../watchers/remove-watcher';
 
+/**
+ * Setup watcher for displayWhenElementVisible
+ * display condition
+ *
+ * @exports registerElementWatcher
+ * @params {string} selector
+ * @params {object} widget
+ * @returns {object} watcher
+ */
 export default function registerElementWatcher (selector, widget) {
   var watcher = {
     elem: document.querySelector(selector),

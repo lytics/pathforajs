@@ -2,6 +2,16 @@
 
 import window from '../dom/window';
 
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text fields
+ *
+ * @exports entityFieldChecker
+ * @params {object} widget
+ * @params {string} fieldName
+ * @params {array} found
+ * @returns {boolean}
+ */
 export default function entityFieldChecker (widget, fieldName, found) {
   if (!found || !found.length) {
     return true;

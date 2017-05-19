@@ -1,5 +1,11 @@
 /** @module pathfora/utils/generate-unique-id */
 
+/**
+ * Create a unique string identifier
+ *
+ * @exports generateUniqueId
+ * @returns {string} id
+ */
 export default function generateUniqueId () {
   var s4;
 

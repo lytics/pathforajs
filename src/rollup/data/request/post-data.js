@@ -1,5 +1,14 @@
 /** @module pathfora/data/request/post-data */
 
+/**
+ * Make an http POST request
+ *
+ * @exports postData
+ * @params {string} url
+ * @params {obj} data
+ * @params {function} onSuccess
+ * @params {function} onError
+ */
 export default function postData (url, data, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', url);

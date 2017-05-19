@@ -6,6 +6,13 @@ import clearFormFields from '../form/clear-form-fields';
 
 import window from '../dom/window';
 
+/**
+ * Setup login when the user clicks the fb
+ * social login button
+ *
+ * @exports onFacebookClick
+ * @params {array} elements
+ */
 export default function onFacebookClick (elements) {
   window.FB.getLoginStatus(function (connection) {
     if (connection.status === 'connected') {

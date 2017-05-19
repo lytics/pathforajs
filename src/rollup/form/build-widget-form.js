@@ -2,6 +2,14 @@
 
 import buildFormElement from './build-form-element';
 
+/**
+ * Build a custom form on a widget according to the
+ * formElements config provided
+ *
+ * @exports buildWidgetForm
+ * @params {object} formElements
+ * @params {object} form
+ */
 export default function buildWidgetForm (formElements, form) {
   for (var i = 0; i < formElements.length; i++) {
     var elem = formElements[i];

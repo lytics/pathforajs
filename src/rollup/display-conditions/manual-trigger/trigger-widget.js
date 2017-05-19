@@ -4,6 +4,13 @@ import validateWatchers from '../watchers/validate-watchers';
 
 import { widgetTracker } from '../../globals/config';
 
+/**
+ * Trigger a single "manualTrigger" widget to be shown
+ *
+ * @exports triggerWidget
+ * @params {obj} widget
+ * @returns {boolean}
+ */
 export default function triggerWidget (widget) {
   return validateWatchers(widget, function () {
     widgetTracker.triggeredWidgets[widget.id] = false;

@@ -11,6 +11,14 @@ import document from '../dom/document';
 
 import { templates } from '../globals/config';
 
+/**
+ * Call all the necessary functions to construct
+ * the widget html
+ *
+ * @exports createWidgetHtml
+ * @params {object} config
+ * @returns {object} widget
+ */
 export default function createWidgetHtml (config) {
   var widget = document.createElement('div');
 

@@ -1,5 +1,13 @@
 /** @module pathfora/data/request/get-data */
 
+/**
+ * Make an http GET request
+ *
+ * @exports getData
+ * @params {string} url
+ * @params {function} onSuccess
+ * @params {function} onError
+ */
 export default function getData (url, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
 

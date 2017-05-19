@@ -15,6 +15,12 @@ import document from '../dom/document';
 
 import { callbackTypes, widgetTracker } from '../globals/config';
 
+/**
+ * Make the widget visible to the user
+ *
+ * @exports showWidget
+ * @params {object} widget
+ */
 export default function showWidget (widget) {
   // FIXME Change to Array#filter and Array#length
   for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {

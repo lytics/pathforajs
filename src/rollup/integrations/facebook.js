@@ -7,6 +7,13 @@ import { templates, pathforaDataObject } from '../globals/config';
 
 import onFacebookLoad from './on-facebook-load';
 
+/**
+ * Initialize facebook tag and set up social login
+ * button template
+ *
+ * @exports integrateWithFacebook
+ * @params {string} appId
+ */
 export default function integrateWithFacebook (appId) {
   if (appId !== '') {
     var btn = templates.social.facebookBtn.replace(

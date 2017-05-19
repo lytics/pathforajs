@@ -1,5 +1,12 @@
 /** @module core/set-widget-classname */
 
+/**
+ * Setup the className for a widget
+ *
+ * @exports setWidgetClassname
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function setWidgetClassname (widget, config) {
   widget.className = [
     'pf-widget ',

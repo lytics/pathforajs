@@ -4,6 +4,15 @@ import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config';
 
 import readCookie from '../utils/cookies/read-cookie';
 
+/**
+ * Check if a widget should be hidden because it meets
+ * a hideAfterAction display condition
+ *
+ * @exports hideAfterActionChecker
+ * @params {object} hideAfterActionConstraints
+ * @params {string} widget
+ * @returns {boolean}
+ */
 export default function hideAfterActionChecker (hideAfterActionConstraints, widget) {
   var parts,
       valid = true,

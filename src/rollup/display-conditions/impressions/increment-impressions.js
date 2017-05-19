@@ -5,6 +5,12 @@ import { PREFIX_IMPRESSION } from '../../globals/config';
 import readCookie from '../../utils/cookies/read-cookie';
 import saveCookie from '../../utils/cookies/save-cookie';
 
+/**
+ * Increment the impression count for a widget
+ *
+ * @exports incrementImpressions
+ * @params {obj} widget
+ */
 export default function incrementImpressions (widget) {
   var parts, totalImpressions,
       id = PREFIX_IMPRESSION + widget.id,

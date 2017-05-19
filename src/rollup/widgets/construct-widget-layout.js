@@ -9,6 +9,13 @@ import { templates } from '../globals/config';
 
 import document from '../dom/document';
 
+/**
+ * Setup inner html elements for a widget
+ *
+ * @exports constructWidgetLayout
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function constructWidgetLayout (widget, config) {
   var node, child, i,
       widgetContent = widget.querySelector('.pf-widget-content'),

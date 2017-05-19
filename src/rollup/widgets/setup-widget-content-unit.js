@@ -5,6 +5,13 @@ import document from '../dom/document';
 
 import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../globals/config';
 
+/**
+ * Setup HTML for a widget with content recommendations
+ *
+ * @exports setupWidgetContentUnit
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function setupWidgetContentUnit (widget, config) {
   var widgetContentUnit = widget.querySelector('.pf-content-unit'),
       settings = config.recommend;

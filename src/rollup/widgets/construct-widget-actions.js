@@ -12,6 +12,14 @@ import closeWidget from './close-widget';
 
 import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config';
 
+/**
+ * Add callbacks and tracking for user interactions
+ * with widgets
+ *
+ * @exports constructWidgetActions
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
       widgetOk = widget.querySelector('.pf-widget-ok'),

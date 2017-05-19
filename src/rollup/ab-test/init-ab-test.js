@@ -5,6 +5,12 @@ import readCookie from '../utils/cookies/read-cookie';
 
 import { pathforaDataObject } from '../globals/config';
 
+/**
+ * Initialized A/B test from user config
+ *
+ * @exports initializeABTesting
+ * @params {obj} abTests
+ */
 export default function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
     var abTestingType = abTest.type,

@@ -2,6 +2,14 @@
 
 import inSegment from '../data/segments/in-segment';
 
+/**
+ * Show/hide trigger elements in a group based on
+ * Lytics segment membership
+ *
+ * @exports procTriggerElements
+ * @params {object} elems
+ * @params {string} group
+ */
 export default function procTriggerElements (elems, group) {
   var matched = false,
       defaultEl = {};

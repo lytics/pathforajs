@@ -5,6 +5,11 @@ import { PF_PAGEVIEWS } from '../../globals/config';
 import readCookie from '../../utils/cookies/read-cookie';
 import saveCookie from '../../utils/cookies/read-cookie';
 
+/**
+ * Track and update the number of pageviews
+ *
+ * @exports initializePageViews
+ */
 export default function initializePageViews () {
   var cookie = readCookie(PF_PAGEVIEWS),
       date = new Date();

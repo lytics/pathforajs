@@ -4,6 +4,13 @@ import { widgetTracker } from '../../globals/config';
 
 import triggerWidget from './trigger-widget';
 
+/**
+ * Public method to trigger a widget that has already been
+ * initialized and have the "manualTrigger" display condition
+ *
+ * @exports triggerWidgets
+ * @params {array} widgetIds
+ */
 export default function triggerWidgets (widgetIds) {
   var i, valid;
 

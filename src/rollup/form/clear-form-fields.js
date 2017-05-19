@@ -2,6 +2,13 @@
 
 import document from '../dom/document';
 
+/**
+ * Clear all current values from a widget form
+ *
+ * @exports clearFormFields
+ * @params {string} type
+ * @params {array} fields
+ */
 export default function clearFormFields (type, fields) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 

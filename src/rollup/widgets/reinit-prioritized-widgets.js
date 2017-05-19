@@ -2,6 +2,12 @@
 
 import { widgetTracker } from '../globals/config';
 
+/**
+ * Widgets with priority are held from initialization
+ * and reinitialized once we've loaded all
+ *
+ * @exports reinitializePrioritizedWidgets
+ */
 export default function reinitializePrioritizedWidgets () {
   if (widgetTracker.prioritizedWidgets.length > 0) {
 

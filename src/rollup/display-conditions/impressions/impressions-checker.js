@@ -4,6 +4,15 @@ import { PREFIX_IMPRESSION } from '../../globals/config';
 
 import readCookie from '../../utils/cookies/read-cookie';
 
+/**
+ * Check if the widget has met the impressions
+ * display condition.
+ *
+ * @exports impressionsChecker
+ * @params {obj} impressionConstraints
+ * @params {obj} widget
+ * @params {boolean} valid
+ */
 export default function impressionsChecker (impressionConstraints, widget) {
   var parts, totalImpressions,
       valid = true,

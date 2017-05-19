@@ -6,6 +6,15 @@ import reportData from '../request/report-data';
 import saveCookie from '../../utils/cookies/save-cookie';
 import hasClass from '../../utils/class/has-class';
 
+/**
+ * Format and track interaction events such as
+ * CTA clicks, form status, etc.
+ *
+ * @exports trackWidgetAction
+ * @params {string} action
+ * @params {obj} widget
+ * @params {obj} htmlElement
+ */
 export default function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;
 

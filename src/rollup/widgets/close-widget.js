@@ -9,10 +9,16 @@ import hasClass from '../utils/class/has-class';
 
 import { widgetTracker } from '../globals/config';
 
-
+/**
+ * Close a widget and remove it from the dom
+ *
+ * @exports closeWidget
+ * @params {string} id
+ * @params {boolean} noTrack
+ */
 export default function closeWidget (id, noTrack) {
-  var node = document.getElementById(id);
-  var i;
+  var i,
+      node = document.getElementById(id);
 
   // FIXME Change to Array#some or Array#filter
   for (i = 0; i < widgetTracker.openedWidgets.length; i++) {

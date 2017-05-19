@@ -5,6 +5,14 @@ import escapeURI from '../../utils/url/escape-uri';
 import parseQuery from './parse-query';
 import phraseChecker from './phrase-checker';
 
+/**
+ * Evaluate if the current URL matches the rules defined
+ * by the urlContains display condition
+ *
+ * @exports urlChecker
+ * @params {array} phrases
+ * @returns {boolean}
+ */
 export default function urlChecker (phrases) {
   var url = escapeURI(window.location.href, { keepEscaped: true }),
       simpleurl = window.location.hostname + window.location.pathname,

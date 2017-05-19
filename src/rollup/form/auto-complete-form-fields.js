@@ -2,6 +2,13 @@
 
 import document from '../dom/document';
 
+/**
+ * Fill in the form of the widget with
+ * the data provided
+ *
+ * @exports autoCompleteFormFields
+ * @params {object} data
+ */
 export default function autoCompleteFormFields (data) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 

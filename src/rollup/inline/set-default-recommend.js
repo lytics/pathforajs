@@ -1,5 +1,11 @@
 /** @module pathfora/inline/set-default-recommend */
 
+/**
+ * Show the default "recommendation" if we received
+ * a bad response from the API
+ *
+ * @exports setDefaultRecommend
+ */
 export default function setDefaultRecommend () {
   // check the default elements
   for (var block in this.defaultElements) {

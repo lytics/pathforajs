@@ -11,7 +11,11 @@ import resetDataObject from '../globals/reset-data-object';
 import resetWidgetTracker from '../globals/reset-widget-tracker';
 import resetDefaultProps from '../globals/reset-default-props';
 
-
+/**
+ * Close all widgets and reset all settings to default
+ *
+ * @exports clearAll
+ */
 export default function clearAll () {
   var opened = widgetTracker.openedWidgets,
       delayed = widgetTracker.delayedWidgets;

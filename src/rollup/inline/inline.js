@@ -8,6 +8,13 @@ import procTriggerElements from './proc-trigger-elements';
 import setDefaultRecommend from './set-default-recommend';
 
 
+/**
+ * Creates a new instance of inline personalization
+ *
+ * @exports Inline
+ * @class {function} Inline
+ * @params {object} pf
+ */
 export default function Inline (pf) {
   this.elements = [];
   this.preppedElements = [];

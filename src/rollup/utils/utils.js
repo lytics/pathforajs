@@ -16,6 +16,12 @@ import insertWidget from './scaffold/insert-widget';
 import constructQueries from './url/construct-queries';
 import escapeURI from './url/escape-uri';
 
+/**
+ * Object containing utility functions
+ *
+ * @exports utils
+ */
+
 export var utils = {
   generateUniqueId: generateUniqueId,
   updateObject: updateObject,

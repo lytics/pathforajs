@@ -1,5 +1,12 @@
 /** @module pathfora/globals/reset-default-props */
 
+/**
+ * Reset the values of the default widget configs
+ *
+ * @exports resetDefaultProps
+ * @params {object} obj
+ * @returns {object} obj
+ */
 export default function resetDefaultProps (obj) {
   obj.generic = {
     className: 'pathfora',

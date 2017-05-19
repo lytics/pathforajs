@@ -1,5 +1,13 @@
 /** @module pathfora/widgets/prepare-widget */
 
+/**
+ * Validate that a widget is correctly set up
+ *
+ * @exports prepareWidget
+ * @params {string} type
+ * @params {object} config
+ * @returns {object}
+ */
 export default function prepareWidget (type, config) {
   var props, random,
       widget = {

@@ -2,6 +2,14 @@
 
 import hasClass from '../../utils/class/has-class';
 
+/**
+ * Set colors for a widget with a custom theme
+ * defined in the config
+ *
+ * @exports setCustomColors
+ * @params {object} widget
+ * @params {object} colors
+ */
 export default function setCustomColors (widget, colors) {
   var i = 0,
       close = widget.querySelector('.pf-widget-close'),

@@ -3,6 +3,13 @@
 
 /** @module pathfora/globals/reset-default-props */
 
+/**
+ * Reset the values of the default widget configs
+ *
+ * @exports resetDefaultProps
+ * @params {object} obj
+ * @returns {object} obj
+ */
 function resetDefaultProps (obj) {
   obj.generic = {
     className: 'pathfora',
@@ -132,6 +139,13 @@ function resetDefaultProps (obj) {
 
 /** @module pathfora/globals/reset-widget-tracker */
 
+/**
+ * Reset the widgetTracker to an empty state
+ *
+ * @exports resetDefaultProps
+ * @params {object} obj
+ * @returns {object} obj
+ */
 function resetWidgetTracker (obj) {
   obj.delayedWidgets = {};
   obj.openedWidgets = [];
@@ -145,6 +159,13 @@ function resetWidgetTracker (obj) {
 
 /** @module pathfora/globals/reset-data-object */
 
+/**
+ * Reset the pathforaDataObject to an empty state
+ *
+ * @exports resetDataObject
+ * @params {object} obj
+ * @returns {object} obj
+ */
 function resetDataObject (obj) {
   obj.pageViews = 0;
   obj.timeSpentOnPage = 0;
@@ -160,6 +181,13 @@ function resetDataObject (obj) {
 
 /* module pathfora/ab-test/create-preset */
 
+/**
+ * Creates A/B test group distrubutions
+ *
+ * @exports createABTestingModePreset
+ * @params {int} a/b values
+ * @returns {obj}
+ */
 function createABTestingModePreset () {
   var groups = [];
 
@@ -298,6 +326,12 @@ function onDOMready (fn) {
 
 /** @module pathfora/callbacks/add-callback */
 
+/**
+ * Add a function to be called once jstag is loaded
+ *
+ * @exports addCallack
+ * @params {function} cb
+ */
 function addCallback (cb) {
   if (window.lio && window.lio.loaded) {
     cb(window.lio.data);
@@ -329,6 +363,12 @@ function validateWidgetsObject (widgets) {
 
 /** @module pathfora/data/tracking/track-time-on-page */
 
+/**
+ * Record the amount of time the user has spent
+ * on the current page
+ *
+ * @exports trackTimeOnPage
+ */
 function trackTimeOnPage () {
   setInterval(function () {
     pathforaDataObject.timeSpentOnPage += 1;
@@ -337,6 +377,12 @@ function trackTimeOnPage () {
 
 /** @module pathfora/data/segments/get-user-segments */
 
+/**
+ * Get a list of Lytics segments for the user
+ *
+ * @exports getUserSegments
+ * @returns {array} segments
+ */
 function getUserSegments () {
   if (window.lio && window.lio.data && window.lio.data.segments) {
     return window.lio.data.segments;
@@ -347,6 +393,13 @@ function getUserSegments () {
 
 /** @module pathfora/utils/update-object */
 
+/**
+ * Merge two objects while preserving original fields
+ *
+ * @exports updateObject
+ * @params {object} object
+ * @params {object} config
+ */
 function updateObject (object, config) {
   for (var prop in config) {
     if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
@@ -364,6 +417,14 @@ function updateObject (object, config) {
 
 /** @module pathfora/widgets/init-widgets */
 
+/**
+ * Public method used to initialize widgets once
+ * the individual configs have been created
+ *
+ * @exports initializeWidgets
+ * @params {object} widgets
+ * @params {object} config
+ */
 function initializeWidgets (widgets, config) {
   // NOTE IE < 10 not supported
   // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
@@ -452,17 +513,46 @@ function initializeWidgets (widgets, config) {
   }
 }
 
+/** @module pathfora/utils/escape-regex */
+
+/**
+ * Ensure that a string does not contain regex
+ *
+ * @exports escapeURI
+ * @params {string} text
+ * @returns {object} options
+ * @returns {string} uri
+ */
+function escapeRegex (s) {
+  return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 /** @module pathfora/utils/cookie/read-cookie */
 
+/**
+ * Get the value of a cookie
+ *
+ * @exports readCookie
+ * @params {string} name
+ * @returns {string}
+ */
 function readCookie (name) {
   var cookies = document.cookie,
-      findCookieRegexp = cookies.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
 
   return findCookieRegexp ? findCookieRegexp.pop() : null;
 }
 
 /** @module pafthroa/utils/url/construct-queries */
 
+/**
+ * Construct the params string for a url from an
+ * object containing key/values
+ *
+ * @exports constructQueries
+ * @params {object} params
+ * @returns {string}
+ */
 function constructQueries (params) {
   var count = 0,
       queries = [];
@@ -499,6 +589,14 @@ function constructQueries (params) {
 
 /** @module pathfora/data/request/get-data */
 
+/**
+ * Make an http GET request
+ *
+ * @exports getData
+ * @params {string} url
+ * @params {function} onSuccess
+ * @params {function} onError
+ */
 function getData (url, onSuccess, onError) {
   var xhr = new XMLHttpRequest();
 
@@ -516,6 +614,16 @@ function getData (url, onSuccess, onError) {
 
 /** @module pathfora/recommendations/recommend-content */
 
+/**
+ * Make the request to the Lytics content recommendation API
+ * and return a list of recommended documents
+ *
+ * @exports recommendContent
+ * @params {string} accountId
+ * @params {object} params
+ * @params {string} id
+ * @params {function} callback
+ */
 function recommendContent (accountId, params, id, callback) {
   // Recommendation API:
   // https://www.getlytics.com/developers/rest-api#content-recommendation
@@ -597,6 +705,9 @@ function recommendContent (accountId, params, id, callback) {
   var recommendUrl = recommendParts.join('') + queries;
 
   getData(recommendUrl, function (json) {
+
+    // set the session storage.
+    sessionStorage.setItem(PREFIX_REC + id, json);
     var resp;
 
     try {
@@ -619,9 +730,6 @@ function recommendContent (accountId, params, id, callback) {
         }
       }
 
-      // set the session storage.
-      sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(resp));
-
       callback(resp.data);
     } else {
       callback([]);
@@ -633,6 +741,13 @@ function recommendContent (accountId, params, id, callback) {
 
 /** @module pathfora/widgets/initialize-widget-array */
 
+/**
+ * Given an array of widgets, begin off the initialization
+ * process for each
+ *
+ * @exports initializeWidgetArray
+ * @params {array} array
+ */
 function initializeWidgetArray (array) {
   var pf = this;
 
@@ -740,6 +855,14 @@ function initializeWidgetArray (array) {
 
 /** @module pathfora/display-conditions/date-checker */
 
+/**
+ * Check if the current date fits within the
+ * date displayConitions for the widget
+ *
+ * @exports dateChecker
+ * @params {object} date
+ * @returns {boolean}
+ */
 function dateChecker (date) {
   var valid = true,
       today = Date.now();
@@ -757,12 +880,27 @@ function dateChecker (date) {
 
 /** @module pathfora/display-conditions/pageviews/page-visits-checker */
 
+/**
+ * Check if the pagevist count meets the requirements
+ *
+ * @exports pageVisitsChecker
+ * @returns {boolean}
+ */
 function pageVisitsChecker (pageVisitsRequired) {
   return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
 }
 
 /** @module pathfora/display-conditions/hide-after-action-checker */
 
+/**
+ * Check if a widget should be hidden because it meets
+ * a hideAfterAction display condition
+ *
+ * @exports hideAfterActionChecker
+ * @params {object} hideAfterActionConstraints
+ * @params {string} widget
+ * @returns {boolean}
+ */
 function hideAfterActionChecker (hideAfterActionConstraints, widget) {
   var parts,
       valid = true,
@@ -812,6 +950,14 @@ function hideAfterActionChecker (hideAfterActionConstraints, widget) {
 
 /** @module pathfora/utils/url/escape-uri */
 
+/**
+ * Escape URIs optionally without double-encoding
+ *
+ * @exports escapeURI
+ * @params {string} text
+ * @returns {object} options
+ * @returns {string} uri
+ */
 function escapeURI (text, options) {
   // NOTE This was ported from various bits of C++ code from Chromium
   options || (options = {});
@@ -868,6 +1014,13 @@ function escapeURI (text, options) {
 
 /** @module pathfora/display-conditions/url-contains/parse-query */
 
+/**
+ * Convert key/value queries from a URL into an object
+ *
+ * @exports parseQuery
+ * @params {string} url
+ * @returns {object} query
+ */
 function parseQuery (url) {
   var query = {},
       pieces = escapeURI(url, { keepEscaped: true }).split('?');
@@ -892,6 +1045,15 @@ function parseQuery (url) {
 
 /** @module pathfora/display-conditions/url-contains/compare-queries */
 
+/**
+ * Check if urls contain matching query params
+ *
+ * @exports compareQueries
+ * @params {object} query
+ * @params {object} matchQuery
+ * @params {string} rule
+ * @returns {bool}
+ */
 function compareQueries (query, matchQuery, rule) {
   switch (rule) {
   case 'exact':
@@ -915,6 +1077,17 @@ function compareQueries (query, matchQuery, rule) {
 
 /** @module pathfora/display-conditions/url-contains/phrase-checker */
 
+/**
+ * Evaluate if the current URL matches a single urlContains
+ * rule provided
+ *
+ * @exports phraseChecker
+ * @params {object} phrase
+ * @params {string} url
+ * @params {string} simpleurl
+ * @params {object} queries
+ * @returns {boolean}
+ */
 function phraseChecker (phrase, url, simpleurl, queries) {
   var valid = false;
 
@@ -985,6 +1158,14 @@ function phraseChecker (phrase, url, simpleurl, queries) {
 
 /** @module pathfora/display-conditions/url-contains/url-checker */
 
+/**
+ * Evaluate if the current URL matches the rules defined
+ * by the urlContains display condition
+ *
+ * @exports urlChecker
+ * @params {array} phrases
+ * @returns {boolean}
+ */
 function urlChecker (phrases) {
   var url = escapeURI(window.location.href, { keepEscaped: true }),
       simpleurl = window.location.hostname + window.location.pathname,
@@ -1026,6 +1207,15 @@ function urlChecker (phrases) {
 
 /** @module pathfora/display-conditions/impressions/impressions-checker */
 
+/**
+ * Check if the widget has met the impressions
+ * display condition.
+ *
+ * @exports impressionsChecker
+ * @params {obj} impressionConstraints
+ * @params {obj} widget
+ * @params {boolean} valid
+ */
 function impressionsChecker (impressionConstraints, widget) {
   var parts, totalImpressions,
       valid = true,
@@ -1058,6 +1248,12 @@ function impressionsChecker (impressionConstraints, widget) {
 
 /** @module pathfora/data/request/report-data */
 
+/**
+ * Send data object to Lytics and GA
+ *
+ * @exports reportData
+ * @params {obj} data
+ */
 function reportData (data) {
   var gaLabel;
 
@@ -1085,6 +1281,14 @@ function reportData (data) {
 
 /** @module pathfora/utils/cookie/save-cookie */
 
+/**
+ * Set the value of a cookie
+ *
+ * @exports saveCookie
+ * @params {string} name
+ * @params {string} value
+ * @params {object} expiration
+ */
 function saveCookie (name, value, expiration) {
   var expires;
 
@@ -1105,12 +1309,29 @@ function saveCookie (name, value, expiration) {
 
 /** @module pathfora/utils/class/has-class */
 
+/**
+ * Check if an HTML element has a class
+ *
+ * @exports hasClass
+ * @params {object} DOMNode
+ * @params {string} className
+ * @params {boolean}
+ */
 function hasClass (DOMNode, className) {
-  return new RegExp('(^| )' + className + '( |$)', 'gi').test(DOMNode.className);
+  return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
 }
 
 /** @module pathfora/data/tracking/track-widget-action */
 
+/**
+ * Format and track interaction events such as
+ * CTA clicks, form status, etc.
+ *
+ * @exports trackWidgetAction
+ * @params {string} action
+ * @params {obj} widget
+ * @params {obj} htmlElement
+ */
 function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;
 
@@ -1220,6 +1441,12 @@ function trackWidgetAction (action, widget, htmlElement) {
 
 /** @module pathfora/display-conditions/impressions/increment-impressions */
 
+/**
+ * Increment the impression count for a widget
+ *
+ * @exports incrementImpressions
+ * @params {obj} widget
+ */
 function incrementImpressions (widget) {
   var parts, totalImpressions,
       id = PREFIX_IMPRESSION + widget.id,
@@ -1246,6 +1473,14 @@ function incrementImpressions (widget) {
 
 /** @module pathfora/widgets/validate-widget-position */
 
+/**
+ * Validate that the widget has correct position field
+ * for its layout and type
+ *
+ * @exports validateWidgetPosition
+ * @params {object} widget
+ * @params {object} config
+ */
 function validateWidgetPosition (widget, config) {
   var choices;
 
@@ -1277,6 +1512,14 @@ function validateWidgetPosition (widget, config) {
 
 /** @module pathfora/widgets/setup-widget-position */
 
+/**
+ * Validate that the widget has correct position field,
+ * and choose the default if it does not
+ *
+ * @exports setupWidgetPostion
+ * @params {object} widget
+ * @params {object} config
+ */
 function setupWidgetPosition (widget, config) {
   if (config.position) {
     validateWidgetPosition(widget, config);
@@ -1287,10 +1530,17 @@ function setupWidgetPosition (widget, config) {
 
 /** @module pathfora/utils/class/remove-class */
 
+/**
+ * Remove a class from an HTML element
+ *
+ * @exports removeClass
+ * @params {object} DOMNode
+ * @params {string} className
+ */
 function removeClass (DOMNode, className) {
   var findClassRegexp = new RegExp([
     '(^|\\b)',
-    className.split(' ').join('|'),
+    escapeRegex(className.split(' ').join('|')),
     '(\\b|$)'
   ].join(''), 'gi');
 
@@ -1299,6 +1549,13 @@ function removeClass (DOMNode, className) {
 
 /** @module pathfora/utils/class/add-class */
 
+/**
+ * Add a class to an HTML element
+ *
+ * @exports addClass
+ * @params {object} DOMNode
+ * @params {string} className
+ */
 function addClass (DOMNode, className) {
   removeClass(DOMNode, className);
 
@@ -1310,9 +1567,16 @@ function addClass (DOMNode, className) {
 
 /** @module pathfora/widgets/close-widget */
 
+/**
+ * Close a widget and remove it from the dom
+ *
+ * @exports closeWidget
+ * @params {string} id
+ * @params {boolean} noTrack
+ */
 function closeWidget (id, noTrack) {
-  var node = document.getElementById(id);
-  var i;
+  var i,
+      node = document.getElementById(id);
 
   // FIXME Change to Array#some or Array#filter
   for (i = 0; i < widgetTracker.openedWidgets.length; i++) {
@@ -1350,6 +1614,14 @@ function closeWidget (id, noTrack) {
 
 /** @module pathfora/widgets/construct-widget-actions */
 
+/**
+ * Add callbacks and tracking for user interactions
+ * with widgets
+ *
+ * @exports constructWidgetActions
+ * @params {object} widget
+ * @params {object} config
+ */
 function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
       widgetOk = widget.querySelector('.pf-widget-ok'),
@@ -1659,6 +1931,13 @@ function constructWidgetActions (widget, config) {
 
 /** @module pathfora/widgets/setup-widget-content-unit */
 
+/**
+ * Setup HTML for a widget with content recommendations
+ *
+ * @exports setupWidgetContentUnit
+ * @params {object} widget
+ * @params {object} config
+ */
 function setupWidgetContentUnit (widget, config) {
   var widgetContentUnit = widget.querySelector('.pf-content-unit'),
       settings = config.recommend;
@@ -1759,6 +2038,13 @@ function setupWidgetContentUnit (widget, config) {
 
 /** @module core/set-widget-classname */
 
+/**
+ * Setup the className for a widget
+ *
+ * @exports setWidgetClassname
+ * @params {object} widget
+ * @params {object} config
+ */
 function setWidgetClassname (widget, config) {
   widget.className = [
     'pf-widget ',
@@ -1777,6 +2063,14 @@ function setWidgetClassname (widget, config) {
 
 /** @module pathfora/form/build-form-element */
 
+/**
+ * Build and insert a custom form element into
+ * the widget's form
+ *
+ * @exports buildFormElement
+ * @params {object} elem
+ * @params {object} form
+ */
 function buildFormElement (elem, form) {
   var content, i, val, label,
       wrapper = document.createElement('div'),
@@ -1890,6 +2184,14 @@ function buildFormElement (elem, form) {
 
 /** @module pathfora/form/build-widget-form */
 
+/**
+ * Build a custom form on a widget according to the
+ * formElements config provided
+ *
+ * @exports buildWidgetForm
+ * @params {object} formElements
+ * @params {object} form
+ */
 function buildWidgetForm (formElements, form) {
   for (var i = 0; i < formElements.length; i++) {
     var elem = formElements[i];
@@ -1918,6 +2220,13 @@ function buildWidgetForm (formElements, form) {
 
 /** @module pathfora/widgets/construct-widget-layout */
 
+/**
+ * Setup inner html elements for a widget
+ *
+ * @exports constructWidgetLayout
+ * @params {object} widget
+ * @params {object} config
+ */
 function constructWidgetLayout (widget, config) {
   var node, child, i,
       widgetContent = widget.querySelector('.pf-widget-content'),
@@ -2212,6 +2521,14 @@ function constructWidgetLayout (widget, config) {
 
 /** @module pathfora/widgets/colors/set-custom-colors */
 
+/**
+ * Set colors for a widget with a custom theme
+ * defined in the config
+ *
+ * @exports setCustomColors
+ * @params {object} widget
+ * @params {object} colors
+ */
 function setCustomColors (widget, colors) {
   var i = 0,
       close = widget.querySelector('.pf-widget-close'),
@@ -2346,6 +2663,14 @@ function setCustomColors (widget, colors) {
 
 /** @module pathfora/wodgets/colors/setup-widget-colors */
 
+/**
+ * Determine if the widget has a custom or predefined
+ * theme and setup the colors accordingly
+ *
+ * @exports setupWidgetColors
+ * @params {object} widget
+ * @params {object} config
+ */
 function setupWidgetColors (widget, config) {
   switch (config.theme) {
   case 'custom':
@@ -2366,6 +2691,14 @@ function setupWidgetColors (widget, config) {
 
 /** @module pathfora/widgets/create-widget-html */
 
+/**
+ * Call all the necessary functions to construct
+ * the widget html
+ *
+ * @exports createWidgetHtml
+ * @params {object} config
+ * @returns {object} widget
+ */
 function createWidgetHtml (config) {
   var widget = document.createElement('div');
 
@@ -2388,6 +2721,13 @@ function createWidgetHtml (config) {
 
 /** @module pathfora/widgets/widget-resize-listener */
 
+/**
+ * Adjust widget look and feel on window resize bounds
+ *
+ * @exports widgetResizeListener
+ * @params {object} widget
+ * @params {object} node
+ */
 function widgetResizeListener (widget, node) {
   if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
     var rec = node.querySelector('.pf-content-unit');
@@ -2403,6 +2743,12 @@ function widgetResizeListener (widget, node) {
 
 /** @module pathfora/widgets/show-widget */
 
+/**
+ * Make the widget visible to the user
+ *
+ * @exports showWidget
+ * @params {object} widget
+ */
 function showWidget (widget) {
   // FIXME Change to Array#filter and Array#length
   for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
@@ -2509,6 +2855,13 @@ function validateWatchers (widget, cb) {
 
 /** @module pathfora/display-conditions/init-exit-intent */
 
+/**
+ * Setup exitIntent for a widget
+ *
+ * @exports initExitIntent
+ * @params {object} widget
+ * @returns {boolean}
+ */
 function initializeExitIntent (widget) {
   var positions = [];
   if (!widget.exitIntentListener) {
@@ -2577,6 +2930,15 @@ function removeWatcher (watcher, widget) {
 
 /** @module pathfora/display-conditions/scroll/register-element-watcher */
 
+/**
+ * Setup watcher for displayWhenElementVisible
+ * display condition
+ *
+ * @exports registerElementWatcher
+ * @params {string} selector
+ * @params {object} widget
+ * @returns {object} watcher
+ */
 function registerElementWatcher (selector, widget) {
   var watcher = {
     elem: document.querySelector(selector),
@@ -2598,6 +2960,13 @@ function registerElementWatcher (selector, widget) {
 
 /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
+/**
+ * Add event listener for scroll display conditions
+ *
+ * @exports initializeScrollWatchers
+ * @params {object} widget
+ * @returns {boolean}
+ */
 function initializeScrollWatchers (widget) {
   widget.scrollListener = function () {
     validateWatchers(widget, function () {
@@ -2620,6 +2989,15 @@ function initializeScrollWatchers (widget) {
 
 /** @module pathfora/display-conditions/scroll/register-position-watcher */
 
+/**
+ * Setup watcher for scrollPercentageToDisplay
+ * display condition
+ *
+ * @exports registerPositionWatcher
+ * @params {int} percent
+ * @params {object} widget
+ * @returns {object} watcher
+ */
 function registerPositionWatcher (percent, widget) {
   var watcher = {
     check: function () {
@@ -2640,6 +3018,14 @@ function registerPositionWatcher (percent, widget) {
 
 /** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
+/**
+ * Begin watching for a custom javascript trigger
+ *
+ * @exports registerManualTriggerWatcher
+ * @params {obj} widget
+ * @params {boolean} value
+ * @returns {obj} watcher
+ */
 function registerManualTriggerWatcher (value, widget) {
   var watcher = {
     check: function () {
@@ -2656,6 +3042,13 @@ function registerManualTriggerWatcher (value, widget) {
 
 /** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
+/**
+ * Trigger a single "manualTrigger" widget to be shown
+ *
+ * @exports triggerWidget
+ * @params {obj} widget
+ * @returns {boolean}
+ */
 function triggerWidget (widget) {
   return validateWatchers(widget, function () {
     widgetTracker.triggeredWidgets[widget.id] = false;
@@ -2672,6 +3065,13 @@ function triggerWidget (widget) {
 
 /** @module pathfora/widgets/init-widget */
 
+/**
+ * Determine if a widget should be shown based on display
+ * conditions, and if so show the widget
+ *
+ * @exports initializeWidget
+ * @params {object} widget
+ */
 function initializeWidget (widget) {
   var watcher,
       condition = widget.displayConditions,
@@ -2783,6 +3183,12 @@ function initializeWidget (widget) {
 
 /** @module pathfora/utils/generate-unique-id */
 
+/**
+ * Create a unique string identifier
+ *
+ * @exports generateUniqueId
+ * @returns {string} id
+ */
 function generateUniqueId () {
   var s4;
 
@@ -2809,6 +3215,13 @@ function generateUniqueId () {
 
 /** @module pathfora/widgets/preview-widget */
 
+/**
+ * Create a minimal widget for a preview
+ *
+ * @exports previewWidget
+ * @params {object} widget
+ * @returns {object}
+ */
 function previewWidget (widget) {
   widget.id = generateUniqueId();
   return createWidgetHtml(widget);
@@ -2816,6 +3229,12 @@ function previewWidget (widget) {
 
 /** @module core/cancel-delayed-widget */
 
+/**
+ * Cancel waiting for a delayed widget
+ *
+ * @exports cancelDelayedWidget
+ * @params {obj} widget
+ */
 function cancelDelayedWidget (widget) {
   var delayObj = widgetTracker.delayedWidgets[widget.id];
 
@@ -2827,6 +3246,11 @@ function cancelDelayedWidget (widget) {
 
 /** @module pathfora/widgets/clear-all */
 
+/**
+ * Close all widgets and reset all settings to default
+ *
+ * @exports clearAll
+ */
 function clearAll () {
   var opened = widgetTracker.openedWidgets,
       delayed = widgetTracker.delayedWidgets;
@@ -2850,6 +3274,12 @@ function clearAll () {
 
 /** @module pathfora/widgets/reinit-prioritized-widgets */
 
+/**
+ * Widgets with priority are held from initialization
+ * and reinitialized once we've loaded all
+ *
+ * @exports reinitializePrioritizedWidgets
+ */
 function reinitializePrioritizedWidgets () {
   if (widgetTracker.prioritizedWidgets.length > 0) {
 
@@ -2871,6 +3301,14 @@ function reinitializePrioritizedWidgets () {
 
 /** @module pathfora/widgets/prepare-widget */
 
+/**
+ * Validate that a widget is correctly set up
+ *
+ * @exports prepareWidget
+ * @params {string} type
+ * @params {object} config
+ * @returns {object}
+ */
 function prepareWidget (type, config) {
   var props, random,
       widget = {
@@ -2945,30 +3383,63 @@ function prepareWidget (type, config) {
 
 /** @module pathfora/widgets/message */
 
+/**
+ * Public method to create a widget of type message
+ *
+ * @exports Message
+ * @params {object} config
+ * @returns {object}
+ */
 function Message (config) {
   return prepareWidget('message', config);
 }
 
 /** @module pathfora/widgets/subscription */
 
+/**
+ * Public method to create a widget of type subscription
+ *
+ * @exports Subscription
+ * @params {object} config
+ * @returns {object}
+ */
 function Subscription (config) {
   return prepareWidget('subscription', config);
 }
 
 /** @module pathfora/widgets/form */
 
+/**
+ * Public method to create a widget of type form
+ *
+ * @exports Form
+ * @params {object} config
+ * @returns {object}
+ */
 function Form (config) {
   return prepareWidget('form', config);
 }
 
-/** @module pathfora/widgets/gate */
+/** @module pathfora/widgets/site-gate */
 
+/**
+* Public method to create a widget of type site gate
+ *
+ * @exports SiteGate
+ * @params {object} config
+ * @returns {object}
+ */
 function SiteGate (config) {
   return prepareWidget('sitegate', config);
 }
 
 /** @module pathfora/display-conditions/pageviews/init-pageviews */
 
+/**
+ * Track and update the number of pageviews
+ *
+ * @exports initializePageViews
+ */
 function initializePageViews () {
   var cookie = readCookie(PF_PAGEVIEWS),
       date = new Date();
@@ -2978,6 +3449,13 @@ function initializePageViews () {
 
 /** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
 
+/**
+ * Public method to trigger a widget that has already been
+ * initialized and have the "manualTrigger" display condition
+ *
+ * @exports triggerWidgets
+ * @params {array} widgetIds
+ */
 function triggerWidgets (widgetIds) {
   var i, valid;
 
@@ -3011,6 +3489,12 @@ function triggerWidgets (widgetIds) {
 
 /** @module pathfora/display-conditions/delay/register-delayed-widget */
 
+/**
+ * Begin waiting for a delayed widget
+ *
+ * @exports registerDelayedWidget
+ * @params {obj} widget
+ */
 function registerDelayedWidget (widget) {
   var pf = this;
   widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
@@ -3020,6 +3504,16 @@ function registerDelayedWidget (widget) {
 
 /** @module pathfora/display-conditions/entity-field-checker */
 
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text fields
+ *
+ * @exports entityFieldChecker
+ * @params {object} widget
+ * @params {string} fieldName
+ * @params {array} found
+ * @returns {boolean}
+ */
 function entityFieldChecker (widget, fieldName, found) {
   if (!found || !found.length) {
     return true;
@@ -3077,6 +3571,13 @@ function entityFieldChecker (widget, fieldName, found) {
 
 /** @module pathfora/inline/prep-elements */
 
+/**
+ * Build a list of all elements to be personalized
+ *
+ * @exports prepElements
+ * @params {string} attr
+ * @returns {object} dataElements
+ */
 function prepElements (attr) {
   var dataElements = {},
       elements = document.querySelectorAll('[' + attr + ']');
@@ -3146,6 +3647,12 @@ function prepElements (attr) {
 
 /** @module pathfora/inline/proc-elements */
 
+/**
+ * Kick off the personalization process for inline trigger fields
+ * and inline content recommendations
+ *
+ * @exports procElements
+ */
 function procElements () {
   var attrs = ['data-pftrigger', 'data-pfrecommend'],
       inline = this,
@@ -3189,6 +3696,15 @@ function procElements () {
 
 /** @module pathfora/inline/proc-recommend-elements */
 
+/**
+ * Make recommendation and fill in the appropriate inline
+ * recommendation elements
+ *
+ * @exports procRecommendElements
+ * @params {object} blocks
+ * @params {string} rec
+ * @params {function} cb
+ */
 function procRecommendElements (blocks, rec, cb) {
   var inline = this;
 
@@ -3272,12 +3788,27 @@ function procRecommendElements (blocks, rec, cb) {
 
 /** @module pathfora/data/segments/in-segment */
 
+/**
+ * Check if the user is a member of a segment
+ *
+ * @exports inSegment
+ * @params {string} match
+ * @returns {boolean} membership
+ */
 function inSegment (match) {
   return (getUserSegments().indexOf(match) !== -1);
 }
 
 /** @module pathfora/inline/proc-trigger-elements */
 
+/**
+ * Show/hide trigger elements in a group based on
+ * Lytics segment membership
+ *
+ * @exports procTriggerElements
+ * @params {object} elems
+ * @params {string} group
+ */
 function procTriggerElements (elems, group) {
   var matched = false,
       defaultEl = {};
@@ -3313,6 +3844,12 @@ function procTriggerElements (elems, group) {
 
 /** @module pathfora/inline/set-default-recommend */
 
+/**
+ * Show the default "recommendation" if we received
+ * a bad response from the API
+ *
+ * @exports setDefaultRecommend
+ */
 function setDefaultRecommend () {
   // check the default elements
   for (var block in this.defaultElements) {
@@ -3328,6 +3865,13 @@ function setDefaultRecommend () {
 
 /** @module pathfora/inline/inline */
 
+/**
+ * Creates a new instance of inline personalization
+ *
+ * @exports Inline
+ * @class {function} Inline
+ * @params {object} pf
+ */
 function Inline (pf) {
   this.elements = [];
   this.preppedElements = [];
@@ -3357,6 +3901,12 @@ function Inline (pf) {
 
 /** @module pathfora/inline/init-inline */
 
+/**
+ * Once the dom is ready and Lytics jstag is
+ * loaded initialize inline personalization
+ *
+ * @exports initializeInline
+ */
 function initializeInline () {
   var pf = this;
 
@@ -3375,6 +3925,12 @@ function initializeInline () {
 
 /** @module pathfora/ab-test/init-ab-test */
 
+/**
+ * Initialized A/B test from user config
+ *
+ * @exports initializeABTesting
+ * @params {obj} abTests
+ */
 function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
     var abTestingType = abTest.type,
@@ -3424,6 +3980,12 @@ function initializeABTesting (abTests) {
 
 /** @module pathfora/ab-test/prepare-ab-test */
 
+/**
+ * Prepares A/B test user config for use
+ *
+ * @exports initializeABTesting
+ * @params {obj} abTests
+ */
 function prepareABTest (config) {
   var test = {};
 
@@ -3446,12 +4008,26 @@ function prepareABTest (config) {
 
 /** @module pathfora/ab-test/ab-test */
 
+/**
+ * Public wrapper method for prepareABTest
+ *
+ * @exports ABTest
+ * @param {object} config
+ * @returns {obj}
+ */
 function ABTest (config) {
   return prepareABTest(config);
 }
 
 /** @module pathfora/form/auto-complete-form-fields */
 
+/**
+ * Fill in the form of the widget with
+ * the data provided
+ *
+ * @exports autoCompleteFormFields
+ * @params {object} data
+ */
 function autoCompleteFormFields (data) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
@@ -3470,6 +4046,12 @@ function autoCompleteFormFields (data) {
 
 /** @module pathfora/integrations/auto-complete-facebook-data */
 
+/**
+ * Fill in widget form with data from facebook login
+ *
+ * @exports autoCompleteFacebookData
+ * @params {array} elements
+ */
 function autoCompleteFacebookData (elements) {
   window.FB.api('/me', {
     fields: 'name,email,work'
@@ -3490,6 +4072,13 @@ function autoCompleteFacebookData (elements) {
 
 /** @module pathfora/form/auto-complete-form-fields */
 
+/**
+ * Clear all current values from a widget form
+ *
+ * @exports clearFormFields
+ * @params {string} type
+ * @params {array} fields
+ */
 function clearFormFields (type, fields) {
   var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
 
@@ -3508,6 +4097,13 @@ function clearFormFields (type, fields) {
 
 /** @module pathfora/integrations/on-facebook-click */
 
+/**
+ * Setup login when the user clicks the fb
+ * social login button
+ *
+ * @exports onFacebookClick
+ * @params {array} elements
+ */
 function onFacebookClick (elements) {
   window.FB.getLoginStatus(function (connection) {
     if (connection.status === 'connected') {
@@ -3530,6 +4126,13 @@ function onFacebookClick (elements) {
 
 /** @module pathfora/integrations/on-facebook-load */
 
+/**
+ * Check if the user is already logged in once
+ * the fb library is loaded and setup the click
+ * listener for the social button
+ *
+ * @exports onFacebookLoad
+ */
 function onFacebookLoad () {
   var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
@@ -3550,6 +4153,13 @@ function onFacebookLoad () {
 
 /** @module pathfora/integrations/facebook */
 
+/**
+ * Initialize facebook tag and set up social login
+ * button template
+ *
+ * @exports integrateWithFacebook
+ * @params {string} appId
+ */
 function integrateWithFacebook (appId) {
   if (appId !== '') {
     var btn = templates.social.facebookBtn.replace(
@@ -3598,6 +4208,13 @@ function integrateWithFacebook (appId) {
 
 /** @module pathfora/integrations/auto-complete-google-data */
 
+/**
+ * Fill in widget form with data from google login
+ *
+ * @exports autoCompleteGoogleData
+ * @params {object} user
+ * @params {array} elements
+ */
 function autoCompleteGoogleData (user, elements) {
   if (typeof user !== 'undefined') {
     var profile = user.getBasicProfile();
@@ -3618,6 +4235,13 @@ function autoCompleteGoogleData (user, elements) {
 
 /** @module pathfora/integrations/on-google-click */
 
+/**
+ * Setup login when the user clicks the google
+ * social login button
+ *
+ * @exports onGoogleClick
+ * @params {array} elements
+ */
 function onGoogleClick (elements) {
   var auth2 = window.gapi.auth2.getAuthInstance();
 
@@ -3638,6 +4262,13 @@ function onGoogleClick (elements) {
 
 /** @module pathfora/integrations/on-google-load */
 
+/**
+ * Check if the user is already logged in once
+ * the google library is loaded and setup the click
+ * listener for the social button
+ *
+ * @exports onGoogleLoad
+ */
 function onGoogleLoad () {
   window.gapi.load('auth2', function () {
     var auth2 = gapi.auth2.init({
@@ -3665,6 +4296,13 @@ function onGoogleLoad () {
 
 /** @module pathfora/integrations/google */
 
+/**
+ * Initialize google tag and set up social login
+ * button template
+ *
+ * @exports integrateWithGoogle
+ * @params {string} clientId
+ */
 function integrateWithGoogle (clientId) {
   if (clientId !== '') {
     var head = document.querySelector('head');
@@ -3714,12 +4352,24 @@ function integrateWithGoogle (clientId) {
 
 /** @module pathfora/data/tracking/get-data */
 
+/**
+ * Get the pathfora data object
+ *
+ * @exports getData
+ * @returns {obj} pathforaDataObject
+ */
 function getData$1 () {
   return pathforaDataObject;
 }
 
 /** @module pathfora/utils/scaffold/init-scaffold */
 
+/**
+ * Initialize scaffold for Lytics controlled widgets
+ *
+ * @exports initWidgetScaffold
+ * @returns {object} scaffold
+ */
 function initWidgetScaffold () {
   return {
     target: [],
@@ -3730,6 +4380,16 @@ function initWidgetScaffold () {
 
 /** @module pathfora/utils/scaffold/insert-widget */
 
+/**
+ * Insert a widget and targeting info into
+ * the widget scaffold
+ *
+ * @exports insertWidget
+ * @params {string} method
+ * @params {string} segment
+ * @params {object} widget
+ * @params {object} config
+ */
 function insertWidget (method, segment, widget, config) {
   // assume that we need to add a new widget until proved otherwise
   var subject,
@@ -3773,6 +4433,12 @@ function insertWidget (method, segment, widget, config) {
 
 /** @module pathfora/utils */
 
+/**
+ * Object containing utility functions
+ *
+ * @exports utils
+ */
+
 var utils = {
   generateUniqueId: generateUniqueId,
   updateObject: updateObject,
@@ -3789,6 +4455,12 @@ var utils = {
 
 /** @module pathfora */
 
+/**
+ * Creates a new Pathfora instance
+ *
+ * @exports Pathfora
+ * @class {function} Pathfora
+ */
 var Pathfora = function () {
   this.version = PF_VERSION;
   this.callbacks = [];

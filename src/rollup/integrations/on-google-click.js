@@ -6,6 +6,13 @@ import clearFormFields from '../form/clear-form-fields';
 
 import window from '../dom/window';
 
+/**
+ * Setup login when the user clicks the google
+ * social login button
+ *
+ * @exports onGoogleClick
+ * @params {array} elements
+ */
 export default function onGoogleClick (elements) {
   var auth2 = window.gapi.auth2.getAuthInstance();
 

@@ -1,5 +1,13 @@
 /** @module pathfora/widgets/validate-widgets-object */
 
+/**
+ * Validate that the widget has correct position field
+ * for its layout and type
+ *
+ * @exports validateWidgetPosition
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function validateWidgetsObject (widgets) {
   if (!widgets) {
     throw new Error('Widgets not specified');

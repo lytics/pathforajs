@@ -7,6 +7,13 @@ import { templates, pathforaDataObject } from '../globals/config';
 
 import onGoogleLoad from './on-google-load';
 
+/**
+ * Initialize google tag and set up social login
+ * button template
+ *
+ * @exports integrateWithGoogle
+ * @params {string} clientId
+ */
 export default function integrateWithGoogle (clientId) {
   if (clientId !== '') {
     var head = document.querySelector('head');

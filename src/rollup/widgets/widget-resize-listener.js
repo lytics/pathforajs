@@ -6,6 +6,13 @@ import hasClass from '../utils/class/has-class';
 
 import { WIDTH_BREAKPOINT } from '../globals/config';
 
+/**
+ * Adjust widget look and feel on window resize bounds
+ *
+ * @exports widgetResizeListener
+ * @params {object} widget
+ * @params {object} node
+ */
 export default function widgetResizeListener (widget, node) {
   if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
     var rec = node.querySelector('.pf-content-unit');

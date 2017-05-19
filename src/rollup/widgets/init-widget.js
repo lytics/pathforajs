@@ -20,6 +20,14 @@ import document from '../dom/document';
 
 import addClass from '../utils/class/add-class';
 
+
+/**
+ * Determine if a widget should be shown based on display
+ * conditions, and if so show the widget
+ *
+ * @exports initializeWidget
+ * @params {object} widget
+ */
 export default function initializeWidget (widget) {
   var watcher,
       condition = widget.displayConditions,

@@ -2,6 +2,12 @@
 
 import window from '../dom/window';
 
+/**
+ * Once the dom is ready and Lytics jstag is
+ * loaded initialize inline personalization
+ *
+ * @exports initializeInline
+ */
 export default function initializeInline () {
   var pf = this;
 

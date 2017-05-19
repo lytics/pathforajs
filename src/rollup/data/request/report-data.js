@@ -2,6 +2,12 @@
 
 import window from '../../dom/window';
 
+/**
+ * Send data object to Lytics and GA
+ *
+ * @exports reportData
+ * @params {obj} data
+ */
 export default function reportData (data) {
   var gaLabel;
 

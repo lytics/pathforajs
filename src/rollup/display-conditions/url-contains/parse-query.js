@@ -2,6 +2,13 @@
 
 import escapeURI from '../../utils/url/escape-uri';
 
+/**
+ * Convert key/value queries from a URL into an object
+ *
+ * @exports parseQuery
+ * @params {string} url
+ * @returns {object} query
+ */
 export default function parseQuery (url) {
   var query = {},
       pieces = escapeURI(url, { keepEscaped: true }).split('?');

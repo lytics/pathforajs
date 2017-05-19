@@ -4,6 +4,13 @@ import validateWatchers from '../watchers/validate-watchers';
 
 import window from '../../dom/window';
 
+/**
+ * Add event listener for scroll display conditions
+ *
+ * @exports initializeScrollWatchers
+ * @params {object} widget
+ * @returns {boolean}
+ */
 export default function initializeScrollWatchers (widget) {
   widget.scrollListener = function () {
     validateWatchers(widget, function () {

@@ -1,5 +1,13 @@
 /** @module pathfora/display-conditions/date-checker */
 
+/**
+ * Check if the current date fits within the
+ * date displayConitions for the widget
+ *
+ * @exports dateChecker
+ * @params {object} date
+ * @returns {boolean}
+ */
 export default function dateChecker (date) {
   var valid = true,
       today = Date.now();

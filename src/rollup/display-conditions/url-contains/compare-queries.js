@@ -1,5 +1,14 @@
 /** @module pathfora/display-conditions/url-contains/compare-queries */
 
+/**
+ * Check if urls contain matching query params
+ *
+ * @exports compareQueries
+ * @params {object} query
+ * @params {object} matchQuery
+ * @params {string} rule
+ * @returns {bool}
+ */
 export default function compareQueries (query, matchQuery, rule) {
   switch (rule) {
   case 'exact':

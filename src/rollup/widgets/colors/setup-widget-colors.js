@@ -4,6 +4,14 @@ import setCustomColors from './set-custom-colors';
 
 import { defaultProps } from '../../globals/config';
 
+/**
+ * Determine if the widget has a custom or predefined
+ * theme and setup the colors accordingly
+ *
+ * @exports setupWidgetColors
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function setupWidgetColors (widget, config) {
   switch (config.theme) {
   case 'custom':

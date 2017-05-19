@@ -1,5 +1,15 @@
 /** @module pathfora/utils/scaffold/insert-widget */
 
+/**
+ * Insert a widget and targeting info into
+ * the widget scaffold
+ *
+ * @exports insertWidget
+ * @params {string} method
+ * @params {string} segment
+ * @params {object} widget
+ * @params {object} config
+ */
 export default function insertWidget (method, segment, widget, config) {
   // assume that we need to add a new widget until proved otherwise
   var subject,
