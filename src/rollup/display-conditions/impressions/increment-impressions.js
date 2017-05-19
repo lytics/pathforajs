@@ -9,7 +9,7 @@ import saveCookie from '../../utils/cookies/save-cookie';
  * Increment the impression count for a widget
  *
  * @exports incrementImpressions
- * @params {obj} widget
+ * @params {object} widget
  */
 export default function incrementImpressions (widget) {
   var parts, totalImpressions,

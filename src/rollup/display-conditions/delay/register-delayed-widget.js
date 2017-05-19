@@ -6,7 +6,7 @@ import { widgetTracker } from '../../globals/config';
  * Begin waiting for a delayed widget
  *
  * @exports registerDelayedWidget
- * @params {obj} widget
+ * @params {object} widget
  */
 export default function registerDelayedWidget (widget) {
   var pf = this;

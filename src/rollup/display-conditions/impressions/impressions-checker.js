@@ -9,8 +9,8 @@ import readCookie from '../../utils/cookies/read-cookie';
  * display condition.
  *
  * @exports impressionsChecker
- * @params {obj} impressionConstraints
- * @params {obj} widget
+ * @params {object} impressionConstraints
+ * @params {object} widget
  * @params {boolean} valid
  */
 export default function impressionsChecker (impressionConstraints, widget) {

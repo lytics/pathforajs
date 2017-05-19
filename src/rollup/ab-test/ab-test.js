@@ -7,7 +7,7 @@ import prepareABTest from './prepare-ab-test';
  *
  * @exports ABTest
  * @param {object} config
- * @returns {obj}
+ * @returns {object}
  */
 export default function ABTest (config) {
   return prepareABTest(config);

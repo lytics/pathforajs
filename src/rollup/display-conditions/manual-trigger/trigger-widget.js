@@ -8,7 +8,7 @@ import { widgetTracker } from '../../globals/config';
  * Trigger a single "manualTrigger" widget to be shown
  *
  * @exports triggerWidget
- * @params {obj} widget
+ * @params {object} widget
  * @returns {boolean}
  */
 export default function triggerWidget (widget) {

@@ -6,7 +6,7 @@ import { PREFIX_AB_TEST, abTestingTypes } from '../globals/config';
  * Prepares A/B test user config for use
  *
  * @exports initializeABTesting
- * @params {obj} abTests
+ * @params {object} abTests
  */
 export default function prepareABTest (config) {
   var test = {};

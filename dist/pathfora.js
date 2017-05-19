@@ -186,7 +186,7 @@ function resetDataObject (obj) {
  *
  * @exports createABTestingModePreset
  * @params {int} a/b values
- * @returns {obj}
+ * @returns {object}
  */
 function createABTestingModePreset () {
   var groups = [];
@@ -342,6 +342,14 @@ function addCallback (cb) {
 
 /** @module pathfora/widgets/validate-widgets-object */
 
+/**
+ * Validate that the widget has correct position field
+ * for its layout and type
+ *
+ * @exports validateWidgetPosition
+ * @params {object} widget
+ * @params {object} config
+ */
 function validateWidgetsObject (widgets) {
   if (!widgets) {
     throw new Error('Widgets not specified');
@@ -1212,8 +1220,8 @@ function urlChecker (phrases) {
  * display condition.
  *
  * @exports impressionsChecker
- * @params {obj} impressionConstraints
- * @params {obj} widget
+ * @params {object} impressionConstraints
+ * @params {object} widget
  * @params {boolean} valid
  */
 function impressionsChecker (impressionConstraints, widget) {
@@ -1252,7 +1260,7 @@ function impressionsChecker (impressionConstraints, widget) {
  * Send data object to Lytics and GA
  *
  * @exports reportData
- * @params {obj} data
+ * @params {object} data
  */
 function reportData (data) {
   var gaLabel;
@@ -1329,8 +1337,8 @@ function hasClass (DOMNode, className) {
  *
  * @exports trackWidgetAction
  * @params {string} action
- * @params {obj} widget
- * @params {obj} htmlElement
+ * @params {object} widget
+ * @params {object} htmlElement
  */
 function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;
@@ -1445,7 +1453,7 @@ function trackWidgetAction (action, widget, htmlElement) {
  * Increment the impression count for a widget
  *
  * @exports incrementImpressions
- * @params {obj} widget
+ * @params {object} widget
  */
 function incrementImpressions (widget) {
   var parts, totalImpressions,
@@ -3022,9 +3030,9 @@ function registerPositionWatcher (percent, widget) {
  * Begin watching for a custom javascript trigger
  *
  * @exports registerManualTriggerWatcher
- * @params {obj} widget
+ * @params {object} widget
  * @params {boolean} value
- * @returns {obj} watcher
+ * @returns {object} watcher
  */
 function registerManualTriggerWatcher (value, widget) {
   var watcher = {
@@ -3046,7 +3054,7 @@ function registerManualTriggerWatcher (value, widget) {
  * Trigger a single "manualTrigger" widget to be shown
  *
  * @exports triggerWidget
- * @params {obj} widget
+ * @params {object} widget
  * @returns {boolean}
  */
 function triggerWidget (widget) {
@@ -3233,7 +3241,7 @@ function previewWidget (widget) {
  * Cancel waiting for a delayed widget
  *
  * @exports cancelDelayedWidget
- * @params {obj} widget
+ * @params {object} widget
  */
 function cancelDelayedWidget (widget) {
   var delayObj = widgetTracker.delayedWidgets[widget.id];
@@ -3423,7 +3431,7 @@ function Form (config) {
 /** @module pathfora/widgets/site-gate */
 
 /**
-* Public method to create a widget of type site gate
+ * Public method to create a widget of type site gate
  *
  * @exports SiteGate
  * @params {object} config
@@ -3493,7 +3501,7 @@ function triggerWidgets (widgetIds) {
  * Begin waiting for a delayed widget
  *
  * @exports registerDelayedWidget
- * @params {obj} widget
+ * @params {object} widget
  */
 function registerDelayedWidget (widget) {
   var pf = this;
@@ -3929,7 +3937,7 @@ function initializeInline () {
  * Initialized A/B test from user config
  *
  * @exports initializeABTesting
- * @params {obj} abTests
+ * @params {object} abTests
  */
 function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
@@ -3984,7 +3992,7 @@ function initializeABTesting (abTests) {
  * Prepares A/B test user config for use
  *
  * @exports initializeABTesting
- * @params {obj} abTests
+ * @params {object} abTests
  */
 function prepareABTest (config) {
   var test = {};
@@ -4013,7 +4021,7 @@ function prepareABTest (config) {
  *
  * @exports ABTest
  * @param {object} config
- * @returns {obj}
+ * @returns {object}
  */
 function ABTest (config) {
   return prepareABTest(config);
@@ -4356,7 +4364,7 @@ function integrateWithGoogle (clientId) {
  * Get the pathfora data object
  *
  * @exports getData
- * @returns {obj} pathforaDataObject
+ * @returns {object} pathforaDataObject
  */
 function getData$1 () {
   return pathforaDataObject;

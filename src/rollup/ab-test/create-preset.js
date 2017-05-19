@@ -5,7 +5,7 @@
  *
  * @exports createABTestingModePreset
  * @params {int} a/b values
- * @returns {obj}
+ * @returns {object}
  */
 export default function createABTestingModePreset () {
   var groups = [];

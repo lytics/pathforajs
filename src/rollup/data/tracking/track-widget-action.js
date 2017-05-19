@@ -12,8 +12,8 @@ import hasClass from '../../utils/class/has-class';
  *
  * @exports trackWidgetAction
  * @params {string} action
- * @params {obj} widget
- * @params {obj} htmlElement
+ * @params {object} widget
+ * @params {object} htmlElement
  */
 export default function trackWidgetAction (action, widget, htmlElement) {
   var child, elem, i;

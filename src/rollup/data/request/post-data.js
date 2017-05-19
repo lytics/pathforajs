@@ -5,7 +5,7 @@
  *
  * @exports postData
  * @params {string} url
- * @params {obj} data
+ * @params {object} data
  * @params {function} onSuccess
  * @params {function} onError
  */

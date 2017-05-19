@@ -9,7 +9,7 @@ import { pathforaDataObject } from '../globals/config';
  * Initialized A/B test from user config
  *
  * @exports initializeABTesting
- * @params {obj} abTests
+ * @params {object} abTests
  */
 export default function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {

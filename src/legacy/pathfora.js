@@ -363,7 +363,7 @@
 
     /**
      * @description Return the basic object required for targetting
-     * @returns {obj}
+     * @returns {object}
      */
     initWidgetScaffold: function () {
       return {
@@ -375,9 +375,9 @@
 
     /**
      * @description Insert widget into existing scaffold
-     * @param {obj} scaffold
+     * @param {object} scaffold
      * @param {string} segment
-     * @param {obj} widget
+     * @param {object} widget
      * @throws {Error} error
      */
     insertWidget: function (method, segment, widget, config) {
@@ -424,7 +424,7 @@
     /**
      * @description Escape URIs optionally without double-encoding
      * @param   {string}  text                 the uri text to escape
-     * @param   {obj}     options
+     * @param   {object}     options
      * @param   {boolean} options.usePlus      escape `space` to `+` instead of `%20`
      * @param   {boolean} options.keepEscaped  do not double-encode text
      * @returns {string}  uri                  the uri-escaped text
@@ -485,7 +485,7 @@
 
     /**
      * @description Turn an objects' key/values into a query param string
-     * @param   {obj}     params     object containing query params
+     * @param   {object}     params     object containing query params
      */
     constructQueries: function (params) {
       var count = 0,
@@ -653,7 +653,7 @@
      * @description Validate that all of the watchers have
      *              been checked, and show the widget if
      *              it's ready.
-     * @param {obj} widget
+     * @param {object} widget
      * @param {function} cb
      */
 
@@ -817,8 +817,8 @@
      * @description Compare query params between the url
      *              the user is visiting and the match
      *              rule provided
-     * @param {obj} queries
-     * @param {obj} matchQueries
+     * @param {object} queries
+     * @param {object} matchQueries
      * @param {string} rule
      */
     compareQueries: function (query, matchQuery, rule) {

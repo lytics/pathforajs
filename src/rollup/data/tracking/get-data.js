@@ -6,7 +6,7 @@ import { pathforaDataObject } from '../../globals/config';
  * Get the pathfora data object
  *
  * @exports getData
- * @returns {obj} pathforaDataObject
+ * @returns {object} pathforaDataObject
  */
 export default function getData () {
   return pathforaDataObject;
