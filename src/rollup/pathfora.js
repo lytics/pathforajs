@@ -35,7 +35,7 @@ import ABTest from './ab-test/ab-test';
 import integrateWithFacebook from './integrations/facebook';
 import integrateWithGoogle from './integrations/google';
 
-import getData from './data/tracking/get-data';
+import getDataObject from './data/tracking/get-data-object';
 
 import { utils } from './utils/utils';
 
@@ -84,7 +84,7 @@ var Pathfora = function () {
   this.integrateWithFacebook = integrateWithFacebook;
   this.integrateWithGoogle = integrateWithGoogle;
 
-  this.getData = getData;
+  this.getDataObject = getDataObject;
 
   this.utils = utils;
 

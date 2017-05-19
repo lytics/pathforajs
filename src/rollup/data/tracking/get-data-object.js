@@ -1,13 +1,13 @@
-/** @module pathfora/data/tracking/get-data */
+/** @module pathfora/data/tracking/get-data-object */
 
 import { pathforaDataObject } from '../../globals/config';
 
 /**
  * Get the pathfora data object
  *
- * @exports getData
+ * @exports getDataObject
  * @returns {object} pathforaDataObject
  */
-export default function getData () {
+export default function getDataObject () {
   return pathforaDataObject;
 }

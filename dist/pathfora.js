@@ -4358,15 +4358,15 @@ function integrateWithGoogle (clientId) {
   }
 }
 
-/** @module pathfora/data/tracking/get-data */
+/** @module pathfora/data/tracking/get-data-object */
 
 /**
  * Get the pathfora data object
  *
- * @exports getData
+ * @exports getDataObject
  * @returns {object} pathforaDataObject
  */
-function getData$1 () {
+function getDataObject () {
   return pathforaDataObject;
 }
 
@@ -4508,7 +4508,7 @@ var Pathfora = function () {
   this.integrateWithFacebook = integrateWithFacebook;
   this.integrateWithGoogle = integrateWithGoogle;
 
-  this.getData = getData$1;
+  this.getDataObject = getDataObject;
 
   this.utils = utils;
 

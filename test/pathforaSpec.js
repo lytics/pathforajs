@@ -75,10 +75,10 @@ describe('Pathfora', function () {
 
     pathfora.initializeWidgets([]);
 
-    var initialTime = pathfora.getData().timeSpentOnPage;
+    var initialTime = pathfora.getDataObject().timeSpentOnPage;
     jasmine.clock().tick(10000);
 
-    var afterDelay = pathfora.getData().timeSpentOnPage;
+    var afterDelay = pathfora.getDataObject().timeSpentOnPage;
     expect(afterDelay).toBeGreaterThan(initialTime + 8);
     expect(afterDelay).toBeLessThan(initialTime + 12);
     jasmine.clock().uninstall();
@@ -128,11 +128,11 @@ describe('Pathfora', function () {
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeTruthy();
-      expect(pathfora.getData()).not.toEqual(clearDataObject);
+      expect(pathfora.getDataObject()).not.toEqual(clearDataObject);
 
       pathfora.clearAll();
       expect(widget.hasClass('opened')).toBeFalsy();
-      expect(pathfora.getData()).toEqual(clearDataObject);
+      expect(pathfora.getDataObject()).toEqual(clearDataObject);
       done();
     }, 200);
   });
@@ -181,16 +181,16 @@ describe('Pathfora', function () {
     });
     pathfora.initializeWidgets([messageBar, messageModal]);
 
-    var completedActions = pathfora.getData().completedActions.length;
-    var closedWidgets = pathfora.getData().closedWidgets.length;
+    var completedActions = pathfora.getDataObject().completedActions.length;
+    var closedWidgets = pathfora.getDataObject().closedWidgets.length;
     expect(completedActions).toBe(0);
     expect(closedWidgets).toBe(0);
 
     $('#' + messageBar.id).find('.pf-widget-ok').click();
     $('#' + messageModal.id).find('.pf-widget-close').click();
 
-    completedActions = pathfora.getData().completedActions.length;
-    closedWidgets = pathfora.getData().closedWidgets.length;
+    completedActions = pathfora.getDataObject().completedActions.length;
+    closedWidgets = pathfora.getDataObject().closedWidgets.length;
     expect(completedActions).toBe(1);
     expect(closedWidgets).toBe(1);
   });
@@ -1225,14 +1225,14 @@ describe('Pathfora', function () {
     localStorage.clear();
     pathfora.initializeWidgets([messageBar]);
 
-    var visitedPage = pathfora.getData().pageViews;
+    var visitedPage = pathfora.getDataObject().pageViews;
     pathfora.clearAll();
 
     expect(visitedPage).toBe(1);
 
     pathfora.initializeWidgets([messageBar]);
 
-    visitedPage = pathfora.getData().pageViews;
+    visitedPage = pathfora.getDataObject().pageViews;
     pathfora.clearAll();
     expect(visitedPage).toBe(2);
   });
@@ -4093,7 +4093,7 @@ describe('API', function () {
     });
 
     pathfora.initializeWidgets([subscribe]);
-    pathfora.api.getWidgetData(subscribe, callback);
+    pathfora.api.getWidgetDataObject(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -4115,7 +4115,7 @@ describe('API', function () {
     });
 
     pathfora.initializeWidgets([subscribe]);
-    pathfora.api.getWidgetData(subscribe, callback);
+    pathfora.api.getWidgetDataObject(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -4138,7 +4138,7 @@ describe('API', function () {
 
     pathfora.initializeWidgets([subscribe]);
 
-    pathfora.api.getWidgetData(subscribe, function () {
+    pathfora.api.getWidgetDataObject(subscribe, function () {
     }, callback);
 
     expect(callback).not.toHaveBeenCalled();
