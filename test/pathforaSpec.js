@@ -8,6 +8,7 @@ var jstag = {
 };
 
 pathfora.utils.saveCookie('seerid', 123);
+pathfora.enableGA = true;
 
 function makeMouseEvent (type, params) {
   var evt;

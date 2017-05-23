@@ -1,4 +1,4 @@
-Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent automatically. Below we will look at which fields are sent in detail and their formats.
+Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent Lytics automatically. To enable this data to be sent to Google Analytics set the `enableGA` flag: `window.pathfora.enableGA = true;` before loading any module configs in your code. Below we will look at which data fields are sent in detail and their formats.
 
 ## Lytics
 As long as your [Lytics javascript tag](https://activate.getlytics.com/resources/documentation/) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics javascript tag](https://activate.getlytics.com/resources/documentation/jstag). The following raw data fields can be sent to Lytics by Pathfora.
