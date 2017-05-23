@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
+// globals
 import { widgetTracker } from '../../globals/config';
 
+// display conditions
 import removeWatcher from '../watchers/remove-watcher';
 
 /**

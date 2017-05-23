@@ -1,12 +1,15 @@
 /** @module pathfora/integrations/on-google-load */
 
-import autoCompleteGoogleData from './auto-complete-google-data';
-import onGoogleClick from './on-google-click';
+// globals
+import { pathforaDataObject } from '../globals/config';
 
+// dom
 import window from '../dom/window';
 import document from '../dom/document';
 
-import { pathforaDataObject } from '../globals/config';
+// integrations
+import autoCompleteGoogleData from './auto-complete-google-data';
+import onGoogleClick from './on-google-click';
 
 /**
  * Check if the user is already logged in once

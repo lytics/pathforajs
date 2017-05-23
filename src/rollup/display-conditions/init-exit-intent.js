@@ -1,8 +1,10 @@
 /** @module pathfora/display-conditions/init-exit-intent */
 
-import validateWatchers from './watchers/validate-watchers';
-
+// dom
 import document from '../dom/document';
+
+// display conditions
+import validateWatchers from './watchers/validate-watchers';
 
 /**
  * Setup exitIntent for a widget

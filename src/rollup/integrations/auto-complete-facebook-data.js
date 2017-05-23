@@ -1,7 +1,10 @@
 /** @module pathfora/integrations/auto-complete-facebook-data */
 
-import autoCompleteFormFields from '../form/auto-complete-form-fields';
+// dom
 import window from '../dom/window';
+
+// form
+import autoCompleteFormFields from '../form/auto-complete-form-fields';
 
 /**
  * Fill in widget form with data from facebook login

@@ -1,10 +1,13 @@
 /** @module pathfora/integrations/google */
 
+// globals
+import { templates, pathforaDataObject } from '../globals/config';
+
+// dom
 import window from '../dom/window';
 import document from '../dom/document';
 
-import { templates, pathforaDataObject } from '../globals/config';
-
+// integrations
 import onGoogleLoad from './on-google-load';
 
 /**

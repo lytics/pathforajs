@@ -1,7 +1,9 @@
 /** @module pathfora/widgets/preview-widget */
 
+// utils
 import generateUniqueId from '../utils/generate-unique-id';
 
+// widgets
 import createWidgetHtml from './create-widget-html';
 
 /**

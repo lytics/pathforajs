@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/url-contains/url-checker */
 
+// utils
 import escapeURI from '../../utils/url/escape-uri';
 
+// display conditions
 import parseQuery from './parse-query';
 import phraseChecker from './phrase-checker';
 

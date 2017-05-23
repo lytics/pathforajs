@@ -1,7 +1,9 @@
 /** @module pathfora/widgets/setup-widget-position */
 
+// globals
 import { defaultPositions } from '../globals/config';
 
+// widgets
 import validateWidgetPosition from './validate-widget-position';
 
 /**

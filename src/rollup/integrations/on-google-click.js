@@ -1,10 +1,13 @@
 /** @module pathfora/integrations/on-google-click */
 
+// dom
+import window from '../dom/window';
+
+// integrations
 import autoCompleteGoogleData from './auto-complete-google-data';
 
+// form
 import clearFormFields from '../form/clear-form-fields';
-
-import window from '../dom/window';
 
 /**
  * Setup login when the user clicks the google

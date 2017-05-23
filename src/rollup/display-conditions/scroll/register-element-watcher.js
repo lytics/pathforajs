@@ -1,8 +1,10 @@
 /** @module pathfora/display-conditions/scroll/register-element-watcher */
 
+// dom
 import document from '../../dom/document';
 import window from '../../dom/window';
 
+// display conditions
 import removeWatcher from '../watchers/remove-watcher';
 
 /**

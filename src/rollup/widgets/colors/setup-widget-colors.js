@@ -1,8 +1,10 @@
 /** @module pathfora/wodgets/colors/setup-widget-colors */
 
-import setCustomColors from './set-custom-colors';
-
+// globals
 import { defaultProps } from '../../globals/config';
+
+// widgets
+import setCustomColors from './set-custom-colors';
 
 /**
  * Determine if the widget has a custom or predefined

@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
 
+// globals
 import { widgetTracker } from '../../globals/config';
 
+// display conditions
 import triggerWidget from './trigger-widget';
 
 /**

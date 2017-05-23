@@ -216,6 +216,8 @@ function createABTestingModePreset () {
 
 /** @module pathfora/globals/config */
 
+// globals
+// ab tests
 var PF_VERSION = '0.1.5';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
@@ -300,6 +302,10 @@ var templates = {
   }
 };
 /* eslint-enable quotes */
+
+/** @module pathfora/dom/window */
+
+/** @module pathfora/dom/document */
 
 var document = window.document;
 
@@ -537,6 +543,8 @@ function escapeRegex (s) {
 
 /** @module pathfora/utils/cookie/read-cookie */
 
+// dom
+// utils
 /**
  * Get the value of a cookie
  *
@@ -622,6 +630,9 @@ function getData (url, onSuccess, onError) {
 
 /** @module pathfora/recommendations/recommend-content */
 
+// utils
+// data
+// globals
 /**
  * Make the request to the Lytics content recommendation API
  * and return a list of recommended documents
@@ -888,6 +899,8 @@ function dateChecker (date) {
 
 /** @module pathfora/display-conditions/pageviews/page-visits-checker */
 
+// globals
+// utils
 /**
  * Check if the pagevist count meets the requirements
  *
@@ -900,6 +913,8 @@ function pageVisitsChecker (pageVisitsRequired) {
 
 /** @module pathfora/display-conditions/hide-after-action-checker */
 
+// globals
+// utils
 /**
  * Check if a widget should be hidden because it meets
  * a hideAfterAction display condition
@@ -1085,6 +1100,8 @@ function compareQueries (query, matchQuery, rule) {
 
 /** @module pathfora/display-conditions/url-contains/phrase-checker */
 
+// display conditions
+// utils
 /**
  * Evaluate if the current URL matches a single urlContains
  * rule provided
@@ -1166,6 +1183,8 @@ function phraseChecker (phrase, url, simpleurl, queries) {
 
 /** @module pathfora/display-conditions/url-contains/url-checker */
 
+// utils
+// display conditions
 /**
  * Evaluate if the current URL matches the rules defined
  * by the urlContains display condition
@@ -1215,6 +1234,8 @@ function urlChecker (phrases) {
 
 /** @module pathfora/display-conditions/impressions/impressions-checker */
 
+// globals
+// utils
 /**
  * Check if the widget has met the impressions
  * display condition.
@@ -1331,6 +1352,8 @@ function hasClass (DOMNode, className) {
 
 /** @module pathfora/data/tracking/track-widget-action */
 
+// global
+// utils
 /**
  * Format and track interaction events such as
  * CTA clicks, form status, etc.
@@ -1449,6 +1472,8 @@ function trackWidgetAction (action, widget, htmlElement) {
 
 /** @module pathfora/display-conditions/impressions/increment-impressions */
 
+// globals
+// utils
 /**
  * Increment the impression count for a widget
  *
@@ -2071,6 +2096,8 @@ function setWidgetClassname (widget, config) {
 
 /** @module pathfora/form/build-form-element */
 
+// dom
+// utils
 /**
  * Build and insert a custom form element into
  * the widget's form
@@ -2671,6 +2698,8 @@ function setCustomColors (widget, colors) {
 
 /** @module pathfora/wodgets/colors/setup-widget-colors */
 
+// widgets
+// globals
 /**
  * Determine if the widget has a custom or predefined
  * theme and setup the colors accordingly
@@ -2837,6 +2866,8 @@ function showWidget (widget) {
 
 /** @module pathfora/display-conditions/watchers/core/validate-watchers */
 
+// widgets
+// display conditions
 function validateWatchers (widget, cb) {
   var valid = true;
 
@@ -2863,6 +2894,8 @@ function validateWatchers (widget, cb) {
 
 /** @module pathfora/display-conditions/init-exit-intent */
 
+// display conditions
+// dom
 /**
  * Setup exitIntent for a widget
  *
@@ -2938,6 +2971,8 @@ function removeWatcher (watcher, widget) {
 
 /** @module pathfora/display-conditions/scroll/register-element-watcher */
 
+// dom
+// display conditions
 /**
  * Setup watcher for displayWhenElementVisible
  * display condition
@@ -2968,6 +3003,8 @@ function registerElementWatcher (selector, widget) {
 
 /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
+// display conditions
+// dom
 /**
  * Add event listener for scroll display conditions
  *
@@ -2997,6 +3034,8 @@ function initializeScrollWatchers (widget) {
 
 /** @module pathfora/display-conditions/scroll/register-position-watcher */
 
+// dom
+// display conditions
 /**
  * Setup watcher for scrollPercentageToDisplay
  * display condition
@@ -3026,6 +3065,8 @@ function registerPositionWatcher (percent, widget) {
 
 /** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
+// globals
+// display conditions
 /**
  * Begin watching for a custom javascript trigger
  *
@@ -3050,6 +3091,8 @@ function registerManualTriggerWatcher (value, widget) {
 
 /** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
+// display conditions
+// globals
 /**
  * Trigger a single "manualTrigger" widget to be shown
  *
@@ -3443,6 +3486,8 @@ function SiteGate (config) {
 
 /** @module pathfora/display-conditions/pageviews/init-pageviews */
 
+// globals
+// utils
 /**
  * Track and update the number of pageviews
  *
@@ -3457,6 +3502,8 @@ function initializePageViews () {
 
 /** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
 
+// globals
+// display conditions
 /**
  * Public method to trigger a widget that has already been
  * initialized and have the "manualTrigger" display condition
@@ -3873,6 +3920,8 @@ function setDefaultRecommend () {
 
 /** @module pathfora/inline/inline */
 
+// dom
+// inline
 /**
  * Creates a new instance of inline personalization
  *
@@ -3933,6 +3982,8 @@ function initializeInline () {
 
 /** @module pathfora/ab-test/init-ab-test */
 
+// utils
+// globals
 /**
  * Initialized A/B test from user config
  *
@@ -4054,6 +4105,8 @@ function autoCompleteFormFields (data) {
 
 /** @module pathfora/integrations/auto-complete-facebook-data */
 
+// form
+// dom
 /**
  * Fill in widget form with data from facebook login
  *
@@ -4105,6 +4158,9 @@ function clearFormFields (type, fields) {
 
 /** @module pathfora/integrations/on-facebook-click */
 
+// form
+// integrations
+// dom
 /**
  * Setup login when the user clicks the fb
  * social login button
@@ -4134,6 +4190,8 @@ function onFacebookClick (elements) {
 
 /** @module pathfora/integrations/on-facebook-load */
 
+// integrations
+// dom
 /**
  * Check if the user is already logged in once
  * the fb library is loaded and setup the click
@@ -4161,6 +4219,9 @@ function onFacebookLoad () {
 
 /** @module pathfora/integrations/facebook */
 
+// dom
+// globals
+// integrations
 /**
  * Initialize facebook tag and set up social login
  * button template
@@ -4243,6 +4304,9 @@ function autoCompleteGoogleData (user, elements) {
 
 /** @module pathfora/integrations/on-google-click */
 
+// integrations
+// form
+// dom
 /**
  * Setup login when the user clicks the google
  * social login button
@@ -4270,6 +4334,9 @@ function onGoogleClick (elements) {
 
 /** @module pathfora/integrations/on-google-load */
 
+// integrations
+// dom
+// globals
 /**
  * Check if the user is already logged in once
  * the google library is loaded and setup the click
@@ -4304,6 +4371,9 @@ function onGoogleLoad () {
 
 /** @module pathfora/integrations/google */
 
+// dom
+// globals
+// integrations
 /**
  * Initialize google tag and set up social login
  * button template
@@ -4441,6 +4511,10 @@ function insertWidget (method, segment, widget, config) {
 
 /** @module pathfora/utils */
 
+// class
+// cookies
+// scaffold
+// url
 /**
  * Object containing utility functions
  *
@@ -4463,6 +4537,16 @@ var utils = {
 
 /** @module pathfora */
 
+// global
+// dom
+// callbacks
+// widgets
+// display conditions
+// inline
+// ab tests
+// integrations
+// data
+// utils
 /**
  * Creates a new Pathfora instance
  *

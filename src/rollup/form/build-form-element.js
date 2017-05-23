@@ -1,7 +1,9 @@
 /** @module pathfora/form/build-form-element */
 
+// dom
 import document from '../dom/document';
 
+// utils
 import addClass from '../utils/class/add-class';
 
 /**

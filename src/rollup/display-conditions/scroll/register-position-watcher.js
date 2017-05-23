@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/scroll/register-position-watcher */
 
+// dom
 import document from '../../dom/document';
 
+// display conditions
 import removeWatcher from '../watchers/remove-watcher';
 
 /**

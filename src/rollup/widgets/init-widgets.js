@@ -1,15 +1,20 @@
 /** @module pathfora/widgets/init-widgets */
 
-import validateWidgetsObject from './validate-widgets-object';
+// globals
+import { defaultProps } from '../globals/config';
 
+// dom
+import document from '../dom/document';
+
+// utils
+import updateObject from '../utils/update-object';
+
+// data
 import trackTimeOnPage from '../data/tracking/track-time-on-page';
 import getUserSegments from '../data/segments/get-user-segments';
 
-import updateObject from '../utils/update-object';
-
-import { defaultProps } from '../globals/config';
-
-import document from '../dom/document';
+// widgets
+import validateWidgetsObject from './validate-widgets-object';
 
 /**
  * Public method used to initialize widgets once

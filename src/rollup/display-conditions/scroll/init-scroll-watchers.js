@@ -1,8 +1,10 @@
 /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
-import validateWatchers from '../watchers/validate-watchers';
-
+// dom
 import window from '../../dom/window';
+
+// display conditions
+import validateWatchers from '../watchers/validate-watchers';
 
 /**
  * Add event listener for scroll display conditions

@@ -1,19 +1,26 @@
 /** @module pathfora/widgets/show-widget */
 
+// globals
+import { callbackTypes, widgetTracker } from '../globals/config';
+
+// dom
+import window from '../dom/window';
+import document from '../dom/document';
+
+// utils
+import addClass from '../utils/class/add-class';
+
+// data
 import trackWidgetAction from '../data/tracking/track-widget-action';
 
+// display conditions
 import incrementImpressions from '../display-conditions/impressions/increment-impressions';
 
+// widgets
 import createWidgetHtml from './create-widget-html';
 import closeWidget from './close-widget';
 import widgetResizeListener from './widget-resize-listener';
 
-import addClass from '../utils/class/add-class';
-
-import window from '../dom/window';
-import document from '../dom/document';
-
-import { callbackTypes, widgetTracker } from '../globals/config';
 
 /**
  * Make the widget visible to the user

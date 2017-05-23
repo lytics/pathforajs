@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/hide-after-action-checker */
 
+// globals
 import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config';
 
+// utils
 import readCookie from '../utils/cookies/read-cookie';
 
 /**

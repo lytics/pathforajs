@@ -1,6 +1,9 @@
 /** @module pathfora/inline/inline */
 
+// dom
 import document from '../dom/document';
+
+// inline
 import prepElements from './prep-elements';
 import procElements from './proc-elements';
 import procRecommendElements from './proc-recommend-elements';

@@ -1,8 +1,10 @@
 /** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
-import validateWatchers from '../watchers/validate-watchers';
-
+// globals
 import { widgetTracker } from '../../globals/config';
+
+// display conditions
+import validateWatchers from '../watchers/validate-watchers';
 
 /**
  * Trigger a single "manualTrigger" widget to be shown

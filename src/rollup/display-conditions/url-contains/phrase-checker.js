@@ -1,9 +1,11 @@
 /** @module pathfora/display-conditions/url-contains/phrase-checker */
 
+// utils
+import escapeURI from '../../utils/url/escape-uri';
+
+// display conditions
 import compareQueries from './compare-queries';
 import parseQuery from './parse-query';
-
-import escapeURI from '../../utils/url/escape-uri';
 
 /**
  * Evaluate if the current URL matches a single urlContains

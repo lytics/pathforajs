@@ -1,9 +1,11 @@
 /** @module pathfora/ab-test/init-ab-test */
 
+// globals
+import { pathforaDataObject } from '../globals/config';
+
+// utils
 import saveCookie from '../utils/cookies/save-cookie';
 import readCookie from '../utils/cookies/read-cookie';
-
-import { pathforaDataObject } from '../globals/config';
 
 /**
  * Initialized A/B test from user config

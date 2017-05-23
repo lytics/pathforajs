@@ -1,13 +1,17 @@
 /** @module pathfora/widgets/construct-widget-layout */
 
-import buildWidgetForm from '../form/build-widget-form';
+// globals
+import { templates } from '../globals/config';
 
+// dom
+import document from '../dom/document';
+
+// utils
 import addClass from '../utils/class/add-class';
 import removeClass from '../utils/class/remove-class';
 
-import { templates } from '../globals/config';
-
-import document from '../dom/document';
+// widgets
+import buildWidgetForm from '../form/build-widget-form';
 
 /**
  * Setup inner html elements for a widget

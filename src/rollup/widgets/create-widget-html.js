@@ -1,15 +1,18 @@
 /** @module pathfora/widgets/create-widget-html */
 
+// globals
+import { templates } from '../globals/config';
+
+// dom
+import document from '../dom/document';
+
+// widgets
 import setupWidgetPosition from './setup-widget-position';
 import constructWidgetActions from './construct-widget-actions';
 import setupWidgetContentUnit from './setup-widget-content-unit';
 import setWidgetClassname from './set-widget-classname';
 import constructWidgetLayout from './construct-widget-layout';
 import setupWidgetColors from './colors/setup-widget-colors';
-
-import document from '../dom/document';
-
-import { templates } from '../globals/config';
 
 /**
  * Call all the necessary functions to construct

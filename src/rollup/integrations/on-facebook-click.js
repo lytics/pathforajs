@@ -1,10 +1,13 @@
 /** @module pathfora/integrations/on-facebook-click */
 
-import autoCompleteFacebookData from './auto-complete-facebook-data';
+// dom
+import window from '../dom/window';
 
+// form
 import clearFormFields from '../form/clear-form-fields';
 
-import window from '../dom/window';
+// integrations
+import autoCompleteFacebookData from './auto-complete-facebook-data';
 
 /**
  * Setup login when the user clicks the fb

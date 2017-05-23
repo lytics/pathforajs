@@ -1,7 +1,9 @@
 /** @module pathfora/display-conditions/impressions/impressions-checker */
 
+// globals
 import { PREFIX_IMPRESSION } from '../../globals/config';
 
+// utils
 import readCookie from '../../utils/cookies/read-cookie';
 
 /**

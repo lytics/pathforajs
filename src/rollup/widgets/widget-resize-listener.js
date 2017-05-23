@@ -1,10 +1,12 @@
 /** @module pathfora/widgets/widget-resize-listener */
 
+// globals
+import { WIDTH_BREAKPOINT } from '../globals/config';
+
+// utils
 import addClass from '../utils/class/add-class';
 import removeClass from '../utils/class/remove-class';
 import hasClass from '../utils/class/has-class';
-
-import { WIDTH_BREAKPOINT } from '../globals/config';
 
 /**
  * Adjust widget look and feel on window resize bounds

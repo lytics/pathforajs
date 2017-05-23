@@ -1,13 +1,29 @@
 /** @module pathfora */
 
+// global
 import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config';
 
+// dom
 import window from './dom/window';
 import document from './dom/document';
 import onDOMready from './dom/on-dom-ready';
 
+// utils
+import { utils } from './utils/utils';
+
+// data
+import getDataObject from './data/tracking/get-data-object';
+
+// callbacks
 import addCallback from './callbacks/add-callback';
 
+// display conditions
+import initializePageViews from './display-conditions/pageviews/init-pageviews';
+import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
+import registerDelayedWidget from './display-conditions/delay/register-delayed-widget';
+import entityFieldChecker from './display-conditions/entity-field-checker';
+
+// widgets
 import initializeWidgets from './widgets/init-widgets';
 import initializeWidgetArray from './widgets/init-widget-array';
 import initializeWidget from './widgets/init-widget';
@@ -21,23 +37,18 @@ import Subscription from './widgets/subscription';
 import Form from './widgets/form';
 import SiteGate from './widgets/site-gate';
 
-import initializePageViews from './display-conditions/pageviews/init-pageviews';
-import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
-import registerDelayedWidget from './display-conditions/delay/register-delayed-widget';
-import entityFieldChecker from './display-conditions/entity-field-checker';
-
-import Inline from './inline/inline';
-import initializeInline from './inline/init-inline';
-
+// ab tests
 import initializeABTesting from './ab-test/init-ab-test';
 import ABTest from './ab-test/ab-test';
 
+// integrations
 import integrateWithFacebook from './integrations/facebook';
 import integrateWithGoogle from './integrations/google';
 
-import getDataObject from './data/tracking/get-data-object';
+// inline
+import Inline from './inline/inline';
+import initializeInline from './inline/init-inline';
 
-import { utils } from './utils/utils';
 
 /**
  * Creates a new Pathfora instance
@@ -46,6 +57,7 @@ import { utils } from './utils/utils';
  * @class {function} Pathfora
  */
 var Pathfora = function () {
+  // globals
   this.version = PF_VERSION;
   this.callbacks = [];
   this.acctid = '';
@@ -54,10 +66,25 @@ var Pathfora = function () {
   this.DOMLoaded = false;
   this.customData = {};
 
+  // dom
   this.onDOMready = onDOMready;
 
+  // utils
+  this.utils = utils;
+
+  // data
+  this.getDataObject = getDataObject;
+
+  // callbacks
   this.addCallback = addCallback;
 
+  // display conditions
+  this.initializePageViews = initializePageViews;
+  this.triggerWidgets = triggerWidgets;
+  this.registerDelayedWidget = registerDelayedWidget;
+  this.entityFieldChecker = entityFieldChecker;
+
+  // widgets
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
@@ -71,27 +98,21 @@ var Pathfora = function () {
   this.Form = Form;
   this.SiteGate = SiteGate;
 
-  this.initializePageViews = initializePageViews;
-  this.triggerWidgets = triggerWidgets;
-  this.registerDelayedWidget = registerDelayedWidget;
-  this.entityFieldChecker = entityFieldChecker;
-
-  this.initializeInline = initializeInline;
-
+  // ab tests
   this.initializeABTesting = initializeABTesting;
   this.ABTest = ABTest;
 
+  // integations
   this.integrateWithFacebook = integrateWithFacebook;
   this.integrateWithGoogle = integrateWithGoogle;
 
-  this.getDataObject = getDataObject;
-
-  this.utils = utils;
-
+  // inline
+  this.initializeInline = initializeInline;
   this.inline = new Inline(this);
   this.initializeInline();
   this.initializePageViews();
 
+  // add pathfora css
   var head = document.getElementsByTagName('head')[0],
       link = document.createElement('link');
 
@@ -101,6 +122,7 @@ var Pathfora = function () {
 
   head.appendChild(link);
 
+  // wait until everything else is loaded to prioritize widgets
   var pf = this;
   window.addEventListener('load', function () {
     pf.reinitializePrioritizedWidgets();

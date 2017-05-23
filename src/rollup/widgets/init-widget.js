@@ -1,5 +1,6 @@
 /** @module pathfora/widgets/init-widget */
 
+// display conditions
 import dateChecker from '../display-conditions/date-checker';
 import pageVisitsChecker from '../display-conditions/pageviews/page-visits-checker';
 import hideAfterActionChecker from '../display-conditions/hide-after-action-checker';
@@ -12,12 +13,16 @@ import registerPositionWatcher from '../display-conditions/scroll/register-posit
 import registerManualTriggerWatcher from '../display-conditions/manual-trigger/register-manual-trigger-watcher';
 import triggerWidget from '../display-conditions/manual-trigger/trigger-widget';
 
+// widgets
 import showWidget from './show-widget';
 
+// globals
 import { widgetTracker } from '../globals/config';
 
+// dom
 import document from '../dom/document';
 
+// utils
 import addClass from '../utils/class/add-class';
 
 

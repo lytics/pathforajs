@@ -1,11 +1,15 @@
 /** @module pathfora/recommendations/recommend-content */
 
+// globals
+import { PREFIX_REC, API_URL } from '../globals/config';
+
+// utils
 import readCookie from '../utils/cookies/read-cookie';
 import constructQueries from '../utils/url/construct-queries';
 
+// data
 import getData from '../data/request/get-data';
 
-import { PREFIX_REC, API_URL } from '../globals/config';
 
 /**
  * Make the request to the Lytics content recommendation API

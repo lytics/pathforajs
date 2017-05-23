@@ -1,13 +1,17 @@
 /** @module pathfora/widgets/initialize-widget-array */
 
+// globals
+import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config';
+
+// dom
+import window from '../dom/window';
+
+// utils
 import readCookie from '../utils/cookies/read-cookie';
 import updateObject from '../utils/update-object';
 
+// recommendations
 import recommendContent from '../recommendations/recommend-content';
-
-import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config';
-
-import window from '../dom/window';
 
 /**
  * Given an array of widgets, begin off the initialization

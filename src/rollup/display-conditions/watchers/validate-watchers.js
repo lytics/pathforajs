@@ -1,8 +1,10 @@
 /** @module pathfora/display-conditions/watchers/core/validate-watchers */
 
-import showWidget from '../../widgets/show-widget';
-
+// display conditions
 import impressionsChecker from '../impressions/impressions-checker';
+
+// widgets
+import showWidget from '../../widgets/show-widget';
 
 export default function validateWatchers (widget, cb) {
   var valid = true;

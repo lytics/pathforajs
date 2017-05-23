@@ -1,13 +1,18 @@
 /** @module pathfora/widgets/close-widget */
 
+// globals
+import { widgetTracker } from '../globals/config';
+
+// dom
 import document from '../dom/document';
 
-import trackWidgetAction from '../data/tracking/track-widget-action';
-
+// utils
 import removeClass from '../utils/class/remove-class';
 import hasClass from '../utils/class/has-class';
 
-import { widgetTracker } from '../globals/config';
+// data
+import trackWidgetAction from '../data/tracking/track-widget-action';
+
 
 /**
  * Close a widget and remove it from the dom

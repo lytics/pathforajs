@@ -1,9 +1,11 @@
 /** @module pathfora/globals/config */
 
+// globals
 import resetDefaultProps from './reset-default-props';
 import resetWidgetTracker from './reset-widget-tracker';
 import resetDataObject from './reset-data-object';
 
+// ab tests
 import createABTestingModePreset from '../ab-test/create-preset';
 
 export var PF_VERSION = '0.1.5',

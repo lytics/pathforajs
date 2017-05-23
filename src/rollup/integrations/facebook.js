@@ -1,10 +1,13 @@
 /** @module pathfora/integrations/facebook */
 
+// globals
+import { templates, pathforaDataObject } from '../globals/config';
+
+// dom
 import window from '../dom/window';
 import document from '../dom/document';
 
-import { templates, pathforaDataObject } from '../globals/config';
-
+// integrations
 import onFacebookLoad from './on-facebook-load';
 
 /**

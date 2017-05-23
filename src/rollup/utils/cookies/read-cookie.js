@@ -1,6 +1,9 @@
 /** @module pathfora/utils/cookie/read-cookie */
 
+// dom
 import document from '../../dom/document';
+
+// utils
 import escapeRegex from '../escape-regex';
 
 /**

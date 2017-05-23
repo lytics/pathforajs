@@ -1,16 +1,20 @@
 /** @module pathfora/widgets/construct-widget-actions */
 
+// globals
+import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config';
+
+// utils
 import readCookie from '../utils/cookies/read-cookie';
 import saveCookie from '../utils/cookies/save-cookie';
 import hasClass from '../utils/class/has-class';
 import addClass from '../utils/class/add-class';
 import removeClass from '../utils/class/remove-class';
 
+// data
 import trackWidgetAction from '../data/tracking/track-widget-action';
 
+// widgets
 import closeWidget from './close-widget';
-
-import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config';
 
 /**
  * Add callbacks and tracking for user interactions

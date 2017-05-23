@@ -1,15 +1,20 @@
 /** @module pathfora/widgets/clear-all */
 
-import document from '../dom/document';
-
-import removeClass from '../utils/class/remove-class';
-
-import cancelDelayedWidget from '../display-conditions/delay/cancel-delayed-widget';
-
+// globals
 import { widgetTracker, pathforaDataObject, defaultProps } from '../globals/config';
 import resetDataObject from '../globals/reset-data-object';
 import resetWidgetTracker from '../globals/reset-widget-tracker';
 import resetDefaultProps from '../globals/reset-default-props';
+
+// dom
+import document from '../dom/document';
+
+// utils
+import removeClass from '../utils/class/remove-class';
+
+// display conditions
+import cancelDelayedWidget from '../display-conditions/delay/cancel-delayed-widget';
+
 
 /**
  * Close all widgets and reset all settings to default
