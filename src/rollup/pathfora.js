@@ -49,7 +49,6 @@ import integrateWithGoogle from './integrations/google';
 import Inline from './inline/inline';
 import initializeInline from './inline/init-inline';
 
-
 /**
  * Creates a new Pathfora instance
  *
@@ -64,6 +63,7 @@ var Pathfora = function () {
   this.locale = PF_LOCALE;
   this.dateOptions = PF_DATE_OPTIONS;
   this.DOMLoaded = false;
+  this.enableGA = false;
   this.customData = {};
 
   // dom

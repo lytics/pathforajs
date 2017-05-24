@@ -330,203 +330,6 @@ function onDOMready (fn) {
   }
 }
 
-/** @module pathfora/callbacks/add-callback */
-
-/**
- * Add a function to be called once jstag is loaded
- *
- * @exports addCallack
- * @params {function} cb
- */
-function addCallback (cb) {
-  if (window.lio && window.lio.loaded) {
-    cb(window.lio.data);
-  } else {
-    this.callbacks.push(cb);
-  }
-}
-
-/** @module pathfora/widgets/validate-widgets-object */
-
-/**
- * Validate that the widget has correct position field
- * for its layout and type
- *
- * @exports validateWidgetPosition
- * @params {object} widget
- * @params {object} config
- */
-function validateWidgetsObject (widgets) {
-  if (!widgets) {
-    throw new Error('Widgets not specified');
-  }
-
-  if (!(widgets instanceof Array) && widgets.target) {
-    widgets.common = widgets.common || [];
-
-    for (var i = 0; i < widgets.target.length; i++) {
-      if (!widgets.target[i].segment) {
-        throw new Error('All targeted widgets should have segment specified');
-      } else if (widgets.target[i].segment === '*') {
-        widgets.common = widgets.common.concat(widgets.target[i].widgets);
-        widgets.target.splice(i, 1);
-      }
-    }
-  }
-}
-
-/** @module pathfora/data/tracking/track-time-on-page */
-
-/**
- * Record the amount of time the user has spent
- * on the current page
- *
- * @exports trackTimeOnPage
- */
-function trackTimeOnPage () {
-  setInterval(function () {
-    pathforaDataObject.timeSpentOnPage += 1;
-  }, 1000);
-}
-
-/** @module pathfora/data/segments/get-user-segments */
-
-/**
- * Get a list of Lytics segments for the user
- *
- * @exports getUserSegments
- * @returns {array} segments
- */
-function getUserSegments () {
-  if (window.lio && window.lio.data && window.lio.data.segments) {
-    return window.lio.data.segments;
-  } else {
-    return ['all'];
-  }
-}
-
-/** @module pathfora/utils/update-object */
-
-/**
- * Merge two objects while preserving original fields
- *
- * @exports updateObject
- * @params {object} object
- * @params {object} config
- */
-function updateObject (object, config) {
-  for (var prop in config) {
-    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
-      if (config.hasOwnProperty(prop)) {
-        if (typeof object[prop] === 'undefined') {
-          object[prop] = {};
-        }
-        updateObject(object[prop], config[prop]);
-      }
-    } else if (config.hasOwnProperty(prop)) {
-      object[prop] = config[prop];
-    }
-  }
-}
-
-/** @module pathfora/widgets/init-widgets */
-
-/**
- * Public method used to initialize widgets once
- * the individual configs have been created
- *
- * @exports initializeWidgets
- * @params {object} widgets
- * @params {object} config
- */
-function initializeWidgets (widgets, config) {
-  // NOTE IE < 10 not supported
-  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
-  var pf = this;
-  if (document.all && !window.atob) {
-    return;
-  }
-
-  // support legacy initialize function where we passed account id as
-  // a second parameter and config as third
-  if (arguments.length >= 3) {
-    config = arguments[2];
-  // if the second param is an account id, we need to throw it out
-  } else if (typeof config === 'string') {
-    config = null;
-  }
-
-  validateWidgetsObject(widgets);
-  trackTimeOnPage();
-
-  if (config) {
-    updateObject(defaultProps, config);
-  }
-
-  if (widgets instanceof Array) {
-
-    // NOTE Simple initialization
-    pf.initializeWidgetArray(widgets);
-  } else {
-
-    // NOTE Target sensitive widgets
-    if (widgets.common) {
-      pf.initializeWidgetArray(widgets.common);
-      updateObject(defaultProps, widgets.common.config);
-    }
-
-    if (widgets.target || widgets.exclude) {
-      // Add callback to initialize once we know segments are loaded
-      pf.addCallback(function () {
-        var target, ti, tl, exclude, ei, ex, ey, el,
-            targetedwidgets = [],
-            excludematched = false,
-            segments = getUserSegments();
-
-        // handle inclusions
-        if (widgets.target) {
-          tl = widgets.target.length;
-          for (ti = 0; ti < tl; ti++) {
-            target = widgets.target[ti];
-            if (segments && segments.indexOf(target.segment) !== -1) {
-              // add the widgets with proper targeting to the master list
-              // ensure we dont overwrite existing widgets in target
-              targetedwidgets = targetedwidgets.concat(target.widgets);
-            }
-          }
-        }
-
-        // handle exclusions
-        if (widgets.exclude) {
-          el = widgets.exclude.length;
-          for (ei = 0; ei < el; ei++) {
-            exclude = widgets.exclude[ei];
-            if (segments && segments.indexOf(exclude.segment) !== -1) {
-              // we found a match, ensure the corresponding segment(s) are not in the
-              // targetted widgets array
-              for (ex = 0; ex < targetedwidgets.length; ex++) {
-                for (ey = 0; ey < exclude.widgets.length; ey++) {
-                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                    targetedwidgets.splice(ex, 1);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (targetedwidgets.length) {
-          pf.initializeWidgetArray(targetedwidgets);
-        }
-
-        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-          pf.initializeWidgetArray(widgets.inverse);
-        }
-      });
-    }
-  }
-}
-
 /** @module pathfora/utils/escape-regex */
 
 /**
@@ -539,6 +342,57 @@ function initializeWidgets (widgets, config) {
  */
 function escapeRegex (s) {
   return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
+/** @module pathfora/utils/class/remove-class */
+
+/**
+ * Remove a class from an HTML element
+ *
+ * @exports removeClass
+ * @params {object} DOMNode
+ * @params {string} className
+ */
+function removeClass (DOMNode, className) {
+  var findClassRegexp = new RegExp([
+    '(^|\\b)',
+    escapeRegex(className.split(' ').join('|')),
+    '(\\b|$)'
+  ].join(''), 'gi');
+
+  DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
+}
+
+/** @module pathfora/utils/class/add-class */
+
+/**
+ * Add a class to an HTML element
+ *
+ * @exports addClass
+ * @params {object} DOMNode
+ * @params {string} className
+ */
+function addClass (DOMNode, className) {
+  removeClass(DOMNode, className);
+
+  DOMNode.className = [
+    DOMNode.className,
+    className
+  ].join(' ');
+}
+
+/** @module pathfora/utils/class/has-class */
+
+/**
+ * Check if an HTML element has a class
+ *
+ * @exports hasClass
+ * @params {object} DOMNode
+ * @params {string} className
+ * @params {boolean}
+ */
+function hasClass (DOMNode, className) {
+  return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
 }
 
 /** @module pathfora/utils/cookie/read-cookie */
@@ -557,6 +411,103 @@ function readCookie (name) {
       findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
 
   return findCookieRegexp ? findCookieRegexp.pop() : null;
+}
+
+/** @module pathfora/utils/cookie/save-cookie */
+
+/**
+ * Set the value of a cookie
+ *
+ * @exports saveCookie
+ * @params {string} name
+ * @params {string} value
+ * @params {object} expiration
+ */
+function saveCookie (name, value, expiration) {
+  var expires;
+
+  if (expiration) {
+    expires = '; expires=' + expiration.toUTCString();
+  } else {
+    expires = '; expires=0';
+  }
+
+  document.cookie = [
+    name,
+    '=',
+    value,
+    expires,
+    '; path = /'
+  ].join('');
+}
+
+/** @module pathfora/utils/scaffold/init-scaffold */
+
+/**
+ * Initialize scaffold for Lytics controlled widgets
+ *
+ * @exports initWidgetScaffold
+ * @returns {object} scaffold
+ */
+function initWidgetScaffold () {
+  return {
+    target: [],
+    exclude: [],
+    inverse: []
+  };
+}
+
+/** @module pathfora/utils/scaffold/insert-widget */
+
+/**
+ * Insert a widget and targeting info into
+ * the widget scaffold
+ *
+ * @exports insertWidget
+ * @params {string} method
+ * @params {string} segment
+ * @params {object} widget
+ * @params {object} config
+ */
+function insertWidget (method, segment, widget, config) {
+  // assume that we need to add a new widget until proved otherwise
+  var subject,
+      makeNew = true;
+
+  // make sure our scaffold is valid
+  if (!config.target) {
+    throw new Error('Invalid scaffold. No target array.');
+  }
+  if (!config.exclude) {
+    throw new Error('Invalid scaffold. No exclude array.');
+  }
+  if (!config.inverse) {
+    throw new Error('Invalid scaffold. No inverse array.');
+  }
+
+  if (method === 'target') {
+    subject = config.target;
+  } else if (method === 'exclude') {
+    subject = config.exclude;
+  } else {
+    throw new Error('Invalid method (' + method + ').');
+  }
+
+  for (var i = 0; i < subject.length; i++) {
+    var wgt = subject[i];
+
+    if (wgt.segment === segment) {
+      wgt.widgets.push(widget);
+      makeNew = false;
+    }
+  }
+
+  if (makeNew) {
+    subject.push({
+      'segment': segment,
+      'widgets': [widget]
+    });
+  }
 }
 
 /** @module pafthroa/utils/url/construct-queries */
@@ -601,374 +552,6 @@ function constructQueries (params) {
   }
 
   return queries.join('');
-}
-
-/** @module pathfora/data/request/get-data */
-
-/**
- * Make an http GET request
- *
- * @exports getData
- * @params {string} url
- * @params {function} onSuccess
- * @params {function} onError
- */
-function getData (url, onSuccess, onError) {
-  var xhr = new XMLHttpRequest();
-
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      onSuccess(xhr.responseText);
-    } else if (xhr.readyState === 4) {
-      onError(xhr.responseText);
-    }
-  };
-
-  xhr.open('GET', url);
-  xhr.send();
-}
-
-/** @module pathfora/recommendations/recommend-content */
-
-// utils
-// data
-// globals
-/**
- * Make the request to the Lytics content recommendation API
- * and return a list of recommended documents
- *
- * @exports recommendContent
- * @params {string} accountId
- * @params {object} params
- * @params {string} id
- * @params {function} callback
- */
-function recommendContent (accountId, params, id, callback) {
-  // Recommendation API:
-  // https://www.getlytics.com/developers/rest-api#content-recommendation
-
-  // if we have the recommendation response cached in session storage
-  // use that instead of making a new API request
-  var storedRec = sessionStorage.getItem(PREFIX_REC + id);
-
-  if (typeof storedRec === 'string' && params.visited !== false) {
-    var rec;
-
-    try {
-      rec = JSON.parse(storedRec);
-    } catch (e) {
-      console.warn('Could not parse json stored response:' + e);
-    }
-
-    if (rec && rec.data) {
-      // special case: shuffle param
-      if (params.shuffle === true) {
-        rec.data.shift();
-      }
-
-      if (rec.data.length > 0) {
-        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
-        callback(rec.data);
-      }
-      return;
-    }
-  }
-
-  var seerId = readCookie('seerid');
-
-  if (!seerId) {
-    throw new Error('Cannot find SEERID cookie');
-  }
-
-  var recommendParts = [
-    API_URL + '/api/content/recommend/',
-    accountId,
-    '/user/_uids/',
-    seerId
-  ];
-
-
-  var ql = params.ql,
-      ast = params.ast,
-      display = params.display;
-
-  delete params.ql;
-  delete params.ast;
-  delete params.display;
-
-  var queries = constructQueries(params);
-
-  params.display = display;
-
-  if (!params.contentsegment) {
-    // Special case for Adhoc Segments
-    if (ql && ql.raw || ast) {
-      if (queries.length > 0) {
-        queries += '&';
-      } else {
-        queries += '?';
-      }
-
-      // Filter QL
-      if (ql && ql.raw) {
-        queries += 'ql=' + ql.raw;
-
-      // Segment JSON (usually segment AST)
-      } else {
-        var contentSegment = {table: 'content', ast: ast};
-        queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
-      }
-    }
-  }
-
-  var recommendUrl = recommendParts.join('') + queries;
-
-  getData(recommendUrl, function (json) {
-
-    // set the session storage.
-    sessionStorage.setItem(PREFIX_REC + id, json);
-    var resp;
-
-    try {
-      resp = JSON.parse(json);
-    } catch (e) {
-      console.warn('Could not parse json response:' + e);
-      callback([]);
-      return;
-    }
-
-    if (resp.data && resp.data.length > 0) {
-      // append a protocol for urls that are absolute
-      for (var i = 0; i < resp.data.length; i++) {
-        var url = resp.data[i].url;
-        if (url) {
-          var split = url.split('/')[0].split('.');
-          if (split.length > 1) {
-            resp.data[i].url = 'http://' + url;
-          }
-        }
-      }
-
-      callback(resp.data);
-    } else {
-      callback([]);
-    }
-  }, function () {
-    callback([]);
-  });
-}
-
-/** @module pathfora/widgets/initialize-widget-array */
-
-/**
- * Given an array of widgets, begin off the initialization
- * process for each
- *
- * @exports initializeWidgetArray
- * @params {array} array
- */
-function initializeWidgetArray (array) {
-  var pf = this;
-
-  var displayWidget = function (w) {
-    if (w.displayConditions.showDelay) {
-      pf.registerDelayedWidget(w);
-    } else {
-      pf.initializeWidget(w);
-    }
-  };
-
-  var recContent = function (w, params) {
-    pf.addCallback(function () {
-      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        } else {
-          throw new Error('Could not get account id from Lytics Javascript tag.');
-        }
-      }
-
-      recommendContent(pf.acctid, params, w.id, function (resp) {
-        // if we get a response from the recommend api put it as the first
-        // element in the content object this replaces any default content
-        if (resp[0]) {
-          var content = resp[0];
-          w.content = [
-            {
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              image: content.primary_image,
-              date: content.created,
-              author: content.author
-            }
-          ];
-        }
-
-        // if we didn't get a valid response from the api, we check if a default
-        // exists and use that as our content piece instead
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
-
-        displayWidget(w);
-      });
-    });
-  };
-
-  for (var i = 0; i < array.length; i++) {
-    var widget = array[i];
-
-    if (!widget || !widget.config) {
-      continue;
-    }
-
-    var widgetOnInitCallback = widget.config.onInit,
-        defaults = defaultProps[widget.type],
-        globals = defaultProps.generic;
-
-    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
-      continue;
-    }
-
-    if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
-      widgetTracker.initializedWidgets.push(widget.id);
-    } else {
-      throw new Error('Cannot add two widgets with the same id');
-    }
-
-    updateObject(widget, globals);
-    updateObject(widget, defaults);
-    updateObject(widget, widget.config);
-
-    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
-        throw new Error('Unsupported layout for content recommendation');
-      }
-
-      if (widget.content && widget.content[0] && !widget.content[0].default) {
-        throw new Error('Cannot define recommended content unless it is a default');
-      }
-
-      var params = widget.recommend;
-
-      if (widget.recommend.collection) {
-        params.contentsegment = widget.recommend.collection;
-        delete params.collection;
-      }
-
-      recContent(widget, params);
-
-    } else {
-      displayWidget(widget);
-    }
-
-    // NOTE onInit feels better here
-    if (typeof widgetOnInitCallback === 'function') {
-      widgetOnInitCallback(callbackTypes.INIT, {
-        config: widget
-      });
-    }
-  }
-}
-
-/** @module pathfora/display-conditions/date-checker */
-
-/**
- * Check if the current date fits within the
- * date displayConitions for the widget
- *
- * @exports dateChecker
- * @params {object} date
- * @returns {boolean}
- */
-function dateChecker (date) {
-  var valid = true,
-      today = Date.now();
-
-  if (date.start_at && today < new Date(date.start_at).getTime()) {
-    valid = false;
-  }
-
-  if (date.end_at && today > new Date(date.end_at).getTime()) {
-    valid = false;
-  }
-
-  return valid;
-}
-
-/** @module pathfora/display-conditions/pageviews/page-visits-checker */
-
-// globals
-// utils
-/**
- * Check if the pagevist count meets the requirements
- *
- * @exports pageVisitsChecker
- * @returns {boolean}
- */
-function pageVisitsChecker (pageVisitsRequired) {
-  return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
-}
-
-/** @module pathfora/display-conditions/hide-after-action-checker */
-
-// globals
-// utils
-/**
- * Check if a widget should be hidden because it meets
- * a hideAfterAction display condition
- *
- * @exports hideAfterActionChecker
- * @params {object} hideAfterActionConstraints
- * @params {string} widget
- * @returns {boolean}
- */
-function hideAfterActionChecker (hideAfterActionConstraints, widget) {
-  var parts,
-      valid = true,
-      now = Date.now(),
-      confirm = readCookie(PREFIX_CONFIRM + widget.id),
-      cancel = readCookie(PREFIX_CANCEL + widget.id),
-      closed = readCookie(PREFIX_CLOSE + widget.id);
-
-  if (hideAfterActionConstraints.confirm && confirm) {
-    parts = confirm.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
-      valid = false;
-    }
-  }
-
-  if (hideAfterActionConstraints.cancel && cancel) {
-    parts = cancel.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
-      valid = false;
-    }
-  }
-
-  if (hideAfterActionConstraints.closed && closed) {
-    parts = closed.split('|');
-
-    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
-      valid = false;
-    }
-
-    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
-      valid = false;
-    }
-  }
-
-  return valid;
 }
 
 /** @module pathfora/utils/url/escape-uri */
@@ -1035,201 +618,138 @@ function escapeURI (text, options) {
   return escaped.join('');
 }
 
-/** @module pathfora/display-conditions/url-contains/parse-query */
+/** @module pathfora/utils/generate-unique-id */
 
 /**
- * Convert key/value queries from a URL into an object
+ * Create a unique string identifier
  *
- * @exports parseQuery
- * @params {string} url
- * @returns {object} query
+ * @exports generateUniqueId
+ * @returns {string} id
  */
-function parseQuery (url) {
-  var query = {},
-      pieces = escapeURI(url, { keepEscaped: true }).split('?');
+function generateUniqueId () {
+  var s4;
 
-  if (pieces.length > 1) {
-    pieces = pieces[1].split('&');
-
-    for (var i = 0; i < pieces.length; i++) {
-      var pair = pieces[i].split('=');
-
-      if (pair.length > 1) {
-        // NOTE We should not account for the preview id
-        if (pair[0] !== 'lytics_variation_preview_id') {
-          query[pair[0]] = pair[1];
-        }
-      }
-    }
+  if (typeof s4 === 'undefined') {
+    s4 = function () {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    };
   }
 
-  return query;
+  return [
+    s4(), s4(),
+    '-',
+    s4(),
+    '-',
+    s4(),
+    '-',
+    s4(),
+    '-',
+    s4(), s4(), s4()
+  ].join('');
 }
 
-/** @module pathfora/display-conditions/url-contains/compare-queries */
+/** @module pathfora/utils/update-object */
 
 /**
- * Check if urls contain matching query params
+ * Merge two objects while preserving original fields
  *
- * @exports compareQueries
- * @params {object} query
- * @params {object} matchQuery
- * @params {string} rule
- * @returns {bool}
+ * @exports updateObject
+ * @params {object} object
+ * @params {object} config
  */
-function compareQueries (query, matchQuery, rule) {
-  switch (rule) {
-  case 'exact':
-    if (Object.keys(matchQuery).length !== Object.keys(query).length) {
-      return false;
-    }
-    break;
-
-  default:
-    break;
-  }
-
-  for (var key in matchQuery) {
-    if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
-      return false;
+function updateObject (object, config) {
+  for (var prop in config) {
+    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
+      if (config.hasOwnProperty(prop)) {
+        if (typeof object[prop] === 'undefined') {
+          object[prop] = {};
+        }
+        updateObject(object[prop], config[prop]);
+      }
+    } else if (config.hasOwnProperty(prop)) {
+      object[prop] = config[prop];
     }
   }
-
-  return true;
 }
 
-/** @module pathfora/display-conditions/url-contains/phrase-checker */
+/** @module pathfora/utils */
 
-// display conditions
-// utils
+// class
+// cookies
+// scaffold
+// url
 /**
- * Evaluate if the current URL matches a single urlContains
- * rule provided
+ * Object containing utility functions
  *
- * @exports phraseChecker
- * @params {object} phrase
- * @params {string} url
- * @params {string} simpleurl
- * @params {object} queries
- * @returns {boolean}
+ * @exports utils
  */
-function phraseChecker (phrase, url, simpleurl, queries) {
-  var valid = false;
 
-  // legacy match allows for an array of strings, check if we are legacy or current object approach
-  switch (typeof phrase) {
-  case 'string':
-    if (url.indexOf(escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
-      valid = compareQueries(queries, parseQuery(phrase), 'substring');
-    }
-    break;
+var utils = {
+  // class
+  addClass: addClass,
+  hasClass: hasClass,
+  removeClass: removeClass,
 
-  case 'object':
-    if (phrase.match && phrase.value) {
-      var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
+  // cookies
+  readCookie: readCookie,
+  saveCookie: saveCookie,
 
-      switch (phrase.match) {
-      // simple match
-      case 'simple':
-        if (simpleurl.slice(-1) === '/') {
-          simpleurl = simpleurl.slice(0, -1);
-        }
+  // scaffold
+  initWidgetScaffold: initWidgetScaffold,
+  insertWidget: insertWidget,
 
-        if (phrase.value.slice(-1) === '/') {
-          phrase.value = phrase.value.slice(0, -1);
-        }
+  // url
+  constructQueries: constructQueries,
+  escapeURI: escapeURI,
 
-        if (simpleurl === phrase.value) {
-          valid = true;
-        }
-        break;
+  generateUniqueId: generateUniqueId,
+  updateObject: updateObject
+};
 
-      // exact match
-      case 'exact':
-        if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
-          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
-        }
-        break;
+/** @module pathfora/data/tracking/get-data-object */
 
-      // regex
-      case 'regex':
-        var re = new RegExp(phrase.value);
-
-        if (re.test(url)) {
-          valid = true;
-        }
-        break;
-
-      // string match (default)
-      default:
-        if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
-          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
-        }
-        break;
-      }
-
-    } else {
-      console.log('invalid display conditions');
-    }
-    break;
-
-  default:
-    console.log('invalid display conditions');
-    break;
-  }
-
-  return valid;
+/**
+ * Get the pathfora data object
+ *
+ * @exports getDataObject
+ * @returns {object} pathforaDataObject
+ */
+function getDataObject () {
+  return pathforaDataObject;
 }
 
-/** @module pathfora/display-conditions/url-contains/url-checker */
+/** @module pathfora/callbacks/add-callback */
 
-// utils
-// display conditions
 /**
- * Evaluate if the current URL matches the rules defined
- * by the urlContains display condition
+ * Add a function to be called once jstag is loaded
  *
- * @exports urlChecker
- * @params {array} phrases
- * @returns {boolean}
+ * @exports addCallack
+ * @params {function} cb
  */
-function urlChecker (phrases) {
-  var url = escapeURI(window.location.href, { keepEscaped: true }),
-      simpleurl = window.location.hostname + window.location.pathname,
-      queries = parseQuery(url),
-      valid, excludeValid = false,
-      matchCt, excludeCt = 0;
-
-  if (!(phrases instanceof Array)) {
-    phrases = Object.keys(phrases).map(function (key) {
-      return phrases[key];
-    });
-  }
-
-  // array of urlContains params is an or list, so if any are true evaluate valid to true
-  if (phrases.indexOf('*') === -1) {
-    phrases.forEach(function (phrase) {
-      if (phrase.exclude) {
-        excludeValid = phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
-        excludeCt++;
-      } else {
-        valid = phraseChecker(phrase, url, simpleurl, queries) || valid;
-        matchCt++;
-      }
-    });
+function addCallback (cb) {
+  if (window.lio && window.lio.loaded) {
+    cb(window.lio.data);
   } else {
-    valid = true;
+    this.callbacks.push(cb);
   }
+}
 
-  if (matchCt === 0) {
-    return !excludeValid;
-  }
+/** @module pathfora/display-conditions/pageviews/init-pageviews */
 
-  if (excludeCt === 0) {
-    return valid;
-  }
-
-  return valid && !excludeValid;
+// globals
+// utils
+/**
+ * Track and update the number of pageviews
+ *
+ * @exports initializePageViews
+ */
+function initializePageViews () {
+  var cookie = readCookie(PF_PAGEVIEWS),
+      date = new Date();
+  date.setDate(date.getDate() + 365);
+  readCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
 }
 
 /** @module pathfora/display-conditions/impressions/impressions-checker */
@@ -1292,7 +812,7 @@ function reportData (data) {
     // NOTE Cannot find Lytics tag, reporting disabled
   }
 
-  if (typeof ga === 'function') {
+  if (window.pathfora.enableGA === true && typeof ga === 'function') {
     gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
 
     window.ga(
@@ -1306,48 +826,6 @@ function reportData (data) {
       }
     );
   }
-}
-
-/** @module pathfora/utils/cookie/save-cookie */
-
-/**
- * Set the value of a cookie
- *
- * @exports saveCookie
- * @params {string} name
- * @params {string} value
- * @params {object} expiration
- */
-function saveCookie (name, value, expiration) {
-  var expires;
-
-  if (expiration) {
-    expires = '; expires=' + expiration.toUTCString();
-  } else {
-    expires = '; expires=0';
-  }
-
-  document.cookie = [
-    name,
-    '=',
-    value,
-    expires,
-    '; path = /'
-  ].join('');
-}
-
-/** @module pathfora/utils/class/has-class */
-
-/**
- * Check if an HTML element has a class
- *
- * @exports hasClass
- * @params {object} DOMNode
- * @params {string} className
- * @params {boolean}
- */
-function hasClass (DOMNode, className) {
-  return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
 }
 
 /** @module pathfora/data/tracking/track-widget-action */
@@ -1545,6 +1023,8 @@ function validateWidgetPosition (widget, config) {
 
 /** @module pathfora/widgets/setup-widget-position */
 
+// globals
+// widgets
 /**
  * Validate that the widget has correct position field,
  * and choose the default if it does not
@@ -1561,45 +1041,12 @@ function setupWidgetPosition (widget, config) {
   }
 }
 
-/** @module pathfora/utils/class/remove-class */
-
-/**
- * Remove a class from an HTML element
- *
- * @exports removeClass
- * @params {object} DOMNode
- * @params {string} className
- */
-function removeClass (DOMNode, className) {
-  var findClassRegexp = new RegExp([
-    '(^|\\b)',
-    escapeRegex(className.split(' ').join('|')),
-    '(\\b|$)'
-  ].join(''), 'gi');
-
-  DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
-}
-
-/** @module pathfora/utils/class/add-class */
-
-/**
- * Add a class to an HTML element
- *
- * @exports addClass
- * @params {object} DOMNode
- * @params {string} className
- */
-function addClass (DOMNode, className) {
-  removeClass(DOMNode, className);
-
-  DOMNode.className = [
-    DOMNode.className,
-    className
-  ].join(' ');
-}
-
 /** @module pathfora/widgets/close-widget */
 
+// globals
+// dom
+// utils
+// data
 /**
  * Close a widget and remove it from the dom
  *
@@ -1647,6 +1094,10 @@ function closeWidget (id, noTrack) {
 
 /** @module pathfora/widgets/construct-widget-actions */
 
+// globals
+// utils
+// data
+// widgets
 /**
  * Add callbacks and tracking for user interactions
  * with widgets
@@ -1964,6 +1415,8 @@ function constructWidgetActions (widget, config) {
 
 /** @module pathfora/widgets/setup-widget-content-unit */
 
+// globals
+// dom
 /**
  * Setup HTML for a widget with content recommendations
  *
@@ -2255,6 +1708,10 @@ function buildWidgetForm (formElements, form) {
 
 /** @module pathfora/widgets/construct-widget-layout */
 
+// globals
+// dom
+// utils
+// widgets
 /**
  * Setup inner html elements for a widget
  *
@@ -2698,8 +2155,8 @@ function setCustomColors (widget, colors) {
 
 /** @module pathfora/wodgets/colors/setup-widget-colors */
 
-// widgets
 // globals
+// widgets
 /**
  * Determine if the widget has a custom or predefined
  * theme and setup the colors accordingly
@@ -2728,6 +2185,9 @@ function setupWidgetColors (widget, config) {
 
 /** @module pathfora/widgets/create-widget-html */
 
+// globals
+// dom
+// widgets
 /**
  * Call all the necessary functions to construct
  * the widget html
@@ -2758,6 +2218,8 @@ function createWidgetHtml (config) {
 
 /** @module pathfora/widgets/widget-resize-listener */
 
+// globals
+// utils
 /**
  * Adjust widget look and feel on window resize bounds
  *
@@ -2780,6 +2242,12 @@ function widgetResizeListener (widget, node) {
 
 /** @module pathfora/widgets/show-widget */
 
+// globals
+// dom
+// utils
+// data
+// display conditions
+// widgets
 /**
  * Make the widget visible to the user
  *
@@ -2866,8 +2334,8 @@ function showWidget (widget) {
 
 /** @module pathfora/display-conditions/watchers/core/validate-watchers */
 
-// widgets
 // display conditions
+// widgets
 function validateWatchers (widget, cb) {
   var valid = true;
 
@@ -2892,10 +2360,890 @@ function validateWatchers (widget, cb) {
   return false;
 }
 
+/** @module pathfora/display-conditions/manual-trigger/trigger-widget */
+
+// globals
+// display conditions
+/**
+ * Trigger a single "manualTrigger" widget to be shown
+ *
+ * @exports triggerWidget
+ * @params {object} widget
+ * @returns {boolean}
+ */
+function triggerWidget (widget) {
+  return validateWatchers(widget, function () {
+    widgetTracker.triggeredWidgets[widget.id] = false;
+
+    // remove from the ready widgets list
+    widgetTracker.readyWidgets.some(function (w, i) {
+      if (w.id === widget.id) {
+        widgetTracker.readyWidgets.splice(i, 1);
+        return true;
+      }
+    });
+  });
+}
+
+/** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
+
+// globals
+// display conditions
+/**
+ * Public method to trigger a widget that has already been
+ * initialized and have the "manualTrigger" display condition
+ *
+ * @exports triggerWidgets
+ * @params {array} widgetIds
+ */
+function triggerWidgets (widgetIds) {
+  var i, valid;
+
+  // no widget ids provided, trigger all ready widgets
+  if (typeof widgetIds === 'undefined') {
+    widgetTracker.triggeredWidgets['*'] = true;
+
+    for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+      valid = triggerWidget(widgetTracker.readyWidgets[i]);
+      if (valid) {
+        i--;
+      }
+    }
+
+  // trigger all widget ids provided
+  } else {
+    widgetIds.forEach(function (id) {
+      if (widgetTracker.triggeredWidgets[id] !== false) {
+        widgetTracker.triggeredWidgets[id] = true;
+      }
+
+      for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+        valid = triggerWidget(widgetTracker.readyWidgets[i]);
+        if (valid) {
+          i--;
+        }
+      }
+    });
+  }
+}
+
+/** @module pathfora/display-conditions/delay/register-delayed-widget */
+
+/**
+ * Begin waiting for a delayed widget
+ *
+ * @exports registerDelayedWidget
+ * @params {object} widget
+ */
+function registerDelayedWidget (widget) {
+  var pf = this;
+  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
+    pf.initializeWidget(widget);
+  }, widget.displayConditions.showDelay * 1000);
+}
+
+/** @module pathfora/display-conditions/entity-field-checker */
+
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text fields
+ *
+ * @exports entityFieldChecker
+ * @params {object} widget
+ * @params {string} fieldName
+ * @params {array} found
+ * @returns {boolean}
+ */
+function entityFieldChecker (widget, fieldName, found) {
+  if (!found || !found.length) {
+    return true;
+  }
+
+  // for each template found...
+  for (var f = 0; f < found.length; f++) {
+    // parse the field name
+    var dataval = found[f].slice(2).slice(0, -2),
+        parts = dataval.split('|'),
+        def = '';
+
+    // get the default (fallback) value
+    if (parts.length > 1) {
+      def = parts[1].trim();
+    }
+
+    // check for subfields if the value is an object
+    var split = parts[0].trim().split('.');
+
+    dataval = window.lio.data;
+    var s;
+
+    for (s = 0; s < split.length; s++) {
+      if (typeof dataval !== 'undefined') {
+        dataval = dataval[split[s]];
+      }
+    }
+
+    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
+    if (typeof dataval === 'undefined') {
+      dataval = this.customData;
+
+      for (s = 0; s < split.length; s++) {
+        if (typeof dataval !== 'undefined') {
+          dataval = dataval[split[s]];
+        }
+      }
+    }
+
+    // replace the template with the lytics data value
+    if (typeof dataval !== 'undefined') {
+      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+    // if there's no default and we should error
+    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
+      return false;
+    // replace with the default option, or empty string if not found
+    } else {
+      widget[fieldName] = widget[fieldName].replace(found[f], def);
+    }
+  }
+
+  return true;
+}
+
+/** @module pathfora/data/tracking/track-time-on-page */
+
+/**
+ * Record the amount of time the user has spent
+ * on the current page
+ *
+ * @exports trackTimeOnPage
+ */
+function trackTimeOnPage () {
+  setInterval(function () {
+    pathforaDataObject.timeSpentOnPage += 1;
+  }, 1000);
+}
+
+/** @module pathfora/data/segments/get-user-segments */
+
+/**
+ * Get a list of Lytics segments for the user
+ *
+ * @exports getUserSegments
+ * @returns {array} segments
+ */
+function getUserSegments () {
+  if (window.lio && window.lio.data && window.lio.data.segments) {
+    return window.lio.data.segments;
+  } else {
+    return ['all'];
+  }
+}
+
+/** @module pathfora/widgets/validate-widgets-object */
+
+/**
+ * Validate that the widget has correct position field
+ * for its layout and type
+ *
+ * @exports validateWidgetPosition
+ * @params {object} widget
+ * @params {object} config
+ */
+function validateWidgetsObject (widgets) {
+  if (!widgets) {
+    throw new Error('Widgets not specified');
+  }
+
+  if (!(widgets instanceof Array) && widgets.target) {
+    widgets.common = widgets.common || [];
+
+    for (var i = 0; i < widgets.target.length; i++) {
+      if (!widgets.target[i].segment) {
+        throw new Error('All targeted widgets should have segment specified');
+      } else if (widgets.target[i].segment === '*') {
+        widgets.common = widgets.common.concat(widgets.target[i].widgets);
+        widgets.target.splice(i, 1);
+      }
+    }
+  }
+}
+
+/** @module pathfora/widgets/init-widgets */
+
+// globals
+// dom
+// utils
+// data
+// widgets
+/**
+ * Public method used to initialize widgets once
+ * the individual configs have been created
+ *
+ * @exports initializeWidgets
+ * @params {object} widgets
+ * @params {object} config
+ */
+function initializeWidgets (widgets, config) {
+  // NOTE IE < 10 not supported
+  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
+  var pf = this;
+  if (document.all && !window.atob) {
+    return;
+  }
+
+  // support legacy initialize function where we passed account id as
+  // a second parameter and config as third
+  if (arguments.length >= 3) {
+    config = arguments[2];
+  // if the second param is an account id, we need to throw it out
+  } else if (typeof config === 'string') {
+    config = null;
+  }
+
+  validateWidgetsObject(widgets);
+  trackTimeOnPage();
+
+  if (config) {
+    updateObject(defaultProps, config);
+  }
+
+  if (widgets instanceof Array) {
+
+    // NOTE Simple initialization
+    pf.initializeWidgetArray(widgets);
+  } else {
+
+    // NOTE Target sensitive widgets
+    if (widgets.common) {
+      pf.initializeWidgetArray(widgets.common);
+      updateObject(defaultProps, widgets.common.config);
+    }
+
+    if (widgets.target || widgets.exclude) {
+      // Add callback to initialize once we know segments are loaded
+      pf.addCallback(function () {
+        var target, ti, tl, exclude, ei, ex, ey, el,
+            targetedwidgets = [],
+            excludematched = false,
+            segments = getUserSegments();
+
+        // handle inclusions
+        if (widgets.target) {
+          tl = widgets.target.length;
+          for (ti = 0; ti < tl; ti++) {
+            target = widgets.target[ti];
+            if (segments && segments.indexOf(target.segment) !== -1) {
+              // add the widgets with proper targeting to the master list
+              // ensure we dont overwrite existing widgets in target
+              targetedwidgets = targetedwidgets.concat(target.widgets);
+            }
+          }
+        }
+
+        // handle exclusions
+        if (widgets.exclude) {
+          el = widgets.exclude.length;
+          for (ei = 0; ei < el; ei++) {
+            exclude = widgets.exclude[ei];
+            if (segments && segments.indexOf(exclude.segment) !== -1) {
+              // we found a match, ensure the corresponding segment(s) are not in the
+              // targetted widgets array
+              for (ex = 0; ex < targetedwidgets.length; ex++) {
+                for (ey = 0; ey < exclude.widgets.length; ey++) {
+                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
+                    targetedwidgets.splice(ex, 1);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (targetedwidgets.length) {
+          pf.initializeWidgetArray(targetedwidgets);
+        }
+
+        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
+          pf.initializeWidgetArray(widgets.inverse);
+        }
+      });
+    }
+  }
+}
+
+/** @module pathfora/data/request/get-data */
+
+/**
+ * Make an http GET request
+ *
+ * @exports getData
+ * @params {string} url
+ * @params {function} onSuccess
+ * @params {function} onError
+ */
+function getData (url, onSuccess, onError) {
+  var xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      onSuccess(xhr.responseText);
+    } else if (xhr.readyState === 4) {
+      onError(xhr.responseText);
+    }
+  };
+
+  xhr.open('GET', url);
+  xhr.send();
+}
+
+/** @module pathfora/recommendations/recommend-content */
+
+// globals
+// utils
+// data
+/**
+ * Make the request to the Lytics content recommendation API
+ * and return a list of recommended documents
+ *
+ * @exports recommendContent
+ * @params {string} accountId
+ * @params {object} params
+ * @params {string} id
+ * @params {function} callback
+ */
+function recommendContent (accountId, params, id, callback) {
+  // Recommendation API:
+  // https://www.getlytics.com/developers/rest-api#content-recommendation
+
+  // if we have the recommendation response cached in session storage
+  // use that instead of making a new API request
+  var storedRec = sessionStorage.getItem(PREFIX_REC + id);
+
+  if (typeof storedRec === 'string' && params.visited !== false) {
+    var rec;
+
+    try {
+      rec = JSON.parse(storedRec);
+    } catch (e) {
+      console.warn('Could not parse json stored response:' + e);
+    }
+
+    if (rec && rec.data) {
+      // special case: shuffle param
+      if (params.shuffle === true) {
+        rec.data.shift();
+      }
+
+      if (rec.data.length > 0) {
+        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+        callback(rec.data);
+      }
+      return;
+    }
+  }
+
+  var seerId = readCookie('seerid');
+
+  if (!seerId) {
+    throw new Error('Cannot find SEERID cookie');
+  }
+
+  var recommendParts = [
+    API_URL + '/api/content/recommend/',
+    accountId,
+    '/user/_uids/',
+    seerId
+  ];
+
+
+  var ql = params.ql,
+      ast = params.ast,
+      display = params.display;
+
+  delete params.ql;
+  delete params.ast;
+  delete params.display;
+
+  var queries = constructQueries(params);
+
+  params.display = display;
+
+  if (!params.contentsegment) {
+    // Special case for Adhoc Segments
+    if (ql && ql.raw || ast) {
+      if (queries.length > 0) {
+        queries += '&';
+      } else {
+        queries += '?';
+      }
+
+      // Filter QL
+      if (ql && ql.raw) {
+        queries += 'ql=' + ql.raw;
+
+      // Segment JSON (usually segment AST)
+      } else {
+        var contentSegment = {table: 'content', ast: ast};
+        queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+      }
+    }
+  }
+
+  var recommendUrl = recommendParts.join('') + queries;
+
+  getData(recommendUrl, function (json) {
+
+    // set the session storage.
+    sessionStorage.setItem(PREFIX_REC + id, json);
+    var resp;
+
+    try {
+      resp = JSON.parse(json);
+    } catch (e) {
+      console.warn('Could not parse json response:' + e);
+      callback([]);
+      return;
+    }
+
+    if (resp.data && resp.data.length > 0) {
+      // append a protocol for urls that are absolute
+      for (var i = 0; i < resp.data.length; i++) {
+        var url = resp.data[i].url;
+        if (url) {
+          var split = url.split('/')[0].split('.');
+          if (split.length > 1) {
+            resp.data[i].url = 'http://' + url;
+          }
+        }
+      }
+
+      callback(resp.data);
+    } else {
+      callback([]);
+    }
+  }, function () {
+    callback([]);
+  });
+}
+
+/** @module pathfora/widgets/initialize-widget-array */
+
+// globals
+// dom
+// utils
+// recommendations
+/**
+ * Given an array of widgets, begin off the initialization
+ * process for each
+ *
+ * @exports initializeWidgetArray
+ * @params {array} array
+ */
+function initializeWidgetArray (array) {
+  var pf = this;
+
+  var displayWidget = function (w) {
+    if (w.displayConditions.showDelay) {
+      pf.registerDelayedWidget(w);
+    } else {
+      pf.initializeWidget(w);
+    }
+  };
+
+  var recContent = function (w, params) {
+    pf.addCallback(function () {
+      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
+        if (window.lio && window.lio.account) {
+          pf.acctid = window.lio.account.id;
+        } else {
+          throw new Error('Could not get account id from Lytics Javascript tag.');
+        }
+      }
+
+      recommendContent(pf.acctid, params, w.id, function (resp) {
+        // if we get a response from the recommend api put it as the first
+        // element in the content object this replaces any default content
+        if (resp[0]) {
+          var content = resp[0];
+          w.content = [
+            {
+              title: content.title,
+              description: content.description,
+              url: content.url,
+              image: content.primary_image,
+              date: content.created,
+              author: content.author
+            }
+          ];
+        }
+
+        // if we didn't get a valid response from the api, we check if a default
+        // exists and use that as our content piece instead
+        if (!w.content) {
+          throw new Error('Could not get recommendation and no default defined');
+        }
+
+        displayWidget(w);
+      });
+    });
+  };
+
+  for (var i = 0; i < array.length; i++) {
+    var widget = array[i];
+
+    if (!widget || !widget.config) {
+      continue;
+    }
+
+    var widgetOnInitCallback = widget.config.onInit,
+        defaults = defaultProps[widget.type],
+        globals = defaultProps.generic;
+
+    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
+      continue;
+    }
+
+    if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
+      widgetTracker.initializedWidgets.push(widget.id);
+    } else {
+      throw new Error('Cannot add two widgets with the same id');
+    }
+
+    updateObject(widget, globals);
+    updateObject(widget, defaults);
+    updateObject(widget, widget.config);
+
+    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
+      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
+        throw new Error('Unsupported layout for content recommendation');
+      }
+
+      if (widget.content && widget.content[0] && !widget.content[0].default) {
+        throw new Error('Cannot define recommended content unless it is a default');
+      }
+
+      var params = widget.recommend;
+
+      if (widget.recommend.collection) {
+        params.contentsegment = widget.recommend.collection;
+        delete params.collection;
+      }
+
+      recContent(widget, params);
+
+    } else {
+      displayWidget(widget);
+    }
+
+    // NOTE onInit feels better here
+    if (typeof widgetOnInitCallback === 'function') {
+      widgetOnInitCallback(callbackTypes.INIT, {
+        config: widget
+      });
+    }
+  }
+}
+
+/** @module pathfora/display-conditions/date-checker */
+
+/**
+ * Check if the current date fits within the
+ * date displayConitions for the widget
+ *
+ * @exports dateChecker
+ * @params {object} date
+ * @returns {boolean}
+ */
+function dateChecker (date) {
+  var valid = true,
+      today = Date.now();
+
+  if (date.start_at && today < new Date(date.start_at).getTime()) {
+    valid = false;
+  }
+
+  if (date.end_at && today > new Date(date.end_at).getTime()) {
+    valid = false;
+  }
+
+  return valid;
+}
+
+/** @module pathfora/display-conditions/pageviews/page-visits-checker */
+
+// globals
+// utils
+/**
+ * Check if the pagevist count meets the requirements
+ *
+ * @exports pageVisitsChecker
+ * @returns {boolean}
+ */
+function pageVisitsChecker (pageVisitsRequired) {
+  return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
+}
+
+/** @module pathfora/display-conditions/hide-after-action-checker */
+
+// globals
+// utils
+/**
+ * Check if a widget should be hidden because it meets
+ * a hideAfterAction display condition
+ *
+ * @exports hideAfterActionChecker
+ * @params {object} hideAfterActionConstraints
+ * @params {string} widget
+ * @returns {boolean}
+ */
+function hideAfterActionChecker (hideAfterActionConstraints, widget) {
+  var parts,
+      valid = true,
+      now = Date.now(),
+      confirm = readCookie(PREFIX_CONFIRM + widget.id),
+      cancel = readCookie(PREFIX_CANCEL + widget.id),
+      closed = readCookie(PREFIX_CLOSE + widget.id);
+
+  if (hideAfterActionConstraints.confirm && confirm) {
+    parts = confirm.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+      valid = false;
+    }
+  }
+
+  if (hideAfterActionConstraints.cancel && cancel) {
+    parts = cancel.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+      valid = false;
+    }
+  }
+
+  if (hideAfterActionConstraints.closed && closed) {
+    parts = closed.split('|');
+
+    if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
+      valid = false;
+    }
+
+    if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+      valid = false;
+    }
+  }
+
+  return valid;
+}
+
+/** @module pathfora/display-conditions/url-contains/parse-query */
+
+/**
+ * Convert key/value queries from a URL into an object
+ *
+ * @exports parseQuery
+ * @params {string} url
+ * @returns {object} query
+ */
+function parseQuery (url) {
+  var query = {},
+      pieces = escapeURI(url, { keepEscaped: true }).split('?');
+
+  if (pieces.length > 1) {
+    pieces = pieces[1].split('&');
+
+    for (var i = 0; i < pieces.length; i++) {
+      var pair = pieces[i].split('=');
+
+      if (pair.length > 1) {
+        // NOTE We should not account for the preview id
+        if (pair[0] !== 'lytics_variation_preview_id') {
+          query[pair[0]] = pair[1];
+        }
+      }
+    }
+  }
+
+  return query;
+}
+
+/** @module pathfora/display-conditions/url-contains/compare-queries */
+
+/**
+ * Check if urls contain matching query params
+ *
+ * @exports compareQueries
+ * @params {object} query
+ * @params {object} matchQuery
+ * @params {string} rule
+ * @returns {bool}
+ */
+function compareQueries (query, matchQuery, rule) {
+  switch (rule) {
+  case 'exact':
+    if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+      return false;
+    }
+    break;
+
+  default:
+    break;
+  }
+
+  for (var key in matchQuery) {
+    if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/** @module pathfora/display-conditions/url-contains/phrase-checker */
+
+// utils
+// display conditions
+/**
+ * Evaluate if the current URL matches a single urlContains
+ * rule provided
+ *
+ * @exports phraseChecker
+ * @params {object} phrase
+ * @params {string} url
+ * @params {string} simpleurl
+ * @params {object} queries
+ * @returns {boolean}
+ */
+function phraseChecker (phrase, url, simpleurl, queries) {
+  var valid = false;
+
+  // legacy match allows for an array of strings, check if we are legacy or current object approach
+  switch (typeof phrase) {
+  case 'string':
+    if (url.indexOf(escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+      valid = compareQueries(queries, parseQuery(phrase), 'substring');
+    }
+    break;
+
+  case 'object':
+    if (phrase.match && phrase.value) {
+      var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
+
+      switch (phrase.match) {
+      // simple match
+      case 'simple':
+        if (simpleurl.slice(-1) === '/') {
+          simpleurl = simpleurl.slice(0, -1);
+        }
+
+        if (phrase.value.slice(-1) === '/') {
+          phrase.value = phrase.value.slice(0, -1);
+        }
+
+        if (simpleurl === phrase.value) {
+          valid = true;
+        }
+        break;
+
+      // exact match
+      case 'exact':
+        if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+        }
+        break;
+
+      // regex
+      case 'regex':
+        var re = new RegExp(phrase.value);
+
+        if (re.test(url)) {
+          valid = true;
+        }
+        break;
+
+      // string match (default)
+      default:
+        if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+          valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+        }
+        break;
+      }
+
+    } else {
+      console.log('invalid display conditions');
+    }
+    break;
+
+  default:
+    console.log('invalid display conditions');
+    break;
+  }
+
+  return valid;
+}
+
+/** @module pathfora/display-conditions/url-contains/url-checker */
+
+// utils
+// display conditions
+/**
+ * Evaluate if the current URL matches the rules defined
+ * by the urlContains display condition
+ *
+ * @exports urlChecker
+ * @params {array} phrases
+ * @returns {boolean}
+ */
+function urlChecker (phrases) {
+  var url = escapeURI(window.location.href, { keepEscaped: true }),
+      simpleurl = window.location.hostname + window.location.pathname,
+      queries = parseQuery(url),
+      valid, excludeValid = false,
+      matchCt, excludeCt = 0;
+
+  if (!(phrases instanceof Array)) {
+    phrases = Object.keys(phrases).map(function (key) {
+      return phrases[key];
+    });
+  }
+
+  // array of urlContains params is an or list, so if any are true evaluate valid to true
+  if (phrases.indexOf('*') === -1) {
+    phrases.forEach(function (phrase) {
+      if (phrase.exclude) {
+        excludeValid = phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
+        excludeCt++;
+      } else {
+        valid = phraseChecker(phrase, url, simpleurl, queries) || valid;
+        matchCt++;
+      }
+    });
+  } else {
+    valid = true;
+  }
+
+  if (matchCt === 0) {
+    return !excludeValid;
+  }
+
+  if (excludeCt === 0) {
+    return valid;
+  }
+
+  return valid && !excludeValid;
+}
+
 /** @module pathfora/display-conditions/init-exit-intent */
 
-// display conditions
 // dom
+// display conditions
 /**
  * Setup exitIntent for a widget
  *
@@ -3003,8 +3351,8 @@ function registerElementWatcher (selector, widget) {
 
 /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
-// display conditions
 // dom
+// display conditions
 /**
  * Add event listener for scroll display conditions
  *
@@ -3089,33 +3437,13 @@ function registerManualTriggerWatcher (value, widget) {
   return watcher;
 }
 
-/** @module pathfora/display-conditions/manual-trigger/trigger-widget */
-
-// display conditions
-// globals
-/**
- * Trigger a single "manualTrigger" widget to be shown
- *
- * @exports triggerWidget
- * @params {object} widget
- * @returns {boolean}
- */
-function triggerWidget (widget) {
-  return validateWatchers(widget, function () {
-    widgetTracker.triggeredWidgets[widget.id] = false;
-
-    // remove from the ready widgets list
-    widgetTracker.readyWidgets.some(function (w, i) {
-      if (w.id === widget.id) {
-        widgetTracker.readyWidgets.splice(i, 1);
-        return true;
-      }
-    });
-  });
-}
-
 /** @module pathfora/widgets/init-widget */
 
+// display conditions
+// widgets
+// globals
+// dom
+// utils
 /**
  * Determine if a widget should be shown based on display
  * conditions, and if so show the widget
@@ -3232,40 +3560,10 @@ function initializeWidget (widget) {
   }
 }
 
-/** @module pathfora/utils/generate-unique-id */
-
-/**
- * Create a unique string identifier
- *
- * @exports generateUniqueId
- * @returns {string} id
- */
-function generateUniqueId () {
-  var s4;
-
-  if (typeof s4 === 'undefined') {
-    s4 = function () {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    };
-  }
-
-  return [
-    s4(), s4(),
-    '-',
-    s4(),
-    '-',
-    s4(),
-    '-',
-    s4(),
-    '-',
-    s4(), s4(), s4()
-  ].join('');
-}
-
 /** @module pathfora/widgets/preview-widget */
 
+// utils
+// widgets
 /**
  * Create a minimal widget for a preview
  *
@@ -3297,6 +3595,10 @@ function cancelDelayedWidget (widget) {
 
 /** @module pathfora/widgets/clear-all */
 
+// globals
+// dom
+// utils
+// display conditions
 /**
  * Close all widgets and reset all settings to default
  *
@@ -3484,144 +3786,452 @@ function SiteGate (config) {
   return prepareWidget('sitegate', config);
 }
 
-/** @module pathfora/display-conditions/pageviews/init-pageviews */
+/** @module pathfora/ab-test/init-ab-test */
 
 // globals
 // utils
 /**
- * Track and update the number of pageviews
+ * Initialized A/B test from user config
  *
- * @exports initializePageViews
+ * @exports initializeABTesting
+ * @params {object} abTests
  */
-function initializePageViews () {
-  var cookie = readCookie(PF_PAGEVIEWS),
-      date = new Date();
-  date.setDate(date.getDate() + 365);
-  readCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
-}
+function initializeABTesting (abTests) {
+  abTests.forEach(function (abTest) {
+    var abTestingType = abTest.type,
+        userAbTestingValue = readCookie(abTest.cookieId),
+        userAbTestingGroup = 0,
+        date = new Date();
 
-/** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
-
-// globals
-// display conditions
-/**
- * Public method to trigger a widget that has already been
- * initialized and have the "manualTrigger" display condition
- *
- * @exports triggerWidgets
- * @params {array} widgetIds
- */
-function triggerWidgets (widgetIds) {
-  var i, valid;
-
-  // no widget ids provided, trigger all ready widgets
-  if (typeof widgetIds === 'undefined') {
-    widgetTracker.triggeredWidgets['*'] = true;
-
-    for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
-      valid = triggerWidget(widgetTracker.readyWidgets[i]);
-      if (valid) {
-        i--;
-      }
+    if (!userAbTestingValue) {
+      userAbTestingValue = Math.random();
     }
 
-  // trigger all widget ids provided
-  } else {
-    widgetIds.forEach(function (id) {
-      if (widgetTracker.triggeredWidgets[id] !== false) {
-        widgetTracker.triggeredWidgets[id] = true;
+    // NOTE Always update the cookie to get the new exp date.
+    date.setDate(date.getDate() + 365);
+    saveCookie(abTest.cookieId, userAbTestingValue, date);
+
+    // NOTE Determine visible group for the user
+    var i = 0;
+    while (i < 1) {
+      i += abTestingType.groups[userAbTestingGroup];
+
+      if (userAbTestingValue <= i) {
+        break;
       }
 
-      for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
-        valid = triggerWidget(widgetTracker.readyWidgets[i]);
-        if (valid) {
-          i--;
+      userAbTestingGroup++;
+    }
+
+    // NOTE Notify widgets about their proper AB groups
+    abTest.groups.forEach(function (group, index) {
+      group.forEach(function (widget) {
+        if (typeof widget.abTestingGroup === 'undefined') {
+          widget.abTestingGroup = index;
+          widget.hiddenViaABTests = userAbTestingGroup === index;
+        } else {
+          throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
         }
+      });
+    });
+
+    if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
+      throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
+    }
+
+    pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
+  });
+}
+
+/** @module pathfora/ab-test/prepare-ab-test */
+
+/**
+ * Prepares A/B test user config for use
+ *
+ * @exports initializeABTesting
+ * @params {object} abTests
+ */
+function prepareABTest (config) {
+  var test = {};
+
+  if (!config) {
+    throw new Error('Config object is missing');
+  }
+
+  test.id = config.id;
+  test.cookieId = PREFIX_AB_TEST + config.id;
+  test.groups = config.groups;
+
+  if (!abTestingTypes[config.type]) {
+    throw new Error('Unknown AB testing type: ' + config.type);
+  }
+
+  test.type = abTestingTypes[config.type];
+
+  return test;
+}
+
+/** @module pathfora/ab-test/ab-test */
+
+/**
+ * Public wrapper method for prepareABTest
+ *
+ * @exports ABTest
+ * @param {object} config
+ * @returns {object}
+ */
+function ABTest (config) {
+  return prepareABTest(config);
+}
+
+/** @module pathfora/form/auto-complete-form-fields */
+
+/**
+ * Fill in the form of the widget with
+ * the data provided
+ *
+ * @exports autoCompleteFormFields
+ * @params {object} data
+ */
+function autoCompleteFormFields (data) {
+  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+  widgets.forEach(function (widget) {
+    if (widget.querySelector('.' + data.type + '-login-btn')) {
+      Object.keys(data).forEach(function (inputField) {
+        var field = widget.querySelector('input[name="' + inputField + '"]');
+
+        if (field && !field.value) {
+          field.value = data[inputField];
+        }
+      });
+    }
+  });
+}
+
+/** @module pathfora/integrations/auto-complete-facebook-data */
+
+// dom
+// form
+/**
+ * Fill in widget form with data from facebook login
+ *
+ * @exports autoCompleteFacebookData
+ * @params {array} elements
+ */
+function autoCompleteFacebookData (elements) {
+  window.FB.api('/me', {
+    fields: 'name,email,work'
+  }, function (resp) {
+    if (resp && !resp.error) {
+      autoCompleteFormFields({
+        type: 'facebook',
+        username: resp.name || '',
+        email: resp.email || ''
+      });
+
+      elements.forEach(function (item) {
+        item.innerHTML = 'Log Out';
+      });
+    }
+  });
+}
+
+/** @module pathfora/form/auto-complete-form-fields */
+
+/**
+ * Clear all current values from a widget form
+ *
+ * @exports clearFormFields
+ * @params {string} type
+ * @params {array} fields
+ */
+function clearFormFields (type, fields) {
+  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+
+  widgets.forEach(function (widget) {
+    if (widget.querySelector('.' + type + '-login-btn')) {
+      fields.forEach(function (inputField) {
+        var field = widget.querySelector('input[name="' + inputField + '"]');
+
+        if (field) {
+          field.value = '';
+        }
+      });
+    }
+  });
+}
+
+/** @module pathfora/integrations/on-facebook-click */
+
+// dom
+// form
+// integrations
+/**
+ * Setup login when the user clicks the fb
+ * social login button
+ *
+ * @exports onFacebookClick
+ * @params {array} elements
+ */
+function onFacebookClick (elements) {
+  window.FB.getLoginStatus(function (connection) {
+    if (connection.status === 'connected') {
+      window.FB.logout(function () {
+        elements.forEach(function (elem) {
+          elem.innerHTML = 'Log In';
+        });
+        clearFormFields('facebook', ['username', 'email']);
+      });
+
+    } else {
+      window.FB.login(function (resp) {
+        if (resp.authResponse) {
+          autoCompleteFacebookData(elements);
+        }
+      });
+    }
+  });
+}
+
+/** @module pathfora/integrations/on-facebook-load */
+
+// dom
+// integrations
+/**
+ * Check if the user is already logged in once
+ * the fb library is loaded and setup the click
+ * listener for the social button
+ *
+ * @exports onFacebookLoad
+ */
+function onFacebookLoad () {
+  var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
+
+  window.FB.getLoginStatus(function (connection) {
+    if (connection.status === 'connected') {
+      autoCompleteFacebookData(fbBtns);
+    }
+  });
+
+  fbBtns.forEach(function (element) {
+    if (element.parentElement) {
+      element.parentElement.onclick = function () {
+        onFacebookClick(fbBtns);
+      };
+    }
+  });
+}
+
+/** @module pathfora/integrations/facebook */
+
+// globals
+// dom
+// integrations
+/**
+ * Initialize facebook tag and set up social login
+ * button template
+ *
+ * @exports integrateWithFacebook
+ * @params {string} appId
+ */
+function integrateWithFacebook (appId) {
+  if (appId !== '') {
+    var btn = templates.social.facebookBtn.replace(
+      /(\{){2}facebook-icon(\}){2}/gm,
+      templates.assets.facebookIcon
+    );
+
+    var parseFBLoginTemplate = function (parentTemplates) {
+      Object.keys(parentTemplates).forEach(function (type) {
+        parentTemplates[type] = parentTemplates[type].replace(
+          /<p name='fb-login' hidden><\/p>/gm,
+          btn
+        );
+      });
+    };
+
+    window.fbAsyncInit = function () {
+      window.FB.init({
+        appId: appId,
+        xfbml: true,
+        version: 'v2.5',
+        status: true,
+        cookie: true
+      });
+
+      onFacebookLoad();
+    };
+
+    // NOTE API initialization
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {
+        return;
       }
+      js = d.createElement(s); js.id = id;
+      js.src = '//connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    parseFBLoginTemplate(templates.form);
+    parseFBLoginTemplate(templates.sitegate);
+
+    pathforaDataObject.socialNetworks.facebookAppId = appId;
+  }
+}
+
+/** @module pathfora/integrations/auto-complete-google-data */
+
+/**
+ * Fill in widget form with data from google login
+ *
+ * @exports autoCompleteGoogleData
+ * @params {object} user
+ * @params {array} elements
+ */
+function autoCompleteGoogleData (user, elements) {
+  if (typeof user !== 'undefined') {
+    var profile = user.getBasicProfile();
+
+    if (typeof profile !== 'undefined') {
+      autoCompleteFormFields({
+        type: 'google',
+        username: profile.getName() || '',
+        email: profile.getEmail() || ''
+      });
+
+      elements.forEach(function (item) {
+        item.innerHTML = 'Sign Out';
+      });
+    }
+  }
+}
+
+/** @module pathfora/integrations/on-google-click */
+
+// dom
+// integrations
+// form
+/**
+ * Setup login when the user clicks the google
+ * social login button
+ *
+ * @exports onGoogleClick
+ * @params {array} elements
+ */
+function onGoogleClick (elements) {
+  var auth2 = window.gapi.auth2.getAuthInstance();
+
+  if (auth2.isSignedIn.get()) {
+    auth2.signOut().then(function () {
+      elements.forEach(function (elem) {
+        elem.innerHTML = 'Sign In';
+      });
+      clearFormFields('google', ['username', 'email']);
+    });
+
+  } else {
+    auth2.signIn().then(function () {
+      autoCompleteGoogleData(auth2.currentUser.get(), elements);
     });
   }
 }
 
-/** @module pathfora/display-conditions/delay/register-delayed-widget */
+/** @module pathfora/integrations/on-google-load */
 
+// globals
+// dom
+// integrations
 /**
- * Begin waiting for a delayed widget
+ * Check if the user is already logged in once
+ * the google library is loaded and setup the click
+ * listener for the social button
  *
- * @exports registerDelayedWidget
- * @params {object} widget
+ * @exports onGoogleLoad
  */
-function registerDelayedWidget (widget) {
-  var pf = this;
-  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-    pf.initializeWidget(widget);
-  }, widget.displayConditions.showDelay * 1000);
+function onGoogleLoad () {
+  window.gapi.load('auth2', function () {
+    var auth2 = gapi.auth2.init({
+      clientId: pathforaDataObject.socialNetworks.googleClientID,
+      cookiepolicy: 'single_host_origin',
+      scope: 'profile'
+    });
+
+    var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
+
+    auth2.then(function () {
+      var user = auth2.currentUser.get();
+      autoCompleteGoogleData(user, googleBtns);
+
+      googleBtns.forEach(function (element) {
+        if (element.parentElement) {
+          element.parentElement.onclick = function () {
+            onGoogleClick(googleBtns);
+          };
+        }
+      });
+    });
+  });
 }
 
-/** @module pathfora/display-conditions/entity-field-checker */
+/** @module pathfora/integrations/google */
 
+// globals
+// dom
+// integrations
 /**
- * Fill in the data for a entity field template in
- * a widgets text fields
+ * Initialize google tag and set up social login
+ * button template
  *
- * @exports entityFieldChecker
- * @params {object} widget
- * @params {string} fieldName
- * @params {array} found
- * @returns {boolean}
+ * @exports integrateWithGoogle
+ * @params {string} clientId
  */
-function entityFieldChecker (widget, fieldName, found) {
-  if (!found || !found.length) {
-    return true;
+function integrateWithGoogle (clientId) {
+  if (clientId !== '') {
+    var head = document.querySelector('head');
+
+    var appMetaTag = templates.social.googleMeta.replace(
+      /(\{){2}google-clientId(\}){2}/gm,
+      clientId
+    );
+
+    var btn = templates.social.googleBtn.replace(
+      /(\{){2}google-icon(\}){2}/gm,
+      templates.assets.googleIcon
+    );
+
+    var parseGoogleLoginTemplate = function (parentTemplates) {
+      Object.keys(parentTemplates).forEach(function (type) {
+        parentTemplates[type] = parentTemplates[type].replace(
+          /<p name='google-login' hidden><\/p>/gm,
+          btn
+        );
+      });
+    };
+
+    head.innerHTML += appMetaTag;
+
+    window.___gcfg = {
+      parsetags: 'onload'
+    };
+
+    window.pathforaGoogleOnLoad = onGoogleLoad;
+
+    // NOTE Google API
+    (function () {
+      var s, po = document.createElement('script');
+      po.type = 'text/javascript';
+      po.async = true;
+      po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
+      s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(po, s);
+    }());
+
+    pathforaDataObject.socialNetworks.googleClientID = clientId;
+    parseGoogleLoginTemplate(templates.form);
+    parseGoogleLoginTemplate(templates.sitegate);
   }
-
-  // for each template found...
-  for (var f = 0; f < found.length; f++) {
-    // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
-        def = '';
-
-    // get the default (fallback) value
-    if (parts.length > 1) {
-      def = parts[1].trim();
-    }
-
-    // check for subfields if the value is an object
-    var split = parts[0].trim().split('.');
-
-    dataval = window.lio.data;
-    var s;
-
-    for (s = 0; s < split.length; s++) {
-      if (typeof dataval !== 'undefined') {
-        dataval = dataval[split[s]];
-      }
-    }
-
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
-    if (typeof dataval === 'undefined') {
-      dataval = this.customData;
-
-      for (s = 0; s < split.length; s++) {
-        if (typeof dataval !== 'undefined') {
-          dataval = dataval[split[s]];
-        }
-      }
-    }
-
-    // replace the template with the lytics data value
-    if (typeof dataval !== 'undefined') {
-      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
-      return false;
-    // replace with the default option, or empty string if not found
-    } else {
-      widget[fieldName] = widget[fieldName].replace(found[f], def);
-    }
-  }
-
-  return true;
 }
 
 /** @module pathfora/inline/prep-elements */
@@ -3980,573 +4590,18 @@ function initializeInline () {
   });
 }
 
-/** @module pathfora/ab-test/init-ab-test */
-
-// utils
-// globals
-/**
- * Initialized A/B test from user config
- *
- * @exports initializeABTesting
- * @params {object} abTests
- */
-function initializeABTesting (abTests) {
-  abTests.forEach(function (abTest) {
-    var abTestingType = abTest.type,
-        userAbTestingValue = readCookie(abTest.cookieId),
-        userAbTestingGroup = 0,
-        date = new Date();
-
-    if (!userAbTestingValue) {
-      userAbTestingValue = Math.random();
-    }
-
-    // NOTE Always update the cookie to get the new exp date.
-    date.setDate(date.getDate() + 365);
-    saveCookie(abTest.cookieId, userAbTestingValue, date);
-
-    // NOTE Determine visible group for the user
-    var i = 0;
-    while (i < 1) {
-      i += abTestingType.groups[userAbTestingGroup];
-
-      if (userAbTestingValue <= i) {
-        break;
-      }
-
-      userAbTestingGroup++;
-    }
-
-    // NOTE Notify widgets about their proper AB groups
-    abTest.groups.forEach(function (group, index) {
-      group.forEach(function (widget) {
-        if (typeof widget.abTestingGroup === 'undefined') {
-          widget.abTestingGroup = index;
-          widget.hiddenViaABTests = userAbTestingGroup === index;
-        } else {
-          throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
-        }
-      });
-    });
-
-    if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
-      throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
-    }
-
-    pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
-  });
-}
-
-/** @module pathfora/ab-test/prepare-ab-test */
-
-/**
- * Prepares A/B test user config for use
- *
- * @exports initializeABTesting
- * @params {object} abTests
- */
-function prepareABTest (config) {
-  var test = {};
-
-  if (!config) {
-    throw new Error('Config object is missing');
-  }
-
-  test.id = config.id;
-  test.cookieId = PREFIX_AB_TEST + config.id;
-  test.groups = config.groups;
-
-  if (!abTestingTypes[config.type]) {
-    throw new Error('Unknown AB testing type: ' + config.type);
-  }
-
-  test.type = abTestingTypes[config.type];
-
-  return test;
-}
-
-/** @module pathfora/ab-test/ab-test */
-
-/**
- * Public wrapper method for prepareABTest
- *
- * @exports ABTest
- * @param {object} config
- * @returns {object}
- */
-function ABTest (config) {
-  return prepareABTest(config);
-}
-
-/** @module pathfora/form/auto-complete-form-fields */
-
-/**
- * Fill in the form of the widget with
- * the data provided
- *
- * @exports autoCompleteFormFields
- * @params {object} data
- */
-function autoCompleteFormFields (data) {
-  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
-
-  widgets.forEach(function (widget) {
-    if (widget.querySelector('.' + data.type + '-login-btn')) {
-      Object.keys(data).forEach(function (inputField) {
-        var field = widget.querySelector('input[name="' + inputField + '"]');
-
-        if (field && !field.value) {
-          field.value = data[inputField];
-        }
-      });
-    }
-  });
-}
-
-/** @module pathfora/integrations/auto-complete-facebook-data */
-
-// form
-// dom
-/**
- * Fill in widget form with data from facebook login
- *
- * @exports autoCompleteFacebookData
- * @params {array} elements
- */
-function autoCompleteFacebookData (elements) {
-  window.FB.api('/me', {
-    fields: 'name,email,work'
-  }, function (resp) {
-    if (resp && !resp.error) {
-      autoCompleteFormFields({
-        type: 'facebook',
-        username: resp.name || '',
-        email: resp.email || ''
-      });
-
-      elements.forEach(function (item) {
-        item.innerHTML = 'Log Out';
-      });
-    }
-  });
-}
-
-/** @module pathfora/form/auto-complete-form-fields */
-
-/**
- * Clear all current values from a widget form
- *
- * @exports clearFormFields
- * @params {string} type
- * @params {array} fields
- */
-function clearFormFields (type, fields) {
-  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
-
-  widgets.forEach(function (widget) {
-    if (widget.querySelector('.' + type + '-login-btn')) {
-      fields.forEach(function (inputField) {
-        var field = widget.querySelector('input[name="' + inputField + '"]');
-
-        if (field) {
-          field.value = '';
-        }
-      });
-    }
-  });
-}
-
-/** @module pathfora/integrations/on-facebook-click */
-
-// form
-// integrations
-// dom
-/**
- * Setup login when the user clicks the fb
- * social login button
- *
- * @exports onFacebookClick
- * @params {array} elements
- */
-function onFacebookClick (elements) {
-  window.FB.getLoginStatus(function (connection) {
-    if (connection.status === 'connected') {
-      window.FB.logout(function () {
-        elements.forEach(function (elem) {
-          elem.innerHTML = 'Log In';
-        });
-        clearFormFields('facebook', ['username', 'email']);
-      });
-
-    } else {
-      window.FB.login(function (resp) {
-        if (resp.authResponse) {
-          autoCompleteFacebookData(elements);
-        }
-      });
-    }
-  });
-}
-
-/** @module pathfora/integrations/on-facebook-load */
-
-// integrations
-// dom
-/**
- * Check if the user is already logged in once
- * the fb library is loaded and setup the click
- * listener for the social button
- *
- * @exports onFacebookLoad
- */
-function onFacebookLoad () {
-  var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
-
-  window.FB.getLoginStatus(function (connection) {
-    if (connection.status === 'connected') {
-      autoCompleteFacebookData(fbBtns);
-    }
-  });
-
-  fbBtns.forEach(function (element) {
-    if (element.parentElement) {
-      element.parentElement.onclick = function () {
-        onFacebookClick(fbBtns);
-      };
-    }
-  });
-}
-
-/** @module pathfora/integrations/facebook */
-
-// dom
-// globals
-// integrations
-/**
- * Initialize facebook tag and set up social login
- * button template
- *
- * @exports integrateWithFacebook
- * @params {string} appId
- */
-function integrateWithFacebook (appId) {
-  if (appId !== '') {
-    var btn = templates.social.facebookBtn.replace(
-      /(\{){2}facebook-icon(\}){2}/gm,
-      templates.assets.facebookIcon
-    );
-
-    var parseFBLoginTemplate = function (parentTemplates) {
-      Object.keys(parentTemplates).forEach(function (type) {
-        parentTemplates[type] = parentTemplates[type].replace(
-          /<p name='fb-login' hidden><\/p>/gm,
-          btn
-        );
-      });
-    };
-
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: appId,
-        xfbml: true,
-        version: 'v2.5',
-        status: true,
-        cookie: true
-      });
-
-      onFacebookLoad();
-    };
-
-    // NOTE API initialization
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s); js.id = id;
-      js.src = '//connect.facebook.net/en_US/sdk.js';
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    parseFBLoginTemplate(templates.form);
-    parseFBLoginTemplate(templates.sitegate);
-
-    pathforaDataObject.socialNetworks.facebookAppId = appId;
-  }
-}
-
-/** @module pathfora/integrations/auto-complete-google-data */
-
-/**
- * Fill in widget form with data from google login
- *
- * @exports autoCompleteGoogleData
- * @params {object} user
- * @params {array} elements
- */
-function autoCompleteGoogleData (user, elements) {
-  if (typeof user !== 'undefined') {
-    var profile = user.getBasicProfile();
-
-    if (typeof profile !== 'undefined') {
-      autoCompleteFormFields({
-        type: 'google',
-        username: profile.getName() || '',
-        email: profile.getEmail() || ''
-      });
-
-      elements.forEach(function (item) {
-        item.innerHTML = 'Sign Out';
-      });
-    }
-  }
-}
-
-/** @module pathfora/integrations/on-google-click */
-
-// integrations
-// form
-// dom
-/**
- * Setup login when the user clicks the google
- * social login button
- *
- * @exports onGoogleClick
- * @params {array} elements
- */
-function onGoogleClick (elements) {
-  var auth2 = window.gapi.auth2.getAuthInstance();
-
-  if (auth2.isSignedIn.get()) {
-    auth2.signOut().then(function () {
-      elements.forEach(function (elem) {
-        elem.innerHTML = 'Sign In';
-      });
-      clearFormFields('google', ['username', 'email']);
-    });
-
-  } else {
-    auth2.signIn().then(function () {
-      autoCompleteGoogleData(auth2.currentUser.get(), elements);
-    });
-  }
-}
-
-/** @module pathfora/integrations/on-google-load */
-
-// integrations
-// dom
-// globals
-/**
- * Check if the user is already logged in once
- * the google library is loaded and setup the click
- * listener for the social button
- *
- * @exports onGoogleLoad
- */
-function onGoogleLoad () {
-  window.gapi.load('auth2', function () {
-    var auth2 = gapi.auth2.init({
-      clientId: pathforaDataObject.socialNetworks.googleClientID,
-      cookiepolicy: 'single_host_origin',
-      scope: 'profile'
-    });
-
-    var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
-
-    auth2.then(function () {
-      var user = auth2.currentUser.get();
-      autoCompleteGoogleData(user, googleBtns);
-
-      googleBtns.forEach(function (element) {
-        if (element.parentElement) {
-          element.parentElement.onclick = function () {
-            onGoogleClick(googleBtns);
-          };
-        }
-      });
-    });
-  });
-}
-
-/** @module pathfora/integrations/google */
-
-// dom
-// globals
-// integrations
-/**
- * Initialize google tag and set up social login
- * button template
- *
- * @exports integrateWithGoogle
- * @params {string} clientId
- */
-function integrateWithGoogle (clientId) {
-  if (clientId !== '') {
-    var head = document.querySelector('head');
-
-    var appMetaTag = templates.social.googleMeta.replace(
-      /(\{){2}google-clientId(\}){2}/gm,
-      clientId
-    );
-
-    var btn = templates.social.googleBtn.replace(
-      /(\{){2}google-icon(\}){2}/gm,
-      templates.assets.googleIcon
-    );
-
-    var parseGoogleLoginTemplate = function (parentTemplates) {
-      Object.keys(parentTemplates).forEach(function (type) {
-        parentTemplates[type] = parentTemplates[type].replace(
-          /<p name='google-login' hidden><\/p>/gm,
-          btn
-        );
-      });
-    };
-
-    head.innerHTML += appMetaTag;
-
-    window.___gcfg = {
-      parsetags: 'onload'
-    };
-
-    window.pathforaGoogleOnLoad = onGoogleLoad;
-
-    // NOTE Google API
-    (function () {
-      var s, po = document.createElement('script');
-      po.type = 'text/javascript';
-      po.async = true;
-      po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
-      s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(po, s);
-    }());
-
-    pathforaDataObject.socialNetworks.googleClientID = clientId;
-    parseGoogleLoginTemplate(templates.form);
-    parseGoogleLoginTemplate(templates.sitegate);
-  }
-}
-
-/** @module pathfora/data/tracking/get-data-object */
-
-/**
- * Get the pathfora data object
- *
- * @exports getDataObject
- * @returns {object} pathforaDataObject
- */
-function getDataObject () {
-  return pathforaDataObject;
-}
-
-/** @module pathfora/utils/scaffold/init-scaffold */
-
-/**
- * Initialize scaffold for Lytics controlled widgets
- *
- * @exports initWidgetScaffold
- * @returns {object} scaffold
- */
-function initWidgetScaffold () {
-  return {
-    target: [],
-    exclude: [],
-    inverse: []
-  };
-}
-
-/** @module pathfora/utils/scaffold/insert-widget */
-
-/**
- * Insert a widget and targeting info into
- * the widget scaffold
- *
- * @exports insertWidget
- * @params {string} method
- * @params {string} segment
- * @params {object} widget
- * @params {object} config
- */
-function insertWidget (method, segment, widget, config) {
-  // assume that we need to add a new widget until proved otherwise
-  var subject,
-      makeNew = true;
-
-  // make sure our scaffold is valid
-  if (!config.target) {
-    throw new Error('Invalid scaffold. No target array.');
-  }
-  if (!config.exclude) {
-    throw new Error('Invalid scaffold. No exclude array.');
-  }
-  if (!config.inverse) {
-    throw new Error('Invalid scaffold. No inverse array.');
-  }
-
-  if (method === 'target') {
-    subject = config.target;
-  } else if (method === 'exclude') {
-    subject = config.exclude;
-  } else {
-    throw new Error('Invalid method (' + method + ').');
-  }
-
-  for (var i = 0; i < subject.length; i++) {
-    var wgt = subject[i];
-
-    if (wgt.segment === segment) {
-      wgt.widgets.push(widget);
-      makeNew = false;
-    }
-  }
-
-  if (makeNew) {
-    subject.push({
-      'segment': segment,
-      'widgets': [widget]
-    });
-  }
-}
-
-/** @module pathfora/utils */
-
-// class
-// cookies
-// scaffold
-// url
-/**
- * Object containing utility functions
- *
- * @exports utils
- */
-
-var utils = {
-  generateUniqueId: generateUniqueId,
-  updateObject: updateObject,
-  addClass: addClass,
-  hasClass: hasClass,
-  removeClass: removeClass,
-  readCookie: readCookie,
-  saveCookie: saveCookie,
-  initWidgetScaffold: initWidgetScaffold,
-  insertWidget: insertWidget,
-  constructQueries: constructQueries,
-  escapeURI: escapeURI
-};
-
 /** @module pathfora */
 
 // global
 // dom
+// utils
+// data
 // callbacks
-// widgets
 // display conditions
-// inline
+// widgets
 // ab tests
 // integrations
-// data
-// utils
+// inline
 /**
  * Creates a new Pathfora instance
  *
@@ -4554,18 +4609,35 @@ var utils = {
  * @class {function} Pathfora
  */
 var Pathfora = function () {
+  // globals
   this.version = PF_VERSION;
   this.callbacks = [];
   this.acctid = '';
   this.locale = PF_LOCALE;
   this.dateOptions = PF_DATE_OPTIONS;
   this.DOMLoaded = false;
+  this.enableGA = false;
   this.customData = {};
 
+  // dom
   this.onDOMready = onDOMready;
 
+  // utils
+  this.utils = utils;
+
+  // data
+  this.getDataObject = getDataObject;
+
+  // callbacks
   this.addCallback = addCallback;
 
+  // display conditions
+  this.initializePageViews = initializePageViews;
+  this.triggerWidgets = triggerWidgets;
+  this.registerDelayedWidget = registerDelayedWidget;
+  this.entityFieldChecker = entityFieldChecker;
+
+  // widgets
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
@@ -4579,27 +4651,21 @@ var Pathfora = function () {
   this.Form = Form;
   this.SiteGate = SiteGate;
 
-  this.initializePageViews = initializePageViews;
-  this.triggerWidgets = triggerWidgets;
-  this.registerDelayedWidget = registerDelayedWidget;
-  this.entityFieldChecker = entityFieldChecker;
-
-  this.initializeInline = initializeInline;
-
+  // ab tests
   this.initializeABTesting = initializeABTesting;
   this.ABTest = ABTest;
 
+  // integations
   this.integrateWithFacebook = integrateWithFacebook;
   this.integrateWithGoogle = integrateWithGoogle;
 
-  this.getDataObject = getDataObject;
-
-  this.utils = utils;
-
+  // inline
+  this.initializeInline = initializeInline;
   this.inline = new Inline(this);
   this.initializeInline();
   this.initializePageViews();
 
+  // add pathfora css
   var head = document.getElementsByTagName('head')[0],
       link = document.createElement('link');
 
@@ -4609,6 +4675,7 @@ var Pathfora = function () {
 
   head.appendChild(link);
 
+  // wait until everything else is loaded to prioritize widgets
   var pf = this;
   window.addEventListener('load', function () {
     pf.reinitializePrioritizedWidgets();

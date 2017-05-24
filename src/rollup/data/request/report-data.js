@@ -17,7 +17,7 @@ export default function reportData (data) {
     // NOTE Cannot find Lytics tag, reporting disabled
   }
 
-  if (typeof ga === 'function') {
+  if (window.pathfora.enableGA === true && typeof ga === 'function') {
     gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
 
     window.ga(
