@@ -2948,7 +2948,7 @@ function initializeWidgetArray (array) {
 
 /**
  * Check if the current date fits within the
- * date displayConitions for the widget
+ * date displayConditions for the widget
  *
  * @exports dateChecker
  * @params {object} date
@@ -2974,7 +2974,7 @@ function dateChecker (date) {
 // globals
 // utils
 /**
- * Check if the pagevist count meets the requirements
+ * Check if the pagevisit count meets the requirements
  *
  * @exports pageVisitsChecker
  * @returns {boolean}
@@ -3214,7 +3214,7 @@ function urlChecker (phrases) {
     });
   }
 
-  // array of urlContains params is an or list, so if any are true evaluate valid to true
+  // array of urlContains params is an "OR" list, so if any are true evaluate valid to true
   if (phrases.indexOf('*') === -1) {
     phrases.forEach(function (phrase) {
       if (phrase.exclude) {

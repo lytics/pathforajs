@@ -28,7 +28,7 @@ export default function urlChecker (phrases) {
     });
   }
 
-  // array of urlContains params is an or list, so if any are true evaluate valid to true
+  // array of urlContains params is an "OR" list, so if any are true evaluate valid to true
   if (phrases.indexOf('*') === -1) {
     phrases.forEach(function (phrase) {
       if (phrase.exclude) {

@@ -2,7 +2,7 @@
 
 /**
  * Check if the current date fits within the
- * date displayConitions for the widget
+ * date displayConditions for the widget
  *
  * @exports dateChecker
  * @params {object} date

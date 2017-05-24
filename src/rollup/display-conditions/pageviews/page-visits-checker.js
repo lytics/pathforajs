@@ -7,7 +7,7 @@ import { PF_PAGEVIEWS } from '../../globals/config';
 import readCookie from '../../utils/cookies/read-cookie';
 
 /**
- * Check if the pagevist count meets the requirements
+ * Check if the pagevisit count meets the requirements
  *
  * @exports pageVisitsChecker
  * @returns {boolean}
