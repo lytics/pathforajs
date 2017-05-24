@@ -8,6 +8,7 @@ var jstag = {
 };
 
 pathfora.utils.saveCookie('seerid', 123);
+pathfora.enableGA = true;
 
 function makeMouseEvent (type, params) {
   var evt;
@@ -75,10 +76,10 @@ describe('Pathfora', function () {
 
     pathfora.initializeWidgets([]);
 
-    var initialTime = pathfora.getData().timeSpentOnPage;
+    var initialTime = pathfora.getDataObject().timeSpentOnPage;
     jasmine.clock().tick(10000);
 
-    var afterDelay = pathfora.getData().timeSpentOnPage;
+    var afterDelay = pathfora.getDataObject().timeSpentOnPage;
     expect(afterDelay).toBeGreaterThan(initialTime + 8);
     expect(afterDelay).toBeLessThan(initialTime + 12);
     jasmine.clock().uninstall();
@@ -128,11 +129,11 @@ describe('Pathfora', function () {
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeTruthy();
-      expect(pathfora.getData()).not.toEqual(clearDataObject);
+      expect(pathfora.getDataObject()).not.toEqual(clearDataObject);
 
       pathfora.clearAll();
       expect(widget.hasClass('opened')).toBeFalsy();
-      expect(pathfora.getData()).toEqual(clearDataObject);
+      expect(pathfora.getDataObject()).toEqual(clearDataObject);
       done();
     }, 200);
   });
@@ -181,16 +182,16 @@ describe('Pathfora', function () {
     });
     pathfora.initializeWidgets([messageBar, messageModal]);
 
-    var completedActions = pathfora.getData().completedActions.length;
-    var closedWidgets = pathfora.getData().closedWidgets.length;
+    var completedActions = pathfora.getDataObject().completedActions.length;
+    var closedWidgets = pathfora.getDataObject().closedWidgets.length;
     expect(completedActions).toBe(0);
     expect(closedWidgets).toBe(0);
 
     $('#' + messageBar.id).find('.pf-widget-ok').click();
     $('#' + messageModal.id).find('.pf-widget-close').click();
 
-    completedActions = pathfora.getData().completedActions.length;
-    closedWidgets = pathfora.getData().closedWidgets.length;
+    completedActions = pathfora.getDataObject().completedActions.length;
+    closedWidgets = pathfora.getDataObject().closedWidgets.length;
     expect(completedActions).toBe(1);
     expect(closedWidgets).toBe(1);
   });
@@ -1074,41 +1075,6 @@ describe('Pathfora', function () {
     expect(w.length).toBe(1);
   });
 
-  it('should support the old cookie naming convention for A/B tests', function () {
-    var id = 'ab-7';
-    pathfora.utils.saveCookie('187ef4436122d1cc2f40dc2b92f0eba0' + id, 0.8982240918558091);
-
-    var widgetA = new pathfora.Message({
-      id: 'ab-widget7-a',
-      msg: 'A',
-      layout: 'slideout'
-    });
-
-    var widgetB = new pathfora.Message({
-      id: 'ab-widget7-b',
-      msg: 'B',
-      layout: 'slideout'
-    });
-
-    var ab = new pathfora.ABTest({
-      id: 'ab-7',
-      type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
-    });
-
-    pathfora.initializeABTesting([ab]);
-    pathfora.initializeWidgets([widgetA, widgetB]);
-
-    var wA = $('#' + widgetA.id),
-        wB = $('#' + widgetB.id);
-
-    expect(wA.length).toBe(1);
-    expect(wB.length).toBe(0);
-  });
-
   it('should support "80/20" A/B test type', function () {
     var id = 'ab-11';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.7077720651868731);
@@ -1260,14 +1226,14 @@ describe('Pathfora', function () {
     localStorage.clear();
     pathfora.initializeWidgets([messageBar]);
 
-    var visitedPage = pathfora.getData().pageViews;
+    var visitedPage = pathfora.getDataObject().pageViews;
     pathfora.clearAll();
 
     expect(visitedPage).toBe(1);
 
     pathfora.initializeWidgets([messageBar]);
 
-    visitedPage = pathfora.getData().pageViews;
+    visitedPage = pathfora.getDataObject().pageViews;
     pathfora.clearAll();
     expect(visitedPage).toBe(2);
   });
@@ -2700,8 +2666,7 @@ describe('Widgets', function () {
     expect(widget1.length).toBe(1);
     expect(widget2.length).toBe(1);
 
-    pathfora.triggeredWidgets['*'] = false;
-
+    pathfora.clearAll();
   });
 
   it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
@@ -2733,7 +2698,7 @@ describe('Widgets', function () {
     widget = $('#' + customWidget4.id);
     expect(widget.length).toBe(1);
 
-    pathfora.triggeredWidgets['*'] = false;
+    pathfora.clearAll();
   });
 
   it('should be able to show after specified time', function () {
@@ -4129,7 +4094,7 @@ describe('API', function () {
     });
 
     pathfora.initializeWidgets([subscribe]);
-    pathfora.api.getWidgetData(subscribe, callback);
+    pathfora.api.getWidgetDataObject(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -4151,7 +4116,7 @@ describe('API', function () {
     });
 
     pathfora.initializeWidgets([subscribe]);
-    pathfora.api.getWidgetData(subscribe, callback);
+    pathfora.api.getWidgetDataObject(subscribe, callback);
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -4174,7 +4139,7 @@ describe('API', function () {
 
     pathfora.initializeWidgets([subscribe]);
 
-    pathfora.api.getWidgetData(subscribe, function () {
+    pathfora.api.getWidgetDataObject(subscribe, function () {
     }, callback);
 
     expect(callback).not.toHaveBeenCalled();

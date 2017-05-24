@@ -52,7 +52,7 @@ There are 4 types of modules and 5 layouts currently supported.
   ```
 
 ## Development
-Pathfora uses [NPM](https://docs.npmjs.com/) for package management, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
+Pathfora uses [NPM](https://docs.npmjs.com/) for package management, [rollup](https://github.com/rollup/rollup) as a module bundler, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
 
 Install Dependencies:
 
@@ -63,7 +63,7 @@ $ npm install
 
 Gulp tasks:
 
-- **`gulp build`** - minify `LESS` files, lint and uglify `js` files in the `src` directory, and place output in `dist` directory.
+- **`gulp build`** - minify `LESS` files. Bundle, lint and uglify `js` modules in the `src/rollup` directory, and place output files in `dist` directory.
 
 - **`gulp`** - runs the `build` tasks above and watches for any changes in the `src` directory, files are served on `localhost` port `8080`.
 

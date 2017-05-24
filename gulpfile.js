@@ -14,6 +14,7 @@ var gulp = require('gulp'),
     fs = require('fs'),
     handlebars = require('gulp-compile-handlebars'),
     shell = require('gulp-shell'),
+    rollup = require('rollup'),
     eslint = require('gulp-eslint'),
     gutil = require('gulp-util'),
     TESTAPIURL = '//api.lytics.io',
@@ -98,12 +99,23 @@ var prepareTemplates = function () {
   return str.replace(/\"/g, '\'');
 };
 
+gulp.task('build:rollup', function () {
+  return rollup.rollup({
+    entry: 'src/rollup/pathfora.js'
+  }).then(function (bundle) {
+    bundle.write({
+      format: 'iife',
+      moduleName: 'pathfora',
+      dest: 'dist/pathfora.js'
+    });
+  });
+});
 
 gulp.task('build:js', function () {
-  gulp.src('src/*.js')
-    .pipe(replace('{{apiurl}}', '//api.lytics.io'))
-    .pipe(replace('{{cssurl}}', '//c.lytics.io/static/pathfora.min.css'))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+  gulp.src('dist/pathfora.js')
+    .pipe(replace('`{{apiurl}}`', '//api.lytics.io'))
+    .pipe(replace('`{{cssurl}}`', '//c.lytics.io/static/pathfora.min.css'))
+    .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
@@ -114,10 +126,10 @@ gulp.task('build:js', function () {
 });
 
 gulp.task('local:js', function () {
-  gulp.src('src/*.js')
-    .pipe(replace('{{apiurl}}', APIURL))
-    .pipe(replace('{{cssurl}}', CSSURL))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+  gulp.src('dist/pathfora.js')
+    .pipe(replace('`{{apiurl}}`', APIURL))
+    .pipe(replace('`{{cssurl}}`', CSSURL))
+    .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
@@ -128,10 +140,10 @@ gulp.task('local:js', function () {
 });
 
 gulp.task('build:testjs', function () {
-  gulp.src('src/*.js')
-    .pipe(replace('{{apiurl}}', TESTAPIURL))
-    .pipe(replace('{{cssurl}}', TESTCSSURL))
-    .pipe(replace('{{templates}}', prepareTemplates()))
+  gulp.src('dist/pathfora.js')
+    .pipe(replace('`{{apiurl}}`', TESTAPIURL))
+    .pipe(replace('`{{cssurl}`}', TESTCSSURL))
+    .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
     .pipe(rename({
@@ -142,7 +154,7 @@ gulp.task('build:testjs', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*', ['build:styles', 'build:js']);
+  gulp.watch('src/**/*', ['build:styles', 'build:rollup', 'build:js']);
 });
 
 gulp.task('local:watch', function () {
@@ -231,16 +243,16 @@ gulp.task('docs:mkdocs', shell.task([
 }));
 
 gulp.task('lint', function () {
-  return gulp.src(['dist/pathfora.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
+  return gulp.src(['src/rollup/**/*.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
 
-gulp.task('test', ['build:styles', 'build:testjs']);
-gulp.task('build:local', ['build:styles', 'local:js']);
+gulp.task('test', ['build:styles', 'build:rollup', 'build:testjs']);
+gulp.task('build:local', ['build:styles', 'build:rollup', 'local:js']);
 gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs']);
-gulp.task('build', ['build:styles', 'build:js', 'lint']);
+gulp.task('build', ['build:styles', 'build:rollup', 'build:js', 'lint']);
 gulp.task('local', ['build:local', 'preview', 'local:watch']);
 gulp.task('docs', ['build:local', 'build:docs', 'preview', 'docs:watch']);
 gulp.task('default', ['build', 'preview', 'watch']);
