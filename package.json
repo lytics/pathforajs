@@ -41,6 +41,7 @@
     "karma-jasmine-ajax": "^0.1.12",
     "karma-phantomjs-launcher": "^1.0.0",
     "less": "^2.4.0",
+    "rollup": "^0.41.6",
     "walk": "^2.3.9"
   },
   "scripts": {
