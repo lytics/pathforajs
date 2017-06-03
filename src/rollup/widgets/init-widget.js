@@ -52,7 +52,9 @@ export default function initializeWidget (widget) {
     }
   }
 
-  var evalDisplayConditions = function () {
+  var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
+
+  pf.replaceEntityFields(fields, widget, function () {
     // display conditions based on page load
     if (condition.date) {
       widget.valid = widget.valid && dateChecker(condition.date);
@@ -112,32 +114,5 @@ export default function initializeWidget (widget) {
         showWidget(widget);
       }
     }
-  };
-
-  var regex = /\{{2}.*?\}{2}/g;
-  var foundMsg, foundHeadline, foundImage;
-
-  if (typeof widget.msg === 'string') {
-    foundMsg = widget.msg.match(regex);
-  }
-
-  if (typeof widget.headline === 'string') {
-    foundHeadline = widget.headline.match(regex);
-  }
-
-
-  if (typeof widget.image === 'string') {
-    foundImage = widget.image.match(regex);
-  }
-
-  if ((foundMsg && foundMsg.length > 0) || (foundHeadline && foundHeadline.length > 0) || (foundImage && foundImage.length > 0)) {
-    pf.addCallback(function () {
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'msg', foundMsg);
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'headline', foundHeadline);
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'image', foundImage);
-      evalDisplayConditions();
-    });
-  } else {
-    evalDisplayConditions();
-  }
+  });
 }

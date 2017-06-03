@@ -1,6 +1,11 @@
 /** @module pathfora/display-conditions/entity-field-checker */
 
-import window from '../dom/window';
+// dom
+import window from '../../dom/window';
+
+// utils
+import setObjectValue from '../../utils/objects/set-object-value';
+import getObjectValue from '../../utils/objects/get-object-value';
 
 /**
  * Fill in the data for a entity field template in
@@ -52,15 +57,17 @@ export default function entityFieldChecker (widget, fieldName, found) {
       }
     }
 
+    var currentVal = getObjectValue(widget, fieldName);
+
     // replace the template with the lytics data value
     if (typeof dataval !== 'undefined') {
-      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+      setObjectValue(widget, fieldName, currentVal.replace(found[f], dataval));
     // if there's no default and we should error
     } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
       return false;
     // replace with the default option, or empty string if not found
     } else {
-      widget[fieldName] = widget[fieldName].replace(found[f], def);
+      setObjectValue(widget, fieldName, currentVal.replace(found[f], def));
     }
   }
 
