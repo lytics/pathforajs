@@ -1,4 +1,4 @@
-/** @module pathfora/display-conditions/entity-fields/replace-entity-fields */
+/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
 
 // utils
 import getObjectValue from '../../utils/objects/get-object-value';
