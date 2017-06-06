@@ -3987,6 +3987,7 @@ describe('Widgets', function () {
       confirmAction: {
         name: 'confirm',
         callback: function () {
+          console.log('woah');
           window.customvar = 'https://www.google.com/?promo={{promoCode}}&email={{email}}';
         }
       }

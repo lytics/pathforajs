@@ -22,6 +22,7 @@ export default function replaceEntityFields (fields, widget, cb) {
     widget.valid = widget.valid && pf.entityFieldChecker(widget, fields[i], found);
     count++;
 
+
     if (count === fields.length) {
       cb();
     }
@@ -30,8 +31,9 @@ export default function replaceEntityFields (fields, widget, cb) {
   for (i = 0; i < fields.length; i++) {
     var fieldValue = getObjectValue(widget, fields[i]);
 
+
     if (typeof fieldValue === 'function') {
-      fieldValue = String(fieldValue);
+      fieldValue = fieldValue.toString();
     }
 
     if (typeof fieldValue === 'string') {

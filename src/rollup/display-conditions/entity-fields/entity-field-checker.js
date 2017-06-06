@@ -22,6 +22,19 @@ export default function entityFieldChecker (widget, fieldName, found) {
     return true;
   }
 
+  var currentVal = getObjectValue(widget, fieldName),
+      isFn = false,
+      fnParams;
+
+  // console.log(currentVal);
+
+  if (typeof currentVal === 'function') {
+    var fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}'));
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/);
+    isFn = true;
+  }
+
   // for each template found...
   for (var f = 0; f < found.length; f++) {
     // parse the field name
@@ -57,18 +70,34 @@ export default function entityFieldChecker (widget, fieldName, found) {
       }
     }
 
-    var currentVal = getObjectValue(widget, fieldName);
+    var val;
 
     // replace the template with the lytics data value
     if (typeof dataval !== 'undefined') {
-      setObjectValue(widget, fieldName, currentVal.replace(found[f], dataval));
+      val = currentVal.replace(found[f], dataval);
     // if there's no default and we should error
     } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
       return false;
     // replace with the default option, or empty string if not found
     } else {
-      setObjectValue(widget, fieldName, currentVal.replace(found[f], def));
+      val = currentVal.replace(found[f], def);
     }
+
+    setObjectValue(widget, fieldName, val);
+    currentVal = val;
+  }
+
+  if (isFn) {
+    var fun;
+
+    if (fnParams) {
+      fun = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+    } else {
+      fun = new Function(getObjectValue(widget, fieldName));
+    }
+
+    console.log(fun.toString());
+    setObjectValue(widget, fieldName, fun);
   }
 
   return true;
