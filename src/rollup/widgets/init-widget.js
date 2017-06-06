@@ -54,7 +54,7 @@ export default function initializeWidget (widget) {
 
   var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
 
-  pf.replaceEntityFields(fields, widget, function () {
+  pf.entityFieldChecker(fields, widget, function () {
     // display conditions based on page load
     if (condition.date) {
       widget.valid = widget.valid && dateChecker(condition.date);

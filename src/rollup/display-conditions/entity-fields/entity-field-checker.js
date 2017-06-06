@@ -1,104 +1,59 @@
-/** @module pathfora/display-conditions/entity-field-checker */
-
-// dom
-import window from '../../dom/window';
+/** @module pathfora/display-conditions/entity-fields/replace-entity-fields */
 
 // utils
-import setObjectValue from '../../utils/objects/set-object-value';
 import getObjectValue from '../../utils/objects/get-object-value';
 
 /**
- * Fill in the data for a entity field template in
- * a widgets text fields
+ * Evaluate all fields on the list provided and check
+ * if there are any entity templates that need to be
+ * replaced.
  *
  * @exports entityFieldChecker
+ * @params {array} fields
  * @params {object} widget
- * @params {string} fieldName
- * @params {array} found
- * @returns {boolean}
+ * @params {function} cb
  */
-export default function entityFieldChecker (widget, fieldName, found) {
-  if (!found || !found.length) {
-    return true;
-  }
+export default function entityFieldChecker (fields, widget, cb) {
+  var found, i,
+      regex = /\{{2}.*?\}{2}/g,
+      pf = this,
+      count = 0;
 
-  var currentVal = getObjectValue(widget, fieldName),
-      isFn = false,
-      fnParams;
+  // call the replace method in a jstag callback
+  var replace = function (w, fieldName, f) {
+    pf.addCallback(function () {
+      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
+      count++;
 
-  // console.log(currentVal);
 
-  if (typeof currentVal === 'function') {
-    var fn = currentVal.toString();
-    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}'));
-    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/);
-    isFn = true;
-  }
-
-  // for each template found...
-  for (var f = 0; f < found.length; f++) {
-    // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
-        def = '';
-
-    // get the default (fallback) value
-    if (parts.length > 1) {
-      def = parts[1].trim();
-    }
-
-    // check for subfields if the value is an object
-    var split = parts[0].trim().split('.');
-
-    dataval = window.lio.data;
-    var s;
-
-    for (s = 0; s < split.length; s++) {
-      if (typeof dataval !== 'undefined') {
-        dataval = dataval[split[s]];
+      if (count === fields.length) {
+        cb();
       }
+    });
+  };
+
+  for (i = 0; i < fields.length; i++) {
+    var fieldValue = getObjectValue(widget, fields[i]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
     }
 
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
-    if (typeof dataval === 'undefined') {
-      dataval = this.customData;
+    if (typeof fieldValue === 'string') {
+      found = fieldValue.match(regex);
 
-      for (s = 0; s < split.length; s++) {
-        if (typeof dataval !== 'undefined') {
-          dataval = dataval[split[s]];
-        }
+      if (found && found.length > 0) {
+        replace(widget, fields[i], found);
+      } else {
+        count++;
       }
-    }
-
-    var val;
-
-    // replace the template with the lytics data value
-    if (typeof dataval !== 'undefined') {
-      val = currentVal.replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
-      return false;
-    // replace with the default option, or empty string if not found
     } else {
-      val = currentVal.replace(found[f], def);
+      count++;
     }
 
-    setObjectValue(widget, fieldName, val);
-    currentVal = val;
-  }
-
-  if (isFn) {
-    var fun;
-
-    if (fnParams) {
-      fun = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
-    } else {
-      fun = new Function(getObjectValue(widget, fieldName));
+    if (count === fields.length) {
+      cb();
     }
-
-    console.log(fun.toString());
-    setObjectValue(widget, fieldName, fun);
   }
-
-  return true;
 }

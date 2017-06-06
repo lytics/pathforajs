@@ -22,7 +22,7 @@ import initializePageViews from './display-conditions/pageviews/init-pageviews';
 import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
 import registerDelayedWidget from './display-conditions/delay/register-delayed-widget';
 import entityFieldChecker from './display-conditions/entity-fields/entity-field-checker';
-import replaceEntityFields from './display-conditions/entity-fields/replace-entity-fields';
+import replaceEntityField from './display-conditions/entity-fields/replace-entity-field';
 
 // widgets
 import initializeWidgets from './widgets/init-widgets';
@@ -84,7 +84,7 @@ var Pathfora = function () {
   this.triggerWidgets = triggerWidgets;
   this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
-  this.replaceEntityFields = replaceEntityFields;
+  this.replaceEntityField = replaceEntityField;
 
   // widgets
   this.initializeWidgets = initializeWidgets;

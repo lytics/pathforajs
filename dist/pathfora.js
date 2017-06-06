@@ -2499,35 +2499,92 @@ function registerDelayedWidget (widget) {
   }, widget.displayConditions.showDelay * 1000);
 }
 
-/** @module pathfora/display-conditions/entity-field-checker */
+/** @module pathfora/display-conditions/entity-fields/replace-entity-fields */
+
+// utils
+/**
+ * Evaluate all fields on the list provided and check
+ * if there are any entity templates that need to be
+ * replaced.
+ *
+ * @exports entityFieldChecker
+ * @params {array} fields
+ * @params {object} widget
+ * @params {function} cb
+ */
+function entityFieldChecker (fields, widget, cb) {
+  var found, i,
+      regex = /\{{2}.*?\}{2}/g,
+      pf = this,
+      count = 0;
+
+  // call the replace method in a jstag callback
+  var replace = function (w, fieldName, f) {
+    pf.addCallback(function () {
+      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
+      count++;
+
+
+      if (count === fields.length) {
+        cb();
+      }
+    });
+  };
+
+  for (i = 0; i < fields.length; i++) {
+    var fieldValue = getObjectValue(widget, fields[i]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
+    }
+
+    if (typeof fieldValue === 'string') {
+      found = fieldValue.match(regex);
+
+      if (found && found.length > 0) {
+        replace(widget, fields[i], found);
+      } else {
+        count++;
+      }
+    } else {
+      count++;
+    }
+
+    if (count === fields.length) {
+      cb();
+    }
+  }
+}
+
+/** @module pathfora/display-conditions/replace-entity-field */
 
 // dom
 // utils
 /**
  * Fill in the data for a entity field template in
- * a widgets text fields
+ * a widgets text field
  *
- * @exports entityFieldChecker
+ * @exports replaceEntityField
  * @params {object} widget
  * @params {string} fieldName
  * @params {array} found
  * @returns {boolean}
  */
-function entityFieldChecker (widget, fieldName, found) {
+function replaceEntityField (widget, fieldName, found) {
   if (!found || !found.length) {
     return true;
   }
 
-  var currentVal = getObjectValue(widget, fieldName),
-      isFn = false,
-      fnParams;
+  var fnParams, fn,
+      currentVal = getObjectValue(widget, fieldName),
+      isFn = false;
 
-  // console.log(currentVal);
-
+  // special case if the field is a function, convert it to a string first
   if (typeof currentVal === 'function') {
-    var fn = currentVal.toString();
-    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}'));
-    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/);
+    fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
     isFn = true;
   }
 
@@ -2583,74 +2640,18 @@ function entityFieldChecker (widget, fieldName, found) {
     currentVal = val;
   }
 
+  // if the value is a function, convert it back from a string
   if (isFn) {
-    var fun;
-
     if (fnParams) {
-      fun = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
     } else {
-      fun = new Function(getObjectValue(widget, fieldName));
+      fn = new Function(getObjectValue(widget, fieldName));
     }
 
-    console.log(fun.toString());
-    setObjectValue(widget, fieldName, fun);
+    setObjectValue(widget, fieldName, fn);
   }
 
   return true;
-}
-
-/** @module pathfora/display-conditions/entity-fields/replace-entity-fields */
-
-// utils
-/**
- * Evaluate all fields on the list provided and replace
- * any entity templates with values.
- *
- * @exports replaceEntityFields
- * @params {array} fields
- * @params {object} widget
- * @params {function} cb
- */
-function replaceEntityFields (fields, widget, cb) {
-  var found, i,
-      regex = /\{{2}.*?\}{2}/g,
-      pf = this,
-      count = 0;
-
-  var checker = function () {
-    widget.valid = widget.valid && pf.entityFieldChecker(widget, fields[i], found);
-    count++;
-
-
-    if (count === fields.length) {
-      cb();
-    }
-  };
-
-  for (i = 0; i < fields.length; i++) {
-    var fieldValue = getObjectValue(widget, fields[i]);
-
-
-    if (typeof fieldValue === 'function') {
-      fieldValue = fieldValue.toString();
-    }
-
-    if (typeof fieldValue === 'string') {
-      found = fieldValue.match(regex);
-
-      if (found && found.length > 0) {
-        pf.addCallback(checker);
-      } else {
-        count++;
-      }
-    } else {
-      count++;
-    }
-
-    if (count === fields.length) {
-      cb();
-    }
-  }
 }
 
 /** @module pathfora/data/tracking/track-time-on-page */
@@ -3616,7 +3617,7 @@ function initializeWidget (widget) {
 
   var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
 
-  pf.replaceEntityFields(fields, widget, function () {
+  pf.entityFieldChecker(fields, widget, function () {
     // display conditions based on page load
     if (condition.date) {
       widget.valid = widget.valid && dateChecker(condition.date);
@@ -4755,7 +4756,7 @@ var Pathfora = function () {
   this.triggerWidgets = triggerWidgets;
   this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
-  this.replaceEntityFields = replaceEntityFields;
+  this.replaceEntityField = replaceEntityField;
 
   // widgets
   this.initializeWidgets = initializeWidgets;

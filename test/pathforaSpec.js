@@ -3979,7 +3979,7 @@ describe('Widgets', function () {
       }
     });
 
-    var fieldWidget9 = new pathfora.Form({
+    var fieldWidget9 = new pathfora.Message({
       id: 'fieldWidget9',
       layout: 'slideout',
       headline: 'Welcome',
@@ -3987,7 +3987,6 @@ describe('Widgets', function () {
       confirmAction: {
         name: 'confirm',
         callback: function () {
-          console.log('woah');
           window.customvar = 'https://www.google.com/?promo={{promoCode}}&email={{email}}';
         }
       }

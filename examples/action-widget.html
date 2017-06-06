@@ -20,7 +20,7 @@
         confirmAction: {
           name: 'Confirm action',
           callback: function() {
-            alert('Test - confirmed {{random shit | default}}');
+            window.somevar = 'this is a test {{thing | my default here}}';
           }
         },
         cancelAction: {
