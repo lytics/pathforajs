@@ -2499,7 +2499,7 @@ function registerDelayedWidget (widget) {
   }, widget.displayConditions.showDelay * 1000);
 }
 
-/** @module pathfora/display-conditions/entity-fields/replace-entity-fields */
+/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
 
 // utils
 /**
@@ -2523,7 +2523,6 @@ function entityFieldChecker (fields, widget, cb) {
     pf.addCallback(function () {
       w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
       count++;
-
 
       if (count === fields.length) {
         cb();

@@ -25,7 +25,6 @@ export default function entityFieldChecker (fields, widget, cb) {
       w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
       count++;
 
-
       if (count === fields.length) {
         cb();
       }
