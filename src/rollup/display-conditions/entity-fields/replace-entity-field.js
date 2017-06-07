@@ -1,20 +1,37 @@
-/** @module pathfora/display-conditions/entity-field-checker */
+/** @module pathfora/display-conditions/replace-entity-field */
 
-import window from '../dom/window';
+// dom
+import window from '../../dom/window';
+
+// utils
+import setObjectValue from '../../utils/objects/set-object-value';
+import getObjectValue from '../../utils/objects/get-object-value';
 
 /**
  * Fill in the data for a entity field template in
- * a widgets text fields
+ * a widgets text field
  *
- * @exports entityFieldChecker
+ * @exports replaceEntityField
  * @params {object} widget
  * @params {string} fieldName
  * @params {array} found
  * @returns {boolean}
  */
-export default function entityFieldChecker (widget, fieldName, found) {
+export default function replaceEntityField (widget, fieldName, found) {
   if (!found || !found.length) {
     return true;
+  }
+
+  var fnParams, fn,
+      currentVal = getObjectValue(widget, fieldName),
+      isFn = false;
+
+  // special case if the field is a function, convert it to a string first
+  if (typeof currentVal === 'function') {
+    fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+    isFn = true;
   }
 
   // for each template found...
@@ -52,16 +69,32 @@ export default function entityFieldChecker (widget, fieldName, found) {
       }
     }
 
+    var val;
+
     // replace the template with the lytics data value
     if (typeof dataval !== 'undefined') {
-      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+      val = currentVal.replace(found[f], dataval);
     // if there's no default and we should error
     } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
       return false;
     // replace with the default option, or empty string if not found
     } else {
-      widget[fieldName] = widget[fieldName].replace(found[f], def);
+      val = currentVal.replace(found[f], def);
     }
+
+    setObjectValue(widget, fieldName, val);
+    currentVal = val;
+  }
+
+  // if the value is a function, convert it back from a string
+  if (isFn) {
+    if (fnParams) {
+      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+    } else {
+      fn = new Function(getObjectValue(widget, fieldName));
+    }
+
+    setObjectValue(widget, fieldName, fn);
   }
 
   return true;

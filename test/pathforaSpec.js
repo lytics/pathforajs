@@ -3979,7 +3979,20 @@ describe('Widgets', function () {
       }
     });
 
-    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7, fieldWidget8]);
+    var fieldWidget9 = new pathfora.Message({
+      id: 'fieldWidget9',
+      layout: 'slideout',
+      headline: 'Welcome',
+      msg: 'custom url',
+      confirmAction: {
+        name: 'confirm',
+        callback: function () {
+          window.customvar = 'https://www.google.com/?promo={{promoCode}}&email={{email}}';
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7, fieldWidget8, fieldWidget9]);
 
     var w1 = $('#' + fieldWidget1.id);
     expect(w1.length).toBe(1);
@@ -4012,6 +4025,10 @@ describe('Widgets', function () {
     expect(w8.length).toBe(1);
     expect(fieldWidget8.msg).toBe('my string will get  defaulted wrong');
 
+    var w9 = $('#' + fieldWidget9.id);
+    expect(w9.length).toBe(1);
+    w9.find('.pf-widget-ok').click();
+
     setTimeout(function () {
       expect(w1.hasClass('opened')).toBeTruthy();
       expect(w2.hasClass('opened')).toBeTruthy();
@@ -4021,6 +4038,7 @@ describe('Widgets', function () {
       expect(w6.hasClass('opened')).toBeTruthy();
       expect(w7.hasClass('opened')).toBeTruthy();
       expect(w8.hasClass('opened')).toBeTruthy();
+      expect(window.customvar === 'https://www.google.com/?promo=123FREE&email=fake@gmail.com').toBeTruthy();
       done();
     }, 200);
 

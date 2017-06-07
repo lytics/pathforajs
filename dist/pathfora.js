@@ -218,7 +218,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '0.2.0';
+var PF_VERSION = '0.2.1';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
@@ -618,6 +618,82 @@ function escapeURI (text, options) {
   return escaped.join('');
 }
 
+/** @module pathfora/utils/objects/update-object */
+
+/**
+ * Merge two objects while preserving original fields
+ *
+ * @exports updateObject
+ * @params {object} object
+ * @params {object} config
+ */
+function updateObject (object, config) {
+  for (var prop in config) {
+    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
+      if (config.hasOwnProperty(prop)) {
+        if (typeof object[prop] === 'undefined') {
+          object[prop] = {};
+        }
+        updateObject(object[prop], config[prop]);
+      }
+    } else if (config.hasOwnProperty(prop)) {
+      object[prop] = config[prop];
+    }
+  }
+}
+
+/** @module pathfora/utils/objects/set-object-value */
+
+/**
+ * Set the value of a field on an object, supports
+ * nested objects using the key dot notation.
+ *
+ * @exports setObjectValue
+ * @params {object} object
+ * @params {string} key
+ * @params value
+ * @returns {object}
+ */
+function setObjectValue (object, key, value) {
+  var parent = object;
+  var fields = key.split('.');
+  for (var i = 0; i < fields.length - 1; i++) {
+    var elem = fields[i];
+
+    if (!parent[elem]) {
+      parent[elem] = {};
+    }
+
+    parent = parent[elem];
+  }
+
+  parent[fields[fields.length - 1]] = value;
+
+  return parent;
+}
+
+/** @module pathfora/utils/objects/get-object-value */
+
+/**
+ * Get the value of a field on an object, supports
+ * nested objects using the key dot notation.
+ *
+ * @exports getObjectValue
+ * @params {object} object
+ * @params {string} key
+ */
+function getObjectValue (object, key) {
+  var parent = object;
+  var fields = key.split('.');
+  for (var i = 0; i < fields.length; i++) {
+    if (typeof parent !== 'undefined') {
+      parent = parent[fields[i]];
+    }
+  }
+
+  return parent;
+}
+
 /** @module pathfora/utils/generate-unique-id */
 
 /**
@@ -650,36 +726,13 @@ function generateUniqueId () {
   ].join('');
 }
 
-/** @module pathfora/utils/update-object */
-
-/**
- * Merge two objects while preserving original fields
- *
- * @exports updateObject
- * @params {object} object
- * @params {object} config
- */
-function updateObject (object, config) {
-  for (var prop in config) {
-    if (config.hasOwnProperty(prop) && typeof config[prop] === 'object' && config[prop] !== null && !Array.isArray(config[prop])) {
-      if (config.hasOwnProperty(prop)) {
-        if (typeof object[prop] === 'undefined') {
-          object[prop] = {};
-        }
-        updateObject(object[prop], config[prop]);
-      }
-    } else if (config.hasOwnProperty(prop)) {
-      object[prop] = config[prop];
-    }
-  }
-}
-
 /** @module pathfora/utils */
 
 // class
 // cookies
 // scaffold
 // url
+// objects
 /**
  * Object containing utility functions
  *
@@ -704,8 +757,12 @@ var utils = {
   constructQueries: constructQueries,
   escapeURI: escapeURI,
 
-  generateUniqueId: generateUniqueId,
-  updateObject: updateObject
+  // objects
+  updateObject: updateObject,
+  setObjectValue: setObjectValue,
+  getObjectValue: getObjectValue,
+
+  generateUniqueId: generateUniqueId
 };
 
 /** @module pathfora/data/tracking/get-data-object */
@@ -2442,21 +2499,92 @@ function registerDelayedWidget (widget) {
   }, widget.displayConditions.showDelay * 1000);
 }
 
-/** @module pathfora/display-conditions/entity-field-checker */
+/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
 
+// utils
 /**
- * Fill in the data for a entity field template in
- * a widgets text fields
+ * Evaluate all fields on the list provided and check
+ * if there are any entity templates that need to be
+ * replaced.
  *
  * @exports entityFieldChecker
+ * @params {array} fields
+ * @params {object} widget
+ * @params {function} cb
+ */
+function entityFieldChecker (fields, widget, cb) {
+  var found, i,
+      regex = /\{{2}.*?\}{2}/g,
+      pf = this,
+      count = 0;
+
+  // call the replace method in a jstag callback
+  var replace = function (w, fieldName, f) {
+    pf.addCallback(function () {
+      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
+      count++;
+
+      if (count === fields.length) {
+        cb();
+      }
+    });
+  };
+
+  for (i = 0; i < fields.length; i++) {
+    var fieldValue = getObjectValue(widget, fields[i]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
+    }
+
+    if (typeof fieldValue === 'string') {
+      found = fieldValue.match(regex);
+
+      if (found && found.length > 0) {
+        replace(widget, fields[i], found);
+      } else {
+        count++;
+      }
+    } else {
+      count++;
+    }
+
+    if (count === fields.length) {
+      cb();
+    }
+  }
+}
+
+/** @module pathfora/display-conditions/replace-entity-field */
+
+// dom
+// utils
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text field
+ *
+ * @exports replaceEntityField
  * @params {object} widget
  * @params {string} fieldName
  * @params {array} found
  * @returns {boolean}
  */
-function entityFieldChecker (widget, fieldName, found) {
+function replaceEntityField (widget, fieldName, found) {
   if (!found || !found.length) {
     return true;
+  }
+
+  var fnParams, fn,
+      currentVal = getObjectValue(widget, fieldName),
+      isFn = false;
+
+  // special case if the field is a function, convert it to a string first
+  if (typeof currentVal === 'function') {
+    fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+    isFn = true;
   }
 
   // for each template found...
@@ -2494,16 +2622,32 @@ function entityFieldChecker (widget, fieldName, found) {
       }
     }
 
+    var val;
+
     // replace the template with the lytics data value
     if (typeof dataval !== 'undefined') {
-      widget[fieldName] = widget[fieldName].replace(found[f], dataval);
+      val = currentVal.replace(found[f], dataval);
     // if there's no default and we should error
     } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
       return false;
     // replace with the default option, or empty string if not found
     } else {
-      widget[fieldName] = widget[fieldName].replace(found[f], def);
+      val = currentVal.replace(found[f], def);
     }
+
+    setObjectValue(widget, fieldName, val);
+    currentVal = val;
+  }
+
+  // if the value is a function, convert it back from a string
+  if (isFn) {
+    if (fnParams) {
+      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+    } else {
+      fn = new Function(getObjectValue(widget, fieldName));
+    }
+
+    setObjectValue(widget, fieldName, fn);
   }
 
   return true;
@@ -3470,7 +3614,9 @@ function initializeWidget (widget) {
     }
   }
 
-  var evalDisplayConditions = function () {
+  var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
+
+  pf.entityFieldChecker(fields, widget, function () {
     // display conditions based on page load
     if (condition.date) {
       widget.valid = widget.valid && dateChecker(condition.date);
@@ -3530,34 +3676,7 @@ function initializeWidget (widget) {
         showWidget(widget);
       }
     }
-  };
-
-  var regex = /\{{2}.*?\}{2}/g;
-  var foundMsg, foundHeadline, foundImage;
-
-  if (typeof widget.msg === 'string') {
-    foundMsg = widget.msg.match(regex);
-  }
-
-  if (typeof widget.headline === 'string') {
-    foundHeadline = widget.headline.match(regex);
-  }
-
-
-  if (typeof widget.image === 'string') {
-    foundImage = widget.image.match(regex);
-  }
-
-  if ((foundMsg && foundMsg.length > 0) || (foundHeadline && foundHeadline.length > 0) || (foundImage && foundImage.length > 0)) {
-    pf.addCallback(function () {
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'msg', foundMsg);
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'headline', foundHeadline);
-      widget.valid = widget.valid && pf.entityFieldChecker(widget, 'image', foundImage);
-      evalDisplayConditions();
-    });
-  } else {
-    evalDisplayConditions();
-  }
+  });
 }
 
 /** @module pathfora/widgets/preview-widget */
@@ -4636,6 +4755,7 @@ var Pathfora = function () {
   this.triggerWidgets = triggerWidgets;
   this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
+  this.replaceEntityField = replaceEntityField;
 
   // widgets
   this.initializeWidgets = initializeWidgets;
