@@ -17,8 +17,12 @@ import insertWidget from './scaffold/insert-widget';
 import constructQueries from './url/construct-queries';
 import escapeURI from './url/escape-uri';
 
+// objects
+import updateObject from './objects/update-object';
+import setObjectValue from './objects/set-object-value';
+import getObjectValue from './objects/get-object-value';
+
 import generateUniqueId from './generate-unique-id';
-import updateObject from './update-object';
 
 /**
  * Object containing utility functions
@@ -44,7 +48,11 @@ export var utils = {
   constructQueries: constructQueries,
   escapeURI: escapeURI,
 
-  generateUniqueId: generateUniqueId,
-  updateObject: updateObject
+  // objects
+  updateObject: updateObject,
+  setObjectValue: setObjectValue,
+  getObjectValue: getObjectValue,
+
+  generateUniqueId: generateUniqueId
 };
 

@@ -7,7 +7,7 @@ import { defaultProps } from '../globals/config';
 import document from '../dom/document';
 
 // utils
-import updateObject from '../utils/update-object';
+import updateObject from '../utils/objects/update-object';
 
 // data
 import trackTimeOnPage from '../data/tracking/track-time-on-page';

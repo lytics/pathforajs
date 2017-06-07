@@ -1,4 +1,4 @@
-/** @module pathfora/utils/update-object */
+/** @module pathfora/utils/objects/update-object */
 
 /**
  * Merge two objects while preserving original fields

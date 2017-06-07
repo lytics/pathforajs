@@ -1,4 +1,4 @@
-If you have a whitelisted entity fields in Lytics or a custom data field in javascript, you can include them in your message, headline, or image field using a simple template that pathfora will recognize and replace with field data. These dynamic field templates allow you to further personalize the customer experience of your module.
+If you have a whitelisted entity fields in Lytics or a custom data field in javascript, you can include them in your message, headline, image, or confirm callback function field using a simple template that pathfora will recognize and replace with field data. These dynamic field templates allow you to further personalize the customer experience of your module.
 
 # Entity Field Templates
 

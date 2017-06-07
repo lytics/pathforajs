@@ -8,7 +8,7 @@ import window from '../dom/window';
 
 // utils
 import readCookie from '../utils/cookies/read-cookie';
-import updateObject from '../utils/update-object';
+import updateObject from '../utils/objects/update-object';
 
 // recommendations
 import recommendContent from '../recommendations/recommend-content';
