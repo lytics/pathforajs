@@ -85,6 +85,12 @@ Inside the container element you may have several elements with the `data-pfbloc
 
 If for some reason the recommendation API returns an error for the user, and cannot fill in recommendation, you can set some default content to show by creating another set of elements with content you've selected filled in and the `data-pfrecommend` value set to default. This content will only show if the any recommendation with a matching `data-pfblock` couldn't be loaded.
 
+**Note:** Pathfora loads some CSS to hide the toggle elements before selecting which element to show. Because the js library will load after the body of the page, you may see a flicker of html elements when the page is first loaded. To prevent this, you can add the following line of CSS to the stylesheet of your website:
+
+```css
+[data-pftrigger], [data-pfrecommend]{ display: none; }
+```
+
 ## Date formatting
 
 Pathfora uses [toLocaleDateString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleDateString) to format the date published of an article. You can set the locale and options for this function on the pathfora object.
