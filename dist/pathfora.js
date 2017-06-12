@@ -1190,7 +1190,7 @@ function constructWidgetActions (widget, config) {
       ct = 1;
     }
 
-    saveCookie(name, ct + '|' + duration, widget.expiration);
+    saveCookie(name, ct + '|' + duration, config.expiration);
   };
 
   // Tracking for widgets with a form element
