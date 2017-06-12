@@ -218,7 +218,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '0.2.1';
+var PF_VERSION = '0.2.2';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
@@ -1190,7 +1190,7 @@ function constructWidgetActions (widget, config) {
       ct = 1;
     }
 
-    saveCookie(name, ct + '|' + duration, widget.expiration);
+    saveCookie(name, ct + '|' + duration, config.expiration);
   };
 
   // Tracking for widgets with a form element

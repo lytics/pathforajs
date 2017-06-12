@@ -54,6 +54,12 @@ If you have multiple elements with the same `pfgroup` name, only the first eleme
 
 Additionally, if the user is not a member of one of these audiences you can create a default piece of content and set the `pftrigger` value to be `default`. This default element will only show if the user is not a member of any other `pftrigger` audience in a group.
 
+**Note:** Pathfora loads some CSS to hide the toggle elements before selecting which element to show. Because the js library will load after the body of the page, you may see a flicker of html elements when the page is first loaded. To prevent this, you can add the following line of CSS to the stylesheet of your website:
+
+```css
+[data-pftrigger], [data-pfrecommend]{ display: none; }
+```
+
 <h3>Content Element Toggle - <a href="../examples/preview/inline/toggle.html" target="_blank">Live Preview</a></h3>
 
 You can check which audiences you are a member of by typing `lio.data.segments` into a console log. If you are in the `high_value` or `registered_users` audience you should see the appropriate content, otherwise you will see the default options.
