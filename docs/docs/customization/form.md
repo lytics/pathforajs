@@ -23,7 +23,7 @@ This is a list of form element objects to include in the module's form. The orde
   <tr>
     <td>type</td>
     <td>string</td>
-    <td>type of form element: checkbox-group, radio-group, select, text, or textarea</td>
+    <td>type of form element: checkbox-group, radio-group, select, text, email, or textarea</td>
   </tr>
   <tr>
     <td>name</td>

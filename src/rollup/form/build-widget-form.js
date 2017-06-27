@@ -26,6 +26,8 @@ export default function buildWidgetForm (formElements, form) {
     // Textarea, Input, & Select
     case 'textarea':
     case 'input':
+    case 'text':
+    case 'email':
     case 'select':
       buildFormElement(elem, form);
       break;

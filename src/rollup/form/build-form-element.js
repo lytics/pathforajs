@@ -24,17 +24,28 @@ export default function buildFormElement (elem, form) {
     wrapper.className = 'pf-widget-' + elem.type;
     content = document.createElement('div');
   } else {
-    content = document.createElement(elem.type);
+
+    switch (elem.type) {
+    case 'email':
+      content = document.createElement('input');
+      content.setAttribute('type', 'email');
+      break;
+    case 'text':
+    case 'input':
+      content = document.createElement('input');
+      content.setAttribute('type', 'text');
+      break;
+    default:
+      content = document.createElement(elem.type);
+      break;
+    }
+
     content.setAttribute('name', elem.name);
     content.setAttribute('id', elem.name);
 
     // add row count for textarea
     if (elem.type === 'textarea') {
       content.setAttribute('rows', 5);
-
-    // add text type for input
-    } else if (elem.type === 'input') {
-      content.setAttribute('type', 'text');
     }
   }
 

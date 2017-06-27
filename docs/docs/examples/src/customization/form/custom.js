@@ -7,7 +7,7 @@ var form = new pathfora.Form({
   theme: 'custom',
   formElements: [
     {
-      'type': 'input',
+      'type': 'text',
       'name': 'name',
       'label': 'Your Name',
       'placeholder': 'Your Name',
@@ -91,7 +91,7 @@ var form2 = new pathfora.Form({
   theme: 'custom',
   formElements: [
     {
-      type: 'input',
+      type: 'text',
       name: 'name',
       placeholder: 'Your Name',
       required: true

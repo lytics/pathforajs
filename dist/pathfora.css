@@ -125,7 +125,6 @@
 }
 .pf-widget form:not(.pf-custom-form) [data-required=true].invalid {
   border: 1px solid #f12626;
-  margin: -1px -1px 9px -1px;
 }
 .pf-widget input[type=text],
 .pf-widget input[type=email],
@@ -728,6 +727,10 @@
 .pf-widget-slideout.pf-subscription.pf-widget-has-branding span {
   margin-bottom: 13px;
 }
+.pf-widget-slideout form:not(.pf-custom-form) input[type=text].invalid,
+.pf-widget-slideout form:not(.pf-custom-form) input[type=email].invalid {
+  margin: -1px -1px 9px;
+}
 /* Pushdown Styles */
 .pf-push-down {
   transition: margin-top 0.3s;
@@ -789,6 +792,14 @@
 .pf-widget-bar .pf-bar-content input[type=email] {
   margin: 0 1px;
   max-width: 200px;
+}
+.pf-widget-bar .pf-bar-content form:not(.pf-custom-form) input[type=text],
+.pf-widget-bar .pf-bar-content form:not(.pf-custom-form) input[type=email] {
+  margin-bottom: 0;
+}
+.pf-widget-bar .pf-bar-content form:not(.pf-custom-form) input[type=text].invalid,
+.pf-widget-bar .pf-bar-content form:not(.pf-custom-form) input[type=email].invalid {
+  margin: 0;
 }
 .pf-widget-bar .pf-bar-content > * {
   display: inline-block;
@@ -1191,4 +1202,8 @@
   position: absolute;
   bottom: -10px;
   right: -10px;
+}
+.pf-widget-inline form:not(.pf-custom-form) input[type=text].invalid,
+.pf-widget-inline form:not(.pf-custom-form) input[type=email].invalid {
+  margin: -1px -1px 9px;
 }
