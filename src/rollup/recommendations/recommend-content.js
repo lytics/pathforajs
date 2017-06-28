@@ -102,9 +102,6 @@ export default function recommendContent (accountId, params, id, callback) {
   var recommendUrl = recommendParts.join('') + queries;
 
   getData(recommendUrl, function (json) {
-
-    // set the session storage.
-    sessionStorage.setItem(PREFIX_REC + id, json);
     var resp;
 
     try {
@@ -126,6 +123,9 @@ export default function recommendContent (accountId, params, id, callback) {
           }
         }
       }
+
+      // set the session storage.
+      sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(resp));
 
       callback(resp.data);
     } else {

@@ -4,9 +4,8 @@
  * Ensure that a string does not contain regex
  *
  * @exports escapeURI
- * @params {string} text
- * @returns {object} options
- * @returns {string} uri
+ * @params {regex} s
+ * @returns {string} regex
  */
 export default function escapeRegex (s) {
   return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');

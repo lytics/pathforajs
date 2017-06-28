@@ -21,7 +21,16 @@
         headline: 'Blocking Widget',
         id: "gate-widget",
         msg: 'Submit this widget to access the website.',
-        okMessage: "Submit"
+        okMessage: "Submit",
+        fields: {
+          // phone: true,
+          title: true,
+        },
+        required: {
+          phone: true,
+          // company: true,
+          title: true,
+        }
       });
       window.pathfora.initializeWidgets([ gate ]);
     </script>

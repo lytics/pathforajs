@@ -9,6 +9,7 @@ import saveCookie from '../utils/cookies/save-cookie';
 import hasClass from '../utils/class/has-class';
 import addClass from '../utils/class/add-class';
 import removeClass from '../utils/class/remove-class';
+import emailValid from '../utils/email-valid';
 
 // data
 import trackWidgetAction from '../data/tracking/track-widget-action';
@@ -129,7 +130,7 @@ export default function constructWidgetActions (widget, config) {
                 valid = false;
                 addClass(parent, 'invalid');
               }
-            } else if (!field.value) {
+            } else if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
               valid = false;
               addClass(parent, 'invalid');
 
@@ -142,7 +143,7 @@ export default function constructWidgetActions (widget, config) {
         } else if (field.hasAttribute('data-required')) {
           removeClass(field, 'invalid');
 
-          if (!field.value || (field.getAttribute('type') === 'email' && field.value.indexOf('@') === -1)) {
+          if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
             valid = false;
             addClass(field, 'invalid');
             if (i === 0) {

@@ -60,6 +60,17 @@
       max-width: 200px;
     }
 
+    form:not(.pf-custom-form) {
+      input[type=text],
+      input[type=email] {
+        margin-bottom: 0;
+
+        &.invalid {
+          margin: 0;
+        }
+      }
+    }
+
     > * {
       display: inline-block;
       vertical-align: middle;

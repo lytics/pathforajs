@@ -23,6 +23,8 @@ import setObjectValue from './objects/set-object-value';
 import getObjectValue from './objects/get-object-value';
 
 import generateUniqueId from './generate-unique-id';
+import escapeRegex from './escape-regex';
+import emailValid from './email-valid';
 
 /**
  * Object containing utility functions
@@ -53,6 +55,7 @@ export var utils = {
   setObjectValue: setObjectValue,
   getObjectValue: getObjectValue,
 
-  generateUniqueId: generateUniqueId
+  generateUniqueId: generateUniqueId,
+  escapeRegex: escapeRegex,
+  emailValid: emailValid
 };
-
