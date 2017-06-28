@@ -336,9 +336,8 @@ function onDOMready (fn) {
  * Ensure that a string does not contain regex
  *
  * @exports escapeURI
- * @params {string} text
- * @returns {object} options
- * @returns {string} uri
+ * @params {regex} s
+ * @returns {string} regex
  */
 function escapeRegex (s) {
   return String(s).replace(/[\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -726,6 +725,20 @@ function generateUniqueId () {
   ].join('');
 }
 
+/** @module pathfora/utils/email-valid */
+
+/**
+ * Validate that the string is a properly formatted email
+ *
+ * @exports emailValid
+ * @params {string} email
+ * @returns {boolean} valid
+ */
+function emailValid (email) {
+  var regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/g;
+  return regex.test(email);
+}
+
 /** @module pathfora/utils */
 
 // class
@@ -762,7 +775,9 @@ var utils = {
   setObjectValue: setObjectValue,
   getObjectValue: getObjectValue,
 
-  generateUniqueId: generateUniqueId
+  generateUniqueId: generateUniqueId,
+  escapeRegex: escapeRegex,
+  emailValid: emailValid
 };
 
 /** @module pathfora/data/tracking/get-data-object */
@@ -1268,7 +1283,7 @@ function constructWidgetActions (widget, config) {
                 valid = false;
                 addClass(parent, 'invalid');
               }
-            } else if (!field.value) {
+            } else if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
               valid = false;
               addClass(parent, 'invalid');
 
@@ -1281,7 +1296,7 @@ function constructWidgetActions (widget, config) {
         } else if (field.hasAttribute('data-required')) {
           removeClass(field, 'invalid');
 
-          if (!field.value || (field.getAttribute('type') === 'email' && field.value.indexOf('@') === -1)) {
+          if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
             valid = false;
             addClass(field, 'invalid');
             if (i === 0) {
@@ -1626,17 +1641,28 @@ function buildFormElement (elem, form) {
     wrapper.className = 'pf-widget-' + elem.type;
     content = document.createElement('div');
   } else {
-    content = document.createElement(elem.type);
+
+    switch (elem.type) {
+    case 'email':
+      content = document.createElement('input');
+      content.setAttribute('type', 'email');
+      break;
+    case 'text':
+    case 'input':
+      content = document.createElement('input');
+      content.setAttribute('type', 'text');
+      break;
+    default:
+      content = document.createElement(elem.type);
+      break;
+    }
+
     content.setAttribute('name', elem.name);
     content.setAttribute('id', elem.name);
 
     // add row count for textarea
     if (elem.type === 'textarea') {
       content.setAttribute('rows', 5);
-
-    // add text type for input
-    } else if (elem.type === 'input') {
-      content.setAttribute('type', 'text');
     }
   }
 
@@ -1753,6 +1779,8 @@ function buildWidgetForm (formElements, form) {
     // Textarea, Input, & Select
     case 'textarea':
     case 'input':
+    case 'text':
+    case 'email':
     case 'select':
       buildFormElement(elem, form);
       break;
