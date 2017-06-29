@@ -740,3 +740,55 @@ displayConditions: {
 // http://www.getlytics.com/integrations?ref=our_partner
 // http://www.getlytics.com/blog/adroll?session=125929&ref=our_partner
 ```
+
+
+## metaConatins
+
+Only display the module on pages that have meta tags that match the conditions defined.
+
+Note that metaContains does not support partial matches as urlContains does. Treat metaContains values as having the exact match rule.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center">object in <code>metaContains</code> array</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>property</td>
+    <td>string</td>
+    <td><code>optional</code> property attribute of the meta tag</td>
+  </tr>
+  <tr>
+    <td>content</td>
+    <td>string</td>
+    <td><code>optional</code> value of the content attribute of the meta tag to match against</td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>string</td>
+    <td><code>optional</code> name attribute of the meta tag</td>
+  </tr>
+</table>
+
+``` javascript
+// example match based on og:type
+
+displayConditions: {
+  metaContains: [
+    {
+      property: 'og:type',
+      content: 'website'
+    }
+  ]
+}
+
+// Matches:
+// <meta property="og:type" content="website" />
+```

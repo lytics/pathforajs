@@ -3899,6 +3899,53 @@ describe('Widgets', function () {
     });
   });
 
+  describe('when metaContains is set', function () {
+    var id = 'meta-contains-test';
+    var modal;
+
+    beforeEach(function () {
+      modal = new pathfora.Message({
+        layout: 'modal',
+        id: id,
+        headline: 'This will show...',
+        msg: '... if your meta tags match the conditions',
+        displayConditions: {
+          metaContains: [
+            {
+              property: 'og:type',
+              content: 'product'
+            },
+            {
+              property: 'og:locale',
+              content: 'en_US'
+            }
+          ]
+        }
+      });
+    });
+
+    it('should not show if the meta rules are not met', function () {
+      pathfora.initializeWidgets([modal]);
+      expect($('#' + id).length).toBe(0);
+    });
+
+    it('should show if a single meta rule is met', function () {
+      $('head').append('<meta property="og:type" content="product">');
+      $('head').append('<meta name="description" content="cool description here">');
+      pathfora.initializeWidgets([modal]);
+      expect($('#' + id).length).toBe(1);
+      $('meta').remove();
+    });
+
+    it('should show if both rules are met', function () {
+      $('head').append('<meta property="og:type" content="product">');
+      $('head').append('<meta property="og:locale" content="en_US">');
+      pathfora.initializeWidgets([modal]);
+      expect($('#' + id).length).toBe(1);
+      $('meta').remove();
+    });
+  });
+
   // -------------------------
   //  ENTITY FIELD TEMPLATES
   // -------------------------
