@@ -5,6 +5,7 @@ import dateChecker from '../display-conditions/date-checker';
 import pageVisitsChecker from '../display-conditions/pageviews/page-visits-checker';
 import hideAfterActionChecker from '../display-conditions/hide-after-action-checker';
 import urlChecker from '../display-conditions/url-contains/url-checker';
+import metaChecker from '../display-conditions/meta-checker';
 import impressionsChecker from '../display-conditions/impressions/impressions-checker';
 import initializeExitIntent from '../display-conditions/init-exit-intent';
 import registerElementWatcher from '../display-conditions/scroll/register-element-watcher';
@@ -67,8 +68,13 @@ export default function initializeWidget (widget) {
     if (condition.hideAfterAction) {
       widget.valid = widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
     }
+
     if (condition.urlContains) {
       widget.valid = widget.valid && urlChecker(condition.urlContains);
+    }
+
+    if (condition.metaContains) {
+      widget.valid = widget.valid && metaChecker(condition.metaContains);
     }
 
     widget.valid = widget.valid && condition.showOnInit;
