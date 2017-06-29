@@ -3929,7 +3929,7 @@ describe('Widgets', function () {
       expect($('#' + id).length).toBe(0);
     });
 
-    it('should not show if a single meta rule is met', function () {
+    it('should show if a single meta rule is met', function () {
       $('head').append('<meta property="og:type" content="product">');
       $('head').append('<meta name="description" content="cool description here">');
       pathfora.initializeWidgets([modal]);
@@ -3937,7 +3937,7 @@ describe('Widgets', function () {
       $('meta').remove();
     });
 
-    it('should not show if both rules are met', function () {
+    it('should show if both rules are met', function () {
       $('head').append('<meta property="og:type" content="product">');
       $('head').append('<meta property="og:locale" content="en_US">');
       pathfora.initializeWidgets([modal]);
