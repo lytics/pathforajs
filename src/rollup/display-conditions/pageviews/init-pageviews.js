@@ -1,11 +1,11 @@
- /** @module pathfora/display-conditions/pageviews/init-pageviews */
+/** @module pathfora/display-conditions/pageviews/init-pageviews */
 
 // globals
 import { PF_PAGEVIEWS } from '../../globals/config';
 
 // utils
 import readCookie from '../../utils/cookies/read-cookie';
-import saveCookie from '../../utils/cookies/read-cookie';
+import saveCookie from '../../utils/cookies/save-cookie';
 
 /**
  * Track and update the number of pageviews

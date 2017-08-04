@@ -18,8 +18,8 @@ module.exports = function(config) {
         'dist/pathfora.js',
         'test/*.js',
         'dist/pathfora.min.css',
-        'node_modules/karma-intl-shim/node_modules/intl/locale-data/jsonp/en-GB.js',
-        'node_modules/karma-intl-shim/node_modules/intl/locale-data/jsonp/en-US.js'
+        './node_modules/intl/locale-data/jsonp/en-GB.js',
+        './node_modules/intl/locale-data/jsonp/en-US.js'
     ],
 
 

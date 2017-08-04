@@ -821,7 +821,7 @@ function initializePageViews () {
   var cookie = readCookie(PF_PAGEVIEWS),
       date = new Date();
   date.setDate(date.getDate() + 365);
-  readCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+  saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
 }
 
 /** @module pathfora/display-conditions/impressions/impressions-checker */

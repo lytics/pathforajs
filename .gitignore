@@ -6,3 +6,4 @@ docs/site/
 docs/docs/examples/preview
 .DS_Store
 .env.json
+package-lock.json
