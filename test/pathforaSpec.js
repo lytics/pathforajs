@@ -1,3 +1,4 @@
+
 'use strict';
 
 var credentials = 123,
@@ -2725,6 +2726,7 @@ describe('Widgets', function () {
   });
 
   it('should not show when page views requirement has not been reached', function () {
+    pathfora.utils.saveCookie('PathforaPageView', 0);
     var form = new pathfora.Form({
       msg: 'subscription',
       id: 'page-view-widget-1',
