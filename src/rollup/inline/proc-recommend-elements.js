@@ -11,7 +11,7 @@ import recommendContent from '../recommendations/recommend-content';
  * @params {string} rec
  * @params {function} cb
  */
-export default function procRecommendElements (blocks, rec, cb) {
+export default function procRecommendElements (blocks, rec, shuffle, cb) {
   var inline = this;
 
   if (rec !== 'default') {
@@ -20,10 +20,14 @@ export default function procRecommendElements (blocks, rec, cb) {
       contentsegment: rec
     };
 
+    if (shuffle) {
+      params.shuffle = shuffle;
+    }
+
     recommendContent(inline.parent.acctid, params, rec, function (resp) {
       var idx = 0;
       for (var block in blocks) {
-        if (blocks.hasOwnProperty(block)) {
+        if (blocks.hasOwnProperty(block) && block !== 'shuffle') {
           var elems = blocks[block];
 
           // loop through the results as we loop

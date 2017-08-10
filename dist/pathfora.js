@@ -3096,7 +3096,7 @@ function initializeWidgetArray (array) {
 
       var params = widget.recommend;
 
-      if (widget.recommend.collection) {
+      if (params && params.collection) {
         params.contentsegment = widget.recommend.collection;
         delete params.collection;
       }
@@ -4474,7 +4474,8 @@ function prepElements (attr) {
       // CASE: Content recommendation elements
       case 'data-pfrecommend':
         var recommend = theElement.getAttribute('data-pfrecommend'),
-            block = theElement.getAttribute('data-pfblock');
+            block = theElement.getAttribute('data-pfblock'),
+            shuffle = false;
 
         if (!block) {
           block = 'default';
@@ -4485,7 +4486,15 @@ function prepElements (attr) {
         }
 
         if (!dataElements[recommend]) {
-          dataElements[recommend] = [];
+          dataElements[recommend] = {};
+        }
+
+        if (theElement.hasAttribute('data-pfshuffle')) {
+          shuffle = theElement.getAttribute('data-pfshuffle') === 'true';
+        }
+
+        if (!dataElements[recommend].shuffle) {
+          dataElements[recommend].shuffle = shuffle;
         }
 
         dataElements[recommend][block] = {
@@ -4493,6 +4502,7 @@ function prepElements (attr) {
           displayType: theElement.style.display,
           block: block,
           recommend: recommend,
+          shuffle: shuffle,
           title: theElement.querySelector('[data-pftype="title"]'),
           image: theElement.querySelector('[data-pftype="image"]'),
           description: theElement.querySelector('[data-pftype="description"]'),
@@ -4546,7 +4556,7 @@ function procElements () {
             throw new Error('Could not get account id from Lytics Javascript tag.');
           }
 
-          inline.procRecommendElements(elements[key], key, function () {
+          inline.procRecommendElements(elements[key], key, elements[key].shuffle, function () {
             cb(elements);
           });
           break;
@@ -4567,7 +4577,7 @@ function procElements () {
  * @params {string} rec
  * @params {function} cb
  */
-function procRecommendElements (blocks, rec, cb) {
+function procRecommendElements (blocks, rec, shuffle, cb) {
   var inline = this;
 
   if (rec !== 'default') {
@@ -4576,10 +4586,14 @@ function procRecommendElements (blocks, rec, cb) {
       contentsegment: rec
     };
 
+    if (shuffle) {
+      params.shuffle = shuffle;
+    }
+
     recommendContent(inline.parent.acctid, params, rec, function (resp) {
       var idx = 0;
       for (var block in blocks) {
-        if (blocks.hasOwnProperty(block)) {
+        if (blocks.hasOwnProperty(block) && block !== 'shuffle') {
           var elems = blocks[block];
 
           // loop through the results as we loop
@@ -4716,7 +4730,7 @@ function setDefaultRecommend () {
   // check the default elements
   for (var block in this.defaultElements) {
     // If we already have an element prepped for this block, don't show the default
-    if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
+    if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block) && block !== 'shuffle') {
       var def = this.defaultElements[block];
       def.elem.removeAttribute('data-pfrecommend');
       def.elem.setAttribute('data-pfmodified', 'true');
@@ -4796,6 +4810,7 @@ function initializeInline () {
 // callbacks
 // display conditions
 // widgets
+// recommendations
 // ab tests
 // integrations
 // inline
@@ -4848,6 +4863,9 @@ var Pathfora = function () {
   this.Subscription = Subscription;
   this.Form = Form;
   this.SiteGate = SiteGate;
+
+  // recommendations
+  this.recommendContent = recommendContent;
 
   // ab tests
   this.initializeABTesting = initializeABTesting;

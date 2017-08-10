@@ -43,7 +43,8 @@ export default function prepElements (attr) {
       // CASE: Content recommendation elements
       case 'data-pfrecommend':
         var recommend = theElement.getAttribute('data-pfrecommend'),
-            block = theElement.getAttribute('data-pfblock');
+            block = theElement.getAttribute('data-pfblock'),
+            shuffle = false;
 
         if (!block) {
           block = 'default';
@@ -54,7 +55,15 @@ export default function prepElements (attr) {
         }
 
         if (!dataElements[recommend]) {
-          dataElements[recommend] = [];
+          dataElements[recommend] = {};
+        }
+
+        if (theElement.hasAttribute('data-pfshuffle')) {
+          shuffle = theElement.getAttribute('data-pfshuffle') === 'true';
+        }
+
+        if (!dataElements[recommend].shuffle) {
+          dataElements[recommend].shuffle = shuffle;
         }
 
         dataElements[recommend][block] = {
@@ -62,6 +71,7 @@ export default function prepElements (attr) {
           displayType: theElement.style.display,
           block: block,
           recommend: recommend,
+          shuffle: shuffle,
           title: theElement.querySelector('[data-pftype="title"]'),
           image: theElement.querySelector('[data-pftype="image"]'),
           description: theElement.querySelector('[data-pftype="description"]'),

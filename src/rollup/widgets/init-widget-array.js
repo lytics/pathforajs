@@ -105,7 +105,7 @@ export default function initializeWidgetArray (array) {
 
       var params = widget.recommend;
 
-      if (widget.recommend.collection) {
+      if (params && params.collection) {
         params.contentsegment = widget.recommend.collection;
         delete params.collection;
       }
