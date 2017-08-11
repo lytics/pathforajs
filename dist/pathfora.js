@@ -4486,7 +4486,9 @@ function prepElements (attr) {
         }
 
         if (!dataElements[recommend]) {
-          dataElements[recommend] = {};
+          dataElements[recommend] = {
+            blocks: []
+          };
         }
 
         if (theElement.hasAttribute('data-pfshuffle')) {
@@ -4497,7 +4499,7 @@ function prepElements (attr) {
           dataElements[recommend].shuffle = shuffle;
         }
 
-        dataElements[recommend][block] = {
+        dataElements[recommend].blocks.push({
           elem: theElement,
           displayType: theElement.style.display,
           block: block,
@@ -4509,7 +4511,7 @@ function prepElements (attr) {
           url: theElement.querySelector('[data-pftype="url"]'),
           published: theElement.querySelector('[data-pftype="published"]'),
           author: theElement.querySelector('[data-pftype="author"]')
-        };
+        });
         break;
       }
     }
@@ -4577,7 +4579,7 @@ function procElements () {
  * @params {string} rec
  * @params {function} cb
  */
-function procRecommendElements (blocks, rec, shuffle, cb) {
+function procRecommendElements (val, rec, shuffle, cb) {
   var inline = this;
 
   if (rec !== 'default') {
@@ -4591,73 +4593,66 @@ function procRecommendElements (blocks, rec, shuffle, cb) {
     }
 
     recommendContent(inline.parent.acctid, params, rec, function (resp) {
-      var idx = 0;
-      for (var block in blocks) {
-        if (blocks.hasOwnProperty(block) && block !== 'shuffle') {
-          var elems = blocks[block];
+      val.blocks.forEach(function (elems, idx) {
 
-          // loop through the results as we loop
-          // through each element with a common liorecommend value
-          if (resp[idx]) {
-            var content = resp[idx];
+        // loop through the results as we loop
+        // through each element with a common liorecommend value
+        if (resp[idx]) {
+          var content = resp[idx];
 
-            if (elems.title) {
-              elems.title.innerHTML = content.title;
-            }
-
-            // if attribute is on image element
-            if (elems.image) {
-              if (typeof elems.image.src !== 'undefined') {
-                elems.image.src = content.primary_image;
-              // if attribute is on container element, set the background
-              } else {
-                elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
-              }
-            }
-
-            // set the description
-            if (elems.description) {
-              elems.description.innerHTML = content.description;
-            }
-
-            // if attribute is on an a (link) element
-            if (elems.url) {
-              if (typeof elems.url.href !== 'undefined') {
-                elems.url.href = content.url;
-              // if attribute is on container element
-              } else {
-                elems.url.innerHTML = content.url;
-              }
-            }
-
-            // set the date published
-            if (elems.published && content.created) {
-              var published = new Date(content.created);
-              elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
-            }
-
-            // set the author
-            if (elems.author) {
-              elems.author.innerHTML = content.author;
-            }
-
-            elems.elem.removeAttribute('data-pfrecommend');
-            elems.elem.setAttribute('data-pfmodified', 'true');
-            inline.preppedElements[block] = elems;
-          } else {
-            break;
+          if (elems.title) {
+            elems.title.innerHTML = content.title;
           }
-          idx++;
+
+          // if attribute is on image element
+          if (elems.image) {
+            if (typeof elems.image.src !== 'undefined') {
+              elems.image.src = content.primary_image;
+            // if attribute is on container element, set the background
+            } else {
+              elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
+            }
+          }
+
+          // set the description
+          if (elems.description) {
+            elems.description.innerHTML = content.description;
+          }
+
+          // if attribute is on an a (link) element
+          if (elems.url) {
+            if (typeof elems.url.href !== 'undefined') {
+              elems.url.href = content.url;
+            // if attribute is on container element
+            } else {
+              elems.url.innerHTML = content.url;
+            }
+          }
+
+          // set the date published
+          if (elems.published && content.created) {
+            var published = new Date(content.created);
+            elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
+          }
+
+          // set the author
+          if (elems.author) {
+            elems.author.innerHTML = content.author;
+          }
+
+          elems.elem.removeAttribute('data-pfrecommend');
+          elems.elem.setAttribute('data-pfmodified', 'true');
+          inline.preppedElements[elems.block] = elems;
+        } else {
+          return;
         }
-      }
+      });
       cb();
     });
   } else {
-    for (var block in blocks) {
-      if (blocks.hasOwnProperty(block)) {
-        inline.defaultElements[block] = blocks[block];
-      }
-    }
+    val.blocks.forEach(function (block) {
+      inline.defaultElements[block.block] = block;
+    });
     cb();
   }
 }
@@ -4730,7 +4725,7 @@ function setDefaultRecommend () {
   // check the default elements
   for (var block in this.defaultElements) {
     // If we already have an element prepped for this block, don't show the default
-    if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block) && block !== 'shuffle') {
+    if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
       var def = this.defaultElements[block];
       def.elem.removeAttribute('data-pfrecommend');
       def.elem.setAttribute('data-pfmodified', 'true');

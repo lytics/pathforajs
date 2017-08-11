@@ -55,7 +55,9 @@ export default function prepElements (attr) {
         }
 
         if (!dataElements[recommend]) {
-          dataElements[recommend] = {};
+          dataElements[recommend] = {
+            blocks: []
+          };
         }
 
         if (theElement.hasAttribute('data-pfshuffle')) {
@@ -66,7 +68,7 @@ export default function prepElements (attr) {
           dataElements[recommend].shuffle = shuffle;
         }
 
-        dataElements[recommend][block] = {
+        dataElements[recommend].blocks.push({
           elem: theElement,
           displayType: theElement.style.display,
           block: block,
@@ -78,7 +80,7 @@ export default function prepElements (attr) {
           url: theElement.querySelector('[data-pftype="url"]'),
           published: theElement.querySelector('[data-pftype="published"]'),
           author: theElement.querySelector('[data-pftype="author"]')
-        };
+        });
         break;
       }
     }
