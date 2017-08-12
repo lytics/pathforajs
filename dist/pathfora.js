@@ -3096,7 +3096,7 @@ function initializeWidgetArray (array) {
 
       var params = widget.recommend;
 
-      if (widget.recommend.collection) {
+      if (params && params.collection) {
         params.contentsegment = widget.recommend.collection;
         delete params.collection;
       }
@@ -4474,7 +4474,8 @@ function prepElements (attr) {
       // CASE: Content recommendation elements
       case 'data-pfrecommend':
         var recommend = theElement.getAttribute('data-pfrecommend'),
-            block = theElement.getAttribute('data-pfblock');
+            block = theElement.getAttribute('data-pfblock'),
+            shuffle = false;
 
         if (!block) {
           block = 'default';
@@ -4485,21 +4486,32 @@ function prepElements (attr) {
         }
 
         if (!dataElements[recommend]) {
-          dataElements[recommend] = [];
+          dataElements[recommend] = {
+            blocks: []
+          };
         }
 
-        dataElements[recommend][block] = {
+        if (theElement.hasAttribute('data-pfshuffle')) {
+          shuffle = theElement.getAttribute('data-pfshuffle') === 'true';
+        }
+
+        if (!dataElements[recommend].shuffle) {
+          dataElements[recommend].shuffle = shuffle;
+        }
+
+        dataElements[recommend].blocks.push({
           elem: theElement,
           displayType: theElement.style.display,
           block: block,
           recommend: recommend,
+          shuffle: shuffle,
           title: theElement.querySelector('[data-pftype="title"]'),
           image: theElement.querySelector('[data-pftype="image"]'),
           description: theElement.querySelector('[data-pftype="description"]'),
           url: theElement.querySelector('[data-pftype="url"]'),
           published: theElement.querySelector('[data-pftype="published"]'),
           author: theElement.querySelector('[data-pftype="author"]')
-        };
+        });
         break;
       }
     }
@@ -4546,7 +4558,7 @@ function procElements () {
             throw new Error('Could not get account id from Lytics Javascript tag.');
           }
 
-          inline.procRecommendElements(elements[key], key, function () {
+          inline.procRecommendElements(elements[key], key, elements[key].shuffle, function () {
             cb(elements);
           });
           break;
@@ -4567,7 +4579,7 @@ function procElements () {
  * @params {string} rec
  * @params {function} cb
  */
-function procRecommendElements (blocks, rec, cb) {
+function procRecommendElements (val, rec, shuffle, cb) {
   var inline = this;
 
   if (rec !== 'default') {
@@ -4576,74 +4588,71 @@ function procRecommendElements (blocks, rec, cb) {
       contentsegment: rec
     };
 
+    if (shuffle) {
+      params.shuffle = shuffle;
+    }
+
     recommendContent(inline.parent.acctid, params, rec, function (resp) {
-      var idx = 0;
-      for (var block in blocks) {
-        if (blocks.hasOwnProperty(block)) {
-          var elems = blocks[block];
+      val.blocks.forEach(function (elems, idx) {
 
-          // loop through the results as we loop
-          // through each element with a common liorecommend value
-          if (resp[idx]) {
-            var content = resp[idx];
+        // loop through the results as we loop
+        // through each element with a common liorecommend value
+        if (resp[idx]) {
+          var content = resp[idx];
 
-            if (elems.title) {
-              elems.title.innerHTML = content.title;
-            }
-
-            // if attribute is on image element
-            if (elems.image) {
-              if (typeof elems.image.src !== 'undefined') {
-                elems.image.src = content.primary_image;
-              // if attribute is on container element, set the background
-              } else {
-                elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
-              }
-            }
-
-            // set the description
-            if (elems.description) {
-              elems.description.innerHTML = content.description;
-            }
-
-            // if attribute is on an a (link) element
-            if (elems.url) {
-              if (typeof elems.url.href !== 'undefined') {
-                elems.url.href = content.url;
-              // if attribute is on container element
-              } else {
-                elems.url.innerHTML = content.url;
-              }
-            }
-
-            // set the date published
-            if (elems.published && content.created) {
-              var published = new Date(content.created);
-              elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
-            }
-
-            // set the author
-            if (elems.author) {
-              elems.author.innerHTML = content.author;
-            }
-
-            elems.elem.removeAttribute('data-pfrecommend');
-            elems.elem.setAttribute('data-pfmodified', 'true');
-            inline.preppedElements[block] = elems;
-          } else {
-            break;
+          if (elems.title) {
+            elems.title.innerHTML = content.title;
           }
-          idx++;
+
+          // if attribute is on image element
+          if (elems.image) {
+            if (typeof elems.image.src !== 'undefined') {
+              elems.image.src = content.primary_image;
+            // if attribute is on container element, set the background
+            } else {
+              elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
+            }
+          }
+
+          // set the description
+          if (elems.description) {
+            elems.description.innerHTML = content.description;
+          }
+
+          // if attribute is on an a (link) element
+          if (elems.url) {
+            if (typeof elems.url.href !== 'undefined') {
+              elems.url.href = content.url;
+            // if attribute is on container element
+            } else {
+              elems.url.innerHTML = content.url;
+            }
+          }
+
+          // set the date published
+          if (elems.published && content.created) {
+            var published = new Date(content.created);
+            elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
+          }
+
+          // set the author
+          if (elems.author) {
+            elems.author.innerHTML = content.author;
+          }
+
+          elems.elem.removeAttribute('data-pfrecommend');
+          elems.elem.setAttribute('data-pfmodified', 'true');
+          inline.preppedElements[elems.block] = elems;
+        } else {
+          return;
         }
-      }
+      });
       cb();
     });
   } else {
-    for (var block in blocks) {
-      if (blocks.hasOwnProperty(block)) {
-        inline.defaultElements[block] = blocks[block];
-      }
-    }
+    val.blocks.forEach(function (block) {
+      inline.defaultElements[block.block] = block;
+    });
     cb();
   }
 }
@@ -4796,6 +4805,7 @@ function initializeInline () {
 // callbacks
 // display conditions
 // widgets
+// recommendations
 // ab tests
 // integrations
 // inline
@@ -4848,6 +4858,9 @@ var Pathfora = function () {
   this.Subscription = Subscription;
   this.Form = Form;
   this.SiteGate = SiteGate;
+
+  // recommendations
+  this.recommendContent = recommendContent;
 
   // ab tests
   this.initializeABTesting = initializeABTesting;

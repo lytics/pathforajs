@@ -37,7 +37,7 @@ export default function procElements () {
             throw new Error('Could not get account id from Lytics Javascript tag.');
           }
 
-          inline.procRecommendElements(elements[key], key, function () {
+          inline.procRecommendElements(elements[key], key, elements[key].shuffle, function () {
             cb(elements);
           });
           break;

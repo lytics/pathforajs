@@ -37,9 +37,17 @@ Each toggleable content recomendation block should have a surrounding container 
     <td>string</td>
     <td>id or slug of a content collection (segment on the content table) to filter content</td>
   </tr>
+
+  <tr>
+    <td>data-pfshuffle</td>
+    <td>boolean</td>
+    <td><code>optional</code> if true, shuffle the result of the recommendations on each page load.</td>
+  </tr>
 </table>
 
 Inside the container element you may have several elements with the `data-pfblock` attribute. Based on the value of this attribute, Pathfora will set the innerHTML or an attribute of this element to contain a content recommendation for the user.
+
+Note that only one `data-pfshuffle` attribute is necessary per unique value of `data-pfrecommend`. This shuffle param will be applied to all blocks with a common `data-pfrecommend` value since we make one API request per content collection referenced on the page.
 
 <table>
   <thead>
