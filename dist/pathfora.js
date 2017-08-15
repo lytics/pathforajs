@@ -3377,8 +3377,10 @@ function urlChecker (phrases) {
   var url = escapeURI(window.location.href, { keepEscaped: true }),
       simpleurl = window.location.hostname + window.location.pathname,
       queries = parseQuery(url),
-      valid, excludeValid = false,
-      matchCt, excludeCt = 0;
+      valid = false,
+      excludeValid = false,
+      matchCt = 0,
+      excludeCt = 0;
 
   if (!(phrases instanceof Array)) {
     phrases = Object.keys(phrases).map(function (key) {
