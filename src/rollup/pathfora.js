@@ -38,6 +38,9 @@ import Subscription from './widgets/subscription';
 import Form from './widgets/form';
 import SiteGate from './widgets/site-gate';
 
+// recommendations
+import recommendContent from './recommendations/recommend-content';
+
 // ab tests
 import initializeABTesting from './ab-test/init-ab-test';
 import ABTest from './ab-test/ab-test';
@@ -99,6 +102,9 @@ var Pathfora = function () {
   this.Subscription = Subscription;
   this.Form = Form;
   this.SiteGate = SiteGate;
+
+  // recommendations
+  this.recommendContent = recommendContent;
 
   // ab tests
   this.initializeABTesting = initializeABTesting;

@@ -4629,6 +4629,25 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.uninstall();
     });
 
+
+    it('should recognize the data-pfshuffle attribute', function () {
+      jasmine.Ajax.install();
+
+      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="my_collection2" data-pfshuffle="true">' +
+        '<img data-pftype="image" alt="My Image">' +
+        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+        '<p data-pftype="published"></p>' +
+        '<p data-pftype="author"></p>' +
+        '<p data-pftype="description"></p>' +
+        '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
+
+      pathfora.inline.procElements();
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true');
+
+      $('[data-pfblock="group1"]').remove();
+      jasmine.Ajax.uninstall();
+    });
+
     it('should not conflict with segment trigger groups', function () {
       jasmine.Ajax.install();
 

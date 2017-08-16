@@ -1,4 +1,4 @@
-Lytics content recommendations are now supported as a **beta** feature in Pathfora. Instead of hand selecting content to show an audience, you can can create a module that will suggest content at a individual level, based on the viewer's content affinities in Lytics. If you would like to try out this feature _please_ contact your customer success representative `success@lytics.io` to help set this up.
+Instead of hand selecting content to show an audience, you can can create a module that will suggest content at a individual level, based on the viewer's content affinities in Lytics.
 
 **Note**: only [Message](/types/message.md) modules using a [slideout](/layouts/slideout.md), [modal](/layouts/modal.md) or [modal](/layouts/inline.md) layout and a [variant](/layouts/modal.md#variant) of `3` support content recommendations.
 
