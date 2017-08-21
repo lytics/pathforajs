@@ -1,21 +1,22 @@
-/** @module pathfora/widgets/construct-widget-actions */
+/** @module pathfora/widgets/actions/construct-widget-actions */
 
 // globals
-import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE, PREFIX_CANCEL } from '../globals/config';
+import { callbackTypes, PREFIX_CONFIRM } from '../../globals/config';
 
 // utils
-import readCookie from '../utils/cookies/read-cookie';
-import saveCookie from '../utils/cookies/save-cookie';
-import hasClass from '../utils/class/has-class';
-import addClass from '../utils/class/add-class';
-import removeClass from '../utils/class/remove-class';
-import emailValid from '../utils/email-valid';
+import hasClass from '../../utils/class/has-class';
+import addClass from '../../utils/class/add-class';
+import removeClass from '../../utils/class/remove-class';
+import emailValid from '../../utils/email-valid';
 
 // data
-import trackWidgetAction from '../data/tracking/track-widget-action';
+import trackWidgetAction from '../../data/tracking/track-widget-action';
 
 // widgets
-import closeWidget from './close-widget';
+import closeWidget from '../close-widget';
+import widgetOnModalClose from './widget-on-modal-close';
+import buttonAction from './button-action';
+import updateActionCookie from './update-action-cookie';
 
 /**
  * Add callbacks and tracking for user interactions
@@ -28,32 +29,9 @@ import closeWidget from './close-widget';
 export default function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
       widgetOk = widget.querySelector('.pf-widget-ok'),
+      widgetCancel = widget.querySelector('.pf-widget-cancel'),
+      widgetClose = widget.querySelector('.pf-widget-close'),
       widgetReco = widget.querySelector('.pf-content-unit');
-
-  var widgetOnModalClose = function (event) {
-    if (typeof config.onModalClose === 'function') {
-      config.onModalClose(callbackTypes.MODAL_CLOSE, {
-        widget: widget,
-        config: config,
-        event: event
-      });
-    }
-  };
-
-  var updateActionCookie = function (name) {
-    var ct,
-        val = readCookie(name),
-        duration = Date.now();
-
-    if (val) {
-      val = val.split('|');
-      ct = Math.min(parseInt(val[0], 10), 9998) + 1;
-    } else {
-      ct = 1;
-    }
-
-    saveCookie(name, ct + '|' + duration, config.expiration);
-  };
 
   // Tracking for widgets with a form element
   switch (config.type) {
@@ -213,65 +191,16 @@ export default function constructWidgetActions (widget, config) {
       };
     }
     break;
-
-  case 'modal':
-  case 'slideout':
-  case 'bar':
-  case 'inline':
-    var widgetCancel = widget.querySelector('.pf-widget-cancel'),
-        widgetClose = widget.querySelector('.pf-widget-close');
-
-    if (widgetClose) {
-      widgetClose.onmouseenter = function (event) {
-        trackWidgetAction('hover', config, event.target);
-      };
-
-      widgetClose.onclick = function (event) {
-        closeWidget(widget.id);
-        updateActionCookie(PREFIX_CLOSE + widget.id);
-
-        if (typeof config.closeAction === 'object' && typeof config.closeAction.callback === 'function') {
-          config.closeAction.callback(callbackTypes.MODAL_CLOSE, {
-            widget: widget,
-            config: config,
-            event: event
-          });
-        }
-
-        widgetOnModalClose(event);
-      };
-    }
-
-    if (widgetCancel) {
-      widgetCancel.onmouseenter = function (event) {
-        trackWidgetAction('hover', config, event.target);
-      };
-
-      if (typeof config.cancelAction === 'object') {
-        widgetCancel.onclick = function (event) {
-          trackWidgetAction('cancel', config);
-          if (typeof config.cancelAction.callback === 'function') {
-            config.cancelAction.callback(callbackTypes.MODAL_CANCEL, {
-              widget: widget,
-              config: config,
-              event: event
-            });
-          }
-          updateActionCookie(PREFIX_CANCEL + widget.id);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(event);
-        };
-      } else {
-        widgetCancel.onclick = function (event) {
-          trackWidgetAction('cancel', config);
-          updateActionCookie(PREFIX_CANCEL + widget.id);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(event);
-        };
-      }
-    }
   default:
     break;
+  }
+
+  if (widgetClose) {
+    buttonAction(widgetClose, 'close', config, widget);
+  }
+
+  if (widgetCancel) {
+    buttonAction(widgetCancel, 'cancel', config, widget);
   }
 
   if (widgetOk) {
@@ -284,7 +213,7 @@ export default function constructWidgetActions (widget, config) {
         // invalid form, do not submit
       } else {
         trackWidgetAction('confirm', config);
-        updateActionCookie(PREFIX_CONFIRM + widget.id);
+        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
 
         if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
           config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
@@ -293,14 +222,14 @@ export default function constructWidgetActions (widget, config) {
             event: event
           });
         }
+
         if (typeof widgetOnButtonClick === 'function') {
           widgetOnButtonClick(event);
         }
 
-        widgetOnModalClose(event);
-
         if (config.layout !== 'inline' && typeof config.success === 'undefined') {
           closeWidget(widget.id, true);
+          widgetOnModalClose(widget, config, event);
 
         // show success state
         } else {
@@ -319,7 +248,6 @@ export default function constructWidgetActions (widget, config) {
     };
   }
 
-
   if (widgetReco) {
     widgetReco.onmouseenter = function (event) {
       trackWidgetAction('hover', config, event.target);
@@ -327,7 +255,7 @@ export default function constructWidgetActions (widget, config) {
 
     widgetReco.onclick = function (event) {
       trackWidgetAction('confirm', config, event.target);
-      updateActionCookie(PREFIX_CONFIRM + widget.id);
+      updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
     };
   }
 }

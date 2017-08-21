@@ -51,6 +51,14 @@ export default function trackWidgetAction (action, widget, htmlElement) {
     params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
     pathforaDataObject.cancelledActions.push(params);
     break;
+  case 'success.confirm':
+    params['pf-widget-action'] = !!widget.success && !!widget.success.confirmAction && widget.success.confirmAction.name || 'success confirm';
+    pathforaDataObject.completedActions.push(params);
+    break;
+  case 'success.cancel':
+    params['pf-widget-action'] = !!widget.success && !!widget.success.cancelAction && widget.success.cancelAction.name || 'success cancel';
+    pathforaDataObject.cancelledActions.push(params);
+    break;
   case 'submit':
   case 'unlock':
     if (hasClass(htmlElement, 'pf-custom-form')) {
@@ -101,9 +109,17 @@ export default function trackWidgetAction (action, widget, htmlElement) {
     if (hasClass(htmlElement, 'pf-content-unit')) {
       params['pf-widget-action'] = 'content recommendation';
     } else if (hasClass(htmlElement, 'pf-widget-ok')) {
-      params['pf-widget-action'] = 'confirm';
+      if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+        params['pf-widget-action'] = 'success.confirm';
+      } else {
+        params['pf-widget-action'] = 'confirm';
+      }
     } else if (hasClass(htmlElement, 'pf-widget-cancel')) {
-      params['pf-widget-action'] = 'cancel';
+      if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+        params['pf-widget-action'] = 'success.cancel';
+      } else {
+        params['pf-widget-action'] = 'cancel';
+      }
     } else if (hasClass(htmlElement, 'pf-widget-close')) {
       params['pf-widget-action'] = 'close';
     }

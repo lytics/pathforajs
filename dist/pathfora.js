@@ -947,6 +947,14 @@ function trackWidgetAction (action, widget, htmlElement) {
     params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
     pathforaDataObject.cancelledActions.push(params);
     break;
+  case 'success.confirm':
+    params['pf-widget-action'] = !!widget.success && !!widget.success.confirmAction && widget.success.confirmAction.name || 'success confirm';
+    pathforaDataObject.completedActions.push(params);
+    break;
+  case 'success.cancel':
+    params['pf-widget-action'] = !!widget.success && !!widget.success.cancelAction && widget.success.cancelAction.name || 'success cancel';
+    pathforaDataObject.cancelledActions.push(params);
+    break;
   case 'submit':
   case 'unlock':
     if (hasClass(htmlElement, 'pf-custom-form')) {
@@ -997,9 +1005,17 @@ function trackWidgetAction (action, widget, htmlElement) {
     if (hasClass(htmlElement, 'pf-content-unit')) {
       params['pf-widget-action'] = 'content recommendation';
     } else if (hasClass(htmlElement, 'pf-widget-ok')) {
-      params['pf-widget-action'] = 'confirm';
+      if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+        params['pf-widget-action'] = 'success.confirm';
+      } else {
+        params['pf-widget-action'] = 'confirm';
+      }
     } else if (hasClass(htmlElement, 'pf-widget-cancel')) {
-      params['pf-widget-action'] = 'cancel';
+      if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+        params['pf-widget-action'] = 'success.cancel';
+      } else {
+        params['pf-widget-action'] = 'cancel';
+      }
     } else if (hasClass(htmlElement, 'pf-widget-close')) {
       params['pf-widget-action'] = 'close';
     }
@@ -1164,7 +1180,126 @@ function closeWidget (id, noTrack) {
   }, 500);
 }
 
-/** @module pathfora/widgets/construct-widget-actions */
+/** @module pathfora/widgets/actions/widgetOnModalClose */
+
+/**
+ * Execute the onModalClose callback
+ * if set by the user
+ *
+ * @exports widgetOnModalClose
+ * @params {object} widget
+ * @params {object} config
+ * @params {object} event
+ */
+
+function widgetOnModalClose (widget, config, event) {
+  if (typeof config.onModalClose === 'function') {
+    config.onModalClose(callbackTypes.MODAL_CLOSE, {
+      widget: widget,
+      config: config,
+      event: event
+    });
+  }
+}
+
+/** @module pathfora/widgets/actions/update-action-cookie */
+
+/**
+ * Increase the value count of the actions
+ * saves as cookies
+ *
+ * @exports updateActionCookie
+ * @params {string} name
+ * @params {object} expiration
+ */
+
+function updateActionCookie (name, expiration) {
+  var ct,
+      val = readCookie(name),
+      duration = Date.now();
+
+  if (val) {
+    val = val.split('|');
+    ct = Math.min(parseInt(val[0], 10), 9998) + 1;
+  } else {
+    ct = 1;
+  }
+
+  saveCookie(name, ct + '|' + duration, expiration);
+}
+
+/** @module pathfora/widgets/actions/buton-action */
+
+// data
+// widgets
+/**
+ * Execute any callbacks that were assigned
+ * to a button, and perform tracking
+ *
+ * @exports widgetOnModalClose
+ * @params {object} btn
+ * @params {string} type
+ * @params {object} config
+ * @params {object} widget
+ */
+
+function buttonAction (btn, type, config, widget) {
+  var prefix, callbackType, action, shouldClose;
+
+  switch (type) {
+  case 'close':
+    prefix = PREFIX_CLOSE;
+    callbackType = callbackTypes.MODAL_CLOSE;
+    action = config.closeAction;
+    shouldClose = true;
+    break;
+  case 'cancel':
+  case 'success.cancel':
+    prefix = PREFIX_CANCEL;
+    callbackTypes.MODAL_CANCEL;
+    action = config.cancelAction;
+    shouldClose = config.layout !== 'inline';
+
+    if (type === 'success.cancel') {
+      action = config.success.cancelAction;
+    }
+    break;
+  case 'confirm':
+  case 'success.confirm':
+    prefix = PREFIX_CONFIRM;
+    callbackTypes.MODAL_CONFIRM;
+    shouldClose = config.layout !== 'inline';
+
+    if (type === 'success.confirm') {
+      action = config.success.confirmAction;
+    }
+    break;
+  }
+
+  btn.onmouseenter = function (event) {
+    trackWidgetAction('hover', config, event.target);
+  };
+
+  btn.onclick = function (event) {
+    trackWidgetAction(type, config);
+    updateActionCookie(prefix + widget.id, config.expiration);
+
+    if (typeof action === 'object' && typeof action.callback === 'function') {
+      action.callback(callbackType, {
+        widget: widget,
+        config: config,
+        event: event
+      });
+    }
+
+    if (shouldClose) {
+      closeWidget(widget.id, true);
+      widgetOnModalClose(widget, config, event);
+    }
+  };
+}
+
+/** @module pathfora/widgets/actions/construct-widget-actions */
 
 // globals
 // utils
@@ -1181,32 +1316,9 @@ function closeWidget (id, noTrack) {
 function constructWidgetActions (widget, config) {
   var widgetOnButtonClick, widgetOnFormSubmit,
       widgetOk = widget.querySelector('.pf-widget-ok'),
+      widgetCancel = widget.querySelector('.pf-widget-cancel'),
+      widgetClose = widget.querySelector('.pf-widget-close'),
       widgetReco = widget.querySelector('.pf-content-unit');
-
-  var widgetOnModalClose = function (event) {
-    if (typeof config.onModalClose === 'function') {
-      config.onModalClose(callbackTypes.MODAL_CLOSE, {
-        widget: widget,
-        config: config,
-        event: event
-      });
-    }
-  };
-
-  var updateActionCookie = function (name) {
-    var ct,
-        val = readCookie(name),
-        duration = Date.now();
-
-    if (val) {
-      val = val.split('|');
-      ct = Math.min(parseInt(val[0], 10), 9998) + 1;
-    } else {
-      ct = 1;
-    }
-
-    saveCookie(name, ct + '|' + duration, config.expiration);
-  };
 
   // Tracking for widgets with a form element
   switch (config.type) {
@@ -1366,65 +1478,16 @@ function constructWidgetActions (widget, config) {
       };
     }
     break;
-
-  case 'modal':
-  case 'slideout':
-  case 'bar':
-  case 'inline':
-    var widgetCancel = widget.querySelector('.pf-widget-cancel'),
-        widgetClose = widget.querySelector('.pf-widget-close');
-
-    if (widgetClose) {
-      widgetClose.onmouseenter = function (event) {
-        trackWidgetAction('hover', config, event.target);
-      };
-
-      widgetClose.onclick = function (event) {
-        closeWidget(widget.id);
-        updateActionCookie(PREFIX_CLOSE + widget.id);
-
-        if (typeof config.closeAction === 'object' && typeof config.closeAction.callback === 'function') {
-          config.closeAction.callback(callbackTypes.MODAL_CLOSE, {
-            widget: widget,
-            config: config,
-            event: event
-          });
-        }
-
-        widgetOnModalClose(event);
-      };
-    }
-
-    if (widgetCancel) {
-      widgetCancel.onmouseenter = function (event) {
-        trackWidgetAction('hover', config, event.target);
-      };
-
-      if (typeof config.cancelAction === 'object') {
-        widgetCancel.onclick = function (event) {
-          trackWidgetAction('cancel', config);
-          if (typeof config.cancelAction.callback === 'function') {
-            config.cancelAction.callback(callbackTypes.MODAL_CANCEL, {
-              widget: widget,
-              config: config,
-              event: event
-            });
-          }
-          updateActionCookie(PREFIX_CANCEL + widget.id);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(event);
-        };
-      } else {
-        widgetCancel.onclick = function (event) {
-          trackWidgetAction('cancel', config);
-          updateActionCookie(PREFIX_CANCEL + widget.id);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(event);
-        };
-      }
-    }
   default:
     break;
+  }
+
+  if (widgetClose) {
+    buttonAction(widgetClose, 'close', config, widget);
+  }
+
+  if (widgetCancel) {
+    buttonAction(widgetCancel, 'cancel', config, widget);
   }
 
   if (widgetOk) {
@@ -1437,7 +1500,7 @@ function constructWidgetActions (widget, config) {
         // invalid form, do not submit
       } else {
         trackWidgetAction('confirm', config);
-        updateActionCookie(PREFIX_CONFIRM + widget.id);
+        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
 
         if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
           config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
@@ -1446,14 +1509,14 @@ function constructWidgetActions (widget, config) {
             event: event
           });
         }
+
         if (typeof widgetOnButtonClick === 'function') {
           widgetOnButtonClick(event);
         }
 
-        widgetOnModalClose(event);
-
         if (config.layout !== 'inline' && typeof config.success === 'undefined') {
           closeWidget(widget.id, true);
+          widgetOnModalClose(widget, config, event);
 
         // show success state
         } else {
@@ -1472,7 +1535,6 @@ function constructWidgetActions (widget, config) {
     };
   }
 
-
   if (widgetReco) {
     widgetReco.onmouseenter = function (event) {
       trackWidgetAction('hover', config, event.target);
@@ -1480,7 +1542,7 @@ function constructWidgetActions (widget, config) {
 
     widgetReco.onclick = function (event) {
       trackWidgetAction('confirm', config, event.target);
-      updateActionCookie(PREFIX_CONFIRM + widget.id);
+      updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
     };
   }
 }
@@ -1791,11 +1853,37 @@ function buildWidgetForm (formElements, form) {
   }
 }
 
+/** @module pathfora/widgets/actions/construct-widget-actions */
+
+// widgets
+/**
+ * Add callbacks and tracking for confirm and cancel
+ * buttons on the success state of a form widget
+ *
+ * @exports constructSuccessActions
+ * @params {object} widget
+ * @params {object} config
+ */
+function constructSuccessActions (widget, config) {
+  var successOk = widget.querySelector('.success-state .pf-widget-ok'),
+      successCancel = widget.querySelector('.success-state .pf-widget-cancel');
+
+
+  if (successCancel) {
+    buttonAction(successCancel, 'success.cancel', config, widget);
+  }
+
+  if (successOk) {
+    buttonAction(successOk, 'success.confirm', config, widget);
+  }
+}
+
 /** @module pathfora/widgets/construct-widget-layout */
 
 // globals
 // dom
 // utils
+// form
 // widgets
 /**
  * Setup inner html elements for a widget
@@ -1855,17 +1943,42 @@ function constructWidgetLayout (widget, config) {
     case 'slideout':
     case 'sitegate':
     case 'inline':
+      if (config.success) {
+        var success = document.createElement('div');
+        success.className = 'success-state';
 
-      var successTitle = document.createElement('div');
-      successTitle.className = 'pf-widget-headline success-state';
-      successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
-      widgetContent.appendChild(successTitle);
+        var successTitle = document.createElement('h2');
+        successTitle.className = 'pf-widget-headline';
+        successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
+        success.appendChild(successTitle);
 
-      var successMsg = document.createElement('div');
-      successMsg.className = 'pf-widget-message success-state';
-      successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
-      widgetContent.appendChild(successMsg);
+        var successMsg = document.createElement('div');
+        successMsg.className = 'pf-widget-message';
+        successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
+        success.appendChild(successMsg);
 
+        if (config.success.okShow) {
+          var okSuccess = document.createElement('button');
+          okSuccess.type = 'button';
+          okSuccess.className = 'pf-widget-btn pf-widget-ok';
+          okSuccess.innerHTML = config.success.okMessage || 'Confirm';
+          success.appendChild(okSuccess);
+        }
+
+        if (config.success.cancelShow) {
+          var cancelSuccess = document.createElement('button');
+          cancelSuccess.type = 'button';
+          cancelSuccess.className = 'pf-widget-btn pf-widget-cancel';
+          cancelSuccess.innerHTML = config.success.cancelMessage || 'Cancel';
+          success.appendChild(cancelSuccess);
+        }
+
+        widgetContent.appendChild(success);
+
+        if (config.success.okShow || config.success.cancelShow) {
+          constructSuccessActions(widget, config);
+        }
+      }
       break;
     }
     break;
@@ -2112,8 +2225,8 @@ function setCustomColors (widget, colors) {
       msg = widget.querySelectorAll('.pf-widget-message'),
       headline = widget.querySelectorAll('.pf-widget-headline'),
       headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
-      cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
-      okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
+      cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
+      okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
       arrow = widget.querySelector('.pf-widget-caption span'),
       arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
       contentUnit = widget.querySelector('.pf-content-unit'),
@@ -2197,22 +2310,26 @@ function setCustomColors (widget, colors) {
   }
 
   if (cancelBtn) {
-    if (colors.cancelText) {
-      cancelBtn.style.setProperty('color', colors.cancelText, 'important');
-    }
+    for (i = 0; i < cancelBtn.length; i++) {
+      if (colors.cancelText) {
+        cancelBtn[i].style.setProperty('color', colors.cancelText, 'important');
+      }
 
-    if (colors.cancelBackground) {
-      cancelBtn.style.setProperty('background-color', colors.cancelBackground, 'important');
+      if (colors.cancelBackground) {
+        cancelBtn[i].style.setProperty('background-color', colors.cancelBackground, 'important');
+      }
     }
   }
 
   if (okBtn) {
-    if (colors.actionText) {
-      okBtn.style.setProperty('color', colors.actionText, 'important');
-    }
+    for (i = 0; i < okBtn.length; i++) {
+      if (colors.actionText) {
+        okBtn[i].style.setProperty('color', colors.actionText, 'important');
+      }
 
-    if (colors.actionBackground) {
-      okBtn.style.setProperty('background-color', colors.actionBackground, 'important');
+      if (colors.actionBackground) {
+        okBtn[i].style.setProperty('background-color', colors.actionBackground, 'important');
+      }
     }
   }
 
@@ -3255,7 +3372,7 @@ function parseQuery (url) {
  * @params {object} query
  * @params {object} matchQuery
  * @params {string} rule
- * @returns {bool}
+ * @returns {boolean}
  */
 function compareQueries (query, matchQuery, rule) {
   switch (rule) {

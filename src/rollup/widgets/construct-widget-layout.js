@@ -10,8 +10,11 @@ import document from '../dom/document';
 import addClass from '../utils/class/add-class';
 import removeClass from '../utils/class/remove-class';
 
-// widgets
+// form
 import buildWidgetForm from '../form/build-widget-form';
+
+// widgets
+import constructSuccessActions from './actions/construct-success-actions';
 
 /**
  * Setup inner html elements for a widget
@@ -71,17 +74,42 @@ export default function constructWidgetLayout (widget, config) {
     case 'slideout':
     case 'sitegate':
     case 'inline':
+      if (config.success) {
+        var success = document.createElement('div');
+        success.className = 'success-state';
 
-      var successTitle = document.createElement('div');
-      successTitle.className = 'pf-widget-headline success-state';
-      successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
-      widgetContent.appendChild(successTitle);
+        var successTitle = document.createElement('h2');
+        successTitle.className = 'pf-widget-headline';
+        successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
+        success.appendChild(successTitle);
 
-      var successMsg = document.createElement('div');
-      successMsg.className = 'pf-widget-message success-state';
-      successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
-      widgetContent.appendChild(successMsg);
+        var successMsg = document.createElement('div');
+        successMsg.className = 'pf-widget-message';
+        successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
+        success.appendChild(successMsg);
 
+        if (config.success.okShow) {
+          var okSuccess = document.createElement('button');
+          okSuccess.type = 'button';
+          okSuccess.className = 'pf-widget-btn pf-widget-ok';
+          okSuccess.innerHTML = config.success.okMessage || 'Confirm';
+          success.appendChild(okSuccess);
+        }
+
+        if (config.success.cancelShow) {
+          var cancelSuccess = document.createElement('button');
+          cancelSuccess.type = 'button';
+          cancelSuccess.className = 'pf-widget-btn pf-widget-cancel';
+          cancelSuccess.innerHTML = config.success.cancelMessage || 'Cancel';
+          success.appendChild(cancelSuccess);
+        }
+
+        widgetContent.appendChild(success);
+
+        if (config.success.okShow || config.success.cancelShow) {
+          constructSuccessActions(widget, config);
+        }
+      }
       break;
     }
     break;
