@@ -2280,6 +2280,9 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
+    expect(success.find('.pf-widget-message').html()).toBe(successForm.success.msg);
+    expect(success.find('.pf-widget-ok')).toBeUndefined;
+    expect(success.find('.pf-widget-cancel')).toBeUndefined;
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeFalsy();
@@ -2317,6 +2320,9 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
+    expect(success.find('.pf-widget-message').html()).toBe(successForm2.success.msg);
+    expect(success.find('.pf-widget-ok')).toBeUndefined;
+    expect(success.find('.pf-widget-cancel')).toBeUndefined;
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeTruthy();
@@ -2324,6 +2330,93 @@ describe('Widgets', function () {
 
       done();
     }, 3000);
+
+  });
+
+  it('should recognize success state buttons and callbacks', function (done) {
+    var successForm3 = new pathfora.Subscription({
+      id: 'success-form-cbs',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      success: {
+        headline: 'test',
+        msg: 'a custom success message',
+        okShow: true,
+        cancelShow: true,
+        cancelMessage: 'Custom Cancel',
+        confirmAction: {
+          name: 'test success confirmation',
+          callback: function () {
+            window.alert('confirmed');
+          }
+        },
+        cancelAction: {
+          name: 'test success cancelation',
+          callback: function () {
+            window.alert('canceled');
+          }
+        },
+        delay: 0
+      }
+    });
+
+    pathfora.initializeWidgets([successForm3]);
+    var widget = $('#' + successForm3.id);
+    var form = widget.find('form');
+    form.find('input[name="email"]').val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = $('.success-state');
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+    expect(success.find('.pf-widget-headline').html()).toBe(successForm3.success.headline);
+    expect(success.find('.pf-widget-message').html()).toBe(successForm3.success.msg);
+
+    expect(success.find('.pf-widget-ok').html()).toBe('Confirm');
+    expect(success.find('.pf-widget-cancel').html()).toBe('Custom Cancel');
+
+    spyOn(jstag, 'send');
+    spyOn(window, 'alert');
+    success.find('.pf-widget-ok').click();
+
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': successForm3.id,
+      'pf-widget-type': 'subscription',
+      'pf-widget-layout': 'slideout',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'success.confirm',
+      'pf-widget-action': successForm3.success.confirmAction.name
+    }));
+    expect(window.alert).toHaveBeenCalledWith('confirmed');
+
+    setTimeout(function () {
+      pathfora.clearAll();
+      pathfora.initializeWidgets([successForm3]);
+
+      widget = $('#' + successForm3.id);
+      form = widget.find('form');
+      form.find('input[name="email"]').val('test@example.com');
+      form.find('.pf-widget-ok').click();
+
+      success = $('.success-state');
+      success.find('.pf-widget-cancel').click();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-id': successForm3.id,
+        'pf-widget-type': 'subscription',
+        'pf-widget-layout': 'slideout',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'success.cancel',
+        'pf-widget-action': successForm3.success.cancelAction.name
+      }));
+      expect(window.alert).toHaveBeenCalledWith('canceled');
+
+      setTimeout(function () {
+        done();
+      }, 1000);
+    }, 1000);
 
   });
 

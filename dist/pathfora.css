@@ -206,8 +206,8 @@
 .pf-widget.success {
   transition: opacity 0.3s;
 }
-.pf-widget.success .pf-widget-headline:not(.success-state),
-.pf-widget.success .pf-widget-message:not(.success-state),
+.pf-widget.success .pf-widget-headline:first-child,
+.pf-widget.success .pf-widget-message:first-child,
 .pf-widget.success form,
 .pf-widget.success .pf-social-login {
   display: none;

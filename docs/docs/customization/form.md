@@ -108,7 +108,37 @@ Set a custom success/confirmation message to show after the user submits a form 
   <tr>
     <td>delay</td>
     <td>int</td>
-    <td>how long in seconds to show the success state before hiding the module. if 0, the module will not hide until the user closes it.</td>
+    <td>how long in seconds to show the success state before hiding the module. if 0, the module will not hide until the user closes it</td>
+  </tr>
+  <tr>
+    <td>okShow</td>
+    <td>boolean</td>
+    <td>if true, show a confirmation button as part of the success state</td>
+  </tr>
+  <tr>
+    <td>cancelShow</td>
+    <td>boolean</td>
+    <td>if true, show a cancel button as part of the success state</td>
+  </tr>
+  <tr>
+    <td>okMessage</td>
+    <td>string</td>
+    <td>text for the confirmation button on the sucess state</td>
+  </tr>
+  <tr>
+    <td>cancelMessage</td>
+    <td>string</td>
+    <td>text for the cancelation button on the success state</td>
+  </tr>
+  <tr>
+    <td>confirmAction</td>
+    <td>object</td>
+    <td>object containing the name and callback function for the confirmation button on the success state (see <a href="../../callbacks/#confirmaction">confirmAction</a>)</td>
+  </tr>
+  <tr>
+    <td>cancelAction</td>
+    <td>object</td>
+    <td>object containing the name and callback function for the cancelation button on the success state (see <a href="../../callbacks/#cancelaction">cancelAction</a>)</td>
   </tr>
 </table>
 
