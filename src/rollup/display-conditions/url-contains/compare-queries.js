@@ -7,7 +7,7 @@
  * @params {object} query
  * @params {object} matchQuery
  * @params {string} rule
- * @returns {bool}
+ * @returns {boolean}
  */
 export default function compareQueries (query, matchQuery, rule) {
   switch (rule) {

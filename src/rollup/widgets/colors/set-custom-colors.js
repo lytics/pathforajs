@@ -16,8 +16,8 @@ export default function setCustomColors (widget, colors) {
       msg = widget.querySelectorAll('.pf-widget-message'),
       headline = widget.querySelectorAll('.pf-widget-headline'),
       headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
-      cancelBtn = widget.querySelector('.pf-widget-btn.pf-widget-cancel'),
-      okBtn = widget.querySelector('.pf-widget-btn.pf-widget-ok'),
+      cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
+      okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
       arrow = widget.querySelector('.pf-widget-caption span'),
       arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
       contentUnit = widget.querySelector('.pf-content-unit'),
@@ -101,22 +101,26 @@ export default function setCustomColors (widget, colors) {
   }
 
   if (cancelBtn) {
-    if (colors.cancelText) {
-      cancelBtn.style.setProperty('color', colors.cancelText, 'important');
-    }
+    for (i = 0; i < cancelBtn.length; i++) {
+      if (colors.cancelText) {
+        cancelBtn[i].style.setProperty('color', colors.cancelText, 'important');
+      }
 
-    if (colors.cancelBackground) {
-      cancelBtn.style.setProperty('background-color', colors.cancelBackground, 'important');
+      if (colors.cancelBackground) {
+        cancelBtn[i].style.setProperty('background-color', colors.cancelBackground, 'important');
+      }
     }
   }
 
   if (okBtn) {
-    if (colors.actionText) {
-      okBtn.style.setProperty('color', colors.actionText, 'important');
-    }
+    for (i = 0; i < okBtn.length; i++) {
+      if (colors.actionText) {
+        okBtn[i].style.setProperty('color', colors.actionText, 'important');
+      }
 
-    if (colors.actionBackground) {
-      okBtn.style.setProperty('background-color', colors.actionBackground, 'important');
+      if (colors.actionBackground) {
+        okBtn[i].style.setProperty('background-color', colors.actionBackground, 'important');
+      }
     }
   }
 
