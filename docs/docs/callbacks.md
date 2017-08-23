@@ -21,6 +21,11 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
     <td><code>optional</code> name of the confirm event to send to Lytics and Google Analytics</td>
   </tr>
   <tr>
+    <td>close</td>
+    <td>boolean</td>
+    <td><code>optional</code> if false, prevent the modal from closing after the callback is executed</td>
+  </tr>
+  <tr>
     <td>callback</td>
     <td>function</td>
     <td><code>optional</code> function to execute when the use clicks the "confirm" button (see params below)</td>
@@ -77,6 +82,11 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
     <td><code>optional</code> name of the cancel event to send to Lytics and Google Analytics</td>
   </tr>
   <tr>
+    <td>close</td>
+    <td>boolean</td>
+    <td><code>optional</code> if false, prevent the modal from closing after the callback is executed</td>
+  </tr>
+  <tr>
     <td>callback</td>
     <td>function</td>
     <td><code>optional</code> function to execute when the use clicks the "cancel" button (see params below)</td>
@@ -99,6 +109,11 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
     <td>event</td>
     <td>string</td>
     <td><code>optional</code> name of the event</td>
+  </tr>
+  <tr>
+    <td>close</td>
+    <td>boolean</td>
+    <td><code>optional</code> if false, prevent the modal from closing after the callback is executed</td>
   </tr>
   <tr>
     <td>payload</td>

@@ -62,12 +62,18 @@ export default function buttonAction (btn, type, config, widget) {
     trackWidgetAction(type, config);
     updateActionCookie(prefix + widget.id, config.expiration);
 
-    if (typeof action === 'object' && typeof action.callback === 'function') {
-      action.callback(callbackType, {
-        widget: widget,
-        config: config,
-        event: event
-      });
+    if (typeof action === 'object') {
+      if (action.close === false) {
+        shouldClose = false;
+      }
+
+      if (typeof action.callback === 'function') {
+        action.callback(callbackType, {
+          widget: widget,
+          config: config,
+          event: event
+        });
+      }
     }
 
     if (shouldClose) {

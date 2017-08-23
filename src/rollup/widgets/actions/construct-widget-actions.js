@@ -209,39 +209,48 @@ export default function constructWidgetActions (widget, config) {
     };
 
     widgetOk.onclick = function (event) {
+      var shouldClose = true;
       if (typeof widgetOnFormSubmit === 'function' && !widgetOnFormSubmit(event)) {
         // invalid form, do not submit
       } else {
         trackWidgetAction('confirm', config);
         updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
 
-        if (typeof config.confirmAction === 'object' && typeof config.confirmAction.callback === 'function') {
-          config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
-            widget: widget,
-            config: config,
-            event: event
-          });
+        if (typeof config.confirmAction === 'object') {
+          if (config.confirmAction.close === false) {
+            shouldClose = false;
+          }
+
+          if (typeof config.confirmAction.callback === 'function') {
+            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
+              widget: widget,
+              config: config,
+              event: event
+            });
+          }
         }
 
         if (typeof widgetOnButtonClick === 'function') {
           widgetOnButtonClick(event);
         }
 
-        if (config.layout !== 'inline' && typeof config.success === 'undefined') {
-          closeWidget(widget.id, true);
-          widgetOnModalClose(widget, config, event);
+        if (shouldClose) {
+          if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+            closeWidget(widget.id, true);
+            widgetOnModalClose(widget, config, event);
 
-        // show success state
-        } else {
-          addClass(widget, 'success');
+          // show success state
+          } else {
+            addClass(widget, 'success');
 
-          // default to a three second delay if the user has not defined one
-          var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+            // default to a three second delay if the user has not defined one
+            var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
 
-          if (delay > 0) {
-            setTimeout(function () {
-              closeWidget(widget.id, true);
-            }, delay);
+            if (delay > 0) {
+              setTimeout(function () {
+                closeWidget(widget.id, true);
+              }, delay);
+            }
           }
         }
       }
