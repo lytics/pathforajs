@@ -1673,6 +1673,40 @@ describe('Widgets', function () {
     expect(modal.confirmAction.callback).toHaveBeenCalled();
   });
 
+  it('should not close the modal on a button action if specified', function (done) {
+    var modal = new pathfora.Message({
+      id: 'confirm-close-action-test',
+      layout: 'modal',
+      msg: 'Confirm action test modal',
+      confirmAction: {
+        name: 'Test confirm action',
+        close: false,
+        callback: function () {
+          // do something
+        }
+      },
+      cancelAction: {
+        close: false
+      }
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    setTimeout(function () {
+      var widget = $('#' + modal.id);
+      expect(widget).toBeDefined();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      setTimeout(function () {
+        widget.find('.pf-widget-ok').click();
+        widget.find('.pf-widget-cancel').click();
+        expect(widget).toBeDefined();
+        expect(widget.hasClass('opened')).toBeTruthy();
+        done();
+      }, 300);
+    }, 300);
+  });
+
 
   it('should be able to trigger action on cancel', function () {
     var modal = new pathfora.Message({
