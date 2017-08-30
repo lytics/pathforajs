@@ -1,4 +1,4 @@
-Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent Lytics automatically. To enable this data to be sent to Google Analytics set the `enableGA` flag: `window.pathfora.enableGA = true;` before loading any module configs in your code. Below we will look at which data fields are sent in detail and their formats.
+Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent Lytics automatically. Below we will look at which data fields are sent in detail and their formats.
 
 ## Lytics
 As long as your [Lytics javascript tag](https://activate.getlytics.com/resources/documentation/) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics javascript tag](https://activate.getlytics.com/resources/documentation/jstag). The following raw data fields can be sent to Lytics by Pathfora.
@@ -40,7 +40,7 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
   </tr>
   <tr>
     <td>confirm</td>
-    <td>"confirm" button was clicked by the user</td>
+    <td>"confirm" CTA button was clicked by the user</td>
   </tr>
   <tr>
     <td>cancel</td>
@@ -58,6 +58,18 @@ As long as your [Lytics javascript tag](https://activate.getlytics.com/resources
     <td>unlock</td>
     <td>user submitted information from a <a href="../types/gate">gate module</a></td>
   </tr>
+  <tr>
+    <td>hover</td>
+    <td>indicates that the user hovered over a button on the modal, name of button is recorded by <code>pf-widget-action</code></td>
+  </tr>
+  <tr>
+    <td>focus</td>
+    <td>indicates that a form element on a modal received focus, name of the form field is recorded by <code>pf-widget-action</code></td>
+  </tr>
+  <tr>
+    <td>form_started</td>
+    <td>indicates that a user began typing in a form element on the modal, name of the form field is recorded by <code>pf-widget-action</code></td>
+  </tr>
 </table>
 
 To verify that the event data fields are being sent properly to Lytics, you can simulate an action by interacting with your module and checking that the expected fields exist in the data streams section of your Lytics Account.
@@ -67,7 +79,11 @@ By default these fields are available as user fields so that you can use them in
 
 ## Google Analytics
 
-Pathfora will send event data from the modules on your website to your Google Analytics account as long as it has access to the `ga` function. This requires that you have the [analytics.js snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) on your website loaded before the Pathfora tag. An event sent to Google Analytics by Pathfora will use the following attributes for [event tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview):
+To enable this data to be sent to Google Analytics set the `enableGA` flag before loading any module configs in your code:
+``` js
+window.pathfora.enableGA = true;
+```
+If this flag is enabled, pathfora will send event data from the modules on your website to your Google Analytics account as long as it has access to the `ga` function. This requires that you have the [analytics.js snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) on your website loaded before the Pathfora tag. An event sent to Google Analytics by Pathfora will use the following attributes for [event tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview):
 
 | Attribute | Type | Value |
 |---|---|---|
