@@ -20,7 +20,6 @@ import addCallback from './callbacks/add-callback';
 // display conditions
 import initializePageViews from './display-conditions/pageviews/init-pageviews';
 import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
-import registerDelayedWidget from './display-conditions/delay/register-delayed-widget';
 import entityFieldChecker from './display-conditions/entity-fields/entity-field-checker';
 import replaceEntityField from './display-conditions/entity-fields/replace-entity-field';
 
@@ -85,7 +84,6 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
   this.replaceEntityField = replaceEntityField;
 

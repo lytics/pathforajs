@@ -2549,8 +2549,9 @@ function showWidget (widget) {
   }
 }
 
-/** @module pathfora/display-conditions/watchers/core/validate-watchers */
+/** @module pathfora/display-conditions/watchers/validate-watchers */
 
+// globals
 // display conditions
 // widgets
 function validateWatchers (widget, cb) {
@@ -2567,7 +2568,14 @@ function validateWatchers (widget, cb) {
   }
 
   if (valid) {
-    showWidget(widget);
+    if (widget.displayConditions.showDelay) {
+      widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
+        showWidget(widget);
+      }, widget.displayConditions.showDelay * 1000);
+    } else {
+      showWidget(widget);
+    }
+
     widget.valid = false;
     cb();
 
@@ -2642,21 +2650,6 @@ function triggerWidgets (widgetIds) {
       }
     });
   }
-}
-
-/** @module pathfora/display-conditions/delay/register-delayed-widget */
-
-/**
- * Begin waiting for a delayed widget
- *
- * @exports registerDelayedWidget
- * @params {object} widget
- */
-function registerDelayedWidget (widget) {
-  var pf = this;
-  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-    pf.initializeWidget(widget);
-  }, widget.displayConditions.showDelay * 1000);
 }
 
 /** @module pathfora/display-conditions/entity-fields/entity-field-checker */
@@ -3146,14 +3139,6 @@ function recommendContent (accountId, params, id, callback) {
 function initializeWidgetArray (array) {
   var pf = this;
 
-  var displayWidget = function (w) {
-    if (w.displayConditions.showDelay) {
-      pf.registerDelayedWidget(w);
-    } else {
-      pf.initializeWidget(w);
-    }
-  };
-
   var recContent = function (w, params) {
     pf.addCallback(function () {
       if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
@@ -3187,7 +3172,7 @@ function initializeWidgetArray (array) {
           throw new Error('Could not get recommendation and no default defined');
         }
 
-        displayWidget(w);
+        pf.initializeWidget(w);
       });
     });
   };
@@ -3236,7 +3221,7 @@ function initializeWidgetArray (array) {
       recContent(widget, params);
 
     } else {
-      displayWidget(widget);
+      pf.initializeWidget(widget);
     }
 
     // NOTE onInit feels better here
@@ -3885,7 +3870,13 @@ function initializeWidget (widget) {
 
     if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
       if (widget.valid) {
-        showWidget(widget);
+        if (condition.showDelay) {
+          widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
+            showWidget(widget);
+          }, condition.showDelay * 1000);
+        } else {
+          showWidget(widget);
+        }
       }
     }
   });
@@ -3907,7 +3898,7 @@ function previewWidget (widget) {
   return createWidgetHtml(widget);
 }
 
-/** @module core/cancel-delayed-widget */
+/** @module pathfora/display-conditions/cancel-delayed-widget */
 
 /**
  * Cancel waiting for a delayed widget
@@ -4975,7 +4966,6 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
   this.replaceEntityField = replaceEntityField;
 

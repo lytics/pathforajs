@@ -1,6 +1,6 @@
-/** @module core/cancel-delayed-widget */
+/** @module pathfora/display-conditions/cancel-delayed-widget */
 
-import { widgetTracker } from '../../globals/config';
+import { widgetTracker } from '../globals/config';
 
 /**
  * Cancel waiting for a delayed widget

@@ -23,14 +23,6 @@ import recommendContent from '../recommendations/recommend-content';
 export default function initializeWidgetArray (array) {
   var pf = this;
 
-  var displayWidget = function (w) {
-    if (w.displayConditions.showDelay) {
-      pf.registerDelayedWidget(w);
-    } else {
-      pf.initializeWidget(w);
-    }
-  };
-
   var recContent = function (w, params) {
     pf.addCallback(function () {
       if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
@@ -64,7 +56,7 @@ export default function initializeWidgetArray (array) {
           throw new Error('Could not get recommendation and no default defined');
         }
 
-        displayWidget(w);
+        pf.initializeWidget(w);
       });
     });
   };
@@ -113,7 +105,7 @@ export default function initializeWidgetArray (array) {
       recContent(widget, params);
 
     } else {
-      displayWidget(widget);
+      pf.initializeWidget(widget);
     }
 
     // NOTE onInit feels better here
