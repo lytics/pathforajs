@@ -117,13 +117,7 @@ export default function initializeWidget (widget) {
 
     if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
       if (widget.valid) {
-        if (condition.showDelay) {
-          widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-            showWidget(widget);
-          }, condition.showDelay * 1000);
-        } else {
-          showWidget(widget);
-        }
+        showWidget(widget);
       }
     }
   });

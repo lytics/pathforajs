@@ -1,8 +1,5 @@
 /** @module pathfora/display-conditions/watchers/validate-watchers */
 
-// globals
-import { widgetTracker } from '../../globals/config';
-
 // display conditions
 import impressionsChecker from '../impressions/impressions-checker';
 
@@ -23,14 +20,7 @@ export default function validateWatchers (widget, cb) {
   }
 
   if (valid) {
-    if (widget.displayConditions.showDelay) {
-      widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-        showWidget(widget);
-      }, widget.displayConditions.showDelay * 1000);
-    } else {
-      showWidget(widget);
-    }
-
+    showWidget(widget);
     widget.valid = false;
     cb();
 

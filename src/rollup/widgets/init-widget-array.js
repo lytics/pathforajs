@@ -86,6 +86,12 @@ export default function initializeWidgetArray (array) {
     updateObject(widget, defaults);
     updateObject(widget, widget.config);
 
+    if (widget.showSocialLogin) {
+      if (widget.showForm === false) {
+        throw new Error('Social login requires a form on the widget');
+      }
+    }
+
     if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
       if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
         throw new Error('Unsupported layout for content recommendation');
