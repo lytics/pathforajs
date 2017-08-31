@@ -1,4 +1,4 @@
-/** @module pathfora/display-conditions/watchers/core/validate-watchers */
+/** @module pathfora/display-conditions/watchers/validate-watchers */
 
 // display conditions
 import impressionsChecker from '../impressions/impressions-checker';

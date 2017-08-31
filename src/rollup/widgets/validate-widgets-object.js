@@ -1,12 +1,12 @@
 /** @module pathfora/widgets/validate-widgets-object */
 
 /**
- * Validate that the widget has correct position field
- * for its layout and type
+ * Validate that object provided to initializeWidgets
+ * is either an array of widgets or a targeting object
+ * targetting object containing widgets.
  *
- * @exports validateWidgetPosition
- * @params {object} widget
- * @params {object} config
+ * @exports validateWidgetsObject
+ * @params {object} widgets
  */
 export default function validateWidgetsObject (widgets) {
   if (!widgets) {

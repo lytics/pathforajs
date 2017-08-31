@@ -13,7 +13,7 @@ import document from '../dom/document';
 import removeClass from '../utils/class/remove-class';
 
 // display conditions
-import cancelDelayedWidget from '../display-conditions/delay/cancel-delayed-widget';
+import cancelDelayedWidget from '../display-conditions/cancel-delayed-widget';
 
 
 /**

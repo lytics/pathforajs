@@ -2471,85 +2471,89 @@ function widgetResizeListener (widget, node) {
  * @exports showWidget
  * @params {object} widget
  */
-function showWidget (widget) {
-  // FIXME Change to Array#filter and Array#length
-  for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
-    if (widgetTracker.openedWidgets[i] === widget) {
-      return;
+function showWidget (w) {
+  var openWidget = function (widget) {
+    // FIXME Change to Array#filter and Array#length
+    for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
+      if (widgetTracker.openedWidgets[i] === widget) {
+        return;
+      }
     }
-  }
 
-  widgetTracker.openedWidgets.push(widget);
-  trackWidgetAction('show', widget);
+    widgetTracker.openedWidgets.push(widget);
+    trackWidgetAction('show', widget);
 
-  if (widget.displayConditions.impressions) {
-    incrementImpressions(widget);
-  }
-
-  var node = createWidgetHtml(widget);
-
-  if (widget.showSocialLogin) {
-    if (widget.showForm === false) {
-      widgetTracker.openedWidgets.pop();
-      throw new Error('Social login requires a form on the widget');
+    if (widget.displayConditions.impressions) {
+      incrementImpressions(widget);
     }
-  }
 
-  if (widget.pushDown) {
-    addClass(document.querySelector('.pf-push-down'), 'opened');
-  }
+    var node = createWidgetHtml(widget);
 
-  if (widget.config.layout !== 'inline') {
-    document.body.appendChild(node);
-  } else {
-    var hostNode = document.querySelector(widget.config.position);
+    if (widget.pushDown) {
+      addClass(document.querySelector('.pf-push-down'), 'opened');
+    }
 
-    if (hostNode) {
-      hostNode.appendChild(node);
+    if (widget.config.layout !== 'inline') {
+      document.body.appendChild(node);
     } else {
-      widgetTracker.openedWidgets.pop();
-      throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+      var hostNode = document.querySelector(widget.config.position);
+
+      if (hostNode) {
+        hostNode.appendChild(node);
+      } else {
+        widgetTracker.openedWidgets.pop();
+        throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+      }
     }
-  }
 
-  // NOTE wait for appending to DOM to trigger the animation
-  // FIXME 50 - magical number
-  setTimeout(function () {
-    var widgetLoadCallback = widget.config.onLoad;
-
-    addClass(node, 'opened');
-
-    if (typeof widgetLoadCallback === 'function') {
-      widgetLoadCallback(callbackTypes.LOAD, {
-        config: widget,
-        widget: node
-      });
-    }
-    if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
-      widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
-        config: widget,
-        widget: node
-      });
-    }
-  }, 50);
-
-
-  if (widget.displayConditions.hideAfter) {
+    // NOTE wait for appending to DOM to trigger the animation
+    // FIXME 50 - magical number
     setTimeout(function () {
-      closeWidget(widget.id, true);
-    }, widget.displayConditions.hideAfter * 1000);
-  }
+      var widgetLoadCallback = widget.config.onLoad;
 
-  widgetResizeListener(widget, node);
+      addClass(node, 'opened');
 
-  if (typeof window.addEventListener === 'function') {
-    window.addEventListener('resize', function () {
-      widgetResizeListener(widget, node);
-    });
+      if (typeof widgetLoadCallback === 'function') {
+        widgetLoadCallback(callbackTypes.LOAD, {
+          config: widget,
+          widget: node
+        });
+      }
+      if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+        widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
+          config: widget,
+          widget: node
+        });
+      }
+    }, 50);
+
+
+    if (widget.displayConditions.hideAfter) {
+      setTimeout(function () {
+        closeWidget(widget.id, true);
+      }, widget.displayConditions.hideAfter * 1000);
+    }
+
+    widgetResizeListener(widget, node);
+
+    if (typeof window.addEventListener === 'function') {
+      window.addEventListener('resize', function () {
+        widgetResizeListener(widget, node);
+      });
+    }
+  };
+
+  // account for showDelay condition
+  if (w.displayConditions && w.displayConditions.showDelay) {
+    widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
+      openWidget(w);
+    }, w.displayConditions.showDelay * 1000);
+  } else {
+    openWidget(w);
   }
 }
 
-/** @module pathfora/display-conditions/watchers/core/validate-watchers */
+/** @module pathfora/display-conditions/watchers/validate-watchers */
 
 // display conditions
 // widgets
@@ -2642,21 +2646,6 @@ function triggerWidgets (widgetIds) {
       }
     });
   }
-}
-
-/** @module pathfora/display-conditions/delay/register-delayed-widget */
-
-/**
- * Begin waiting for a delayed widget
- *
- * @exports registerDelayedWidget
- * @params {object} widget
- */
-function registerDelayedWidget (widget) {
-  var pf = this;
-  widgetTracker.delayedWidgets[widget.id] = setTimeout(function () {
-    pf.initializeWidget(widget);
-  }, widget.displayConditions.showDelay * 1000);
 }
 
 /** @module pathfora/display-conditions/entity-fields/entity-field-checker */
@@ -2846,12 +2835,12 @@ function getUserSegments () {
 /** @module pathfora/widgets/validate-widgets-object */
 
 /**
- * Validate that the widget has correct position field
- * for its layout and type
+ * Validate that object provided to initializeWidgets
+ * is either an array of widgets or a targeting object
+ * targetting object containing widgets.
  *
- * @exports validateWidgetPosition
- * @params {object} widget
- * @params {object} config
+ * @exports validateWidgetsObject
+ * @params {object} widgets
  */
 function validateWidgetsObject (widgets) {
   if (!widgets) {
@@ -3146,14 +3135,6 @@ function recommendContent (accountId, params, id, callback) {
 function initializeWidgetArray (array) {
   var pf = this;
 
-  var displayWidget = function (w) {
-    if (w.displayConditions.showDelay) {
-      pf.registerDelayedWidget(w);
-    } else {
-      pf.initializeWidget(w);
-    }
-  };
-
   var recContent = function (w, params) {
     pf.addCallback(function () {
       if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
@@ -3187,7 +3168,7 @@ function initializeWidgetArray (array) {
           throw new Error('Could not get recommendation and no default defined');
         }
 
-        displayWidget(w);
+        pf.initializeWidget(w);
       });
     });
   };
@@ -3217,6 +3198,12 @@ function initializeWidgetArray (array) {
     updateObject(widget, defaults);
     updateObject(widget, widget.config);
 
+    if (widget.showSocialLogin) {
+      if (widget.showForm === false) {
+        throw new Error('Social login requires a form on the widget');
+      }
+    }
+
     if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
       if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
         throw new Error('Unsupported layout for content recommendation');
@@ -3236,7 +3223,7 @@ function initializeWidgetArray (array) {
       recContent(widget, params);
 
     } else {
-      displayWidget(widget);
+      pf.initializeWidget(widget);
     }
 
     // NOTE onInit feels better here
@@ -3907,7 +3894,7 @@ function previewWidget (widget) {
   return createWidgetHtml(widget);
 }
 
-/** @module core/cancel-delayed-widget */
+/** @module pathfora/display-conditions/cancel-delayed-widget */
 
 /**
  * Cancel waiting for a delayed widget
@@ -4975,7 +4962,6 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.registerDelayedWidget = registerDelayedWidget;
   this.entityFieldChecker = entityFieldChecker;
   this.replaceEntityField = replaceEntityField;
 
