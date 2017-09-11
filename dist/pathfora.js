@@ -394,24 +394,6 @@ function hasClass (DOMNode, className) {
   return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
 }
 
-/** @module pathfora/utils/cookie/read-cookie */
-
-// dom
-// utils
-/**
- * Get the value of a cookie
- *
- * @exports readCookie
- * @params {string} name
- * @returns {string}
- */
-function readCookie (name) {
-  var cookies = document.cookie,
-      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
-
-  return findCookieRegexp ? findCookieRegexp.pop() : null;
-}
-
 /** @module pathfora/utils/cookie/save-cookie */
 
 /**
@@ -432,12 +414,58 @@ function saveCookie (name, value, expiration) {
   }
 
   document.cookie = [
-    name,
+    encodeURIComponent(name),
     '=',
-    value,
+    encodeURIComponent(value),
     expires,
     '; path = /'
   ].join('');
+}
+
+/** @module pathfora/utils/cookie/delete-cookie */
+
+/**
+ * Delete a cookie
+ *
+ * @exports deleteCookie
+ * @params {string} name
+ */
+function deleteCookie (name) {
+  var date = new Date('Thu, 01 Jan 1970 00:00:01 GMT');
+  saveCookie(name, '', date);
+}
+
+/** @module pathfora/utils/cookie/read-cookie */
+
+// dom
+// utils
+/**
+ * Get the value of a cookie
+ *
+ * @exports readCookie
+ * @params {string} name
+ * @returns {string}
+ */
+function readCookie (name) {
+  var cookies = document.cookie,
+      findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
+
+  // legacy - check for cookie names that haven't been escaped
+  if (!findCookieRegexp) {
+    findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
+  } else {
+    var val = findCookieRegexp.pop();
+
+    // update any legacy cookies that haven't been encoded
+    if (val === decodeURIComponent(val)) {
+      deleteCookie(name);
+      saveCookie(encodeURIComponent(name), encodeURIComponent(val));
+    }
+
+    return decodeURIComponent(val);
+  }
+
+  return null;
 }
 
 /** @module pathfora/utils/scaffold/init-scaffold */
