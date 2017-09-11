@@ -20,9 +20,9 @@ export default function saveCookie (name, value, expiration) {
   }
 
   document.cookie = [
-    name,
+    encodeURIComponent(name),
     '=',
-    value,
+    encodeURIComponent(value),
     expires,
     '; path = /'
   ].join('');
