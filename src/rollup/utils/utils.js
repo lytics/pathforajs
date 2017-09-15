@@ -8,6 +8,8 @@ import removeClass from './class/remove-class';
 // cookies
 import readCookie from './cookies/read-cookie';
 import saveCookie from './cookies/save-cookie';
+import deleteCookie from './cookies/delete-cookie';
+import updateLegacyCookies from './cookies/update-legacy-cookies';
 
 // scaffold
 import initWidgetScaffold from './scaffold/init-scaffold';
@@ -41,6 +43,8 @@ export var utils = {
   // cookies
   readCookie: readCookie,
   saveCookie: saveCookie,
+  deleteCookie: deleteCookie,
+  updateLegacyCookies: updateLegacyCookies,
 
   // scaffold
   initWidgetScaffold: initWidgetScaffold,

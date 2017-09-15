@@ -4418,6 +4418,41 @@ describe('Utils', function () {
 });
 
 
+describe('Pathfora', function () {
+  describe('updateLegacyCookies', function () {
+    it('should encode legacy Pathfora cookies', function () {
+      var setCookie = function (cname, cvalue) {
+        var expires = 'expires=0';
+        document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+      };
+
+      var getCookie = function (cname) {
+        var name = cname + '=';
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return '';
+      };
+
+      setCookie('PathforaImpressions_randomwidgetid', '1|293847239874932871');
+      sessionStorage.setItem('PathforaRecommend_randomwidgetid', '{"somejson": "here"}');
+
+      pathfora.utils.updateLegacyCookies();
+
+      expect(getCookie('PathforaImpressions_randomwidgetid')).toEqual('1%257C293847239874932871');
+      expect(sessionStorage.getItem('PathforaRecommend_randomwidgetid')).toEqual('%7B%22somejson%22%3A%20%22here%22%7D');
+    });
+  });
+});
+
+
 // -------------------------
 // INLINE PERSONALIZATION TEST
 // -------------------------

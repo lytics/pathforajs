@@ -468,6 +468,63 @@ function readCookie (name) {
   return null;
 }
 
+/** @module pathfora/utils/cookie/update-legacy-cookies */
+
+// dom
+// global
+// utils
+/**
+ * Update legacy cookies to
+ * encoded cookie values.
+ *
+ * @exports updateLegacyCookies
+ */
+function updateLegacyCookies () {
+  // We should update all cookies that have these prefixes.
+  var cookieFind = [
+    PREFIX_REC,
+    PREFIX_UNLOCK,
+    PREFIX_IMPRESSION,
+    PREFIX_CONFIRM,
+    PREFIX_CANCEL,
+    PREFIX_CLOSE,
+    PREFIX_AB_TEST,
+    PF_PAGEVIEWS
+  ];
+
+  var i = 0;
+
+  var filterFunc = function (c) {
+    return c.trim().indexOf(cookieFind[i]) === 0;
+  };
+
+  var cookieFunc = function (c) {
+    var split = c.trim().split('=');
+
+    if (split.length === 2) {
+      var name = split[0];
+      var val = split[1];
+      if (val === decodeURIComponent(val)) {
+        deleteCookie(name);
+        saveCookie(encodeURIComponent(name), encodeURIComponent(val));
+      }
+    }
+  };
+
+  var sessionFunc = function (c) {
+    var val = sessionStorage.getItem(c);
+    if (val === decodeURIComponent(val)) {
+      sessionStorage.removeItem(c);
+      sessionStorage.setItem(encodeURIComponent(c), encodeURIComponent(val));
+    }
+  };
+
+  for (i = 0; i < cookieFind.length; i++) {
+    document.cookie.split(';').filter(filterFunc).forEach(cookieFunc);
+    Object.keys(sessionStorage).filter(filterFunc).forEach(sessionFunc);
+  }
+}
+
 /** @module pathfora/utils/scaffold/init-scaffold */
 
 /**
@@ -789,6 +846,8 @@ var utils = {
   // cookies
   readCookie: readCookie,
   saveCookie: saveCookie,
+  deleteCookie: deleteCookie,
+  updateLegacyCookies: updateLegacyCookies,
 
   // scaffold
   initWidgetScaffold: initWidgetScaffold,
@@ -3044,7 +3103,7 @@ function recommendContent (accountId, params, id, callback) {
     var rec;
 
     try {
-      rec = JSON.parse(storedRec);
+      rec = JSON.parse(decodeURIComponent(storedRec));
     } catch (e) {
       console.warn('Could not parse json stored response:' + e);
     }
@@ -3056,7 +3115,7 @@ function recommendContent (accountId, params, id, callback) {
       }
 
       if (rec.data.length > 0) {
-        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+        sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(rec.data)));
         callback(rec.data);
       }
       return;
@@ -3136,7 +3195,7 @@ function recommendContent (accountId, params, id, callback) {
       }
 
       // set the session storage.
-      sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(resp));
+      sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(resp)));
 
       callback(resp.data);
     } else {
@@ -5031,6 +5090,8 @@ var Pathfora = function () {
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
   link.setAttribute('href', CSS_URL);
+
+  this.utils.updateLegacyCookies();
 
   head.appendChild(link);
 

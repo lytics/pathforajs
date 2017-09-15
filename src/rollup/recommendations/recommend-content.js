@@ -33,7 +33,7 @@ export default function recommendContent (accountId, params, id, callback) {
     var rec;
 
     try {
-      rec = JSON.parse(storedRec);
+      rec = JSON.parse(decodeURIComponent(storedRec));
     } catch (e) {
       console.warn('Could not parse json stored response:' + e);
     }
@@ -45,7 +45,7 @@ export default function recommendContent (accountId, params, id, callback) {
       }
 
       if (rec.data.length > 0) {
-        sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(rec.data));
+        sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(rec.data)));
         callback(rec.data);
       }
       return;
@@ -125,7 +125,7 @@ export default function recommendContent (accountId, params, id, callback) {
       }
 
       // set the session storage.
-      sessionStorage.setItem(PREFIX_REC + id, JSON.stringify(resp));
+      sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(resp)));
 
       callback(resp.data);
     } else {
