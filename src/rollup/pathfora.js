@@ -126,6 +126,8 @@ var Pathfora = function () {
   link.setAttribute('type', 'text/css');
   link.setAttribute('href', CSS_URL);
 
+  this.utils.updateLegacyCookies();
+
   head.appendChild(link);
 
   // wait until everything else is loaded to prioritize widgets
