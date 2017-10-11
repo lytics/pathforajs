@@ -3095,6 +3095,12 @@ function recommendContent (accountId, params, id, callback) {
   // Recommendation API:
   // https://www.getlytics.com/developers/rest-api#content-recommendation
 
+  // ensure that the callback arg is a function
+  if (typeof callback !== 'function') {
+    console.warn('Could not make recommendation - missing callback function.');
+    return;
+  }
+
   // if we have the recommendation response cached in session storage
   // use that instead of making a new API request
   var storedRec = sessionStorage.getItem(PREFIX_REC + id);
@@ -3125,7 +3131,7 @@ function recommendContent (accountId, params, id, callback) {
   var seerId = readCookie('seerid');
 
   if (!seerId) {
-    throw new Error('Cannot find SEERID cookie');
+    callback([]);
   }
 
   var recommendParts = [
