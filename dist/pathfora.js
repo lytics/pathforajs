@@ -3125,7 +3125,7 @@ function recommendContent (accountId, params, id, callback) {
   var seerId = readCookie('seerid');
 
   if (!seerId) {
-    throw new Error('Cannot find SEERID cookie');
+    callback([]);
   }
 
   var recommendParts = [
