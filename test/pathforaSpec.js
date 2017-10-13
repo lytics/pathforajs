@@ -4441,13 +4441,21 @@ describe('Pathfora', function () {
         return '';
       };
 
-      setCookie('PathforaImpressions_randomwidgetid', '1|293847239874932871');
-      sessionStorage.setItem('PathforaRecommend_randomwidgetid', '{"somejson": "here"}');
+      setCookie('PathforaClosed_1', '1%257C1502732355490'); // double encoded
+      setCookie('PathforaImpressions_2', '1|293847239874932871');
+      sessionStorage.setItem('PathforaRecommend_2', '{"somejson": "here"}');
+      setCookie('PathforaImpressions_3', '%badval%');
 
       pathfora.utils.updateLegacyCookies();
 
-      expect(getCookie('PathforaImpressions_randomwidgetid')).toEqual('1%257C293847239874932871');
-      expect(sessionStorage.getItem('PathforaRecommend_randomwidgetid')).toEqual('%7B%22somejson%22%3A%20%22here%22%7D');
+      expect(getCookie('PathforaClosed_1')).toEqual('1%7C1502732355490');
+      expect(getCookie('PathforaImpressions_2')).toEqual('1%7C293847239874932871');
+      expect(sessionStorage.getItem('PathforaRecommend_2')).toEqual('%7B%22somejson%22%3A%20%22here%22%7D');
+      expect(getCookie('PathforaImpressions_3')).toEqual('%badval%');
+
+      expect(pathfora.utils.readCookie('PathforaClosed_1')).toEqual('1|1502732355490');
+      expect(pathfora.utils.readCookie('PathforaImpressions_2')).toEqual('1|293847239874932871');
+      expect(pathfora.utils.readCookie('PathforaImpressions_3')).toEqual('%badval%');
     });
   });
 });

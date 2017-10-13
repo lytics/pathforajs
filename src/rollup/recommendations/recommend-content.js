@@ -6,6 +6,7 @@ import { PREFIX_REC, API_URL } from '../globals/config';
 // utils
 import readCookie from '../utils/cookies/read-cookie';
 import constructQueries from '../utils/url/construct-queries';
+import decodeSafe from '../utils/decode-safe';
 
 // data
 import getData from '../data/request/get-data';
@@ -39,7 +40,7 @@ export default function recommendContent (accountId, params, id, callback) {
     var rec;
 
     try {
-      rec = JSON.parse(decodeURIComponent(storedRec));
+      rec = JSON.parse(decodeSafe(storedRec));
     } catch (e) {
       console.warn('Could not parse json stored response:' + e);
     }
