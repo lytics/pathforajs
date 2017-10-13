@@ -27,6 +27,8 @@ import getObjectValue from './objects/get-object-value';
 import generateUniqueId from './generate-unique-id';
 import escapeRegex from './escape-regex';
 import emailValid from './email-valid';
+import decodeSafe from './decode-safe';
+import isNotEncoded from './is-not-encoded';
 
 /**
  * Object containing utility functions
@@ -61,5 +63,7 @@ export var utils = {
 
   generateUniqueId: generateUniqueId,
   escapeRegex: escapeRegex,
-  emailValid: emailValid
+  emailValid: emailValid,
+  decodeSafe: decodeSafe,
+  isNotEncoded: isNotEncoded
 };

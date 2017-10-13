@@ -435,6 +435,41 @@ function deleteCookie (name) {
   saveCookie(name, '', date);
 }
 
+/** @module pathfora/utils/is-not-encoded */
+
+/**
+ * Check if a string is encoded or not.
+ *
+ * @exports isNotEncoded
+ * @params {string} s
+ * @returns {boolean} isNotEncoded
+ */
+function isNotEncoded (s) {
+  try {
+    return decodeURIComponent(s) === s && encodeURIComponent(s) !== s;
+  } catch (e) {
+    return false;
+  }
+}
+
+/** @module pathfora/utils/decode-safe */
+
+/**
+ * Try decoding a string, return original string
+ * if the decode fails.
+ *
+ * @exports decodeSafe
+ * @params {string} s
+ * @returns {string} decoded
+ */
+function decodeSafe (s) {
+  try {
+    return decodeURIComponent(s);
+  } catch (e) {
+    return s;
+  }
+}
+
 /** @module pathfora/utils/cookie/read-cookie */
 
 // dom
@@ -457,12 +492,12 @@ function readCookie (name) {
     var val = findCookieRegexp.pop();
 
     // update any legacy cookies that haven't been encoded
-    if (val === decodeURIComponent(val)) {
+    if (isNotEncoded(val)) {
       deleteCookie(name);
-      saveCookie(encodeURIComponent(name), encodeURIComponent(val));
+      saveCookie(name, val);
     }
 
-    return decodeURIComponent(val);
+    return decodeSafe(val);
   }
 
   return null;
@@ -501,19 +536,30 @@ function updateLegacyCookies () {
   var cookieFunc = function (c) {
     var split = c.trim().split('=');
 
+
     if (split.length === 2) {
       var name = split[0];
       var val = split[1];
-      if (val === decodeURIComponent(val)) {
+      if (isNotEncoded(val)) {
         deleteCookie(name);
-        saveCookie(encodeURIComponent(name), encodeURIComponent(val));
+        saveCookie(name, val);
+      }
+
+      // prevent double encoding bug
+      try {
+        if (decodeURIComponent(val) !== decodeURIComponent(decodeURIComponent(val))) {
+          deleteCookie(name);
+          saveCookie(name, decodeURIComponent(decodeURIComponent(val)));
+        }
+      } catch (e) {
+        // recover
       }
     }
   };
 
   var sessionFunc = function (c) {
     var val = sessionStorage.getItem(c);
-    if (val === decodeURIComponent(val)) {
+    if (isNotEncoded(val)) {
       sessionStorage.removeItem(c);
       sessionStorage.setItem(encodeURIComponent(c), encodeURIComponent(val));
     }
@@ -864,7 +910,9 @@ var utils = {
 
   generateUniqueId: generateUniqueId,
   escapeRegex: escapeRegex,
-  emailValid: emailValid
+  emailValid: emailValid,
+  decodeSafe: decodeSafe,
+  isNotEncoded: isNotEncoded
 };
 
 /** @module pathfora/data/tracking/get-data-object */
@@ -3109,7 +3157,7 @@ function recommendContent (accountId, params, id, callback) {
     var rec;
 
     try {
-      rec = JSON.parse(decodeURIComponent(storedRec));
+      rec = JSON.parse(decodeSafe(storedRec));
     } catch (e) {
       console.warn('Could not parse json stored response:' + e);
     }

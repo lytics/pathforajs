@@ -7,6 +7,8 @@ import document from '../../dom/document';
 import escapeRegex from '../escape-regex';
 import saveCookie from './save-cookie';
 import deleteCookie from './delete-cookie';
+import isNotEncoded from '../is-not-encoded';
+import decodeSafe from '../decode-safe';
 
 /**
  * Get the value of a cookie
@@ -26,12 +28,12 @@ export default function readCookie (name) {
     var val = findCookieRegexp.pop();
 
     // update any legacy cookies that haven't been encoded
-    if (val === decodeURIComponent(val)) {
+    if (isNotEncoded(val)) {
       deleteCookie(name);
-      saveCookie(encodeURIComponent(name), encodeURIComponent(val));
+      saveCookie(name, val);
     }
 
-    return decodeURIComponent(val);
+    return decodeSafe(val);
   }
 
   return null;
