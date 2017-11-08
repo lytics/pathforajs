@@ -17,6 +17,7 @@ var gulp = require('gulp'),
     rollup = require('rollup'),
     eslint = require('gulp-eslint'),
     gutil = require('gulp-util'),
+    istanbul = require('rollup-plugin-istanbul'),
     TESTAPIURL = '//api.lytics.io',
     TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
     EXAMPLESSRC = 'docs/docs/examples/src',
@@ -101,12 +102,18 @@ var prepareTemplates = function () {
 
 gulp.task('build:rollup', function () {
   return rollup.rollup({
-    entry: 'src/rollup/pathfora.js'
+    entry: 'src/rollup/pathfora.js',
+    plugins: [
+      istanbul({
+        exclude: ['test/*.spec.js', 'dist/*.js']
+      })
+    ]
   }).then(function (bundle) {
     bundle.write({
       format: 'iife',
       moduleName: 'pathfora',
-      dest: 'dist/pathfora.js'
+      dest: 'dist/pathfora.js',
+      sourcemap: true
     });
   });
 });

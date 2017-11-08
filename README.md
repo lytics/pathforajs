@@ -1,8 +1,9 @@
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
+[![codecov](https://codecov.io/gh/lytics/pathforajs/branch/develop/graph/badge.svg)](https://codecov.io/gh/lytics/pathforajs)
 
 # Pathfora JS
 Pathfora JS is a lightweight SDK for displaying personalized modules on your website, it integrates with your [Lytics](http://www.getlytics.com/) account to track user actions, and conditionally display modules based on your users' audience membership. For more info and full configuration examples check out the [full documentation](https://lytics.github.io/pathforadocs/).
-        
+
 ## Modules
 There are 4 types of modules and 5 layouts currently supported.
 
@@ -12,9 +13,9 @@ There are 4 types of modules and 5 layouts currently supported.
   - **Form** - Module with a form to capture user information, can contain fields for `name`, `email`, `title` and `message`.
   - **Subscription** - Module with a single input field, `email`.
   - **Gate** - Module which gates the page behind it, the user cannot view the page until they enter information into the gate form. Can contain form fields for `name`, `email`, `organization`, `title`.
-  
+
 **Modules are displayed in one of following layouts:**
- 
+
   - **Modal** - A large size module with an overlay behind it - meant to cover a substantial area of the browser window, so that it demands attention from the user.
   - **Slideout** - A medium module which slides from either side into the window.
   - **Bar** - A thin module which appears at the top or bottom of the browser window.
@@ -71,7 +72,7 @@ Gulp tasks:
 
 - **`gulp lint`** - lint all the `js` source files with the rules defined in [.eslintrc](https://github.com/lytics/pathforajs/blob/develop/.eslintrc).
 
-- **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL. 
+- **`gulp local`** - reads some config params from an optional local file, `.env.json` and builds and watches as with the default gulp task. This can allow you to test CSS changes locally (by default `dist/pathfora.min.js` loads the most recently deployed CSS file) or override the Lytics API URL.
 
   Example `.env.json` file, (using local CSS):
 
@@ -87,7 +88,7 @@ Documentation for the most recent release is available [here](http://lytics.gith
 
 You can also view and add to the docs by running the `gulp docs` task. Our docs are powered by [mkdocs](http://www.mkdocs.org/) which you must install before attempting to run the docs.
 
-```sh 
+```sh
 $ pip install mkdocs
 $ gulp docs
 ```
