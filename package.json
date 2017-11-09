@@ -49,6 +49,9 @@
   },
   "scripts": {
     "test": "gulp build && karma start --single-run --browsers PhantomJS",
+    "clean": "rm -rf ./dist",
+    "build:prod": "NODE_ENV=production gulp build",
+    "prod": "npm run test && npm run clean && npm run build:prod",
     "lint": "eslint src/*",
     "lint:fix": "npm run lint -- --fix",
     "docs": "jsdoc src/pathfora.js -d docs",
