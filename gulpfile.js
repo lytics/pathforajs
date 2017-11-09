@@ -100,14 +100,21 @@ var prepareTemplates = function () {
   return str.replace(/\"/g, '\'');
 };
 
+//Plugins for rollup. Babel, istanbul, etc.
+var rollupPlugins = [];
+
+if (process.env.NODE_ENV !== 'production') {
+  rollupPlugins.push(
+    istanbul({
+      exclude: ['test/*.spec.js', 'dist/*.js']
+    })
+  );
+}
+
 gulp.task('build:rollup', function () {
   return rollup.rollup({
     entry: 'src/rollup/pathfora.js',
-    plugins: [
-      istanbul({
-        exclude: ['test/*.spec.js', 'dist/*.js']
-      })
-    ]
+    plugins: rollupPlugins
   }).then(function (bundle) {
     bundle.write({
       format: 'iife',
