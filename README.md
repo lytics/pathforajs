@@ -83,6 +83,17 @@ Gulp tasks:
   }
   ```
 
+Useful NPM scripts:
+
+- **`npm test`** - builds and activates Karma test runner on PhantomJS.
+
+- **`npm run clean`** - blow out the `./dist` folder. 
+
+- **`npm run build:prod`** - sets `NODE_ENV` to `production` and builds minified files in `./dist` folder.
+
+- **`npm run prod`** - run tests, clean and rebuild the `/dist` folder. This is built on top of the `gulp build`
+command. Important to know that this sets the `NODE_ENV` to `production`, removing instabul instrumentation for code coverage. Currently, this is the default command used for our Travis CI.
+
 ### Documentation
 Documentation for the most recent release is available [here](http://lytics.github.io/pathforadocs/).
 
