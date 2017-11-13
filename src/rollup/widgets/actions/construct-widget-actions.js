@@ -18,6 +18,9 @@ import widgetOnModalClose from './widget-on-modal-close';
 import buttonAction from './button-action';
 import updateActionCookie from './update-action-cookie';
 
+// dom
+import document from '../../dom/document';
+
 /**
  * Add callbacks and tracking for user interactions
  * with widgets
@@ -221,6 +224,10 @@ export default function constructWidgetActions (widget, config) {
             shouldClose = false;
           }
 
+          if (config.confirmAction.waitForAsyncResponse === true) {
+            shouldClose = false;
+          }
+
           if (typeof config.confirmAction.callback === 'function') {
             config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
               widget: widget,
@@ -234,6 +241,9 @@ export default function constructWidgetActions (widget, config) {
           widgetOnButtonClick(event);
         }
 
+        // default to a three second delay if the user has not defined one
+        var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
         if (shouldClose) {
           if (config.layout !== 'inline' && typeof config.success === 'undefined') {
             closeWidget(widget.id, true);
@@ -243,15 +253,34 @@ export default function constructWidgetActions (widget, config) {
           } else {
             addClass(widget, 'success');
 
-            // default to a three second delay if the user has not defined one
-            var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
-
             if (delay > 0) {
               setTimeout(function () {
                 closeWidget(widget.id, true);
               }, delay);
             }
           }
+        }
+
+        // prevents synchronous display of success state, and shows error or success state modal accordingly.
+        if (!shouldClose && typeof config.confirmAction.asyncCallback === 'function') {
+          config.confirmAction.asyncCallback(callbackTypes.MODAL_CONFIRM, {
+            widget: widget,
+            config: config,
+            event: event
+          }, function (err) {
+            if (err) {
+              document.getElementById('errorMessage').style.display = 'block';
+              return;
+            }
+
+            addClass(widget, 'success');
+
+            if (delay > 0) {
+              setTimeout(function () {
+                closeWidget(widget.id, true);
+              }, delay);
+            }
+          });
         }
       }
     };
