@@ -1,5 +1,7 @@
-### Issues
+### Contribution Prerequisites
+You must have [Node](https://nodejs.org/en/) installed at v8.0.0+.
 
+### Issues
 PathforaJS consume GitHub issues, similar to most open source projects. Issues can be divided into categories and are tracked based on their attached labels. The most common ones are `feature requests`, `bugs`, `maintenance`. When you open a new issue, please make sure there is an attached label. This greatly helps contributors prioritize what needs to be worked on.
 
 At minimum, an issue should state the current problem and the expected/desired behavior.
