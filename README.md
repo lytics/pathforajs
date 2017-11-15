@@ -52,6 +52,12 @@ There are 4 types of modules and 5 layouts currently supported.
   pathfora.initializeWidgets([module]);
   ```
 
+## Communication
+**`slack`** - There’s a [slack channel](https://join.slack.com/t/pathforajs/shared_invite/enQtMjcyNDEzMDY4NzIxLTI5ZDIyMDI2NGEzNjU4NDE3MTgyOWQ2YzM5MzhjZjVmZDljMDE3NmU5MDFmYmExNTA5ODlhZmE4NmM2ZmE3MTI). Feel free to join and collaborate!
+
+## Contributing to Pathfora
+[See contribution notes](CONTRIBUTION.md)
+
 ## Development
 Pathfora uses [NPM](https://docs.npmjs.com/) for package management, [rollup](https://github.com/rollup/rollup) as a module bundler, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
 
@@ -87,7 +93,7 @@ Useful NPM scripts:
 
 - **`npm test`** - builds and activates Karma test runner on PhantomJS.
 
-- **`npm run clean`** - blow out the `./dist` folder. 
+- **`npm run clean`** - blow out the `./dist` folder.
 
 - **`npm run build:prod`** - sets `NODE_ENV` to `production` and builds minified files in `./dist` folder.
 
