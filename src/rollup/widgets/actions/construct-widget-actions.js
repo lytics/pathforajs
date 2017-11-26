@@ -242,7 +242,7 @@ export default function constructWidgetActions (widget, config) {
         }
 
         // default to a three second delay if the user has not defined one
-        var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+        var delay = config.success && typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
 
         if (shouldClose) {
           if (config.layout !== 'inline' && typeof config.success === 'undefined') {
