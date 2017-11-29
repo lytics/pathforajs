@@ -1,4 +1,7 @@
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/lytics/pathforajs/blob/develop/LICENSE.md)
 [![Build Status](https://travis-ci.org/lytics/pathforajs.svg?branch=develop)](https://travis-ci.org/lytics/pathforajs)
+[![dependencies Status](https://david-dm.org/lytics/pathforajs/status.svg)](https://david-dm.org/lytics/pathforajs)
+[![devDependencies Status](https://david-dm.org/lytics/pathforajs/dev-status.svg)](https://david-dm.org/lytics/pathforajs?type=dev)
 [![codecov](https://codecov.io/gh/lytics/pathforajs/branch/develop/graph/badge.svg)](https://codecov.io/gh/lytics/pathforajs)
 
 # Pathfora JS
@@ -93,7 +96,7 @@ Useful NPM scripts:
 
 - **`npm test`** - builds and activates Karma test runner on PhantomJS.
 
-- **`npm run clean`** - blow out the `./dist` folder.
+- **`npm run clean`** - removes files from the `./dist` folder for a clean build.
 
 - **`npm run build:prod`** - sets `NODE_ENV` to `production` and builds minified files in `./dist` folder.
 
@@ -125,3 +128,7 @@ Running tests:
 ``` sh
 $ gulp build && karma start --single-run --browsers PhantomJS
 ```
+
+## License
+[MIT](LICENSE.md)
+Copyright (c) 2017, 2016, 2015 Lytics
