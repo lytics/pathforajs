@@ -35,6 +35,13 @@ export default function buildFormElement (elem, form) {
       content = document.createElement('input');
       content.setAttribute('type', 'text');
       break;
+    case 'errorMessage':
+      content = document.createElement('P');
+      content.setAttribute('style', 'display: none');
+      content.setAttribute('id', 'pf-error-message');
+      content.setAttribute('class', 'pf-error-message');
+      content.appendChild(document.createTextNode(elem.msg));
+      break;
     default:
       content = document.createElement(elem.type);
       break;

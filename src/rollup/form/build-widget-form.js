@@ -29,6 +29,7 @@ export default function buildWidgetForm (formElements, form) {
     case 'text':
     case 'email':
     case 'select':
+    case 'errorMessage':
       buildFormElement(elem, form);
       break;
 
