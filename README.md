@@ -129,6 +129,10 @@ Running tests:
 $ gulp build && karma start --single-run --browsers PhantomJS
 ```
 
+Or simply:
+```npm test
+```
+
 ## License
 [MIT](LICENSE.md)
 Copyright (c) 2017, 2016, 2015 Lytics
