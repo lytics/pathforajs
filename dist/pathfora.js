@@ -1675,7 +1675,7 @@ function constructWidgetActions (widget, config) {
       }
 
       if (shouldClose) {
-        if (config.layout !== 'inline' && typeof config.success === 'undefined') {
+        if (config.layout !== 'inline' && !config.success) {
           closeWidget(widget.id, true);
           widgetOnModalClose(widget, config, event);
 
@@ -1684,7 +1684,7 @@ function constructWidgetActions (widget, config) {
           addClass(widget, 'success');
 
           // default to a three second delay if the user has not defined one
-          var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+          var delay = config.success && typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
 
           if (delay > 0) {
             setTimeout(function () {
