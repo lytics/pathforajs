@@ -27,7 +27,7 @@ import updateActionCookie from './update-action-cookie';
  * @params {object} config
  */
 export default function constructWidgetActions (widget, config) {
-  var widgetOnButtonClick, widgetOnFormSubmit,
+  var widgetOnButtonClick, widgetFormValidate, widgetForm,
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetClose = widget.querySelector('.pf-widget-close'),
@@ -38,7 +38,7 @@ export default function constructWidgetActions (widget, config) {
   case 'form':
   case 'sitegate':
   case 'subscription':
-    var widgetForm = widget.querySelector('form');
+    widgetForm = widget.querySelector('form');
 
     var onInputChange = function (event) {
       if (event.target.value && event.target.value.length > 0) {
@@ -65,21 +65,8 @@ export default function constructWidgetActions (widget, config) {
     }
 
     // Form submit handler
-    widgetOnFormSubmit = function (event) {
-      var widgetAction;
+    widgetFormValidate = function (event) {
       event.preventDefault();
-
-      switch (config.type) {
-      case 'form':
-        widgetAction = 'submit';
-        break;
-      case 'subscription':
-        widgetAction = 'subscribe';
-        break;
-      case 'sitegate':
-        widgetAction = 'unlock';
-        break;
-      }
 
       // Validate that the form is filled out correctly
       var valid = true,
@@ -131,27 +118,7 @@ export default function constructWidgetActions (widget, config) {
         }
       }
 
-      if (valid && widgetAction) {
-        trackWidgetAction(widgetAction, config, widgetForm);
-
-        if (typeof config.onSubmit === 'function') {
-          config.onSubmit(callbackTypes.FORM_SUBMIT, {
-            widget: widget,
-            config: config,
-            event: event,
-            data: Array.prototype.slice.call(
-              widgetForm.querySelectorAll('input, textarea, select')
-            ).map(function (element) {
-              return {
-                name: element.name || element.id,
-                value: element.value
-              };
-            })
-          });
-        }
-        return true;
-      }
-      return false;
+      return valid;
     };
 
     break;
@@ -209,48 +176,92 @@ export default function constructWidgetActions (widget, config) {
     };
 
     widgetOk.onclick = function (event) {
-      var shouldClose = true;
-      if (typeof widgetOnFormSubmit === 'function' && !widgetOnFormSubmit(event)) {
-        // invalid form, do not submit
-      } else {
-        trackWidgetAction('confirm', config);
-        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+      var data, widgetAction,
+          shouldClose = true;
 
-        if (typeof config.confirmAction === 'object') {
-          if (config.confirmAction.close === false) {
-            shouldClose = false;
-          }
+      if (typeof widgetFormValidate === 'function') {
+        switch (config.type) {
+        case 'form':
+          widgetAction = 'submit';
+          break;
+        case 'subscription':
+          widgetAction = 'subscribe';
+          break;
+        case 'sitegate':
+          widgetAction = 'unlock';
+          break;
+        }
 
-          if (typeof config.confirmAction.callback === 'function') {
-            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
+        if (!widgetAction || !widgetFormValidate(event)) {
+          return;
+        } else if (widgetForm) {
+          trackWidgetAction(widgetAction, config, widgetForm);
+
+          data = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('input, textarea, select')
+          ).map(function (element) {
+            return {
+              name: element.name || element.id,
+              value: element.value
+            };
+          });
+
+          // onSubmit callback should be deprecated,
+          // we keep the cb for backwards compatibility.
+          if (typeof config.onSubmit === 'function') {
+            config.onSubmit(callbackTypes.FORM_SUBMIT, {
               widget: widget,
               config: config,
-              event: event
+              event: event,
+              data: data
             });
           }
         }
+      }
 
-        if (typeof widgetOnButtonClick === 'function') {
-          widgetOnButtonClick(event);
+      trackWidgetAction('confirm', config);
+      updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+
+      if (typeof config.confirmAction === 'object') {
+        if (config.confirmAction.close === false) {
+          shouldClose = false;
         }
 
-        if (shouldClose) {
-          if (config.layout !== 'inline' && typeof config.success === 'undefined') {
-            closeWidget(widget.id, true);
-            widgetOnModalClose(widget, config, event);
+        if (typeof config.confirmAction.callback === 'function') {
+          var param = {
+            widget: widget,
+            config: config,
+            event: event
+          };
 
-          // show success state
-          } else {
-            addClass(widget, 'success');
+          if (data) {
+            param.data = data;
+          }
 
-            // default to a three second delay if the user has not defined one
-            var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+          config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
+        }
+      }
 
-            if (delay > 0) {
-              setTimeout(function () {
-                closeWidget(widget.id, true);
-              }, delay);
-            }
+      if (typeof widgetOnButtonClick === 'function') {
+        widgetOnButtonClick(event);
+      }
+
+      if (shouldClose) {
+        if (config.layout !== 'inline' && !config.success) {
+          closeWidget(widget.id, true);
+          widgetOnModalClose(widget, config, event);
+
+        // show success state
+        } else {
+          addClass(widget, 'success');
+
+          // default to a three second delay if the user has not defined one
+          var delay = config.success && typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
+
+          if (delay > 0) {
+            setTimeout(function () {
+              closeWidget(widget.id, true);
+            }, delay);
           }
         }
       }

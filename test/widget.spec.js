@@ -519,6 +519,36 @@ describe('Widgets', function () {
     expect(modal.confirmAction.callback).toHaveBeenCalled();
   });
 
+  it('should trigger callback function after pressing action with form data.', function () {
+    var modal = new pathfora.Form({
+      id: 'confirm-action-form-test',
+      layout: 'modal',
+      msg: 'Confirm action test modal',
+      confirmAction: {
+        callback: function (a, b) {
+          alert('test confirmation');
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    widget.find('input[name="username"]').val('test name');
+    widget.find('input[name="email"]').val('test@example.com');
+    spyOn(modal.confirmAction, 'callback');
+    expect(modal.confirmAction.callback).not.toHaveBeenCalled();
+    widget.find('.pf-widget-ok').click();
+    expect(modal.confirmAction.callback).toHaveBeenCalledWith('modalConfirm', jasmine.objectContaining({
+      data: [
+        {name: 'username', value: 'test name'},
+        {name: 'email', value: 'test@example.com'},
+        {name: 'title', value: ''},
+        {name: 'message', value: ''}
+      ]
+    }));
+  });
+
   it('should not close the modal on a button action if specified', function (done) {
     var modal = new pathfora.Message({
       id: 'confirm-close-action-test',

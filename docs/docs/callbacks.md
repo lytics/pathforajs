@@ -52,7 +52,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
+    <td><code>optional</code> object containing the rendered DOM Element (widget), the config of the widget (config), the javascript event (event), and the data submitted by the user in the case of modules with a form (data)</td>
   </tr>
 </table>
 
@@ -282,7 +282,10 @@ Javascript callback function **for [button layouts](/layouts/button.md) only** o
 
 <pre data-src="../examples/src/callbacks/onClick.js"></pre>
 
-## onSubmit
+## onSubmit (deprecated)
+
+**This callback is deprecated. We advise using [confirmAction](#confirmaction) instead, as it has the same functionality.**
+
 Javascript callback function **for any types with form elements** on submission of the form (includes form data as param).
 
 <table>
