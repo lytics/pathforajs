@@ -217,19 +217,39 @@
     }
   }
 
-  .success-state {
+  .success-state, .error-state {
     display: none;
   }
 
   &.success {
     transition: opacity 0.3s;
 
-    .pf-widget-headline:first-child, .pf-widget-message:first-child, form, .pf-social-login {
+    .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
       display: none;
     }
 
     .success-state {
       display: block;
+      
+      .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+        display: block;
+      }
+    }
+  }
+
+  &.error {
+    transition: opacity 0.3s;
+
+    .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+      display: none;
+    }
+
+    .error-state {
+      display: block;
+      
+      .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+        display: block;
+      }
     }
   }
 }

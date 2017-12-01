@@ -9,6 +9,9 @@ import addClass from '../../utils/class/add-class';
 import removeClass from '../../utils/class/remove-class';
 import emailValid from '../../utils/email-valid';
 
+// form
+import handleFormStates from '../../form/handle-form-states';
+
 // data
 import trackWidgetAction from '../../data/tracking/track-widget-action';
 
@@ -179,6 +182,7 @@ export default function constructWidgetActions (widget, config) {
       var data, widgetAction,
           shouldClose = true;
 
+      // special case for form widgets
       if (typeof widgetFormValidate === 'function') {
         switch (config.type) {
         case 'form':
@@ -192,11 +196,13 @@ export default function constructWidgetActions (widget, config) {
           break;
         }
 
+        // validate form input
         if (!widgetAction || !widgetFormValidate(event)) {
           return;
         } else if (widgetForm) {
           trackWidgetAction(widgetAction, config, widgetForm);
 
+          // get the data submitted to the form
           data = Array.prototype.slice.call(
             widgetForm.querySelectorAll('input, textarea, select')
           ).map(function (element) {
@@ -219,9 +225,16 @@ export default function constructWidgetActions (widget, config) {
         }
       }
 
+      // track confirm action
       trackWidgetAction('confirm', config);
       updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
 
+      // support onClick callback for button modules
+      if (typeof widgetOnButtonClick === 'function') {
+        widgetOnButtonClick(event);
+      }
+
+      // confirmAction
       if (typeof config.confirmAction === 'object') {
         if (config.confirmAction.close === false) {
           shouldClose = false;
@@ -234,35 +247,31 @@ export default function constructWidgetActions (widget, config) {
             event: event
           };
 
+          // include the data from the form if we have it.
           if (data) {
             param.data = data;
           }
 
-          config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
+          // if waitForAsyncResponse we will handle the states as part of the callback
+          if (config.confirmAction.waitForAsyncResponse === true) {
+            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param, function (successful) {
+              handleFormStates(successful, widget, config);
+            });
+            return;
+
+          } else {
+            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
+          }
         }
       }
 
-      if (typeof widgetOnButtonClick === 'function') {
-        widgetOnButtonClick(event);
-      }
-
       if (shouldClose) {
-        if (config.layout !== 'inline' && !config.success) {
+        if (config.layout !== 'inline' && (!config.formStates || !config.formStates.success)) {
           closeWidget(widget.id, true);
           widgetOnModalClose(widget, config, event);
-
-        // show success state
         } else {
-          addClass(widget, 'success');
-
-          // default to a three second delay if the user has not defined one
-          var delay = config.success && typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
-
-          if (delay > 0) {
-            setTimeout(function () {
-              closeWidget(widget.id, true);
-            }, delay);
-          }
+          // show success state
+          handleFormStates(true, widget, config);
         }
       }
     };

@@ -86,6 +86,17 @@ export default function initializeWidgetArray (array) {
     updateObject(widget, defaults);
     updateObject(widget, widget.config);
 
+    // retain support for old "success" field
+    if (widget.success) {
+      if (!widget.formStates) {
+        widget.formStates = {};
+      }
+
+      if (!widget.formStates.success) {
+        widget.formStates.success = widget.success;
+      }
+    }
+
     if (widget.showSocialLogin) {
       if (widget.showForm === false) {
         throw new Error('Social login requires a form on the widget');
