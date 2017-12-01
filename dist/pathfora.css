@@ -200,19 +200,44 @@
     right: -8px;
   }
 }
-.pf-widget .success-state {
+.pf-widget .success-state,
+.pf-widget .error-state {
   display: none;
 }
 .pf-widget.success {
   transition: opacity 0.3s;
 }
-.pf-widget.success .pf-widget-headline:first-child,
-.pf-widget.success .pf-widget-message:first-child,
+.pf-widget.success .pf-widget-headline,
+.pf-widget.success .pf-widget-message,
 .pf-widget.success form,
 .pf-widget.success .pf-social-login {
   display: none;
 }
 .pf-widget.success .success-state {
+  display: block;
+}
+.pf-widget.success .success-state .pf-widget-headline,
+.pf-widget.success .success-state .pf-widget-message,
+.pf-widget.success .success-state form,
+.pf-widget.success .success-state .pf-social-login {
+  display: block;
+}
+.pf-widget.error {
+  transition: opacity 0.3s;
+}
+.pf-widget.error .pf-widget-headline,
+.pf-widget.error .pf-widget-message,
+.pf-widget.error form,
+.pf-widget.error .pf-social-login {
+  display: none;
+}
+.pf-widget.error .error-state {
+  display: block;
+}
+.pf-widget.error .error-state .pf-widget-headline,
+.pf-widget.error .error-state .pf-widget-message,
+.pf-widget.error .error-state form,
+.pf-widget.error .error-state .pf-social-login {
   display: block;
 }
 /* Variant Styles */

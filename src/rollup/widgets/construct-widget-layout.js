@@ -14,7 +14,7 @@ import removeClass from '../utils/class/remove-class';
 import buildWidgetForm from '../form/build-widget-form';
 
 // widgets
-import constructSuccessActions from './actions/construct-success-actions';
+import constructFormStateActions from './actions/construct-form-state-actions';
 
 /**
  * Setup inner html elements for a widget
@@ -74,42 +74,57 @@ export default function constructWidgetLayout (widget, config) {
     case 'slideout':
     case 'sitegate':
     case 'inline':
-      if (config.success) {
-        var success = document.createElement('div');
-        success.className = 'success-state';
-
-        var successTitle = document.createElement('h2');
-        successTitle.className = 'pf-widget-headline';
-        successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
-        success.appendChild(successTitle);
-
-        var successMsg = document.createElement('div');
-        successMsg.className = 'pf-widget-message';
-        successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
-        success.appendChild(successMsg);
-
-        if (config.success.okShow) {
-          var okSuccess = document.createElement('button');
-          okSuccess.type = 'button';
-          okSuccess.className = 'pf-widget-btn pf-widget-ok';
-          okSuccess.innerHTML = config.success.okMessage || 'Confirm';
-          success.appendChild(okSuccess);
-        }
-
-        if (config.success.cancelShow) {
-          var cancelSuccess = document.createElement('button');
-          cancelSuccess.type = 'button';
-          cancelSuccess.className = 'pf-widget-btn pf-widget-cancel';
-          cancelSuccess.innerHTML = config.success.cancelMessage || 'Cancel';
-          success.appendChild(cancelSuccess);
-        }
-
-        widgetContent.appendChild(success);
-
-        if (config.success.okShow || config.success.cancelShow) {
-          constructSuccessActions(widget, config);
-        }
+      if (!config.formStates) {
+        break;
       }
+
+      var constructFormState = function (name, obj, defaultHeadline, defaultMsg) {
+        var elem = document.createElement('div');
+        elem.className = name + '-state';
+
+        var title = document.createElement('h2');
+        title.className = 'pf-widget-headline';
+        title.innerHTML = obj.headline || defaultHeadline;
+        elem.appendChild(title);
+
+        var msg = document.createElement('div');
+        msg.className = 'pf-widget-message';
+        msg.innerHTML = obj.msg || defaultMsg;
+        elem.appendChild(msg);
+
+        if (obj.okShow) {
+          var ok = document.createElement('button');
+          ok.type = 'button';
+          ok.className = 'pf-widget-btn pf-widget-ok';
+          ok.innerHTML = obj.okMessage || 'Confirm';
+          elem.appendChild(ok);
+        }
+
+        if (config.formStates.success.cancelShow) {
+          var cancel = document.createElement('button');
+          cancel.type = 'button';
+          cancel.className = 'pf-widget-btn pf-widget-cancel';
+          cancel.innerHTML = obj.cancelMessage || 'Cancel';
+          elem.appendChild(cancel);
+        }
+
+        widgetContent.appendChild(elem);
+
+        if (obj.okShow || obj.cancelShow) {
+          constructFormStateActions(widget, config, name);
+        }
+      };
+
+      // success state
+      if (config.formStates.success) {
+        constructFormState('success', config.formStates.success, 'Thank You', 'We have received your submission.');
+      }
+
+      // error state
+      if (config.formStates.error) {
+        constructFormState('error', config.formStates.error, 'Error', 'There was an error receiving with your submission.');
+      }
+
       break;
     }
     break;
