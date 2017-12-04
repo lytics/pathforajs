@@ -1,4 +1,4 @@
-/** @module pathfora/widgets/actions/construct-form-state-actions */
+/** @module pathfora/widgets/actions/form-state-actions */
 
 // widgets
 import buttonAction from './button-action';
@@ -7,12 +7,12 @@ import buttonAction from './button-action';
  * Add callbacks and tracking for confirm and cancel
  * buttons on the success or error state of a form widget
  *
- * @exports constructSuccessActions
+ * @exports formStateActions
  * @params {object} widget
  * @params {object} config
  * @params {name} string
  */
-export default function constructFormStateActions (widget, config, name) {
+export default function formStateActions (config, widget, name) {
   var ok = widget.querySelector('.' + name + '-state .pf-widget-ok'),
       cancel = widget.querySelector('.' + name + '-state .pf-widget-cancel');
 

@@ -12,9 +12,10 @@ import removeClass from '../utils/class/remove-class';
 
 // form
 import buildWidgetForm from '../form/build-widget-form';
+import constructFormState from '../form/construct-form-state';
 
 // widgets
-import constructFormStateActions from './actions/construct-form-state-actions';
+import formStateActions from './actions/form-state-actions';
 
 /**
  * Setup inner html elements for a widget
@@ -78,51 +79,18 @@ export default function constructWidgetLayout (widget, config) {
         break;
       }
 
-      var constructFormState = function (name, obj, defaultHeadline, defaultMsg) {
-        var elem = document.createElement('div');
-        elem.className = name + '-state';
-
-        var title = document.createElement('h2');
-        title.className = 'pf-widget-headline';
-        title.innerHTML = obj.headline || defaultHeadline;
-        elem.appendChild(title);
-
-        var msg = document.createElement('div');
-        msg.className = 'pf-widget-message';
-        msg.innerHTML = obj.msg || defaultMsg;
-        elem.appendChild(msg);
-
-        if (obj.okShow) {
-          var ok = document.createElement('button');
-          ok.type = 'button';
-          ok.className = 'pf-widget-btn pf-widget-ok';
-          ok.innerHTML = obj.okMessage || 'Confirm';
-          elem.appendChild(ok);
-        }
-
-        if (config.formStates.success.cancelShow) {
-          var cancel = document.createElement('button');
-          cancel.type = 'button';
-          cancel.className = 'pf-widget-btn pf-widget-cancel';
-          cancel.innerHTML = obj.cancelMessage || 'Cancel';
-          elem.appendChild(cancel);
-        }
-
-        widgetContent.appendChild(elem);
-
-        if (obj.okShow || obj.cancelShow) {
-          constructFormStateActions(widget, config, name);
-        }
-      };
-
       // success state
       if (config.formStates.success) {
-        constructFormState('success', config.formStates.success, 'Thank You', 'We have received your submission.');
+        var success = constructFormState(config, widget, 'success');
+        widgetContent.appendChild(success);
+        formStateActions(config, widget, 'success');
       }
 
       // error state
       if (config.formStates.error) {
-        constructFormState('error', config.formStates.error, 'Error', 'There was an error receiving with your submission.');
+        var error = constructFormState(config, widget, 'error');
+        widgetContent.appendChild(error);
+        formStateActions(config, widget, 'error');
       }
 
       break;

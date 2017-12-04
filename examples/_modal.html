@@ -14,40 +14,63 @@
     <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
     <script src="../dist/pathfora.js"></script>
     <script>
-    var successForm3 = new pathfora.Form({
-      id: 'success-form-cbs',
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      confirmAction: {
-        waitForAsyncResponse: true,
-        callback: function (name, payload, cb) {
-          cb(true);
-        }
-      },
-
-      formStates: {
-        success: {
-          headline: 'test',
-          msg: 'a custom success message',
-          okShow: true,
-          cancelShow: true,
-          cancelMessage: 'Custom Cancel',
-          delay: 0,
+      // var messageBar = pathfora.Message({
+      //   id: 'asd',
+      //   layout: 'modal',
+      //   headline: 'Aenean leo malesuada',
+      //   variant: '2',
+      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
+      //   image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      //   theme:'dark'
+      // });
+      // window.pathfora.initializeWidgets([ messageBar ]);
+      // var messageBar = pathfora.Message({
+      //   id: 'asd',
+      //   layout: 'modal',
+      //   headline: 'Aenean leo malesuada',
+      //   msg: 'In placerat orci eget turpis euismod semper. Maecenas maximus imperdiet turpis quis interdum.',
+      //   variant: '1',
+      // });
+      // window.pathfora.initializeWidgets([ messageBar ]);
+      var subscription = pathfora.Message({
+        layout: "modal",
+        id: 'modal-subscription',
+        msg: "Welcome to our website",
+        headline: 'Aenean leo malesuada',
+        msg: 'In placerat orci eget turpis euismod semper. Aenean leo malesuada. {{segments.0}}',
+        placeholders: {
+          email: "Email",
+          title: "Title"
         },
-        error: {
-          headline: 'test',
-          msg: 'a custom error message',
-          okShow: true,
-          cancelShow: true,
-          cancelMessage: 'Custom Cancel',
-          delay: 0,
-        }
-      }
-
-    });
-      window.pathfora.initializeWidgets([ successForm3 ]);
-
+        theme: 'dark',
+        // fields: {
+        //   message: false,
+        //   title: false,
+        // },
+        okMessage: 'Hoop',
+        okShow: true,
+        // variant: '2',
+        // image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+      });
+      window.pathfora.initializeWidgets([ subscription ]);
+      // var form = pathfora.Form({
+      //   layout: 'modal',
+      //   position: '',
+      //   variant: '1',
+      //   msg: "Hello",
+      //   headline: "Yolo",
+      //   placeholders: {
+      //     name: 'Name',
+      //     title: 'Title',
+      //     email: 'Email',
+      //     message: 'Message'
+      //   },
+      //   okMessage: 'Send',
+      //   cancelMessage: 'Cancel',
+      //   okShow: true,
+      //   cancelShow: true
+      // });
+      // window.pathfora.initializeWidgets([ form ]);
     </script>
   </body>
 </html>
