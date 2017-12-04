@@ -744,11 +744,168 @@ describe('Widgets', function () {
   });
 
   // -------------------------
-  //  SUCCESS STATE
+  //  FORM STATES
+  // -------------------------
+
+  it('should show success or error state if waitForAsyncResponse is set', function (done) {
+    var formStatesWidget = new pathfora.Form({
+      id: 'form-states',
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      confirmAction: {
+        waitForAsyncResponse: true,
+        callback: function (name, payload, cb) {
+          if (payload.data[0].value === "test") {
+            cb(true);
+            return;
+          }
+          cb(false);
+        }
+      },
+      formStates: {
+        success: {
+          headline: 'test',
+          msg: 'a custom success message',
+          delay: 0,
+          okShow: true,
+          okMessage: 'confirm success',
+          confirmAction: {
+            name: 'confirm success',
+            callback: function() {
+              alert('confirm success');
+            }
+          },
+          cancelShow: true,
+          cancelMessage: 'cancel success',
+          cancelAction: {
+            name: 'cancel success',
+            callback: function() {
+              alert('cancel success');
+            }
+          }
+        },
+        error: {
+          headline: 'test',
+          msg: 'a custom error message',
+          delay: 0,
+          okShow: true,
+          okMessage: 'confirm error',
+          confirmAction: {
+            name: 'confirm error',
+            callback: function() {
+              alert('confirm error');
+            }
+          },
+          cancelShow: true,
+          cancelMessage: 'cancel error',
+          cancelAction: {
+            name: 'cancel error',
+            callback: function() {
+              alert('cancel error');
+            }
+          }
+        }
+      }
+    });
+    window.pathfora.initializeWidgets([ formStatesWidget ]);
+
+    var widget = $('#' + formStatesWidget.id),
+        form = widget.find('form');
+    expect(form.length).toBe(1);
+
+    var name = form.find('input[name="username"]');
+    expect(name.length).toBe(1);
+    name.val('test');
+    form.find('.pf-widget-ok').click();
+
+    var email = form.find('input[name="email"]');
+    expect(email.length).toBe(1);
+    email.val('test@example.com');
+    form.find('.pf-widget-ok').click();
+
+    var success = widget.find('.success-state'),
+        error = widget.find('.error-state');
+
+    expect(form.css('display')).toBe('none');
+    expect(success.css('display')).toBe('block');
+    expect(widget.hasClass('success')).toBeTruthy();
+    expect(success.find('.pf-widget-headline').html()).toBe(formStatesWidget.formStates.success.headline);
+    expect(success.find('.pf-widget-message').html()).toBe(formStatesWidget.formStates.success.msg);
+
+    expect(success.find('.pf-widget-ok').html()).toBe(formStatesWidget.formStates.success.okMessage);
+    expect(success.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.success.cancelMessage);
+
+    spyOn(jstag, 'send');
+    spyOn(window, 'alert');
+    success.find('.pf-widget-ok').click();
+
+    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+      'pf-widget-id': formStatesWidget.id,
+      'pf-widget-type': 'form',
+      'pf-widget-layout': 'slideout',
+      'pf-widget-variant': '1',
+      'pf-widget-event': 'success.confirm',
+      'pf-widget-action': formStatesWidget.formStates.success.confirmAction.name
+    }));
+    expect(window.alert).toHaveBeenCalledWith('confirm success');
+
+    pathfora.clearAll();
+    pathfora.closeWidget(formStatesWidget.id, true);
+
+  setTimeout(function () {
+      window.pathfora.initializeWidgets([ formStatesWidget ]);
+
+      widget = $('#' + formStatesWidget.id),
+          form = widget.find('form');
+      expect(form.length).toBe(1);
+
+      name = form.find('input[name="username"]');
+      expect(name.length).toBe(1);
+      name.val('bad');
+      form.find('.pf-widget-ok').click();
+
+      email = form.find('input[name="email"]');
+      expect(email.length).toBe(1);
+      email.val('bad@example.com');
+      form.find('.pf-widget-ok').click();
+
+      success = widget.find('.success-state');
+      expect(success.length).toBe(1);
+      error = widget.find('.error-state');
+      expect(error.length).toBe(1);
+
+      expect(form.css('display')).toBe('none');
+      expect(success.css('display')).toBe('none');
+      expect(error.css('display')).toBe('block');
+      expect(widget.hasClass('error')).toBeTruthy();
+      expect(error.find('.pf-widget-headline').html()).toBe(formStatesWidget.formStates.error.headline);
+      expect(error.find('.pf-widget-message').html()).toBe(formStatesWidget.formStates.error.msg);
+      expect(error.find('.pf-widget-ok').html()).toBe(formStatesWidget.formStates.error.okMessage);
+      expect(error.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.error.cancelMessage);
+
+      error.find('.pf-widget-cancel').click();
+
+      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
+        'pf-widget-id': formStatesWidget.id,
+        'pf-widget-type': 'form',
+        'pf-widget-layout': 'slideout',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'error.cancel',
+        'pf-widget-action': formStatesWidget.formStates.error.cancelAction.name
+      }));
+      expect(window.alert).toHaveBeenCalledWith('cancel error');
+      pathfora.clearAll();
+
+      done();
+    }, 600);
+  });
+
+  // -------------------------
+  //  LEGACY SUCCESS STATES
   // -------------------------
 
   it('should show success state if one is set by the user', function (done) {
-
     var successForm = new pathfora.Subscription({
       id: 'success-form',
       msg: 'subscription',
@@ -771,7 +928,7 @@ describe('Widgets', function () {
     email.val('test@example.com');
     form.find('.pf-widget-ok').click();
 
-    var success = $('.success-state');
+    var success = widget.find('.success-state');
 
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
@@ -784,7 +941,6 @@ describe('Widgets', function () {
       expect(widget.hasClass('opened')).toBeFalsy();
       done();
     }, 2000);
-
   });
 
   it('should not hide the module if the success state delay is 0', function (done) {
