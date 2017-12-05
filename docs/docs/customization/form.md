@@ -79,14 +79,38 @@ This is a list of form element objects to include in the module's form. The orde
 <pre data-src="../../examples/src/customization/form/custom.js"></pre>
 
 
-## success
+## formStates
 
-Set a custom success/confirmation message to show after the user submits a form before hiding the module.
+Set a custom success or error state message on confirmation to show after the user submits a form.
 
 <table>
   <thead>
     <tr>
-      <td colspan="3" align="center"><code>success</code> object</td>
+      <td colspan="3" align="center"><code>formStates</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>success</td>
+    <td>object</td>
+    <td><code>optional</code> object containing the settings for the success state</td>
+  </tr>
+  <tr>
+    <td>error</td>
+    <td>object</td>
+    <td><code>optional</code> object containing the settings for the error state (note that the error state is only used by modules with the <a href="../../callbacks/#confirmaction">waitForAsyncResponse</a> field set to true</td>
+  </tr>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>success</code> or <code>error</code> object</td>
     </tr>
     <tr>
       <th>Key</th>
@@ -133,7 +157,7 @@ Set a custom success/confirmation message to show after the user submits a form 
   <tr>
     <td>confirmAction</td>
     <td>object</td>
-    <td>object containing the name and callback function for the confirmation button on the success state (see <a href="../../callbacks/#confirmaction">confirmAction</a>)</td>
+    <td>object containing the name and callback function for the confirmation button on the success state (see <a href="../../callbacks/#confirmaction">confirmAction</a> note that only the <code>name</code> and <code>callback</code> fields are relevant in this nested version of <code>confirmAction</code>).</td>
   </tr>
   <tr>
     <td>cancelAction</td>
@@ -142,9 +166,9 @@ Set a custom success/confirmation message to show after the user submits a form 
   </tr>
 </table>
 
-<h3>Success State - <a href="../../examples/preview/customization/form/success.html" target="_blank">Live Preview</a></h3>
+<h3>Success &amp; Error State - <a href="../../examples/preview/customization/form/formStates.html" target="_blank">Live Preview</a></h3>
 
-![Form Field Placeholders](../examples/img/customization/form/success.png)
+![Form States](../examples/img/customization/form/formStates.png)
 
-<pre data-src="../../examples/src/customization/form/success.js"></pre>
+<pre data-src="../../examples/src/customization/form/formStates.js"></pre>
 
