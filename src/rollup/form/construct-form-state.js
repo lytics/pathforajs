@@ -12,6 +12,10 @@ import document from '../dom/document';
  * @params {string} name
  */
 export default function constructFormState (config, widget, name) {
+  if (!config.formStates) {
+    return;
+  }
+
   var obj, defaultHeadline, defaultMsg;
 
   switch (name) {
