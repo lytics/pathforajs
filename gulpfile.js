@@ -231,7 +231,7 @@ const compileExample = function (root, name) {
   }
 };
 
-gulp.task('docs:watch', function () {
+gulp.task('docs:watch', ['build:rollup'], function () {
   gulp.watch('docs/docs/examples/src/**/*', function (event) {
     let p = path.relative(process.cwd(), event.path);
     let root = p.substring(0, p.lastIndexOf('/') + 1);
@@ -240,7 +240,7 @@ gulp.task('docs:watch', function () {
   });
 });
 
-gulp.task('docs:hbs', function () {
+gulp.task('docs:hbs', ['build:rollup'], function () {
   let options = {
     listeners: {
       file: function (root, stat) {
@@ -252,7 +252,7 @@ gulp.task('docs:hbs', function () {
   walk.walkSync(EXAMPLESSRC, options);
 });
 
-gulp.task('docs:mkdocs', shell.task([
+gulp.task('docs:mkdocs', ['build:rollup'], shell.task([
   'mkdocs serve'
 ], {
   cwd: 'docs'

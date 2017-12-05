@@ -1083,20 +1083,23 @@ function trackWidgetAction (action, widget, htmlElement) {
     pathforaDataObject.cancelledActions.push(params);
     break;
   case 'success.confirm':
-    params['pf-widget-action'] = !!widget.formStates.success && !!widget.formStates.success.confirmAction && widget.formStates.success.confirmAction.name || 'success confirm';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+      && !!widget.formStates.success.confirmAction && widget.formStates.success.confirmAction.name || 'success confirm';
     pathforaDataObject.completedActions.push(params);
     break;
   case 'success.cancel':
-    params['pf-widget-action'] = !!widget.formStates.success && !!widget.formStates.success.cancelAction && widget.formStates.success.cancelAction.name || 'success cancel';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+      && !!widget.formStates.success.cancelAction && widget.formStates.success.cancelAction.name || 'success cancel';
     pathforaDataObject.cancelledActions.push(params);
     break;
-
   case 'error.confirm':
-    params['pf-widget-action'] = !!widget.formStates.error && !!widget.formStates.error.confirmAction && widget.formStates.error.confirmAction.name || 'error confirm';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+      && !!widget.formStates.error.confirmAction && widget.formStates.error.confirmAction.name || 'error confirm';
     pathforaDataObject.completedActions.push(params);
     break;
   case 'error.cancel':
-    params['pf-widget-action'] = !!widget.formStates.error && !!widget.formStates.error.cancelAction && widget.formStates.error.cancelAction.name || 'error cancel';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+      && !!widget.formStates.error.cancelAction && widget.formStates.error.cancelAction.name || 'error cancel';
     pathforaDataObject.cancelledActions.push(params);
     break;
 
@@ -2090,6 +2093,10 @@ function buildWidgetForm (formElements, form) {
  * @params {string} name
  */
 function constructFormState (config, widget, name) {
+  if (!config.formStates) {
+    return;
+  }
+
   var obj, defaultHeadline, defaultMsg;
 
   switch (name) {

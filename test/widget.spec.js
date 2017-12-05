@@ -817,12 +817,17 @@ describe('Widgets', function () {
     var name = form.find('input[name="username"]');
     expect(name.length).toBe(1);
     name.val('test');
-    form.find('.pf-widget-ok').click();
 
     var email = form.find('input[name="email"]');
     expect(email.length).toBe(1);
     email.val('test@example.com');
+
+    spyOn(formStatesWidget.confirmAction, 'callback').and.callThrough();
+    expect(formStatesWidget.confirmAction.callback).not.toHaveBeenCalled();
+
     form.find('.pf-widget-ok').click();
+
+    expect(formStatesWidget.confirmAction.callback).toHaveBeenCalledWith('modalConfirm', jasmine.any(Object), jasmine.any(Function));
 
     var success = widget.find('.success-state'),
         error = widget.find('.error-state');
@@ -837,9 +842,11 @@ describe('Widgets', function () {
     expect(success.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.success.cancelMessage);
 
     spyOn(jstag, 'send');
-    spyOn(window, 'alert');
+    spyOn(formStatesWidget.formStates.success.confirmAction, 'callback');
+    expect(formStatesWidget.formStates.success.confirmAction.callback).not.toHaveBeenCalled();
     success.find('.pf-widget-ok').click();
 
+    expect(formStatesWidget.formStates.success.confirmAction.callback).toHaveBeenCalled();
     expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
       'pf-widget-id': formStatesWidget.id,
       'pf-widget-type': 'form',
@@ -848,8 +855,6 @@ describe('Widgets', function () {
       'pf-widget-event': 'success.confirm',
       'pf-widget-action': formStatesWidget.formStates.success.confirmAction.name
     }));
-    expect(window.alert).toHaveBeenCalledWith('confirm success');
-
     pathfora.clearAll();
     pathfora.closeWidget(formStatesWidget.id, true);
 
@@ -863,7 +868,6 @@ describe('Widgets', function () {
       name = form.find('input[name="username"]');
       expect(name.length).toBe(1);
       name.val('bad');
-      form.find('.pf-widget-ok').click();
 
       email = form.find('input[name="email"]');
       expect(email.length).toBe(1);
@@ -874,7 +878,6 @@ describe('Widgets', function () {
       expect(success.length).toBe(1);
       error = widget.find('.error-state');
       expect(error.length).toBe(1);
-
       expect(form.css('display')).toBe('none');
       expect(success.css('display')).toBe('none');
       expect(error.css('display')).toBe('block');
@@ -884,8 +887,11 @@ describe('Widgets', function () {
       expect(error.find('.pf-widget-ok').html()).toBe(formStatesWidget.formStates.error.okMessage);
       expect(error.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.error.cancelMessage);
 
+      spyOn(formStatesWidget.formStates.error.cancelAction, 'callback');
+      expect(formStatesWidget.formStates.error.cancelAction.callback).not.toHaveBeenCalled();
       error.find('.pf-widget-cancel').click();
 
+      expect(formStatesWidget.formStates.error.cancelAction.callback).toHaveBeenCalled();
       expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
         'pf-widget-id': formStatesWidget.id,
         'pf-widget-type': 'form',
@@ -894,7 +900,6 @@ describe('Widgets', function () {
         'pf-widget-event': 'error.cancel',
         'pf-widget-action': formStatesWidget.formStates.error.cancelAction.name
       }));
-      expect(window.alert).toHaveBeenCalledWith('cancel error');
       pathfora.clearAll();
 
       done();
