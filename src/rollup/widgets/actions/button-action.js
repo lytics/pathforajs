@@ -33,24 +33,35 @@ export default function buttonAction (btn, type, config, widget) {
     break;
   case 'cancel':
   case 'success.cancel':
+  case 'error.cancel':
     prefix = PREFIX_CANCEL;
     callbackTypes.MODAL_CANCEL;
     action = config.cancelAction;
     shouldClose = config.layout !== 'inline';
 
     if (type === 'success.cancel') {
-      action = config.success.cancelAction;
+      action = config.formStates.success.cancelAction;
     }
+
+    if (type === 'error.cancel') {
+      action = config.formStates.error.cancelAction;
+    }
+
     break;
   case 'confirm':
   case 'success.confirm':
+  case 'error.confirm':
     prefix = PREFIX_CONFIRM;
     callbackTypes.MODAL_CONFIRM;
     shouldClose = config.layout !== 'inline';
 
     if (type === 'success.confirm') {
-      action = config.success.confirmAction;
+      action = config.formStates.success.confirmAction;
     }
+    if (type === 'error.confirm') {
+      action = config.formStates.error.confirmAction;
+    }
+
     break;
   }
 
