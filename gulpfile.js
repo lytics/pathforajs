@@ -1,6 +1,6 @@
 'use strict';
 
-var gulp = require('gulp'),
+const gulp = require('gulp'),
     less = require('gulp-less'),
     path = require('path'),
     uglify = require('gulp-uglify'),
@@ -17,7 +17,9 @@ var gulp = require('gulp'),
     rollup = require('rollup'),
     eslint = require('gulp-eslint'),
     gutil = require('gulp-util'),
-    TESTAPIURL = '//api.lytics.io',
+    istanbul = require('rollup-plugin-istanbul');
+
+let TESTAPIURL = '//api.lytics.io',
     TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
     EXAMPLESSRC = 'docs/docs/examples/src',
     EXAMPLESDEST = 'docs/docs/examples/preview',
@@ -52,26 +54,26 @@ gulp.task('build:styles', function () {
 });
 
 // gathers and minifies all the widget templates for inclusion
-var prepareTemplates = function () {
-  var templateDirectory = 'src/templates',
+const prepareTemplates = function () {
+  let templateDirectory = 'src/templates',
       templates = {},
       includes = {};
 
-  var options = {
+  let options = {
     listeners: {
       file: function (root, stat) {
         if (stat.name === '.DS_Store') {
           return;
         }
 
-        var dir = root.split('/').pop();
+        let dir = root.split('/').pop();
 
         if (!templates[dir]) {
           templates[dir] = {};
         }
 
         if (stat.name.charAt(0) !== '.') {
-          var markup = fs.readFileSync(root + '/' + stat.name, 'utf-8'),
+          let markup = fs.readFileSync(root + '/' + stat.name, 'utf-8'),
               file = stat.name.replace('.html', '');
 
           if (dir === 'includes') {
@@ -85,9 +87,9 @@ var prepareTemplates = function () {
   };
 
   walk.walkSync(templateDirectory, options);
-  var str = JSON.stringify(templates, null, 2);
+  let str = JSON.stringify(templates, null, 2);
 
-  for (var inc in includes) {
+  for (let inc in includes) {
     if (includes.hasOwnProperty(inc)) {
       str = str.replace(
         new RegExp('(\{){2}' + inc + '(\}){2}', 'gm'),
@@ -99,19 +101,33 @@ var prepareTemplates = function () {
   return str.replace(/\"/g, '\'');
 };
 
-gulp.task('build:rollup', function () {
-  return rollup.rollup({
-    entry: 'src/rollup/pathfora.js'
-  }).then(function (bundle) {
-    bundle.write({
-      format: 'iife',
-      moduleName: 'pathfora',
-      dest: 'dist/pathfora.js'
-    });
+//Plugins for rollup. Babel, istanbul, etc.
+let rollupPlugins = [];
+
+if (process.env.NODE_ENV !== 'production') {
+  rollupPlugins.push(
+    istanbul({
+      exclude: ['test/*.spec.js', 'dist/*.js']
+    })
+  );
+}
+
+gulp.task('build:rollup', async function () {
+  const bundle = await rollup.rollup({
+    input: 'src/rollup/pathfora.js',
+    plugins: rollupPlugins
+  });
+
+  await bundle.write({
+    format: 'iife',
+    name: 'pathfora',
+    file: 'dist/pathfora.js'
   });
 });
 
-gulp.task('build:js', function () {
+// Ensure build:rollup finishes before running build:js
+// by adding it as a dependent job
+gulp.task('build:js', ['build:rollup'], function () {
   gulp.src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', '//api.lytics.io'))
     .pipe(replace('`{{cssurl}}`', '//c.lytics.io/static/pathfora.min.css'))
@@ -125,7 +141,7 @@ gulp.task('build:js', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('local:js', function () {
+gulp.task('local:js', ['build:rollup'], function () {
   gulp.src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', APIURL))
     .pipe(replace('`{{cssurl}}`', CSSURL))
@@ -139,7 +155,7 @@ gulp.task('local:js', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('build:testjs', function () {
+gulp.task('build:testjs', ['build:rollup'], function () {
   gulp.src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', TESTAPIURL))
     .pipe(replace('`{{cssurl}`}', TESTCSSURL))
@@ -169,8 +185,8 @@ gulp.task('preview', function () {
   });
 });
 
-var compileExample = function (root, name) {
-  var out, css, proc, html,
+const compileExample = function (root, name) {
+  let out, css, proc, html,
       dest = root.split(EXAMPLESSRC + '/').pop(),
       contents = {
         config: '',
@@ -215,17 +231,17 @@ var compileExample = function (root, name) {
   }
 };
 
-gulp.task('docs:watch', function () {
+gulp.task('docs:watch', ['build:rollup'], function () {
   gulp.watch('docs/docs/examples/src/**/*', function (event) {
-    var p = path.relative(process.cwd(), event.path);
-    var root = p.substring(0, p.lastIndexOf('/') + 1);
-    var name = p.substring(p.lastIndexOf('/') + 1, p.length);
+    let p = path.relative(process.cwd(), event.path);
+    let root = p.substring(0, p.lastIndexOf('/') + 1);
+    let name = p.substring(p.lastIndexOf('/') + 1, p.length);
     compileExample(root, name);
   });
 });
 
-gulp.task('docs:hbs', function () {
-  var options = {
+gulp.task('docs:hbs', ['build:rollup'], function () {
+  let options = {
     listeners: {
       file: function (root, stat) {
         compileExample(root, stat.name);
@@ -236,13 +252,13 @@ gulp.task('docs:hbs', function () {
   walk.walkSync(EXAMPLESSRC, options);
 });
 
-gulp.task('docs:mkdocs', shell.task([
+gulp.task('docs:mkdocs', ['build:rollup'], shell.task([
   'mkdocs serve'
 ], {
   cwd: 'docs'
 }));
 
-gulp.task('lint', function () {
+gulp.task('lint', ['build:js'], function () {
   return gulp.src(['src/rollup/**/*.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())

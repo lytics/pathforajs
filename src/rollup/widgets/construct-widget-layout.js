@@ -12,9 +12,10 @@ import removeClass from '../utils/class/remove-class';
 
 // form
 import buildWidgetForm from '../form/build-widget-form';
+import constructFormState from '../form/construct-form-state';
 
 // widgets
-import constructSuccessActions from './actions/construct-success-actions';
+import formStateActions from './actions/form-state-actions';
 
 /**
  * Setup inner html elements for a widget
@@ -74,42 +75,24 @@ export default function constructWidgetLayout (widget, config) {
     case 'slideout':
     case 'sitegate':
     case 'inline':
-      if (config.success) {
-        var success = document.createElement('div');
-        success.className = 'success-state';
-
-        var successTitle = document.createElement('h2');
-        successTitle.className = 'pf-widget-headline';
-        successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
-        success.appendChild(successTitle);
-
-        var successMsg = document.createElement('div');
-        successMsg.className = 'pf-widget-message';
-        successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
-        success.appendChild(successMsg);
-
-        if (config.success.okShow) {
-          var okSuccess = document.createElement('button');
-          okSuccess.type = 'button';
-          okSuccess.className = 'pf-widget-btn pf-widget-ok';
-          okSuccess.innerHTML = config.success.okMessage || 'Confirm';
-          success.appendChild(okSuccess);
-        }
-
-        if (config.success.cancelShow) {
-          var cancelSuccess = document.createElement('button');
-          cancelSuccess.type = 'button';
-          cancelSuccess.className = 'pf-widget-btn pf-widget-cancel';
-          cancelSuccess.innerHTML = config.success.cancelMessage || 'Cancel';
-          success.appendChild(cancelSuccess);
-        }
-
-        widgetContent.appendChild(success);
-
-        if (config.success.okShow || config.success.cancelShow) {
-          constructSuccessActions(widget, config);
-        }
+      if (!config.formStates) {
+        break;
       }
+
+      // success state
+      if (config.formStates.success) {
+        var success = constructFormState(config, widget, 'success');
+        widgetContent.appendChild(success);
+        formStateActions(config, widget, 'success');
+      }
+
+      // error state
+      if (config.formStates.error) {
+        var error = constructFormState(config, widget, 'error');
+        widgetContent.appendChild(error);
+        formStateActions(config, widget, 'error');
+      }
+
       break;
     }
     break;

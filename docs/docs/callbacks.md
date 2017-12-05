@@ -30,6 +30,11 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
     <td>function</td>
     <td><code>optional</code> function to execute when the use clicks the "confirm" button (see params below)</td>
   </tr>
+  <tr>
+    <td>waitForAsyncResponse</td>
+    <td>boolean</td>
+    <td><code>optional</code> if true, a third parameter (cb) will be passed to the callback function (see params below)</td>
+  </tr>
 </table>
 
 <table>
@@ -47,12 +52,17 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
+    <td>object containing the rendered DOM Element (widget), the config of the widget (config), the javascript event (event), and the data submitted by the user in the case of modules with a form (data)</td>
+  </tr>
+  <tr>
+    <td>cb</td>
+    <td>function</td>
+    <td><code>optional</code> cb accepts a single boolean param, if true, the submission was counted as successful, and the <a href="../customization/form/#formstates">success state</a> will show. if false, the <a href="../customization/form/#formstates">error state</a> will show.</td>
   </tr>
 </table>
 
@@ -108,17 +118,12 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
-  </tr>
-  <tr>
-    <td>close</td>
-    <td>boolean</td>
-    <td><code>optional</code> if false, prevent the modal from closing after the callback is executed</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
+    <td>object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
   </tr>
 </table>
 
@@ -169,12 +174,12 @@ Set a [tracking name](/tracking.md) and javascript callback for a "close" button
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
+    <td>object containing the rendered DOM Element (widget), the config of the widget (config), and the javascript event (event)</td>
   </tr>
 </table>
 
@@ -203,12 +208,12 @@ Javascript callback function on initialization of the module. This should trigge
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the pathfora module (config)</td>
+    <td>object containing the pathfora module (config)</td>
   </tr>
 </table>
 
@@ -235,12 +240,12 @@ Javascript callback function on loading the module, triggered when the module is
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the Pathfora module (config) and the rendered DOM Element (widget)</td>
+    <td>object containing the Pathfora module (config) and the rendered DOM Element (widget)</td>
   </tr>
 </table>
 
@@ -268,12 +273,12 @@ Javascript callback function **for [button layouts](/layouts/button.md) only** o
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript MouseEvent (event)</td>
+    <td>object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript MouseEvent (event)</td>
   </tr>
 </table>
 
@@ -282,7 +287,10 @@ Javascript callback function **for [button layouts](/layouts/button.md) only** o
 
 <pre data-src="../examples/src/callbacks/onClick.js"></pre>
 
-## onSubmit
+## onSubmit (deprecated)
+
+**This callback is deprecated. We advise using [confirmAction](#confirmaction) instead, as it has the same functionality.**
+
 Javascript callback function **for any types with form elements** on submission of the form (includes form data as param).
 
 <table>
@@ -300,12 +308,12 @@ Javascript callback function **for any types with form elements** on submission 
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript Event (event), and the data submitted by the user (data)</td>
+    <td>object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript Event (event), and the data submitted by the user (data)</td>
   </tr>
 </table>
 
@@ -331,12 +339,12 @@ Javascript callback function for when a module is closed, this will fire anytime
   <tr>
     <td>event</td>
     <td>string</td>
-    <td><code>optional</code> name of the event</td>
+    <td>name of the event</td>
   </tr>
   <tr>
     <td>payload</td>
     <td>object</td>
-    <td><code>optional</code> object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript Event (event), and the data submitted by the user (data)</td>
+    <td>object containing the rendered DOM Element (widget), the pathfora module (config), and the javascript Event (event), and the data submitted by the user (data)</td>
   </tr>
 </table>
 

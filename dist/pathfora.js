@@ -218,7 +218,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '0.2.13';
+var PF_VERSION = '0.2.14';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
@@ -833,15 +833,11 @@ function getObjectValue (object, key) {
  * @returns {string} id
  */
 function generateUniqueId () {
-  var s4;
-
-  if (typeof s4 === 'undefined') {
-    s4 = function () {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    };
-  }
+  var s4 = function () {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  };
 
   return [
     s4(), s4(),
@@ -1083,13 +1079,26 @@ function trackWidgetAction (action, widget, htmlElement) {
     pathforaDataObject.cancelledActions.push(params);
     break;
   case 'success.confirm':
-    params['pf-widget-action'] = !!widget.success && !!widget.success.confirmAction && widget.success.confirmAction.name || 'success confirm';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+      && !!widget.formStates.success.confirmAction && widget.formStates.success.confirmAction.name || 'success confirm';
     pathforaDataObject.completedActions.push(params);
     break;
   case 'success.cancel':
-    params['pf-widget-action'] = !!widget.success && !!widget.success.cancelAction && widget.success.cancelAction.name || 'success cancel';
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+      && !!widget.formStates.success.cancelAction && widget.formStates.success.cancelAction.name || 'success cancel';
     pathforaDataObject.cancelledActions.push(params);
     break;
+  case 'error.confirm':
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+      && !!widget.formStates.error.confirmAction && widget.formStates.error.confirmAction.name || 'error confirm';
+    pathforaDataObject.completedActions.push(params);
+    break;
+  case 'error.cancel':
+    params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+      && !!widget.formStates.error.cancelAction && widget.formStates.error.cancelAction.name || 'error cancel';
+    pathforaDataObject.cancelledActions.push(params);
+    break;
+
   case 'submit':
   case 'unlock':
     if (hasClass(htmlElement, 'pf-custom-form')) {
@@ -1142,12 +1151,16 @@ function trackWidgetAction (action, widget, htmlElement) {
     } else if (hasClass(htmlElement, 'pf-widget-ok')) {
       if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
         params['pf-widget-action'] = 'success.confirm';
+      } else if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'error-state')) {
+        params['pf-widget-action'] = 'error.confirm';
       } else {
         params['pf-widget-action'] = 'confirm';
       }
     } else if (hasClass(htmlElement, 'pf-widget-cancel')) {
       if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
         params['pf-widget-action'] = 'success.cancel';
+      } else if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'error-state')) {
+        params['pf-widget-action'] = 'error.cancel';
       } else {
         params['pf-widget-action'] = 'cancel';
       }
@@ -1315,6 +1328,38 @@ function closeWidget (id, noTrack) {
   }, 500);
 }
 
+/** @module pathfora/form/handle-form-states */
+
+// utils
+// widgets
+/**
+ * Handles showing the success or error state of a form.
+ *
+ * @exports handleFormStates
+ * @params {boolean} successful
+ * @params {object} widget
+ * @params {object} config
+ */
+function handleFormStates (successful, widget, config) {
+  if (config.formStates) {
+    var delay = 0;
+
+    if (successful) {
+      addClass(widget, 'success');
+      delay = config.formStates.success && typeof config.formStates.success.delay !== 'undefined' ? config.formStates.success.delay * 1000 : 3000;
+    } else {
+      addClass(widget, 'error');
+      delay = config.formStates.error && typeof config.formStates.error.delay !== 'undefined' ? config.formStates.error.delay * 1000 : 3000;
+    }
+
+    if (delay > 0) {
+      setTimeout(function () {
+        closeWidget(widget.id, true);
+      }, delay);
+    }
+  }
+}
+
 /** @module pathfora/widgets/actions/widgetOnModalClose */
 
 /**
@@ -1390,24 +1435,35 @@ function buttonAction (btn, type, config, widget) {
     break;
   case 'cancel':
   case 'success.cancel':
+  case 'error.cancel':
     prefix = PREFIX_CANCEL;
-    callbackTypes.MODAL_CANCEL;
+    
     action = config.cancelAction;
     shouldClose = config.layout !== 'inline';
 
     if (type === 'success.cancel') {
-      action = config.success.cancelAction;
+      action = config.formStates.success.cancelAction;
     }
+
+    if (type === 'error.cancel') {
+      action = config.formStates.error.cancelAction;
+    }
+
     break;
   case 'confirm':
   case 'success.confirm':
+  case 'error.confirm':
     prefix = PREFIX_CONFIRM;
-    callbackTypes.MODAL_CONFIRM;
+    
     shouldClose = config.layout !== 'inline';
 
     if (type === 'success.confirm') {
-      action = config.success.confirmAction;
+      action = config.formStates.success.confirmAction;
     }
+    if (type === 'error.confirm') {
+      action = config.formStates.error.confirmAction;
+    }
+
     break;
   }
 
@@ -1444,6 +1500,7 @@ function buttonAction (btn, type, config, widget) {
 
 // globals
 // utils
+// form
 // data
 // widgets
 /**
@@ -1455,7 +1512,7 @@ function buttonAction (btn, type, config, widget) {
  * @params {object} config
  */
 function constructWidgetActions (widget, config) {
-  var widgetOnButtonClick, widgetOnFormSubmit,
+  var widgetOnButtonClick, widgetFormValidate, widgetForm,
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetClose = widget.querySelector('.pf-widget-close'),
@@ -1466,7 +1523,7 @@ function constructWidgetActions (widget, config) {
   case 'form':
   case 'sitegate':
   case 'subscription':
-    var widgetForm = widget.querySelector('form');
+    widgetForm = widget.querySelector('form');
 
     var onInputChange = function (event) {
       if (event.target.value && event.target.value.length > 0) {
@@ -1493,21 +1550,8 @@ function constructWidgetActions (widget, config) {
     }
 
     // Form submit handler
-    widgetOnFormSubmit = function (event) {
-      var widgetAction;
+    widgetFormValidate = function (event) {
       event.preventDefault();
-
-      switch (config.type) {
-      case 'form':
-        widgetAction = 'submit';
-        break;
-      case 'subscription':
-        widgetAction = 'subscribe';
-        break;
-      case 'sitegate':
-        widgetAction = 'unlock';
-        break;
-      }
 
       // Validate that the form is filled out correctly
       var valid = true,
@@ -1559,27 +1603,7 @@ function constructWidgetActions (widget, config) {
         }
       }
 
-      if (valid && widgetAction) {
-        trackWidgetAction(widgetAction, config, widgetForm);
-
-        if (typeof config.onSubmit === 'function') {
-          config.onSubmit(callbackTypes.FORM_SUBMIT, {
-            widget: widget,
-            config: config,
-            event: event,
-            data: Array.prototype.slice.call(
-              widgetForm.querySelectorAll('input, textarea, select')
-            ).map(function (element) {
-              return {
-                name: element.name || element.id,
-                value: element.value
-              };
-            })
-          });
-        }
-        return true;
-      }
-      return false;
+      return valid;
     };
 
     break;
@@ -1637,49 +1661,99 @@ function constructWidgetActions (widget, config) {
     };
 
     widgetOk.onclick = function (event) {
-      var shouldClose = true;
-      if (typeof widgetOnFormSubmit === 'function' && !widgetOnFormSubmit(event)) {
-        // invalid form, do not submit
-      } else {
-        trackWidgetAction('confirm', config);
-        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+      var data, widgetAction,
+          shouldClose = true;
 
-        if (typeof config.confirmAction === 'object') {
-          if (config.confirmAction.close === false) {
-            shouldClose = false;
-          }
+      // special case for form widgets
+      if (typeof widgetFormValidate === 'function') {
+        switch (config.type) {
+        case 'form':
+          widgetAction = 'submit';
+          break;
+        case 'subscription':
+          widgetAction = 'subscribe';
+          break;
+        case 'sitegate':
+          widgetAction = 'unlock';
+          break;
+        }
 
-          if (typeof config.confirmAction.callback === 'function') {
-            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, {
+        // validate form input
+        if (!widgetAction || !widgetFormValidate(event)) {
+          return;
+        } else if (widgetForm) {
+          trackWidgetAction(widgetAction, config, widgetForm);
+
+          // get the data submitted to the form
+          data = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('input, textarea, select')
+          ).map(function (element) {
+            return {
+              name: element.name || element.id,
+              value: element.value
+            };
+          });
+
+          // onSubmit callback should be deprecated,
+          // we keep the cb for backwards compatibility.
+          if (typeof config.onSubmit === 'function') {
+            config.onSubmit(callbackTypes.FORM_SUBMIT, {
               widget: widget,
               config: config,
-              event: event
+              event: event,
+              data: data
             });
           }
         }
+      }
 
-        if (typeof widgetOnButtonClick === 'function') {
-          widgetOnButtonClick(event);
+      // track confirm action
+      trackWidgetAction('confirm', config);
+      updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+
+      // support onClick callback for button modules
+      if (typeof widgetOnButtonClick === 'function') {
+        widgetOnButtonClick(event);
+      }
+
+      // confirmAction
+      if (typeof config.confirmAction === 'object') {
+        if (config.confirmAction.close === false) {
+          shouldClose = false;
         }
 
-        if (shouldClose) {
-          if (config.layout !== 'inline' && typeof config.success === 'undefined') {
-            closeWidget(widget.id, true);
-            widgetOnModalClose(widget, config, event);
+        if (typeof config.confirmAction.callback === 'function') {
+          var param = {
+            widget: widget,
+            config: config,
+            event: event
+          };
 
-          // show success state
-          } else {
-            addClass(widget, 'success');
-
-            // default to a three second delay if the user has not defined one
-            var delay = typeof config.success.delay !== 'undefined' ? config.success.delay * 1000 : 3000;
-
-            if (delay > 0) {
-              setTimeout(function () {
-                closeWidget(widget.id, true);
-              }, delay);
-            }
+          // include the data from the form if we have it.
+          if (data) {
+            param.data = data;
           }
+
+          // if waitForAsyncResponse we will handle the states as part of the callback
+          if (config.confirmAction.waitForAsyncResponse === true) {
+            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param, function (successful) {
+              handleFormStates(successful, widget, config);
+            });
+            return;
+
+          } else {
+            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
+          }
+        }
+      }
+
+      if (shouldClose) {
+        if (config.layout !== 'inline' && (!config.formStates || !config.formStates.success)) {
+          closeWidget(widget.id, true);
+          widgetOnModalClose(widget, config, event);
+        } else {
+          // show success state
+          handleFormStates(true, widget, config);
         }
       }
     };
@@ -2003,28 +2077,93 @@ function buildWidgetForm (formElements, form) {
   }
 }
 
-/** @module pathfora/widgets/actions/construct-widget-actions */
+/** @module pathfora/form/construct-form-state */
+
+// dom
+/**
+ * Setup html for success or error state of a form module
+ *
+ * @exports constructFormState
+ * @params {object} widget
+ * @params {object} config
+ * @params {string} name
+ */
+function constructFormState (config, widget, name) {
+  if (!config.formStates) {
+    return;
+  }
+
+  var obj, defaultHeadline, defaultMsg;
+
+  switch (name) {
+  case 'success':
+    obj = config.formStates.success;
+    defaultMsg = 'We have received your submission.';
+    defaultHeadline = 'Thank You';
+    break;
+  case 'error':
+    obj = config.formStates.error;
+    defaultMsg = 'There was an error receiving with your submission.';
+    defaultHeadline = 'Error';
+    break;
+  default:
+    throw new Error('Unrecognized formState: ' + name);
+  }
+
+  var elem = document.createElement('div');
+  elem.className = name + '-state';
+
+  var title = document.createElement('h2');
+  title.className = 'pf-widget-headline';
+  title.innerHTML = obj.headline || defaultHeadline;
+  elem.appendChild(title);
+
+  var msg = document.createElement('div');
+  msg.className = 'pf-widget-message';
+  msg.innerHTML = obj.msg || defaultMsg;
+  elem.appendChild(msg);
+
+  if (obj.okShow) {
+    var ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'pf-widget-btn pf-widget-ok';
+    ok.innerHTML = obj.okMessage || 'Confirm';
+    elem.appendChild(ok);
+  }
+
+  if (obj.cancelShow) {
+    var cancel = document.createElement('button');
+    cancel.type = 'button';
+    cancel.className = 'pf-widget-btn pf-widget-cancel';
+    cancel.innerHTML = obj.cancelMessage || 'Cancel';
+    elem.appendChild(cancel);
+  }
+
+  return elem;
+}
+
+/** @module pathfora/widgets/actions/form-state-actions */
 
 // widgets
 /**
  * Add callbacks and tracking for confirm and cancel
- * buttons on the success state of a form widget
+ * buttons on the success or error state of a form widget
  *
- * @exports constructSuccessActions
+ * @exports formStateActions
  * @params {object} widget
  * @params {object} config
+ * @params {name} string
  */
-function constructSuccessActions (widget, config) {
-  var successOk = widget.querySelector('.success-state .pf-widget-ok'),
-      successCancel = widget.querySelector('.success-state .pf-widget-cancel');
+function formStateActions (config, widget, name) {
+  var ok = widget.querySelector('.' + name + '-state .pf-widget-ok'),
+      cancel = widget.querySelector('.' + name + '-state .pf-widget-cancel');
 
-
-  if (successCancel) {
-    buttonAction(successCancel, 'success.cancel', config, widget);
+  if (cancel) {
+    buttonAction(cancel, name + '.cancel', config, widget);
   }
 
-  if (successOk) {
-    buttonAction(successOk, 'success.confirm', config, widget);
+  if (ok) {
+    buttonAction(ok, name + '.confirm', config, widget);
   }
 }
 
@@ -2093,42 +2232,24 @@ function constructWidgetLayout (widget, config) {
     case 'slideout':
     case 'sitegate':
     case 'inline':
-      if (config.success) {
-        var success = document.createElement('div');
-        success.className = 'success-state';
-
-        var successTitle = document.createElement('h2');
-        successTitle.className = 'pf-widget-headline';
-        successTitle.innerHTML = config.success && config.success.headline ? config.success.headline : 'Thank you';
-        success.appendChild(successTitle);
-
-        var successMsg = document.createElement('div');
-        successMsg.className = 'pf-widget-message';
-        successMsg.innerHTML = config.success && config.success.msg ? config.success.msg : 'We have received your submission.';
-        success.appendChild(successMsg);
-
-        if (config.success.okShow) {
-          var okSuccess = document.createElement('button');
-          okSuccess.type = 'button';
-          okSuccess.className = 'pf-widget-btn pf-widget-ok';
-          okSuccess.innerHTML = config.success.okMessage || 'Confirm';
-          success.appendChild(okSuccess);
-        }
-
-        if (config.success.cancelShow) {
-          var cancelSuccess = document.createElement('button');
-          cancelSuccess.type = 'button';
-          cancelSuccess.className = 'pf-widget-btn pf-widget-cancel';
-          cancelSuccess.innerHTML = config.success.cancelMessage || 'Cancel';
-          success.appendChild(cancelSuccess);
-        }
-
-        widgetContent.appendChild(success);
-
-        if (config.success.okShow || config.success.cancelShow) {
-          constructSuccessActions(widget, config);
-        }
+      if (!config.formStates) {
+        break;
       }
+
+      // success state
+      if (config.formStates.success) {
+        var success = constructFormState(config, widget, 'success');
+        widgetContent.appendChild(success);
+        formStateActions(config, widget, 'success');
+      }
+
+      // error state
+      if (config.formStates.error) {
+        var error = constructFormState(config, widget, 'error');
+        widgetContent.appendChild(error);
+        formStateActions(config, widget, 'error');
+      }
+
       break;
     }
     break;
@@ -3338,6 +3459,17 @@ function initializeWidgetArray (array) {
     updateObject(widget, globals);
     updateObject(widget, defaults);
     updateObject(widget, widget.config);
+
+    // retain support for old "success" field
+    if (widget.success) {
+      if (!widget.formStates) {
+        widget.formStates = {};
+      }
+
+      if (!widget.formStates.success) {
+        widget.formStates.success = widget.success;
+      }
+    }
 
     if (widget.showSocialLogin) {
       if (widget.showForm === false) {
