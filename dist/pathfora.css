@@ -24,6 +24,9 @@
   color: #888;
   font-size: 15px;
 }
+.pf-widget .pf-widget-body {
+  color: #888;
+}
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget.pf-mobile-hide {
     display: none;
