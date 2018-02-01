@@ -23,11 +23,13 @@ export default function constructQueries (params) {
       if (params[key] instanceof Object) {
         // multiple params []string (topics or rollups)
         for (var i in params[key]) {
-          if (i < Object.keys(params[key]).length && i > 0) {
-            queries.push('&');
-          }
+          if (params[key].hasOwnProperty(i)) {
+            if (i < Object.keys(params[key]).length && i > 0) {
+              queries.push('&');
+            }
 
-          queries.push(key + '[]=' + params[key][i]);
+            queries.push(key + '[]=' + params[key][i]);
+          }
         }
 
       // single param
