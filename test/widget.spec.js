@@ -276,18 +276,18 @@ describe('Widgets', function () {
     pathfora.clearAll();
   });
 
-  it('should show branding assets unless set otherwise', function () {
+  it('should not show branding assets unless set otherwise', function () {
     var w1 = new pathfora.Message({
       msg: 'test',
       id: 'branding1',
-      layout: 'slideout'
+      layout: 'slideout',
+      branding: true
     });
 
     var w2 = new pathfora.Message({
       msg: 'test',
       id: 'branding2',
-      layout: 'modal',
-      branding: false
+      layout: 'modal'
     });
 
     pathfora.initializeWidgets([w1, w2]);
