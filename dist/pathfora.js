@@ -665,11 +665,13 @@ function constructQueries (params) {
       if (params[key] instanceof Object) {
         // multiple params []string (topics or rollups)
         for (var i in params[key]) {
-          if (i < Object.keys(params[key]).length && i > 0) {
-            queries.push('&');
-          }
+          if (params[key].hasOwnProperty(i)) {
+            if (i < Object.keys(params[key]).length && i > 0) {
+              queries.push('&');
+            }
 
-          queries.push(key + '[]=' + params[key][i]);
+            queries.push(key + '[]=' + params[key][i]);
+          }
         }
 
       // single param
@@ -2507,7 +2509,8 @@ function setCustomColors (widget, colors) {
       required = widget.querySelectorAll('.pf-required-flag'),
       requiredAsterisk = widget.querySelectorAll('span.required'),
       requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
-      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
+      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn')),
+      body = widget.querySelector('.pf-widget-body');
 
   if (colors.background) {
     if (hasClass(widget, 'pf-widget-modal')) {
@@ -2623,6 +2626,10 @@ function setCustomColors (widget, colors) {
     for (i = 0; i < msg.length; i++) {
       msg[i].style.setProperty('color', colors.text, 'important');
     }
+  }
+
+  if (body && colors.text) {
+    body.style.setProperty('color', colors.text, 'important');
   }
 }
 
