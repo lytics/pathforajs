@@ -27,7 +27,8 @@ export default function setCustomColors (widget, colors) {
       required = widget.querySelectorAll('.pf-required-flag'),
       requiredAsterisk = widget.querySelectorAll('span.required'),
       requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
-      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn'));
+      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn')),
+      body = widget.querySelector('.pf-widget-body');
 
   if (colors.background) {
     if (hasClass(widget, 'pf-widget-modal')) {
@@ -143,5 +144,9 @@ export default function setCustomColors (widget, colors) {
     for (i = 0; i < msg.length; i++) {
       msg[i].style.setProperty('color', colors.text, 'important');
     }
+  }
+
+  if (body && colors.text) {
+    body.style.setProperty('color', colors.text, 'important');
   }
 }
