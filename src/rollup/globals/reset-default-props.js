@@ -10,7 +10,7 @@
 export default function resetDefaultProps (obj) {
   obj.generic = {
     className: 'pathfora',
-    branding: true,
+    branding: false,
     responsive: true,
     headline: '',
     themes: {
