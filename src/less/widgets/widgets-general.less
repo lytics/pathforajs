@@ -34,6 +34,10 @@
   color: @text;
   font-size: 15px;
 
+  .pf-widget-body {
+    color: @text;
+  }
+
   &.pf-mobile-hide {
     .mobile({
       display: none;
@@ -230,7 +234,7 @@
 
     .success-state {
       display: block;
-      
+
       .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
         display: block;
       }
@@ -246,7 +250,7 @@
 
     .error-state {
       display: block;
-      
+
       .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
         display: block;
       }
@@ -391,7 +395,7 @@
       display: block;
       clear: none;
       float: left;
-      
+
       &.right {
         float: right;
       }
@@ -417,7 +421,7 @@
   .pf-widget-radio, .pf-widget-checkbox {
     display: block;
     padding: 4px;
-  
+
     input {
       margin-right: 10px;
     }
