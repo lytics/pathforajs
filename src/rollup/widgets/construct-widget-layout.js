@@ -247,6 +247,8 @@ export default function constructWidgetLayout (widget, config) {
         } else if (element && typeof element.options !== 'undefined') {
           element.options[0].innerHTML = config.placeholders[field];
         }
+
+        element.setAttribute('aria-label', config.placeholders[field]);
       });
 
       // Set required Fields
