@@ -199,6 +199,45 @@ describe('Widgets', function () {
     }, 200);
   });
 
+  it('should close if the escape key is pressed and it is a modal', function(done) {
+    var modal = new pathfora.Message({
+      id: 'modal-esc-test',
+      layout: 'modal',
+      headline: 'Message Title',
+      msg: 'test',
+    });
+
+    var gate = new pathfora.SiteGate({
+      id: 'modal-esc-test2',
+      layout: 'modal',
+      headline: 'Message Title',
+      msg: 'test',
+    });
+
+    pathfora.initializeWidgets([modal, gate]);
+
+    var widget = $('#' + modal.id);
+    var widgetGate = $('#' + gate.id);
+    expect(widget).toBeDefined();
+    expect(widgetGate).toBeDefined();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      expect(widgetGate.hasClass('opened')).toBeTruthy();
+
+      var e = $.Event("keydown", { keyCode: 27 });
+      $(document).trigger(e);
+      expect(widget.hasClass('opened')).toBeFalsy();
+      expect(widgetGate.hasClass('opened')).toBeTruthy();
+
+      setTimeout(function () {
+        expect($('#' + modal.id).length).toBe(0);
+        expect($('#' + gate.id).length).toBe(1);
+        done();
+      }, 600);
+    }, 200);
+  });
+
   it('should handle missing values properly and never surface undefined', function () {
     var message = new pathfora.Message({
       id: 'message-test-widget',
@@ -1306,60 +1345,6 @@ describe('Widgets', function () {
         expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
       }
       done();
-    }, 200);
-  });
-
-  it('should close if the escape key is pressed and it is a modal', function() {
-    var modal = new pathfora.Message({
-      id: 'modal-esc-test',
-      layout: 'modal',
-      headline: 'Message Title',
-      msg: 'test',
-    });
-
-    pathfora.initializeWidgets([modal]);
-
-    var widget = $('#' + modal.id);
-    expect(widget).toBeDefined();
-
-    setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-
-      var e = $.Event("keydown", { keyCode: 27 });
-      $('body').trigger(e);
-      expect(widget.hasClass('opened')).toBeFalsy();
-
-      setTimeout(function () {
-        expect($('#' + widget.id).length).toBe(0);
-        done();
-      }, 600);
-    }, 200);
-  });
-
-  it('should not close if the escape key is pressed and it is a gate', function() {
-    var modal = new pathfora.SiteGate({
-      id: 'modal-esc-test',
-      layout: 'modal',
-      headline: 'Message Title',
-      msg: 'test',
-    });
-
-    pathfora.initializeWidgets([modal]);
-
-    var widget = $('#' + modal.id);
-    expect(widget).toBeDefined();
-
-    setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-
-      var e = $.Event("keydown", { keyCode: 27 });
-      $('body').trigger(e);
-      expect(widget.hasClass('opened')).toBeTruthy();
-
-      setTimeout(function () {
-        expect($('#' + widget.id).length).toBe(1);
-        done();
-      }, 600);
     }, 200);
   });
 
