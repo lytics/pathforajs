@@ -29,8 +29,7 @@ export var defaultPositions = {
   modal: '',
   slideout: 'bottom-left',
   button: 'top-left',
-  bar: 'top-absolute',
-  folding: 'bottom-left'
+  bar: 'top-absolute'
 };
 
 export var callbackTypes = {

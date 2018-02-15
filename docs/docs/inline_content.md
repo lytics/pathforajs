@@ -24,7 +24,7 @@ Each toggleable content recomendation block should have a surrounding container 
       <th>Value</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>data-pfblock</td>
     <td>string</td>
@@ -35,7 +35,7 @@ Each toggleable content recomendation block should have a surrounding container 
   <tr>
     <td>data-pfrecommend</td>
     <td>string</td>
-    <td>id or slug of a content collection (segment on the content table) to filter content</td>
+    <td>id of a content collection - the source list of content to recommend from** or <code>default</code></td>
   </tr>
 
   <tr>
@@ -44,6 +44,10 @@ Each toggleable content recomendation block should have a surrounding container 
     <td><code>optional</code> if true, shuffle the result of the recommendations on each page load.</td>
   </tr>
 </table>
+
+** You can get the id of the content collection from the url of that collection in the Lytics App.
+
+<img class="full" src="../assets/content_collection_id.jpg" alt="Content Collection API from url">
 
 Inside the container element you may have several elements with the `data-pfblock` attribute. Based on the value of this attribute, Pathfora will set the innerHTML or an attribute of this element to contain a content recommendation for the user.
 
@@ -59,7 +63,7 @@ Note that only one `data-pfshuffle` attribute is necessary per unique value of `
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>image</td>
     <td>on an <code>img</code> tag this will set the <code>src</code> value to be the meta image of the document, otherwise it will set the <code>background-image</code></td>

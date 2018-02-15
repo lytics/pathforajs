@@ -1,7 +1,10 @@
 /** @module pathfora/widgets/actions/construct-widget-actions */
 
 // globals
-import { callbackTypes, PREFIX_CONFIRM } from '../../globals/config';
+import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE } from '../../globals/config';
+
+// dom
+import document from '../../dom/document';
 
 // utils
 import hasClass from '../../utils/class/has-class';
@@ -128,28 +131,6 @@ export default function constructWidgetActions (widget, config) {
   }
 
   switch (config.layout) {
-  case 'folding':
-    var widgetAllCaptions = widget.querySelectorAll('.pf-widget-caption, .pf-widget-caption-left'),
-        widgetFirstCaption = widget.querySelector('.pf-widget-caption');
-
-    if (config.position !== 'left') {
-      setTimeout(function () {
-        var height = widget.offsetHeight - widgetFirstCaption.offsetHeight;
-        widget.style.bottom = -height + 'px';
-      }, 0);
-    }
-
-    for (var i = widgetAllCaptions.length - 1; i >= 0; i--) {
-      widgetAllCaptions[i].onclick = function () {
-        if (hasClass(widget, 'opened')) {
-          removeClass(widget, 'opened');
-        } else {
-          addClass(widget, 'opened');
-        }
-      };
-    }
-    break;
-
   case 'button':
     if (typeof config.onClick === 'function') {
       widgetOnButtonClick = function (event) {
@@ -158,6 +139,19 @@ export default function constructWidgetActions (widget, config) {
           config: config,
           event: event
         });
+      };
+    }
+    break;
+  case 'modal':
+    if (config.type !== 'sitegate') {
+      document.onkeydown = function (event) {
+        event = event || window.event;
+        if (event.keyCode === 27) {
+          trackWidgetAction('close', config);
+          updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+          closeWidget(widget.id, true);
+          widgetOnModalClose(widget, config, event);
+        }
       };
     }
     break;

@@ -24,9 +24,6 @@ export default function validateWidgetPosition (widget, config) {
   case 'button':
     choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
     break;
-  case 'folding':
-    choices = ['left', 'bottom-left', 'bottom-right'];
-    break;
   case 'inline':
     choices = [];
     break;

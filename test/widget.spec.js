@@ -174,28 +174,7 @@ describe('Widgets', function () {
     }, 500);
   });
 
-  it('should be able to close', function (done) {
-    var promoWidget = new pathfora.Message({
-      layout: 'modal',
-      msg: 'Close widget test',
-      id: 'close-widget'
-    });
-
-    pathfora.initializeWidgets([promoWidget]);
-    pathfora.showWidget(promoWidget);
-
-    var widget = $('#' + promoWidget.id);
-    expect(widget).toBeDefined();
-
-    setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-      widget.find('.pf-widget-close').click();
-      expect(widget.hasClass('opened')).toBeFalsy();
-      done();
-    }, 200);
-  });
-
-  it('should not be in DOM when closed', function (done) {
+  it('should close when the x button is clicked', function (done) {
     var testWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Close widget test',
@@ -203,19 +182,18 @@ describe('Widgets', function () {
     });
 
     pathfora.initializeWidgets([testWidget]);
-    pathfora.showWidget(testWidget);
 
     var widget = $('#' + testWidget.id);
     expect(widget).toBeDefined();
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeTruthy();
-      expect(widget[0]).toBeDefined();
 
       widget.find('.pf-widget-close').click();
+      expect(widget.hasClass('opened')).toBeFalsy();
 
       setTimeout(function () {
-        expect($('#' + testWidget.id)[0]).toBeUndefined();
+        expect($('#' + testWidget.id).length).toBe(0);
         done();
       }, 600);
     }, 200);
@@ -680,23 +658,15 @@ describe('Widgets', function () {
       layout: 'slideout'
     });
 
-    var w4 = new pathfora.Form({
-      msg: 'folding - default pos test',
-      id: 'position-widget-4',
-      layout: 'folding'
-    });
-
-    pathfora.initializeWidgets([w1, w2, w3, w4]);
+    pathfora.initializeWidgets([w1, w2, w3]);
 
     var widget1 = $('#' + w1.id),
         widget2 = $('#' + w2.id),
-        widget3 = $('#' + w3.id),
-        widget4 = $('#' + w4.id);
+        widget3 = $('#' + w3.id);
 
     expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
     expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
     expect(widget3.hasClass('pf-position-bottom-left')).toBeTruthy();
-    expect(widget4.hasClass('pf-position-bottom-left')).toBeTruthy();
   });
 
 
@@ -1282,7 +1252,6 @@ describe('Widgets', function () {
     }
   });
 
-
   it('should not submit the form if required fields are not filled out', function (done) {
     var customForm = new pathfora.Form({
       id: 'custom-form-3',
@@ -1337,6 +1306,60 @@ describe('Widgets', function () {
         expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
       }
       done();
+    }, 200);
+  });
+
+  it('should close if the escape key is pressed and it is a modal', function() {
+    var modal = new pathfora.Message({
+      id: 'modal-esc-test',
+      layout: 'modal',
+      headline: 'Message Title',
+      msg: 'test',
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    expect(widget).toBeDefined();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var e = $.Event("keydown", { keyCode: 27 });
+      $('body').trigger(e);
+      expect(widget.hasClass('opened')).toBeFalsy();
+
+      setTimeout(function () {
+        expect($('#' + widget.id).length).toBe(0);
+        done();
+      }, 600);
+    }, 200);
+  });
+
+  it('should not close if the escape key is pressed and it is a gate', function() {
+    var modal = new pathfora.SiteGate({
+      id: 'modal-esc-test',
+      layout: 'modal',
+      headline: 'Message Title',
+      msg: 'test',
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    expect(widget).toBeDefined();
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var e = $.Event("keydown", { keyCode: 27 });
+      $('body').trigger(e);
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      setTimeout(function () {
+        expect($('#' + widget.id).length).toBe(1);
+        done();
+      }, 600);
     }, 200);
   });
 

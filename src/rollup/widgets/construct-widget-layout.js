@@ -116,7 +116,6 @@ export default function constructWidgetLayout (widget, config) {
   switch (config.type) {
   case 'form':
     switch (config.layout) {
-    case 'folding':
     case 'modal':
     case 'slideout':
     case 'random':
@@ -128,7 +127,6 @@ export default function constructWidgetLayout (widget, config) {
     break;
   case 'subscription':
     switch (config.layout) {
-    case 'folding':
     case 'modal':
     case 'bar':
     case 'slideout':
