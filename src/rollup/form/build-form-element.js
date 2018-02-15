@@ -52,6 +52,8 @@ export default function buildFormElement (elem, form) {
   if (elem.label) {
     if (isGroup) {
       label = document.createElement('span');
+      label.id = elem.name;
+      content.setAttribute('aria-labelledby', elem.name);
     } else {
       label = document.createElement('label');
       label.setAttribute('for', elem.name);
@@ -93,6 +95,10 @@ export default function buildFormElement (elem, form) {
       content.appendChild(placeholder);
     } else {
       content.placeholder = elem.placeholder;
+    }
+
+    if (!elem.label) {
+      content.setAttribute('aria-label', elem.placeholder);
     }
   }
 
