@@ -28,8 +28,7 @@
     modal: '',
     slideout: 'bottom-left',
     button: 'top-left',
-    bar: 'top-absolute',
-    folding: 'bottom-left'
+    bar: 'top-absolute'
   };
 
   var defaultProps = {
