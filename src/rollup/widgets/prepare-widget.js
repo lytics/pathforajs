@@ -20,11 +20,10 @@ export default function prepareWidget (type, config) {
 
   if (config.layout === 'random') {
     props = {
-      layout: ['modal', 'slideout', 'bar', 'folding'],
+      layout: ['modal', 'slideout', 'bar'],
       variant: ['1', '2'],
       slideout: ['bottom-left', 'bottom-right'],
-      bar: ['top-absolute', 'top-fixed', 'bottom-fixed'],
-      folding: ['left', 'bottom-left', 'bottom-right']
+      bar: ['top-absolute', 'top-fixed', 'bottom-fixed']
     };
 
     // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
