@@ -35,7 +35,7 @@ Each toggleable piece of content should have a surrounding container HTML elemen
       <th>Value</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>data-pfgroup</td>
     <td>string</td>
@@ -46,11 +46,11 @@ Each toggleable piece of content should have a surrounding container HTML elemen
   <tr>
     <td>data-pftrigger</td>
     <td>string</td>
-    <td>ID of the audience in Lytics or <code>default</code></td>
+    <td>id or slug of the audience in Lytics or <code>default</code></td>
   </tr>
 </table>
 
-If you have multiple elements with the same `pfgroup` name, only the first element with a matching `pftrigger` value will show. This means at most only one piece of content in a group will show. 
+If you have multiple elements with the same `pfgroup` name, only the first element with a matching `pftrigger` value will show. This means at most only one piece of content in a group will show.
 
 Additionally, if the user is not a member of one of these audiences you can create a default piece of content and set the `pftrigger` value to be `default`. This default element will only show if the user is not a member of any other `pftrigger` audience in a group.
 
