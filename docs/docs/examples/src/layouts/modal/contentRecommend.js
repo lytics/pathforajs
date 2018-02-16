@@ -5,10 +5,8 @@ var module = new pathfora.Message({
   msg: 'Based on your interests we think you will like this content.',
   variant: 3,
   recommend: {
-    path: '/blog/post',
-    domain: 'getlytics.com',
     visited: false,
-    topics: ['Marketing', 'data-first marketing']
+    collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09'
   },
   content: [
     {

@@ -8,7 +8,7 @@ import resetDataObject from './reset-data-object';
 // ab tests
 import createABTestingModePreset from '../ab-test/create-preset';
 
-export var PF_VERSION = '0.2.15',
+export var PF_VERSION = '0.2.16',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -29,8 +29,7 @@ export var defaultPositions = {
   modal: '',
   slideout: 'bottom-left',
   button: 'top-left',
-  bar: 'top-absolute',
-  folding: 'bottom-left'
+  bar: 'top-absolute'
 };
 
 export var callbackTypes = {
