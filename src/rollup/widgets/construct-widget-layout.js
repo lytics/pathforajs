@@ -25,7 +25,9 @@ import formStateActions from './actions/form-state-actions';
  * @params {object} config
  */
 export default function constructWidgetLayout (widget, config) {
-  var node, child, i,
+  var node,
+      child,
+      i,
       widgetContent = widget.querySelector('.pf-widget-content'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetOk = widget.querySelector('.pf-widget-ok'),
@@ -227,7 +229,6 @@ export default function constructWidgetLayout (widget, config) {
       }
 
       buildWidgetForm(config.formElements, form);
-
     } else {
       // suport old form functions
       var getFormElement = function (field) {
@@ -270,27 +271,38 @@ export default function constructWidgetLayout (widget, config) {
       });
 
       // NOTE: collapse half-width inputs
-      Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
-        var parent = element.parentNode,
-            prev = element.previousElementSibling,
-            next = element.nextElementSibling;
+      Array.prototype.slice
+        .call(widget.querySelectorAll('form .pf-field-half-width'))
+        .forEach(function (element, halfcount) {
+          var parent = element.parentNode,
+              prev = element.previousElementSibling,
+              next = element.nextElementSibling;
 
-        if (parent) {
-          if (element.className.indexOf('pf-field-half-width') !== -1) {
+          if (parent) {
+            if (element.className.indexOf('pf-field-half-width') !== -1) {
+              if (halfcount % 2) {
+                // odd
+                addClass(element, 'right');
 
-            if (halfcount % 2) { // odd
-              addClass(element, 'right');
-
-              if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                if (
+                  !(
+                    prev &&
+                      prev.className.indexOf('pf-field-half-width') !== -1
+                  )
+                ) {
+                  removeClass(element, 'pf-field-half-width');
+                }
+              } else if (
+                !(
+                  next && next.className.indexOf('pf-field-half-width') !== -1
+                )
+              ) {
+                // even
                 removeClass(element, 'pf-field-half-width');
               }
-
-            } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
-              removeClass(element, 'pf-field-half-width');
             }
           }
-        }
-      });
+        });
     }
 
     // For select boxes we need to control the color of

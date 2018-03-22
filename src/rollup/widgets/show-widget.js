@@ -21,7 +21,6 @@ import createWidgetHtml from './create-widget-html';
 import closeWidget from './close-widget';
 import widgetResizeListener from './widget-resize-listener';
 
-
 /**
  * Make the widget visible to the user
  *
@@ -52,6 +51,36 @@ export default function showWidget (w) {
 
     if (widget.config.layout !== 'inline') {
       document.body.appendChild(node);
+
+      // ensure that we set focus the the modal for accessibility reasons
+      var focusable = node.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (focusable.length) {
+        var input = node.querySelector('input'),
+            ok = node.querySelector('.pf-widget-ok');
+
+        if (input) {
+          input.focus();
+        } else if (ok) {
+          ok.focus();
+        } else {
+          focusable[0].focus();
+        }
+
+        // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+        if (widget.layout === 'modal' || widget.type === 'sitegate') {
+          document.addEventListener('keydown', function (ev) {
+            if (ev.keyCode === 9) {
+              if (ev.target === focusable[focusable.length - 1]) {
+                ev.preventDefault();
+                focusable[0].focus();
+              }
+            }
+          });
+        }
+      }
     } else {
       var hostNode = document.querySelector(widget.config.position);
 
@@ -59,7 +88,9 @@ export default function showWidget (w) {
         hostNode.appendChild(node);
       } else {
         widgetTracker.openedWidgets.pop();
-        throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+        throw new Error(
+          'Inline widget could not be initialized in ' + widget.config.position
+        );
       }
     }
 
@@ -76,14 +107,16 @@ export default function showWidget (w) {
           widget: node
         });
       }
-      if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+      if (
+        widget.config.layout === 'modal' &&
+        typeof widget.config.onModalOpen === 'function'
+      ) {
         widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
           config: widget,
           widget: node
         });
       }
     }, 50);
-
 
     if (widget.displayConditions.hideAfter) {
       setTimeout(function () {
