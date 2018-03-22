@@ -2176,7 +2176,9 @@ function formStateActions (config, widget, name) {
  * @params {object} config
  */
 function constructWidgetLayout (widget, config) {
-  var node, child, i,
+  var node,
+      child,
+      i,
       widgetContent = widget.querySelector('.pf-widget-content'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetOk = widget.querySelector('.pf-widget-ok'),
@@ -2378,7 +2380,6 @@ function constructWidgetLayout (widget, config) {
       }
 
       buildWidgetForm(config.formElements, form);
-
     } else {
       // suport old form functions
       var getFormElement = function (field) {
@@ -2421,27 +2422,38 @@ function constructWidgetLayout (widget, config) {
       });
 
       // NOTE: collapse half-width inputs
-      Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
-        var parent = element.parentNode,
-            prev = element.previousElementSibling,
-            next = element.nextElementSibling;
+      Array.prototype.slice
+        .call(widget.querySelectorAll('form .pf-field-half-width'))
+        .forEach(function (element, halfcount) {
+          var parent = element.parentNode,
+              prev = element.previousElementSibling,
+              next = element.nextElementSibling;
 
-        if (parent) {
-          if (element.className.indexOf('pf-field-half-width') !== -1) {
+          if (parent) {
+            if (element.className.indexOf('pf-field-half-width') !== -1) {
+              if (halfcount % 2) {
+                // odd
+                addClass(element, 'right');
 
-            if (halfcount % 2) { // odd
-              addClass(element, 'right');
-
-              if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                if (
+                  !(
+                    prev &&
+                      prev.className.indexOf('pf-field-half-width') !== -1
+                  )
+                ) {
+                  removeClass(element, 'pf-field-half-width');
+                }
+              } else if (
+                !(
+                  next && next.className.indexOf('pf-field-half-width') !== -1
+                )
+              ) {
+                // even
                 removeClass(element, 'pf-field-half-width');
               }
-
-            } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
-              removeClass(element, 'pf-field-half-width');
             }
           }
-        }
-      });
+        });
     }
 
     // For select boxes we need to control the color of
@@ -2750,6 +2762,36 @@ function showWidget (w) {
 
     if (widget.config.layout !== 'inline') {
       document.body.appendChild(node);
+
+      // ensure that we set focus the the modal for accessibility reasons
+      var focusable = node.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (focusable.length) {
+        var input = node.querySelector('input'),
+            ok = node.querySelector('.pf-widget-ok');
+
+        if (input) {
+          input.focus();
+        } else if (ok) {
+          ok.focus();
+        } else {
+          focusable[0].focus();
+        }
+
+        // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+        if (widget.layout === 'modal' || widget.type === 'sitegate') {
+          document.addEventListener('keydown', function (ev) {
+            if (ev.keyCode === 9) {
+              if (ev.target === focusable[focusable.length - 1]) {
+                ev.preventDefault();
+                focusable[0].focus();
+              }
+            }
+          });
+        }
+      }
     } else {
       var hostNode = document.querySelector(widget.config.position);
 
@@ -2757,7 +2799,9 @@ function showWidget (w) {
         hostNode.appendChild(node);
       } else {
         widgetTracker.openedWidgets.pop();
-        throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+        throw new Error(
+          'Inline widget could not be initialized in ' + widget.config.position
+        );
       }
     }
 
@@ -2774,14 +2818,16 @@ function showWidget (w) {
           widget: node
         });
       }
-      if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+      if (
+        widget.config.layout === 'modal' &&
+        typeof widget.config.onModalOpen === 'function'
+      ) {
         widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
           config: widget,
           widget: node
         });
       }
     }, 50);
-
 
     if (widget.displayConditions.hideAfter) {
       setTimeout(function () {
