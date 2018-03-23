@@ -55,7 +55,7 @@
     "walk": "^2.3.9"
   },
   "scripts": {
-    "test": "gulp build && karma start --single-run --browsers PhantomJS",
+    "test": "gulp build && karma start --single-run",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
     "prod": "npm run test && npm run clean && npm run build:prod",

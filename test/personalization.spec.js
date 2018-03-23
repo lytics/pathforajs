@@ -20,13 +20,17 @@ describe('Inline Personalization', function () {
         loaded: true
       };
 
-      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="smt_new">New</div>');
+      $(document.body).append(
+        '<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="smt_new">New</div>'
+      );
 
-      $(document.body).append('<div data-pfgroup="testgrp2" data-pftrigger="high_momentum">High Momentum</div>' +
-        '<div data-pfgroup="testgrp2" data-pftrigger="email">Has Email</div>' +
-        '<div data-pfgroup="testgrp2" data-pftrigger="default">Default</div>');
+      $(document.body).append(
+        '<div data-pfgroup="testgrp2" data-pftrigger="high_momentum">High Momentum</div>' +
+          '<div data-pfgroup="testgrp2" data-pftrigger="email">Has Email</div>' +
+          '<div data-pfgroup="testgrp2" data-pftrigger="default">Default</div>'
+      );
 
       window.pathfora.inline.procElements();
 
@@ -50,7 +54,6 @@ describe('Inline Personalization', function () {
       $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
     });
 
-
     it('should select to show the default if none of the triggers match', function () {
       window.lio = {
         data: {
@@ -59,9 +62,11 @@ describe('Inline Personalization', function () {
         loaded: true
       };
 
-      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="default">Default</div>');
+      $(document.body).append(
+        '<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="default">Default</div>'
+      );
 
       window.pathfora.inline.procElements();
 
@@ -86,9 +91,11 @@ describe('Inline Personalization', function () {
         loaded: true
       };
 
-      $(document.body).append('<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
-        '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>');
+      $(document.body).append(
+        '<div data-pfgroup="testgrp" data-pftrigger="high_value">High Value</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="portlanders">Portlander</div>' +
+          '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>'
+      );
 
       var testModule = new pathfora.Message({
         id: '9ec53f71a1514339bb1552280ae76682',
@@ -103,10 +110,12 @@ describe('Inline Personalization', function () {
       });
 
       var widgets = {
-        target: [{
-          segment: 'email',
-          widgets: [testModule]
-        }],
+        target: [
+          {
+            segment: 'email',
+            widgets: [testModule]
+          }
+        ],
         inverse: [testModule2]
       };
 
@@ -143,28 +152,32 @@ describe('Inline Personalization', function () {
       jasmine.Ajax.install();
     });
 
-    afterEach(function() {
+    afterEach(function () {
       jasmine.Ajax.uninstall();
     });
 
     it('should fill pftype elements with content recommendation data', function () {
-      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="my_collection">' +
-        '<img data-pftype="image" alt="My Image">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
-        '<p data-pftype="published"></p>' +
-        '<p data-pftype="author"></p>' +
-        '<p data-pftype="description"></p>' +
-        '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
+      $(document.body).append(
+        '<div data-pfblock="group1" data-pfrecommend="my_collection">' +
+          '<img data-pftype="image" alt="My Image">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+          '<p data-pftype="published"></p>' +
+          '<p data-pftype="author"></p>' +
+          '<p data-pftype="description"></p>' +
+          '</div><div data-pfblock="group1" data-pfrecommend="default"></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-
 
       var rec = $('[data-pfmodified="true"]'),
           recImage = rec.find('[data-pftype="image"]'),
@@ -177,7 +190,9 @@ describe('Inline Personalization', function () {
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
-      expect(recImage.attr('src')).toBe('http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg');
+      expect(recImage.attr('src')).toBe(
+        'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
+      );
       expect(recUrl.attr('href')).toBe('http://www.example.com/1');
       expect(recTitle.text()).toBe('Example Title');
       expect(recDesc.text()).toBe('An example description');
@@ -195,21 +210,25 @@ describe('Inline Personalization', function () {
     });
 
     it('should show the default content if invalid response from API', function () {
-      $(document.body).append('<div data-pfblock="group2" data-pfrecommend="bad_collection">' +
-        '<img data-pftype="image" alt="My Image">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
-        '<p data-pftype="description"></p>' +
-        '</div><div data-pfblock="group2" data-pfrecommend="default"></div>');
+      $(document.body).append(
+        '<div data-pfblock="group2" data-pfrecommend="bad_collection">' +
+          '<img data-pftype="image" alt="My Image">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+          '<p data-pftype="description"></p>' +
+          '</div><div data-pfblock="group2" data-pfrecommend="default"></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 400,
-        'contentType': 'application/json',
-        'responseText': '{"data": null,"message": "No such account id","status": 400}'
+        status: 400,
+        contentType: 'application/json',
+        responseText:
+          '{"data": null,"message": "No such account id","status": 400}'
       });
-
 
       var def = $('[data-pfmodified="true"]'),
           bad = $('[data-pfrecommend="bad_collection"]');
@@ -224,19 +243,23 @@ describe('Inline Personalization', function () {
     });
 
     it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function () {
-      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="my_collection">' +
-        '<div data-pftype="image"></div>' +
-        '<div data-pftype="url"></div></div>');
+      $(document.body).append(
+        '<div data-pfblock="group3" data-pfrecommend="my_collection">' +
+          '<div data-pftype="image"></div>' +
+          '<div data-pftype="url"></div></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-
 
       var rec = $('[data-pfmodified="true"]'),
           recImage = rec.find('[data-pftype="image"]'),
@@ -244,7 +267,9 @@ describe('Inline Personalization', function () {
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
-      expect(recImage.css('background-image')).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+      expect(recImage.css('background-image')).toBe(
+        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+      );
       expect(recUrl.html()).toBe('http://www.example.com/1');
 
       $('[data-pfblock="group3"]').remove();
@@ -252,22 +277,31 @@ describe('Inline Personalization', function () {
 
     it('should recognize date formatting set by the user', function () {
       pathfora.locale = 'en-GB';
-      pathfora.dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      pathfora.dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      };
 
-      $(document.body).append('<div data-pfblock="group3" data-pfrecommend="my_collection">' +
-        '<div data-pftype="image"></div>' +
-        '<div data-pftype="published"></div>' +
-        '<div data-pftype="url"></div></div>');
+      $(document.body).append(
+        '<div data-pfblock="group3" data-pfrecommend="my_collection">' +
+          '<div data-pftype="image"></div>' +
+          '<div data-pftype="published"></div>' +
+          '<div data-pftype="url"></div></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-
 
       var rec = $('[data-pfmodified="true"]'),
           recPublished = rec.find('[data-pftype="published"]');
@@ -284,22 +318,26 @@ describe('Inline Personalization', function () {
     });
 
     it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
-      $(document.body).append('<div data-pfblock="group4" data-pfrecommend="my_collection">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
-        '</div><div data-pfblock="group5" data-pfrecommend="my_collection">' +
-        '<h2 data-pftype="title"></h2>' +
-        '<div data-pftype="url"></div></div>');
+      $(document.body).append(
+        '<div data-pfblock="group4" data-pfrecommend="my_collection">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+          '</div><div data-pfblock="group5" data-pfrecommend="my_collection">' +
+          '<h2 data-pftype="title"></h2>' +
+          '<div data-pftype="url"></div></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false},' +
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false},' +
           '{"url": "www.example.com/2","title": "Another Example Title","description": "An second example description","primary_image": "image2.jpg","confidence": 0.23334,"visited": false}]}'
       });
-
 
       var recs = $('[data-pfmodified="true"]');
       expect(recs.length).toBe(2);
@@ -323,18 +361,21 @@ describe('Inline Personalization', function () {
       $('[data-pfblock="group4"], [data-pfblock="group5"]').remove();
     });
 
-
     it('should recognize the data-pfshuffle attribute', function () {
-      $(document.body).append('<div data-pfblock="group1" data-pfrecommend="my_collection2" data-pfshuffle="true">' +
-        '<img data-pftype="image" alt="My Image">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
-        '<p data-pftype="published"></p>' +
-        '<p data-pftype="author"></p>' +
-        '<p data-pftype="description"></p>' +
-        '</div><div data-pfblock="group1" data-pfrecommend="default"></div>');
+      $(document.body).append(
+        '<div data-pfblock="group1" data-pfrecommend="my_collection2" data-pfshuffle="true">' +
+          '<img data-pftype="image" alt="My Image">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
+          '<p data-pftype="published"></p>' +
+          '<p data-pftype="author"></p>' +
+          '<p data-pftype="description"></p>' +
+          '</div><div data-pfblock="group1" data-pfrecommend="default"></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true'
+      );
 
       $('[data-pfblock="group1"]').remove();
     });
@@ -346,20 +387,24 @@ describe('Inline Personalization', function () {
         }
       };
 
-      $(document.body).append('<div data-pfgroup="seg1" data-pftrigger="high_value" data-pfblock="block1" data-pfrecommend="my_collection">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>' +
-        '<div data-pfblock="block1" data-pfrecommend="default">default block1</div>' +
-        '<div data-pfgroup="seg1" data-pftrigger="default">default seg1</div>');
+      $(document.body).append(
+        '<div data-pfgroup="seg1" data-pftrigger="high_value" data-pfblock="block1" data-pfrecommend="my_collection">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>' +
+          '<div data-pfblock="block1" data-pfrecommend="default">default block1</div>' +
+          '<div data-pfgroup="seg1" data-pftrigger="default">default seg1</div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data": null,"message": "No such account id","status": 400}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data": null,"message": "No such account id","status": 400}'
       });
-
 
       var elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
@@ -375,20 +420,24 @@ describe('Inline Personalization', function () {
 
       $('[data-pfgroup="seg1"], [data-pfblock="block1"]').remove();
 
-      $(document.body).append('<div data-pfgroup="seg2" data-pftrigger="blah">in blah seg2</div>' +
-        '<div data-pfgroup="seg2" data-pftrigger="high_value">in high_value seg2</div>' +
-        '<div data-pfgroup="seg2" data-pftrigger="default" data-pfblock="block2" data-pfrecommend="my_collection">' +
-        '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>');
+      $(document.body).append(
+        '<div data-pfgroup="seg2" data-pftrigger="blah">in blah seg2</div>' +
+          '<div data-pfgroup="seg2" data-pftrigger="high_value">in high_value seg2</div>' +
+          '<div data-pfgroup="seg2" data-pftrigger="default" data-pfblock="block2" data-pfrecommend="my_collection">' +
+          '<a data-pftype="url"><h2 data-pftype="title"></h2></a></div>'
+      );
 
       pathfora.inline.procElements();
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-
 
       elems = $('[data-pfmodified="true"]');
       expect(elems.length).toBe(2);
