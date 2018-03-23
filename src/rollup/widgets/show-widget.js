@@ -52,33 +52,29 @@ export default function showWidget (w) {
     if (widget.config.layout !== 'inline') {
       document.body.appendChild(node);
 
-      // ensure that we set focus the the modal for accessibility reasons
-      var focusable = node.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
+      if (widget.layout === 'modal' || widget.type === 'sitegate') {
+        // ensure that we set focus the the modal for accessibility reasons
+        var focusable = node.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
 
-      if (focusable.length) {
-        var input = node.querySelector('input'),
-            ok = node.querySelector('.pf-widget-ok');
-
-        if (input) {
-          input.focus();
-        } else if (ok) {
-          ok.focus();
-        } else {
-          focusable[0].focus();
-        }
-
-        // for modal and sitegate widgets we need to limit tab cycle focus to the widget
-        if (widget.layout === 'modal' || widget.type === 'sitegate') {
-          document.addEventListener('keydown', function (ev) {
-            if (ev.keyCode === 9) {
-              if (ev.target === focusable[focusable.length - 1]) {
-                ev.preventDefault();
-                focusable[0].focus();
+        if (focusable.length) {
+          widget.listeners.tabindex = {
+            type: 'keydown',
+            target: document,
+            fn: function (ev) {
+              // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+              if (ev.keyCode === 9) {
+                if (!node.contains(event.target)) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                } else if (ev.target === focusable[focusable.length - 1]) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                }
               }
             }
-          });
+          };
         }
       }
     } else {
@@ -126,10 +122,21 @@ export default function showWidget (w) {
 
     widgetResizeListener(widget, node);
 
-    if (typeof window.addEventListener === 'function') {
-      window.addEventListener('resize', function () {
+    widget.listeners.resize = {
+      type: 'resize',
+      target: window,
+      fn: function () {
         widgetResizeListener(widget, node);
-      });
+      }
+    };
+
+    for (var key in widget.listeners) {
+      if (widget.listeners.hasOwnProperty(key)) {
+        var val = widget.listeners[key];
+        if (val.target && typeof val.target.addEventListener === 'function') {
+          val.target.addEventListener(val.type, val.fn);
+        }
+      }
     }
   };
 
@@ -137,6 +144,7 @@ export default function showWidget (w) {
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
       openWidget(w);
+      document.querySelector('.pf-widget-ok').focus();
     }, w.displayConditions.showDelay * 1000);
   } else {
     openWidget(w);

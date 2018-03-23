@@ -1,4 +1,3 @@
-
 'use strict';
 
 //Globals
@@ -12,6 +11,14 @@ var jstag = {
 pathfora.utils.saveCookie('seerid', 123);
 pathfora.enableGA = true;
 
+function createAndDispatchKeydown (key, target) {
+  var eventObj = document.createEvent('Event');
+  eventObj.initEvent('keydown', false, false);
+  eventObj.which = key;
+  eventObj.keyCode = key;
+  target.dispatchEvent(eventObj);
+}
+
 // -------------------------
 // PATHFORA TESTS
 // -------------------------
@@ -21,6 +28,36 @@ describe('Pathfora', function () {
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();
+  });
+
+  it('should keep focus during a tab cycle in a modal or site gate', function (done) {
+    var modal = new pathfora.Message({
+      msg: 'msg',
+      id: 'tab-cycle-test',
+      layout: 'modal',
+      okMessage: 'woot'
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    setTimeout(function () {
+      var widget = $('#' + modal.id),
+          ok = widget.find('.pf-widget-ok');
+
+      widget.appendTo(document.body);
+      expect(widget.hasClass('opened')).toBe(true);
+      ok.focus();
+
+      createAndDispatchKeydown(9, document.activeElement);
+      expect(widget.get(0).contains(document.activeElement)).toBe(true);
+      createAndDispatchKeydown(9, document.activeElement);
+      expect(widget.get(0).contains(document.activeElement)).toBe(true);
+      createAndDispatchKeydown(9, document.activeElement);
+      expect(widget.get(0).contains(document.activeElement)).toBe(true);
+      createAndDispatchKeydown(9, document.activeElement);
+      expect(widget.get(0).contains(document.activeElement)).toBe(true);
+      done();
+    }, 200);
   });
 
   // -------------------------
@@ -39,7 +76,9 @@ describe('Pathfora', function () {
   });
 
   xit('should be able to display widget only on specific page scrolling value', function (done) {
-    $(document.body).append('<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>');
+    $(document.body).append(
+      "<div id='height-element' style='height:10000px; display:block;'>Test</div>"
+    );
 
     var form = new pathfora.Subscription({
       msg: 'test',
@@ -121,9 +160,9 @@ describe('API', function () {
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'text/plain',
-      'responseText': '{"response":"ok"}'
+      status: 200,
+      contentType: 'text/plain',
+      responseText: '{"response":"ok"}'
     });
 
     expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
@@ -143,9 +182,9 @@ describe('API', function () {
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'text/plain',
-      'responseText': '{"response":"ok"}'
+      status: 200,
+      contentType: 'text/plain',
+      responseText: '{"response":"ok"}'
     });
 
     expect(callback).toHaveBeenCalledWith('{"response":"ok"}');
@@ -162,14 +201,13 @@ describe('API', function () {
 
     pathfora.initializeWidgets([subscribe]);
 
-    pathfora.api.getWidgetDataObject(subscribe, function () {
-    }, callback);
+    pathfora.api.getWidgetDataObject(subscribe, function () {}, callback);
 
     expect(callback).not.toHaveBeenCalled();
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 401,
-      'contentType': 'text/plain',
-      'responseText': '{"response":"error"}'
+      status: 401,
+      contentType: 'text/plain',
+      responseText: '{"response":"error"}'
     });
 
     expect(callback).toHaveBeenCalledWith('{"response":"error"}');

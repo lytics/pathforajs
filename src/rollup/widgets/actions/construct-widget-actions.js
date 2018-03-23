@@ -1,10 +1,14 @@
 /** @module pathfora/widgets/actions/construct-widget-actions */
 
 // globals
-import { callbackTypes, PREFIX_CONFIRM, PREFIX_CLOSE } from '../../globals/config';
+import {
+  callbackTypes,
+  PREFIX_CONFIRM,
+  PREFIX_CLOSE
+} from '../../globals/config';
 
 // dom
-import document from '../../dom/document';
+// import document from '../../dom/document';
 
 // utils
 import hasClass from '../../utils/class/has-class';
@@ -33,7 +37,9 @@ import updateActionCookie from './update-action-cookie';
  * @params {object} config
  */
 export default function constructWidgetActions (widget, config) {
-  var widgetOnButtonClick, widgetFormValidate, widgetForm,
+  var widgetOnButtonClick,
+      widgetFormValidate,
+      widgetForm,
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetClose = widget.querySelector('.pf-widget-close'),
@@ -60,7 +66,10 @@ export default function constructWidgetActions (widget, config) {
     for (var elem in widgetForm.childNodes) {
       if (widgetForm.children.hasOwnProperty(elem)) {
         var child = widgetForm.children[elem];
-        if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+        if (
+          typeof child.getAttribute !== 'undefined' &&
+            child.getAttribute('name') !== null
+        ) {
           // Track focus of form elements
           child.onfocus = onInputFocus;
 
@@ -76,7 +85,9 @@ export default function constructWidgetActions (widget, config) {
 
       // Validate that the form is filled out correctly
       var valid = true,
-          requiredElements = Array.prototype.slice.call(widgetForm.querySelectorAll('[data-required=true]'));
+          requiredElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-required=true]')
+          );
 
       for (var i = 0; i < requiredElements.length; i++) {
         var field = requiredElements[i];
@@ -86,7 +97,10 @@ export default function constructWidgetActions (widget, config) {
             var parent = field.parentNode;
             removeClass(parent, 'invalid');
 
-            if (hasClass(parent, 'pf-widget-radio-group') || hasClass(parent, 'pf-widget-checkbox-group')) {
+            if (
+              hasClass(parent, 'pf-widget-radio-group') ||
+                hasClass(parent, 'pf-widget-checkbox-group')
+            ) {
               var inputs = field.querySelectorAll('input');
               var count = 0;
 
@@ -101,7 +115,11 @@ export default function constructWidgetActions (widget, config) {
                 valid = false;
                 addClass(parent, 'invalid');
               }
-            } else if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
+            } else if (
+              !field.value ||
+                (field.getAttribute('type') === 'email' &&
+                  !emailValid(field.value))
+            ) {
               valid = false;
               addClass(parent, 'invalid');
 
@@ -110,11 +128,15 @@ export default function constructWidgetActions (widget, config) {
               }
             }
           }
-        // legacy support old, non-custom forms
+          // legacy support old, non-custom forms
         } else if (field.hasAttribute('data-required')) {
           removeClass(field, 'invalid');
 
-          if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
+          if (
+            !field.value ||
+              (field.getAttribute('type') === 'email' &&
+                !emailValid(field.value))
+          ) {
             valid = false;
             addClass(field, 'invalid');
             if (i === 0) {
@@ -144,13 +166,17 @@ export default function constructWidgetActions (widget, config) {
     break;
   case 'modal':
     if (config.type !== 'sitegate') {
-      document.onkeydown = function (event) {
-        event = event || window.event;
-        if (event.keyCode === 27) {
-          trackWidgetAction('close', config);
-          updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(widget, config, event);
+      config.listeners.escape = {
+        type: 'keydown',
+        target: document,
+        fn: function (event) {
+          event = event || window.event;
+          if (event.keyCode === 27) {
+            trackWidgetAction('close', config);
+            updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+            closeWidget(widget.id, true);
+            widgetOnModalClose(widget, config, event);
+          }
         }
       };
     }
@@ -173,7 +199,8 @@ export default function constructWidgetActions (widget, config) {
     };
 
     widgetOk.onclick = function (event) {
-      var data, widgetAction,
+      var data,
+          widgetAction,
           shouldClose = true;
 
       // special case for form widgets
@@ -197,14 +224,14 @@ export default function constructWidgetActions (widget, config) {
           trackWidgetAction(widgetAction, config, widgetForm);
 
           // get the data submitted to the form
-          data = Array.prototype.slice.call(
-            widgetForm.querySelectorAll('input, textarea, select')
-          ).map(function (element) {
-            return {
-              name: element.name || element.id,
-              value: element.value
-            };
-          });
+          data = Array.prototype.slice
+            .call(widgetForm.querySelectorAll('input, textarea, select'))
+            .map(function (element) {
+              return {
+                name: element.name || element.id,
+                value: element.value
+              };
+            });
 
           // onSubmit callback should be deprecated,
           // we keep the cb for backwards compatibility.
@@ -248,11 +275,14 @@ export default function constructWidgetActions (widget, config) {
 
           // if waitForAsyncResponse we will handle the states as part of the callback
           if (config.confirmAction.waitForAsyncResponse === true) {
-            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param, function (successful) {
-              handleFormStates(successful, widget, config);
-            });
+            config.confirmAction.callback(
+              callbackTypes.MODAL_CONFIRM,
+              param,
+              function (successful) {
+                handleFormStates(successful, widget, config);
+              }
+            );
             return;
-
           } else {
             config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
           }
@@ -260,7 +290,10 @@ export default function constructWidgetActions (widget, config) {
       }
 
       if (shouldClose) {
-        if (config.layout !== 'inline' && (!config.formStates || !config.formStates.success)) {
+        if (
+          config.layout !== 'inline' &&
+          (!config.formStates || !config.formStates.success)
+        ) {
           closeWidget(widget.id, true);
           widgetOnModalClose(widget, config, event);
         } else {
