@@ -218,7 +218,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '0.2.16';
+var PF_VERSION = '0.2.17';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
