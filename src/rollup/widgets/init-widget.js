@@ -26,7 +26,6 @@ import document from '../dom/document';
 // utils
 import addClass from '../utils/class/add-class';
 
-
 /**
  * Determine if a widget should be shown based on display
  * conditions, and if so show the widget
@@ -40,16 +39,22 @@ export default function initializeWidget (widget) {
       pf = this;
 
   widget.watchers = [];
+  widget.listeners = [];
 
   // NOTE Default cookie expiration is one year from now
   widget.expiration = new Date();
   widget.expiration.setDate(widget.expiration.getDate() + 365);
 
   if (widget.pushDown) {
-    if (widget.layout === 'bar' && (widget.position === 'top-fixed' || widget.position === 'top-absolute')) {
+    if (
+      widget.layout === 'bar' &&
+      (widget.position === 'top-fixed' || widget.position === 'top-absolute')
+    ) {
       addClass(document.querySelector(widget.pushDown), 'pf-push-down');
     } else {
-      throw new Error('Only top positioned bar widgets may have a pushDown property');
+      throw new Error(
+        'Only top positioned bar widgets may have a pushDown property'
+      );
     }
   }
 
@@ -66,7 +71,9 @@ export default function initializeWidget (widget) {
     }
 
     if (condition.hideAfterAction) {
-      widget.valid = widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
+      widget.valid =
+        widget.valid &&
+        hideAfterActionChecker(condition.hideAfterAction, widget);
     }
 
     if (condition.urlContains) {
@@ -80,10 +87,15 @@ export default function initializeWidget (widget) {
     widget.valid = widget.valid && condition.showOnInit;
 
     if (condition.impressions) {
-      widget.valid = widget.valid && impressionsChecker(condition.impressions, widget);
+      widget.valid =
+        widget.valid && impressionsChecker(condition.impressions, widget);
     }
 
-    if (typeof condition.priority !== 'undefined' && widget.valid && widgetTracker.prioritizedWidgets.indexOf(widget) === -1) {
+    if (
+      typeof condition.priority !== 'undefined' &&
+      widget.valid &&
+      widgetTracker.prioritizedWidgets.indexOf(widget) === -1
+    ) {
       widgetTracker.prioritizedWidgets.push(widget);
       return;
     }
@@ -94,13 +106,19 @@ export default function initializeWidget (widget) {
     }
 
     if (condition.displayWhenElementVisible) {
-      watcher = registerElementWatcher(condition.displayWhenElementVisible, widget);
+      watcher = registerElementWatcher(
+        condition.displayWhenElementVisible,
+        widget
+      );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
     }
 
     if (condition.scrollPercentageToDisplay) {
-      watcher = registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+      watcher = registerPositionWatcher(
+        condition.scrollPercentageToDisplay,
+        widget
+      );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
     }

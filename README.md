@@ -126,7 +126,7 @@ Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework,
 
 Running tests:
 ``` sh
-$ gulp build && karma start --single-run --browsers PhantomJS
+$ gulp build && karma start --single-run
 ```
 
 ## License

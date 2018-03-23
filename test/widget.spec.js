@@ -150,7 +150,7 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should not append widget second time if it\'s already opened', function (done) {
+  it("should not append widget second time if it's already opened", function (done) {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
       id: 'append-widget',
@@ -199,19 +199,19 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should close if the escape key is pressed and it is a modal', function(done) {
+  it('should close if the escape key is pressed and it is a modal', function (done) {
     var modal = new pathfora.Message({
       id: 'modal-esc-test',
       layout: 'modal',
       headline: 'Message Title',
-      msg: 'test',
+      msg: 'test'
     });
 
     var gate = new pathfora.SiteGate({
       id: 'modal-esc-test2',
       layout: 'modal',
       headline: 'Message Title',
-      msg: 'test',
+      msg: 'test'
     });
 
     pathfora.initializeWidgets([modal, gate]);
@@ -225,8 +225,8 @@ describe('Widgets', function () {
       expect(widget.hasClass('opened')).toBeTruthy();
       expect(widgetGate.hasClass('opened')).toBeTruthy();
 
-      var e = $.Event("keydown", { keyCode: 27 });
-      $(document).trigger(e);
+      createAndDispatchKeydown(27, document);
+
       expect(widget.hasClass('opened')).toBeFalsy();
       expect(widgetGate.hasClass('opened')).toBeTruthy();
 
@@ -467,30 +467,30 @@ describe('Widgets', function () {
       },
       formElements: [
         {
-          'type': 'radio-group',
-          'label': 'What\'s your favorite color?',
-          'name': 'favorite_color',
-          'required': true,
-          'values': [
+          type: 'radio-group',
+          label: "What's your favorite color?",
+          name: 'favorite_color',
+          required: true,
+          values: [
             {
-              'label': 'Red',
-              'value': 'red'
+              label: 'Red',
+              value: 'red'
             },
             {
-              'label': 'Blue',
-              'value': 'blue'
+              label: 'Blue',
+              value: 'blue'
             },
             {
-              'label': 'Green',
-              'value': 'green'
+              label: 'Green',
+              value: 'green'
             }
           ]
         },
         {
-          'type': 'input',
-          'name': 'name',
-          'placeholder': 'Your Name',
-          'required': true
+          type: 'input',
+          name: 'name',
+          placeholder: 'Your Name',
+          required: true
         }
       ]
     });
@@ -503,7 +503,9 @@ describe('Widgets', function () {
 
     expect(asterisk.css('color')).toBe('rgb(186, 0, 166)');
     expect(flag.css('background-color')).toBe('rgb(186, 0, 166)');
-    expect(flag.find('span').css('border-right-color')).toBe('rgb(186, 0, 166)');
+    expect(flag.find('span').css('border-right-color')).toBe(
+      'rgb(186, 0, 166)'
+    );
     expect(flag.css('color')).toBe('rgb(235, 206, 232)');
 
     var input = widget.find('input[data-required=true]:not(.pf-has-label)');
@@ -556,14 +558,17 @@ describe('Widgets', function () {
     spyOn(modal.confirmAction, 'callback');
     expect(modal.confirmAction.callback).not.toHaveBeenCalled();
     widget.find('.pf-widget-ok').click();
-    expect(modal.confirmAction.callback).toHaveBeenCalledWith('modalConfirm', jasmine.objectContaining({
-      data: [
-        {name: 'username', value: 'test name'},
-        {name: 'email', value: 'test@example.com'},
-        {name: 'title', value: ''},
-        {name: 'message', value: ''}
-      ]
-    }));
+    expect(modal.confirmAction.callback).toHaveBeenCalledWith(
+      'modalConfirm',
+      jasmine.objectContaining({
+        data: [
+          { name: 'username', value: 'test name' },
+          { name: 'email', value: 'test@example.com' },
+          { name: 'title', value: '' },
+          { name: 'message', value: '' }
+        ]
+      })
+    );
   });
 
   it('should not close the modal on a button action if specified', function (done) {
@@ -600,7 +605,6 @@ describe('Widgets', function () {
     }, 300);
   });
 
-
   it('should be able to trigger action on cancel', function () {
     var modal = new pathfora.Message({
       id: 'cancel-action-test',
@@ -622,7 +626,7 @@ describe('Widgets', function () {
     expect(modal.cancelAction.callback).toHaveBeenCalled();
   });
 
-  it ('shouldn\'t fire submit callbacks on cancel, and cancel callbacks on submit', function () {
+  it("shouldn't fire submit callbacks on cancel, and cancel callbacks on submit", function () {
     var w1 = new pathfora.Message({
       id: 'widget-with-action-callback',
       msg: 'Cancel action negative test',
@@ -708,8 +712,6 @@ describe('Widgets', function () {
     expect(widget3.hasClass('pf-position-bottom-left')).toBeTruthy();
   });
 
-
-
   // -------------------------
   //  INLINE MODULES
   // -------------------------
@@ -724,7 +726,9 @@ describe('Widgets', function () {
 
     expect(function () {
       pathfora.initializeWidgets([inline]);
-    }).toThrow(new Error('Inline widget could not be initialized in .a-non-existant-div'));
+    }).toThrow(
+      new Error('Inline widget could not be initialized in .a-non-existant-div')
+    );
   });
 
   it('should append the inline widget to the position element', function (done) {
@@ -749,7 +753,6 @@ describe('Widgets', function () {
       expect(widget.length).toBe(1);
       done();
     }, 200);
-
   });
 
   // -------------------------
@@ -765,7 +768,7 @@ describe('Widgets', function () {
       confirmAction: {
         waitForAsyncResponse: true,
         callback: function (name, payload, cb) {
-          if (payload.data[0].value === "test") {
+          if (payload.data[0].value === 'test') {
             cb(true);
             return;
           }
@@ -781,7 +784,7 @@ describe('Widgets', function () {
           okMessage: 'confirm success',
           confirmAction: {
             name: 'confirm success',
-            callback: function() {
+            callback: function () {
               alert('confirm success');
             }
           },
@@ -789,7 +792,7 @@ describe('Widgets', function () {
           cancelMessage: 'cancel success',
           cancelAction: {
             name: 'cancel success',
-            callback: function() {
+            callback: function () {
               alert('cancel success');
             }
           }
@@ -802,7 +805,7 @@ describe('Widgets', function () {
           okMessage: 'confirm error',
           confirmAction: {
             name: 'confirm error',
-            callback: function() {
+            callback: function () {
               alert('confirm error');
             }
           },
@@ -810,14 +813,14 @@ describe('Widgets', function () {
           cancelMessage: 'cancel error',
           cancelAction: {
             name: 'cancel error',
-            callback: function() {
+            callback: function () {
               alert('cancel error');
             }
           }
         }
       }
     });
-    window.pathfora.initializeWidgets([ formStatesWidget ]);
+    window.pathfora.initializeWidgets([formStatesWidget]);
 
     var widget = $('#' + formStatesWidget.id),
         form = widget.find('form');
@@ -836,7 +839,11 @@ describe('Widgets', function () {
 
     form.find('.pf-widget-ok').click();
 
-    expect(formStatesWidget.confirmAction.callback).toHaveBeenCalledWith('modalConfirm', jasmine.any(Object), jasmine.any(Function));
+    expect(formStatesWidget.confirmAction.callback).toHaveBeenCalledWith(
+      'modalConfirm',
+      jasmine.any(Object),
+      jasmine.any(Function)
+    );
 
     var success = widget.find('.success-state'),
         error = widget.find('.error-state');
@@ -844,34 +851,48 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
-    expect(success.find('.pf-widget-headline').html()).toBe(formStatesWidget.formStates.success.headline);
-    expect(success.find('.pf-widget-message').html()).toBe(formStatesWidget.formStates.success.msg);
+    expect(success.find('.pf-widget-headline').html()).toBe(
+      formStatesWidget.formStates.success.headline
+    );
+    expect(success.find('.pf-widget-message').html()).toBe(
+      formStatesWidget.formStates.success.msg
+    );
 
-    expect(success.find('.pf-widget-ok').html()).toBe(formStatesWidget.formStates.success.okMessage);
-    expect(success.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.success.cancelMessage);
+    expect(success.find('.pf-widget-ok').html()).toBe(
+      formStatesWidget.formStates.success.okMessage
+    );
+    expect(success.find('.pf-widget-cancel').html()).toBe(
+      formStatesWidget.formStates.success.cancelMessage
+    );
 
     spyOn(jstag, 'send');
     spyOn(formStatesWidget.formStates.success.confirmAction, 'callback');
-    expect(formStatesWidget.formStates.success.confirmAction.callback).not.toHaveBeenCalled();
+    expect(
+      formStatesWidget.formStates.success.confirmAction.callback
+    ).not.toHaveBeenCalled();
     success.find('.pf-widget-ok').click();
 
-    expect(formStatesWidget.formStates.success.confirmAction.callback).toHaveBeenCalled();
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': formStatesWidget.id,
-      'pf-widget-type': 'form',
-      'pf-widget-layout': 'slideout',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'success.confirm',
-      'pf-widget-action': formStatesWidget.formStates.success.confirmAction.name
-    }));
+    expect(
+      formStatesWidget.formStates.success.confirmAction.callback
+    ).toHaveBeenCalled();
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': formStatesWidget.id,
+        'pf-widget-type': 'form',
+        'pf-widget-layout': 'slideout',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'success.confirm',
+        'pf-widget-action':
+          formStatesWidget.formStates.success.confirmAction.name
+      })
+    );
     pathfora.clearAll();
     pathfora.closeWidget(formStatesWidget.id, true);
 
-  setTimeout(function () {
-      window.pathfora.initializeWidgets([ formStatesWidget ]);
+    setTimeout(function () {
+      window.pathfora.initializeWidgets([formStatesWidget]);
 
-      widget = $('#' + formStatesWidget.id),
-          form = widget.find('form');
+      (widget = $('#' + formStatesWidget.id)), (form = widget.find('form'));
       expect(form.length).toBe(1);
 
       name = form.find('input[name="username"]');
@@ -891,24 +912,39 @@ describe('Widgets', function () {
       expect(success.css('display')).toBe('none');
       expect(error.css('display')).toBe('block');
       expect(widget.hasClass('error')).toBeTruthy();
-      expect(error.find('.pf-widget-headline').html()).toBe(formStatesWidget.formStates.error.headline);
-      expect(error.find('.pf-widget-message').html()).toBe(formStatesWidget.formStates.error.msg);
-      expect(error.find('.pf-widget-ok').html()).toBe(formStatesWidget.formStates.error.okMessage);
-      expect(error.find('.pf-widget-cancel').html()).toBe(formStatesWidget.formStates.error.cancelMessage);
+      expect(error.find('.pf-widget-headline').html()).toBe(
+        formStatesWidget.formStates.error.headline
+      );
+      expect(error.find('.pf-widget-message').html()).toBe(
+        formStatesWidget.formStates.error.msg
+      );
+      expect(error.find('.pf-widget-ok').html()).toBe(
+        formStatesWidget.formStates.error.okMessage
+      );
+      expect(error.find('.pf-widget-cancel').html()).toBe(
+        formStatesWidget.formStates.error.cancelMessage
+      );
 
       spyOn(formStatesWidget.formStates.error.cancelAction, 'callback');
-      expect(formStatesWidget.formStates.error.cancelAction.callback).not.toHaveBeenCalled();
+      expect(
+        formStatesWidget.formStates.error.cancelAction.callback
+      ).not.toHaveBeenCalled();
       error.find('.pf-widget-cancel').click();
 
-      expect(formStatesWidget.formStates.error.cancelAction.callback).toHaveBeenCalled();
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-id': formStatesWidget.id,
-        'pf-widget-type': 'form',
-        'pf-widget-layout': 'slideout',
-        'pf-widget-variant': '1',
-        'pf-widget-event': 'error.cancel',
-        'pf-widget-action': formStatesWidget.formStates.error.cancelAction.name
-      }));
+      expect(
+        formStatesWidget.formStates.error.cancelAction.callback
+      ).toHaveBeenCalled();
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-id': formStatesWidget.id,
+          'pf-widget-type': 'form',
+          'pf-widget-layout': 'slideout',
+          'pf-widget-variant': '1',
+          'pf-widget-event': 'error.cancel',
+          'pf-widget-action':
+            formStatesWidget.formStates.error.cancelAction.name
+        })
+      );
       pathfora.clearAll();
 
       done();
@@ -947,7 +983,9 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
-    expect(success.find('.pf-widget-message').html()).toBe(successForm.success.msg);
+    expect(success.find('.pf-widget-message').html()).toBe(
+      successForm.success.msg
+    );
     expect(success.find('.pf-widget-ok')).toBeUndefined;
     expect(success.find('.pf-widget-cancel')).toBeUndefined;
 
@@ -958,7 +996,6 @@ describe('Widgets', function () {
   });
 
   it('should not hide the module if the success state delay is 0', function (done) {
-
     var successForm2 = new pathfora.Subscription({
       id: 'success-form-no-delay',
       msg: 'subscription',
@@ -986,7 +1023,9 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
-    expect(success.find('.pf-widget-message').html()).toBe(successForm2.success.msg);
+    expect(success.find('.pf-widget-message').html()).toBe(
+      successForm2.success.msg
+    );
     expect(success.find('.pf-widget-ok')).toBeUndefined;
     expect(success.find('.pf-widget-cancel')).toBeUndefined;
 
@@ -996,7 +1035,6 @@ describe('Widgets', function () {
 
       done();
     }, 3000);
-
   });
 
   it('should recognize success state buttons and callbacks', function (done) {
@@ -1037,8 +1075,12 @@ describe('Widgets', function () {
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
-    expect(success.find('.pf-widget-headline').html()).toBe(successForm3.success.headline);
-    expect(success.find('.pf-widget-message').html()).toBe(successForm3.success.msg);
+    expect(success.find('.pf-widget-headline').html()).toBe(
+      successForm3.success.headline
+    );
+    expect(success.find('.pf-widget-message').html()).toBe(
+      successForm3.success.msg
+    );
 
     expect(success.find('.pf-widget-ok').html()).toBe('Confirm');
     expect(success.find('.pf-widget-cancel').html()).toBe('Custom Cancel');
@@ -1047,14 +1089,16 @@ describe('Widgets', function () {
     spyOn(window, 'alert');
     success.find('.pf-widget-ok').click();
 
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': successForm3.id,
-      'pf-widget-type': 'subscription',
-      'pf-widget-layout': 'slideout',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'success.confirm',
-      'pf-widget-action': successForm3.success.confirmAction.name
-    }));
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': successForm3.id,
+        'pf-widget-type': 'subscription',
+        'pf-widget-layout': 'slideout',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'success.confirm',
+        'pf-widget-action': successForm3.success.confirmAction.name
+      })
+    );
     expect(window.alert).toHaveBeenCalledWith('confirmed');
 
     setTimeout(function () {
@@ -1069,21 +1113,22 @@ describe('Widgets', function () {
       success = $('.success-state');
       success.find('.pf-widget-cancel').click();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-id': successForm3.id,
-        'pf-widget-type': 'subscription',
-        'pf-widget-layout': 'slideout',
-        'pf-widget-variant': '1',
-        'pf-widget-event': 'success.cancel',
-        'pf-widget-action': successForm3.success.cancelAction.name
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-id': successForm3.id,
+          'pf-widget-type': 'subscription',
+          'pf-widget-layout': 'slideout',
+          'pf-widget-variant': '1',
+          'pf-widget-event': 'success.cancel',
+          'pf-widget-action': successForm3.success.cancelAction.name
+        })
+      );
       expect(window.alert).toHaveBeenCalledWith('canceled');
 
       setTimeout(function () {
         done();
       }, 1000);
     }, 1000);
-
   });
 
   // -------------------------
@@ -1140,7 +1185,9 @@ describe('Widgets', function () {
     for (var elem in theform[0].children) {
       if (typeof theform[0].children[elem].getAttribute !== 'undefined') {
         var inputname = theform[0].children[elem].getAttribute('name'),
-            inputrequired = theform[0].children[elem].getAttribute('data-required');
+            inputrequired = theform[0].children[elem].getAttribute(
+              'data-required'
+            );
 
         if (inputname === 'message') {
           expect(inputrequired).toBe('true');
@@ -1165,19 +1212,19 @@ describe('Widgets', function () {
       layout: 'slideout',
       formElements: [
         {
-          'type': 'input',
-          'name': 'name',
-          'placeholder': 'Your Name',
-          'required': true
+          type: 'input',
+          name: 'name',
+          placeholder: 'Your Name',
+          required: true
         },
         {
-          'type': 'checkbox-group',
-          'name': 'terms_agreement',
-          'required': true,
-          'values': [
+          type: 'checkbox-group',
+          name: 'terms_agreement',
+          required: true,
+          values: [
             {
-              'label': 'I agree',
-              'value': 'agree'
+              label: 'I agree',
+              value: 'agree'
             }
           ]
         }
@@ -1191,19 +1238,24 @@ describe('Widgets', function () {
     widget.find('[name=name]').val('my name here');
     spyOn(jstag, 'send');
 
-    widget.find('form').find('.pf-widget-ok').click();
+    widget
+      .find('form')
+      .find('.pf-widget-ok')
+      .click();
 
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': customForm.id,
-      'pf-widget-type': 'form',
-      'pf-widget-layout': 'slideout',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'submit',
-      'pf-custom-form': {
-        'terms_agreement': ['agree'],
-        'name': 'my name here'
-      }
-    }));
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': customForm.id,
+        'pf-widget-type': 'form',
+        'pf-widget-layout': 'slideout',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'submit',
+        'pf-custom-form': {
+          terms_agreement: ['agree'],
+          name: 'my name here'
+        }
+      })
+    );
   });
 
   it('should add labels and placeholders for custom fields if defined', function () {
@@ -1213,52 +1265,52 @@ describe('Widgets', function () {
       layout: 'slideout',
       formElements: [
         {
-          'type': 'select',
-          'label': 'What\'s your favorite animal?',
-          'placeholder': 'Select an animal...',
-          'name': 'favorite_animal',
-          'required': true,
-          'values': [
+          type: 'select',
+          label: "What's your favorite animal?",
+          placeholder: 'Select an animal...',
+          name: 'favorite_animal',
+          required: true,
+          values: [
             {
-              'label': 'Cat',
-              'value': 'cat'
+              label: 'Cat',
+              value: 'cat'
             },
             {
-              'label': 'Dog',
-              'value': 'dog'
+              label: 'Dog',
+              value: 'dog'
             },
             {
-              'label': 'Horse',
-              'value': 'horse'
+              label: 'Horse',
+              value: 'horse'
             }
           ]
         },
         {
-          'type': 'checkbox-group',
-          'label': 'Which ice cream flavors do you like the most?',
-          'name': 'ice_cream_flavors',
-          'required': true,
-          'values': [
+          type: 'checkbox-group',
+          label: 'Which ice cream flavors do you like the most?',
+          name: 'ice_cream_flavors',
+          required: true,
+          values: [
             {
-              'label': 'Vanilla',
-              'value': 'vanilla'
+              label: 'Vanilla',
+              value: 'vanilla'
             },
             {
-              'label': 'Chocolate',
-              'value': 'chocolate'
+              label: 'Chocolate',
+              value: 'chocolate'
             },
             {
-              'label': 'Strawberry',
-              'value': 'strawberry'
+              label: 'Strawberry',
+              value: 'strawberry'
             }
           ]
         },
         {
-          'type': 'textarea',
-          'label': 'Comments',
-          'name': 'comments',
-          'placeholder': 'Any more comments?',
-          'required': true
+          type: 'textarea',
+          label: 'Comments',
+          name: 'comments',
+          placeholder: 'Any more comments?',
+          required: true
         }
       ]
     });
@@ -1275,7 +1327,9 @@ describe('Widgets', function () {
     var i;
 
     for (i = 0; i < labels.length; i++) {
-      expect(labels[i].innerHTML.indexOf(customForm.formElements[i].label) !== -1).toBeTruthy();
+      expect(
+        labels[i].innerHTML.indexOf(customForm.formElements[i].label) !== -1
+      ).toBeTruthy();
     }
 
     for (i = 0; i < divs.length; i++) {
@@ -1298,28 +1352,28 @@ describe('Widgets', function () {
       layout: 'slideout',
       formElements: [
         {
-          'type': 'input',
-          'placeholder': 'What\'s your favorite animal?',
-          'name': 'favorite_animal',
-          'required': true
+          type: 'input',
+          placeholder: "What's your favorite animal?",
+          name: 'favorite_animal',
+          required: true
         },
         {
-          'type': 'radio-group',
-          'label': 'Which ice cream flavors do you like the most?',
-          'name': 'ice_cream_flavors',
-          'required': true,
-          'values': [
+          type: 'radio-group',
+          label: 'Which ice cream flavors do you like the most?',
+          name: 'ice_cream_flavors',
+          required: true,
+          values: [
             {
-              'label': 'Vanilla',
-              'value': 'vanilla'
+              label: 'Vanilla',
+              value: 'vanilla'
             },
             {
-              'label': 'Chocolate',
-              'value': 'chocolate'
+              label: 'Chocolate',
+              value: 'chocolate'
             },
             {
-              'label': 'Strawberry',
-              'value': 'strawberry'
+              label: 'Strawberry',
+              value: 'strawberry'
             }
           ]
         }
@@ -1332,7 +1386,10 @@ describe('Widgets', function () {
     spyOn(jstag, 'send');
 
     setTimeout(function () {
-      widget.find('form').find('.pf-widget-ok').click();
+      widget
+        .find('form')
+        .find('.pf-widget-ok')
+        .click();
       expect(jstag.send).not.toHaveBeenCalled();
       expect(widget.hasClass('opened')).toBeTruthy();
 
