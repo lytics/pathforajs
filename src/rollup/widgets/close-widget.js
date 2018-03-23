@@ -13,7 +13,6 @@ import hasClass from '../utils/class/has-class';
 // data
 import trackWidgetAction from '../data/tracking/track-widget-action';
 
-
 /**
  * Close a widget and remove it from the dom
  *
@@ -31,6 +30,14 @@ export default function closeWidget (id, noTrack) {
       if (!noTrack) {
         trackWidgetAction('close', widgetTracker.openedWidgets[i]);
       }
+
+      for (var key in widgetTracker.openedWidgets[i].listeners) {
+        if (widgetTracker.openedWidgets[i].listeners.hasOwnProperty(key)) {
+          var val = widgetTracker.openedWidgets[i].listeners[key];
+          val.target.removeEventListener(val.type, val.fn);
+        }
+      }
+
       widgetTracker.openedWidgets.splice(i, 1);
       break;
     }
