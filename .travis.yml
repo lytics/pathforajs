@@ -10,6 +10,8 @@ script:
 after_success:
 - bash <(curl -s https:/codecov.io/bash)
 before_install:
+- "sudo chown root /opt/google/chrome/chrome-sandbox"
+- "sudo chmod 4755 /opt/google/chrome/chrome-sandbox"
 - google-chrome-stable --headless --disable-gpu http://localhost &
 notifications:
   slack:
