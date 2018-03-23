@@ -21,7 +21,6 @@ import createWidgetHtml from './create-widget-html';
 import closeWidget from './close-widget';
 import widgetResizeListener from './widget-resize-listener';
 
-
 /**
  * Make the widget visible to the user
  *
@@ -52,6 +51,32 @@ export default function showWidget (w) {
 
     if (widget.config.layout !== 'inline') {
       document.body.appendChild(node);
+
+      if (widget.layout === 'modal' || widget.type === 'sitegate') {
+        // ensure that we set focus the the modal for accessibility reasons
+        var focusable = node.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
+        if (focusable.length) {
+          widget.listeners.tabindex = {
+            type: 'keydown',
+            target: document,
+            fn: function (ev) {
+              // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+              if (ev.keyCode === 9) {
+                if (!node.contains(event.target)) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                } else if (ev.target === focusable[focusable.length - 1]) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                }
+              }
+            }
+          };
+        }
+      }
     } else {
       var hostNode = document.querySelector(widget.config.position);
 
@@ -59,7 +84,9 @@ export default function showWidget (w) {
         hostNode.appendChild(node);
       } else {
         widgetTracker.openedWidgets.pop();
-        throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+        throw new Error(
+          'Inline widget could not be initialized in ' + widget.config.position
+        );
       }
     }
 
@@ -76,14 +103,16 @@ export default function showWidget (w) {
           widget: node
         });
       }
-      if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+      if (
+        widget.config.layout === 'modal' &&
+        typeof widget.config.onModalOpen === 'function'
+      ) {
         widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
           config: widget,
           widget: node
         });
       }
     }, 50);
-
 
     if (widget.displayConditions.hideAfter) {
       setTimeout(function () {
@@ -93,10 +122,21 @@ export default function showWidget (w) {
 
     widgetResizeListener(widget, node);
 
-    if (typeof window.addEventListener === 'function') {
-      window.addEventListener('resize', function () {
+    widget.listeners.resize = {
+      type: 'resize',
+      target: window,
+      fn: function () {
         widgetResizeListener(widget, node);
-      });
+      }
+    };
+
+    for (var key in widget.listeners) {
+      if (widget.listeners.hasOwnProperty(key)) {
+        var val = widget.listeners[key];
+        if (val.target && typeof val.target.addEventListener === 'function') {
+          val.target.addEventListener(val.type, val.fn);
+        }
+      }
     }
   };
 
@@ -104,6 +144,7 @@ export default function showWidget (w) {
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
       openWidget(w);
+      document.querySelector('.pf-widget-ok').focus();
     }, w.displayConditions.showDelay * 1000);
   } else {
     openWidget(w);

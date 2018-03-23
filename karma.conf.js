@@ -1,6 +1,5 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
@@ -10,12 +9,12 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        'node_modules/jquery/dist/jquery.min.js',
-        'dist/pathfora.js',
-        'test/*.spec.js',
-        'dist/pathfora.min.css',
-        './node_modules/intl/locale-data/jsonp/en-GB.js',
-        './node_modules/intl/locale-data/jsonp/en-US.js'
+      'node_modules/jquery/dist/jquery.min.js',
+      'dist/pathfora.js',
+      'test/*.spec.js',
+      'dist/pathfora.min.css',
+      './node_modules/intl/locale-data/jsonp/en-GB.js',
+      './node_modules/intl/locale-data/jsonp/en-US.js'
     ],
 
     // preprocess matching files before serving them to the browser
@@ -25,26 +24,26 @@ module.exports = function(config) {
     },
 
     rollupPreprocessor: {
-        plugins: [
-          require('rollup-plugin-istanbul')({
-            exclude: ['**/*.spec.js']
-          })
-        ],
-        format: 'iife',
-        sourceMap: 'inline'
+      plugins: [
+        require('rollup-plugin-istanbul')({
+          exclude: ['**/*.spec.js']
+        })
+      ],
+      format: 'iife',
+      sourceMap: 'inline'
     },
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['progress', 'coverage'],
 
-    coverageReporter : {
-        dir : 'coverage/',
-        reporters: [
-            { type: 'html', subdir: 'html' },
-            { type: 'lcovonly', subdir: '.' },
-            { type: 'json', subdir: '.' }
-        ]
+    coverageReporter: {
+      dir: 'coverage/',
+      reporters: [
+        { type: 'html', subdir: 'html' },
+        { type: 'lcovonly', subdir: '.' },
+        { type: 'json', subdir: '.' }
+      ]
     },
 
     // web server port
@@ -62,7 +61,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

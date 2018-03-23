@@ -218,7 +218,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '0.2.16';
+var PF_VERSION = '0.2.17';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
@@ -304,20 +304,20 @@ var templates = {
 
 /** @module pathfora/dom/document */
 
-var document = window.document;
+var document$1 = window.document;
 
 /** @module pathfora/dom/on-dom-ready */
 
 function onDOMready (fn) {
   var handler,
       pf = this,
-      hack = document.documentElement.doScroll,
+      hack = document$1.documentElement.doScroll,
       domContentLoaded = 'DOMContentLoaded',
-      loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document.readyState);
+      loaded = (hack ? /^loaded|^c/ : /^loaded|^i|^c/).test(document$1.readyState);
 
   if (!loaded) {
-    document.addEventListener(domContentLoaded, handler = function () {
-      document.removeEventListener(domContentLoaded, handler);
+    document$1.addEventListener(domContentLoaded, handler = function () {
+      document$1.removeEventListener(domContentLoaded, handler);
       pf.DOMLoaded = true;
       fn();
     });
@@ -410,7 +410,7 @@ function saveCookie (name, value, expiration) {
     expires = '; expires=0';
   }
 
-  document.cookie = [
+  document$1.cookie = [
     encodeURIComponent(name),
     '=',
     encodeURIComponent(value),
@@ -479,7 +479,7 @@ function decodeSafe (s) {
  * @returns {string}
  */
 function readCookie (name) {
-  var cookies = document.cookie,
+  var cookies = document$1.cookie,
       findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
 
   // legacy - check for cookie names that haven't been escaped
@@ -563,7 +563,7 @@ function updateLegacyCookies () {
   };
 
   for (i = 0; i < cookieFind.length; i++) {
-    document.cookie.split(';').filter(filterFunc).forEach(cookieFunc);
+    document$1.cookie.split(';').filter(filterFunc).forEach(cookieFunc);
     Object.keys(sessionStorage).filter(filterFunc).forEach(sessionFunc);
   }
 }
@@ -1288,7 +1288,7 @@ function setupWidgetPosition (widget, config) {
  */
 function closeWidget (id, noTrack) {
   var i,
-      node = document.getElementById(id);
+      node = document$1.getElementById(id);
 
   // FIXME Change to Array#some or Array#filter
   for (i = 0; i < widgetTracker.openedWidgets.length; i++) {
@@ -1296,6 +1296,14 @@ function closeWidget (id, noTrack) {
       if (!noTrack) {
         trackWidgetAction('close', widgetTracker.openedWidgets[i]);
       }
+
+      for (var key in widgetTracker.openedWidgets[i].listeners) {
+        if (widgetTracker.openedWidgets[i].listeners.hasOwnProperty(key)) {
+          var val = widgetTracker.openedWidgets[i].listeners[key];
+          val.target.removeEventListener(val.type, val.fn);
+        }
+      }
+
       widgetTracker.openedWidgets.splice(i, 1);
       break;
     }
@@ -1304,7 +1312,7 @@ function closeWidget (id, noTrack) {
   removeClass(node, 'opened');
 
   if (hasClass(node, 'pf-has-push-down')) {
-    var pushDown = document.querySelector('.pf-push-down');
+    var pushDown = document$1.querySelector('.pf-push-down');
     if (pushDown) {
       removeClass(pushDown, 'opened');
     }
@@ -1496,6 +1504,8 @@ function buttonAction (btn, type, config, widget) {
 
 // globals
 // dom
+// import document from '../../dom/document';
+
 // utils
 // form
 // data
@@ -1509,7 +1519,9 @@ function buttonAction (btn, type, config, widget) {
  * @params {object} config
  */
 function constructWidgetActions (widget, config) {
-  var widgetOnButtonClick, widgetFormValidate, widgetForm,
+  var widgetOnButtonClick,
+      widgetFormValidate,
+      widgetForm,
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetClose = widget.querySelector('.pf-widget-close'),
@@ -1536,7 +1548,10 @@ function constructWidgetActions (widget, config) {
     for (var elem in widgetForm.childNodes) {
       if (widgetForm.children.hasOwnProperty(elem)) {
         var child = widgetForm.children[elem];
-        if (typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+        if (
+          typeof child.getAttribute !== 'undefined' &&
+            child.getAttribute('name') !== null
+        ) {
           // Track focus of form elements
           child.onfocus = onInputFocus;
 
@@ -1552,7 +1567,9 @@ function constructWidgetActions (widget, config) {
 
       // Validate that the form is filled out correctly
       var valid = true,
-          requiredElements = Array.prototype.slice.call(widgetForm.querySelectorAll('[data-required=true]'));
+          requiredElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-required=true]')
+          );
 
       for (var i = 0; i < requiredElements.length; i++) {
         var field = requiredElements[i];
@@ -1562,7 +1579,10 @@ function constructWidgetActions (widget, config) {
             var parent = field.parentNode;
             removeClass(parent, 'invalid');
 
-            if (hasClass(parent, 'pf-widget-radio-group') || hasClass(parent, 'pf-widget-checkbox-group')) {
+            if (
+              hasClass(parent, 'pf-widget-radio-group') ||
+                hasClass(parent, 'pf-widget-checkbox-group')
+            ) {
               var inputs = field.querySelectorAll('input');
               var count = 0;
 
@@ -1577,7 +1597,11 @@ function constructWidgetActions (widget, config) {
                 valid = false;
                 addClass(parent, 'invalid');
               }
-            } else if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
+            } else if (
+              !field.value ||
+                (field.getAttribute('type') === 'email' &&
+                  !emailValid(field.value))
+            ) {
               valid = false;
               addClass(parent, 'invalid');
 
@@ -1586,11 +1610,15 @@ function constructWidgetActions (widget, config) {
               }
             }
           }
-        // legacy support old, non-custom forms
+          // legacy support old, non-custom forms
         } else if (field.hasAttribute('data-required')) {
           removeClass(field, 'invalid');
 
-          if (!field.value || (field.getAttribute('type') === 'email' && !emailValid(field.value))) {
+          if (
+            !field.value ||
+              (field.getAttribute('type') === 'email' &&
+                !emailValid(field.value))
+          ) {
             valid = false;
             addClass(field, 'invalid');
             if (i === 0) {
@@ -1620,13 +1648,17 @@ function constructWidgetActions (widget, config) {
     break;
   case 'modal':
     if (config.type !== 'sitegate') {
-      document.onkeydown = function (event) {
-        event = event || window.event;
-        if (event.keyCode === 27) {
-          trackWidgetAction('close', config);
-          updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
-          closeWidget(widget.id, true);
-          widgetOnModalClose(widget, config, event);
+      config.listeners.escape = {
+        type: 'keydown',
+        target: document,
+        fn: function (event) {
+          event = event || window.event;
+          if (event.keyCode === 27) {
+            trackWidgetAction('close', config);
+            updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+            closeWidget(widget.id, true);
+            widgetOnModalClose(widget, config, event);
+          }
         }
       };
     }
@@ -1649,7 +1681,8 @@ function constructWidgetActions (widget, config) {
     };
 
     widgetOk.onclick = function (event) {
-      var data, widgetAction,
+      var data,
+          widgetAction,
           shouldClose = true;
 
       // special case for form widgets
@@ -1673,14 +1706,14 @@ function constructWidgetActions (widget, config) {
           trackWidgetAction(widgetAction, config, widgetForm);
 
           // get the data submitted to the form
-          data = Array.prototype.slice.call(
-            widgetForm.querySelectorAll('input, textarea, select')
-          ).map(function (element) {
-            return {
-              name: element.name || element.id,
-              value: element.value
-            };
-          });
+          data = Array.prototype.slice
+            .call(widgetForm.querySelectorAll('input, textarea, select'))
+            .map(function (element) {
+              return {
+                name: element.name || element.id,
+                value: element.value
+              };
+            });
 
           // onSubmit callback should be deprecated,
           // we keep the cb for backwards compatibility.
@@ -1724,11 +1757,14 @@ function constructWidgetActions (widget, config) {
 
           // if waitForAsyncResponse we will handle the states as part of the callback
           if (config.confirmAction.waitForAsyncResponse === true) {
-            config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param, function (successful) {
-              handleFormStates(successful, widget, config);
-            });
+            config.confirmAction.callback(
+              callbackTypes.MODAL_CONFIRM,
+              param,
+              function (successful) {
+                handleFormStates(successful, widget, config);
+              }
+            );
             return;
-
           } else {
             config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
           }
@@ -1736,7 +1772,10 @@ function constructWidgetActions (widget, config) {
       }
 
       if (shouldClose) {
-        if (config.layout !== 'inline' && (!config.formStates || !config.formStates.success)) {
+        if (
+          config.layout !== 'inline' &&
+          (!config.formStates || !config.formStates.success)
+        ) {
           closeWidget(widget.id, true);
           widgetOnModalClose(widget, config, event);
         } else {
@@ -1781,11 +1820,11 @@ function setupWidgetContentUnit (widget, config) {
       // The top recommendation should be default if we couldn't
       // get one from the api
       var rec = config.content[0],
-          recImage = document.createElement('div'),
-          recMeta = document.createElement('div'),
-          recTitle = document.createElement('h4'),
-          recDesc = document.createElement('p'),
-          recInfo = document.createElement('span');
+          recImage = document$1.createElement('div'),
+          recMeta = document$1.createElement('div'),
+          recTitle = document$1.createElement('h4'),
+          recDesc = document$1.createElement('p'),
+          recInfo = document$1.createElement('span');
 
       widgetContentUnit.href = rec.url;
 
@@ -1907,27 +1946,27 @@ function setWidgetClassname (widget, config) {
  */
 function buildFormElement (elem, form) {
   var content, i, val, label,
-      wrapper = document.createElement('div'),
+      wrapper = document$1.createElement('div'),
       isGroup = elem.hasOwnProperty('groupType');
 
   // group elements include: checkbox groups
   if (isGroup) {
     wrapper.className = 'pf-widget-' + elem.type;
-    content = document.createElement('div');
+    content = document$1.createElement('div');
   } else {
 
     switch (elem.type) {
     case 'email':
-      content = document.createElement('input');
+      content = document$1.createElement('input');
       content.setAttribute('type', 'email');
       break;
     case 'text':
     case 'input':
-      content = document.createElement('input');
+      content = document$1.createElement('input');
       content.setAttribute('type', 'text');
       break;
     default:
-      content = document.createElement(elem.type);
+      content = document$1.createElement(elem.type);
       break;
     }
 
@@ -1942,11 +1981,11 @@ function buildFormElement (elem, form) {
 
   if (elem.label) {
     if (isGroup) {
-      label = document.createElement('span');
+      label = document$1.createElement('span');
       label.id = elem.name;
       content.setAttribute('aria-labelledby', elem.name);
     } else {
-      label = document.createElement('label');
+      label = document$1.createElement('label');
       label.setAttribute('for', elem.name);
     }
 
@@ -1966,11 +2005,11 @@ function buildFormElement (elem, form) {
     content.setAttribute('data-required', 'true');
 
     if (elem.label) {
-      var reqFlag = document.createElement('div');
+      var reqFlag = document$1.createElement('div');
       reqFlag.className = 'pf-required-flag';
       reqFlag.innerHTML = 'required';
 
-      var reqTriange = document.createElement('span');
+      var reqTriange = document$1.createElement('span');
       reqFlag.appendChild(reqTriange);
 
       wrapper.appendChild(reqFlag);
@@ -1980,7 +2019,7 @@ function buildFormElement (elem, form) {
   if (elem.placeholder) {
     // select element has first option as placeholder
     if (elem.type === 'select') {
-      var placeholder = document.createElement('option');
+      var placeholder = document$1.createElement('option');
       placeholder.setAttribute('value', '');
       placeholder.innerHTML = elem.placeholder;
       content.appendChild(placeholder);
@@ -1998,22 +2037,22 @@ function buildFormElement (elem, form) {
       val = elem.values[i];
 
       if (isGroup) {
-        var input = document.createElement('input');
+        var input = document$1.createElement('input');
         input.setAttribute('type', elem.groupType);
         input.setAttribute('value', val.value);
         input.setAttribute('name', elem.name);
 
         if (val.label) {
-          label = document.createElement('label');
+          label = document$1.createElement('label');
           label.className = 'pf-widget-' + elem.groupType;
           label.appendChild(input);
-          label.appendChild(document.createTextNode(val.label));
+          label.appendChild(document$1.createTextNode(val.label));
           content.appendChild(label);
         } else {
           throw new Error(elem.groupType + 'form group values must contain labels');
         }
       } else if (elem.type === 'select') {
-        var option = document.createElement('option');
+        var option = document$1.createElement('option');
         option.setAttribute('value', val.value);
         option.innerHTML = val.label;
 
@@ -2104,21 +2143,21 @@ function constructFormState (config, widget, name) {
     throw new Error('Unrecognized formState: ' + name);
   }
 
-  var elem = document.createElement('div');
+  var elem = document$1.createElement('div');
   elem.className = name + '-state';
 
-  var title = document.createElement('h2');
+  var title = document$1.createElement('h2');
   title.className = 'pf-widget-headline';
   title.innerHTML = obj.headline || defaultHeadline;
   elem.appendChild(title);
 
-  var msg = document.createElement('div');
+  var msg = document$1.createElement('div');
   msg.className = 'pf-widget-message';
   msg.innerHTML = obj.msg || defaultMsg;
   elem.appendChild(msg);
 
   if (obj.okShow) {
-    var ok = document.createElement('button');
+    var ok = document$1.createElement('button');
     ok.type = 'button';
     ok.className = 'pf-widget-btn pf-widget-ok';
     ok.innerHTML = obj.okMessage || 'Confirm';
@@ -2126,7 +2165,7 @@ function constructFormState (config, widget, name) {
   }
 
   if (obj.cancelShow) {
-    var cancel = document.createElement('button');
+    var cancel = document$1.createElement('button');
     cancel.type = 'button';
     cancel.className = 'pf-widget-btn pf-widget-cancel';
     cancel.innerHTML = obj.cancelMessage || 'Cancel';
@@ -2176,7 +2215,9 @@ function formStateActions (config, widget, name) {
  * @params {object} config
  */
 function constructWidgetLayout (widget, config) {
-  var node, child, i,
+  var node,
+      child,
+      i,
       widgetContent = widget.querySelector('.pf-widget-content'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetOk = widget.querySelector('.pf-widget-ok'),
@@ -2255,7 +2296,7 @@ function constructWidgetLayout (widget, config) {
   case 'sitegate':
   case 'inline':
     if (widgetContent && config.branding) {
-      var branding = document.createElement('div');
+      var branding = document$1.createElement('div');
       branding.className = 'branding';
       branding.innerHTML = templates.assets.lytics;
       widgetContent.appendChild(branding);
@@ -2338,7 +2379,7 @@ function constructWidgetLayout (widget, config) {
     if (config.layout === 'button') {
       // NOTE Images are not compatible with the button layout
     } else {
-      var widgetImage = document.createElement('img');
+      var widgetImage = document$1.createElement('img');
       widgetImage.src = config.image;
       widgetImage.className = 'pf-widget-img';
       widgetBody.appendChild(widgetImage);
@@ -2378,7 +2419,6 @@ function constructWidgetLayout (widget, config) {
       }
 
       buildWidgetForm(config.formElements, form);
-
     } else {
       // suport old form functions
       var getFormElement = function (field) {
@@ -2421,27 +2461,38 @@ function constructWidgetLayout (widget, config) {
       });
 
       // NOTE: collapse half-width inputs
-      Array.prototype.slice.call(widget.querySelectorAll('form .pf-field-half-width')).forEach(function (element, halfcount) {
-        var parent = element.parentNode,
-            prev = element.previousElementSibling,
-            next = element.nextElementSibling;
+      Array.prototype.slice
+        .call(widget.querySelectorAll('form .pf-field-half-width'))
+        .forEach(function (element, halfcount) {
+          var parent = element.parentNode,
+              prev = element.previousElementSibling,
+              next = element.nextElementSibling;
 
-        if (parent) {
-          if (element.className.indexOf('pf-field-half-width') !== -1) {
+          if (parent) {
+            if (element.className.indexOf('pf-field-half-width') !== -1) {
+              if (halfcount % 2) {
+                // odd
+                addClass(element, 'right');
 
-            if (halfcount % 2) { // odd
-              addClass(element, 'right');
-
-              if (!(prev && prev.className.indexOf('pf-field-half-width') !== -1)) {
+                if (
+                  !(
+                    prev &&
+                      prev.className.indexOf('pf-field-half-width') !== -1
+                  )
+                ) {
+                  removeClass(element, 'pf-field-half-width');
+                }
+              } else if (
+                !(
+                  next && next.className.indexOf('pf-field-half-width') !== -1
+                )
+              ) {
+                // even
                 removeClass(element, 'pf-field-half-width');
               }
-
-            } else if (!(next && next.className.indexOf('pf-field-half-width') !== -1)) { // even
-              removeClass(element, 'pf-field-half-width');
             }
           }
-        }
-      });
+        });
     }
 
     // For select boxes we need to control the color of
@@ -2669,7 +2720,7 @@ function setupWidgetColors (widget, config) {
  * @returns {object} widget
  */
 function createWidgetHtml (config) {
-  var widget = document.createElement('div');
+  var widget = document$1.createElement('div');
 
   widget.innerHTML = templates[config.type][config.layout] || '';
   widget.id = config.id;
@@ -2745,19 +2796,47 @@ function showWidget (w) {
     var node = createWidgetHtml(widget);
 
     if (widget.pushDown) {
-      addClass(document.querySelector('.pf-push-down'), 'opened');
+      addClass(document$1.querySelector('.pf-push-down'), 'opened');
     }
 
     if (widget.config.layout !== 'inline') {
-      document.body.appendChild(node);
+      document$1.body.appendChild(node);
+
+      if (widget.layout === 'modal' || widget.type === 'sitegate') {
+        // ensure that we set focus the the modal for accessibility reasons
+        var focusable = node.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
+        if (focusable.length) {
+          widget.listeners.tabindex = {
+            type: 'keydown',
+            target: document$1,
+            fn: function (ev) {
+              // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+              if (ev.keyCode === 9) {
+                if (!node.contains(event.target)) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                } else if (ev.target === focusable[focusable.length - 1]) {
+                  ev.preventDefault();
+                  focusable[0].focus();
+                }
+              }
+            }
+          };
+        }
+      }
     } else {
-      var hostNode = document.querySelector(widget.config.position);
+      var hostNode = document$1.querySelector(widget.config.position);
 
       if (hostNode) {
         hostNode.appendChild(node);
       } else {
         widgetTracker.openedWidgets.pop();
-        throw new Error('Inline widget could not be initialized in ' + widget.config.position);
+        throw new Error(
+          'Inline widget could not be initialized in ' + widget.config.position
+        );
       }
     }
 
@@ -2774,14 +2853,16 @@ function showWidget (w) {
           widget: node
         });
       }
-      if (widget.config.layout === 'modal' && typeof widget.config.onModalOpen === 'function') {
+      if (
+        widget.config.layout === 'modal' &&
+        typeof widget.config.onModalOpen === 'function'
+      ) {
         widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
           config: widget,
           widget: node
         });
       }
     }, 50);
-
 
     if (widget.displayConditions.hideAfter) {
       setTimeout(function () {
@@ -2791,10 +2872,21 @@ function showWidget (w) {
 
     widgetResizeListener(widget, node);
 
-    if (typeof window.addEventListener === 'function') {
-      window.addEventListener('resize', function () {
+    widget.listeners.resize = {
+      type: 'resize',
+      target: window,
+      fn: function () {
         widgetResizeListener(widget, node);
-      });
+      }
+    };
+
+    for (var key in widget.listeners) {
+      if (widget.listeners.hasOwnProperty(key)) {
+        var val = widget.listeners[key];
+        if (val.target && typeof val.target.addEventListener === 'function') {
+          val.target.addEventListener(val.type, val.fn);
+        }
+      }
     }
   };
 
@@ -2802,6 +2894,7 @@ function showWidget (w) {
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
       openWidget(w);
+      document$1.querySelector('.pf-widget-ok').focus();
     }, w.displayConditions.showDelay * 1000);
   } else {
     openWidget(w);
@@ -3135,7 +3228,7 @@ function initializeWidgets (widgets, config) {
   // NOTE IE < 10 not supported
   // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
   var pf = this;
-  if (document.all && !window.atob) {
+  if (document$1.all && !window.atob) {
     return;
   }
 
@@ -3817,7 +3910,7 @@ function urlChecker (phrases) {
  * @returns {boolean}
  */
 function metaChecker (phrases) {
-  var meta = document.querySelectorAll('meta');
+  var meta = document$1.querySelectorAll('meta');
 
   for (var j = 0; j < phrases.length; j++) {
     var rule = phrases[j],
@@ -3891,12 +3984,12 @@ function initializeExitIntent (widget) {
 
         if (valid) {
           validateWatchers(widget, function () {
-            if (typeof document.addEventListener === 'function') {
-              document.removeEventListener('mousemove', widget.exitIntentListener);
-              document.removeEventListener('mouseout', widget.exitIntentTrigger);
+            if (typeof document$1.addEventListener === 'function') {
+              document$1.removeEventListener('mousemove', widget.exitIntentListener);
+              document$1.removeEventListener('mouseout', widget.exitIntentTrigger);
             } else {
-              document.onmousemove = null;
-              document.onmouseout = null;
+              document$1.onmousemove = null;
+              document$1.onmouseout = null;
             }
           });
         }
@@ -3906,12 +3999,12 @@ function initializeExitIntent (widget) {
     };
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
-    if (typeof document.addEventListener === 'function') {
-      document.addEventListener('mousemove', widget.exitIntentListener, false);
-      document.addEventListener('mouseout', widget.exitIntentTrigger, false);
+    if (typeof document$1.addEventListener === 'function') {
+      document$1.addEventListener('mousemove', widget.exitIntentListener, false);
+      document$1.addEventListener('mouseout', widget.exitIntentTrigger, false);
     } else {
-      document.onmousemove = widget.exitIntentListener;
-      document.onmouseout = widget.exitIntentTrigger;
+      document$1.onmousemove = widget.exitIntentListener;
+      document$1.onmouseout = widget.exitIntentTrigger;
     }
   }
   return true;
@@ -3942,11 +4035,11 @@ function removeWatcher (watcher, widget) {
  */
 function registerElementWatcher (selector, widget) {
   var watcher = {
-    elem: document.querySelector(selector),
+    elem: document$1.querySelector(selector),
 
     check: function () {
-      var scrollTop = document.body.scrollTop || document.documentElement.scrollTop,
-          scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
+      var scrollTop = document$1.body.scrollTop || document$1.documentElement.scrollTop,
+          scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
 
       if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
         removeWatcher(watcher, widget);
@@ -4006,9 +4099,9 @@ function initializeScrollWatchers (widget) {
 function registerPositionWatcher (percent, widget) {
   var watcher = {
     check: function () {
-      var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
+      var height = Math.max(document$1.body.scrollHeight, document$1.body.offsetHeight, document$1.documentElement.clientHeight, document$1.documentElement.scrollHeight, document$1.documentElement.offsetHeight),
           positionInPixels = height * (percent / 100),
-          offset = document.documentElement.scrollTop || document.body.scrollTop;
+          offset = document$1.documentElement.scrollTop || document$1.body.scrollTop;
 
       if (offset >= positionInPixels) {
         removeWatcher(watcher, widget);
@@ -4067,16 +4160,22 @@ function initializeWidget (widget) {
       pf = this;
 
   widget.watchers = [];
+  widget.listeners = [];
 
   // NOTE Default cookie expiration is one year from now
   widget.expiration = new Date();
   widget.expiration.setDate(widget.expiration.getDate() + 365);
 
   if (widget.pushDown) {
-    if (widget.layout === 'bar' && (widget.position === 'top-fixed' || widget.position === 'top-absolute')) {
-      addClass(document.querySelector(widget.pushDown), 'pf-push-down');
+    if (
+      widget.layout === 'bar' &&
+      (widget.position === 'top-fixed' || widget.position === 'top-absolute')
+    ) {
+      addClass(document$1.querySelector(widget.pushDown), 'pf-push-down');
     } else {
-      throw new Error('Only top positioned bar widgets may have a pushDown property');
+      throw new Error(
+        'Only top positioned bar widgets may have a pushDown property'
+      );
     }
   }
 
@@ -4093,7 +4192,9 @@ function initializeWidget (widget) {
     }
 
     if (condition.hideAfterAction) {
-      widget.valid = widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
+      widget.valid =
+        widget.valid &&
+        hideAfterActionChecker(condition.hideAfterAction, widget);
     }
 
     if (condition.urlContains) {
@@ -4107,10 +4208,15 @@ function initializeWidget (widget) {
     widget.valid = widget.valid && condition.showOnInit;
 
     if (condition.impressions) {
-      widget.valid = widget.valid && impressionsChecker(condition.impressions, widget);
+      widget.valid =
+        widget.valid && impressionsChecker(condition.impressions, widget);
     }
 
-    if (typeof condition.priority !== 'undefined' && widget.valid && widgetTracker.prioritizedWidgets.indexOf(widget) === -1) {
+    if (
+      typeof condition.priority !== 'undefined' &&
+      widget.valid &&
+      widgetTracker.prioritizedWidgets.indexOf(widget) === -1
+    ) {
       widgetTracker.prioritizedWidgets.push(widget);
       return;
     }
@@ -4121,13 +4227,19 @@ function initializeWidget (widget) {
     }
 
     if (condition.displayWhenElementVisible) {
-      watcher = registerElementWatcher(condition.displayWhenElementVisible, widget);
+      watcher = registerElementWatcher(
+        condition.displayWhenElementVisible,
+        widget
+      );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
     }
 
     if (condition.scrollPercentageToDisplay) {
-      watcher = registerPositionWatcher(condition.scrollPercentageToDisplay, widget);
+      watcher = registerPositionWatcher(
+        condition.scrollPercentageToDisplay,
+        widget
+      );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
     }
@@ -4199,9 +4311,16 @@ function clearAll () {
       delayed = widgetTracker.delayedWidgets;
 
   opened.forEach(function (widget) {
-    var element = document.getElementById(widget.id);
+    var element = document$1.getElementById(widget.id);
     removeClass(element, 'opened');
     element.parentNode.removeChild(element);
+
+    for (var key in widget.listeners) {
+      if (widget.listeners.hasOwnProperty(key)) {
+        var val = widget.listeners[key];
+        val.target.removeEventListener(val.type, val.fn);
+      }
+    }
   });
 
   opened.slice(0);
@@ -4483,7 +4602,7 @@ function ABTest (config) {
  * @params {object} data
  */
 function autoCompleteFormFields (data) {
-  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+  var widgets = Array.prototype.slice.call(document$1.querySelectorAll('.pf-widget-content'));
 
   widgets.forEach(function (widget) {
     if (widget.querySelector('.' + data.type + '-login-btn')) {
@@ -4536,7 +4655,7 @@ function autoCompleteFacebookData (elements) {
  * @params {array} fields
  */
 function clearFormFields (type, fields) {
-  var widgets = Array.prototype.slice.call(document.querySelectorAll('.pf-widget-content'));
+  var widgets = Array.prototype.slice.call(document$1.querySelectorAll('.pf-widget-content'));
 
   widgets.forEach(function (widget) {
     if (widget.querySelector('.' + type + '-login-btn')) {
@@ -4595,7 +4714,7 @@ function onFacebookClick (elements) {
  * @exports onFacebookLoad
  */
 function onFacebookLoad () {
-  var fbBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.facebook-login-btn span'));
+  var fbBtns = Array.prototype.slice.call(document$1.querySelectorAll('.social-login-btn.facebook-login-btn span'));
 
   window.FB.getLoginStatus(function (connection) {
     if (connection.status === 'connected') {
@@ -4661,7 +4780,7 @@ function integrateWithFacebook (appId) {
       js = d.createElement(s); js.id = id;
       js.src = '//connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    }(document$1, 'script', 'facebook-jssdk'));
 
     parseFBLoginTemplate(templates.form);
     parseFBLoginTemplate(templates.sitegate);
@@ -4747,7 +4866,7 @@ function onGoogleLoad () {
       scope: 'profile'
     });
 
-    var googleBtns = Array.prototype.slice.call(document.querySelectorAll('.social-login-btn.google-login-btn span'));
+    var googleBtns = Array.prototype.slice.call(document$1.querySelectorAll('.social-login-btn.google-login-btn span'));
 
     auth2.then(function () {
       var user = auth2.currentUser.get();
@@ -4778,7 +4897,7 @@ function onGoogleLoad () {
  */
 function integrateWithGoogle (clientId) {
   if (clientId !== '') {
-    var head = document.querySelector('head');
+    var head = document$1.querySelector('head');
 
     var appMetaTag = templates.social.googleMeta.replace(
       /(\{){2}google-clientId(\}){2}/gm,
@@ -4809,11 +4928,11 @@ function integrateWithGoogle (clientId) {
 
     // NOTE Google API
     (function () {
-      var s, po = document.createElement('script');
+      var s, po = document$1.createElement('script');
       po.type = 'text/javascript';
       po.async = true;
       po.src = 'https://apis.google.com/js/platform.js?onload=pathforaGoogleOnLoad';
-      s = document.getElementsByTagName('script')[0];
+      s = document$1.getElementsByTagName('script')[0];
       s.parentNode.insertBefore(po, s);
     }());
 
@@ -4834,7 +4953,7 @@ function integrateWithGoogle (clientId) {
  */
 function prepElements (attr) {
   var dataElements = {},
-      elements = document.querySelectorAll('[' + attr + ']');
+      elements = document$1.querySelectorAll('[' + attr + ']');
 
   this.elements = this.elements.concat(elements);
 
@@ -5151,17 +5270,17 @@ function Inline (pf) {
 
   // for our automatic element handling we need to ensure they are all hidden by default
   var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
-      style = document.createElement('style');
+      style = document$1.createElement('style');
 
   style.type = 'text/css';
 
   if (style.styleSheet) { // handle ie
     style.styleSheet.cssText = css;
   } else {
-    style.appendChild(document.createTextNode(css));
+    style.appendChild(document$1.createTextNode(css));
   }
 
-  document.getElementsByTagName('head')[0].appendChild(style);
+  document$1.getElementsByTagName('head')[0].appendChild(style);
 }
 
 /** @module pathfora/inline/init-inline */
@@ -5268,8 +5387,8 @@ var Pathfora = function () {
   this.initializePageViews();
 
   // add pathfora css
-  var head = document.getElementsByTagName('head')[0],
-      link = document.createElement('link');
+  var head = document$1.getElementsByTagName('head')[0],
+      link = document$1.createElement('link');
 
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');

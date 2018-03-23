@@ -1,13 +1,13 @@
 // -------------------------
 //  CONTENT RECOMMENDATIONS
 // -------------------------
-describe("the content recommendation component", function() {
-  beforeEach(function() {
+describe('the content recommendation component', function () {
+  beforeEach(function () {
     jasmine.Ajax.install();
     pathfora.clearAll();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     jasmine.Ajax.uninstall();
   });
 
@@ -26,7 +26,7 @@ describe("the content recommendation component", function() {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: 'FILTER AND(url LIKE \"www.example.com/*\") FROM content'
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
         }
       }
     });
@@ -42,7 +42,8 @@ describe("the content recommendation component", function() {
           url: 'http://www.example.com/2',
           title: 'Default Title',
           description: 'Default description',
-          image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
+          image:
+            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
         }
       ],
       recommend: {
@@ -54,24 +55,30 @@ describe("the content recommendation component", function() {
 
     // Should show default
     pathfora.initializeWidgets([defaultModal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 400,
-      'contentType': 'application/json',
-      'responseText': '{"data": null,"message": "No such account id","status": 400}'
+      status: 400,
+      contentType: 'application/json',
+      responseText:
+        '{"data": null,"message": "No such account id","status": 400}'
     });
 
     pathfora.acctid = credentials;
 
     // Should get and show api response
     pathfora.initializeWidgets([modal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      status: 200,
+      contentType: 'application/json',
+      responseText:
+        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
     });
 
     var widget = $('#' + modal.id);
@@ -91,7 +98,9 @@ describe("the content recommendation component", function() {
       expect(title).toBe('Example Title');
       expect(href).toBe('http://www.example.com/1');
       expect(desc).toBe('An example description');
-      expect(img).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+      expect(img).toBe(
+        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+      );
 
       href = widget2.find('.pf-content-unit').attr('href');
       desc = widget2.find('.pf-content-unit p').text();
@@ -101,7 +110,9 @@ describe("the content recommendation component", function() {
       expect(title).toBe('Default Title');
       expect(href).toBe('http://www.example.com/2');
       expect(desc).toBe('Default description');
-      expect(img).toBe('url(http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg)');
+      expect(img).toBe(
+        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+      );
 
       pathfora.clearAll();
       pathfora.acctid = '';
@@ -156,7 +167,8 @@ describe("the content recommendation component", function() {
           url: 'http://www.example.com/2',
           title: 'Default Title',
           description: 'Default description',
-          image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
+          image:
+            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
         }
       ]
     });
@@ -164,14 +176,19 @@ describe("the content recommendation component", function() {
     // Should error since there is no default defined
     expect(function () {
       pathfora.initializeWidgets([errorModal]);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 400,
-        'contentType': 'application/json',
-        'responseText': '{"data": null,"message": "No such account id","status": 400}'
+        status: 400,
+        contentType: 'application/json',
+        responseText:
+          '{"data": null,"message": "No such account id","status": 400}'
       });
-    }).toThrow(new Error('Could not get recommendation and no default defined'));
+    }).toThrow(
+      new Error('Could not get recommendation and no default defined')
+    );
 
     pathfora.acctid = credentials;
 
@@ -181,14 +198,19 @@ describe("the content recommendation component", function() {
 
     expect(function () {
       pathfora.initializeWidgets([errorModal3]);
-      expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*');
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*'
+      );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
-        'status': 200,
-        'contentType': 'application/json',
-        'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
       });
-    }).toThrow(new Error('Cannot define recommended content unless it is a default'));
+    }).toThrow(
+      new Error('Cannot define recommended content unless it is a default')
+    );
 
     setTimeout(function () {
       done();
@@ -223,12 +245,15 @@ describe("the content recommendation component", function() {
     });
 
     pathfora.initializeWidgets([astModal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      status: 200,
+      contentType: 'application/json',
+      responseText:
+        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
     });
 
     var widget = $('#' + astModal.id);
@@ -262,12 +287,15 @@ describe("the content recommendation component", function() {
     });
 
     pathfora.initializeWidgets([relativeModal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      status: 200,
+      contentType: 'application/json',
+      responseText:
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
     });
 
     var widget = $('#' + relativeModal.id);
@@ -310,12 +338,15 @@ describe("the content recommendation component", function() {
     });
 
     pathfora.initializeWidgets([displayModal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+      status: 200,
+      contentType: 'application/json',
+      responseText:
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
     });
 
     var widget = $('#' + displayModal.id);
@@ -344,12 +375,15 @@ describe("the content recommendation component", function() {
     });
 
     pathfora.initializeWidgets([displayModal2]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe('//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*');
+    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+    );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
-      'status': 200,
-      'contentType': 'application/json',
-      'responseText': '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+      status: 200,
+      contentType: 'application/json',
+      responseText:
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
     });
 
     widget = $('#' + displayModal2.id);
@@ -363,4 +397,4 @@ describe("the content recommendation component", function() {
 
     pathfora.acctid = '';
   });
-})
+});
