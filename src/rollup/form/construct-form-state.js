@@ -62,12 +62,5 @@ export default function constructFormState (config, widget, name) {
     elem.appendChild(cancel);
   }
 
-  if (obj.footerText !== '') {
-    var footer = document.createElement('div');
-    footer.className = 'pf-widget-footer';
-    footer.innerHTML = obj.footerText;
-    elem.appendChild(footer);
-  }
-
   return elem;
 }

@@ -335,7 +335,7 @@ export default function constructWidgetLayout (widget, config) {
     widgetMessage.innerHTML = config.msg;
   }
 
-  if (widgetFooter && widgetFooter.value !== null) {
+  if (config.footerText) {
     widgetFooter.innerHTML = config.footerText;
   }
 }
