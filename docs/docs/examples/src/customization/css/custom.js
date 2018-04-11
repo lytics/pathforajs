@@ -6,6 +6,7 @@ var module = new pathfora.Message({
   msg: 'We hope you are enjoying your recent purchase, and we\'d love to hear from you! Send us a tweet and let us know what you think.',
   okMessage: 'Tweet @ us!',
   cancelMessage: 'No Thanks',
+  footerText: 'By clicking Tweet @ us, you agree to send and receive tweets.',
   variant: 2,
   image: '../../../../assets/twitter.png',
   theme: 'custom',

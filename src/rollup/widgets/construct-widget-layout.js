@@ -33,7 +33,8 @@ export default function constructWidgetLayout (widget, config) {
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
       widgetBody = widget.querySelector('.pf-widget-body'),
-      widgetMessage = widget.querySelector('.pf-widget-message');
+      widgetMessage = widget.querySelector('.pf-widget-message'),
+      widgetFooter = widget.querySelector('.pf-widget-footer');
 
   if (widgetCancel !== null && !config.cancelShow) {
     node = widgetCancel;
@@ -335,9 +336,6 @@ export default function constructWidgetLayout (widget, config) {
   }
 
   if (config.footerText) {
-    var widgetFooter = document.createElement('div');
-    widgetFooter.className = 'pf-widget-footer';
     widgetFooter.innerHTML = config.footerText;
-    widgetBody.appendChild(widgetFooter);
   }
 }

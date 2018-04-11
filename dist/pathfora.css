@@ -26,6 +26,10 @@
 .pf-widget .pf-widget-body {
   color: #888;
 }
+.pf-widget .pf-widget-footer {
+  font-size: 12px;
+  text-align: left;
+}
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget.pf-mobile-hide {
     display: none;
@@ -604,6 +608,9 @@
 }
 .pf-widget-slideout .pf-widget-headline {
   font-size: 20px;
+}
+.pf-widget-slideout .pf-widget-footer {
+  margin-top: 10px;
 }
 .pf-widget-slideout.pf-position-bottom-left,
 .pf-widget-slideout.pf-position-left,
