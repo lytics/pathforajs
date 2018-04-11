@@ -61,6 +61,11 @@ Each module type that Pathfora supports has its own configuration method, which 
     <td>string</td>
     <td>header or title text for the module, not supported by some layouts</td>
   </tr>
+  <tr>
+    <td>footerText</td>
+    <td>string</td>
+    <td>text footer content, not supported by some layouts</td>
+  </tr>
 </table>
 
 
