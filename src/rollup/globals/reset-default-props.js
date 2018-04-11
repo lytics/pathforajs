@@ -52,8 +52,7 @@ export default function resetDefaultProps (obj) {
     okMessage: 'Confirm',
     cancelMessage: 'Cancel',
     okShow: true,
-    cancelShow: true,
-    footerText: ''
+    cancelShow: true
   };
 
   obj.subscription = {
@@ -66,8 +65,7 @@ export default function resetDefaultProps (obj) {
     okMessage: 'Confirm',
     cancelMessage: 'Cancel',
     okShow: true,
-    cancelShow: true,
-    footerText: ''
+    cancelShow: true
   };
 
   obj.form = {
@@ -98,8 +96,7 @@ export default function resetDefaultProps (obj) {
     okShow: true,
     cancelMessage: 'Cancel',
     cancelShow: true,
-    showSocialLogin: false,
-    footerText: ''
+    showSocialLogin: false
   };
 
 
@@ -131,8 +128,7 @@ export default function resetDefaultProps (obj) {
     okShow: true,
     cancelShow: false,
     showSocialLogin: false,
-    showForm: true,
-    footerText: ''
+    showForm: true
   };
 
   return obj;
