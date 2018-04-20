@@ -28,7 +28,6 @@ Within the `pf-widget` div most key elements are assigned class names. Form comp
 | `pf-widget-ok` | "Confirm" button |
 | `pf-widget-cancel` | "Cancel" button |
 | `pf-widget-img` | image element for modules of [variant 2](/layouts/modal.md#variant)
-| `pf-social-login` | div containing social login buttons for modules with [showSocialLogin](/types/form.md#showsociallogin) enabled |
 
 To see these classes in action, you can view the html [templates](https://github.com/lytics/pathforajs/tree/master/src/templates) that will be rendered on your website. This is the html that gets minified, and added to a div with the class `pf-widget`. That div then gets added to the DOM of your website.
 
