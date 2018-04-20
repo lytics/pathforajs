@@ -58,8 +58,7 @@ describe('Widgets', function () {
       completedActions: [],
       cancelledActions: [],
       displayedWidgets: [],
-      abTestingGroups: [],
-      socialNetworks: {}
+      abTestingGroups: []
     };
 
     var form = new pathfora.Subscription({

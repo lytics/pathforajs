@@ -44,10 +44,6 @@ import recommendContent from './recommendations/recommend-content';
 import initializeABTesting from './ab-test/init-ab-test';
 import ABTest from './ab-test/ab-test';
 
-// integrations
-import integrateWithFacebook from './integrations/facebook';
-import integrateWithGoogle from './integrations/google';
-
 // inline
 import Inline from './inline/inline';
 import initializeInline from './inline/init-inline';
@@ -107,10 +103,6 @@ var Pathfora = function () {
   // ab tests
   this.initializeABTesting = initializeABTesting;
   this.ABTest = ABTest;
-
-  // integations
-  this.integrateWithFacebook = integrateWithFacebook;
-  this.integrateWithGoogle = integrateWithGoogle;
 
   // inline
   this.initializeInline = initializeInline;
