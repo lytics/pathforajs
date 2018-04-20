@@ -59,35 +59,3 @@ Define which layout type the form module should use.
 ![Inline Form Module](../examples/img/types/form/inline.png)
 
 <pre data-src="../../examples/src/types/form/inline.js"></pre>
-
-
-## showSocialLogin
-
-With social login enabled, a module can show Google or Facebook login buttons which the user can use to connect to their account. This will autofill the form elements with their account information such as name and email. This setting requires authentication with [integrateWithFacebook](/api/methods.md#integratewithfacebook) or [integrateWithGoogle](/api/methods.md#integratewithgoogle).
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="2" align="center"><code>showSocialLogin</code> boolean</td>
-    </tr>
-    <tr>
-      <th>Value</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-  
-  <tr>
-    <td>false</td>
-    <td><code>default</code> do not show social login buttons</td>
-  </tr>
-  <tr>
-    <td>true</td>
-    <td>show social login buttons</td>
-  </tr>
-</table>
-
-<h3>Social Login /w Google &amp; Facebook - <a href="../../examples/preview/types/form/social.html" target="_blank">Live Preview</a></h3>
-
-![Social Login Form Module](../examples/img/types/form/social.png)
-
-<pre data-src="../../examples/src/types/form/social.js"></pre>
