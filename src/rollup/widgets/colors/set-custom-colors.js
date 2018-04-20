@@ -27,7 +27,6 @@ export default function setCustomColors (widget, colors) {
       required = widget.querySelectorAll('.pf-required-flag'),
       requiredAsterisk = widget.querySelectorAll('span.required'),
       requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
-      socialBtns = Array.prototype.slice.call(widget.querySelectorAll('.social-login-btn')),
       body = widget.querySelector('.pf-widget-body');
 
   if (colors.background) {
@@ -128,17 +127,6 @@ export default function setCustomColors (widget, colors) {
   if (colors.text && branding) {
     branding.style.setProperty('fill', colors.text, 'important');
   }
-
-
-  socialBtns.forEach(function (btn) {
-    if (colors.actionText) {
-      btn.style.setProperty('color', colors.actionText, 'important');
-    }
-
-    if (colors.actionBackground) {
-      btn.style.setProperty('background-color', colors.actionBackground, 'important');
-    }
-  });
 
   if (msg && colors.text) {
     for (i = 0; i < msg.length; i++) {

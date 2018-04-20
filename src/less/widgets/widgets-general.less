@@ -226,14 +226,14 @@
   &.success {
     transition: opacity 0.3s;
 
-    .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+    .pf-widget-headline, .pf-widget-message, form {
       display: none;
     }
 
     .success-state {
       display: block;
 
-      .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+      .pf-widget-headline, .pf-widget-message, form {
         display: block;
       }
     }
@@ -242,14 +242,14 @@
   &.error {
     transition: opacity 0.3s;
 
-    .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+    .pf-widget-headline, .pf-widget-message, form {
       display: none;
     }
 
     .error-state {
       display: block;
 
-      .pf-widget-headline, .pf-widget-message, form, .pf-social-login {
+      .pf-widget-headline, .pf-widget-message, form {
         display: block;
       }
     }
@@ -485,42 +485,6 @@
   input, select {
     &.pf-field-half-width {
       width: 48%;
-    }
-  }
-}
-
-.pf-social-login {
-  text-align: right;
-  margin-bottom: 10px;
-
-  .social-login-btn {
-    font-size: 13px;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    cursor: pointer;
-    padding: 6px 10px 4px;
-    border-radius: 3px;
-    margin-bottom: 2px;
-    box-shadow: 0px 1px 1px rgba(0,0,0,.2);
-    color: @actionText;
-    border: 0;
-    background-color: @actionBackground;
-
-    & + .social-login-btn {
-      margin-left: 4px;
-    }
-
-    svg {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-    }
-
-    span {
-      vertical-align: top;
-      margin-left: 5px;
-      display: inline-block;
     }
   }
 }
