@@ -315,6 +315,45 @@ describe('Widgets', function () {
     expect(widget2.find('.branding svg').length).toBe(0);
   });
 
+  it('should display footer when footerText setting is used', function () {
+    var modalFooter = new pathfora.Message({
+      id: 'footer1',
+      msg: 'test',
+      layout: 'modal',
+      footerText: 'Footer text'
+    });
+
+    var modalNoFooter = new pathfora.Message({
+      id: 'footer2',
+      msg: 'test',
+      layout: 'modal'
+    });
+
+    var slideoutFooter = new pathfora.Message({
+      id: 'slidout1',
+      msg: 'test',
+      layout: 'slideout',
+      footerText: 'Footer text'
+    });
+
+    var slideoutNoFooter = new pathfora.Message({
+      id: 'slideout2',
+      msg: 'test',
+      layout: 'slideout'
+    });
+
+    pathfora.initializeWidgets([modalFooter, modalNoFooter, slideoutFooter, slideoutNoFooter]);
+
+    var modal1 = $('#' + modalFooter.id),
+        modal2 = $('#' + modalNoFooter.id),
+        slideout1 = $('#' + slideoutFooter.id),
+        slideout2 = $('#' + slideoutNoFooter.id);
+    expect(modal1.find('.pf-widget-footer').html()).toEqual('Footer text');
+    expect(modal2.find('.pf-widget-footer').html()).toEqual('');
+    expect(slideout1.find('.pf-widget-footer').html()).toEqual('Footer text');
+    expect(slideout2.find('.pf-widget-footer').html()).toEqual('');
+  });
+
   // -------------------------
   //  COLORS/THEME
   // -------------------------
