@@ -15,7 +15,6 @@ export default function resetDataObject (obj) {
   obj.cancelledActions = [];
   obj.displayedWidgets = [];
   obj.abTestingGroups = [];
-  obj.socialNetworks = {};
 
   return obj;
 }

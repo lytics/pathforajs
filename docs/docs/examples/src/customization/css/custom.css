@@ -47,3 +47,7 @@
 .pf-widget.pf-twitter-module .pf-widget-img {
   border-radius: 0px;
 }
+
+.pf-widget.pf-twitter-module .pf-widget-footer {
+  font-size: 9px;
+}

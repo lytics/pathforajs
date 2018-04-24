@@ -33,7 +33,8 @@ export default function constructWidgetLayout (widget, config) {
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
       widgetBody = widget.querySelector('.pf-widget-body'),
-      widgetMessage = widget.querySelector('.pf-widget-message');
+      widgetMessage = widget.querySelector('.pf-widget-message'),
+      widgetFooter = widget.querySelector('.pf-widget-footer');
 
   if (widgetCancel !== null && !config.cancelShow) {
     node = widgetCancel;
@@ -199,14 +200,6 @@ export default function constructWidgetLayout (widget, config) {
   switch (config.type) {
   case 'sitegate':
   case 'form':
-    if (config.showSocialLogin === false) {
-      node = widget.querySelector('.pf-social-login');
-
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
-    }
-
     // Check if custom form is defined
     if (config.formElements && config.formElements.length) {
       // remove the existing form fields
@@ -332,5 +325,9 @@ export default function constructWidgetLayout (widget, config) {
 
   if (config.msg) {
     widgetMessage.innerHTML = config.msg;
+  }
+
+  if (config.footerText) {
+    widgetFooter.innerHTML = config.footerText;
   }
 }

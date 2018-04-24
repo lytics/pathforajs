@@ -95,8 +95,7 @@ export default function resetDefaultProps (obj) {
     okMessage: 'Send',
     okShow: true,
     cancelMessage: 'Cancel',
-    cancelShow: true,
-    showSocialLogin: false
+    cancelShow: true
   };
 
 
@@ -127,7 +126,6 @@ export default function resetDefaultProps (obj) {
     okMessage: 'Submit',
     okShow: true,
     cancelShow: false,
-    showSocialLogin: false,
     showForm: true
   };
 

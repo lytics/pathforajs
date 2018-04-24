@@ -61,6 +61,11 @@ Each module type that Pathfora supports has its own configuration method, which 
     <td>string</td>
     <td>header or title text for the module, not supported by some layouts</td>
   </tr>
+  <tr>
+    <td>footerText</td>
+    <td>string</td>
+    <td>text footer content, not supported by some layouts</td>
+  </tr>
 </table>
 
 
@@ -162,56 +167,5 @@ triggerWidgets is a helper method for widgets with the [manualTrigger](/display_
     <td>widgetIds</td>
     <td>array</td>
     <td><code>optional</code> list of ids of widgets to display, if empty this method will trigger all widgets with the <a href="../../display_conditions#manualTrigger">manualTrigger</a> displayCondition</td>
-  </tr>
-</table>
-
-
-## integrateWithFacebook
-
-Pathfora can integrate with your Facebook App to allow users to autofill the fields of [form](/types/form.md) or [gate](/types/gate.md) modules with their facebook profile information. This method is used to authenticate this integration with Facebook. This method should be called **before** the `initializeWidgets` method.
-
-**Note:** In addition to using this method, you will need to enable [social login](/types/form.md#showsociallogin) in your module's config to allow for form autofill.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="3" align="center"><code>integrateWithFacebook</code> function</td>
-    </tr>
-    <tr>
-      <th>Parameter</th>
-      <th>Type</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-
-  <tr>
-    <td>appId</td>
-    <td>string</td>
-    <td><a href="https://developers.facebook.com/docs/apps/register#app-id" target="_blank">app id</a> for your Facebook application</td>
-  </tr>
-</table>
-
-## integrateWithGoogle
-
-Pathfora can integrate with your Google App to allow users to autofill the fields of [form](/types/form.md) or [gate](/types/gate.md) modules with their Google account information. This method is used to authenticate this integration with Google. This method should be called **before** the `initializeWidgets` method.
-
-**Note:** In addition to using this method, you will need to enable [social login](/types/form.md#showsociallogin) in your module's config to allow for form autofill.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="3" align="center"><code>integrateWithGoogle</code> function</td>
-    </tr>
-    <tr>
-      <th>Parameter</th>
-      <th>Type</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-
-  <tr>
-    <td>clientID</td>
-    <td>string</td>
-    <td><a href="https://developers.google.com/identity/sign-in/web/devconsole-project" target="_blank">client id</a> from your Google Developers Console project</td>
   </tr>
 </table>
