@@ -200,14 +200,6 @@ export default function constructWidgetLayout (widget, config) {
   switch (config.type) {
   case 'sitegate':
   case 'form':
-    if (config.showSocialLogin === false) {
-      node = widget.querySelector('.pf-social-login');
-
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
-    }
-
     // Check if custom form is defined
     if (config.formElements && config.formElements.length) {
       // remove the existing form fields
