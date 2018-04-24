@@ -211,8 +211,7 @@
 }
 .pf-widget.success .pf-widget-headline,
 .pf-widget.success .pf-widget-message,
-.pf-widget.success form,
-.pf-widget.success .pf-social-login {
+.pf-widget.success form {
   display: none;
 }
 .pf-widget.success .success-state {
@@ -220,8 +219,7 @@
 }
 .pf-widget.success .success-state .pf-widget-headline,
 .pf-widget.success .success-state .pf-widget-message,
-.pf-widget.success .success-state form,
-.pf-widget.success .success-state .pf-social-login {
+.pf-widget.success .success-state form {
   display: block;
 }
 .pf-widget.error {
@@ -229,8 +227,7 @@
 }
 .pf-widget.error .pf-widget-headline,
 .pf-widget.error .pf-widget-message,
-.pf-widget.error form,
-.pf-widget.error .pf-social-login {
+.pf-widget.error form {
   display: none;
 }
 .pf-widget.error .error-state {
@@ -238,8 +235,7 @@
 }
 .pf-widget.error .error-state .pf-widget-headline,
 .pf-widget.error .error-state .pf-widget-message,
-.pf-widget.error .error-state form,
-.pf-widget.error .error-state .pf-social-login {
+.pf-widget.error .error-state form {
   display: block;
 }
 /* Variant Styles */
@@ -443,37 +439,6 @@
 .pf-form.pf-widget-slideout select.pf-field-half-width,
 .pf-sitegate.pf-widget-slideout select.pf-field-half-width {
   width: 48%;
-}
-.pf-social-login {
-  text-align: right;
-  margin-bottom: 10px;
-}
-.pf-social-login .social-login-btn {
-  font-size: 13px;
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  padding: 6px 10px 4px;
-  border-radius: 3px;
-  margin-bottom: 2px;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
-  color: #444;
-  border: 0;
-  background-color: white;
-}
-.pf-social-login .social-login-btn + .social-login-btn {
-  margin-left: 4px;
-}
-.pf-social-login .social-login-btn svg {
-  width: 16px;
-  height: 16px;
-  display: inline-block;
-}
-.pf-social-login .social-login-btn span {
-  vertical-align: top;
-  margin-left: 5px;
-  display: inline-block;
 }
 .pf-widget-modal {
   position: fixed;
