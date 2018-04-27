@@ -1452,7 +1452,7 @@ function formBuilderEventsFn() {
 
     var defaults = {
       controlPosition: 'right',
-      controlOrder: ['autocomplete', 'button', 'checkbox', 'checkbox-group', 'date', 'file', 'header', 'hidden', 'paragraph', 'number', 'radio-group', 'select', 'text', 'textarea'],
+      controlOrder: ['autocomplete', 'button', 'checkbox', 'checkbox-group', 'date', 'file', 'header', 'hidden', 'paragraph', 'number', 'radio-group', 'select', 'text', 'textarea', 'email'],
       dataType: 'xml',
       // Array of fields to disable
       disableFields: [],
@@ -1733,6 +1733,13 @@ function formBuilderEventsFn() {
       label: opts.messages.text,
       attrs: {
         type: 'text',
+        className: 'text-input',
+        name: 'text-input'
+      }
+    }, {
+      label: opts.messages.text,
+      attrs: {
+        type: 'email',
         className: 'text-input',
         name: 'text-input'
       }
@@ -2107,7 +2114,7 @@ function formBuilderEventsFn() {
       values.style = values.style || 'default';
 
       //Help Text / Description Field
-      if (!utils.inArray(values.type, ['header', 'paragraph', 'button'])) {
+      if (!utils.inArray(values.type, ['header', 'paragraph', 'button', 'email'])) {
         advFields.push(textAttribute('description', values));
       }
 
@@ -2388,7 +2395,7 @@ function formBuilderEventsFn() {
         return;
       }
 
-      var placeholderFields = ['text', 'textarea', 'select'];
+      var placeholderFields = ['text', 'textarea', 'select', 'email'];
 
       var noName = ['header'];
 
