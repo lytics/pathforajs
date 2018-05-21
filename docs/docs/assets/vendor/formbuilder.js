@@ -1506,6 +1506,7 @@ function formBuilderEventsFn() {
         editNames: 'Edit Names',
         editorTitle: 'Form Elements',
         editXML: 'Edit XML',
+        email: 'Email',
         enableOther: 'Enable &quot;Other&quot;',
         enableOtherMsg: 'Let users to enter an unlisted option',
         fieldDeleteWarning: false,
@@ -1737,11 +1738,11 @@ function formBuilderEventsFn() {
         name: 'text-input'
       }
     }, {
-      label: opts.messages.text,
+      label: opts.messages.email,
       attrs: {
         type: 'email',
         className: 'text-input',
-        name: 'text-input'
+        name: 'email'
       }
     }, {
       label: opts.messages.textArea,
