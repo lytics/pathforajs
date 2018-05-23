@@ -16,6 +16,12 @@ jQuery(function($) {
         }
       },
 
+      email: {
+        onadd: function(fld) {
+          removeFields(fld, ['className', 'description', 'subtype', 'value', 'access', 'maxlength']);
+        }
+      },
+
       textarea: {
         onadd: function(fld) {
           removeFields(fld, ['className', 'description', 'rows', 'value', 'access', 'maxlength']);
@@ -28,6 +34,8 @@ jQuery(function($) {
           $('.option-selected', fld).remove();
         }
       },
+
+
 
       'radio-group': {
         onadd: function(fld) {
