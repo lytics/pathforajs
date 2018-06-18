@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Action widget</title>
+  </head>
+  <body>
+    <h1>Action widget example</h1>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var messageBar = new pathfora.Message({
+        id: 'messageBar1',
+        layout: 'bar',
+        msg: 'Welcome to our website'
+      });
+      var modal = new pathfora.Message({
+        id: 'modal1',
+        layout: 'modal',
+        msg: 'Welcome to our website {{segments.0}}',
+        displayConditions: {
+          hideAfterAction: {
+            confirm: {
+              hideCount: 1,
+            }
+          }
+        }
+      });
+      window.pathfora.initializeWidgets([ modal, messageBar ], null, {priority: 'ordered'});
+    </script>
+    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+  </body>
+</html>

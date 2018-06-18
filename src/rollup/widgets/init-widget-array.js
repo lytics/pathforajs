@@ -1,17 +1,16 @@
 /** @module pathfora/widgets/initialize-widget-array */
 
 // globals
-import { PREFIX_UNLOCK, widgetTracker, defaultProps, callbackTypes } from '../globals/config';
-
-// dom
-import window from '../dom/window';
+import {
+  PREFIX_UNLOCK,
+  widgetTracker,
+  defaultProps,
+  callbackTypes
+} from '../globals/config';
 
 // utils
 import readCookie from '../utils/cookies/read-cookie';
 import updateObject from '../utils/objects/update-object';
-
-// recommendations
-import recommendContent from '../recommendations/recommend-content';
 
 /**
  * Given an array of widgets, begin off the initialization
@@ -20,46 +19,8 @@ import recommendContent from '../recommendations/recommend-content';
  * @exports initializeWidgetArray
  * @params {array} array
  */
-export default function initializeWidgetArray (array) {
+export default function initializeWidgetArray (array, options) {
   var pf = this;
-
-  var recContent = function (w, params) {
-    pf.addCallback(function () {
-      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        } else {
-          throw new Error('Could not get account id from Lytics Javascript tag.');
-        }
-      }
-
-      recommendContent(pf.acctid, params, w.id, function (resp) {
-        // if we get a response from the recommend api put it as the first
-        // element in the content object this replaces any default content
-        if (resp[0]) {
-          var content = resp[0];
-          w.content = [
-            {
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              image: content.primary_image,
-              date: content.created,
-              author: content.author
-            }
-          ];
-        }
-
-        // if we didn't get a valid response from the api, we check if a default
-        // exists and use that as our content piece instead
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
-
-        pf.initializeWidget(w);
-      });
-    });
-  };
 
   for (var i = 0; i < array.length; i++) {
     var widget = array[i];
@@ -72,7 +33,11 @@ export default function initializeWidgetArray (array) {
         defaults = defaultProps[widget.type],
         globals = defaultProps.generic;
 
-    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
+    if (
+      (widget.type === 'sitegate' &&
+        readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+      widget.hiddenViaABTests === true
+    ) {
       continue;
     }
 
@@ -97,26 +62,13 @@ export default function initializeWidgetArray (array) {
       }
     }
 
-    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
-        throw new Error('Unsupported layout for content recommendation');
-      }
-
-      if (widget.content && widget.content[0] && !widget.content[0].default) {
-        throw new Error('Cannot define recommended content unless it is a default');
-      }
-
-      var params = widget.recommend;
-
-      if (params && params.collection) {
-        params.contentsegment = widget.recommend.collection;
-        delete params.collection;
-      }
-
-      recContent(widget, params);
-
+    if (
+      (widget.recommend && Object.keys(widget.recommend).length !== 0) ||
+      (widget.content && widget.content.length !== 0)
+    ) {
+      pf.initializeRecommendationWidget(widget, options);
     } else {
-      pf.initializeWidget(widget);
+      pf.initializeWidget(widget, options);
     }
 
     // NOTE onInit feels better here
@@ -125,5 +77,16 @@ export default function initializeWidgetArray (array) {
         config: widget
       });
     }
+
+    if (options && options.priority === 'ordered') {
+      if (
+        widgetTracker.prioritizedWidgets.length &&
+        widgetTracker.prioritizedWidgets[0].id === widget.id
+      ) {
+        break;
+      }
+    }
+
+    console.log('in array', widget, widgetTracker.prioritizedWidgets);
   }
 }
