@@ -23,7 +23,9 @@ export var PF_VERSION = '1.0.0',
     DEFAULT_CHAR_LIMIT_STACK = 160,
     WIDTH_BREAKPOINT = 650,
     API_URL = '`{{apiurl}}`',
-    CSS_URL = '`{{cssurl}}`';
+    CSS_URL = '`{{cssurl}}`',
+    ENTITY_FIELD_TEMPLATE_REGEX = /\{{2}.*?\}{2}/g,
+    ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'];
 
 export var defaultPositions = {
   modal: '',
