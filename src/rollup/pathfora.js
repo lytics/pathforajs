@@ -18,7 +18,6 @@ import { utils } from './utils/utils';
 
 // data
 import getDataObject from './data/tracking/get-data-object';
-import trackTimeOnPage from './data/tracking/track-time-on-page';
 
 // callbacks
 import addCallback from './callbacks/add-callback';
@@ -123,7 +122,6 @@ var Pathfora = function () {
   this.utils.updateLegacyCookies();
 
   head.appendChild(link);
-  trackTimeOnPage();
 };
 
 window.pathfora = window.pathfora || new Pathfora();

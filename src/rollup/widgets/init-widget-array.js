@@ -6,6 +6,9 @@ import { widgetTracker, defaultProps } from '../globals/config';
 // utils
 import updateObject from '../utils/objects/update-object';
 
+//validations
+import validateRecommendationWidget from '../validation/validate-recommendation-widget.js';
+
 /**
  * Given an array of widgets, begin off the initialization
  * process for each
@@ -34,6 +37,11 @@ export default function initializeWidgetArray (array, options) {
     } else {
       throw new Error('Cannot add two widgets with the same id');
     }
+
+    if (widget.recommend && Object.keys(widget.recommend).length !== 0) {
+      validateRecommendationWidget(widget);
+    }
+
 
     // retain support for old "success" field
     if (widget.success) {

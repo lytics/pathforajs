@@ -10,6 +10,8 @@ import updateObject from '../utils/objects/update-object';
 import validateAccountId from '../validation/validate-account-id';
 import requiresLio from '../validation/requires-lio';
 
+// data
+import trackTimeOnPage from '../data/tracking/track-time-on-page';
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created
@@ -21,7 +23,7 @@ import requiresLio from '../validation/requires-lio';
  */
 export default function initializeWidgets (widgets, config, options) {
   var pf = this;
-
+  trackTimeOnPage();
   // support legacy initialize function where we passed account id as
   // a second parameter and config as third
   if (typeof config === 'string') {
