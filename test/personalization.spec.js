@@ -17,6 +17,9 @@ describe('Inline Personalization', function () {
         data: {
           segments: ['all', 'high_value', 'email', 'smt_new']
         },
+        account: {
+          id: '0'
+        },
         loaded: true
       };
 
@@ -59,6 +62,9 @@ describe('Inline Personalization', function () {
         data: {
           segments: ['all', 'email']
         },
+        account: {
+          id: '0'
+        },
         loaded: true
       };
 
@@ -87,6 +93,9 @@ describe('Inline Personalization', function () {
       window.lio = {
         data: {
           segments: ['all', 'portlanders', 'email']
+        },
+        account: {
+          id: '0'
         },
         loaded: true
       };
@@ -384,6 +393,9 @@ describe('Inline Personalization', function () {
       window.lio = {
         data: {
           segments: ['all', 'high_value', 'email', 'smt_new']
+        },
+        account: {
+          id: '0'
         }
       };
 

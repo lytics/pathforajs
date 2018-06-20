@@ -207,6 +207,9 @@ describe('when performing AB testing', function() {
     window.lio = {
       data: {
         segments: ['all', 'smt_new']
+      },
+      account: {
+        id: '0'
       }
     };
 

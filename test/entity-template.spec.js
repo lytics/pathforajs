@@ -11,6 +11,9 @@ describe("the entity templates", function() {
       data: {
         promoCode: '123FREE',
         email: 'fake@gmail.com'
+      },
+      account: {
+        id: '0'
       }
     };
 
