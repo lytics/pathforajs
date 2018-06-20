@@ -7,13 +7,8 @@ import { defaultProps } from '../globals/config';
 import updateObject from '../utils/objects/update-object';
 
 // validation
-import validateWidgetsObject from '../validation/validate-widgets-object';
 import validateAccountId from '../validation/validate-account-id';
 import requiresLio from '../validation/requires-lio';
-
-// widgets
-// import initializeWidgetArray from './init-widget-array';
-// import initializeTargetedWidgets from
 
 /**
  * Public method used to initialize widgets once
@@ -38,7 +33,9 @@ export default function initializeWidgets (widgets, config, options) {
     }
   }
 
-  validateWidgetsObject(widgets);
+  if (!widgets) {
+    throw new Error('Initialize called with no widgets');
+  }
 
   if (config) {
     updateObject(defaultProps, config);
@@ -46,7 +43,6 @@ export default function initializeWidgets (widgets, config, options) {
 
   var init = function () {
     if (Array.isArray(widgets)) {
-      // NOTE Simple initialization
       pf.initializeWidgetArray(widgets, options);
     } else {
       pf.initializeTargetedWidgets(widgets, options);

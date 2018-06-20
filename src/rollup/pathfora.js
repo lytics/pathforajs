@@ -28,6 +28,7 @@ import initializePageViews from './display-conditions/pageviews/init-pageviews';
 import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
 
 // widgets
+import initializeTargetedWidgets from './widgets/init-targeted-widgets';
 import initializeWidgets from './widgets/init-widgets';
 import initializeWidgetArray from './widgets/init-widget-array';
 import initializeWidget from './widgets/init-widget';
@@ -85,6 +86,7 @@ var Pathfora = function () {
   this.triggerWidgets = triggerWidgets;
 
   // widgets
+  this.initializeTargetedWidgets = initializeTargetedWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;

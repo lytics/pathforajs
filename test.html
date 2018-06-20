@@ -16,7 +16,11 @@
       var modal = new pathfora.Message({
         id: 'modal1',
         layout: 'modal',
-        msg: 'Welcome to our website {{segments.0}}',
+        variant: '3',
+        msg: 'Welcome to our website',
+        recommend: {
+          collection: '5c930f88b8782b327b636a94490f0e91'
+        },
         displayConditions: {
           hideAfterAction: {
             confirm: {
@@ -27,6 +31,6 @@
       });
       window.pathfora.initializeWidgets([ modal, messageBar ], null, {priority: 'ordered'});
     </script>
-    <script src="https://api.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
+    <script src="https://api.lytics.io/api/tag/4f7b525bdba058fc096757a6/lio.js"></script>
   </body>
 </html>

@@ -1,49 +1,38 @@
 /** @module pathfora/validation/requires-lio */
 
-// global
-import { ENTITY_FIELD_TEMPLATE_REGEX, ENTITY_FIELDS } from '../globals/config';
+// globals
+import { ENTITY_FIELDS, ENTITY_FIELD_TEMPLATE_REGEX } from '../globals/config';
 
 // utils
 import getObjectValue from '../utils/objects/get-object-value';
 
 /**
- * Determine if the settings of a given array
- * of the widgets provided require that
- * the lytics user entity be loaded before
- * proceeding with the initialization.
+ * Check if the
  *
  * @exports requiresLio
- * @params {object} widgets
+ * @params {widgets} object
  */
 export default function requiresLio (widgets) {
-  if (widgets.target || widgets.exclude) {
+  if (widgets.target || widgets.inverse || widgets.exclude) {
     return true;
   }
 
-  var array = widgets;
+  if (Array.isArray(widgets)) {
+    for (var i = 0; i < widgets.length; i++) {
+      var widget = widgets[i];
 
-  if (widgets.common) {
-    array = widgets.common;
-  }
+      for (var j = 0; j < ENTITY_FIELDS.length; j++) {
+        var fieldValue = getObjectValue(widget, ENTITY_FIELDS[j]);
 
-  for (var i = 0; i < array.length; i++) {
-    var widget = array[i];
+        // convert functions to a string
+        if (typeof fieldValue === 'function') {
+          fieldValue = fieldValue.toString();
+        }
 
-    if (widget.recommend && Object.keys(widget.recommend).length !== 0) {
-      return true;
-    }
-
-    for (var j = 0; j < ENTITY_FIELDS.length; j++) {
-      var fieldValue = getObjectValue(widget.config, ENTITY_FIELDS[j]);
-
-      // convert functions to a string
-      if (typeof fieldValue === 'function') {
-        fieldValue = fieldValue.toString();
-      }
-
-      if (typeof fieldValue === 'string') {
-        if (ENTITY_FIELD_TEMPLATE_REGEX.test(fieldValue)) {
-          return true;
+        if (typeof fieldValue === 'string') {
+          if (ENTITY_FIELD_TEMPLATE_REGEX.test(fieldValue)) {
+            return true;
+          }
         }
       }
     }
