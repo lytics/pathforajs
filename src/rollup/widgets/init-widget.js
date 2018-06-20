@@ -19,13 +19,18 @@ import triggerWidget from '../display-conditions/manual-trigger/trigger-widget';
 import showWidget from './show-widget';
 
 // globals
-import { widgetTracker } from '../globals/config';
+import { widgetTracker, PREFIX_UNLOCK } from '../globals/config';
 
 // dom
 import document from '../dom/document';
 
 // utils
 import addClass from '../utils/class/add-class';
+import readCookie from '../utils/cookies/read-cookie';
+
+// validation
+import validateAccountId from '../validation/validate-account-id';
+import setWidgetContent from './recommendations/set-widget-content';
 
 /**
  * Determine if a widget should be shown based on display
@@ -46,6 +51,14 @@ export default function initializeWidget (widget, options) {
   // NOTE Default cookie expiration is one year from now
   widget.expiration = new Date();
   widget.expiration.setDate(widget.expiration.getDate() + 365);
+
+  if (
+    (widget.type === 'sitegate' &&
+      readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+    widget.hiddenViaABTests === true
+  ) {
+    return;
+  }
 
   if (widget.pushDown) {
     if (
@@ -92,9 +105,9 @@ export default function initializeWidget (widget, options) {
       widget.valid && impressionsChecker(condition.impressions, widget);
   }
 
+  // if it's valid at this point, add it to the priority list
   if (widget.valid && options && options.priority === 'ordered') {
     widgetTracker.prioritizedWidgets.push(widget);
-    console.log('pushing widget', widget);
   }
 
   // display conditions based on page interaction
@@ -132,7 +145,17 @@ export default function initializeWidget (widget, options) {
 
   if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
     if (widget.valid) {
-      showWidget(widget);
+      // make api request for recommendations before calling showWidget
+      if (widget.recommend && Object.keys(widget.recommend).length !== 0) {
+        pf.addCallback(function () {
+          validateAccountId(pf);
+          setWidgetContent(pf.acctid, widget, function () {
+            showWidget(widget);
+          });
+        });
+      } else {
+        showWidget(widget);
+      }
     }
   }
 }

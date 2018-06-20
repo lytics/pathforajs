@@ -72,7 +72,6 @@ export default function recommendContent (accountId, params, id, callback) {
     seerId
   ];
 
-
   var ql = params.ql,
       ast = params.ast,
       display = params.display;

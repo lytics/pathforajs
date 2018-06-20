@@ -1,12 +1,10 @@
 /** @module pathfora/widgets/init-targeted-widgets */
 
-import { defaultProps } from '../globals/config';
-
-// utils
-import updateObject from '../utils/objects/update-object';
-
 // data
 import getUserSegments from '../data/segments/get-user-segments';
+
+// validation
+import validateWidgetsObject from '../validation/validate-widgets-object';
 
 /**
  * Initialize widgets which are targeted by segments.
@@ -19,12 +17,13 @@ export default function initializeTargetedWidgets (widgets, options) {
   var pf = this,
       i;
 
-  // NOTE Target sensitive widgets
+  validateWidgetsObject(widgets);
+
   if (widgets.common) {
     pf.initializeWidgetArray(widgets.common, options);
-    updateObject(defaultProps, widgets.common.config);
   }
 
+  // NOTE Target sensitive widgets
   if (widgets.target || widgets.exclude) {
     var targetedwidgets = [],
         segments = getUserSegments();
