@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Action widget</title>
+  </head>
+  <body>
+    <h1>Action widget example</h1>
+    <script src="../dist/pathfora.min.js"></script>
+    <script>
+      var modal = new pathfora.Message({
+        id: 'modal1',
+        layout: 'modal',
+        displayConditions: {
+          showOnExitIntent: true
+        },
+        variant: 3,
+        recommend: {
+          collection: '5c930f88b8782b327b636a94490f0e91'
+        },
+      });
+      window.pathfora.initializeWidgets([ modal ]);
+    </script>
+    <script src="https://api.lytics.io/api/tag/4f7b525bdba058fc096757a6/lio.js"></script>
+  </body>
+</html>

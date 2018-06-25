@@ -28,10 +28,6 @@ import document from '../dom/document';
 import addClass from '../utils/class/add-class';
 import readCookie from '../utils/cookies/read-cookie';
 
-// validation
-import validateAccountId from '../validation/validate-account-id';
-import setWidgetContent from './recommendations/set-widget-content';
-
 /**
  * Determine if a widget should be shown based on display
  * conditions, and if so show the widget
@@ -145,17 +141,7 @@ export default function initializeWidget (widget, options) {
 
   if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
     if (widget.valid) {
-      // make api request for recommendations before calling showWidget
-      if (widget.recommend && Object.keys(widget.recommend).length !== 0) {
-        pf.addCallback(function () {
-          validateAccountId(pf);
-          setWidgetContent(pf.acctid, widget, function () {
-            showWidget(widget);
-          });
-        });
-      } else {
-        showWidget(widget);
-      }
+      showWidget(widget);
     }
   }
 }

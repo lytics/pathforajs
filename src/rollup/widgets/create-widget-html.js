@@ -9,7 +9,7 @@ import document from '../dom/document';
 // widgets
 import setupWidgetPosition from './setup-widget-position';
 import constructWidgetActions from './actions/construct-widget-actions';
-import setupWidgetContentUnit from './setup-widget-content-unit';
+import setupWidgetContentUnit from './recommendations/setup-widget-content-unit';
 import setWidgetClassname from './set-widget-classname';
 import constructWidgetLayout from './construct-widget-layout';
 import setupWidgetColors from './colors/setup-widget-colors';
