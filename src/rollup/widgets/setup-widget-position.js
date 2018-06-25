@@ -3,8 +3,8 @@
 // globals
 import { defaultPositions } from '../globals/config';
 
-// widgets
-import validateWidgetPosition from './validate-widget-position';
+// validaion
+import validateWidgetPosition from '../validation/validate-widget-position';
 
 /**
  * Validate that the widget has correct position field,

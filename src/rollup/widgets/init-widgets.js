@@ -6,10 +6,6 @@ import { defaultProps } from '../globals/config';
 // utils
 import updateObject from '../utils/objects/update-object';
 
-// validation
-import validateAccountId from '../validation/validate-account-id';
-import requiresLio from '../validation/requires-lio';
-
 // data
 import trackTimeOnPage from '../data/tracking/track-time-on-page';
 /**
@@ -43,22 +39,9 @@ export default function initializeWidgets (widgets, config, options) {
     updateObject(defaultProps, config);
   }
 
-  var init = function () {
-    if (Array.isArray(widgets)) {
-      pf.initializeWidgetArray(widgets, options);
-    } else {
-      pf.initializeTargetedWidgets(widgets, options);
-    }
-  };
-
-  // determine if we need to wait for lio to
-  // load the user entity
-  if (requiresLio(widgets)) {
-    pf.addCallback(function () {
-      validateAccountId(pf);
-      init();
-    });
+  if (Array.isArray(widgets)) {
+    pf.initializeWidgetArray(widgets, options);
   } else {
-    init();
+    pf.initializeTargetedWidgets(widgets, options);
   }
 }

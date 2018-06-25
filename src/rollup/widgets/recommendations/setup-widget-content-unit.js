@@ -1,11 +1,11 @@
 /** @module pathfora/widgets/setup-widget-content-unit */
 
 // globals
-import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../globals/config';
+import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../../globals/config';
 
 // dom
-import window from '../dom/window';
-import document from '../dom/document';
+import window from '../../dom/window';
+import document from '../../dom/document';
 
 /**
  * Setup HTML for a widget with content recommendations

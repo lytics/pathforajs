@@ -6,8 +6,9 @@ import { widgetTracker, defaultProps } from '../globals/config';
 // utils
 import updateObject from '../utils/objects/update-object';
 
-//validations
-import validateRecommendationWidget from '../validation/validate-recommendation-widget.js';
+// widgets
+import preloadLio from './preload-lio';
+import preloadRecommendation from './recommendations/preload-recommendation';
 
 /**
  * Given an array of widgets, begin off the initialization
@@ -38,11 +39,6 @@ export default function initializeWidgetArray (array, options) {
       throw new Error('Cannot add two widgets with the same id');
     }
 
-    if (widget.recommend && Object.keys(widget.recommend).length !== 0) {
-      validateRecommendationWidget(widget);
-    }
-
-
     // retain support for old "success" field
     if (widget.success) {
       if (!widget.formStates) {
@@ -54,18 +50,27 @@ export default function initializeWidgetArray (array, options) {
       }
     }
 
-    pf.initializeWidget(widget, options);
+    preloadLio(widget, pf, function () {
+      preloadRecommendation(widget, pf, function () {
+        pf.initializeWidget(widget, options);
 
-    if (options && options.priority === 'ordered') {
-      if (
-        widgetTracker.prioritizedWidgets.length &&
-        widgetTracker.prioritizedWidgets[0].id === widget.id
-      ) {
-        return;
-      }
+        if (options && options.priority === 'ordered') {
+          if (
+            widgetTracker.prioritizedWidgets.length &&
+            widgetTracker.prioritizedWidgets[0].id === widget.id
+          ) {
+            return;
+          }
+
+          initWidget(a, index + 1);
+        }
+      });
+    });
+
+    if (!options || options.priority !== 'ordered') {
+      initWidget(a, index + 1);
     }
 
-    initWidget(a, index + 1);
   };
 
   initWidget(array, 0);
