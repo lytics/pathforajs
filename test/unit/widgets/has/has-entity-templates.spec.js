@@ -1,14 +1,14 @@
 import hasEntityTemplates from '../../../../src/rollup/widgets/has/has-entity-templates';
 
-describe('hasEntityTemplates', function() {
-  it('should return true if widget has entity templates', function() {
+describe('hasEntityTemplates', function () {
+  it('should return true if widget has entity templates', function () {
     var widget = {
       msg: 'Hello there, {{name}}'
     };
     expect(hasEntityTemplates(widget)).toBeTruthy();
   });
 
-  it('should return false if widget does not have entity templates', function() {
+  it('should return false if widget does not have entity templates', function () {
     var widget = {
       headline: 'Hello there',
       msg: 'Welcome'
@@ -16,10 +16,10 @@ describe('hasEntityTemplates', function() {
     expect(hasEntityTemplates(widget)).toBeFalsy();
   });
 
-  it('should account for functions', function() {
+  it('should account for functions', function () {
     var widget = {
       confirmAction: {
-        callback: function() {
+        callback: function () {
           window.open('{{url}}');
         }
       }
@@ -28,7 +28,7 @@ describe('hasEntityTemplates', function() {
 
     widget = {
       confirmAction: {
-        callback: function() {
+        callback: function () {
           window.open('https://www.google.com/');
         }
       }

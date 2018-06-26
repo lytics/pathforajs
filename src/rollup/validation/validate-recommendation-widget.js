@@ -6,7 +6,7 @@
  *
  * @exports validateRecommendationWidget
  * @params {object} widget
-*/
+ */
 export default function validateRecommendationWidget (widget) {
   // validate
   if (widget.type !== 'message') {

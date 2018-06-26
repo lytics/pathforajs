@@ -1,14 +1,14 @@
 import validateAccountId from '../../../src/rollup/validation/validate-account-id';
 
-describe('validateAccountId', function() {
+describe('validateAccountId', function () {
   beforeEach(function () {
     window.lio = {};
     pathfora.acctid = '';
   });
 
-  it('should throw an error if lio has no account id', function() {
-    expect(function() {
-      validateAccountId(pathfora)
+  it('should throw an error if lio has no account id', function () {
+    expect(function () {
+      validateAccountId(pathfora);
     }).toThrow(
       new Error('Could not get account id from Lytics Javascript tag.')
     );

@@ -1,11 +1,10 @@
 import preloadRecommendation from '../../../../src/rollup/widgets/recommendations/preload-recommendation';
 
-describe('preloadRecommendation', function() {
+describe('preloadRecommendation', function () {
   beforeEach(function () {
     window.lio = {};
     pathfora.clearAll();
   });
-
 
   it('should execute the callback immediately if recommendation is not needed', function () {
     var widget = {},
@@ -25,24 +24,22 @@ describe('preloadRecommendation', function() {
 
     var cb = jasmine.createSpy();
 
-    expect(function() {
+    expect(function () {
       preloadRecommendation(widget, pathfora, cb);
-    }).toThrow(
-      new Error('Unsupported widget type for content recommendation')
-    );
+    }).toThrow(new Error('Unsupported widget type for content recommendation'));
 
     expect(cb).not.toHaveBeenCalled();
     expect(pathfora.callbacks.length).toBe(0);
   });
 
-  it('should request the recommendation and fill in the content before executing the callback', function() {
+  it('should request the recommendation and fill in the content before executing the callback', function () {
     jasmine.Ajax.install();
 
     window.lio = {
       account: {
         id: 0
       }
-    }
+    };
 
     var widget = {
       type: 'message',
