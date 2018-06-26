@@ -1,7 +1,12 @@
 /** @module pathfora/widgets/recommendation/setup-widget-content-unit */
 
 // globals
-import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../../globals/config';
+import {
+  PF_LOCALE,
+  PF_DATE_OPTIONS,
+  DEFAULT_CHAR_LIMIT,
+  DEFAULT_CHAR_LIMIT_STACK
+} from '../../globals/config';
 
 // dom
 import window from '../../dom/window';
@@ -21,7 +26,6 @@ export default function setupWidgetContentUnit (widget, config) {
   if (config.recommend && config.content) {
     // Make sure we have content to get
     if (Object.keys(config.content).length > 0) {
-
       // The top recommendation should be default if we couldn't
       // get one from the api
       var rec = config.content[0],
@@ -34,7 +38,10 @@ export default function setupWidgetContentUnit (widget, config) {
       widgetContentUnit.href = rec.url;
 
       // image div
-      if (rec.image && (!settings.display || settings.display.image !== false)) {
+      if (
+        rec.image &&
+        (!settings.display || settings.display.image !== false)
+      ) {
         recImage.className = 'pf-content-unit-img';
         recImage.style.backgroundImage = "url('" + rec.image + "')";
         widgetContentUnit.appendChild(recImage);
@@ -43,12 +50,18 @@ export default function setupWidgetContentUnit (widget, config) {
       recMeta.className = 'pf-content-unit-meta';
 
       // title h4
-      if (rec.title && (!settings.display || settings.display.title !== false)) {
+      if (
+        rec.title &&
+        (!settings.display || settings.display.title !== false)
+      ) {
         recTitle.innerHTML = rec.title;
         recMeta.appendChild(recTitle);
       }
 
-      if (rec.author && (settings.display && settings.display.author === true)) {
+      if (
+        rec.author &&
+        (settings.display && settings.display.author === true)
+      ) {
         recInfo.innerHTML = 'by ' + rec.author;
       }
 
@@ -84,10 +97,15 @@ export default function setupWidgetContentUnit (widget, config) {
       }
 
       // description p
-      if (rec.description && (!settings.display || settings.display.description !== false)) {
+      if (
+        rec.description &&
+        (!settings.display || settings.display.description !== false)
+      ) {
         var desc = rec.description,
-            limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
-
+            limit =
+            config.layout === 'modal'
+              ? DEFAULT_CHAR_LIMIT
+              : DEFAULT_CHAR_LIMIT_STACK;
 
         // set the default character limit for descriptions
         if (!settings.display) {
@@ -98,7 +116,10 @@ export default function setupWidgetContentUnit (widget, config) {
           settings.display.descriptionLimit = limit;
         }
 
-        if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
+        if (
+          desc.length > settings.display.descriptionLimit &&
+          settings.display.descriptionLimit !== -1
+        ) {
           desc = desc.substring(0, settings.display.descriptionLimit);
           desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
         }

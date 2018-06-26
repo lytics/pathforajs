@@ -14,9 +14,7 @@ export default function validateAccountId (pf) {
     if (window.lio && window.lio.account) {
       pf.acctid = window.lio.account.id;
     } else {
-      throw new Error(
-        'Could not get account id from Lytics Javascript tag.'
-      );
+      throw new Error('Could not get account id from Lytics Javascript tag.');
     }
   }
 }

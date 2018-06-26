@@ -11,7 +11,7 @@ describe('Prioritized widgets', function () {
     window.lio = {};
   });
 
-  describe('of type "ordered"', function() {
+  describe('of type "ordered"', function () {
     it('should only show the first valid widget', function (done) {
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
@@ -139,7 +139,9 @@ describe('Prioritized widgets', function () {
         }
       });
 
-      pathfora.initializeWidgets([modal, messageBar], null, {priority: 'ordered'});
+      pathfora.initializeWidgets([modal, messageBar], null, {
+        priority: 'ordered'
+      });
 
       var widget1 = $('#' + messageBar.id),
           widget2 = $('#' + modal.id);
@@ -160,8 +162,7 @@ describe('Prioritized widgets', function () {
         });
 
         setTimeout(function () {
-          widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id);
+          (widget1 = $('#' + messageBar.id)), (widget2 = $('#' + modal.id));
           expect(widget1.length).toBe(0);
           expect(widget2).toBeDefined();
           expect(widget2.hasClass('opened')).toBeTruthy();
@@ -172,7 +173,7 @@ describe('Prioritized widgets', function () {
     });
   });
 
-  describe('with no priority defined', function() {
+  describe('with no priority defined', function () {
     it('should attempt to initialize widgets asyncronously', function (done) {
       var messageBar = new pathfora.Message({
         id: 'messageBar1noPriority',

@@ -324,7 +324,12 @@ describe('Widgets', function () {
       layout: 'slideout'
     });
 
-    pathfora.initializeWidgets([modalFooter, modalNoFooter, slideoutFooter, slideoutNoFooter]);
+    pathfora.initializeWidgets([
+      modalFooter,
+      modalNoFooter,
+      slideoutFooter,
+      slideoutNoFooter
+    ]);
 
     var modal1 = $('#' + modalFooter.id),
         modal2 = $('#' + modalNoFooter.id),
