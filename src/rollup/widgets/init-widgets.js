@@ -8,6 +8,7 @@ import updateObject from '../utils/objects/update-object';
 
 // data
 import trackTimeOnPage from '../data/tracking/track-time-on-page';
+
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created

@@ -10,7 +10,7 @@ import window from '../dom/window';
  * @params {object} pf
  */
 export default function validateAccountId (pf) {
-  if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
+  if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
     if (window.lio && window.lio.account) {
       pf.acctid = window.lio.account.id;
     } else {

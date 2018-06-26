@@ -82,24 +82,6 @@ describe('Widgets', function () {
     }, 200);
   });
 
-  it('should be able to set random layout for each widget element', function () {
-    spyOn(Math, 'floor').and.returnValue(1);
-
-    var random = new pathfora.Message({
-      id: 'custom-random-test',
-      layout: 'random',
-      msg: 'Custom random layout test',
-      headline: 'Hello'
-    });
-
-    pathfora.initializeWidgets([random]);
-
-    var widget = $('#' + random.id);
-    expect(widget.find('.pf-widget-slideout')).toBeTruthy();
-    expect(widget.find('.pf-position-right')).toBeTruthy();
-    expect(widget.find('.pf-widget-variant-2')).toBeTruthy();
-  });
-
   it('should be able to be displayed on document', function (done) {
     var promoWidget = new pathfora.Message({
       layout: 'bar',

@@ -4,10 +4,12 @@
 describe('the content recommendation component', function () {
   beforeEach(function () {
     jasmine.Ajax.install();
+    window.lio = {};
     pathfora.clearAll();
   });
 
   afterEach(function () {
+    window.lio = {};
     jasmine.Ajax.uninstall();
   });
 
