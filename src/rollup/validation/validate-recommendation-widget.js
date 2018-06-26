@@ -1,5 +1,12 @@
 /** @module pathfora/validation/validate-recommendation-widget */
 
+/**
+ * Validate that a recommendation widget
+ * is using the correct type and layout
+ *
+ * @exports validateRecommendationWidget
+ * @params {object} widget
+*/
 export default function validateRecommendationWidget (widget) {
   // validate
   if (widget.type !== 'message') {

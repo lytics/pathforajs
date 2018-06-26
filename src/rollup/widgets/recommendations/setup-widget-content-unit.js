@@ -1,4 +1,4 @@
-/** @module pathfora/widgets/setup-widget-content-unit */
+/** @module pathfora/widgets/recommendation/setup-widget-content-unit */
 
 // globals
 import { PF_LOCALE, PF_DATE_OPTIONS, DEFAULT_CHAR_LIMIT, DEFAULT_CHAR_LIMIT_STACK } from '../../globals/config';

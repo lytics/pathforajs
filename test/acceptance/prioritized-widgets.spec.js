@@ -7,6 +7,10 @@ describe('Prioritized widgets', function () {
     window.lio = {};
   });
 
+  afterEach(function () {
+    window.lio = {};
+  });
+
   describe('of type "ordered"', function() {
     it('should only show the first valid widget', function (done) {
       var messageBar = new pathfora.Message({
@@ -64,6 +68,7 @@ describe('Prioritized widgets', function () {
     });
 
     it('should work with entity field templates regardless of load time', function (done) {
+      window.lio = {};
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
         layout: 'bar',
@@ -95,7 +100,6 @@ describe('Prioritized widgets', function () {
           },
           loaded: true
         };
-
         expect(pathfora.callbacks.length).toBe(1);
         pathfora.callbacks[0]();
 
@@ -171,12 +175,12 @@ describe('Prioritized widgets', function () {
   describe('with no priority defined', function() {
     it('should attempt to initialize widgets asyncronously', function (done) {
       var messageBar = new pathfora.Message({
-        id: 'messageBar1',
+        id: 'messageBar1noPriority',
         layout: 'bar',
         msg: 'Welcome to our website {{name}}'
       });
       var modal = new pathfora.Message({
-        id: 'modal2',
+        id: 'modal2noPriority',
         layout: 'modal',
         msg: 'Welcome to our website'
       });

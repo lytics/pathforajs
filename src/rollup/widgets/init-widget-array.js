@@ -20,7 +20,7 @@ import preloadRecommendation from './recommendations/preload-recommendation';
 export default function initializeWidgetArray (array, options) {
   var pf = this;
 
-  var initWidget = function (a, index) {
+  var initWidget = function (a, index, o) {
     if (index >= a.length) {
       return;
     }
@@ -53,7 +53,6 @@ export default function initializeWidgetArray (array, options) {
     preloadLio(widget, pf, function () {
       preloadRecommendation(widget, pf, function () {
         pf.initializeWidget(widget, options);
-
         if (options && options.priority === 'ordered') {
           if (
             widgetTracker.prioritizedWidgets.length &&
@@ -62,16 +61,15 @@ export default function initializeWidgetArray (array, options) {
             return;
           }
 
-          initWidget(a, index + 1);
+          initWidget(a, index + 1, o);
         }
       });
     });
 
     if (!options || options.priority !== 'ordered') {
-      initWidget(a, index + 1);
+      initWidget(a, index + 1, o);
     }
-
   };
 
-  initWidget(array, 0);
+  initWidget(array, 0, options);
 }

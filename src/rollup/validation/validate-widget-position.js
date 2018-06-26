@@ -1,4 +1,4 @@
-/** @module pathfora/widgets/validate-widget-position */
+/** @module pathfora/validation/validate-widget-position */
 
 /**
  * Validate that the widget has correct position field

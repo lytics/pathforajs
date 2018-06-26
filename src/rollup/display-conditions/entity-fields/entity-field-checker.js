@@ -27,7 +27,8 @@ export default function entityFieldChecker (widget, customData) {
       valid = true;
 
   for (var i = 0; i < ENTITY_FIELDS.length; i++) {
-    var fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
 
     // convert functions to a string
     if (typeof fieldValue === 'function') {
@@ -35,7 +36,7 @@ export default function entityFieldChecker (widget, customData) {
     }
 
     if (typeof fieldValue === 'string') {
-      found = fieldValue.match(ENTITY_FIELD_TEMPLATE_REGEX);
+      found = fieldValue.match(regex);
 
       if (found && found.length > 0) {
         valid =

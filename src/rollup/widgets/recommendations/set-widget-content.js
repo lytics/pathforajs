@@ -1,4 +1,16 @@
+/** @module pathfora/widgets/recommendation/set-widget-recommendation */
+
 import recommendContent from '../../recommendations/recommend-content';
+
+/**
+ * Make the call to get the recommendations then
+ * handle assigning it to the widget.
+ *
+ * @exports setWidgetContent
+ * @params {object} accountId
+ * @params {object} widget
+ * @params {function} cb
+ */
 
 export default function setWidgetContent (accountId, widget, cb) {
   var params = widget.recommend;
