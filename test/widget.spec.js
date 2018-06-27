@@ -492,6 +492,38 @@ describe('Widgets', function () {
     expect(cancelBtn.css('background-color')).toBe('rgb(238, 238, 238)');
   });
 
+  it('should display a recommendation modal even if missing a description', function () {
+    var modal = new pathfora.Message({
+      id: 'modal1',
+      layout: 'modal',
+      variant: '3',
+      msg: 'test',
+      theme: 'custom',
+      colors: {
+         actionBackground: '#fff',
+         actionText: '#444',
+         background: '#f1f1f1',
+         cancelBackground: '#f1f1f1',
+         cancelText: '#bbb',
+         close: '#bbb',
+         headline: '#d35145',
+         text: '#d35145'
+      },
+      recommend: {
+        collection: 'owifnwkqlbf'
+      },
+      content: [{
+        url: 'https://www.getlytics.com/blog/post/know_your_data',
+        title: 'test',
+        default: true
+      }]
+    });
+    window.pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    expect(widget).toBeDefined();
+  });
+
   it('should account for required colors on validation', function () {
     var modal = new pathfora.Form({
       id: 'required-color-modal',

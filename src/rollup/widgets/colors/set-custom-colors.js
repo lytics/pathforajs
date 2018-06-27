@@ -69,11 +69,11 @@ export default function setCustomColors (widget, colors) {
       contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
     }
 
-    if (colors.actionText) {
+    if (colors.actionText && contentUnitMeta.querySelector('h4')) {
       contentUnitMeta.querySelector('h4').style.setProperty('color', colors.actionText, 'important');
     }
 
-    if (colors.text) {
+    if (colors.text && contentUnitMeta.querySelector('p')) {
       contentUnitMeta.querySelector('p').style.setProperty('color', colors.text, 'important');
     }
   }
