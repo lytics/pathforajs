@@ -29,6 +29,7 @@ export default function setCustomColors (widget, colors) {
       requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
       body = widget.querySelector('.pf-widget-body');
 
+
   if (colors.background) {
     if (hasClass(widget, 'pf-widget-modal')) {
       widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
@@ -65,16 +66,19 @@ export default function setCustomColors (widget, colors) {
   }
 
   if (contentUnit && contentUnitMeta) {
+    var contentUnitMetaTitle = contentUnitMeta.querySelector('h4');
+    var contentUnitMetaDescription = contentUnitMeta.querySelector('p');
+
     if (colors.actionBackground) {
       contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
     }
 
-    if (colors.actionText && contentUnitMeta.querySelector('h4')) {
-      contentUnitMeta.querySelector('h4').style.setProperty('color', colors.actionText, 'important');
+    if (colors.actionText && contentUnitMetaTitle) {
+      contentUnitMetaTitle.style.setProperty('color', colors.actionText, 'important');
     }
 
-    if (colors.text && contentUnitMeta.querySelector('p')) {
-      contentUnitMeta.querySelector('p').style.setProperty('color', colors.text, 'important');
+    if (colors.text && contentUnitMetaDescription) {
+      contentUnitMetaDescription.style.setProperty('color', colors.text, 'important');
     }
   }
 
