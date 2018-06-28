@@ -9,6 +9,9 @@ import updateObject from '../utils/objects/update-object';
 // data
 import trackTimeOnPage from '../data/tracking/track-time-on-page';
 
+// validation
+import validateOptions from '../validation/validate-options';
+
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created
@@ -35,6 +38,8 @@ export default function initializeWidgets (widgets, config, options) {
   if (!widgets) {
     throw new Error('Initialize called with no widgets');
   }
+
+  validateOptions(options);
 
   if (config) {
     updateObject(defaultProps, config);

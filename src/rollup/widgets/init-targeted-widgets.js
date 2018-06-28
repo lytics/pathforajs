@@ -28,7 +28,7 @@ export default function initializeTargetedWidgets (widgets, options) {
   if (widgets.target || widgets.exclude) {
     pf.addCallback(function () {
       validateAccountId(pf);
-      var targetedwidgets = [],
+      var targetedWidgets = [],
           segments = getUserSegments();
 
       // handle inclusions
@@ -38,7 +38,7 @@ export default function initializeTargetedWidgets (widgets, options) {
           if (segments && segments.indexOf(target.segment) !== -1) {
             // add the widgets with proper targeting to the master list
             // ensure we dont overwrite existing widgets in target
-            targetedwidgets = targetedwidgets.concat(target.widgets);
+            targetedWidgets = targetedWidgets.concat(target.widgets);
           }
         }
       }
@@ -50,10 +50,10 @@ export default function initializeTargetedWidgets (widgets, options) {
           if (segments && segments.indexOf(exclude.segment) !== -1) {
             // we found a match, ensure the corresponding segment(s) are not in the
             // targetted widgets array
-            for (var x = 0; x < targetedwidgets.length; x++) {
+            for (var x = 0; x < targetedWidgets.length; x++) {
               for (var y = 0; y < exclude.widgets.length; y++) {
-                if (targetedwidgets[x] === exclude.widgets[y]) {
-                  targetedwidgets.splice(x, 1);
+                if (targetedWidgets[x] === exclude.widgets[y]) {
+                  targetedWidgets.splice(x, 1);
                 }
               }
             }
@@ -61,11 +61,9 @@ export default function initializeTargetedWidgets (widgets, options) {
         }
       }
 
-      if (targetedwidgets.length) {
-        pf.initializeWidgetArray(targetedwidgets, options);
-      }
-
-      if (!targetedwidgets.length && widgets.inverse) {
+      if (targetedWidgets.length) {
+        pf.initializeWidgetArray(targetedWidgets, options);
+      } else if (widgets.inverse) {
         pf.initializeWidgetArray(widgets.inverse, options);
       }
     });

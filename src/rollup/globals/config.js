@@ -25,7 +25,8 @@ export var PF_VERSION = '1.0.0',
     API_URL = '`{{apiurl}}`',
     CSS_URL = '`{{cssurl}}`',
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
-    ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'];
+    ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
+    OPTIONS_PRIORITY_ORDERED = 'ordered';
 
 export var defaultPositions = {
   modal: '',

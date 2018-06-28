@@ -19,7 +19,11 @@ import triggerWidget from '../display-conditions/manual-trigger/trigger-widget';
 import showWidget from './show-widget';
 
 // globals
-import { widgetTracker, PREFIX_UNLOCK } from '../globals/config';
+import {
+  widgetTracker,
+  PREFIX_UNLOCK,
+  OPTIONS_PRIORITY_ORDERED
+} from '../globals/config';
 
 // dom
 import document from '../dom/document';
@@ -102,7 +106,11 @@ export default function initializeWidget (widget, options) {
   }
 
   // if it's valid at this point, add it to the priority list
-  if (widget.valid && options && options.priority === 'ordered') {
+  if (
+    widget.valid &&
+    options &&
+    options.priority === OPTIONS_PRIORITY_ORDERED
+  ) {
     widgetTracker.prioritizedWidgets.push(widget);
   }
 
