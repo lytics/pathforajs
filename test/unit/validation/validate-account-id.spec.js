@@ -14,6 +14,18 @@ describe('validateAccountId', function () {
     );
   });
 
+  it('should throw an error if account id is empty', function () {
+    window.lio.account = {
+      id: ''
+    };
+
+    expect(function () {
+      validateAccountId(pathfora);
+    }).toThrow(
+      new Error('Lytics Javascript tag returned an empty account id.')
+    );
+  });
+
   it('should set the account id if defined', function () {
     window.lio.account = {
       id: 'bananas'

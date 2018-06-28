@@ -1,7 +1,11 @@
 /** @module pathfora/widgets/initialize-widget-array */
 
 // globals
-import { widgetTracker, defaultProps } from '../globals/config';
+import {
+  widgetTracker,
+  defaultProps,
+  OPTIONS_PRIORITY_ORDERED
+} from '../globals/config';
 
 // utils
 import updateObject from '../utils/objects/update-object';
@@ -20,12 +24,12 @@ import preloadRecommendation from './recommendations/preload-recommendation';
 export default function initializeWidgetArray (array, options) {
   var pf = this;
 
-  var initWidget = function (a, index, o) {
-    if (index >= a.length) {
+  var initWidget = function (widgetArray, index, initOptions) {
+    if (index >= widgetArray.length) {
       return;
     }
 
-    var widget = a[index],
+    var widget = widgetArray[index],
         defaults = defaultProps[widget.type],
         globals = defaultProps.generic;
 
@@ -52,8 +56,8 @@ export default function initializeWidgetArray (array, options) {
 
     preloadLio(widget, pf, function () {
       preloadRecommendation(widget, pf, function () {
-        pf.initializeWidget(widget, options);
-        if (options && options.priority === 'ordered') {
+        pf.initializeWidget(widget, initOptions);
+        if (initOptions && initOptions.priority === OPTIONS_PRIORITY_ORDERED) {
           if (
             widgetTracker.prioritizedWidgets.length &&
             widgetTracker.prioritizedWidgets[0].id === widget.id
@@ -61,13 +65,13 @@ export default function initializeWidgetArray (array, options) {
             return;
           }
 
-          initWidget(a, index + 1, o);
+          initWidget(widgetArray, index + 1, initOptions);
         }
       });
     });
 
-    if (!options || options.priority !== 'ordered') {
-      initWidget(a, index + 1, o);
+    if (!initOptions || initOptions.priority !== OPTIONS_PRIORITY_ORDERED) {
+      initWidget(widgetArray, index + 1, initOptions);
     }
   };
 

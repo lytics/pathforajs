@@ -3,7 +3,7 @@
 // globals
 import { defaultPositions } from '../globals/config';
 
-// validaion
+// validation
 import validateWidgetPosition from '../validation/validate-widget-position';
 
 /**

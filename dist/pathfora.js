@@ -233,6 +233,7 @@ var API_URL = '//api.lytics.io';
 var CSS_URL = '//c.lytics.io/static/pathfora.min.css';
 var ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}';
 var ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'];
+var OPTIONS_PRIORITY_ORDERED = 'ordered';
 
 var defaultPositions = {
   modal: '',
@@ -1262,7 +1263,7 @@ function validateWidgetPosition (widget, config) {
 /** @module pathfora/widgets/setup-widget-position */
 
 // globals
-// validaion
+// validation
 /**
  * Validate that the widget has correct position field,
  * and choose the default if it does not
@@ -3063,6 +3064,13 @@ function validateWidgetsObject (widgets) {
 function validateAccountId (pf) {
   if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
     if (window.lio && window.lio.account) {
+      if (
+        typeof window.lio.account.id === 'undefined' ||
+        window.lio.account.id === ''
+      ) {
+        throw new Error('Lytics Javascript tag returned an empty account id.');
+      }
+
       pf.acctid = window.lio.account.id;
     } else {
       throw new Error('Could not get account id from Lytics Javascript tag.');
@@ -3095,7 +3103,7 @@ function initializeTargetedWidgets (widgets, options) {
   if (widgets.target || widgets.exclude) {
     pf.addCallback(function () {
       validateAccountId(pf);
-      var targetedwidgets = [],
+      var targetedWidgets = [],
           segments = getUserSegments();
 
       // handle inclusions
@@ -3105,7 +3113,7 @@ function initializeTargetedWidgets (widgets, options) {
           if (segments && segments.indexOf(target.segment) !== -1) {
             // add the widgets with proper targeting to the master list
             // ensure we dont overwrite existing widgets in target
-            targetedwidgets = targetedwidgets.concat(target.widgets);
+            targetedWidgets = targetedWidgets.concat(target.widgets);
           }
         }
       }
@@ -3117,10 +3125,10 @@ function initializeTargetedWidgets (widgets, options) {
           if (segments && segments.indexOf(exclude.segment) !== -1) {
             // we found a match, ensure the corresponding segment(s) are not in the
             // targetted widgets array
-            for (var x = 0; x < targetedwidgets.length; x++) {
+            for (var x = 0; x < targetedWidgets.length; x++) {
               for (var y = 0; y < exclude.widgets.length; y++) {
-                if (targetedwidgets[x] === exclude.widgets[y]) {
-                  targetedwidgets.splice(x, 1);
+                if (targetedWidgets[x] === exclude.widgets[y]) {
+                  targetedWidgets.splice(x, 1);
                 }
               }
             }
@@ -3128,11 +3136,9 @@ function initializeTargetedWidgets (widgets, options) {
         }
       }
 
-      if (targetedwidgets.length) {
-        pf.initializeWidgetArray(targetedwidgets, options);
-      }
-
-      if (!targetedwidgets.length && widgets.inverse) {
+      if (targetedWidgets.length) {
+        pf.initializeWidgetArray(targetedWidgets, options);
+      } else if (widgets.inverse) {
         pf.initializeWidgetArray(widgets.inverse, options);
       }
     });
@@ -3153,11 +3159,34 @@ function trackTimeOnPage () {
   }, 1000);
 }
 
+/** @module pathfora/validation/validate-options */
+
+/**
+ * Validate and set the Lytics account Id
+ *
+ * @exports validateAccountId
+ * @params {object} pf
+ */
+function validateOptions (options) {
+  if (options) {
+    // validate priority
+    if (options.priority) {
+      switch (options.priority) {
+      case OPTIONS_PRIORITY_ORDERED:
+        break;
+      default:
+        throw new Error('Invalid priority defined in options.');
+      }
+    }
+  }
+}
+
 /** @module pathfora/widgets/init-widgets */
 
 // globals
 // utils
 // data
+// validation
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created
@@ -3184,6 +3213,8 @@ function initializeWidgets (widgets, config, options) {
   if (!widgets) {
     throw new Error('Initialize called with no widgets');
   }
+
+  validateOptions(options);
 
   if (config) {
     updateObject(defaultProps, config);
@@ -3536,12 +3567,12 @@ function preloadRecommendation (widget, pf, cb) {
 function initializeWidgetArray (array, options) {
   var pf = this;
 
-  var initWidget = function (a, index, o) {
-    if (index >= a.length) {
+  var initWidget = function (widgetArray, index, initOptions) {
+    if (index >= widgetArray.length) {
       return;
     }
 
-    var widget = a[index],
+    var widget = widgetArray[index],
         defaults = defaultProps[widget.type],
         globals = defaultProps.generic;
 
@@ -3568,8 +3599,8 @@ function initializeWidgetArray (array, options) {
 
     preloadLio(widget, pf, function () {
       preloadRecommendation(widget, pf, function () {
-        pf.initializeWidget(widget, options);
-        if (options && options.priority === 'ordered') {
+        pf.initializeWidget(widget, initOptions);
+        if (initOptions && initOptions.priority === OPTIONS_PRIORITY_ORDERED) {
           if (
             widgetTracker.prioritizedWidgets.length &&
             widgetTracker.prioritizedWidgets[0].id === widget.id
@@ -3577,13 +3608,13 @@ function initializeWidgetArray (array, options) {
             return;
           }
 
-          initWidget(a, index + 1, o);
+          initWidget(widgetArray, index + 1, initOptions);
         }
       });
     });
 
-    if (!options || options.priority !== 'ordered') {
-      initWidget(a, index + 1, o);
+    if (!initOptions || initOptions.priority !== OPTIONS_PRIORITY_ORDERED) {
+      initWidget(widgetArray, index + 1, initOptions);
     }
   };
 
@@ -4359,7 +4390,11 @@ function initializeWidget (widget, options) {
   }
 
   // if it's valid at this point, add it to the priority list
-  if (widget.valid && options && options.priority === 'ordered') {
+  if (
+    widget.valid &&
+    options &&
+    options.priority === OPTIONS_PRIORITY_ORDERED
+  ) {
     widgetTracker.prioritizedWidgets.push(widget);
   }
 
