@@ -140,6 +140,13 @@ export default function showWidget (w) {
     }
   };
 
+  var widgetOnInitCallback = w.onInit;
+  if (typeof widgetOnInitCallback === 'function') {
+    widgetOnInitCallback(callbackTypes.INIT, {
+      config: w
+    });
+  }
+
   // account for showDelay condition
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
