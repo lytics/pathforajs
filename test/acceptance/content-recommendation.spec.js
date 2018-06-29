@@ -400,7 +400,14 @@ describe('the content recommendation component', function () {
     pathfora.acctid = '';
   });
 
-  it('should display a recommendation modal even if missing a description', function () {
+  it('should display a recommendation modal even if missing a description', function (done) {
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
     var modal = new pathfora.Message({
       id: 'modal1',
       layout: 'modal',
@@ -408,32 +415,51 @@ describe('the content recommendation component', function () {
       msg: 'test',
       theme: 'custom',
       colors: {
-         actionBackground: '#fff',
-         actionText: '#444',
-         background: '#f1f1f1',
-         cancelBackground: '#f1f1f1',
-         cancelText: '#bbb',
-         close: '#bbb',
-         headline: '#d35145',
-         text: '#d35145'
+        actionBackground: '#fff',
+        actionText: '#444',
+        background: '#f1f1f1',
+        cancelBackground: '#f1f1f1',
+        cancelText: '#bbb',
+        close: '#bbb',
+        headline: '#d35145',
+        text: '#d35145'
       },
       recommend: {
-        collection: 'owifnwkqlbf'
+        collection: 'blah'
       },
-      content: [{
-        url: 'https://www.getlytics.com/blog/post/know_your_data',
-        title: 'test',
-        default: true
-      }]
+      content: [
+        {
+          url: 'https://www.getlytics.com/blog/post/know_your_data',
+          title: 'test',
+          default: true
+        }
+      ]
     });
     window.pathfora.initializeWidgets([modal]);
 
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      status: 500,
+      contentType: 'application/json',
+      responseText:
+        '{"data": null,"message": "Internal Server Error","status": 400}'
+    });
+
     var widget = $('#' + modal.id);
-    console.log(widget);
-    expect(widget).toBeDefined();
+    setTimeout(function () {
+      expect(widget).toBeDefined();
+      expect(widget.length).toBe(1);
+      done();
+    }, 200);
   });
 
-  it('should set the colors specified to the content recommendation modal', function(done) {
+  it('should set the colors specified to the content recommendation modal', function (done) {
+    window.lio = {
+      account: {
+        id: 0
+      },
+      loaded: true
+    };
+
     var modal = new pathfora.Message({
       id: 'modal1',
       layout: 'modal',
@@ -441,32 +467,42 @@ describe('the content recommendation component', function () {
       msg: 'test',
       theme: 'custom',
       colors: {
-         actionBackground: '#fff',
-         actionText: '#53f442',
-         background: '#f1f1f1',
-         cancelBackground: '#f1f1f1',
-         cancelText: '#bbb',
-         close: '#bbb',
-         headline: '#53f442',
-         text: '#d35145'
+        actionBackground: '#fff',
+        actionText: '#53f442',
+        background: '#f1f1f1',
+        cancelBackground: '#f1f1f1',
+        cancelText: '#bbb',
+        close: '#bbb',
+        headline: '#53f442',
+        text: '#d35145'
       },
-      content: [{
-        url: 'https://www.getlytics.com/blog/post/know_your_data',
-        title: 'test',
-        description: 'sample test content description',
-        default: true
-      }]
+      recommend: {
+        collection: 'blah'
+      },
+      content: [
+        {
+          url: 'https://www.getlytics.com/blog/post/know_your_data',
+          title: 'test',
+          description: 'sample test content description',
+          default: true
+        }
+      ]
     });
     window.pathfora.initializeWidgets([modal]);
 
-    setTimeout(function () {
-      var widget = $('#' + modal.id);
-      var title = widget.find('.pf-content-unit-meta h4');
-      console.log('css', title.css());
-      expect(title.css('color')).toBe('#53f442');
+    jasmine.Ajax.requests.mostRecent().respondWith({
+      status: 500,
+      contentType: 'application/json',
+      responseText:
+        '{"data": null,"message": "Internal Server Error","status": 400}'
+    });
 
-      var description = widget.find('.pf-content-unit-meta p');
-      expect(description.css('color')).toBe('#d35145');
+    setTimeout(function () {
+      var widget = $('#' + modal.id),
+          title = widget.find('.pf-content-unit-meta h4'),
+          description = widget.find('.pf-content-unit-meta p');
+      expect(title.css('color')).toBe('rgb(83, 244, 66)');
+      expect(description.css('color')).toBe('rgb(211, 81, 69)');
       done();
     }, 200);
   });
