@@ -3566,6 +3566,7 @@ function preloadRecommendation (widget, pf, cb) {
  */
 function initializeWidgetArray (array, options) {
   var pf = this;
+  widgetTracker.prioritizedWidgets = [];
 
   var initWidget = function (widgetArray, index, initOptions) {
     if (index >= widgetArray.length) {
