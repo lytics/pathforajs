@@ -39,6 +39,8 @@ describe('Prioritized widgets', function () {
     });
 
     it('should account for display conditions when determining priority', function (done) {
+      pathfora.utils.saveCookie('PathforaPageView', 2);
+
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
         layout: 'bar',
@@ -47,8 +49,23 @@ describe('Prioritized widgets', function () {
           pageVisits: 3
         }
       });
+
       var modal = new pathfora.Message({
         id: 'modal2',
+        layout: 'modal'
+      });
+
+      var anotherMessageBar = new pathfora.Message({
+        id: 'anotherMessageBar',
+        layout: 'bar',
+        msg: 'Welcome to our website',
+        displayConditions: {
+          pageVisits: 1
+        }
+      });
+
+      var anotherModal = new pathfora.Message({
+        id: 'anotherModal',
         layout: 'modal'
       });
 
@@ -56,13 +73,22 @@ describe('Prioritized widgets', function () {
         priority: 'ordered'
       });
 
-      var widget1 = $('#' + messageBar.id);
-      var widget2 = $('#' + modal.id);
+      pathfora.initializeWidgets([anotherMessageBar, anotherModal], null, {
+        priority: 'ordered'
+      });
+
+      var widget1 = $('#' + messageBar.id),
+          widget2 = $('#' + modal.id),
+          widget3 = $('#' + anotherMessageBar.id),
+          widget4 = $('#' + anotherModal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
         expect(widget2).toBeDefined();
         expect(widget2.hasClass('opened')).toBeTruthy();
+        expect(widget3).toBeDefined();
+        expect(widget3.hasClass('opened')).toBeTruthy();
+        expect(widget4.length).toBe(0);
         done();
       }, 200);
     });

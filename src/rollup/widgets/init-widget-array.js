@@ -23,6 +23,7 @@ import preloadRecommendation from './recommendations/preload-recommendation';
  */
 export default function initializeWidgetArray (array, options) {
   var pf = this;
+  widgetTracker.prioritizedWidgets = [];
 
   var initWidget = function (widgetArray, index, initOptions) {
     if (index >= widgetArray.length) {
