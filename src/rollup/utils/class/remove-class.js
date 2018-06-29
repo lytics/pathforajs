@@ -15,6 +15,5 @@ export default function removeClass (DOMNode, className) {
     escapeRegex(className.split(' ').join('|')),
     '(\\b|$)'
   ].join(''), 'gi');
-
   DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
 }
