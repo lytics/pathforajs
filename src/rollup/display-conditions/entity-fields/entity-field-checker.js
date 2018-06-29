@@ -1,7 +1,16 @@
 /** @module pathfora/display-conditions/entity-fields/entity-field-checker */
 
+// globals
+import {
+  ENTITY_FIELD_TEMPLATE_REGEX,
+  ENTITY_FIELDS
+} from '../../globals/config';
+
 // utils
 import getObjectValue from '../../utils/objects/get-object-value';
+
+// display conditions
+import replaceEntityField from './replace-entity-field';
 
 /**
  * Evaluate all fields on the list provided and check
@@ -13,26 +22,13 @@ import getObjectValue from '../../utils/objects/get-object-value';
  * @params {object} widget
  * @params {function} cb
  */
-export default function entityFieldChecker (fields, widget, cb) {
-  var found, i,
-      regex = /\{{2}.*?\}{2}/g,
-      pf = this,
-      count = 0;
+export default function entityFieldChecker (widget, customData) {
+  var found,
+      valid = true;
 
-  // call the replace method in a jstag callback
-  var replace = function (w, fieldName, f) {
-    pf.addCallback(function () {
-      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
-      count++;
-
-      if (count === fields.length) {
-        cb();
-      }
-    });
-  };
-
-  for (i = 0; i < fields.length; i++) {
-    var fieldValue = getObjectValue(widget, fields[i]);
+  for (var i = 0; i < ENTITY_FIELDS.length; i++) {
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
 
     // convert functions to a string
     if (typeof fieldValue === 'function') {
@@ -43,16 +39,12 @@ export default function entityFieldChecker (fields, widget, cb) {
       found = fieldValue.match(regex);
 
       if (found && found.length > 0) {
-        replace(widget, fields[i], found);
-      } else {
-        count++;
+        valid =
+          valid &&
+          replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
       }
-    } else {
-      count++;
-    }
-
-    if (count === fields.length) {
-      cb();
     }
   }
+
+  return valid;
 }

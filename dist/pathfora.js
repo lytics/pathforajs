@@ -215,7 +215,7 @@ function createABTestingModePreset () {
 
 // globals
 // ab tests
-var PF_VERSION = '1.0.0';
+var PF_VERSION = '1.1.0';
 var PF_LOCALE = 'en-US';
 var PF_DATE_OPTIONS = {};
 var PREFIX_REC = 'PathforaRecommend_';
@@ -231,6 +231,9 @@ var DEFAULT_CHAR_LIMIT_STACK = 160;
 var WIDTH_BREAKPOINT = 650;
 var API_URL = '//api.lytics.io';
 var CSS_URL = '//c.lytics.io/static/pathfora.min.css';
+var ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}';
+var ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'];
+var OPTIONS_PRIORITY_ORDERED = 'ordered';
 
 var defaultPositions = {
   modal: '',
@@ -269,7 +272,7 @@ var templates = {
     'slideout': '<button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' data-required=\'true\' aria-label=\'Email\'></span></form><div class=\'pf-widget-footer\'></div></div>'
   },
   'sitegate': {
-    'modal': '<div class=\'pf-widget-container\' role=\'dialog\' aria-labeledby=\'pf-widget-headline\' aria-describedby=\'pf-widget-message\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\' id=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\' id=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'> <textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea> <button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div>'
+    'modal': '<div class=\'pf-widget-container\' role=\'dialog\' aria-labeledby=\'pf-widget-headline\' aria-describedby=\'pf-widget-message\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\' id=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\' id=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'><textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div>'
   },
   'message': {
     'bar': '<div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><span><button type=\'button\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></span></div>',
@@ -280,9 +283,9 @@ var templates = {
   },
   'includes': {},
   'form': {
-    'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'> <textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea> <button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button></form></div></div></div></div></div>',
-    'modal': '<div class=\'pf-widget-container\' role=\'dialog\' aria-labeledby=\'pf-widget-headline\' aria-describedby=\'pf-widget-message\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><h2 class=\'pf-widget-headline\' id=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\' id=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'> <textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea> <button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div>',
-    'slideout': '<button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><p class=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'> <textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea> <button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div>'
+    'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'><textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button></form></div></div></div></div></div>',
+    'modal': '<div class=\'pf-widget-container\' role=\'dialog\' aria-labeledby=\'pf-widget-headline\' aria-describedby=\'pf-widget-message\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><h2 class=\'pf-widget-headline\' id=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\' id=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'><textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div>',
+    'slideout': '<button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-widget-body\'></div><div class=\'pf-widget-content\'><h2 class=\'pf-widget-headline\'></h2><p class=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'><textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div>'
   },
   'assets': {
     'lytics': '<a href=\'https://www.getlytics.com?utm_source=pathfora&amp;utm_medium=web&amp;utm_campaign=personalization\' target=\'_blank\'><svg width=\'120\' height=\'30\' xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 143.97 36.85\'><title>lytics</title><path d=\'M122.26 11.36h.1c1.41-.39 2.33-1 2.2-2.94 0-.7-.28-1.06-.69-1.06-.7 0-1.3 1.38-1.37 1.53l-.09.21a3.22 3.22 0 0 0-.5 2 .38.38 0 0 0 .36.25\' transform=\'translate(-.85)\'/><path d=\'M88 5.27a.76.76 0 0 0-1.09.73v.18a1.57 1.57 0 0 0 .45.93 8.78 8.78 0 0 0 6 2.6h.21a.12.12 0 0 1 .13.14 32 32 0 0 1-2 8 1.76 1.76 0 0 1-1 1.17.6.6 0 0 1-.26-.07c-.32-.16-.74-.41-1.18-.67a13.8 13.8 0 0 0-1.72-.93 15.11 15.11 0 0 0-3.88-1.22c-1.81-.2-4.09.56-4.47 2.52a4.7 4.7 0 0 0 2 4.47 10 10 0 0 0 5.19 1.75 6.34 6.34 0 0 0 3.74-1.24l.47-.39c.27-.23.82-.69 1.13-.9a.12.12 0 0 1 .15 0l.5.41a7.84 7.84 0 0 0 .62.5 7.72 7.72 0 0 0 3.54 1.33h.58a5.21 5.21 0 0 0 2.62-.66.12.12 0 0 1 .15 0 2.19 2.19 0 0 0 1.6.68c1.75 0 3.76-1.83 5.06-3.29v.1a8.92 8.92 0 0 1-.83 2.69 7.53 7.53 0 0 1-1.06 1.33l-.47.52a35.84 35.84 0 0 0-3 4.07c-.9 1.43-1.67 2.95-1.31 4.35a3.2 3.2 0 0 0 1.65 2 3.39 3.39 0 0 0 1.67.49c2.09 0 3.25-2.42 3.75-3.86a16.38 16.38 0 0 0 .82-4c.07-.6.14-1.22.25-1.94l.08-.59a3.35 3.35 0 0 1 .8-2.22c.64-.57 1.28-1.17 1.89-1.74l.09-.09.72-.67.28-.25a.12.12 0 0 1 .2.06 4.52 4.52 0 0 0 .71 1.61 3.32 3.32 0 0 0 2.73 1.36 4 4 0 0 0 2.76-1.15 5.29 5.29 0 0 0 .53-.72.12.12 0 0 1 .2 0 2.1 2.1 0 0 0 .47.49 3.52 3.52 0 0 0 2.05.91c.87 0 1.54-.6 2.48-1.5a2.14 2.14 0 0 0 .29-.4.12.12 0 0 1 .21 0l.23.39a4.53 4.53 0 0 0 3.12 2 9.87 9.87 0 0 0 1.46.12 5.58 5.58 0 0 0 4.47-2.09.12.12 0 0 1 .19 0 5.41 5.41 0 0 0 .84.93 5.35 5.35 0 0 0 3.32 1.21 3 3 0 0 0 3.05-2.22 1.33 1.33 0 0 1 1.23-1.29c.67-.25 2.25-.95 2.45-2.16a.77.77 0 0 0-.14-.66.69.69 0 0 0-.55-.23 5.83 5.83 0 0 0-2.08.81 10.5 10.5 0 0 1-1 .46.12.12 0 0 1-.14 0 2.78 2.78 0 0 1-.24-.67 3.12 3.12 0 0 0-.12-.4 32.49 32.49 0 0 0-1.77-3.46 4.53 4.53 0 0 1-.25-.57 3 3 0 0 0-.61-1.1 2.89 2.89 0 0 0-1.53-.45.74.74 0 0 0-.8.42 1.23 1.23 0 0 0 .07.9l.08.26a2.77 2.77 0 0 1-.06.76 3.65 3.65 0 0 1-.69 1.44l-.14.18c-.3.37-.52.65-.67.87a.68.68 0 0 0-.28-.06.67.67 0 0 0-.52.25 3.21 3.21 0 0 0-.47 1.67v.06a13.23 13.23 0 0 0-.76 1.12c-.16.26-.31.5-.42.63a3.3 3.3 0 0 1-2.47 1 3.65 3.65 0 0 1-2.42-.95 1.76 1.76 0 0 1-.56-1.35 6.7 6.7 0 0 1 1.92-4.19 2.4 2.4 0 0 1 1.44-.77.66.66 0 0 1 .32-.02c.4.21.38.32.07.91a1.77 1.77 0 0 0-.3 1.26.48.48 0 0 0 .24.3l.72.4a.51.51 0 0 0 .63-.1 3.19 3.19 0 0 0 .83-3.35c-.48-1.07-1.71-1.59-3.25-1.34a6.61 6.61 0 0 0-4.9 5l-.09.44-.38.66c-.52.92-1.16 2.06-2 2.37a2.1 2.1 0 0 1-.68.17h-.06a3.3 3.3 0 0 1 .12-1.07l.08-.39a15.21 15.21 0 0 1 .78-2.53 12.54 12.54 0 0 0 .91-3.4 1.45 1.45 0 0 0-.4-1.11 1.2 1.2 0 0 0-.86-.41.94.94 0 0 0-.82.51 22.22 22.22 0 0 0-2.13 6.27v.06l-.28.37a7 7 0 0 1-2.37 2.32 1 1 0 0 1-1.22-.23 2 2 0 0 1-.21-1.7c.35-1.23.66-2.49 1-3.75a34.52 34.52 0 0 0 1.23-3.54l.1-.08c.85-.15 1.72-.3 2.56-.41.28 0 .56-.05.85-.07h.63a.5.5 0 0 0 .42-.31 1 1 0 0 0-.07-.88 1.79 1.79 0 0 0-1.4-.74h-.08c-.61 0-1.31 0-2 .08l-.13-.17a8.47 8.47 0 0 0 .46-2.67 2.68 2.68 0 0 0-.32-1.49 1.38 1.38 0 0 0-1.5-.67 2.07 2.07 0 0 0-1.13 1.48 14.92 14.92 0 0 0-.41 1.59c-.27.62-.56 1.33-.85 2.1l-.28.22h-.84a17.31 17.31 0 0 0-2.62.32 1.21 1.21 0 0 0-.91.76.81.81 0 0 0 .08.66 2.49 2.49 0 0 0 1.37 1 2 2 0 0 0 .49.06 8.68 8.68 0 0 0 1.61-.23h.14c-.12.41-.24.83-.35 1.26-.21.82-.37 1.58-.48 2.3-.29.51-.6 1-.94 1.49a12.48 12.48 0 0 1-1.83 1.9l-.23.38a39.76 39.76 0 0 1 .76-5.35.49.49 0 0 0-.16-.46l-.69-.59a.51.51 0 0 0-.33-.12h-.25a.38.38 0 0 0-.33.19c-.51.9-.9 1.7-1.27 2.47a23.51 23.51 0 0 1-2.07 3.66 2.8 2.8 0 0 1-2.05 1 1.06 1.06 0 0 1-.72-.23v-.08a1.38 1.38 0 0 0-.12-.41l-.15-.25v-.14a21.73 21.73 0 0 1 1.38-6.69 1.88 1.88 0 0 0 .15-1.67 1 1 0 0 0-.9-.39h-.25c-1.18.12-2.27 2.69-2.28 2.72a15.2 15.2 0 0 0-1 6.62.12.12 0 0 1-.06.12 3.83 3.83 0 0 1-2 .58c-.76-.06-1.72-.25-3.45-1.72a.12.12 0 0 1 0-.15 27 27 0 0 0 2.88-9.57 1.32 1.32 0 0 1 .28-.87 3.25 3.25 0 0 1 .87-.11h.14a17 17 0 0 0 2.8-.36 11.86 11.86 0 0 0 3.94-1.74 5.54 5.54 0 0 0 2.72-3.76 3.2 3.2 0 0 0-.85-2.5 3.83 3.83 0 0 0-3.09-1.2 8.54 8.54 0 0 0-5.3 2.31 21.6 21.6 0 0 0-2.48 3.16 6.87 6.87 0 0 0-.37.7 2 2 0 0 1-.92 1.19 6.38 6.38 0 0 1-4.63-1.36 5 5 0 0 0-.77-.52l-.43-.21zm14.3-2.93l.34-.11a2.16 2.16 0 0 1 2 .23.69.69 0 0 1 .1.6 4 4 0 0 1-1.64 2.3 11.44 11.44 0 0 1-5.63 1.88.12.12 0 0 1-.12-.18 9.82 9.82 0 0 1 5-4.73zm-17.3 19.95a4.36 4.36 0 0 1-3.39-2.16 1.22 1.22 0 0 1 .1-1.34 1.67 1.67 0 0 1 1.29-.44c2 0 5.08 1.71 6.41 2.47a.12.12 0 0 1 0 .18c-.74 1-2.16 1.42-4.44 1.29zm20.4 6.43c-.17 1-.35 1.94-.52 2.67-.33 1.4-.82 2.36-2.2 2.8h-.35a.39.39 0 0 1-.41-.14c-.09-.17-.25-1 1.71-3.86l.07-.1c.51-.76 1.1-1.54 1.65-2.23a.12.12 0 0 1 .22.1zm31.7-11.51h.2a9.64 9.64 0 0 1 1.55 2.64.12.12 0 0 1-.11.17 4.59 4.59 0 0 1-2.08-.47.72.72 0 0 1-.42-.43 3.23 3.23 0 0 1 .86-1.9zm1.85 5a.73.73 0 0 1-.88.61 3.3 3.3 0 0 1-1.65-.5 2.36 2.36 0 0 1-.65-1.05.12.12 0 0 1 .23-.17 6.66 6.66 0 0 0 2.42.9h.58v.18zM.85 21.74v-8h3.52a2.51 2.51 0 1 1 0 5h-2.12v3h-1.4zm4.69-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3zM7.79 17.74a4 4 0 0 1 4.09-4.14 4 4 0 0 1 4.12 4.14 4 4 0 0 1-4.09 4.14 4 4 0 0 1-4.12-4.14zm6.74 0a2.66 2.66 0 1 0-5.3 0 2.66 2.66 0 1 0 5.3 0z\' transform=\'translate(-.85)\'/><path d=\'M22.35 21.74l-1.56-5.9-1.55 5.9h-1.49l-2.29-8h1.57l1.56 6.16 1.66-6.16h1.12l1.66 6.16 1.55-6.16h1.57l-2.28 8h-1.52zM27.07 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.07v1.24h-5.48z\'/><path d=\'M39.42 21.74l-1.77-3h-1.4v3h-1.4v-8h3.51a2.43 2.43 0 0 1 2.64 2.5 2.24 2.24 0 0 1-1.9 2.35l2 3.14h-1.68zm.12-5.49a1.26 1.26 0 0 0-1.37-1.25h-1.92v2.54h1.92a1.26 1.26 0 0 0 1.37-1.3z\' transform=\'translate(-.85)\'/><path d=\'M41.53 21.74v-8h5.48v1.26h-4.07v2h4v1.24h-4v2.26h4.08v1.24h-5.49z\'/><path d=\'M49.31 21.74v-8h3a3.91 3.91 0 0 1 4.19 4 3.9 3.9 0 0 1-4.19 4h-3zm5.72-4a2.59 2.59 0 0 0-2.75-2.74h-1.57v5.5h1.57a2.63 2.63 0 0 0 2.72-2.76zM60.91 21.74v-8h3.93a2 2 0 0 1 2.28 2 1.8 1.8 0 0 1-1.39 1.83 2 2 0 0 1 1.55 2 2.1 2.1 0 0 1-2.28 2.17h-4zm4.77-5.74a1 1 0 0 0-1.13-1h-2.24v2h2.24a1 1 0 0 0 1.13-1zm.16 3.37a1.1 1.1 0 0 0-1.22-1.1h-2.3v2.23h2.3a1.08 1.08 0 0 0 1.22-1.12z\' transform=\'translate(-.85)\'/><path d=\'M69.74 21.74v-3.33l-3.11-4.68h1.61l2.21 3.43 2.18-3.43h1.61l-3.09 4.68v3.32h-1.4z\'/></svg></a>'
@@ -345,7 +348,6 @@ function removeClass (DOMNode, className) {
     escapeRegex(className.split(' ').join('|')),
     '(\\b|$)'
   ].join(''), 'gi');
-
   DOMNode.className = DOMNode.className.replace(findClassRegexp, ' ');
 }
 
@@ -1207,7 +1209,7 @@ function incrementImpressions (widget) {
   saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
 }
 
-/** @module pathfora/widgets/validate-widget-position */
+/** @module pathfora/validation/validate-widget-position */
 
 /**
  * Validate that the widget has correct position field
@@ -1225,13 +1227,27 @@ function validateWidgetPosition (widget, config) {
     choices = [''];
     break;
   case 'slideout':
-    choices = ['bottom-left', 'bottom-right', 'left', 'right', 'top-left', 'top-right'];
+    choices = [
+      'bottom-left',
+      'bottom-right',
+      'left',
+      'right',
+      'top-left',
+      'top-right'
+    ];
     break;
   case 'bar':
     choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
     break;
   case 'button':
-    choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+    choices = [
+      'left',
+      'right',
+      'top-left',
+      'top-right',
+      'bottom-left',
+      'bottom-right'
+    ];
     break;
   case 'inline':
     choices = [];
@@ -1246,7 +1262,7 @@ function validateWidgetPosition (widget, config) {
 /** @module pathfora/widgets/setup-widget-position */
 
 // globals
-// widgets
+// validation
 /**
  * Validate that the widget has correct position field,
  * and choose the default if it does not
@@ -1788,7 +1804,7 @@ function constructWidgetActions (widget, config) {
   }
 }
 
-/** @module pathfora/widgets/setup-widget-content-unit */
+/** @module pathfora/widgets/recommendation/setup-widget-content-unit */
 
 // globals
 // dom
@@ -1806,7 +1822,6 @@ function setupWidgetContentUnit (widget, config) {
   if (config.recommend && config.content) {
     // Make sure we have content to get
     if (Object.keys(config.content).length > 0) {
-
       // The top recommendation should be default if we couldn't
       // get one from the api
       var rec = config.content[0],
@@ -1819,7 +1834,10 @@ function setupWidgetContentUnit (widget, config) {
       widgetContentUnit.href = rec.url;
 
       // image div
-      if (rec.image && (!settings.display || settings.display.image !== false)) {
+      if (
+        rec.image &&
+        (!settings.display || settings.display.image !== false)
+      ) {
         recImage.className = 'pf-content-unit-img';
         recImage.style.backgroundImage = "url('" + rec.image + "')";
         widgetContentUnit.appendChild(recImage);
@@ -1828,12 +1846,18 @@ function setupWidgetContentUnit (widget, config) {
       recMeta.className = 'pf-content-unit-meta';
 
       // title h4
-      if (rec.title && (!settings.display || settings.display.title !== false)) {
+      if (
+        rec.title &&
+        (!settings.display || settings.display.title !== false)
+      ) {
         recTitle.innerHTML = rec.title;
         recMeta.appendChild(recTitle);
       }
 
-      if (rec.author && (settings.display && settings.display.author === true)) {
+      if (
+        rec.author &&
+        (settings.display && settings.display.author === true)
+      ) {
         recInfo.innerHTML = 'by ' + rec.author;
       }
 
@@ -1869,10 +1893,15 @@ function setupWidgetContentUnit (widget, config) {
       }
 
       // description p
-      if (rec.description && (!settings.display || settings.display.description !== false)) {
+      if (
+        rec.description &&
+        (!settings.display || settings.display.description !== false)
+      ) {
         var desc = rec.description,
-            limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
-
+            limit =
+            config.layout === 'modal'
+              ? DEFAULT_CHAR_LIMIT
+              : DEFAULT_CHAR_LIMIT_STACK;
 
         // set the default character limit for descriptions
         if (!settings.display) {
@@ -1883,7 +1912,10 @@ function setupWidgetContentUnit (widget, config) {
           settings.display.descriptionLimit = limit;
         }
 
-        if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
+        if (
+          desc.length > settings.display.descriptionLimit &&
+          settings.display.descriptionLimit !== -1
+        ) {
           desc = desc.substring(0, settings.display.descriptionLimit);
           desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
         }
@@ -2541,6 +2573,7 @@ function setCustomColors (widget, colors) {
       requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
       body = widget.querySelector('.pf-widget-body');
 
+
   if (colors.background) {
     if (hasClass(widget, 'pf-widget-modal')) {
       widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
@@ -2577,16 +2610,19 @@ function setCustomColors (widget, colors) {
   }
 
   if (contentUnit && contentUnitMeta) {
+    var contentUnitMetaTitle = contentUnitMeta.querySelector('h4');
+    var contentUnitMetaDescription = contentUnitMeta.querySelector('p');
+
     if (colors.actionBackground) {
       contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
     }
 
-    if (colors.actionText) {
-      contentUnitMeta.querySelector('h4').style.setProperty('color', colors.actionText, 'important');
+    if (colors.actionText && contentUnitMetaTitle) {
+      contentUnitMetaTitle.style.setProperty('color', colors.actionText, 'important');
     }
 
-    if (colors.text) {
-      contentUnitMeta.querySelector('p').style.setProperty('color', colors.text, 'important');
+    if (colors.text && contentUnitMetaDescription) {
+      contentUnitMetaDescription.style.setProperty('color', colors.text, 'important');
     }
   }
 
@@ -2865,6 +2901,13 @@ function showWidget (w) {
     }
   };
 
+  var widgetOnInitCallback = w.onInit;
+  if (typeof widgetOnInitCallback === 'function') {
+    widgetOnInitCallback(callbackTypes.INIT, {
+      config: w
+    });
+  }
+
   // account for showDelay condition
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
@@ -2971,174 +3014,6 @@ function triggerWidgets (widgetIds) {
   }
 }
 
-/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
-
-// utils
-/**
- * Evaluate all fields on the list provided and check
- * if there are any entity templates that need to be
- * replaced.
- *
- * @exports entityFieldChecker
- * @params {array} fields
- * @params {object} widget
- * @params {function} cb
- */
-function entityFieldChecker (fields, widget, cb) {
-  var found, i,
-      regex = /\{{2}.*?\}{2}/g,
-      pf = this,
-      count = 0;
-
-  // call the replace method in a jstag callback
-  var replace = function (w, fieldName, f) {
-    pf.addCallback(function () {
-      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
-      count++;
-
-      if (count === fields.length) {
-        cb();
-      }
-    });
-  };
-
-  for (i = 0; i < fields.length; i++) {
-    var fieldValue = getObjectValue(widget, fields[i]);
-
-    // convert functions to a string
-    if (typeof fieldValue === 'function') {
-      fieldValue = fieldValue.toString();
-    }
-
-    if (typeof fieldValue === 'string') {
-      found = fieldValue.match(regex);
-
-      if (found && found.length > 0) {
-        replace(widget, fields[i], found);
-      } else {
-        count++;
-      }
-    } else {
-      count++;
-    }
-
-    if (count === fields.length) {
-      cb();
-    }
-  }
-}
-
-/** @module pathfora/display-conditions/replace-entity-field */
-
-// dom
-// utils
-/**
- * Fill in the data for a entity field template in
- * a widgets text field
- *
- * @exports replaceEntityField
- * @params {object} widget
- * @params {string} fieldName
- * @params {array} found
- * @returns {boolean}
- */
-function replaceEntityField (widget, fieldName, found) {
-  if (!found || !found.length) {
-    return true;
-  }
-
-  var fnParams, fn,
-      currentVal = getObjectValue(widget, fieldName),
-      isFn = false;
-
-  // special case if the field is a function, convert it to a string first
-  if (typeof currentVal === 'function') {
-    fn = currentVal.toString();
-    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
-    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
-    isFn = true;
-  }
-
-  // for each template found...
-  for (var f = 0; f < found.length; f++) {
-    // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
-        def = '';
-
-    // get the default (fallback) value
-    if (parts.length > 1) {
-      def = parts[1].trim();
-    }
-
-    // check for subfields if the value is an object
-    var split = parts[0].trim().split('.');
-
-    dataval = window.lio.data;
-    var s;
-
-    for (s = 0; s < split.length; s++) {
-      if (typeof dataval !== 'undefined') {
-        dataval = dataval[split[s]];
-      }
-    }
-
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
-    if (typeof dataval === 'undefined') {
-      dataval = this.customData;
-
-      for (s = 0; s < split.length; s++) {
-        if (typeof dataval !== 'undefined') {
-          dataval = dataval[split[s]];
-        }
-      }
-    }
-
-    var val;
-
-    // replace the template with the lytics data value
-    if (typeof dataval !== 'undefined') {
-      val = currentVal.replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
-      return false;
-    // replace with the default option, or empty string if not found
-    } else {
-      val = currentVal.replace(found[f], def);
-    }
-
-    setObjectValue(widget, fieldName, val);
-    currentVal = val;
-  }
-
-  // if the value is a function, convert it back from a string
-  if (isFn) {
-    if (fnParams) {
-      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
-    } else {
-      fn = new Function(getObjectValue(widget, fieldName));
-    }
-
-    setObjectValue(widget, fieldName, fn);
-  }
-
-  return true;
-}
-
-/** @module pathfora/data/tracking/track-time-on-page */
-
-/**
- * Record the amount of time the user has spent
- * on the current page
- *
- * @exports trackTimeOnPage
- */
-function trackTimeOnPage () {
-  setInterval(function () {
-    pathforaDataObject.timeSpentOnPage += 1;
-  }, 1000);
-}
-
 /** @module pathfora/data/segments/get-user-segments */
 
 /**
@@ -3155,7 +3030,7 @@ function getUserSegments () {
   }
 }
 
-/** @module pathfora/widgets/validate-widgets-object */
+/** @module pathfora/validation/validate-widgets-object */
 
 /**
  * Validate that object provided to initializeWidgets
@@ -3166,11 +3041,7 @@ function getUserSegments () {
  * @params {object} widgets
  */
 function validateWidgetsObject (widgets) {
-  if (!widgets) {
-    throw new Error('Widgets not specified');
-  }
-
-  if (!(widgets instanceof Array) && widgets.target) {
+  if (widgets.target) {
     widgets.common = widgets.common || [];
 
     for (var i = 0; i < widgets.target.length; i++) {
@@ -3184,13 +3055,141 @@ function validateWidgetsObject (widgets) {
   }
 }
 
+/** @module pathfora/validation/validate-account-id */
+
+// dom
+/**
+ * Validate and set the Lytics account Id
+ *
+ * @exports validateAccountId
+ * @params {object} pf
+ */
+function validateAccountId (pf) {
+  if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
+    if (window.lio && window.lio.account) {
+      if (
+        typeof window.lio.account.id === 'undefined' ||
+        window.lio.account.id === ''
+      ) {
+        throw new Error('Lytics Javascript tag returned an empty account id.');
+      }
+
+      pf.acctid = window.lio.account.id;
+    } else {
+      throw new Error('Could not get account id from Lytics Javascript tag.');
+    }
+  }
+}
+
+/** @module pathfora/widgets/init-targeted-widgets */
+
+// data
+// validation
+/**
+ * Initialize widgets which are targeted by segments.
+ *
+ * @exports initializeWidgets
+ * @params {object} widgets
+ * @params {object} options
+ */
+function initializeTargetedWidgets (widgets, options) {
+  var pf = this,
+      i;
+
+  validateWidgetsObject(widgets);
+
+  if (widgets.common) {
+    pf.initializeWidgetArray(widgets.common, options);
+  }
+
+  // NOTE Target sensitive widgets
+  if (widgets.target || widgets.exclude) {
+    pf.addCallback(function () {
+      validateAccountId(pf);
+      var targetedWidgets = [],
+          segments = getUserSegments();
+
+      // handle inclusions
+      if (widgets.target) {
+        for (i = 0; i < widgets.target.length; i++) {
+          var target = widgets.target[i];
+          if (segments && segments.indexOf(target.segment) !== -1) {
+            // add the widgets with proper targeting to the master list
+            // ensure we dont overwrite existing widgets in target
+            targetedWidgets = targetedWidgets.concat(target.widgets);
+          }
+        }
+      }
+
+      // handle exclusions
+      if (widgets.exclude) {
+        for (i = 0; i < widgets.exclude.length; i++) {
+          var exclude = widgets.exclude[i];
+          if (segments && segments.indexOf(exclude.segment) !== -1) {
+            // we found a match, ensure the corresponding segment(s) are not in the
+            // targetted widgets array
+            for (var x = 0; x < targetedWidgets.length; x++) {
+              for (var y = 0; y < exclude.widgets.length; y++) {
+                if (targetedWidgets[x] === exclude.widgets[y]) {
+                  targetedWidgets.splice(x, 1);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (targetedWidgets.length) {
+        pf.initializeWidgetArray(targetedWidgets, options);
+      } else if (widgets.inverse) {
+        pf.initializeWidgetArray(widgets.inverse, options);
+      }
+    });
+  }
+}
+
+/** @module pathfora/data/tracking/track-time-on-page */
+
+/**
+ * Record the amount of time the user has spent
+ * on the current page
+ *
+ * @exports trackTimeOnPage
+ */
+function trackTimeOnPage () {
+  setInterval(function () {
+    pathforaDataObject.timeSpentOnPage += 1;
+  }, 1000);
+}
+
+/** @module pathfora/validation/validate-options */
+
+/**
+ * Validate and set the Lytics account Id
+ *
+ * @exports validateAccountId
+ * @params {object} pf
+ */
+function validateOptions (options) {
+  if (options) {
+    // validate priority
+    if (options.priority) {
+      switch (options.priority) {
+      case OPTIONS_PRIORITY_ORDERED:
+        break;
+      default:
+        throw new Error('Invalid priority defined in options.');
+      }
+    }
+  }
+}
+
 /** @module pathfora/widgets/init-widgets */
 
 // globals
-// dom
 // utils
 // data
-// widgets
+// validation
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created
@@ -3198,92 +3197,104 @@ function validateWidgetsObject (widgets) {
  * @exports initializeWidgets
  * @params {object} widgets
  * @params {object} config
+ * @params {object} options
  */
-function initializeWidgets (widgets, config) {
-  // NOTE IE < 10 not supported
-  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
+function initializeWidgets (widgets, config, options) {
   var pf = this;
-  if (document$1.all && !window.atob) {
-    return;
-  }
-
+  trackTimeOnPage();
   // support legacy initialize function where we passed account id as
   // a second parameter and config as third
-  if (arguments.length >= 3) {
-    config = arguments[2];
-  // if the second param is an account id, we need to throw it out
-  } else if (typeof config === 'string') {
-    config = null;
+  if (typeof config === 'string') {
+    if (options) {
+      config = options;
+      options = null;
+    } else {
+      config = null;
+    }
   }
 
-  validateWidgetsObject(widgets);
-  trackTimeOnPage();
+  if (!widgets) {
+    throw new Error('Initialize called with no widgets');
+  }
+
+  validateOptions(options);
 
   if (config) {
     updateObject(defaultProps, config);
   }
 
-  if (widgets instanceof Array) {
-
-    // NOTE Simple initialization
-    pf.initializeWidgetArray(widgets);
+  if (Array.isArray(widgets)) {
+    pf.initializeWidgetArray(widgets, options);
   } else {
+    pf.initializeTargetedWidgets(widgets, options);
+  }
+}
 
-    // NOTE Target sensitive widgets
-    if (widgets.common) {
-      pf.initializeWidgetArray(widgets.common);
-      updateObject(defaultProps, widgets.common.config);
+/** @module pathfora/widgets/has/has-recommend */
+
+/**
+ * Check if the widget has recommendations.
+ *
+ * @exports hasRecommend
+ * @params {object} widget
+ * @returns {bool} hasRecommend
+ */
+function hasRecommend (widget) {
+  return widget.recommend && Object.keys(widget.recommend).length !== 0;
+}
+
+/** @module pathfora/widgets/has/has-entity-templates */
+
+// globals
+// utils
+/**
+ * Check if the widget has entity field templates
+ *
+ * @exports hasEntityTemplates
+ * @params {object} widget
+ * @returns {bool} hasEntityTemplates
+ */
+function hasEntityTemplates (widget) {
+  for (var j = 0; j < ENTITY_FIELDS.length; j++) {
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[j]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
     }
 
-    if (widgets.target || widgets.exclude) {
-      // Add callback to initialize once we know segments are loaded
-      pf.addCallback(function () {
-        var target, ti, tl, exclude, ei, ex, ey, el,
-            targetedwidgets = [],
-            excludematched = false,
-            segments = getUserSegments();
-
-        // handle inclusions
-        if (widgets.target) {
-          tl = widgets.target.length;
-          for (ti = 0; ti < tl; ti++) {
-            target = widgets.target[ti];
-            if (segments && segments.indexOf(target.segment) !== -1) {
-              // add the widgets with proper targeting to the master list
-              // ensure we dont overwrite existing widgets in target
-              targetedwidgets = targetedwidgets.concat(target.widgets);
-            }
-          }
-        }
-
-        // handle exclusions
-        if (widgets.exclude) {
-          el = widgets.exclude.length;
-          for (ei = 0; ei < el; ei++) {
-            exclude = widgets.exclude[ei];
-            if (segments && segments.indexOf(exclude.segment) !== -1) {
-              // we found a match, ensure the corresponding segment(s) are not in the
-              // targetted widgets array
-              for (ex = 0; ex < targetedwidgets.length; ex++) {
-                for (ey = 0; ey < exclude.widgets.length; ey++) {
-                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                    targetedwidgets.splice(ex, 1);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (targetedwidgets.length) {
-          pf.initializeWidgetArray(targetedwidgets);
-        }
-
-        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-          pf.initializeWidgetArray(widgets.inverse);
-        }
-      });
+    if (typeof fieldValue === 'string') {
+      if (regex.test(fieldValue)) {
+        return true;
+      }
     }
+  }
+
+  return false;
+}
+
+/** @module pathfora/widgets/preload-lio */
+
+// widgets
+// validation
+/**
+ * Check if the widget needs lio to be loaded, if so
+ * wait for the callback, otherwise continue execution.
+ *
+ * @exports preloadLio
+ * @params {object} widget
+ * @params {object} pf
+ * @params {function} cb
+ */
+function preloadLio (widget, pf, cb) {
+  if (hasRecommend(widget) || hasEntityTemplates(widget)) {
+    pf.addCallback(function () {
+      validateAccountId(pf);
+      cb();
+    });
+  } else {
+    cb();
   }
 }
 
@@ -3377,7 +3388,6 @@ function recommendContent (accountId, params, id, callback) {
     seerId
   ];
 
-
   var ql = params.ql,
       ast = params.ast,
       display = params.display;
@@ -3448,12 +3458,108 @@ function recommendContent (accountId, params, id, callback) {
   });
 }
 
+/** @module pathfora/widgets/recommendation/set-widget-recommendation */
+
+/**
+ * Make the call to get the recommendations then
+ * handle assigning it to the widget.
+ *
+ * @exports setWidgetContent
+ * @params {object} accountId
+ * @params {object} widget
+ * @params {function} cb
+ */
+
+function setWidgetContent (accountId, widget, cb) {
+  var params = widget.recommend;
+
+  if (params && params.collection) {
+    params.contentsegment = widget.recommend.collection;
+    delete params.collection;
+  }
+
+  recommendContent(accountId, params, widget.id, function (resp) {
+    // if we get a response from the recommend api put it as the first
+    // element in the content object this replaces any default content
+    if (resp[0]) {
+      var content = resp[0];
+      widget.content = [
+        {
+          title: content.title,
+          description: content.description,
+          url: content.url,
+          image: content.primary_image,
+          date: content.created,
+          author: content.author
+        }
+      ];
+    }
+
+    // if we didn't get a valid response from the api, we check if a default
+    // exists and use that as our content piece instead
+    if (!widget.content) {
+      throw new Error('Could not get recommendation and no default defined');
+    }
+
+    cb();
+  });
+}
+
+/** @module pathfora/validation/validate-recommendation-widget */
+
+/**
+ * Validate that a recommendation widget
+ * is using the correct type and layout
+ *
+ * @exports validateRecommendationWidget
+ * @params {object} widget
+ */
+function validateRecommendationWidget (widget) {
+  // validate
+  if (widget.type !== 'message') {
+    throw new Error('Unsupported widget type for content recommendation');
+  }
+
+  if (
+    widget.layout !== 'slideout' &&
+    widget.layout !== 'modal' &&
+    widget.layout !== 'inline'
+  ) {
+    throw new Error('Unsupported layout for content recommendation');
+  }
+
+  if (widget.content && widget.content[0] && !widget.content[0].default) {
+    throw new Error('Cannot define recommended content unless it is a default');
+  }
+}
+
+/** @module pathfora/widgets/recommendation/preload-recommendation */
+
+// widgets
+// validations
+/**
+ * Check if the widget needs recommendations to be loaded, if so
+ * wait for the callback, otherwise continue execution.
+ *
+ * @exports preloadRecommendation
+ * @params {object} widget
+ * @params {object} pf
+ * @params {function} cb
+ */
+function preloadRecommendation (widget, pf, cb) {
+  if (hasRecommend(widget)) {
+    validateRecommendationWidget(widget);
+    setWidgetContent(pf.acctid, widget, cb);
+  } else {
+    cb();
+  }
+}
+
 /** @module pathfora/widgets/initialize-widget-array */
 
 // globals
-// dom
 // utils
-// recommendations
+// widgets
 /**
  * Given an array of widgets, begin off the initialization
  * process for each
@@ -3461,71 +3567,28 @@ function recommendContent (accountId, params, id, callback) {
  * @exports initializeWidgetArray
  * @params {array} array
  */
-function initializeWidgetArray (array) {
+function initializeWidgetArray (array, options) {
   var pf = this;
+  widgetTracker.prioritizedWidgets = [];
 
-  var recContent = function (w, params) {
-    pf.addCallback(function () {
-      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        } else {
-          throw new Error('Could not get account id from Lytics Javascript tag.');
-        }
-      }
-
-      recommendContent(pf.acctid, params, w.id, function (resp) {
-        // if we get a response from the recommend api put it as the first
-        // element in the content object this replaces any default content
-        if (resp[0]) {
-          var content = resp[0];
-          w.content = [
-            {
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              image: content.primary_image,
-              date: content.created,
-              author: content.author
-            }
-          ];
-        }
-
-        // if we didn't get a valid response from the api, we check if a default
-        // exists and use that as our content piece instead
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
-
-        pf.initializeWidget(w);
-      });
-    });
-  };
-
-  for (var i = 0; i < array.length; i++) {
-    var widget = array[i];
-
-    if (!widget || !widget.config) {
-      continue;
+  var initWidget = function (widgetArray, index, initOptions) {
+    if (index >= widgetArray.length) {
+      return;
     }
 
-    var widgetOnInitCallback = widget.config.onInit,
+    var widget = widgetArray[index],
         defaults = defaultProps[widget.type],
         globals = defaultProps.generic;
 
-    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
-      continue;
-    }
+    updateObject(widget, globals);
+    updateObject(widget, defaults);
+    updateObject(widget, widget.config);
 
     if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
       widgetTracker.initializedWidgets.push(widget.id);
     } else {
       throw new Error('Cannot add two widgets with the same id');
     }
-
-    updateObject(widget, globals);
-    updateObject(widget, defaults);
-    updateObject(widget, widget.config);
 
     // retain support for old "success" field
     if (widget.success) {
@@ -3538,35 +3601,176 @@ function initializeWidgetArray (array) {
       }
     }
 
-    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
-        throw new Error('Unsupported layout for content recommendation');
-      }
+    preloadLio(widget, pf, function () {
+      preloadRecommendation(widget, pf, function () {
+        pf.initializeWidget(widget, initOptions);
+        if (initOptions && initOptions.priority === OPTIONS_PRIORITY_ORDERED) {
+          if (
+            widgetTracker.prioritizedWidgets.length &&
+            widgetTracker.prioritizedWidgets[0].id === widget.id
+          ) {
+            return;
+          }
 
-      if (widget.content && widget.content[0] && !widget.content[0].default) {
-        throw new Error('Cannot define recommended content unless it is a default');
-      }
+          initWidget(widgetArray, index + 1, initOptions);
+        }
+      });
+    });
 
-      var params = widget.recommend;
+    if (!initOptions || initOptions.priority !== OPTIONS_PRIORITY_ORDERED) {
+      initWidget(widgetArray, index + 1, initOptions);
+    }
+  };
 
-      if (params && params.collection) {
-        params.contentsegment = widget.recommend.collection;
-        delete params.collection;
-      }
+  initWidget(array, 0, options);
+}
 
-      recContent(widget, params);
+/** @module pathfora/display-conditions/replace-entity-field */
 
-    } else {
-      pf.initializeWidget(widget);
+// dom
+// utils
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text field
+ *
+ * @exports replaceEntityField
+ * @params {object} widget
+ * @params {string} fieldName
+ * @params {array} found
+ * @returns {boolean}
+ */
+function replaceEntityField (
+  widget,
+  fieldName,
+  found,
+  customData
+) {
+  if (!found || !found.length) {
+    return true;
+  }
+
+  var fnParams,
+      fn,
+      currentVal = getObjectValue(widget, fieldName),
+      isFn = false;
+
+  // special case if the field is a function, convert it to a string first
+  if (typeof currentVal === 'function') {
+    fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+    isFn = true;
+  }
+
+  // for each template found...
+  for (var f = 0; f < found.length; f++) {
+    // parse the field name
+    var dataval = found[f].slice(2).slice(0, -2),
+        parts = dataval.split('|'),
+        def = '';
+
+    // get the default (fallback) value
+    if (parts.length > 1) {
+      def = parts[1].trim();
     }
 
-    // NOTE onInit feels better here
-    if (typeof widgetOnInitCallback === 'function') {
-      widgetOnInitCallback(callbackTypes.INIT, {
-        config: widget
-      });
+    // check for subfields if the value is an object
+    var split = parts[0].trim().split('.');
+
+    dataval = window.lio.data;
+    var s;
+
+    for (s = 0; s < split.length; s++) {
+      if (typeof dataval !== 'undefined') {
+        dataval = dataval[split[s]];
+      }
+    }
+
+    // if we couldn't find the data in question on the lytics jstag, check customData provided
+    if (typeof dataval === 'undefined') {
+      dataval = customData;
+
+      for (s = 0; s < split.length; s++) {
+        if (typeof dataval !== 'undefined') {
+          dataval = dataval[split[s]];
+        }
+      }
+    }
+
+    var val;
+
+    // replace the template with the lytics data value
+    if (typeof dataval !== 'undefined') {
+      val = currentVal.replace(found[f], dataval);
+      // if there's no default and we should error
+    } else if (
+      (!def || def.length === 0) &&
+      widget.displayConditions.showOnMissingFields !== true
+    ) {
+      return false;
+      // replace with the default option, or empty string if not found
+    } else {
+      val = currentVal.replace(found[f], def);
+    }
+
+    setObjectValue(widget, fieldName, val);
+    currentVal = val;
+  }
+
+  // if the value is a function, convert it back from a string
+  if (isFn) {
+    if (fnParams) {
+      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+    } else {
+      fn = new Function(getObjectValue(widget, fieldName));
+    }
+
+    setObjectValue(widget, fieldName, fn);
+  }
+
+  return true;
+}
+
+/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
+
+// globals
+// utils
+// display conditions
+/**
+ * Evaluate all fields on the list provided and check
+ * if there are any entity templates that need to be
+ * replaced.
+ *
+ * @exports entityFieldChecker
+ * @params {array} fields
+ * @params {object} widget
+ * @params {function} cb
+ */
+function entityFieldChecker (widget, customData) {
+  var found,
+      valid = true;
+
+  for (var i = 0; i < ENTITY_FIELDS.length; i++) {
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
+    }
+
+    if (typeof fieldValue === 'string') {
+      found = fieldValue.match(regex);
+
+      if (found && found.length > 0) {
+        valid =
+          valid &&
+          replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
+      }
     }
   }
+
+  return valid;
 }
 
 /** @module pathfora/display-conditions/date-checker */
@@ -4122,8 +4326,9 @@ function registerManualTriggerWatcher (value, widget) {
  *
  * @exports initializeWidget
  * @params {object} widget
+ * @returns {bool} shown
  */
-function initializeWidget (widget) {
+function initializeWidget (widget, options) {
   var watcher,
       condition = widget.displayConditions,
       pf = this;
@@ -4134,6 +4339,14 @@ function initializeWidget (widget) {
   // NOTE Default cookie expiration is one year from now
   widget.expiration = new Date();
   widget.expiration.setDate(widget.expiration.getDate() + 365);
+
+  if (
+    (widget.type === 'sitegate' &&
+      readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+    widget.hiddenViaABTests === true
+  ) {
+    return;
+  }
 
   if (widget.pushDown) {
     if (
@@ -4148,87 +4361,85 @@ function initializeWidget (widget) {
     }
   }
 
-  var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
+  // entity fields
+  widget.valid = widget.valid && entityFieldChecker(widget, pf.customData);
 
-  pf.entityFieldChecker(fields, widget, function () {
-    // display conditions based on page load
-    if (condition.date) {
-      widget.valid = widget.valid && dateChecker(condition.date);
+  // display conditions based on page load
+  if (condition.date) {
+    widget.valid = widget.valid && dateChecker(condition.date);
+  }
+
+  if (condition.pageVisits) {
+    widget.valid = widget.valid && pageVisitsChecker(condition.pageVisits);
+  }
+
+  if (condition.hideAfterAction) {
+    widget.valid =
+      widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
+  }
+
+  if (condition.urlContains) {
+    widget.valid = widget.valid && urlChecker(condition.urlContains);
+  }
+
+  if (condition.metaContains) {
+    widget.valid = widget.valid && metaChecker(condition.metaContains);
+  }
+
+  widget.valid = widget.valid && condition.showOnInit;
+
+  if (condition.impressions) {
+    widget.valid =
+      widget.valid && impressionsChecker(condition.impressions, widget);
+  }
+
+  // if it's valid at this point, add it to the priority list
+  if (
+    widget.valid &&
+    options &&
+    options.priority === OPTIONS_PRIORITY_ORDERED
+  ) {
+    widgetTracker.prioritizedWidgets.push(widget);
+  }
+
+  // display conditions based on page interaction
+  if (condition.showOnExitIntent) {
+    initializeExitIntent(widget);
+  }
+
+  if (condition.displayWhenElementVisible) {
+    watcher = registerElementWatcher(
+      condition.displayWhenElementVisible,
+      widget
+    );
+    widget.watchers.push(watcher);
+    initializeScrollWatchers(widget);
+  }
+
+  if (condition.scrollPercentageToDisplay) {
+    watcher = registerPositionWatcher(
+      condition.scrollPercentageToDisplay,
+      widget
+    );
+    widget.watchers.push(watcher);
+    initializeScrollWatchers(widget);
+  }
+
+  if (condition.manualTrigger) {
+    watcher = registerManualTriggerWatcher(condition.manualTrigger, widget);
+    widget.watchers.push(watcher);
+    widgetTracker.readyWidgets.push(widget);
+
+    // if we've already triggered the widget
+    // before initializing lets initialize right away
+    triggerWidget(widget);
+  }
+
+  if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
+    if (widget.valid) {
+      showWidget(widget);
     }
-
-    if (condition.pageVisits) {
-      widget.valid = widget.valid && pageVisitsChecker(condition.pageVisits);
-    }
-
-    if (condition.hideAfterAction) {
-      widget.valid =
-        widget.valid &&
-        hideAfterActionChecker(condition.hideAfterAction, widget);
-    }
-
-    if (condition.urlContains) {
-      widget.valid = widget.valid && urlChecker(condition.urlContains);
-    }
-
-    if (condition.metaContains) {
-      widget.valid = widget.valid && metaChecker(condition.metaContains);
-    }
-
-    widget.valid = widget.valid && condition.showOnInit;
-
-    if (condition.impressions) {
-      widget.valid =
-        widget.valid && impressionsChecker(condition.impressions, widget);
-    }
-
-    if (
-      typeof condition.priority !== 'undefined' &&
-      widget.valid &&
-      widgetTracker.prioritizedWidgets.indexOf(widget) === -1
-    ) {
-      widgetTracker.prioritizedWidgets.push(widget);
-      return;
-    }
-
-    // display conditions based on page interaction
-    if (condition.showOnExitIntent) {
-      initializeExitIntent(widget);
-    }
-
-    if (condition.displayWhenElementVisible) {
-      watcher = registerElementWatcher(
-        condition.displayWhenElementVisible,
-        widget
-      );
-      widget.watchers.push(watcher);
-      initializeScrollWatchers(widget);
-    }
-
-    if (condition.scrollPercentageToDisplay) {
-      watcher = registerPositionWatcher(
-        condition.scrollPercentageToDisplay,
-        widget
-      );
-      widget.watchers.push(watcher);
-      initializeScrollWatchers(widget);
-    }
-
-    if (condition.manualTrigger) {
-      watcher = registerManualTriggerWatcher(condition.manualTrigger, widget);
-      widget.watchers.push(watcher);
-      widgetTracker.readyWidgets.push(widget);
-
-      // if we've already triggered the widget
-      // before initializing lets initialize right away
-      triggerWidget(widget);
-    }
-
-    if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-      if (widget.valid) {
-        showWidget(widget);
-      }
-    }
-  });
+  }
 }
 
 /** @module pathfora/widgets/preview-widget */
@@ -4301,33 +4512,8 @@ function clearAll () {
   resetWidgetTracker(widgetTracker);
   resetDataObject(pathforaDataObject);
   resetDefaultProps(defaultProps);
-}
-
-/** @module pathfora/widgets/reinit-prioritized-widgets */
-
-/**
- * Widgets with priority are held from initialization
- * and reinitialized once we've loaded all
- *
- * @exports reinitializePrioritizedWidgets
- */
-function reinitializePrioritizedWidgets () {
-  if (widgetTracker.prioritizedWidgets.length > 0) {
-
-    widgetTracker.prioritizedWidgets.sort(function (a, b) {
-      return a.displayConditions.priority - b.displayConditions.priority;
-    }).reverse();
-
-    var highest = widgetTracker.prioritizedWidgets[0].displayConditions.priority;
-
-    for (var j = 0; j < widgetTracker.prioritizedWidgets.length; j++) {
-      if (widgetTracker.prioritizedWidgets[j].displayConditions.priority === highest) {
-        this.initializeWidget(widgetTracker.prioritizedWidgets[j]);
-      } else {
-        break;
-      }
-    }
-  }
+  this.callbacks = [];
+  this.acctid = '';
 }
 
 /** @module pathfora/widgets/prepare-widget */
@@ -4341,65 +4527,15 @@ function reinitializePrioritizedWidgets () {
  * @returns {object}
  */
 function prepareWidget (type, config) {
-  var props, random,
-      widget = {
-        valid: true
-      };
+  var widget = {
+    valid: true,
+    type: type
+  };
 
   if (!config) {
     throw new Error('Config object is missing');
   }
 
-  if (config.layout === 'random') {
-    props = {
-      layout: ['modal', 'slideout', 'bar'],
-      variant: ['1', '2'],
-      slideout: ['bottom-left', 'bottom-right'],
-      bar: ['top-absolute', 'top-fixed', 'bottom-fixed']
-    };
-
-    // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
-    switch (type) {
-    case 'message':
-      random = Math.floor(Math.random() * 4);
-      config.layout = props.layout[random];
-      break;
-    case 'subscription':
-      random = Math.floor(Math.random() * 5);
-      while (random === 3) {
-        random = Math.floor(Math.random() * 5);
-      }
-      config.layout = props.layout[random];
-      break;
-    case 'form':
-      random = Math.floor(Math.random() * 5);
-      while (random === 2 || random === 3) {
-        random = Math.floor(Math.random() * 5);
-      }
-      config.layout = props.layout[random];
-    }
-    switch (config.layout) {
-    case 'folding':
-      config.position = props.folding[Math.floor(Math.random() * 3)];
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      break;
-    case 'slideout':
-      config.position = props.slideout[Math.floor(Math.random() * 2)];
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      break;
-    case 'modal':
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      config.position = '';
-      break;
-    case 'bar':
-      config.position = props.bar[Math.floor(Math.random() * 3)];
-      break;
-    case 'inline':
-      config.position = 'body';
-      break;
-    }
-  }
-  widget.type = type;
   widget.config = config;
 
   if (!config.id) {
@@ -4904,6 +5040,7 @@ function Inline (pf) {
 
 /** @module pathfora/inline/init-inline */
 
+// validation
 /**
  * Once the dom is ready and Lytics jstag is
  * loaded initialize inline personalization
@@ -4915,12 +5052,7 @@ function initializeInline () {
 
   this.onDOMready(function () {
     pf.addCallback(function () {
-      if (pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        }
-      }
-
+      validateAccountId(pf);
       pf.inline.procElements();
     });
   });
@@ -4970,10 +5102,9 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.entityFieldChecker = entityFieldChecker;
-  this.replaceEntityField = replaceEntityField;
 
   // widgets
+  this.initializeTargetedWidgets = initializeTargetedWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
@@ -4981,7 +5112,6 @@ var Pathfora = function () {
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
   this.clearAll = clearAll;
-  this.reinitializePrioritizedWidgets = reinitializePrioritizedWidgets;
   this.Message = Message;
   this.Subscription = Subscription;
   this.Form = Form;
@@ -5011,12 +5141,6 @@ var Pathfora = function () {
   this.utils.updateLegacyCookies();
 
   head.appendChild(link);
-
-  // wait until everything else is loaded to prioritize widgets
-  var pf = this;
-  window.addEventListener('load', function () {
-    pf.reinitializePrioritizedWidgets();
-  });
 };
 
 window.pathfora = window.pathfora || new Pathfora();

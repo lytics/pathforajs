@@ -11,7 +11,7 @@ module.exports = function (config) {
     files: [
       'node_modules/jquery/dist/jquery.min.js',
       'dist/pathfora.js',
-      'test/*.spec.js',
+      'test/**/*.spec.js',
       'dist/pathfora.min.css',
       './node_modules/intl/locale-data/jsonp/en-GB.js',
       './node_modules/intl/locale-data/jsonp/en-US.js'
@@ -20,18 +20,20 @@ module.exports = function (config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/rollup/pathfora.js': ['rollup']
+      'src/rollup/pathfora.js': ['rollup'],
+      'test/unit/**/*.spec.js': ['rollup']
     },
 
     rollupPreprocessor: {
       plugins: [
         require('rollup-plugin-istanbul')({
-          exclude: ['**/*.spec.js']
+          exclude: ['test/**/*.spec.js']
         })
       ],
       format: 'iife',
-      sourceMap: 'inline'
+      sourcemap: 'inline'
     },
+
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
