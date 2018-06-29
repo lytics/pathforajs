@@ -10,6 +10,9 @@ describe("when targeting users", function() {
     window.lio = {
       data: {
         segments: ['all', 'b']
+      },
+      account: {
+        id: '0'
       }
     };
 
@@ -81,6 +84,9 @@ describe("when targeting users", function() {
     window.lio = {
       data: {
         segments: ['a', 'b']
+      },
+      account: {
+        id: '0'
       }
     };
 
@@ -128,6 +134,9 @@ describe("when targeting users", function() {
     window.lio = {
       data: {
         segments: ['a', 'b']
+      },
+      account: {
+        id: '0'
       }
     };
 

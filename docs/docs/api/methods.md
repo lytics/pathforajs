@@ -27,6 +27,31 @@ This method is used to initialize any modules built with Pathfora. It kicks off 
     <td>object</td>
     <td><code>optional</code> <a href="../config">generalized configuration</a> settings for multiple modules</td>
   </tr>
+  <tr>
+    <td>options</td>
+    <td>object</td>
+    <td><code>optional</code> additional options for the initialization (see below)</td>
+  </tr>
+</table>
+
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>options</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>priority</td>
+    <td>string</td>
+    <td>if set to "ordered" will only show the first valid module from the list initialized</td>
+  </tr>
 </table>
 
 ### Type Configuration Methods
