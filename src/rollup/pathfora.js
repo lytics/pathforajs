@@ -1,7 +1,12 @@
 /** @module pathfora */
 
 // global
-import { PF_VERSION, PF_LOCALE, PF_DATE_OPTIONS, CSS_URL } from './globals/config';
+import {
+  PF_VERSION,
+  PF_LOCALE,
+  PF_DATE_OPTIONS,
+  CSS_URL
+} from './globals/config';
 
 // dom
 import window from './dom/window';
@@ -20,10 +25,9 @@ import addCallback from './callbacks/add-callback';
 // display conditions
 import initializePageViews from './display-conditions/pageviews/init-pageviews';
 import triggerWidgets from './display-conditions/manual-trigger/trigger-widgets';
-import entityFieldChecker from './display-conditions/entity-fields/entity-field-checker';
-import replaceEntityField from './display-conditions/entity-fields/replace-entity-field';
 
 // widgets
+import initializeTargetedWidgets from './widgets/init-targeted-widgets';
 import initializeWidgets from './widgets/init-widgets';
 import initializeWidgetArray from './widgets/init-widget-array';
 import initializeWidget from './widgets/init-widget';
@@ -31,7 +35,6 @@ import previewWidget from './widgets/preview-widget';
 import showWidget from './widgets/show-widget';
 import closeWidget from './widgets/close-widget';
 import clearAll from './widgets/clear-all';
-import reinitializePrioritizedWidgets from './widgets/reinit-prioritized-widgets';
 import Message from './widgets/message';
 import Subscription from './widgets/subscription';
 import Form from './widgets/form';
@@ -80,10 +83,9 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.entityFieldChecker = entityFieldChecker;
-  this.replaceEntityField = replaceEntityField;
 
   // widgets
+  this.initializeTargetedWidgets = initializeTargetedWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
@@ -91,7 +93,6 @@ var Pathfora = function () {
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
   this.clearAll = clearAll;
-  this.reinitializePrioritizedWidgets = reinitializePrioritizedWidgets;
   this.Message = Message;
   this.Subscription = Subscription;
   this.Form = Form;
@@ -121,12 +122,6 @@ var Pathfora = function () {
   this.utils.updateLegacyCookies();
 
   head.appendChild(link);
-
-  // wait until everything else is loaded to prioritize widgets
-  var pf = this;
-  window.addEventListener('load', function () {
-    pf.reinitializePrioritizedWidgets();
-  });
 };
 
 window.pathfora = window.pathfora || new Pathfora();

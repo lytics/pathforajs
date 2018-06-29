@@ -1,4 +1,4 @@
-/** @module pathfora/widgets/validate-widgets-object */
+/** @module pathfora/validation/validate-widgets-object */
 
 /**
  * Validate that object provided to initializeWidgets
@@ -9,11 +9,7 @@
  * @params {object} widgets
  */
 export default function validateWidgetsObject (widgets) {
-  if (!widgets) {
-    throw new Error('Widgets not specified');
-  }
-
-  if (!(widgets instanceof Array) && widgets.target) {
+  if (widgets.target) {
     widgets.common = widgets.common || [];
 
     for (var i = 0; i < widgets.target.length; i++) {

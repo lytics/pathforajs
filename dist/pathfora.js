@@ -231,6 +231,9 @@ var DEFAULT_CHAR_LIMIT_STACK = 160;
 var WIDTH_BREAKPOINT = 650;
 var API_URL = '//api.lytics.io';
 var CSS_URL = '//c.lytics.io/static/pathfora.min.css';
+var ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}';
+var ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'];
+var OPTIONS_PRIORITY_ORDERED = 'ordered';
 
 var defaultPositions = {
   modal: '',
@@ -1207,7 +1210,7 @@ function incrementImpressions (widget) {
   saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
 }
 
-/** @module pathfora/widgets/validate-widget-position */
+/** @module pathfora/validation/validate-widget-position */
 
 /**
  * Validate that the widget has correct position field
@@ -1225,13 +1228,27 @@ function validateWidgetPosition (widget, config) {
     choices = [''];
     break;
   case 'slideout':
-    choices = ['bottom-left', 'bottom-right', 'left', 'right', 'top-left', 'top-right'];
+    choices = [
+      'bottom-left',
+      'bottom-right',
+      'left',
+      'right',
+      'top-left',
+      'top-right'
+    ];
     break;
   case 'bar':
     choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
     break;
   case 'button':
-    choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+    choices = [
+      'left',
+      'right',
+      'top-left',
+      'top-right',
+      'bottom-left',
+      'bottom-right'
+    ];
     break;
   case 'inline':
     choices = [];
@@ -1246,7 +1263,7 @@ function validateWidgetPosition (widget, config) {
 /** @module pathfora/widgets/setup-widget-position */
 
 // globals
-// widgets
+// validation
 /**
  * Validate that the widget has correct position field,
  * and choose the default if it does not
@@ -1788,7 +1805,7 @@ function constructWidgetActions (widget, config) {
   }
 }
 
-/** @module pathfora/widgets/setup-widget-content-unit */
+/** @module pathfora/widgets/recommendation/setup-widget-content-unit */
 
 // globals
 // dom
@@ -1806,7 +1823,6 @@ function setupWidgetContentUnit (widget, config) {
   if (config.recommend && config.content) {
     // Make sure we have content to get
     if (Object.keys(config.content).length > 0) {
-
       // The top recommendation should be default if we couldn't
       // get one from the api
       var rec = config.content[0],
@@ -1819,7 +1835,10 @@ function setupWidgetContentUnit (widget, config) {
       widgetContentUnit.href = rec.url;
 
       // image div
-      if (rec.image && (!settings.display || settings.display.image !== false)) {
+      if (
+        rec.image &&
+        (!settings.display || settings.display.image !== false)
+      ) {
         recImage.className = 'pf-content-unit-img';
         recImage.style.backgroundImage = "url('" + rec.image + "')";
         widgetContentUnit.appendChild(recImage);
@@ -1828,12 +1847,18 @@ function setupWidgetContentUnit (widget, config) {
       recMeta.className = 'pf-content-unit-meta';
 
       // title h4
-      if (rec.title && (!settings.display || settings.display.title !== false)) {
+      if (
+        rec.title &&
+        (!settings.display || settings.display.title !== false)
+      ) {
         recTitle.innerHTML = rec.title;
         recMeta.appendChild(recTitle);
       }
 
-      if (rec.author && (settings.display && settings.display.author === true)) {
+      if (
+        rec.author &&
+        (settings.display && settings.display.author === true)
+      ) {
         recInfo.innerHTML = 'by ' + rec.author;
       }
 
@@ -1869,10 +1894,15 @@ function setupWidgetContentUnit (widget, config) {
       }
 
       // description p
-      if (rec.description && (!settings.display || settings.display.description !== false)) {
+      if (
+        rec.description &&
+        (!settings.display || settings.display.description !== false)
+      ) {
         var desc = rec.description,
-            limit = config.layout === 'modal' ? DEFAULT_CHAR_LIMIT : DEFAULT_CHAR_LIMIT_STACK;
-
+            limit =
+            config.layout === 'modal'
+              ? DEFAULT_CHAR_LIMIT
+              : DEFAULT_CHAR_LIMIT_STACK;
 
         // set the default character limit for descriptions
         if (!settings.display) {
@@ -1883,7 +1913,10 @@ function setupWidgetContentUnit (widget, config) {
           settings.display.descriptionLimit = limit;
         }
 
-        if (desc.length > settings.display.descriptionLimit && settings.display.descriptionLimit !== -1) {
+        if (
+          desc.length > settings.display.descriptionLimit &&
+          settings.display.descriptionLimit !== -1
+        ) {
           desc = desc.substring(0, settings.display.descriptionLimit);
           desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
         }
@@ -2869,6 +2902,13 @@ function showWidget (w) {
     }
   };
 
+  var widgetOnInitCallback = w.onInit;
+  if (typeof widgetOnInitCallback === 'function') {
+    widgetOnInitCallback(callbackTypes.INIT, {
+      config: w
+    });
+  }
+
   // account for showDelay condition
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
@@ -2975,174 +3015,6 @@ function triggerWidgets (widgetIds) {
   }
 }
 
-/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
-
-// utils
-/**
- * Evaluate all fields on the list provided and check
- * if there are any entity templates that need to be
- * replaced.
- *
- * @exports entityFieldChecker
- * @params {array} fields
- * @params {object} widget
- * @params {function} cb
- */
-function entityFieldChecker (fields, widget, cb) {
-  var found, i,
-      regex = /\{{2}.*?\}{2}/g,
-      pf = this,
-      count = 0;
-
-  // call the replace method in a jstag callback
-  var replace = function (w, fieldName, f) {
-    pf.addCallback(function () {
-      w.valid = w.valid && pf.replaceEntityField(w, fieldName, f);
-      count++;
-
-      if (count === fields.length) {
-        cb();
-      }
-    });
-  };
-
-  for (i = 0; i < fields.length; i++) {
-    var fieldValue = getObjectValue(widget, fields[i]);
-
-    // convert functions to a string
-    if (typeof fieldValue === 'function') {
-      fieldValue = fieldValue.toString();
-    }
-
-    if (typeof fieldValue === 'string') {
-      found = fieldValue.match(regex);
-
-      if (found && found.length > 0) {
-        replace(widget, fields[i], found);
-      } else {
-        count++;
-      }
-    } else {
-      count++;
-    }
-
-    if (count === fields.length) {
-      cb();
-    }
-  }
-}
-
-/** @module pathfora/display-conditions/replace-entity-field */
-
-// dom
-// utils
-/**
- * Fill in the data for a entity field template in
- * a widgets text field
- *
- * @exports replaceEntityField
- * @params {object} widget
- * @params {string} fieldName
- * @params {array} found
- * @returns {boolean}
- */
-function replaceEntityField (widget, fieldName, found) {
-  if (!found || !found.length) {
-    return true;
-  }
-
-  var fnParams, fn,
-      currentVal = getObjectValue(widget, fieldName),
-      isFn = false;
-
-  // special case if the field is a function, convert it to a string first
-  if (typeof currentVal === 'function') {
-    fn = currentVal.toString();
-    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
-    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
-    isFn = true;
-  }
-
-  // for each template found...
-  for (var f = 0; f < found.length; f++) {
-    // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
-        def = '';
-
-    // get the default (fallback) value
-    if (parts.length > 1) {
-      def = parts[1].trim();
-    }
-
-    // check for subfields if the value is an object
-    var split = parts[0].trim().split('.');
-
-    dataval = window.lio.data;
-    var s;
-
-    for (s = 0; s < split.length; s++) {
-      if (typeof dataval !== 'undefined') {
-        dataval = dataval[split[s]];
-      }
-    }
-
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
-    if (typeof dataval === 'undefined') {
-      dataval = this.customData;
-
-      for (s = 0; s < split.length; s++) {
-        if (typeof dataval !== 'undefined') {
-          dataval = dataval[split[s]];
-        }
-      }
-    }
-
-    var val;
-
-    // replace the template with the lytics data value
-    if (typeof dataval !== 'undefined') {
-      val = currentVal.replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
-      return false;
-    // replace with the default option, or empty string if not found
-    } else {
-      val = currentVal.replace(found[f], def);
-    }
-
-    setObjectValue(widget, fieldName, val);
-    currentVal = val;
-  }
-
-  // if the value is a function, convert it back from a string
-  if (isFn) {
-    if (fnParams) {
-      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
-    } else {
-      fn = new Function(getObjectValue(widget, fieldName));
-    }
-
-    setObjectValue(widget, fieldName, fn);
-  }
-
-  return true;
-}
-
-/** @module pathfora/data/tracking/track-time-on-page */
-
-/**
- * Record the amount of time the user has spent
- * on the current page
- *
- * @exports trackTimeOnPage
- */
-function trackTimeOnPage () {
-  setInterval(function () {
-    pathforaDataObject.timeSpentOnPage += 1;
-  }, 1000);
-}
-
 /** @module pathfora/data/segments/get-user-segments */
 
 /**
@@ -3159,7 +3031,7 @@ function getUserSegments () {
   }
 }
 
-/** @module pathfora/widgets/validate-widgets-object */
+/** @module pathfora/validation/validate-widgets-object */
 
 /**
  * Validate that object provided to initializeWidgets
@@ -3170,11 +3042,7 @@ function getUserSegments () {
  * @params {object} widgets
  */
 function validateWidgetsObject (widgets) {
-  if (!widgets) {
-    throw new Error('Widgets not specified');
-  }
-
-  if (!(widgets instanceof Array) && widgets.target) {
+  if (widgets.target) {
     widgets.common = widgets.common || [];
 
     for (var i = 0; i < widgets.target.length; i++) {
@@ -3188,13 +3056,141 @@ function validateWidgetsObject (widgets) {
   }
 }
 
+/** @module pathfora/validation/validate-account-id */
+
+// dom
+/**
+ * Validate and set the Lytics account Id
+ *
+ * @exports validateAccountId
+ * @params {object} pf
+ */
+function validateAccountId (pf) {
+  if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
+    if (window.lio && window.lio.account) {
+      if (
+        typeof window.lio.account.id === 'undefined' ||
+        window.lio.account.id === ''
+      ) {
+        throw new Error('Lytics Javascript tag returned an empty account id.');
+      }
+
+      pf.acctid = window.lio.account.id;
+    } else {
+      throw new Error('Could not get account id from Lytics Javascript tag.');
+    }
+  }
+}
+
+/** @module pathfora/widgets/init-targeted-widgets */
+
+// data
+// validation
+/**
+ * Initialize widgets which are targeted by segments.
+ *
+ * @exports initializeWidgets
+ * @params {object} widgets
+ * @params {object} options
+ */
+function initializeTargetedWidgets (widgets, options) {
+  var pf = this,
+      i;
+
+  validateWidgetsObject(widgets);
+
+  if (widgets.common) {
+    pf.initializeWidgetArray(widgets.common, options);
+  }
+
+  // NOTE Target sensitive widgets
+  if (widgets.target || widgets.exclude) {
+    pf.addCallback(function () {
+      validateAccountId(pf);
+      var targetedWidgets = [],
+          segments = getUserSegments();
+
+      // handle inclusions
+      if (widgets.target) {
+        for (i = 0; i < widgets.target.length; i++) {
+          var target = widgets.target[i];
+          if (segments && segments.indexOf(target.segment) !== -1) {
+            // add the widgets with proper targeting to the master list
+            // ensure we dont overwrite existing widgets in target
+            targetedWidgets = targetedWidgets.concat(target.widgets);
+          }
+        }
+      }
+
+      // handle exclusions
+      if (widgets.exclude) {
+        for (i = 0; i < widgets.exclude.length; i++) {
+          var exclude = widgets.exclude[i];
+          if (segments && segments.indexOf(exclude.segment) !== -1) {
+            // we found a match, ensure the corresponding segment(s) are not in the
+            // targetted widgets array
+            for (var x = 0; x < targetedWidgets.length; x++) {
+              for (var y = 0; y < exclude.widgets.length; y++) {
+                if (targetedWidgets[x] === exclude.widgets[y]) {
+                  targetedWidgets.splice(x, 1);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      if (targetedWidgets.length) {
+        pf.initializeWidgetArray(targetedWidgets, options);
+      } else if (widgets.inverse) {
+        pf.initializeWidgetArray(widgets.inverse, options);
+      }
+    });
+  }
+}
+
+/** @module pathfora/data/tracking/track-time-on-page */
+
+/**
+ * Record the amount of time the user has spent
+ * on the current page
+ *
+ * @exports trackTimeOnPage
+ */
+function trackTimeOnPage () {
+  setInterval(function () {
+    pathforaDataObject.timeSpentOnPage += 1;
+  }, 1000);
+}
+
+/** @module pathfora/validation/validate-options */
+
+/**
+ * Validate and set the Lytics account Id
+ *
+ * @exports validateAccountId
+ * @params {object} pf
+ */
+function validateOptions (options) {
+  if (options) {
+    // validate priority
+    if (options.priority) {
+      switch (options.priority) {
+      case OPTIONS_PRIORITY_ORDERED:
+        break;
+      default:
+        throw new Error('Invalid priority defined in options.');
+      }
+    }
+  }
+}
+
 /** @module pathfora/widgets/init-widgets */
 
 // globals
-// dom
 // utils
 // data
-// widgets
+// validation
 /**
  * Public method used to initialize widgets once
  * the individual configs have been created
@@ -3202,92 +3198,104 @@ function validateWidgetsObject (widgets) {
  * @exports initializeWidgets
  * @params {object} widgets
  * @params {object} config
+ * @params {object} options
  */
-function initializeWidgets (widgets, config) {
-  // NOTE IE < 10 not supported
-  // FIXME Why? 'atob' can be polyfilled, 'all' is not necessary anymore?
+function initializeWidgets (widgets, config, options) {
   var pf = this;
-  if (document$1.all && !window.atob) {
-    return;
-  }
-
+  trackTimeOnPage();
   // support legacy initialize function where we passed account id as
   // a second parameter and config as third
-  if (arguments.length >= 3) {
-    config = arguments[2];
-  // if the second param is an account id, we need to throw it out
-  } else if (typeof config === 'string') {
-    config = null;
+  if (typeof config === 'string') {
+    if (options) {
+      config = options;
+      options = null;
+    } else {
+      config = null;
+    }
   }
 
-  validateWidgetsObject(widgets);
-  trackTimeOnPage();
+  if (!widgets) {
+    throw new Error('Initialize called with no widgets');
+  }
+
+  validateOptions(options);
 
   if (config) {
     updateObject(defaultProps, config);
   }
 
-  if (widgets instanceof Array) {
-
-    // NOTE Simple initialization
-    pf.initializeWidgetArray(widgets);
+  if (Array.isArray(widgets)) {
+    pf.initializeWidgetArray(widgets, options);
   } else {
+    pf.initializeTargetedWidgets(widgets, options);
+  }
+}
 
-    // NOTE Target sensitive widgets
-    if (widgets.common) {
-      pf.initializeWidgetArray(widgets.common);
-      updateObject(defaultProps, widgets.common.config);
+/** @module pathfora/widgets/has/has-recommend */
+
+/**
+ * Check if the widget has recommendations.
+ *
+ * @exports hasRecommend
+ * @params {object} widget
+ * @returns {bool} hasRecommend
+ */
+function hasRecommend (widget) {
+  return widget.recommend && Object.keys(widget.recommend).length !== 0;
+}
+
+/** @module pathfora/widgets/has/has-entity-templates */
+
+// globals
+// utils
+/**
+ * Check if the widget has entity field templates
+ *
+ * @exports hasEntityTemplates
+ * @params {object} widget
+ * @returns {bool} hasEntityTemplates
+ */
+function hasEntityTemplates (widget) {
+  for (var j = 0; j < ENTITY_FIELDS.length; j++) {
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[j]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
     }
 
-    if (widgets.target || widgets.exclude) {
-      // Add callback to initialize once we know segments are loaded
-      pf.addCallback(function () {
-        var target, ti, tl, exclude, ei, ex, ey, el,
-            targetedwidgets = [],
-            excludematched = false,
-            segments = getUserSegments();
-
-        // handle inclusions
-        if (widgets.target) {
-          tl = widgets.target.length;
-          for (ti = 0; ti < tl; ti++) {
-            target = widgets.target[ti];
-            if (segments && segments.indexOf(target.segment) !== -1) {
-              // add the widgets with proper targeting to the master list
-              // ensure we dont overwrite existing widgets in target
-              targetedwidgets = targetedwidgets.concat(target.widgets);
-            }
-          }
-        }
-
-        // handle exclusions
-        if (widgets.exclude) {
-          el = widgets.exclude.length;
-          for (ei = 0; ei < el; ei++) {
-            exclude = widgets.exclude[ei];
-            if (segments && segments.indexOf(exclude.segment) !== -1) {
-              // we found a match, ensure the corresponding segment(s) are not in the
-              // targetted widgets array
-              for (ex = 0; ex < targetedwidgets.length; ex++) {
-                for (ey = 0; ey < exclude.widgets.length; ey++) {
-                  if (targetedwidgets[ex] === exclude.widgets[ey]) {
-                    targetedwidgets.splice(ex, 1);
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        if (targetedwidgets.length) {
-          pf.initializeWidgetArray(targetedwidgets);
-        }
-
-        if (!targetedwidgets.length && !excludematched && widgets.inverse) {
-          pf.initializeWidgetArray(widgets.inverse);
-        }
-      });
+    if (typeof fieldValue === 'string') {
+      if (regex.test(fieldValue)) {
+        return true;
+      }
     }
+  }
+
+  return false;
+}
+
+/** @module pathfora/widgets/preload-lio */
+
+// widgets
+// validation
+/**
+ * Check if the widget needs lio to be loaded, if so
+ * wait for the callback, otherwise continue execution.
+ *
+ * @exports preloadLio
+ * @params {object} widget
+ * @params {object} pf
+ * @params {function} cb
+ */
+function preloadLio (widget, pf, cb) {
+  if (hasRecommend(widget) || hasEntityTemplates(widget)) {
+    pf.addCallback(function () {
+      validateAccountId(pf);
+      cb();
+    });
+  } else {
+    cb();
   }
 }
 
@@ -3381,7 +3389,6 @@ function recommendContent (accountId, params, id, callback) {
     seerId
   ];
 
-
   var ql = params.ql,
       ast = params.ast,
       display = params.display;
@@ -3452,12 +3459,108 @@ function recommendContent (accountId, params, id, callback) {
   });
 }
 
+/** @module pathfora/widgets/recommendation/set-widget-recommendation */
+
+/**
+ * Make the call to get the recommendations then
+ * handle assigning it to the widget.
+ *
+ * @exports setWidgetContent
+ * @params {object} accountId
+ * @params {object} widget
+ * @params {function} cb
+ */
+
+function setWidgetContent (accountId, widget, cb) {
+  var params = widget.recommend;
+
+  if (params && params.collection) {
+    params.contentsegment = widget.recommend.collection;
+    delete params.collection;
+  }
+
+  recommendContent(accountId, params, widget.id, function (resp) {
+    // if we get a response from the recommend api put it as the first
+    // element in the content object this replaces any default content
+    if (resp[0]) {
+      var content = resp[0];
+      widget.content = [
+        {
+          title: content.title,
+          description: content.description,
+          url: content.url,
+          image: content.primary_image,
+          date: content.created,
+          author: content.author
+        }
+      ];
+    }
+
+    // if we didn't get a valid response from the api, we check if a default
+    // exists and use that as our content piece instead
+    if (!widget.content) {
+      throw new Error('Could not get recommendation and no default defined');
+    }
+
+    cb();
+  });
+}
+
+/** @module pathfora/validation/validate-recommendation-widget */
+
+/**
+ * Validate that a recommendation widget
+ * is using the correct type and layout
+ *
+ * @exports validateRecommendationWidget
+ * @params {object} widget
+ */
+function validateRecommendationWidget (widget) {
+  // validate
+  if (widget.type !== 'message') {
+    throw new Error('Unsupported widget type for content recommendation');
+  }
+
+  if (
+    widget.layout !== 'slideout' &&
+    widget.layout !== 'modal' &&
+    widget.layout !== 'inline'
+  ) {
+    throw new Error('Unsupported layout for content recommendation');
+  }
+
+  if (widget.content && widget.content[0] && !widget.content[0].default) {
+    throw new Error('Cannot define recommended content unless it is a default');
+  }
+}
+
+/** @module pathfora/widgets/recommendation/preload-recommendation */
+
+// widgets
+// validations
+/**
+ * Check if the widget needs recommendations to be loaded, if so
+ * wait for the callback, otherwise continue execution.
+ *
+ * @exports preloadRecommendation
+ * @params {object} widget
+ * @params {object} pf
+ * @params {function} cb
+ */
+function preloadRecommendation (widget, pf, cb) {
+  if (hasRecommend(widget)) {
+    validateRecommendationWidget(widget);
+    setWidgetContent(pf.acctid, widget, cb);
+  } else {
+    cb();
+  }
+}
+
 /** @module pathfora/widgets/initialize-widget-array */
 
 // globals
-// dom
 // utils
-// recommendations
+// widgets
 /**
  * Given an array of widgets, begin off the initialization
  * process for each
@@ -3465,71 +3568,28 @@ function recommendContent (accountId, params, id, callback) {
  * @exports initializeWidgetArray
  * @params {array} array
  */
-function initializeWidgetArray (array) {
+function initializeWidgetArray (array, options) {
   var pf = this;
+  widgetTracker.prioritizedWidgets = [];
 
-  var recContent = function (w, params) {
-    pf.addCallback(function () {
-      if (typeof pf.acctid !== 'undefined' && pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        } else {
-          throw new Error('Could not get account id from Lytics Javascript tag.');
-        }
-      }
-
-      recommendContent(pf.acctid, params, w.id, function (resp) {
-        // if we get a response from the recommend api put it as the first
-        // element in the content object this replaces any default content
-        if (resp[0]) {
-          var content = resp[0];
-          w.content = [
-            {
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              image: content.primary_image,
-              date: content.created,
-              author: content.author
-            }
-          ];
-        }
-
-        // if we didn't get a valid response from the api, we check if a default
-        // exists and use that as our content piece instead
-        if (!w.content) {
-          throw new Error('Could not get recommendation and no default defined');
-        }
-
-        pf.initializeWidget(w);
-      });
-    });
-  };
-
-  for (var i = 0; i < array.length; i++) {
-    var widget = array[i];
-
-    if (!widget || !widget.config) {
-      continue;
+  var initWidget = function (widgetArray, index, initOptions) {
+    if (index >= widgetArray.length) {
+      return;
     }
 
-    var widgetOnInitCallback = widget.config.onInit,
+    var widget = widgetArray[index],
         defaults = defaultProps[widget.type],
         globals = defaultProps.generic;
 
-    if (widget.type === 'sitegate' && readCookie(PREFIX_UNLOCK + widget.id) === 'true' || widget.hiddenViaABTests === true) {
-      continue;
-    }
+    updateObject(widget, globals);
+    updateObject(widget, defaults);
+    updateObject(widget, widget.config);
 
     if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
       widgetTracker.initializedWidgets.push(widget.id);
     } else {
       throw new Error('Cannot add two widgets with the same id');
     }
-
-    updateObject(widget, globals);
-    updateObject(widget, defaults);
-    updateObject(widget, widget.config);
 
     // retain support for old "success" field
     if (widget.success) {
@@ -3542,35 +3602,176 @@ function initializeWidgetArray (array) {
       }
     }
 
-    if (widget.type === 'message' && (widget.recommend && Object.keys(widget.recommend).length !== 0) || (widget.content && widget.content.length !== 0)) {
-      if (widget.layout !== 'slideout' && widget.layout !== 'modal' && widget.layout !== 'inline') {
-        throw new Error('Unsupported layout for content recommendation');
-      }
+    preloadLio(widget, pf, function () {
+      preloadRecommendation(widget, pf, function () {
+        pf.initializeWidget(widget, initOptions);
+        if (initOptions && initOptions.priority === OPTIONS_PRIORITY_ORDERED) {
+          if (
+            widgetTracker.prioritizedWidgets.length &&
+            widgetTracker.prioritizedWidgets[0].id === widget.id
+          ) {
+            return;
+          }
 
-      if (widget.content && widget.content[0] && !widget.content[0].default) {
-        throw new Error('Cannot define recommended content unless it is a default');
-      }
+          initWidget(widgetArray, index + 1, initOptions);
+        }
+      });
+    });
 
-      var params = widget.recommend;
+    if (!initOptions || initOptions.priority !== OPTIONS_PRIORITY_ORDERED) {
+      initWidget(widgetArray, index + 1, initOptions);
+    }
+  };
 
-      if (params && params.collection) {
-        params.contentsegment = widget.recommend.collection;
-        delete params.collection;
-      }
+  initWidget(array, 0, options);
+}
 
-      recContent(widget, params);
+/** @module pathfora/display-conditions/replace-entity-field */
 
-    } else {
-      pf.initializeWidget(widget);
+// dom
+// utils
+/**
+ * Fill in the data for a entity field template in
+ * a widgets text field
+ *
+ * @exports replaceEntityField
+ * @params {object} widget
+ * @params {string} fieldName
+ * @params {array} found
+ * @returns {boolean}
+ */
+function replaceEntityField (
+  widget,
+  fieldName,
+  found,
+  customData
+) {
+  if (!found || !found.length) {
+    return true;
+  }
+
+  var fnParams,
+      fn,
+      currentVal = getObjectValue(widget, fieldName),
+      isFn = false;
+
+  // special case if the field is a function, convert it to a string first
+  if (typeof currentVal === 'function') {
+    fn = currentVal.toString();
+    currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+    fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+    isFn = true;
+  }
+
+  // for each template found...
+  for (var f = 0; f < found.length; f++) {
+    // parse the field name
+    var dataval = found[f].slice(2).slice(0, -2),
+        parts = dataval.split('|'),
+        def = '';
+
+    // get the default (fallback) value
+    if (parts.length > 1) {
+      def = parts[1].trim();
     }
 
-    // NOTE onInit feels better here
-    if (typeof widgetOnInitCallback === 'function') {
-      widgetOnInitCallback(callbackTypes.INIT, {
-        config: widget
-      });
+    // check for subfields if the value is an object
+    var split = parts[0].trim().split('.');
+
+    dataval = window.lio.data;
+    var s;
+
+    for (s = 0; s < split.length; s++) {
+      if (typeof dataval !== 'undefined') {
+        dataval = dataval[split[s]];
+      }
+    }
+
+    // if we couldn't find the data in question on the lytics jstag, check customData provided
+    if (typeof dataval === 'undefined') {
+      dataval = customData;
+
+      for (s = 0; s < split.length; s++) {
+        if (typeof dataval !== 'undefined') {
+          dataval = dataval[split[s]];
+        }
+      }
+    }
+
+    var val;
+
+    // replace the template with the lytics data value
+    if (typeof dataval !== 'undefined') {
+      val = currentVal.replace(found[f], dataval);
+      // if there's no default and we should error
+    } else if (
+      (!def || def.length === 0) &&
+      widget.displayConditions.showOnMissingFields !== true
+    ) {
+      return false;
+      // replace with the default option, or empty string if not found
+    } else {
+      val = currentVal.replace(found[f], def);
+    }
+
+    setObjectValue(widget, fieldName, val);
+    currentVal = val;
+  }
+
+  // if the value is a function, convert it back from a string
+  if (isFn) {
+    if (fnParams) {
+      fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+    } else {
+      fn = new Function(getObjectValue(widget, fieldName));
+    }
+
+    setObjectValue(widget, fieldName, fn);
+  }
+
+  return true;
+}
+
+/** @module pathfora/display-conditions/entity-fields/entity-field-checker */
+
+// globals
+// utils
+// display conditions
+/**
+ * Evaluate all fields on the list provided and check
+ * if there are any entity templates that need to be
+ * replaced.
+ *
+ * @exports entityFieldChecker
+ * @params {array} fields
+ * @params {object} widget
+ * @params {function} cb
+ */
+function entityFieldChecker (widget, customData) {
+  var found,
+      valid = true;
+
+  for (var i = 0; i < ENTITY_FIELDS.length; i++) {
+    var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+        fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
+
+    // convert functions to a string
+    if (typeof fieldValue === 'function') {
+      fieldValue = fieldValue.toString();
+    }
+
+    if (typeof fieldValue === 'string') {
+      found = fieldValue.match(regex);
+
+      if (found && found.length > 0) {
+        valid =
+          valid &&
+          replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
+      }
     }
   }
+
+  return valid;
 }
 
 /** @module pathfora/display-conditions/date-checker */
@@ -4126,8 +4327,9 @@ function registerManualTriggerWatcher (value, widget) {
  *
  * @exports initializeWidget
  * @params {object} widget
+ * @returns {bool} shown
  */
-function initializeWidget (widget) {
+function initializeWidget (widget, options) {
   var watcher,
       condition = widget.displayConditions,
       pf = this;
@@ -4138,6 +4340,14 @@ function initializeWidget (widget) {
   // NOTE Default cookie expiration is one year from now
   widget.expiration = new Date();
   widget.expiration.setDate(widget.expiration.getDate() + 365);
+
+  if (
+    (widget.type === 'sitegate' &&
+      readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+    widget.hiddenViaABTests === true
+  ) {
+    return;
+  }
 
   if (widget.pushDown) {
     if (
@@ -4152,87 +4362,85 @@ function initializeWidget (widget) {
     }
   }
 
-  var fields = ['msg', 'headline', 'image', 'confirmAction.callback'];
+  // entity fields
+  widget.valid = widget.valid && entityFieldChecker(widget, pf.customData);
 
-  pf.entityFieldChecker(fields, widget, function () {
-    // display conditions based on page load
-    if (condition.date) {
-      widget.valid = widget.valid && dateChecker(condition.date);
+  // display conditions based on page load
+  if (condition.date) {
+    widget.valid = widget.valid && dateChecker(condition.date);
+  }
+
+  if (condition.pageVisits) {
+    widget.valid = widget.valid && pageVisitsChecker(condition.pageVisits);
+  }
+
+  if (condition.hideAfterAction) {
+    widget.valid =
+      widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
+  }
+
+  if (condition.urlContains) {
+    widget.valid = widget.valid && urlChecker(condition.urlContains);
+  }
+
+  if (condition.metaContains) {
+    widget.valid = widget.valid && metaChecker(condition.metaContains);
+  }
+
+  widget.valid = widget.valid && condition.showOnInit;
+
+  if (condition.impressions) {
+    widget.valid =
+      widget.valid && impressionsChecker(condition.impressions, widget);
+  }
+
+  // if it's valid at this point, add it to the priority list
+  if (
+    widget.valid &&
+    options &&
+    options.priority === OPTIONS_PRIORITY_ORDERED
+  ) {
+    widgetTracker.prioritizedWidgets.push(widget);
+  }
+
+  // display conditions based on page interaction
+  if (condition.showOnExitIntent) {
+    initializeExitIntent(widget);
+  }
+
+  if (condition.displayWhenElementVisible) {
+    watcher = registerElementWatcher(
+      condition.displayWhenElementVisible,
+      widget
+    );
+    widget.watchers.push(watcher);
+    initializeScrollWatchers(widget);
+  }
+
+  if (condition.scrollPercentageToDisplay) {
+    watcher = registerPositionWatcher(
+      condition.scrollPercentageToDisplay,
+      widget
+    );
+    widget.watchers.push(watcher);
+    initializeScrollWatchers(widget);
+  }
+
+  if (condition.manualTrigger) {
+    watcher = registerManualTriggerWatcher(condition.manualTrigger, widget);
+    widget.watchers.push(watcher);
+    widgetTracker.readyWidgets.push(widget);
+
+    // if we've already triggered the widget
+    // before initializing lets initialize right away
+    triggerWidget(widget);
+  }
+
+  if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
+    if (widget.valid) {
+      showWidget(widget);
     }
-
-    if (condition.pageVisits) {
-      widget.valid = widget.valid && pageVisitsChecker(condition.pageVisits);
-    }
-
-    if (condition.hideAfterAction) {
-      widget.valid =
-        widget.valid &&
-        hideAfterActionChecker(condition.hideAfterAction, widget);
-    }
-
-    if (condition.urlContains) {
-      widget.valid = widget.valid && urlChecker(condition.urlContains);
-    }
-
-    if (condition.metaContains) {
-      widget.valid = widget.valid && metaChecker(condition.metaContains);
-    }
-
-    widget.valid = widget.valid && condition.showOnInit;
-
-    if (condition.impressions) {
-      widget.valid =
-        widget.valid && impressionsChecker(condition.impressions, widget);
-    }
-
-    if (
-      typeof condition.priority !== 'undefined' &&
-      widget.valid &&
-      widgetTracker.prioritizedWidgets.indexOf(widget) === -1
-    ) {
-      widgetTracker.prioritizedWidgets.push(widget);
-      return;
-    }
-
-    // display conditions based on page interaction
-    if (condition.showOnExitIntent) {
-      initializeExitIntent(widget);
-    }
-
-    if (condition.displayWhenElementVisible) {
-      watcher = registerElementWatcher(
-        condition.displayWhenElementVisible,
-        widget
-      );
-      widget.watchers.push(watcher);
-      initializeScrollWatchers(widget);
-    }
-
-    if (condition.scrollPercentageToDisplay) {
-      watcher = registerPositionWatcher(
-        condition.scrollPercentageToDisplay,
-        widget
-      );
-      widget.watchers.push(watcher);
-      initializeScrollWatchers(widget);
-    }
-
-    if (condition.manualTrigger) {
-      watcher = registerManualTriggerWatcher(condition.manualTrigger, widget);
-      widget.watchers.push(watcher);
-      widgetTracker.readyWidgets.push(widget);
-
-      // if we've already triggered the widget
-      // before initializing lets initialize right away
-      triggerWidget(widget);
-    }
-
-    if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
-      if (widget.valid) {
-        showWidget(widget);
-      }
-    }
-  });
+  }
 }
 
 /** @module pathfora/widgets/preview-widget */
@@ -4305,33 +4513,8 @@ function clearAll () {
   resetWidgetTracker(widgetTracker);
   resetDataObject(pathforaDataObject);
   resetDefaultProps(defaultProps);
-}
-
-/** @module pathfora/widgets/reinit-prioritized-widgets */
-
-/**
- * Widgets with priority are held from initialization
- * and reinitialized once we've loaded all
- *
- * @exports reinitializePrioritizedWidgets
- */
-function reinitializePrioritizedWidgets () {
-  if (widgetTracker.prioritizedWidgets.length > 0) {
-
-    widgetTracker.prioritizedWidgets.sort(function (a, b) {
-      return a.displayConditions.priority - b.displayConditions.priority;
-    }).reverse();
-
-    var highest = widgetTracker.prioritizedWidgets[0].displayConditions.priority;
-
-    for (var j = 0; j < widgetTracker.prioritizedWidgets.length; j++) {
-      if (widgetTracker.prioritizedWidgets[j].displayConditions.priority === highest) {
-        this.initializeWidget(widgetTracker.prioritizedWidgets[j]);
-      } else {
-        break;
-      }
-    }
-  }
+  this.callbacks = [];
+  this.acctid = '';
 }
 
 /** @module pathfora/widgets/prepare-widget */
@@ -4345,65 +4528,15 @@ function reinitializePrioritizedWidgets () {
  * @returns {object}
  */
 function prepareWidget (type, config) {
-  var props, random,
-      widget = {
-        valid: true
-      };
+  var widget = {
+    valid: true,
+    type: type
+  };
 
   if (!config) {
     throw new Error('Config object is missing');
   }
 
-  if (config.layout === 'random') {
-    props = {
-      layout: ['modal', 'slideout', 'bar'],
-      variant: ['1', '2'],
-      slideout: ['bottom-left', 'bottom-right'],
-      bar: ['top-absolute', 'top-fixed', 'bottom-fixed']
-    };
-
-    // FIXME Hard coded magical numbers, hard coded magical numbers everywhere :))
-    switch (type) {
-    case 'message':
-      random = Math.floor(Math.random() * 4);
-      config.layout = props.layout[random];
-      break;
-    case 'subscription':
-      random = Math.floor(Math.random() * 5);
-      while (random === 3) {
-        random = Math.floor(Math.random() * 5);
-      }
-      config.layout = props.layout[random];
-      break;
-    case 'form':
-      random = Math.floor(Math.random() * 5);
-      while (random === 2 || random === 3) {
-        random = Math.floor(Math.random() * 5);
-      }
-      config.layout = props.layout[random];
-    }
-    switch (config.layout) {
-    case 'folding':
-      config.position = props.folding[Math.floor(Math.random() * 3)];
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      break;
-    case 'slideout':
-      config.position = props.slideout[Math.floor(Math.random() * 2)];
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      break;
-    case 'modal':
-      config.variant = props.variant[Math.floor(Math.random() * 2)];
-      config.position = '';
-      break;
-    case 'bar':
-      config.position = props.bar[Math.floor(Math.random() * 3)];
-      break;
-    case 'inline':
-      config.position = 'body';
-      break;
-    }
-  }
-  widget.type = type;
   widget.config = config;
 
   if (!config.id) {
@@ -4908,6 +5041,7 @@ function Inline (pf) {
 
 /** @module pathfora/inline/init-inline */
 
+// validation
 /**
  * Once the dom is ready and Lytics jstag is
  * loaded initialize inline personalization
@@ -4919,12 +5053,7 @@ function initializeInline () {
 
   this.onDOMready(function () {
     pf.addCallback(function () {
-      if (pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        }
-      }
-
+      validateAccountId(pf);
       pf.inline.procElements();
     });
   });
@@ -4974,10 +5103,9 @@ var Pathfora = function () {
   // display conditions
   this.initializePageViews = initializePageViews;
   this.triggerWidgets = triggerWidgets;
-  this.entityFieldChecker = entityFieldChecker;
-  this.replaceEntityField = replaceEntityField;
 
   // widgets
+  this.initializeTargetedWidgets = initializeTargetedWidgets;
   this.initializeWidgets = initializeWidgets;
   this.initializeWidgetArray = initializeWidgetArray;
   this.initializeWidget = initializeWidget;
@@ -4985,7 +5113,6 @@ var Pathfora = function () {
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
   this.clearAll = clearAll;
-  this.reinitializePrioritizedWidgets = reinitializePrioritizedWidgets;
   this.Message = Message;
   this.Subscription = Subscription;
   this.Form = Form;
@@ -5015,12 +5142,6 @@ var Pathfora = function () {
   this.utils.updateLegacyCookies();
 
   head.appendChild(link);
-
-  // wait until everything else is loaded to prioritize widgets
-  var pf = this;
-  window.addEventListener('load', function () {
-    pf.reinitializePrioritizedWidgets();
-  });
 };
 
 window.pathfora = window.pathfora || new Pathfora();

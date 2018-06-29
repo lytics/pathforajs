@@ -50,4 +50,6 @@ export default function clearAll () {
   resetWidgetTracker(widgetTracker);
   resetDataObject(pathforaDataObject);
   resetDefaultProps(defaultProps);
+  this.callbacks = [];
+  this.acctid = '';
 }

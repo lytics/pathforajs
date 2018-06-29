@@ -17,12 +17,18 @@ import getObjectValue from '../../utils/objects/get-object-value';
  * @params {array} found
  * @returns {boolean}
  */
-export default function replaceEntityField (widget, fieldName, found) {
+export default function replaceEntityField (
+  widget,
+  fieldName,
+  found,
+  customData
+) {
   if (!found || !found.length) {
     return true;
   }
 
-  var fnParams, fn,
+  var fnParams,
+      fn,
       currentVal = getObjectValue(widget, fieldName),
       isFn = false;
 
@@ -58,9 +64,9 @@ export default function replaceEntityField (widget, fieldName, found) {
       }
     }
 
-    // if we couldn't find the data in question on the lytics jstag, check pathfora.customData
+    // if we couldn't find the data in question on the lytics jstag, check customData provided
     if (typeof dataval === 'undefined') {
-      dataval = this.customData;
+      dataval = customData;
 
       for (s = 0; s < split.length; s++) {
         if (typeof dataval !== 'undefined') {
@@ -74,10 +80,13 @@ export default function replaceEntityField (widget, fieldName, found) {
     // replace the template with the lytics data value
     if (typeof dataval !== 'undefined') {
       val = currentVal.replace(found[f], dataval);
-    // if there's no default and we should error
-    } else if ((!def || def.length === 0) && widget.displayConditions.showOnMissingFields !== true) {
+      // if there's no default and we should error
+    } else if (
+      (!def || def.length === 0) &&
+      widget.displayConditions.showOnMissingFields !== true
+    ) {
       return false;
-    // replace with the default option, or empty string if not found
+      // replace with the default option, or empty string if not found
     } else {
       val = currentVal.replace(found[f], def);
     }

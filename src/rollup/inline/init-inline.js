@@ -1,6 +1,7 @@
 /** @module pathfora/inline/init-inline */
 
-import window from '../dom/window';
+// validation
+import validateAccountId from '../validation/validate-account-id';
 
 /**
  * Once the dom is ready and Lytics jstag is
@@ -13,12 +14,7 @@ export default function initializeInline () {
 
   this.onDOMready(function () {
     pf.addCallback(function () {
-      if (pf.acctid === '') {
-        if (window.lio && window.lio.account) {
-          pf.acctid = window.lio.account.id;
-        }
-      }
-
+      validateAccountId(pf);
       pf.inline.procElements();
     });
   });
