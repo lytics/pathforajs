@@ -1,4 +1,4 @@
-/** @module pathfora/widgets/validate-widget-position */
+/** @module pathfora/validation/validate-widget-position */
 
 /**
  * Validate that the widget has correct position field
@@ -16,13 +16,27 @@ export default function validateWidgetPosition (widget, config) {
     choices = [''];
     break;
   case 'slideout':
-    choices = ['bottom-left', 'bottom-right', 'left', 'right', 'top-left', 'top-right'];
+    choices = [
+      'bottom-left',
+      'bottom-right',
+      'left',
+      'right',
+      'top-left',
+      'top-right'
+    ];
     break;
   case 'bar':
     choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
     break;
   case 'button':
-    choices = ['left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+    choices = [
+      'left',
+      'right',
+      'top-left',
+      'top-right',
+      'bottom-left',
+      'bottom-right'
+    ];
     break;
   case 'inline':
     choices = [];
