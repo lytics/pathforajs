@@ -429,6 +429,45 @@ describe('the content recommendation component', function () {
     window.pathfora.initializeWidgets([modal]);
 
     var widget = $('#' + modal.id);
+    console.log(widget);
     expect(widget).toBeDefined();
+  });
+
+  it('should set the colors specified to the content recommendation modal', function(done) {
+    var modal = new pathfora.Message({
+      id: 'modal1',
+      layout: 'modal',
+      variant: '3',
+      msg: 'test',
+      theme: 'custom',
+      colors: {
+         actionBackground: '#fff',
+         actionText: '#53f442',
+         background: '#f1f1f1',
+         cancelBackground: '#f1f1f1',
+         cancelText: '#bbb',
+         close: '#bbb',
+         headline: '#53f442',
+         text: '#d35145'
+      },
+      content: [{
+        url: 'https://www.getlytics.com/blog/post/know_your_data',
+        title: 'test',
+        description: 'sample test content description',
+        default: true
+      }]
+    });
+    window.pathfora.initializeWidgets([modal]);
+
+    setTimeout(function () {
+      var widget = $('#' + modal.id);
+      var title = widget.find('.pf-content-unit-meta h4');
+      console.log('css', title.css());
+      expect(title.css('color')).toBe('#53f442');
+
+      var description = widget.find('.pf-content-unit-meta p');
+      expect(description.css('color')).toBe('#d35145');
+      done();
+    }, 200);
   });
 });
