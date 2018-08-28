@@ -8,7 +8,8 @@ function makeMouseEvent (type, params) {
   } catch (e) {
     evt = document.createEvent('MouseEvents');
     params = params || {};
-    evt.initMouseEvent(type,
+    evt.initMouseEvent(
+      type,
       params.canBubble,
       params.cancelable,
       params.view || window,
@@ -29,9 +30,10 @@ function makeMouseEvent (type, params) {
   return evt;
 }
 
-describe("when setting display conditions", function() {
-  beforeEach(function() {
+describe('when setting display conditions', function () {
+  beforeEach(function () {
     pathfora.clearAll();
+    sessionStorage.clear();
   });
 
   it('should show when all manualTrigger widgets are triggered', function () {
@@ -83,7 +85,6 @@ describe("when setting display conditions", function() {
     pathfora.initializeWidgets([customWidget3]);
     var widget = $('#' + customWidget3.id);
     expect(widget.length).toBe(1);
-
 
     var customWidget4 = new pathfora.Message({
       msg: 'custom trigger test4',
@@ -175,7 +176,7 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         date: {
-          'start_at': limitDate.toISOString()
+          start_at: limitDate.toISOString()
         }
       }
     });
@@ -200,7 +201,7 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         date: {
-          'end_at': limitDate.toISOString()
+          end_at: limitDate.toISOString()
         }
       }
     });
@@ -348,6 +349,59 @@ describe("when setting display conditions", function() {
     expect(widget.length).toBe(0);
   });
 
+  it('should show if before limited amount of global impressions', function () {
+    var widgetId = 'impressionWidget1';
+    sessionStorage.setItem('PathforaImpressions_AnotherWidget', 0);
+    sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
+
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          global: {
+            session: 1
+          }
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(1);
+  });
+
+  it('should not show if after limited amount of global impressions', function () {
+    var widgetId = 'impressionWidget2';
+    sessionStorage.setItem('PathforaImpressions_a' + widgetId, 2);
+    sessionStorage.setItem('PathforaImpressions_b' + widgetId, 2);
+    sessionStorage.setItem('PathforaImpressions_c' + widgetId, 2);
+
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        impressions: {
+          global: {
+            session: 4
+          }
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
+
   it('should show if before limited amount of impressions', function () {
     var widgetId = 'impressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
@@ -360,8 +414,10 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          session: 1,
-          total: 5
+          widget: {
+            session: 1,
+            total: 5
+          }
         }
       }
     });
@@ -384,8 +440,10 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          session: 1,
-          total: 5
+          widget: {
+            session: 1,
+            total: 5
+          }
         }
       }
     });
@@ -398,7 +456,10 @@ describe("when setting display conditions", function() {
 
   it('should show if impression buffer met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2|' + Date.now());
+    pathfora.utils.saveCookie(
+      'PathforaImpressions_' + widgetId,
+      '2|' + Date.now()
+    );
 
     var form = new pathfora.Form({
       id: widgetId,
@@ -408,8 +469,10 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          session: 3,
-          buffer: 2
+          widget: {
+            session: 3,
+            buffer: 2
+          }
         }
       }
     });
@@ -424,7 +487,10 @@ describe("when setting display conditions", function() {
 
   it('should not show if impression buffer not met', function () {
     var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2|' + Date.now());
+    pathfora.utils.saveCookie(
+      'PathforaImpressions_' + widgetId,
+      '2|' + Date.now()
+    );
 
     var form = new pathfora.Form({
       id: widgetId,
@@ -434,8 +500,10 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          session: 3,
-          buffer: 60
+          widget: {
+            session: 3,
+            buffer: 60
+          }
         }
       }
     });
@@ -449,7 +517,10 @@ describe("when setting display conditions", function() {
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
   it('should accept and parse impression cookies with comma values', function () {
     var widgetId = 'impressionComma';
-    pathfora.utils.saveCookie('PathforaImpressions_' + widgetId, '2,' + Date.now());
+    pathfora.utils.saveCookie(
+      'PathforaImpressions_' + widgetId,
+      '2,' + Date.now()
+    );
 
     var form = new pathfora.Form({
       id: widgetId,
@@ -459,7 +530,9 @@ describe("when setting display conditions", function() {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          total: 2
+          widget: {
+            total: 2
+          }
         }
       }
     });
@@ -478,9 +551,7 @@ describe("when setting display conditions", function() {
       id: 'url-widget-1',
       position: 'bottom-right',
       displayConditions: {
-        urlContains: [
-          'localhost'
-        ]
+        urlContains: ['localhost']
       }
     });
 
@@ -491,9 +562,7 @@ describe("when setting display conditions", function() {
       id: 'url-widget-2',
       position: 'bottom-right',
       displayConditions: {
-        urlContains: [
-          '*'
-        ]
+        urlContains: ['*']
       }
     });
 
@@ -505,7 +574,7 @@ describe("when setting display conditions", function() {
     expect(widget2.length).toBe(1);
   });
 
-  it('should not show when the url doesn\'t match the display conditions', function () {
+  it("should not show when the url doesn't match the display conditions", function () {
     var form = new pathfora.Form({
       msg: 'subscription',
       headline: 'Header',
@@ -513,9 +582,7 @@ describe("when setting display conditions", function() {
       id: 'url-widget-3',
       position: 'bottom-right',
       displayConditions: {
-        urlContains: [
-          'notlocalhost'
-        ]
+        urlContains: ['notlocalhost']
       }
     });
 
@@ -747,7 +814,7 @@ describe("when setting display conditions", function() {
         urlContains: [
           {
             match: 'regex',
-            value: '^(http|https)+:\/\/+[a-z:]{10}\\d{4}\/con[txe]{4}.html$'
+            value: '^(http|https)+://+[a-z:]{10}\\d{4}/con[txe]{4}.html$'
           }
         ]
       }
@@ -762,7 +829,7 @@ describe("when setting display conditions", function() {
         urlContains: [
           {
             match: 'regex',
-            value: '^(http|https)+:\/\/+[a-z:]{10}\d{3}\/con[txe]{4}.html$'
+            value: '^(http|https)+://+[a-z:]{10}d{3}/con[txe]{4}.html$'
           }
         ]
       }
@@ -872,7 +939,6 @@ describe("when setting display conditions", function() {
     window.history.pushState({}, '', '/context.html');
   });
 
-
   it('should ignore order of query params for exact rule', function () {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1');
 
@@ -920,7 +986,11 @@ describe("when setting display conditions", function() {
   });
 
   it('should ignore "lytics_variation_preview_id" query in comparison', function () {
-    window.history.pushState({}, '', '/context.html?bar=2&foo=1&lytics_variation_preview_id=7b26ca56afb84669bba0bf0810ec459f');
+    window.history.pushState(
+      {},
+      '',
+      '/context.html?bar=2&foo=1&lytics_variation_preview_id=7b26ca56afb84669bba0bf0810ec459f'
+    );
 
     var form1 = new pathfora.Form({
       id: '7b26ca56afb84669bba0bf0810ec459f',
@@ -972,9 +1042,7 @@ describe("when setting display conditions", function() {
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
-        urlContains: [
-          '/context?foo=1&baz=3'
-        ]
+        urlContains: ['/context?foo=1&baz=3']
       }
     });
 
@@ -985,9 +1053,7 @@ describe("when setting display conditions", function() {
       layout: 'slideout',
       position: 'bottom-right',
       displayConditions: {
-        urlContains: [
-          '/context?foo=1&bar=4'
-        ]
+        urlContains: ['/context?foo=1&bar=4']
       }
     });
 
@@ -1032,9 +1098,7 @@ describe("when setting display conditions", function() {
       layout: 'slideout',
       displayConditions: {
         pageVisits: 0,
-        urlContains: [
-          'google.com'
-        ]
+        urlContains: ['google.com']
       }
     });
 
@@ -1045,9 +1109,7 @@ describe("when setting display conditions", function() {
       layout: 'slideout',
       displayConditions: {
         pageVisits: 5,
-        urlContains: [
-          '*'
-        ]
+        urlContains: ['*']
       }
     });
 
@@ -1058,9 +1120,7 @@ describe("when setting display conditions", function() {
       layout: 'slideout',
       displayConditions: {
         pageVisits: 0,
-        urlContains: [
-          '*'
-        ]
+        urlContains: ['*']
       }
     });
 
@@ -1070,7 +1130,6 @@ describe("when setting display conditions", function() {
     expect($('#' + form2.id).length).toBe(0);
     expect($('#' + form3.id).length).toBe(1);
   });
-
 
   it('should consider multiple display conditions and watchers', function (done) {
     var id = 'multiple-conditions',
@@ -1084,7 +1143,9 @@ describe("when setting display conditions", function() {
       id: id,
       displayConditions: {
         impressions: {
-          session: 3
+          widget: {
+            session: 3
+          }
         },
         manualTrigger: true
       }
@@ -1097,7 +1158,9 @@ describe("when setting display conditions", function() {
       id: id2,
       displayConditions: {
         impressions: {
-          session: 1
+          widget: {
+            session: 1
+          }
         },
         manualTrigger: true
       }
@@ -1110,7 +1173,9 @@ describe("when setting display conditions", function() {
       id: id3,
       displayConditions: {
         impressions: {
-          session: 3
+          widget: {
+            session: 3
+          }
         },
         manualTrigger: true
       }
@@ -1255,7 +1320,9 @@ describe("when setting display conditions", function() {
 
     it('should show if a single meta rule is met', function () {
       $('head').append('<meta property="og:type" content="product">');
-      $('head').append('<meta name="description" content="cool description here">');
+      $('head').append(
+        '<meta name="description" content="cool description here">'
+      );
       pathfora.initializeWidgets([modal]);
       expect($('#' + id).length).toBe(1);
       $('meta').remove();
@@ -1269,4 +1336,4 @@ describe("when setting display conditions", function() {
       $('meta').remove();
     });
   });
-})
+});
