@@ -343,7 +343,7 @@ Hide the module after a certain number of impressions or global impressions acro
   <tr>
     <td>total</td>
     <td>int</td>
-    <td><code>optional</code> count of how many total (multisession) impressions before showing the module</td>
+    <td><code>optional</code> (not supported for global) count of how many total (multisession) impressions before showing the module</td>
   </tr>
 </table>
 
