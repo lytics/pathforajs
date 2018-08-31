@@ -202,4 +202,39 @@ describe('when setting display conditions', function () {
       }, 200);
     }, 200);
   });
+
+  // NOTE Retain support for cookies with comma - can remove on 5/2/2016
+  it('should accept and parse hideAfterAction cookies with comma values', function () {
+    var widgetId = 'hideAfterActionComma';
+    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '2,' + Date.now());
+    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, '1,' + Date.now());
+    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, '1,' + Date.now());
+
+    var form = new pathfora.Form({
+      id: widgetId,
+      msg: 'subscription',
+      headline: 'Header',
+      layout: 'slideout',
+      position: 'bottom-right',
+      displayConditions: {
+        hideAfterAction: {
+          confirm: {
+            hideCount: 3,
+            duration: 1440
+          },
+          cancel: {
+            hideCount: 1
+          },
+          closed: {
+            duration: 30
+          }
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    var widget = $('#' + form.id);
+    expect(widget.length).toBe(0);
+  });
 });
