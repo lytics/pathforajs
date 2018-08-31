@@ -479,35 +479,6 @@ describe('when setting display conditions', function () {
     expect(widget.length).toBe(0);
   });
 
-  // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-  it('should accept and parse impression cookies with comma values', function () {
-    var widgetId = 'impressionComma';
-    pathfora.utils.saveCookie(
-      'PathforaImpressions_' + widgetId,
-      '2,' + Date.now()
-    );
-
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          widget: {
-            total: 2
-          }
-        }
-      }
-    });
-
-    pathfora.initializeWidgets([form]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
-  });
-
   it('should show when the url matches the display conditions', function () {
     var form = new pathfora.Form({
       msg: 'subscription',
