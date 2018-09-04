@@ -297,12 +297,36 @@ displayConditions: {
 
 
 ## impressions
-Hide the module after a certain number of impressions. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
+Hide the module after a certain number of impressions or global impressions across all widgets. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
 
 <table>
   <thead>
     <tr>
       <td colspan="3" align="center"><code>impressions</code> object</td>
+    </tr>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>widget</td>
+    <td>object</td>
+    <td><code>optional</code> contains settings specific to the widget itself</td>
+  </tr>
+  <tr>
+    <td>global</td>
+    <td>object</td>
+    <td><code>optional</code> contains settings specific to the widget but based upon all consumable or consumed widgets</td>
+  </tr>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>widget</code> / <code>global</code> object</td>
     </tr>
     <tr>
       <th>Key</th>
@@ -319,16 +343,19 @@ Hide the module after a certain number of impressions. The current number of imp
   <tr>
     <td>total</td>
     <td>int</td>
-    <td><code>optional</code> count of how many total (multisession) impressions before showing the module</td>
+    <td><code>optional</code> (not supported for global) count of how many total (multisession) impressions before showing the module</td>
   </tr>
 </table>
+
 
 ``` javascript
 // example: hide module after the second impression in the same session
 
 displayConditions: {
   impressions: {
-    session: 2
+    widget: {
+      session: 2
+    }
   }
 }
 ```
@@ -338,7 +365,9 @@ displayConditions: {
 
 displayConditions: {
   impressions: {
-    total: 5
+    widget: {
+      total: 5
+    }
   }
 }
 ```
@@ -349,8 +378,10 @@ displayConditions: {
 
 displayConditions: {
   impressions: {
-    session: 2,
-    total: 5
+    widget: {
+      session: 2,
+      total: 5
+    }
   }
 }
 ```
