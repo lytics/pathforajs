@@ -14,7 +14,8 @@ import saveCookie from '../../utils/cookies/save-cookie';
  * @params {object} widget
  */
 export default function incrementImpressions (widget) {
-  var parts, totalImpressions,
+  var parts,
+      totalImpressions,
       id = PREFIX_IMPRESSION + widget.id,
       sessionImpressions = ~~sessionStorage.getItem(id),
       total = readCookie(id),
@@ -34,5 +35,9 @@ export default function incrementImpressions (widget) {
   }
 
   sessionStorage.setItem(id, sessionImpressions);
-  saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
+  saveCookie(
+    id,
+    Math.min(totalImpressions, 9998) + '|' + now,
+    widget.expiration
+  );
 }
