@@ -39,9 +39,8 @@ export default function showWidget (w) {
     widgetTracker.openedWidgets.push(widget);
     trackWidgetAction('show', widget);
 
-    if (widget.displayConditions.impressions) {
-      incrementImpressions(widget);
-    }
+    // increment impressions for widget regardless of display condition need(s)
+    incrementImpressions(widget);
 
     var node = createWidgetHtml(widget);
 
