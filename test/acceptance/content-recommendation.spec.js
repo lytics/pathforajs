@@ -75,55 +75,56 @@ describe('the content recommendation component', function () {
 
     // Should get and show api response
     pathfora.initializeWidgets([modal]);
-    console.log(jasmine.Ajax.requests.mostRecent());
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
-    );
-
-    jasmine.Ajax.requests.mostRecent().respondWith({
-      status: 200,
-      contentType: 'application/json',
-      responseText:
-        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
-    });
-
-    var widget = $('#' + modal.id);
-    var widget2 = $('#' + defaultModal.id);
-    expect(widget).toBeDefined();
-    expect(widget2).toBeDefined();
-
     setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-      expect(widget2.hasClass('opened')).toBeTruthy();
-
-      var href = widget.find('.pf-content-unit').attr('href'),
-          desc = widget.find('.pf-content-unit p').text(),
-          img = widget.find('.pf-content-unit-img').css('background-image'),
-          title = widget.find('.pf-content-unit h4').text();
-
-      expect(title).toBe('Example Title');
-      expect(href).toBe('http://www.example.com/1');
-      expect(desc).toBe('An example description');
-      expect(img).toBe(
-        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
-      href = widget2.find('.pf-content-unit').attr('href');
-      desc = widget2.find('.pf-content-unit p').text();
-      img = widget2.find('.pf-content-unit-img').css('background-image');
-      title = widget2.find('.pf-content-unit h4').text();
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
 
-      expect(title).toBe('Default Title');
-      expect(href).toBe('http://www.example.com/2');
-      expect(desc).toBe('Default description');
-      expect(img).toBe(
-        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
-      );
+      var widget = $('#' + modal.id);
+      var widget2 = $('#' + defaultModal.id);
+      expect(widget).toBeDefined();
+      expect(widget2).toBeDefined();
 
-      pathfora.clearAll();
-      pathfora.acctid = '';
-      done();
-    }, 200);
+      setTimeout(function () {
+        expect(widget.hasClass('opened')).toBeTruthy();
+        expect(widget2.hasClass('opened')).toBeTruthy();
+
+        var href = widget.find('.pf-content-unit').attr('href'),
+            desc = widget.find('.pf-content-unit p').text(),
+            img = widget.find('.pf-content-unit-img').css('background-image'),
+            title = widget.find('.pf-content-unit h4').text();
+
+        expect(title).toBe('Example Title');
+        expect(href).toBe('http://www.example.com/1');
+        expect(desc).toBe('An example description');
+        expect(img).toBe(
+          'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+        );
+
+        href = widget2.find('.pf-content-unit').attr('href');
+        desc = widget2.find('.pf-content-unit p').text();
+        img = widget2.find('.pf-content-unit-img').css('background-image');
+        title = widget2.find('.pf-content-unit h4').text();
+
+        expect(title).toBe('Default Title');
+        expect(href).toBe('http://www.example.com/2');
+        expect(desc).toBe('Default description');
+        expect(img).toBe(
+          'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+        );
+
+        pathfora.clearAll();
+        pathfora.acctid = '';
+        done();
+      }, 200);
+    }, 10);
   });
 
   it('should throw errors if default content is improperly defined', function (done) {
