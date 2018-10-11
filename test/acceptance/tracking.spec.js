@@ -1,7 +1,13 @@
 // -------------------------
 // TRACKING
 // -------------------------
-describe("the tracking component", function() {
+describe('the tracking component', function () {
+  beforeEach(function () {
+    localStorage.clear();
+    sessionStorage.clear();
+    pathfora.clearAll();
+  });
+
   it('should know if users have interacted in the past', function () {
     localStorage.clear();
 
@@ -29,8 +35,12 @@ describe("the tracking component", function() {
     expect(completedActions).toBe(0);
     expect(closedWidgets).toBe(0);
 
-    $('#' + messageBar.id).find('.pf-widget-ok').click();
-    $('#' + messageModal.id).find('.pf-widget-close').click();
+    $('#' + messageBar.id)
+      .find('.pf-widget-ok')
+      .click();
+    $('#' + messageModal.id)
+      .find('.pf-widget-close')
+      .click();
 
     completedActions = pathfora.getDataObject().completedActions.length;
     closedWidgets = pathfora.getDataObject().closedWidgets.length;
@@ -52,7 +62,7 @@ describe("the tracking component", function() {
     jasmine.clock().uninstall();
   });
 
-  it('should report displaying widgets and it\'s variants', function () {
+  it("should report displaying widgets and it's variants", function () {
     jasmine.Ajax.install();
 
     var messageBar = new pathfora.Message({
@@ -65,20 +75,29 @@ describe("the tracking component", function() {
 
     pathfora.initializeWidgets([messageBar]);
 
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': messageBar.id,
-      'pf-widget-type': 'message',
-      'pf-widget-layout': 'modal',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'show'
-    }));
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': messageBar.id,
+        'pf-widget-type': 'message',
+        'pf-widget-layout': 'modal',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'show'
+      })
+    );
 
-    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', messageBar.id + ' : show', jasmine.any(String), jasmine.any(Object));
+    expect(ga).toHaveBeenCalledWith(
+      'send',
+      'event',
+      'Lytics',
+      messageBar.id + ' : show',
+      jasmine.any(String),
+      jasmine.any(Object)
+    );
     pathfora.clearAll();
     jasmine.Ajax.uninstall();
   });
 
-  it('should report closing widgets and it\'s variants', function () {
+  it("should report closing widgets and it's variants", function () {
     jasmine.Ajax.install();
     jasmine.clock().install();
 
@@ -95,15 +114,24 @@ describe("the tracking component", function() {
 
     jasmine.clock().tick(1000);
 
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': messageBar.id,
-      'pf-widget-type': 'message',
-      'pf-widget-layout': 'modal',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'close'
-    }));
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': messageBar.id,
+        'pf-widget-type': 'message',
+        'pf-widget-layout': 'modal',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'close'
+      })
+    );
 
-    expect(ga).toHaveBeenCalledWith('send', 'event', 'Lytics', messageBar.id + ' : close', jasmine.any(String), jasmine.any(Object));
+    expect(ga).toHaveBeenCalledWith(
+      'send',
+      'event',
+      'Lytics',
+      messageBar.id + ' : close',
+      jasmine.any(String),
+      jasmine.any(Object)
+    );
     pathfora.clearAll();
     jasmine.clock().uninstall();
     jasmine.Ajax.uninstall();
@@ -136,9 +164,11 @@ describe("the tracking component", function() {
       widget.find('.pf-widget-ok').click();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'action test'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'action test'
+        })
+      );
       done();
     }, 200);
 
@@ -174,10 +204,12 @@ describe("the tracking component", function() {
       widget.find('.pf-widget-cancel').click();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'cancel reporting test',
-        'pf-widget-event': 'cancel'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'cancel reporting test',
+          'pf-widget-event': 'cancel'
+        })
+      );
       done();
     }, 200);
 
@@ -193,17 +225,18 @@ describe("the tracking component", function() {
 
     pathfora.initializeWidgets([messageBar]);
 
-
     spyOn(jstag, 'send');
     $('.pf-widget-close').click();
 
-    expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-      'pf-widget-id': messageBar.id,
-      'pf-widget-type': 'message',
-      'pf-widget-layout': 'modal',
-      'pf-widget-variant': '1',
-      'pf-widget-event': 'close'
-    }));
+    expect(jstag.send).toHaveBeenCalledWith(
+      jasmine.objectContaining({
+        'pf-widget-id': messageBar.id,
+        'pf-widget-type': 'message',
+        'pf-widget-layout': 'modal',
+        'pf-widget-variant': '1',
+        'pf-widget-event': 'close'
+      })
+    );
   });
 
   it('should report to Google Analytics API, when available', function (done) {
@@ -258,29 +291,44 @@ describe("the tracking component", function() {
       spyOn(jstag, 'send');
       expect(jstag.send).not.toHaveBeenCalled();
 
-      widget.find('.pf-widget-ok').mouseenter().mouseleave();
+      widget
+        .find('.pf-widget-ok')
+        .mouseenter()
+        .mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'confirm',
-        'pf-widget-event': 'hover'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'confirm',
+          'pf-widget-event': 'hover'
+        })
+      );
 
-      widget.find('.pf-widget-cancel').mouseenter().mouseleave();
+      widget
+        .find('.pf-widget-cancel')
+        .mouseenter()
+        .mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'cancel',
-        'pf-widget-event': 'hover'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'cancel',
+          'pf-widget-event': 'hover'
+        })
+      );
 
-      widget.find('.pf-widget-close').mouseenter().mouseleave();
+      widget
+        .find('.pf-widget-close')
+        .mouseenter()
+        .mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'close',
-        'pf-widget-event': 'hover'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'close',
+          'pf-widget-event': 'hover'
+        })
+      );
 
       done();
     }, 200);
@@ -311,26 +359,32 @@ describe("the tracking component", function() {
       form.find('[name="username"]').focus();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'username',
-        'pf-widget-event': 'focus'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'username',
+          'pf-widget-event': 'focus'
+        })
+      );
 
       form.find('[name="email"]').focus();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'email',
-        'pf-widget-event': 'focus'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'email',
+          'pf-widget-event': 'focus'
+        })
+      );
 
       form.find('[name="message"]').focus();
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'message',
-        'pf-widget-event': 'focus'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'message',
+          'pf-widget-event': 'focus'
+        })
+      );
 
       done();
     }, 200);
@@ -358,36 +412,51 @@ describe("the tracking component", function() {
       spyOn(jstag, 'send');
       expect(jstag.send).not.toHaveBeenCalled();
 
-      form.find('[name="username"]').val('a').change();
+      form
+        .find('[name="username"]')
+        .val('a')
+        .change();
 
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'username',
-        'pf-widget-event': 'form_start'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'username',
+          'pf-widget-event': 'form_start'
+        })
+      );
 
-      form.find('[name="email"]').val('a').change();
-
-      expect(jstag.send).toHaveBeenCalled();
-
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'email',
-        'pf-widget-event': 'form_start'
-      }));
-
-      form.find('[name="message"]').val('a').change();
+      form
+        .find('[name="email"]')
+        .val('a')
+        .change();
 
       expect(jstag.send).toHaveBeenCalled();
 
-      expect(jstag.send).toHaveBeenCalledWith(jasmine.objectContaining({
-        'pf-widget-action': 'message',
-        'pf-widget-event': 'form_start'
-      }));
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'email',
+          'pf-widget-event': 'form_start'
+        })
+      );
+
+      form
+        .find('[name="message"]')
+        .val('a')
+        .change();
+
+      expect(jstag.send).toHaveBeenCalled();
+
+      expect(jstag.send).toHaveBeenCalledWith(
+        jasmine.objectContaining({
+          'pf-widget-action': 'message',
+          'pf-widget-event': 'form_start'
+        })
+      );
 
       done();
     }, 200);
 
     jasmine.Ajax.uninstall();
   });
-})
+});

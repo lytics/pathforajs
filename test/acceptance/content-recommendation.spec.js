@@ -5,12 +5,15 @@ describe('the content recommendation component', function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     window.lio = {};
+    window.pathfora.dateOptions = {};
     pathfora.clearAll();
   });
 
   afterEach(function () {
     window.lio = {};
     jasmine.Ajax.uninstall();
+    window.pathfora.dateOptions = {};
+    window.pathfora.acctid = '';
   });
 
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
@@ -72,6 +75,7 @@ describe('the content recommendation component', function () {
 
     // Should get and show api response
     pathfora.initializeWidgets([modal]);
+    console.log(jasmine.Ajax.requests.mostRecent());
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
       '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
     );
@@ -214,11 +218,7 @@ describe('the content recommendation component', function () {
       new Error('Cannot define recommended content unless it is a default')
     );
 
-    setTimeout(function () {
-      done();
-    }, 200);
-
-    pathfora.acctid = '';
+    done();
   });
 
   it('should accept segment AST definition', function (done) {
@@ -264,11 +264,9 @@ describe('the content recommendation component', function () {
       expect(widget.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
-
-    pathfora.acctid = '';
   });
 
-  it('should not append protocol to relative urls', function () {
+  it('should not append protocol to relative urls', function (done) {
     window.lio = {
       account: {
         id: 0
@@ -307,9 +305,12 @@ describe('the content recommendation component', function () {
     expect(href).toBe('this/is/a/path');
 
     pathfora.acctid = '';
+    done();
   });
 
-  it('should account for display options for content recommendations', function () {
+  it('should account for display options for content recommendations', function (done) {
+    window.pathfora.locale = 'en-US';
+
     window.lio = {
       account: {
         id: 0
@@ -398,6 +399,7 @@ describe('the content recommendation component', function () {
     expect(image.length).toBe(0);
 
     pathfora.acctid = '';
+    done();
   });
 
   it('should display a recommendation modal even if missing a description', function (done) {
