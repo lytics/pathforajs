@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.1.0',
+  var PF_VERSION = '1.1.1',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -944,29 +944,68 @@
    * @params {boolean} valid
    */
   function impressionsChecker (impressionConstraints, widget) {
-    var parts, totalImpressions,
+    var parts,
+        totalImpressions,
         valid = true,
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
+        sessionImpressionsForAllWidgets = 0,
         total = readCookie(id),
         now = Date.now();
 
+    // retain backwards compatibility if using legacy method of:
+    impressionConstraints.widget = impressionConstraints.widget || {};
+    impressionConstraints.global = impressionConstraints.global || {};
+
+    // migrate impressions.session to impressions.widget.session if not also set
+    if (typeof impressionConstraints.widget.session === 'undefined') {
+      impressionConstraints.widget.session = impressionConstraints.session;
+    }
+    // migrate impressions.total to impressions.widget.total if not also set
+    if (typeof impressionConstraints.widget.total === 'undefined') {
+      impressionConstraints.widget.total = impressionConstraints.total;
+    }
+    // migrate impressions.buffer to impressions.widget.buffer if not also set
+    if (typeof impressionConstraints.widget.buffer === 'undefined') {
+      impressionConstraints.widget.buffer = impressionConstraints.buffer;
+    }
+
+    // widget specific session total
     if (!sessionImpressions) {
       sessionImpressions = 0;
     }
 
+    // widget specific historic total
     if (!total) {
       totalImpressions = 0;
     } else {
       parts = total.split('|');
       totalImpressions = parseInt(parts[0], 10);
 
-      if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < impressionConstraints.buffer) {
+      if (
+        typeof parts[1] !== 'undefined' &&
+        Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.buffer
+      ) {
         valid = false;
       }
     }
 
-    if (sessionImpressions >= impressionConstraints.session || totalImpressions >= impressionConstraints.total) {
+    // all widget session total
+    if (impressionConstraints.global.session > 0) {
+      for (var i = 0; i < ~~sessionStorage.length; i++) {
+        var k = sessionStorage.key(i);
+        if (typeof k !== 'undefined' && k.includes(PREFIX_IMPRESSION)) {
+          sessionImpressionsForAllWidgets =
+            sessionImpressionsForAllWidgets + ~~sessionStorage.getItem(k);
+        }
+      }
+    }
+
+    if (
+      sessionImpressions >= impressionConstraints.widget.session ||
+      totalImpressions >= impressionConstraints.widget.total ||
+      sessionImpressionsForAllWidgets >= impressionConstraints.global.session
+    ) {
       valid = false;
     }
 
@@ -1164,7 +1203,8 @@
    * @params {object} widget
    */
   function incrementImpressions (widget) {
-    var parts, totalImpressions,
+    var parts,
+        totalImpressions,
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
         total = readCookie(id),
@@ -1184,7 +1224,11 @@
     }
 
     sessionStorage.setItem(id, sessionImpressions);
-    saveCookie(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
+    saveCookie(
+      id,
+      Math.min(totalImpressions, 9998) + '|' + now,
+      widget.expiration
+    );
   }
 
   /** @module pathfora/validation/validate-widget-position */
@@ -2730,9 +2774,8 @@
       widgetTracker.openedWidgets.push(widget);
       trackWidgetAction('show', widget);
 
-      if (widget.displayConditions.impressions) {
-        incrementImpressions(widget);
-      }
+      // increment impressions for widget regardless of display condition need(s)
+      incrementImpressions(widget);
 
       var node = createWidgetHtml(widget);
 
