@@ -10,8 +10,13 @@ import window from '../../dom/window';
  */
 export default function getUserSegments () {
   if (window.lio && window.lio.data && window.lio.data.segments) {
+    // legacy
     return window.lio.data.segments;
+  } else if (window.jstag && typeof window.jstag.getSegments === 'function') {
+    // > jstag 3.0.0
+    return window.jstag.getSegments();
   } else {
+    // fallback
     return ['all'];
   }
 }
