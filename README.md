@@ -30,7 +30,7 @@ There are 4 types of modules and 5 layouts currently supported.
 
   ``` html
   <!-- Pathfora Tag -->
-  <script src="http://c.lytics.io/static/pathfora.min.js"></script>
+  <script src="https://c.lytics.io/static/pathfora.min.js"></script>
   ```
 
 2. Set up your module configuration, a simple example is provided below. See the [documentation](http://lytics.github.io/pathforadocs/) for a full list of settings and examples.
