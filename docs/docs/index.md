@@ -5,7 +5,7 @@ Before you begin creating modules with Pathfora you must add the [Lytics javascr
 
 ``` html
 <!-- Pathfora Tag -->
-<script src="http://c.lytics.io/static/pathfora.min.js"></script>
+<script src="https://c.lytics.io/static/pathfora.min.js"></script>
 ```
 
 Next you'll need to set up configuration for your module and initialize it with `initializeWidgets`. Example configurations, settings, and their generated modules can be found throughout the documentation.
