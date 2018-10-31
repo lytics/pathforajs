@@ -148,7 +148,7 @@ describe('Widgets', function () {
       pathfora.showWidget(openedWidget);
 
       setTimeout(function () {
-        expect($('.pf-widget').length).toEqual(1);
+        expect($('#' + openedWidget.id).length).toEqual(1);
         pathfora.clearAll();
         done();
       }, 200);
@@ -1043,7 +1043,7 @@ describe('Widgets', function () {
     email.val('test@example.com');
     form.find('.pf-widget-ok').click();
 
-    var success = $('.success-state');
+    var success = widget.find('.success-state');
 
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
@@ -1096,7 +1096,7 @@ describe('Widgets', function () {
     form.find('input[name="email"]').val('test@example.com');
     form.find('.pf-widget-ok').click();
 
-    var success = $('.success-state');
+    var success = widget.find('.success-state');
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
@@ -1135,7 +1135,7 @@ describe('Widgets', function () {
       form.find('input[name="email"]').val('test@example.com');
       form.find('.pf-widget-ok').click();
 
-      success = $('.success-state');
+      success = widget.find('.success-state');
       success.find('.pf-widget-cancel').click();
 
       expect(jstag.send).toHaveBeenCalledWith(
@@ -1204,7 +1204,7 @@ describe('Widgets', function () {
 
     pathfora.initializeWidgets([formfields]);
 
-    var theform = document.getElementsByTagName('form');
+    var theform = $('#' + formfields.id).find('form');
     expect(theform.length).toBe(1);
 
     for (var elem in theform[0].children) {
@@ -1230,7 +1230,7 @@ describe('Widgets', function () {
   //  FORM BUILDER
   // -------------------------
 
-  it('should track custom fields to lytics', function () {
+  it('should track custom fields to lytics', function (done) {
     var customForm = new pathfora.Form({
       id: 'custom-form-1',
       msg: 'custom form',
@@ -1281,6 +1281,7 @@ describe('Widgets', function () {
         }
       })
     );
+    done();
   });
 
   it('should add labels and placeholders for custom fields if defined', function () {
