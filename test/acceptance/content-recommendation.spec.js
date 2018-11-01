@@ -5,12 +5,15 @@ describe('the content recommendation component', function () {
   beforeEach(function () {
     jasmine.Ajax.install();
     window.lio = {};
+    window.pathfora.dateOptions = {};
     pathfora.clearAll();
   });
 
   afterEach(function () {
     window.lio = {};
     jasmine.Ajax.uninstall();
+    window.pathfora.dateOptions = {};
+    window.pathfora.acctid = '';
   });
 
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
@@ -72,54 +75,56 @@ describe('the content recommendation component', function () {
 
     // Should get and show api response
     pathfora.initializeWidgets([modal]);
-    expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
-    );
-
-    jasmine.Ajax.requests.mostRecent().respondWith({
-      status: 200,
-      contentType: 'application/json',
-      responseText:
-        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
-    });
-
-    var widget = $('#' + modal.id);
-    var widget2 = $('#' + defaultModal.id);
-    expect(widget).toBeDefined();
-    expect(widget2).toBeDefined();
-
     setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-      expect(widget2.hasClass('opened')).toBeTruthy();
-
-      var href = widget.find('.pf-content-unit').attr('href'),
-          desc = widget.find('.pf-content-unit p').text(),
-          img = widget.find('.pf-content-unit-img').css('background-image'),
-          title = widget.find('.pf-content-unit h4').text();
-
-      expect(title).toBe('Example Title');
-      expect(href).toBe('http://www.example.com/1');
-      expect(desc).toBe('An example description');
-      expect(img).toBe(
-        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
-      href = widget2.find('.pf-content-unit').attr('href');
-      desc = widget2.find('.pf-content-unit p').text();
-      img = widget2.find('.pf-content-unit-img').css('background-image');
-      title = widget2.find('.pf-content-unit h4').text();
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
 
-      expect(title).toBe('Default Title');
-      expect(href).toBe('http://www.example.com/2');
-      expect(desc).toBe('Default description');
-      expect(img).toBe(
-        'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
-      );
+      var widget = $('#' + modal.id);
+      var widget2 = $('#' + defaultModal.id);
+      expect(widget).toBeDefined();
+      expect(widget2).toBeDefined();
 
-      pathfora.clearAll();
-      pathfora.acctid = '';
-      done();
-    }, 200);
+      setTimeout(function () {
+        expect(widget.hasClass('opened')).toBeTruthy();
+        expect(widget2.hasClass('opened')).toBeTruthy();
+
+        var href = widget.find('.pf-content-unit').attr('href'),
+            desc = widget.find('.pf-content-unit p').text(),
+            img = widget.find('.pf-content-unit-img').css('background-image'),
+            title = widget.find('.pf-content-unit h4').text();
+
+        expect(title).toBe('Example Title');
+        expect(href).toBe('http://www.example.com/1');
+        expect(desc).toBe('An example description');
+        expect(img).toBe(
+          'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+        );
+
+        href = widget2.find('.pf-content-unit').attr('href');
+        desc = widget2.find('.pf-content-unit p').text();
+        img = widget2.find('.pf-content-unit-img').css('background-image');
+        title = widget2.find('.pf-content-unit h4').text();
+
+        expect(title).toBe('Default Title');
+        expect(href).toBe('http://www.example.com/2');
+        expect(desc).toBe('Default description');
+        expect(img).toBe(
+          'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
+        );
+
+        pathfora.clearAll();
+        pathfora.acctid = '';
+        done();
+      }, 200);
+    }, 10);
   });
 
   it('should throw errors if default content is improperly defined', function (done) {
@@ -214,11 +219,7 @@ describe('the content recommendation component', function () {
       new Error('Cannot define recommended content unless it is a default')
     );
 
-    setTimeout(function () {
-      done();
-    }, 200);
-
-    pathfora.acctid = '';
+    done();
   });
 
   it('should accept segment AST definition', function (done) {
@@ -264,11 +265,9 @@ describe('the content recommendation component', function () {
       expect(widget.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
-
-    pathfora.acctid = '';
   });
 
-  it('should not append protocol to relative urls', function () {
+  it('should not append protocol to relative urls', function (done) {
     window.lio = {
       account: {
         id: '123'
@@ -307,9 +306,12 @@ describe('the content recommendation component', function () {
     expect(href).toBe('this/is/a/path');
 
     pathfora.acctid = '';
+    done();
   });
 
-  it('should account for display options for content recommendations', function () {
+  it('should account for display options for content recommendations', function (done) {
+    window.pathfora.locale = 'en-US';
+
     window.lio = {
       account: {
         id: '123'
@@ -398,6 +400,7 @@ describe('the content recommendation component', function () {
     expect(image.length).toBe(0);
 
     pathfora.acctid = '';
+    done();
   });
 
   it('should display a recommendation modal even if missing a description', function (done) {
