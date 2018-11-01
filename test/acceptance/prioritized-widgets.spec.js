@@ -1,6 +1,7 @@
 // Prioritized Widget Tests
 describe('Prioritized widgets', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();

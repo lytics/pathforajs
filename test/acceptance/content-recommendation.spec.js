@@ -3,6 +3,7 @@
 // -------------------------
 describe('the content recommendation component', function () {
   beforeEach(function () {
+    resetLegacyTag();
     jasmine.Ajax.install();
     window.lio = {};
     window.pathfora.dateOptions = {};

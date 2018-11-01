@@ -3,6 +3,7 @@
 // -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();

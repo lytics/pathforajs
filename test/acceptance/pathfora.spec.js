@@ -4,9 +4,13 @@
 var credentials = 123,
     ga = jasmine.createSpy('ga');
 
-var jstag = {
-  send: function () {}
+var resetLegacyTag = function () {
+  window.jstag = {
+    send: function () {}
+  };
 };
+
+resetLegacyTag();
 
 pathfora.utils.saveCookie('seerid', 123);
 pathfora.enableGA = true;
@@ -25,6 +29,7 @@ function createAndDispatchKeydown (key, target) {
 
 describe('Pathfora', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();

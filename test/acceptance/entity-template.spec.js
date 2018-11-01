@@ -3,6 +3,7 @@
 // -------------------------
 describe('the entity templates', function () {
   beforeEach(function () {
+    resetLegacyTag();
     pathfora.clearAll();
   });
 

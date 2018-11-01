@@ -1,8 +1,9 @@
 // -------------------------
 // A/B TESTING
 // -------------------------
-describe('when performing AB testing', function() {
-  beforeEach(function() {
+describe('when performing AB testing', function () {
+  beforeEach(function () {
+    resetLegacyTag();
     pathfora.clearAll();
   });
 
@@ -22,10 +23,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-1',
       type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
+      groups: [[widgetA], [widgetB]]
     });
 
     pathfora.initializeABTesting([ab]);
@@ -63,10 +61,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-2',
       type: '50/50',
-      groups: [
-        [widget1A, widget2A],
-        [widget1B, widget2B]
-      ]
+      groups: [[widget1A, widget2A], [widget1B, widget2B]]
     });
 
     pathfora.initializeABTesting([ab]);
@@ -76,7 +71,12 @@ describe('when performing AB testing', function() {
     expect(w.length).toBe(2);
 
     var first = w.first();
-    expect(first.find('.pf-widget-message').text()).toEqual(first.next().find('.pf-widget-message').text());
+    expect(first.find('.pf-widget-message').text()).toEqual(
+      first
+        .next()
+        .find('.pf-widget-message')
+        .text()
+    );
   });
 
   it('should show the second group if the cookie value is < 0.5', function () {
@@ -98,10 +98,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: id,
       type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
+      groups: [[widgetA], [widgetB]]
     });
 
     pathfora.initializeABTesting([ab]);
@@ -132,10 +129,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: id,
       type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
+      groups: [[widgetA], [widgetB]]
     });
 
     pathfora.initializeABTesting([ab]);
@@ -164,10 +158,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-5',
       type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
+      groups: [[widgetA], [widgetB]]
     });
 
     var widgetC = new pathfora.Message({
@@ -185,10 +176,7 @@ describe('when performing AB testing', function() {
     var ab2 = new pathfora.ABTest({
       id: 'ab-6',
       type: '50/50',
-      groups: [
-        [widgetC],
-        [widgetD]
-      ]
+      groups: [[widgetC], [widgetD]]
     });
 
     pathfora.initializeABTesting([ab, ab2]);
@@ -230,17 +218,16 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-10',
       type: '50/50',
-      groups: [
-        [widgetA],
-        [widgetB]
-      ]
+      groups: [[widgetA], [widgetB]]
     });
 
     var widgets = {
-      target: [{
-        segment: 'smt_new',
-        widgets: [widgetA, widgetB]
-      }]
+      target: [
+        {
+          segment: 'smt_new',
+          widgets: [widgetA, widgetB]
+        }
+      ]
     };
 
     pathfora.initializeABTesting([ab]);
@@ -263,10 +250,7 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-11',
       type: '80/20',
-      groups: [
-        [],
-        [widget]
-      ]
+      groups: [[], [widget]]
     });
 
     pathfora.initializeABTesting([ab]);
@@ -286,24 +270,22 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-7',
       type: '50/50',
-      groups: [
-        [widgetA],
-        []
-      ]
+      groups: [[widgetA], []]
     });
 
     var ab2 = new pathfora.ABTest({
       id: 'ab-8',
       type: '50/50',
-      groups: [
-        [widgetA],
-        []
-      ]
+      groups: [[widgetA], []]
     });
 
     expect(function () {
       pathfora.initializeABTesting([ab, ab2]);
-    }).toThrow(new Error('Widget #' + widgetA.id + ' is defined in more than one AB test.'));
+    }).toThrow(
+      new Error(
+        'Widget #' + widgetA.id + ' is defined in more than one AB test.'
+      )
+    );
   });
 
   it('should not allow a widget to be used in more than one A/B test', function () {
@@ -322,23 +304,19 @@ describe('when performing AB testing', function() {
     var ab = new pathfora.ABTest({
       id: 'ab-9',
       type: '50/50',
-      groups: [
-        [widgetA],
-        []
-      ]
+      groups: [[widgetA], []]
     });
 
     var ab2 = new pathfora.ABTest({
       id: 'ab-9',
       type: '50/50',
-      groups: [
-        [widgetB],
-        []
-      ]
+      groups: [[widgetB], []]
     });
 
     expect(function () {
       pathfora.initializeABTesting([ab, ab2]);
-    }).toThrow(new Error('AB test with ID=' + ab.id + ' has been already defined.'));
+    }).toThrow(
+      new Error('AB test with ID=' + ab.id + ' has been already defined.')
+    );
   });
 });

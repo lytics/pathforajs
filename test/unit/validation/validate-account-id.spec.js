@@ -2,6 +2,7 @@ import validateAccountId from '../../../src/rollup/validation/validate-account-i
 
 describe('validateAccountId', function () {
   beforeEach(function () {
+    resetLegacyTag();
     pathfora.acctid = '';
   });
 
