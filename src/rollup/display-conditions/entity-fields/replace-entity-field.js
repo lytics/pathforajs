@@ -43,8 +43,8 @@ export default function replaceEntityField (
   // for each template found...
   for (var f = 0; f < found.length; f++) {
     // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
+    var foundval = found[f].slice(2).slice(0, -2),
+        parts = foundval.split('|'),
         def = '';
 
     // get the default (fallback) value
@@ -55,9 +55,18 @@ export default function replaceEntityField (
     // check for subfields if the value is an object
     var split = parts[0].trim().split('.');
 
-    dataval = window.lio.data;
-    var s;
+    // get entity data from tag
+    var dataval;
+    if (window.lio && window.lio.data) {
+      dataval = window.lio.data;
+    } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      var entity = window.jstag.getEntity();
+      if (entity && entity.data && entity.data.user) {
+        dataval = entity.data.user;
+      }
+    }
 
+    var s;
     for (s = 0; s < split.length; s++) {
       if (typeof dataval !== 'undefined') {
         dataval = dataval[split[s]];

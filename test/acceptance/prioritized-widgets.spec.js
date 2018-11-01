@@ -145,7 +145,7 @@ describe('Prioritized widgets', function () {
 
       window.lio = {
         account: {
-          id: 0
+          id: '123'
         },
         loaded: true
       };
@@ -177,7 +177,7 @@ describe('Prioritized widgets', function () {
         expect(widget2.length).toBe(0);
 
         expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-          '//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
+          '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
         );
 
         jasmine.Ajax.requests.mostRecent().respondWith({
