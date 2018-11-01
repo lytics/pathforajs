@@ -122,7 +122,7 @@ describe('Prioritized widgets', function () {
             name: 'Sarah'
           },
           account: {
-            id: '0'
+            id: '123'
           },
           loaded: true
         };

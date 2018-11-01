@@ -1,10 +1,10 @@
 // -------------------------
 //  ENTITY FIELD TEMPLATES
 // -------------------------
-describe("the entity templates", function() {
-	beforeEach(function() {
-		pathfora.clearAll();
-	});
+describe('the entity templates', function () {
+  beforeEach(function () {
+    pathfora.clearAll();
+  });
 
   it('should replace dynamic templates with entity fields', function (done) {
     window.lio = {
@@ -93,12 +93,23 @@ describe("the entity templates", function() {
       confirmAction: {
         name: 'confirm',
         callback: function () {
-          window.customvar = 'https://www.google.com/?promo={{promoCode}}&email={{email}}';
+          window.customvar =
+            'https://www.google.com/?promo={{promoCode}}&email={{email}}';
         }
       }
     });
 
-    pathfora.initializeWidgets([fieldWidget1, fieldWidget2, fieldWidget3, fieldWidget4, fieldWidget5, fieldWidget6, fieldWidget7, fieldWidget8, fieldWidget9]);
+    pathfora.initializeWidgets([
+      fieldWidget1,
+      fieldWidget2,
+      fieldWidget3,
+      fieldWidget4,
+      fieldWidget5,
+      fieldWidget6,
+      fieldWidget7,
+      fieldWidget8,
+      fieldWidget9
+    ]);
 
     var w1 = $('#' + fieldWidget1.id);
     expect(w1.length).toBe(1);
@@ -144,7 +155,10 @@ describe("the entity templates", function() {
       expect(w6.hasClass('opened')).toBeTruthy();
       expect(w7.hasClass('opened')).toBeTruthy();
       expect(w8.hasClass('opened')).toBeTruthy();
-      expect(window.customvar === 'https://www.google.com/?promo=123FREE&email=fake@gmail.com').toBeTruthy();
+      expect(
+        window.customvar ===
+          'https://www.google.com/?promo=123FREE&email=fake@gmail.com'
+      ).toBeTruthy();
       done();
     }, 200);
   });
