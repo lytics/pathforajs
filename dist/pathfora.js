@@ -2235,7 +2235,8 @@
         widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
         widgetBody = widget.querySelector('.pf-widget-body'),
         widgetMessage = widget.querySelector('.pf-widget-message'),
-        widgetFooter = widget.querySelector('.pf-widget-footer');
+        widgetFooter = widget.querySelector('.pf-widget-footer'),
+        widgetMiddle = widget.querySelector('.pf-va-middle');
 
     if (widgetCancel !== null && !config.cancelShow) {
       node = widgetCancel;
@@ -2388,10 +2389,12 @@
 
     // NOTE Set the image
     if (config.image) {
-      if (config.layout === 'button') ; else {
-        var widgetImage = document$1.createElement('img');
-        widgetImage.src = config.image;
-        widgetImage.className = 'pf-widget-img';
+      var widgetImage = document$1.createElement('img');
+      widgetImage.src = config.image;
+      widgetImage.className = 'pf-widget-img';
+      if (config.layout === 'button') ; else if (config.layout === 'modal' || config.layout === 'inline') {
+        widgetMiddle.appendChild(widgetImage);
+      } else {
         widgetBody.appendChild(widgetImage);
       }
     }
