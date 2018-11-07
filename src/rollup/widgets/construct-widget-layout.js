@@ -34,8 +34,7 @@ export default function constructWidgetLayout (widget, config) {
       widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
       widgetBody = widget.querySelector('.pf-widget-body'),
       widgetMessage = widget.querySelector('.pf-widget-message'),
-      widgetFooter = widget.querySelector('.pf-widget-footer'),
-      widgetMiddle = widget.querySelector('.pf-va-middle');
+      widgetFooter = widget.querySelector('.pf-widget-footer');
 
   if (widgetCancel !== null && !config.cancelShow) {
     node = widgetCancel;
@@ -194,7 +193,7 @@ export default function constructWidgetLayout (widget, config) {
     if (config.layout === 'button') {
       // NOTE Images are not compatible with the button layout
     } else if (config.layout === 'modal' || config.layout === 'inline') {
-      widgetMiddle.appendChild(widgetImage);
+      widgetContent.appendChild(widgetImage);
     } else {
       widgetBody.appendChild(widgetImage);
     }
