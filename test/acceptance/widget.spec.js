@@ -341,6 +341,39 @@ describe('Widgets', function () {
     expect(slideout2.find('.pf-widget-footer').html()).toEqual('');
   });
 
+  it('should contain pf-widget-text div for inline and modal layouts', function() {
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal'
+    });
+
+    var div = document.createElement('div');
+    div.className = 'some-dom-element';
+    document.body.appendChild(div);
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing'
+    });
+
+    var slideout = new pathfora.Message({
+      id: 'slideout',
+      msg: 'test',
+      layout: 'slideout'
+    });
+
+    pathfora.initializeWidgets([modal, inline, slideout]);
+
+    var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id),
+        slideoutWidget = $('#' + slideout.id);
+    expect(modalWidget.find('.pf-widget-text').html()).toBeDefined();
+    expect(inlineWidget.find('.pf-widget-text').html()).toBeDefined();
+    expect(slideoutWidget.find('.pf-widget-text').html()).toBeUndefined();
+  });
+
   // -------------------------
   //  COLORS/THEME
   // -------------------------
