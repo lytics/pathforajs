@@ -2548,10 +2548,10 @@ function formBuilderEventsFn() {
       var optionInputType = {
         selected: multipleSelect ? 'checkbox' : 'radio'
       },
-          optionDataOrder = ['value', 'label', 'selected'],
+          optionDataOrder = ['value', 'label'],
           optionInputs = [];
 
-      optionData = Object.assign({ selected: false, label: '', value: '' }, optionData);
+      optionData = Object.assign({ label: '', value: '' }, optionData);
 
       for (var i = optionDataOrder.length - 1; i >= 0; i--) {
         var prop = optionDataOrder[i];
