@@ -374,6 +374,36 @@ describe('Widgets', function () {
     expect(slideoutWidget.find('.pf-widget-text').html()).toBeUndefined();
   });
 
+  it('should append pf-widget-img to pf-widget-content for modal and inline layouts', function() {
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal',
+      variant: 2,
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+    });
+
+    var div = document.createElement('div');
+    div.className = 'some-dom-element';
+    document.body.appendChild(div);
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing',
+      variant: 2,
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+    });
+
+    pathfora.initializeWidgets([modal, inline]);
+
+    var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id);
+    expect(modalWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
+    expect(inlineWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
+    expect(modalWidget.find('.pf-widget-text').find('img').html()).toBeUndefined();
+  });
+  
   // -------------------------
   //  COLORS/THEME
   // -------------------------
