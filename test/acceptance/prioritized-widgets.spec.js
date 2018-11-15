@@ -123,7 +123,7 @@ describe('Prioritized widgets', function () {
             name: 'Sarah'
           },
           account: {
-            id: '123'
+            id: '321'
           },
           loaded: true
         };
@@ -146,7 +146,7 @@ describe('Prioritized widgets', function () {
 
       window.lio = {
         account: {
-          id: '123'
+          id: '321'
         },
         loaded: true
       };
@@ -174,11 +174,13 @@ describe('Prioritized widgets', function () {
           widget2 = $('#' + modal.id);
 
       setTimeout(function () {
+        console.log(window.lio);
+        
         expect(widget1.length).toBe(0);
         expect(widget2.length).toBe(0);
 
         expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-          '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
+          '//api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
         );
 
         jasmine.Ajax.requests.mostRecent().respondWith({
