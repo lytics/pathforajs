@@ -57,9 +57,16 @@ export default function replaceEntityField (
 
     // get entity data from tag
     var dataval;
+
+    // for the legacy tag < 3.0, there is a lio object surfaced. within this object lives the personalization
+    // data. however, in current gen tag > 3.0 we have a getEntity() method that should be used as the source
+    // of truth, the returned data model is slightly different in that it supports the full personalization
+    // api vs the legacy entity api that only returns segment and user field info.
     if (window.lio && window.lio.data) {
       dataval = window.lio.data;
+      // tag is legacy
     } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      // tag is current gen
       var entity = window.jstag.getEntity();
       if (entity && entity.data && entity.data.user) {
         dataval = entity.data.user;
