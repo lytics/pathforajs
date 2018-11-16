@@ -7,14 +7,18 @@
     <h1>Action widget example</h1>
     <script src="../dist/pathfora.min.js"></script>
     <script src="https://api.lytics.io/api/tag/876493052fb5615a66effcf65804517b/lio.js"></script>
+    <link rel="stylesheet" href="test-purina.css"> 
     <script>
-      var modal = new pathfora.Message({
+      var modal = new pathfora.SiteGate({
         id: 'modal1',
-        layout: 'bar',
-        msg: 'Welcome to our website',
-        variant: 2,
-        image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
-        headline: 'Headline'
+        layout: 'modal',
+        headline: 'All Done For Now?',
+        msg: 'Want to save your blend for later? Create an account and pick up right where you left off.',
+        okMessage: 'SAVE FOR LATER',
+        className: 'yorkie',
+        cancelShow: false
+        // variant: 2,
+        // image: 'https://storage.googleapis.com/sourcemedia-personalize/review/sets/assets/eba.png'
       });
       window.pathfora.initializeWidgets([modal]);
     </script>
