@@ -21,6 +21,7 @@ Within the `pf-widget` div most key elements are assigned class names. Form comp
 | Class Name | Element |
 |---|---|
 | `pf-widget-content` | second container div inside `pf-widget` (for modal and gate layouts this will the the box surrounding the actual module content) |
+| `pf-widget-text` | third container div inside `pf-widget` for modals, gates, and inline layouts (it contains the text: headline and message/form) |
 | `pf-widget-headline` | `<h2>` headline text |
 | `pf-widget-message` | `<p>` containing widget message text |  
 | `pf-widget-close` | "x" icon to close the modal |
