@@ -187,12 +187,14 @@ export default function constructWidgetLayout (widget, config) {
 
   // NOTE Set the image
   if (config.image) {
+    var widgetImage = document.createElement('img');
+    widgetImage.src = config.image;
+    widgetImage.className = 'pf-widget-img';
     if (config.layout === 'button') {
       // NOTE Images are not compatible with the button layout
+    } else if (config.layout === 'modal' || config.layout === 'inline') {
+      widgetContent.appendChild(widgetImage);
     } else {
-      var widgetImage = document.createElement('img');
-      widgetImage.src = config.image;
-      widgetImage.className = 'pf-widget-img';
       widgetBody.appendChild(widgetImage);
     }
   }
