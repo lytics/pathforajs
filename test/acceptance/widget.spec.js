@@ -148,7 +148,7 @@ describe('Widgets', function () {
       pathfora.showWidget(openedWidget);
 
       setTimeout(function () {
-        expect($('.pf-widget').length).toEqual(1);
+        expect($('#' + openedWidget.id).length).toEqual(1);
         pathfora.clearAll();
         done();
       }, 200);
@@ -339,6 +339,62 @@ describe('Widgets', function () {
     expect(modal2.find('.pf-widget-footer').html()).toEqual('');
     expect(slideout1.find('.pf-widget-footer').html()).toEqual('Footer text');
     expect(slideout2.find('.pf-widget-footer').html()).toEqual('');
+  });
+
+  it('should contain pf-widget-text div for inline and modal layouts', function() {
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal'
+    });
+     var div = document.createElement('div');
+    div.className = 'some-dom-element';
+    document.body.appendChild(div);
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing'
+    });
+     var slideout = new pathfora.Message({
+      id: 'slideout',
+      msg: 'test',
+      layout: 'slideout'
+    });
+     pathfora.initializeWidgets([modal, inline, slideout]);
+     var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id),
+        slideoutWidget = $('#' + slideout.id);
+    expect(modalWidget.find('.pf-widget-text').html()).toBeDefined();
+    expect(inlineWidget.find('.pf-widget-text').html()).toBeDefined();
+    expect(slideoutWidget.find('.pf-widget-text').html()).toBeUndefined();
+  });
+
+  it('should append pf-widget-img to pf-widget-content for modal and inline layouts', function() {
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal',
+      variant: 2,
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+    });
+     var div = document.createElement('div');
+    div.className = 'some-dom-element';
+    document.body.appendChild(div);
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing',
+      variant: 2,
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+    });
+     pathfora.initializeWidgets([modal, inline]);
+     var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id);
+    expect(modalWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
+    expect(inlineWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
+    expect(modalWidget.find('.pf-widget-text').find('img').html()).toBeUndefined();
   });
 
   // -------------------------
@@ -1043,7 +1099,7 @@ describe('Widgets', function () {
     email.val('test@example.com');
     form.find('.pf-widget-ok').click();
 
-    var success = $('.success-state');
+    var success = widget.find('.success-state');
 
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
@@ -1096,7 +1152,7 @@ describe('Widgets', function () {
     form.find('input[name="email"]').val('test@example.com');
     form.find('.pf-widget-ok').click();
 
-    var success = $('.success-state');
+    var success = widget.find('.success-state');
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
     expect(widget.hasClass('success')).toBeTruthy();
@@ -1135,7 +1191,7 @@ describe('Widgets', function () {
       form.find('input[name="email"]').val('test@example.com');
       form.find('.pf-widget-ok').click();
 
-      success = $('.success-state');
+      success = widget.find('.success-state');
       success.find('.pf-widget-cancel').click();
 
       expect(jstag.send).toHaveBeenCalledWith(
@@ -1204,7 +1260,7 @@ describe('Widgets', function () {
 
     pathfora.initializeWidgets([formfields]);
 
-    var theform = document.getElementsByTagName('form');
+    var theform = $('#' + formfields.id).find('form');
     expect(theform.length).toBe(1);
 
     for (var elem in theform[0].children) {
@@ -1230,7 +1286,7 @@ describe('Widgets', function () {
   //  FORM BUILDER
   // -------------------------
 
-  it('should track custom fields to lytics', function () {
+  it('should track custom fields to lytics', function (done) {
     var customForm = new pathfora.Form({
       id: 'custom-form-1',
       msg: 'custom form',
@@ -1281,6 +1337,7 @@ describe('Widgets', function () {
         }
       })
     );
+    done();
   });
 
   it('should add labels and placeholders for custom fields if defined', function () {

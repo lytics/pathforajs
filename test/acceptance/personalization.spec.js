@@ -9,10 +9,18 @@ describe('Inline Personalization', function () {
     beforeEach(function () {
       window.pathfora.inline.elements = [];
       window.pathfora.acctid = '';
+      window.pathfora.dateOptions = {};
       pathfora.clearAll();
     });
 
-    it('should select to show the first matching element per group', function () {
+    afterEach(function () {
+      window.pathfora.inline.elements = [];
+      window.pathfora.acctid = '';
+      window.pathfora.dateOptions = {};
+      pathfora.clearAll();
+    });
+
+    it('should select to show the first matching element per group', function (done) {
       window.lio = {
         data: {
           segments: ['all', 'high_value', 'email', 'smt_new']
@@ -55,9 +63,10 @@ describe('Inline Personalization', function () {
       expect(grp2hide.css('display')).toBe('none');
 
       $('[data-pfgroup="testgrp"], [data-pfgroup="testgrp2"]').remove();
+      done();
     });
 
-    it('should select to show the default if none of the triggers match', function () {
+    it('should select to show the default if none of the triggers match', function (done) {
       window.lio = {
         data: {
           segments: ['all', 'email']
@@ -87,9 +96,10 @@ describe('Inline Personalization', function () {
       expect(hidden.css('display')).toBe('none');
 
       $('[data-pfgroup="testgrp"]').remove();
+      done();
     });
 
-    it('should not interfere with pathfora targeting', function () {
+    it('should not interfere with pathfora targeting', function (done) {
       window.lio = {
         data: {
           segments: ['all', 'portlanders', 'email']
@@ -147,6 +157,7 @@ describe('Inline Personalization', function () {
       expect(w2.length).toBe(0);
 
       $('[data-pfgroup="testgrp"]').remove();
+      done();
     });
   });
 
@@ -158,14 +169,18 @@ describe('Inline Personalization', function () {
       sessionStorage.clear();
       pathfora.acctid = credentials;
       pathfora.inline.elements = [];
+      pathfora.dateOptions = {};
       jasmine.Ajax.install();
     });
 
     afterEach(function () {
       jasmine.Ajax.uninstall();
+      pathfora.dateOptions = {};
     });
 
-    it('should fill pftype elements with content recommendation data', function () {
+    it('should fill pftype elements with content recommendation data', function (done) {
+      window.pathfora.locale = 'en-US';
+
       $(document.body).append(
         '<div data-pfblock="group1" data-pfrecommend="my_collection">' +
           '<img data-pftype="image" alt="My Image">' +
@@ -216,9 +231,10 @@ describe('Inline Personalization', function () {
       expect(def.css('display')).toBe('none');
 
       $('[data-pfblock="group1"]').remove();
+      done();
     });
 
-    it('should show the default content if invalid response from API', function () {
+    it('should show the default content if invalid response from API', function (done) {
       $(document.body).append(
         '<div data-pfblock="group2" data-pfrecommend="bad_collection">' +
           '<img data-pftype="image" alt="My Image">' +
@@ -249,9 +265,10 @@ describe('Inline Personalization', function () {
       expect(bad.css('display')).toBe('none');
 
       $('[data-pfblock="group2"]').remove();
+      done();
     });
 
-    it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function () {
+    it('should set the background image of a div with pfdatatype image or the innerHtml of a div with pfdatatype url', function (done) {
       $(document.body).append(
         '<div data-pfblock="group3" data-pfrecommend="my_collection">' +
           '<div data-pftype="image"></div>' +
@@ -282,9 +299,10 @@ describe('Inline Personalization', function () {
       expect(recUrl.html()).toBe('http://www.example.com/1');
 
       $('[data-pfblock="group3"]').remove();
+      done();
     });
 
-    it('should recognize date formatting set by the user', function () {
+    it('should recognize date formatting set by the user', function (done) {
       pathfora.locale = 'en-GB';
       pathfora.dateOptions = {
         weekday: 'long',
@@ -324,9 +342,10 @@ describe('Inline Personalization', function () {
       expect(date[3]).toBe('2016');
 
       $('[data-pfblock="group3"]').remove();
+      done();
     });
 
-    it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function () {
+    it('should return docs from the same response for multiple recommendations with the same filter (no repeat docs)', function (done) {
       $(document.body).append(
         '<div data-pfblock="group4" data-pfrecommend="my_collection">' +
           '<a data-pftype="url"><h2 data-pftype="title"></h2></a>' +
@@ -368,9 +387,10 @@ describe('Inline Personalization', function () {
       expect(rec2Url.html()).toBe('http://www.example.com/2');
 
       $('[data-pfblock="group4"], [data-pfblock="group5"]').remove();
+      done();
     });
 
-    it('should recognize the data-pfshuffle attribute', function () {
+    it('should recognize the data-pfshuffle attribute', function (done) {
       $(document.body).append(
         '<div data-pfblock="group1" data-pfrecommend="my_collection2" data-pfshuffle="true">' +
           '<img data-pftype="image" alt="My Image">' +
@@ -387,9 +407,10 @@ describe('Inline Personalization', function () {
       );
 
       $('[data-pfblock="group1"]').remove();
+      done();
     });
 
-    it('should not conflict with segment trigger groups', function () {
+    it('should not conflict with segment trigger groups', function (done) {
       window.lio = {
         data: {
           segments: ['all', 'high_value', 'email', 'smt_new']
@@ -463,6 +484,7 @@ describe('Inline Personalization', function () {
       expect(elem2.attr('data-pfblock')).toBe('block2');
 
       $('[data-pfgroup="seg2"], [data-pfblock="block2"]').remove();
+      done();
     });
   });
 });

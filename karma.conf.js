@@ -30,8 +30,10 @@ module.exports = function (config) {
           exclude: ['test/**/*.spec.js']
         })
       ],
-      format: 'iife',
-      sourcemap: 'inline'
+      output: {
+        format: 'iife',
+        sourcemap: 'inline'
+      }
     },
 
     // test results reporter to use

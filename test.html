@@ -8,31 +8,13 @@
     <script src="../dist/pathfora.min.js"></script>
     <script src="https://api.lytics.io/api/tag/876493052fb5615a66effcf65804517b/lio.js"></script>
     <script>
-      var modal = new pathfora.Message({
+      var modal = new pathfora.Form({
         id: 'modal1',
         layout: 'modal',
-        variant: '3',
         msg: 'Welcome to our website',
-        theme: 'custom',
-        colors: {
-               actionBackground: '#fff',
-               actionText: '#53f442',
-               background: '#f1f1f1',
-               cancelBackground: '#f1f1f1',
-               cancelText: '#bbb',
-               close: '#bbb',
-               headline: '#53f442',
-               text: '#d35145'
-        },
-        recommend: {
-          collection: 'owifnwkqlbf'
-        },
-        content: [{
-          url: 'https://www.getlytics.com/blog/post/know_your_data',
-          title: 'test',
-          description: 'I am a sample test description.',
-          default: true
-        }]
+        variant: 2,
+        image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
+        headline: 'Headline'
       });
       window.pathfora.initializeWidgets([modal]);
     </script>
