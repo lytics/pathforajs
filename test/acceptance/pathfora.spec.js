@@ -2,14 +2,17 @@
 
 //Globals
 var credentials = 123,
-    ga = jasmine.createSpy('ga');
+    ga = {
+      getAll: function () {}
+    };
+
 
 var jstag = {
   send: function () {}
 };
 
 pathfora.utils.saveCookie('seerid', 123);
-pathfora.enableGA = true;
+pathfora.enableGA = false;
 
 function createAndDispatchKeydown (key, target) {
   var eventObj = document.createEvent('Event');
