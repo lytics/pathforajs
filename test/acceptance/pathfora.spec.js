@@ -7,9 +7,13 @@ var credentials = 123,
     };
 
 
-var jstag = {
-  send: function () {}
+var resetLegacyTag = function () {
+  window.jstag = {
+    send: function () {}
+  };
 };
+
+resetLegacyTag();
 
 pathfora.utils.saveCookie('seerid', 123);
 pathfora.enableGA = false;
@@ -28,6 +32,7 @@ function createAndDispatchKeydown (key, target) {
 
 describe('Pathfora', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();

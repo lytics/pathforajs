@@ -1,6 +1,10 @@
 import validateRecommendationWidget from '../../../src/rollup/validation/validate-recommendation-widget';
 
 describe('validateRecommendationWidget', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   it('should throw an error it has the wrong layout type', function () {
     var widget = { type: 'form' };
     expect(function () {

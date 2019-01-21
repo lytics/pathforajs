@@ -3,6 +3,8 @@
 // -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
+    resetLegacyTag();
+
     var gaInstances = [
       { 
         get: function(field) {

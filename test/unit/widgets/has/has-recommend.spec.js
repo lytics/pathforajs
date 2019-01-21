@@ -1,6 +1,10 @@
 import hasRecommend from '../../../../src/rollup/widgets/has/has-recommend';
 
 describe('hasRecommend', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   it('should return true if widget has the recommend setting', function () {
     var widget = {
       recommend: {

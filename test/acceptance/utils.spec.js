@@ -2,13 +2,17 @@
 // UTIL TESTS
 // -------------------------
 describe('Utils', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   describe('the escapeURI util', function () {
     var escapeURI = pathfora.utils.escapeURI;
 
     it('should escape non-URI characters', function () {
       // Most of the character space we care about, un-escaped...
       var unescaped =
-        '\x02\n\x1d !\"%\'()*-.0123456789' +
+        '\x02\n\x1d !"%\'()*-.0123456789' +
         '<>ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
         '[\\]^_`abcdefghijklmnopqrstuvwxyz' +
         '{|}~\x7f\x80\xff';
@@ -66,10 +70,10 @@ describe('Utils', function () {
     });
   });
 
-  describe('generateUniqueId util', function() {
+  describe('generateUniqueId util', function () {
     var generateUniqueId = pathfora.utils.generateUniqueId;
 
-    it('should return a random unique id', function() {
+    it('should return a random unique id', function () {
       expect(generateUniqueId().length).toEqual(36);
     });
   });
@@ -104,13 +108,23 @@ describe('Utils', function () {
       pathfora.utils.updateLegacyCookies();
 
       expect(getCookie('PathforaClosed_1')).toEqual('1%7C1502732355490');
-      expect(getCookie('PathforaImpressions_2')).toEqual('1%7C293847239874932871');
-      expect(sessionStorage.getItem('PathforaRecommend_2')).toEqual('%7B%22somejson%22%3A%20%22here%22%7D');
+      expect(getCookie('PathforaImpressions_2')).toEqual(
+        '1%7C293847239874932871'
+      );
+      expect(sessionStorage.getItem('PathforaRecommend_2')).toEqual(
+        '%7B%22somejson%22%3A%20%22here%22%7D'
+      );
       expect(getCookie('PathforaImpressions_3')).toEqual('%badval%');
 
-      expect(pathfora.utils.readCookie('PathforaClosed_1')).toEqual('1|1502732355490');
-      expect(pathfora.utils.readCookie('PathforaImpressions_2')).toEqual('1|293847239874932871');
-      expect(pathfora.utils.readCookie('PathforaImpressions_3')).toEqual('%badval%');
+      expect(pathfora.utils.readCookie('PathforaClosed_1')).toEqual(
+        '1|1502732355490'
+      );
+      expect(pathfora.utils.readCookie('PathforaImpressions_2')).toEqual(
+        '1|293847239874932871'
+      );
+      expect(pathfora.utils.readCookie('PathforaImpressions_3')).toEqual(
+        '%badval%'
+      );
     });
   });
 });

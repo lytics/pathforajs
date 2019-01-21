@@ -32,6 +32,7 @@ function makeMouseEvent (type, params) {
 
 describe('when setting display conditions', function () {
   beforeEach(function () {
+    resetLegacyTag();
     pathfora.clearAll();
     sessionStorage.clear();
   });
