@@ -2,7 +2,10 @@
 
 //Globals
 var credentials = 123,
-    ga = jasmine.createSpy('ga');
+    ga = {
+      getAll: function () {}
+    };
+
 
 var resetLegacyTag = function () {
   window.jstag = {
@@ -13,7 +16,7 @@ var resetLegacyTag = function () {
 resetLegacyTag();
 
 pathfora.utils.saveCookie('seerid', 123);
-pathfora.enableGA = true;
+pathfora.enableGA = false;
 
 function createAndDispatchKeydown (key, target) {
   var eventObj = document.createEvent('Event');
