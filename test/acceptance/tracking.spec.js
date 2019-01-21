@@ -3,9 +3,33 @@
 // -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
+    var gaInstances = [
+      { 
+        get: function(field) {
+          if (field === 'name') {
+            return 'gtm1';
+          }
+        } 
+      },
+      {
+        get: function(field) {
+          if (field === 'name') {
+            return 'gtm2';
+          }
+        } 
+      }
+    ];
+
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();
+    spyOn(window, 'ga');
+    spyOn(ga, 'getAll').and.returnValue(gaInstances);
+    pathfora.enableGA = true;
+  });
+
+  afterEach(function() {
+    pathfora.enableGA = false;
   });
 
   it('should know if users have interacted in the past', function () {
@@ -86,13 +110,23 @@ describe('the tracking component', function () {
     );
 
     expect(ga).toHaveBeenCalledWith(
-      'send',
+      'gtm1.send',
       'event',
       'Lytics',
       messageBar.id + ' : show',
       jasmine.any(String),
       jasmine.any(Object)
     );
+
+    expect(ga).toHaveBeenCalledWith(
+      'gtm2.send',
+      'event',
+      'Lytics',
+      messageBar.id + ' : show',
+      jasmine.any(String),
+      jasmine.any(Object)
+    );
+
     pathfora.clearAll();
     jasmine.Ajax.uninstall();
   });
@@ -125,13 +159,23 @@ describe('the tracking component', function () {
     );
 
     expect(ga).toHaveBeenCalledWith(
-      'send',
+      'gtm1.send',
       'event',
       'Lytics',
       messageBar.id + ' : close',
       jasmine.any(String),
       jasmine.any(Object)
     );
+
+    expect(ga).toHaveBeenCalledWith(
+      'gtm2.send',
+      'event',
+      'Lytics',
+      messageBar.id + ' : close',
+      jasmine.any(String),
+      jasmine.any(Object)
+    );
+
     pathfora.clearAll();
     jasmine.clock().uninstall();
     jasmine.Ajax.uninstall();
@@ -260,14 +304,22 @@ describe('the tracking component', function () {
       widget.find('.pf-widget-ok').click();
 
       expect(ga).toHaveBeenCalled();
-      expect(ga.calls.mostRecent().args).toEqual([
-        'send',
+      expect(ga).toHaveBeenCalledWith(
+        'gtm1.send',
         'event',
         'Lytics',
         messageBar.id + ' : ' + messageBar.confirmAction.name,
         jasmine.any(String),
         jasmine.any(Object)
-      ]);
+      );
+      expect(ga).toHaveBeenCalledWith(
+        'gtm2.send',
+        'event',
+        'Lytics',
+        messageBar.id + ' : ' + messageBar.confirmAction.name,
+        jasmine.any(String),
+        jasmine.any(Object)
+      );
       done();
     }, 200);
   });

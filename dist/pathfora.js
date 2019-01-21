@@ -1021,25 +1021,30 @@
    * @params {object} data
    */
   function reportData (data) {
-    var gaLabel;
+    var gaLabel, trackers, i;
 
     if (typeof jstag === 'object') {
       window.jstag.send(data);
     }
 
-    if (window.pathfora.enableGA === true && typeof ga === 'function') {
+    if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
       gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
+      trackers = window.ga.getAll();
 
-      window.ga(
-        'send',
-        'event',
-        'Lytics',
-        data['pf-widget-id'] + ' : ' + gaLabel,
-        '',
-        {
-          nonInteraction: true
-        }
-      );
+      for (i = 0; i < trackers.length; i++) {
+        var name = trackers[i].get('name');
+
+        window.ga(
+          name + '.send',
+          'event',
+          'Lytics',
+          data['pf-widget-id'] + ' : ' + gaLabel,
+          '',
+          {
+            nonInteraction: true
+          }
+        );
+      }
     }
   }
 
