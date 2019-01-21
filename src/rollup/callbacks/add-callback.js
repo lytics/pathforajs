@@ -10,8 +10,18 @@ import window from '../dom/window';
  */
 export default function addCallback (cb) {
   if (window.lio && window.lio.loaded) {
+    // legacy
     cb(window.lio.data);
-  } else {
-    this.callbacks.push(cb);
+    return;
+  } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+    // > jstag 3.0.0
+    var entity = window.jstag.getEntity();
+    if (entity.data && entity.data.user) {
+      cb(entity.data.user);
+      return;
+    }
   }
+
+  // fallback
+  this.callbacks.push(cb);
 }

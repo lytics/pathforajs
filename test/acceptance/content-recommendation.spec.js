@@ -3,6 +3,8 @@
 // -------------------------
 describe('the content recommendation component', function () {
   beforeEach(function () {
+    credentials = undefined;
+    resetLegacyTag();
     jasmine.Ajax.install();
     window.lio = {};
     window.pathfora.dateOptions = {};
@@ -10,6 +12,7 @@ describe('the content recommendation component', function () {
   });
 
   afterEach(function () {
+    credentials = 123;
     window.lio = {};
     jasmine.Ajax.uninstall();
     window.pathfora.dateOptions = {};
@@ -19,7 +22,7 @@ describe('the content recommendation component', function () {
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -61,7 +64,7 @@ describe('the content recommendation component', function () {
     // Should show default
     pathfora.initializeWidgets([defaultModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+      '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -77,7 +80,7 @@ describe('the content recommendation component', function () {
     pathfora.initializeWidgets([modal]);
     setTimeout(function () {
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+        '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -130,7 +133,7 @@ describe('the content recommendation component', function () {
   it('should throw errors if default content is improperly defined', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -184,7 +187,7 @@ describe('the content recommendation component', function () {
     expect(function () {
       pathfora.initializeWidgets([errorModal]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+        '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -206,7 +209,7 @@ describe('the content recommendation component', function () {
     expect(function () {
       pathfora.initializeWidgets([errorModal3]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?ql=*'
+        '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -225,7 +228,7 @@ describe('the content recommendation component', function () {
   it('should accept segment AST definition', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -249,7 +252,7 @@ describe('the content recommendation component', function () {
 
     pathfora.initializeWidgets([astModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/0/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]'
+      '//api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -270,7 +273,7 @@ describe('the content recommendation component', function () {
   it('should not append protocol to relative urls', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -289,7 +292,7 @@ describe('the content recommendation component', function () {
 
     pathfora.initializeWidgets([relativeModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+      '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -314,7 +317,7 @@ describe('the content recommendation component', function () {
 
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -343,7 +346,7 @@ describe('the content recommendation component', function () {
 
     pathfora.initializeWidgets([displayModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+      '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -380,7 +383,7 @@ describe('the content recommendation component', function () {
 
     pathfora.initializeWidgets([displayModal2]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      '//api.lytics.io/api/content/recommend/0/user/_uids/123?ql=*'
+      '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
@@ -406,7 +409,7 @@ describe('the content recommendation component', function () {
   it('should display a recommendation modal even if missing a description', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };
@@ -458,7 +461,7 @@ describe('the content recommendation component', function () {
   it('should set the colors specified to the content recommendation modal', function (done) {
     window.lio = {
       account: {
-        id: 0
+        id: '321'
       },
       loaded: true
     };

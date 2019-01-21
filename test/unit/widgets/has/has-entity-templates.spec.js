@@ -1,6 +1,10 @@
 import hasEntityTemplates from '../../../../src/rollup/widgets/has/has-entity-templates';
 
 describe('hasEntityTemplates', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   it('should return true if widget has entity templates', function () {
     var widget = {
       msg: 'Hello there, {{name}}'

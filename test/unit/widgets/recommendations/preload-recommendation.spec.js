@@ -2,6 +2,7 @@ import preloadRecommendation from '../../../../src/rollup/widgets/recommendation
 
 describe('preloadRecommendation', function () {
   beforeEach(function () {
+    resetLegacyTag();
     window.lio = {};
     pathfora.clearAll();
   });

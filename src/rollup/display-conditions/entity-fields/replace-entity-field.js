@@ -43,8 +43,8 @@ export default function replaceEntityField (
   // for each template found...
   for (var f = 0; f < found.length; f++) {
     // parse the field name
-    var dataval = found[f].slice(2).slice(0, -2),
-        parts = dataval.split('|'),
+    var foundval = found[f].slice(2).slice(0, -2),
+        parts = foundval.split('|'),
         def = '';
 
     // get the default (fallback) value
@@ -55,9 +55,25 @@ export default function replaceEntityField (
     // check for subfields if the value is an object
     var split = parts[0].trim().split('.');
 
-    dataval = window.lio.data;
-    var s;
+    // get entity data from tag
+    var dataval;
 
+    // for the legacy tag < 3.0, there is a lio object surfaced. within this object lives the personalization
+    // data. however, in current gen tag > 3.0 we have a getEntity() method that should be used as the source
+    // of truth, the returned data model is slightly different in that it supports the full personalization
+    // api vs the legacy entity api that only returns segment and user field info.
+    if (window.lio && window.lio.data) {
+      dataval = window.lio.data;
+      // tag is legacy
+    } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      // tag is current gen
+      var entity = window.jstag.getEntity();
+      if (entity && entity.data && entity.data.user) {
+        dataval = entity.data.user;
+      }
+    }
+
+    var s;
     for (s = 0; s < split.length; s++) {
       if (typeof dataval !== 'undefined') {
         dataval = dataval[split[s]];

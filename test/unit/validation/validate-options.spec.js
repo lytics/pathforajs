@@ -1,6 +1,10 @@
 import validateOptions from '../../../src/rollup/validation/validate-options';
 
 describe('validateOptions', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   it('should throw an error priority is invalid', function () {
     var options = { priority: 'bad' };
 

@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.1.2',
+  var PF_VERSION = '1.1.3',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -912,10 +912,20 @@
    */
   function addCallback (cb) {
     if (window.lio && window.lio.loaded) {
+      // legacy
       cb(window.lio.data);
-    } else {
-      this.callbacks.push(cb);
+      return;
+    } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      // > jstag 3.0.0
+      var entity = window.jstag.getEntity();
+      if (entity.data && entity.data.user) {
+        cb(entity.data.user);
+        return;
+      }
     }
+
+    // fallback
+    this.callbacks.push(cb);
   }
 
   /** @module pathfora/display-conditions/pageviews/init-pageviews */
@@ -1021,25 +1031,30 @@
    * @params {object} data
    */
   function reportData (data) {
-    var gaLabel;
+    var gaLabel, trackers;
 
     if (typeof jstag === 'object') {
       window.jstag.send(data);
     }
 
-    if (window.pathfora.enableGA === true && typeof ga === 'function') {
+    if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
       gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
+      trackers = window.ga.getAll();
 
-      window.ga(
-        'send',
-        'event',
-        'Lytics',
-        data['pf-widget-id'] + ' : ' + gaLabel,
-        '',
-        {
-          nonInteraction: true
-        }
-      );
+      for (var i = 0; i < trackers.length; i++) {
+        var name = trackers[i].get('name');
+
+        window.ga(
+          name + '.send',
+          'event',
+          'Lytics',
+          data['pf-widget-id'] + ' : ' + gaLabel,
+          '',
+          {
+            nonInteraction: true
+          }
+        );
+      }
     }
   }
 
@@ -2993,8 +3008,13 @@
    */
   function getUserSegments () {
     if (window.lio && window.lio.data && window.lio.data.segments) {
+      // legacy
       return window.lio.data.segments;
+    } else if (window.jstag && typeof window.jstag.getSegments === 'function') {
+      // > jstag 3.0.0
+      return window.jstag.getSegments();
     } else {
+      // fallback
       return ['all'];
     }
   }
@@ -3033,18 +3053,33 @@
    * @params {object} pf
    */
   function validateAccountId (pf) {
+    var acctid;
+
+    // in the legacy javascript tag < 2.0, there is an lio object surfaced that holds the account id.
+    // in > 3.0 this lio object is only available for backwards compatibility and not the main source
+    // of truth. we should be getting the cid that is passed to the config, which is an array, by default
+    // we can assume the first cid in the array is the one to be used for personalization and such.
     if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
       if (window.lio && window.lio.account) {
-        if (
-          typeof window.lio.account.id === 'undefined' ||
-          window.lio.account.id === ''
-        ) {
-          throw new Error('Lytics Javascript tag returned an empty account id.');
-        }
-
-        pf.acctid = window.lio.account.id;
+        // tag is legacy
+        acctid = window.lio.account.id;
+      } else if (
+        // tag is current gen
+        window.jstag &&
+        window.jstag.config &&
+        window.jstag.config.cid &&
+        window.jstag.config.cid.length > 0
+      ) {
+        acctid = window.jstag.config.cid[0];
       } else {
         throw new Error('Could not get account id from Lytics Javascript tag.');
+      }
+
+      // make sure we have a valid acctid before setting
+      if (!!acctid) {
+        pf.acctid = acctid;
+      } else {
+        throw new Error('Lytics Javascript tag returned an empty account id.');
       }
     }
   }
@@ -3614,8 +3649,8 @@
     // for each template found...
     for (var f = 0; f < found.length; f++) {
       // parse the field name
-      var dataval = found[f].slice(2).slice(0, -2),
-          parts = dataval.split('|'),
+      var foundval = found[f].slice(2).slice(0, -2),
+          parts = foundval.split('|'),
           def = '';
 
       // get the default (fallback) value
@@ -3626,9 +3661,25 @@
       // check for subfields if the value is an object
       var split = parts[0].trim().split('.');
 
-      dataval = window.lio.data;
-      var s;
+      // get entity data from tag
+      var dataval;
 
+      // for the legacy tag < 3.0, there is a lio object surfaced. within this object lives the personalization
+      // data. however, in current gen tag > 3.0 we have a getEntity() method that should be used as the source
+      // of truth, the returned data model is slightly different in that it supports the full personalization
+      // api vs the legacy entity api that only returns segment and user field info.
+      if (window.lio && window.lio.data) {
+        dataval = window.lio.data;
+        // tag is legacy
+      } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+        // tag is current gen
+        var entity = window.jstag.getEntity();
+        if (entity && entity.data && entity.data.user) {
+          dataval = entity.data.user;
+        }
+      }
+
+      var s;
       for (s = 0; s < split.length; s++) {
         if (typeof dataval !== 'undefined') {
           dataval = dataval[split[s]];
