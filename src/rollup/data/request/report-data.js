@@ -9,7 +9,7 @@ import window from '../../dom/window';
  * @params {object} data
  */
 export default function reportData (data) {
-  var gaLabel, trackers, i;
+  var gaLabel, trackers;
 
   if (typeof jstag === 'object') {
     window.jstag.send(data);

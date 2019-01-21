@@ -1021,7 +1021,7 @@
    * @params {object} data
    */
   function reportData (data) {
-    var gaLabel, trackers, i;
+    var gaLabel, trackers;
 
     if (typeof jstag === 'object') {
       window.jstag.send(data);
@@ -1031,7 +1031,7 @@
       gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
       trackers = window.ga.getAll();
 
-      for (i = 0; i < trackers.length; i++) {
+      for (var i = 0; i < trackers.length; i++) {
         var name = trackers[i].get('name');
 
         window.ga(
