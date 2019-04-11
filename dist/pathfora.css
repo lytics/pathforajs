@@ -505,20 +505,20 @@
   display: table;
   width: 100%;
 }
-.pf-widget-modal form input[type="text"],
-.pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type='text'],
+.pf-widget-modal form input[type='email'],
 .pf-widget-modal form select,
 .pf-widget-modal form textarea {
   font-size: 16px;
 }
-.pf-widget-modal form input[type="text"],
-.pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type='text'],
+.pf-widget-modal form input[type='email'],
 .pf-widget-modal form select {
   height: 45px;
 }
-.pf-widget-modal form input[type="text"][data-required="active"]:focus,
-.pf-widget-modal form input[type="email"][data-required="active"]:focus,
-.pf-widget-modal form select[data-required="active"]:focus {
+.pf-widget-modal form input[type='text'][data-required='active']:focus,
+.pf-widget-modal form input[type='email'][data-required='active']:focus,
+.pf-widget-modal form select[data-required='active']:focus {
   margin-top: 1px;
   margin-bottom: 10px;
 }
@@ -536,6 +536,42 @@
   margin-left: -70px;
   width: 140px;
   height: 140px;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-background-image {
+  background-size: cover;
+  background-image: inherit;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-background-image.top {
+  height: 50%;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-background-image.bottom {
+  height: 50%;
+  bottom: 0;
+  top: unset;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-background-image.right {
+  width: 50%;
+  left: unset;
+  right: 0;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-background-image.left {
+  width: 50%;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-text.left {
+  padding-left: inherit;
+  margin-left: 50%;
+  width: 50%;
+}
+.pf-widget-modal.pf-widget-variant-4 .pf-widget-text.right {
+  padding-right: inherit;
+  margin-right: 50%;
+  width: 50%;
 }
 .pf-widget-modal.pf-subscription .pf-widget-btn {
   margin-top: 2px;
@@ -972,6 +1008,42 @@
   left: 50%;
   margin-left: -50px;
 }
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-background-image {
+  background-size: cover;
+  background-image: inherit;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-background-image.top {
+  height: 50%;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-background-image.bottom {
+  height: 50%;
+  bottom: 0;
+  top: unset;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-background-image.right {
+  width: 50%;
+  left: unset;
+  right: 0;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-background-image.left {
+  width: 50%;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-text.left {
+  padding-left: 20px;
+  margin-left: 50%;
+  width: 50%;
+}
+.pf-widget-inline.pf-widget-variant-4 .pf-widget-text.right {
+  padding-right: 20px;
+  margin-right: 50%;
+  width: 50%;
+}
 .pf-widget-inline.pf-subscription .pf-widget-btn {
   line-height: 39px;
 }
@@ -993,7 +1065,7 @@
   bottom: -10px;
   right: -10px;
 }
-.pf-widget-inline form:not(.pf-custom-form) input[type=text].invalid,
-.pf-widget-inline form:not(.pf-custom-form) input[type=email].invalid {
+.pf-widget-inline form:not(.pf-custom-form) input[type='text'].invalid,
+.pf-widget-inline form:not(.pf-custom-form) input[type='email'].invalid {
   margin: -1px -1px 9px;
 }

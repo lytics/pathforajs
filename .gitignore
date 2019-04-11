@@ -9,3 +9,4 @@ docs/docs/examples/preview
 package-lock.json
 coverage/
 yarn.lock
+.vscode

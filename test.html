@@ -5,15 +5,20 @@
   </head>
   <body>
     <h1>Action widget example</h1>
+    <div class="inline"></div>
     <script src="../dist/pathfora.min.js"></script>
     <script src="https://api.lytics.io/api/tag/876493052fb5615a66effcf65804517b/lio.js"></script>
     <script>
-      var modal = new pathfora.Form({
+      var modal = new pathfora.Message({
         id: 'modal1',
-        layout: 'modal',
+        layout: 'inline',
         msg: 'Welcome to our website',
-        variant: 2,
-        image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
+        position: '.inline',
+        variant: 4,
+        backgroundImage: {
+          src: '../docs/docs/assets/desk.png',
+          position: 'right'
+        },
         headline: 'Headline'
       });
       window.pathfora.initializeWidgets([modal]);
