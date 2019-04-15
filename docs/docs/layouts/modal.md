@@ -92,6 +92,9 @@ Define the background image and position you would like to use for the module.
   </tr>
 </table>
 
+<h3>Customzing position</h3>
+<p>The position of the background image and the text block can be tweaked with <a href="../../customization/css">custom css</a>.</p>
+
 <h3>Background Image (variant 4) - <a href="../../examples/preview/layouts/modal/backgroundImage.html" target="_blank">Live Preview</a></h3>
 ![Background Image Module](../examples/img/layouts/modal/backgroundImage.png)
 <pre data-src="../../examples/src/layouts/modal/backgroundImage.js"></pre>
