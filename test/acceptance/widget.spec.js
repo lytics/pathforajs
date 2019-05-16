@@ -397,6 +397,70 @@ describe('Widgets', function () {
     expect(inlineWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
     expect(modalWidget.find('.pf-widget-text').find('img').html()).toBeUndefined();
   });
+  //variant 4
+  it('should append div with pf-widget-background-image for modal and inline layout', function() {
+   var div = document.createElement('div');
+   div.className = 'some-dom-element';
+   document.body.appendChild(div);
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal',
+      variant: 4,
+      backgroundImage: {
+        src: '../docs/docs/assets/desk.png'
+      }
+    });
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing',
+      variant: 4,
+      backgroundImage: {
+        src: '../docs/docs/assets/desk.png'
+      }
+    });
+    pathfora.initializeWidgets([modal, inline]);
+     var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id);
+    expect(modalWidget.find('.pf-widget-background-image')).toBeDefined();
+    expect(inlineWidget.find('.pf-widget-background-image')).toBeDefined();
+  });
+
+  it('should append position class to pf-widget-background-image and pf-widget-text for modal and inline layouts', function() {
+    var div = document.createElement('div');
+   div.className = 'some-dom-element';
+   document.body.appendChild(div);
+    var modal = new pathfora.Message({
+      id: 'modal',
+      msg:'testmodal',
+      layout: 'modal',
+      variant: 4,
+      backgroundImage: {
+        src: '../docs/docs/assets/desk.png',
+        position: 'top'
+      }
+    });
+    var inline = new pathfora.Message({
+      id: 'inline',
+      layout: 'inline',
+      position: '.some-dom-element',
+      msg: 'testing',
+      variant: 4,
+      backgroundImage: {
+        src: '../docs/docs/assets/desk.png',
+        position: 'top'
+      }
+    });
+     pathfora.initializeWidgets([modal, inline]);
+     var modalWidget = $('#' + modal.id),
+        inlineWidget = $('#' + inline.id);
+    expect(modalWidget.find('.pf-widget-background-image').hasClass('top')).toBeTruthy();
+    expect(inlineWidget.find('.pf-widget-background-image').hasClass('top')).toBeTruthy();
+    expect(modalWidget.find('.pf-widget-text').hasClass('top')).toBeTruthy();
+    expect(inlineWidget.find('.pf-widget-text').hasClass('top')).toBeTruthy();
+  });
 
   // -------------------------
   //  COLORS/THEME

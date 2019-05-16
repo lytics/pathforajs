@@ -2250,7 +2250,8 @@
         widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
         widgetBody = widget.querySelector('.pf-widget-body'),
         widgetMessage = widget.querySelector('.pf-widget-message'),
-        widgetFooter = widget.querySelector('.pf-widget-footer');
+        widgetFooter = widget.querySelector('.pf-widget-footer'),
+        widgetText = widget.querySelector('.pf-widget-text');
 
     if (widgetCancel !== null && !config.cancelShow) {
       node = widgetCancel;
@@ -2410,6 +2411,25 @@
         widgetContent.appendChild(widgetImage);
       } else {
         widgetBody.appendChild(widgetImage);
+      }
+    }
+
+    // Adds background image and appends class
+    if (config.backgroundImage && config.backgroundImage.src) {
+      var bgConfig = config.backgroundImage;
+      if (config.layout === 'modal' || config.layout === 'inline') {
+        var widgetBg = document$1.createElement('div');
+        var textParent = widgetText.parentNode;
+        var url = 'url(' + bgConfig.src + ')';
+
+        textParent.insertBefore(widgetBg, widgetText);
+        widgetBg.style.setProperty('background-image', url, '');
+        addClass(widgetBg, 'pf-widget-background-image');
+
+        if (bgConfig.position) {
+          addClass(widgetBg, bgConfig.position);
+          addClass(widgetText, bgConfig.position);
+        }
       }
     }
 
