@@ -1,3 +1,5 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // -------------------------
 //  ENTITY FIELD TEMPLATES
 // -------------------------

@@ -1,3 +1,6 @@
+import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // -------------------------
 //  WIDGET TESTS
 // -------------------------
@@ -342,13 +345,13 @@ describe('Widgets', function () {
     expect(slideout2.find('.pf-widget-footer').html()).toEqual('');
   });
 
-  it('should contain pf-widget-text div for inline and modal layouts', function() {
+  it('should contain pf-widget-text div for inline and modal layouts', function () {
     var modal = new pathfora.Message({
       id: 'modal',
       msg:'testmodal',
       layout: 'modal'
     });
-     var div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'some-dom-element';
     document.body.appendChild(div);
     var inline = new pathfora.Message({
@@ -357,13 +360,13 @@ describe('Widgets', function () {
       position: '.some-dom-element',
       msg: 'testing'
     });
-     var slideout = new pathfora.Message({
+    var slideout = new pathfora.Message({
       id: 'slideout',
       msg: 'test',
       layout: 'slideout'
     });
-     pathfora.initializeWidgets([modal, inline, slideout]);
-     var modalWidget = $('#' + modal.id),
+    pathfora.initializeWidgets([modal, inline, slideout]);
+    var modalWidget = $('#' + modal.id),
         inlineWidget = $('#' + inline.id),
         slideoutWidget = $('#' + slideout.id);
     expect(modalWidget.find('.pf-widget-text').html()).toBeDefined();
@@ -371,7 +374,7 @@ describe('Widgets', function () {
     expect(slideoutWidget.find('.pf-widget-text').html()).toBeUndefined();
   });
 
-  it('should append pf-widget-img to pf-widget-content for modal and inline layouts', function() {
+  it('should append pf-widget-img to pf-widget-content for modal and inline layouts', function () {
     var modal = new pathfora.Message({
       id: 'modal',
       msg:'testmodal',
@@ -379,7 +382,7 @@ describe('Widgets', function () {
       variant: 2,
       image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
     });
-     var div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'some-dom-element';
     document.body.appendChild(div);
     var inline = new pathfora.Message({
@@ -390,8 +393,8 @@ describe('Widgets', function () {
       variant: 2,
       image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
     });
-     pathfora.initializeWidgets([modal, inline]);
-     var modalWidget = $('#' + modal.id),
+    pathfora.initializeWidgets([modal, inline]);
+    var modalWidget = $('#' + modal.id),
         inlineWidget = $('#' + inline.id);
     expect(modalWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
     expect(inlineWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
@@ -626,7 +629,7 @@ describe('Widgets', function () {
       layout: 'modal',
       msg: 'Confirm action test modal',
       confirmAction: {
-        callback: function (a, b) {
+        callback: function () {
           alert('test confirmation');
         }
       }
@@ -687,7 +690,7 @@ describe('Widgets', function () {
         }
       ],
       confirmAction: {
-        callback: function (a, b) {
+        callback: function () {
           alert('test confirmation');
         }
       }
@@ -700,13 +703,13 @@ describe('Widgets', function () {
     widget.find('input[name="subscription_feeds"]')[2].checked = true;
     spyOn(modal.confirmAction, 'callback');
     expect(modal.confirmAction.callback).not.toHaveBeenCalled();
-  widget.find('.pf-widget-ok').click();
+    widget.find('.pf-widget-ok').click();
     expect(modal.confirmAction.callback).toHaveBeenCalledWith(
       'modalConfirm',
       jasmine.objectContaining({
         data: [
           { name: 'email', value: 'test@example.com' },
-          { name: 'subscription_feeds', value: 'fashion' },
+          { name: 'subscription_feeds', value: 'fashion' }
         ]
       })
     );
@@ -1033,7 +1036,8 @@ describe('Widgets', function () {
     setTimeout(function () {
       window.pathfora.initializeWidgets([formStatesWidget]);
 
-      (widget = $('#' + formStatesWidget.id)), (form = widget.find('form'));
+      widget = $('#' + formStatesWidget.id);
+      form = widget.find('form');
       expect(form.length).toBe(1);
 
       name = form.find('input[name="username"]');
@@ -1392,7 +1396,7 @@ describe('Widgets', function () {
         'pf-widget-variant': '1',
         'pf-widget-event': 'submit',
         'pf-custom-form': {
-          terms_agreement: ['agree'],
+          'terms_agreement': ['agree'],
           name: 'my name here'
         }
       })

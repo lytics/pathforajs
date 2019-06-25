@@ -1,3 +1,5 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // -------------------------
 // INLINE PERSONALIZATION TEST
 // -------------------------
@@ -171,7 +173,7 @@ describe('Inline Personalization', function () {
   describe('pfrecommend elements', function () {
     beforeEach(function () {
       sessionStorage.clear();
-      pathfora.acctid = credentials;
+      pathfora.acctid = 123;
       pathfora.inline.elements = [];
       pathfora.dateOptions = {};
       jasmine.Ajax.install();

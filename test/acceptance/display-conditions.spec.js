@@ -1,3 +1,5 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // -------------------------
 //  DISPLAY CONDITIONS
 // -------------------------
@@ -177,7 +179,7 @@ describe('when setting display conditions', function () {
       position: 'bottom-right',
       displayConditions: {
         date: {
-          start_at: limitDate.toISOString()
+          'start_at': limitDate.toISOString()
         }
       }
     });
@@ -202,7 +204,7 @@ describe('when setting display conditions', function () {
       position: 'bottom-right',
       displayConditions: {
         date: {
-          end_at: limitDate.toISOString()
+          'end_at': limitDate.toISOString()
         }
       }
     });

@@ -5,8 +5,8 @@ describe('getUserSegments', function () {
 
   describe('when no tag is installed', function () {
     beforeEach(function () {
-      window.lio = undefined;
-      window.jstag = undefined;
+      window.lio = null;
+      window.jstag = null;
     });
 
     it('should return default segments if nothing is installed', function () {
@@ -17,7 +17,7 @@ describe('getUserSegments', function () {
 
   describe('when legacy tag is installed', function () {
     beforeEach(function () {
-      window.jstag = undefined;
+      window.jstag = null;
       window.lio = {};
     });
 
@@ -67,7 +67,7 @@ describe('getUserSegments', function () {
 
   describe('when current gen tag is installed', function () {
     beforeEach(function () {
-      window.lio = undefined;
+      window.lio = null;
       window.jstag = {};
     });
 

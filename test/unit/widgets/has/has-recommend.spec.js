@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../../utils/reset-legacy-tag';
 import hasRecommend from '../../../../src/rollup/widgets/has/has-recommend';
 
 describe('hasRecommend', function () {

@@ -9,7 +9,8 @@
     "pathfora": true,
     "$": true,
     "FB": true,
-    "gapi": true
+    "gapi": true,
+    "jstag": true
   },
   "parserOptions": {
     "ecmaVersion": 2017,
@@ -29,7 +30,7 @@
       "error",
       {
         "before": false,
-        "after": true,
+        "after": true
       }
     ],
     "curly": [
@@ -72,7 +73,7 @@
     "indent": [
         "error",
         2,
-        { "SwitchCase": 0, "VariableDeclarator": 2 },
+        { "SwitchCase": 0, "VariableDeclarator": 2 }
     ],
     "comma-dangle": "error",
     "no-dupe-args": "error",

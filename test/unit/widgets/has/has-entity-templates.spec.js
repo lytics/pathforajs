@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../../utils/reset-legacy-tag';
 import hasEntityTemplates from '../../../../src/rollup/widgets/has/has-entity-templates';
 
 describe('hasEntityTemplates', function () {
