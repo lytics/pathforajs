@@ -2,14 +2,21 @@
 
 //Globals
 var credentials = 123,
-    ga = jasmine.createSpy('ga');
+    ga = {
+      getAll: function () {}
+    };
 
-var jstag = {
-  send: function () {}
+
+var resetLegacyTag = function () {
+  window.jstag = {
+    send: function () {}
+  };
 };
 
+resetLegacyTag();
+
 pathfora.utils.saveCookie('seerid', 123);
-pathfora.enableGA = true;
+pathfora.enableGA = false;
 
 function createAndDispatchKeydown (key, target) {
   var eventObj = document.createEvent('Event');
@@ -25,6 +32,7 @@ function createAndDispatchKeydown (key, target) {
 
 describe('Pathfora', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();

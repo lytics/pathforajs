@@ -1,8 +1,9 @@
 // -------------------------
 // TARGETING
 // -------------------------
-describe("when targeting users", function() {
-  beforeEach(function() {
+describe('when targeting users', function () {
+  beforeEach(function () {
+    resetLegacyTag();
     pathfora.clearAll();
   });
 
@@ -43,19 +44,24 @@ describe("when targeting users", function() {
     });
 
     var widgets = {
-      target: [{
-        segment: 'a',
-        widgets: [messageA]
-      }, {
-        segment: 'b',
-        widgets: [messageB]
-      }, {
-        segment: 'c',
-        widgets: [messageC]
-      }, {
-        segment: '*',
-        widgets: [messageD]
-      }]
+      target: [
+        {
+          segment: 'a',
+          widgets: [messageA]
+        },
+        {
+          segment: 'b',
+          widgets: [messageB]
+        },
+        {
+          segment: 'c',
+          widgets: [messageC]
+        },
+        {
+          segment: '*',
+          widgets: [messageD]
+        }
+      ]
     };
 
     pathfora.initializeWidgets(widgets);
@@ -105,14 +111,18 @@ describe("when targeting users", function() {
     });
 
     var widgets = {
-      target: [{
-        segment: 'a',
-        widgets: [messageA, messageB]
-      }],
-      exclude: [{
-        segment: 'b',
-        widgets: [messageA]
-      }]
+      target: [
+        {
+          segment: 'a',
+          widgets: [messageA, messageB]
+        }
+      ],
+      exclude: [
+        {
+          segment: 'b',
+          widgets: [messageA]
+        }
+      ]
     };
 
     pathfora.initializeWidgets(widgets);
@@ -182,4 +192,4 @@ describe("when targeting users", function() {
       done();
     }, 200);
   });
-})
+});

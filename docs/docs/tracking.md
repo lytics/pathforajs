@@ -1,7 +1,7 @@
 Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent Lytics automatically. Below we will look at which data fields are sent in detail and their formats.
 
 ## Lytics
-As long as your [Lytics javascript tag](https://activate.getlytics.com/resources/documentation/) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics javascript tag](https://activate.getlytics.com/resources/documentation/jstag). The following raw data fields can be sent to Lytics by Pathfora.
+As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). The following raw data fields can be sent to Lytics by Pathfora.
 
 | Attribute | Type | Value |
 |---|---|---|

@@ -2,6 +2,10 @@
 // INLINE PERSONALIZATION TEST
 // -------------------------
 describe('Inline Personalization', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   // -------------------------
   // TRIGGER ELEMENTS
   // -------------------------

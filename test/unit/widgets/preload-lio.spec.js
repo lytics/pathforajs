@@ -2,6 +2,7 @@ import preloadLio from '../../../src/rollup/widgets/preload-lio';
 
 describe('preloadLio', function () {
   beforeEach(function () {
+    resetLegacyTag();
     window.lio = {};
     pathfora.clearAll();
   });

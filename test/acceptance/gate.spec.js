@@ -1,7 +1,11 @@
 // -------------------------
 //  GATE
 // -------------------------
-describe("the gate component", function() {
+describe('the gate component', function () {
+  beforeEach(function () {
+    resetLegacyTag();
+  });
+
   it('should open gate when the cookie is not set', function (done) {
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',

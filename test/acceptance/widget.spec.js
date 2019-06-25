@@ -3,6 +3,7 @@
 // -------------------------
 describe('Widgets', function () {
   beforeEach(function () {
+    resetLegacyTag();
     localStorage.clear();
     sessionStorage.clear();
     pathfora.clearAll();
