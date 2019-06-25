@@ -226,7 +226,12 @@ export default function constructWidgetActions (widget, config) {
           // get the data submitted to the form
           data = Array.prototype.slice
             .call(widgetForm.querySelectorAll('input, textarea, select'))
-            .map(function (element) {
+            .filter(function (element) {
+              if (element.type && (element.type === 'checkbox' || element.type === 'radio')) {
+                return element.checked;
+              }
+              return true;
+            }).map(function (element) {
               return {
                 name: element.name || element.id,
                 value: element.value

@@ -652,6 +652,65 @@ describe('Widgets', function () {
     );
   });
 
+  it('should trigger callback function after pressing action with custom form data.', function () {
+    var modal = new pathfora.Form({
+      id: 'custom-confirm-action-test',
+      layout: 'modal',
+      msg: 'Confirm action test modal',
+      formElements: [
+        {
+          'type': 'text',
+          'required': true,
+          'label': 'Email Address',
+          'name': 'email'
+        },
+        {
+          'type': 'checkbox-group',
+          'required': true,
+          'label': 'Which feeds would you like to subscribe to?',
+          'name': 'subscription_feeds',
+          'values': [
+            {
+              'label': 'Beauty & Perfumes',
+              'value': 'beauty'
+            },
+            {
+              'label': 'Electronics',
+              'value': 'electronics'
+            },
+            {
+              'label': 'Fashion',
+              'value': 'fashion'
+            }
+          ]
+        }
+      ],
+      confirmAction: {
+        callback: function (a, b) {
+          alert('test confirmation');
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([modal]);
+
+    var widget = $('#' + modal.id);
+    widget.find('input[name="email"]').val('test@example.com');
+    widget.find('input[name="subscription_feeds"]')[2].checked = true;
+    spyOn(modal.confirmAction, 'callback');
+    expect(modal.confirmAction.callback).not.toHaveBeenCalled();
+  widget.find('.pf-widget-ok').click();
+    expect(modal.confirmAction.callback).toHaveBeenCalledWith(
+      'modalConfirm',
+      jasmine.objectContaining({
+        data: [
+          { name: 'email', value: 'test@example.com' },
+          { name: 'subscription_feeds', value: 'fashion' },
+        ]
+      })
+    );
+  });
+
   it('should not close the modal on a button action if specified', function (done) {
     var modal = new pathfora.Message({
       id: 'confirm-close-action-test',
