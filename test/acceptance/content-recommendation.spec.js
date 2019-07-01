@@ -127,7 +127,7 @@ describe('the content recommendation component', function () {
         pathfora.acctid = '';
         done();
       }, 200);
-    }, 10);
+    }, 100);
   });
 
   it('should throw errors if default content is improperly defined', function (done) {
