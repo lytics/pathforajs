@@ -3,7 +3,7 @@ import inSegment from '../../../src/rollup/data/segments/in-segment';
 describe('inSegment', function () {
   describe('when is legacy', function () {
     beforeEach(function () {
-      window.jstag = undefined;
+      window.jstag = null;
       window.lio = {
         data: {
           segments: ['one', 'fish', 'two', 'fish']
@@ -29,7 +29,7 @@ describe('inSegment', function () {
 
   describe('when is current gen', function () {
     beforeEach(function () {
-      window.lio = undefined;
+      window.lio = null;
       window.jstag = {
         getSegments: function () {
           return ['red', 'fish', 'blue', 'fish'];

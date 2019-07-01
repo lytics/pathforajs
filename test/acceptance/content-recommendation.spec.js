@@ -1,9 +1,10 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // -------------------------
 //  CONTENT RECOMMENDATIONS
 // -------------------------
 describe('the content recommendation component', function () {
   beforeEach(function () {
-    credentials = undefined;
     resetLegacyTag();
     jasmine.Ajax.install();
     window.lio = {};
@@ -12,7 +13,6 @@ describe('the content recommendation component', function () {
   });
 
   afterEach(function () {
-    credentials = 123;
     window.lio = {};
     jasmine.Ajax.uninstall();
     window.pathfora.dateOptions = {};
@@ -74,7 +74,7 @@ describe('the content recommendation component', function () {
         '{"data": null,"message": "No such account id","status": 400}'
     });
 
-    pathfora.acctid = credentials;
+    pathfora.acctid = 321;
 
     // Should get and show api response
     pathfora.initializeWidgets([modal]);
@@ -200,7 +200,7 @@ describe('the content recommendation component', function () {
       new Error('Could not get recommendation and no default defined')
     );
 
-    pathfora.acctid = credentials;
+    pathfora.acctid = 123;
 
     expect(function () {
       pathfora.initializeWidgets([errorModal2]);

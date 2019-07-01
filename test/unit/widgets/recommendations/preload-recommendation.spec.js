@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../../utils/reset-legacy-tag';
 import preloadRecommendation from '../../../../src/rollup/widgets/recommendations/preload-recommendation';
 
 describe('preloadRecommendation', function () {
@@ -41,6 +42,8 @@ describe('preloadRecommendation', function () {
         id: 0
       }
     };
+
+    pathfora.acctid = 0;
 
     var widget = {
       type: 'message',
