@@ -1,30 +1,12 @@
+import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 'use strict';
-
-//Globals
-var credentials = 123,
-    ga = {
-      getAll: function () {}
-    };
-
-
-var resetLegacyTag = function () {
-  window.jstag = {
-    send: function () {}
-  };
-};
 
 resetLegacyTag();
 
 pathfora.utils.saveCookie('seerid', 123);
 pathfora.enableGA = false;
-
-function createAndDispatchKeydown (key, target) {
-  var eventObj = document.createEvent('Event');
-  eventObj.initEvent('keydown', false, false);
-  eventObj.which = key;
-  eventObj.keyCode = key;
-  target.dispatchEvent(eventObj);
-}
 
 // -------------------------
 // PATHFORA TESTS

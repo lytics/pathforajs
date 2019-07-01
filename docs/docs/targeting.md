@@ -11,7 +11,7 @@ var modules = {
 pathfora.initializeWidgets(modules);
 ```
 
-For audience targeting, it is required that you load the [Lytics Javascript Tag](https://activate.getlytics.com/documentation/jstag_anon). Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of. If you do not load this tag for targeted modules they will never initialize. 
+For audience targeting, it is required that you load the [Lytics Javascript Tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of. If you do not load this tag for targeted modules they will never initialize. 
 
 ## Setup Your Audiences
 

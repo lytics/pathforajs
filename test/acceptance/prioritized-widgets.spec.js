@@ -1,3 +1,5 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
 // Prioritized Widget Tests
 describe('Prioritized widgets', function () {
   beforeEach(function () {
@@ -174,8 +176,6 @@ describe('Prioritized widgets', function () {
           widget2 = $('#' + modal.id);
 
       setTimeout(function () {
-        console.log(window.lio);
-        
         expect(widget1.length).toBe(0);
         expect(widget2.length).toBe(0);
 
@@ -191,7 +191,8 @@ describe('Prioritized widgets', function () {
         });
 
         setTimeout(function () {
-          (widget1 = $('#' + messageBar.id)), (widget2 = $('#' + modal.id));
+          widget1 = $('#' + messageBar.id);
+          widget2 = $('#' + modal.id);
           expect(widget1.length).toBe(0);
           expect(widget2).toBeDefined();
           expect(widget2.hasClass('opened')).toBeTruthy();

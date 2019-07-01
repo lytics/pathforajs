@@ -21,7 +21,7 @@ module.exports = function (config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'src/rollup/pathfora.js': ['rollup'],
-      'test/unit/**/*.spec.js': ['rollup']
+      'test/**/*.spec.js': ['rollup']
     },
 
     rollupPreprocessor: {

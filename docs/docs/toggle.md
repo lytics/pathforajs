@@ -12,7 +12,7 @@ Beyond it's modules, the Pathfora library can also show or hide inline content b
 </div>
 ```
 
-You must load the [Lytics Javascript Tag](https://activate.getlytics.com/documentation/jstag_anon) to toggle elements based on audience membership. Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of and will select which elements to show/hide based on this list.
+You must load the [Lytics Javascript Tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/) to toggle elements based on audience membership. Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of and will select which elements to show/hide based on this list.
 
 
 ## Setup Your Audiences

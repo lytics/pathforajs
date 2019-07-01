@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.1.3',
+  var PF_VERSION = '1.1.4',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -1729,7 +1729,12 @@
             // get the data submitted to the form
             data = Array.prototype.slice
               .call(widgetForm.querySelectorAll('input, textarea, select'))
-              .map(function (element) {
+              .filter(function (element) {
+                if (element.type && (element.type === 'checkbox' || element.type === 'radio')) {
+                  return element.checked;
+                }
+                return true;
+              }).map(function (element) {
                 return {
                   name: element.name || element.id,
                   value: element.value

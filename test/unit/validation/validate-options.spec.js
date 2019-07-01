@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../utils/reset-legacy-tag';
 import validateOptions from '../../../src/rollup/validation/validate-options';
 
 describe('validateOptions', function () {

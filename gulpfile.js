@@ -259,7 +259,7 @@ gulp.task('docs:mkdocs', ['build:rollup'], shell.task([
 }));
 
 gulp.task('lint', ['build:js'], function () {
-  return gulp.src(['src/rollup/**/*.js', 'gulpfile.js', 'test/pathforaSpec.js', 'docs/docs/examples/**/*.js'])
+  return gulp.src(['src/rollup/**/*.js', 'gulpfile.js', 'test/**/*.js', 'docs/docs/examples/**/*.js'])
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());

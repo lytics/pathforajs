@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../utils/reset-legacy-tag';
 import validateRecommendationWidget from '../../../src/rollup/validation/validate-recommendation-widget';
 
 describe('validateRecommendationWidget', function () {

@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../utils/reset-legacy-tag';
 import validateAccountId from '../../../src/rollup/validation/validate-account-id';
 
 describe('validateAccountId', function () {
@@ -8,8 +9,8 @@ describe('validateAccountId', function () {
 
   describe('when no tag is installed', function () {
     beforeEach(function () {
-      window.lio = undefined;
-      window.jstag = undefined;
+      window.lio = null;
+      window.jstag = null;
     });
 
     it('should throw an error when trying to get account id', function () {
@@ -71,7 +72,7 @@ describe('validateAccountId', function () {
   describe('when tag installed is legacy tag', function () {
     beforeEach(function () {
       window.lio = {};
-      window.jstag = undefined;
+      window.jstag = null;
     });
 
     it('should throw an error if lio has no account id', function () {
@@ -114,7 +115,7 @@ describe('validateAccountId', function () {
 
   describe('when tag installed is current gen', function () {
     beforeEach(function () {
-      window.lio = undefined;
+      window.lio = null;
       window.jstag = {
         config: {
           cid: []

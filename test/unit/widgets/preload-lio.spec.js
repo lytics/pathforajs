@@ -1,3 +1,4 @@
+import resetLegacyTag from '../../utils/reset-legacy-tag';
 import preloadLio from '../../../src/rollup/widgets/preload-lio';
 
 describe('preloadLio', function () {

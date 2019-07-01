@@ -26,7 +26,7 @@ There are 4 types of modules and 5 layouts currently supported.
   - **Inline** - A module which can be inserted into an existing div on a page.
 
 ## General Usage
-1. Add [Lytics tracking tag](https://activate.getlytics.com/#/documentation/jstag_anon) to your website, and import pathfora.js file.
+1. Add [Lytics tracking tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration) to your website, and import pathfora.js file.
 
   ``` html
   <!-- Pathfora Tag -->

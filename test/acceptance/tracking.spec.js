@@ -1,3 +1,8 @@
+import resetLegacyTag from '../utils/reset-legacy-tag';
+
+window.ga = function () {};
+window.ga.getAll = function () {};
+
 // -------------------------
 // TRACKING
 // -------------------------
@@ -6,19 +11,19 @@ describe('the tracking component', function () {
     resetLegacyTag();
 
     var gaInstances = [
-      { 
-        get: function(field) {
+      {
+        get: function (field) {
           if (field === 'name') {
             return 'gtm1';
           }
-        } 
+        }
       },
       {
-        get: function(field) {
+        get: function (field) {
           if (field === 'name') {
             return 'gtm2';
           }
-        } 
+        }
       }
     ];
 
@@ -26,11 +31,11 @@ describe('the tracking component', function () {
     sessionStorage.clear();
     pathfora.clearAll();
     spyOn(window, 'ga');
-    spyOn(ga, 'getAll').and.returnValue(gaInstances);
+    spyOn(window.ga, 'getAll').and.returnValue(gaInstances);
     pathfora.enableGA = true;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     pathfora.enableGA = false;
   });
 
@@ -111,7 +116,7 @@ describe('the tracking component', function () {
       })
     );
 
-    expect(ga).toHaveBeenCalledWith(
+    expect(window.ga).toHaveBeenCalledWith(
       'gtm1.send',
       'event',
       'Lytics',
@@ -120,7 +125,7 @@ describe('the tracking component', function () {
       jasmine.any(Object)
     );
 
-    expect(ga).toHaveBeenCalledWith(
+    expect(window.ga).toHaveBeenCalledWith(
       'gtm2.send',
       'event',
       'Lytics',
@@ -160,7 +165,7 @@ describe('the tracking component', function () {
       })
     );
 
-    expect(ga).toHaveBeenCalledWith(
+    expect(window.ga).toHaveBeenCalledWith(
       'gtm1.send',
       'event',
       'Lytics',
@@ -169,7 +174,7 @@ describe('the tracking component', function () {
       jasmine.any(Object)
     );
 
-    expect(ga).toHaveBeenCalledWith(
+    expect(window.ga).toHaveBeenCalledWith(
       'gtm2.send',
       'event',
       'Lytics',
@@ -305,8 +310,8 @@ describe('the tracking component', function () {
     setTimeout(function () {
       widget.find('.pf-widget-ok').click();
 
-      expect(ga).toHaveBeenCalled();
-      expect(ga).toHaveBeenCalledWith(
+      expect(window.ga).toHaveBeenCalled();
+      expect(window.ga).toHaveBeenCalledWith(
         'gtm1.send',
         'event',
         'Lytics',
@@ -314,7 +319,7 @@ describe('the tracking component', function () {
         jasmine.any(String),
         jasmine.any(Object)
       );
-      expect(ga).toHaveBeenCalledWith(
+      expect(window.ga).toHaveBeenCalledWith(
         'gtm2.send',
         'event',
         'Lytics',

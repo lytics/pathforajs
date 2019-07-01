@@ -2,8 +2,8 @@ import replaceEntityField from '../../../../src/rollup/display-conditions/entity
 
 describe('replaceEntityField', function () {
   beforeEach(function () {
-    window.jstag = undefined;
-    window.lio = undefined;
+    window.jstag = null;
+    window.lio = null;
   });
 
   describe('when using legacy tag', function () {
