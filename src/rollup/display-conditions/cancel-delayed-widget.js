@@ -6,7 +6,7 @@ import { widgetTracker } from '../globals/config';
  * Cancel waiting for a delayed widget
  *
  * @exports cancelDelayedWidget
- * @params {object} widget
+ * @params {string} widgetKey id of the widget
  */
 export default function cancelDelayedWidget (widgetKey) {
   var delayObj = widgetTracker.delayedWidgets[widgetKey];
