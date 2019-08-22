@@ -8,11 +8,11 @@ import { widgetTracker } from '../globals/config';
  * @exports cancelDelayedWidget
  * @params {object} widget
  */
-export default function cancelDelayedWidget (widget) {
-  var delayObj = widgetTracker.delayedWidgets[widget.id];
+export default function cancelDelayedWidget (widgetKey) {
+  var delayObj = widgetTracker.delayedWidgets[widgetKey];
 
   if (delayObj) {
     clearTimeout(delayObj);
-    delete widgetTracker.delayedWidgets[widget.id];
+    delete widgetTracker.delayedWidgets[widgetKey];
   }
 }

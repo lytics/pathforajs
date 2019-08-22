@@ -43,8 +43,10 @@ export default function clearAll () {
 
   opened.slice(0);
 
-  for (var i = delayed.length; i > -1; i--) {
-    cancelDelayedWidget(delayed[i]);
+  for (var key in delayed) {
+    if (delayed.hasOwnProperty(key)) {
+      cancelDelayedWidget(key);
+    }
   }
 
   resetWidgetTracker(widgetTracker);
