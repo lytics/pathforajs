@@ -65,7 +65,7 @@ export default function recommendContent (accountId, params, id, callback) {
   var userByFieldValue;
 
   // check for custom cookie name in jstag config
-  if (window.jstag && window.jstag.config && window.jstag.cookie !== ''){
+  if (window.jstag && window.jstag.config && window.jstag.cookie !== '') {
     storedCookieName = window.jstag.cookie;
   }
 
@@ -79,14 +79,14 @@ export default function recommendContent (accountId, params, id, callback) {
     window.liosetup.field !== '' &&
     window.liosetup.value &&
     window.liosetup.value !== ''
-  ){
+  ) {
     userByFieldName = window.liosetup.field;
     userByFieldValue = window.liosetup.value;
   }
 
   // ensure we have required params
   if (!userByFieldName && !userByFieldValue) {
-    console.warn('Could not determine BY field and value from config')
+    console.warn('Could not determine BY field and value from config');
     callback([]);
   }
 
@@ -98,7 +98,7 @@ export default function recommendContent (accountId, params, id, callback) {
     accountId,
     'user',
     userByFieldName,
-    userByFieldValue,
+    userByFieldValue
   ];
 
   var ql = params.ql,
