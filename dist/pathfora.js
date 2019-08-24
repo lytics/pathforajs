@@ -3371,17 +3371,46 @@
       }
     }
 
-    var seerId = readCookie('seerid');
+    // becuase you can override the base cookiename as well as field name/value we need to account for those
+    var storedCookieName = 'seerid';
+    var userByFieldName = '_uids';
+    var userByFieldValue;
 
-    if (!seerId) {
+    // check for custom cookie name in jstag config
+    if (window.jstag && window.jstag.config && window.jstag.config.cookie !== '') {
+      storedCookieName = window.jstag.config.cookie;
+    }
+
+    // attempt to get value from stored cookie
+    userByFieldValue = readCookie(storedCookieName);
+
+    // override everything is key/value have been explicitly set for user
+    if (
+      window.liosetup &&
+      window.liosetup.field &&
+      window.liosetup.field !== '' &&
+      window.liosetup.value &&
+      window.liosetup.value !== ''
+    ) {
+      userByFieldName = window.liosetup.field;
+      userByFieldValue = window.liosetup.value;
+    }
+
+    // ensure we have required params
+    if (!userByFieldName && !userByFieldValue) {
+      console.warn('Could not determine BY field and value from config');
       callback([]);
     }
 
     var recommendParts = [
-      API_URL + '/api/content/recommend/',
+      API_URL,
+      'api',
+      'content',
+      'recommend',
       accountId,
-      '/user/_uids/',
-      seerId
+      'user',
+      userByFieldName,
+      userByFieldValue
     ];
 
     var ql = params.ql,
@@ -3417,7 +3446,7 @@
       }
     }
 
-    var recommendUrl = recommendParts.join('') + queries;
+    var recommendUrl = recommendParts.join('/') + queries;
 
     getData(recommendUrl, function (json) {
       var resp;
