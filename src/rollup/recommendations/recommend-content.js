@@ -72,7 +72,7 @@ export default function recommendContent (accountId, params, id, callback) {
   // attempt to get value from stored cookie
   userByFieldValue = readCookie(storedCookieName);
 
-  // override everything is key/value have been explicitly set for user
+  // override everything if key/value have been explicitly set for user
   if (
     window.liosetup &&
     window.liosetup.field &&
