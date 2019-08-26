@@ -1,5 +1,8 @@
 export default function resetLegacyTag () {
   window.jstag = {
-    send: function () {}
+    send: function () {},
+    config: {
+      cookie: 'seerid'
+    }
   };
 }

@@ -14,9 +14,140 @@ describe('the content recommendation component', function () {
 
   afterEach(function () {
     window.lio = {};
+    window.liosetup = {};
     jasmine.Ajax.uninstall();
     window.pathfora.dateOptions = {};
     window.pathfora.acctid = '';
+  });
+
+  it('should handle defaults', function (done) {
+    window.jstag.config.cookie = 'seerid';
+
+    window.lio = {
+      account: {
+        id: '321'
+      },
+      loaded: true
+    };
+
+    pathfora.acctid = 321;
+
+    var sampleModal = new pathfora.Message({
+      id: 'recommendation-modal-sample1',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([sampleModal]);
+
+    setTimeout(function () {
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+      );
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+      done();
+    }, 200);
+  });
+
+  it('should handle both the BY field and value override', function (done) {
+    window.jstag.config.cookie = 'seerid';
+
+    window.lio = {
+      account: {
+        id: '321'
+      },
+      loaded: true
+    };
+
+    window.liosetup = window.liosetup || {};
+    window.liosetup.field = 'customField';
+    window.liosetup.value = 'customValue';
+    pathfora.acctid = 321;
+
+    var sampleModal = new pathfora.Message({
+      id: 'recommendation-modal-sample2',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([sampleModal]);
+
+    setTimeout(function () {
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/321/user/customField/customValue?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+      );
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+      done();
+    }, 200);
+  });
+
+  it('should handle the default lytics cookie override', function (done) {
+    window.jstag.config.cookie = 'bonk';
+    pathfora.utils.saveCookie('bonk', '123.bonk.override');
+
+    window.lio = {
+      account: {
+        id: '321'
+      },
+      loaded: true
+    };
+
+    pathfora.acctid = 321;
+
+    var sampleModal = new pathfora.Message({
+      id: 'recommendation-modal-sample3',
+      msg: 'A',
+      variant: 3,
+      layout: 'modal',
+      recommend: {
+        ql: {
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([sampleModal]);
+
+    setTimeout(function () {
+      expect(jasmine.Ajax.requests.mostRecent().url).toBe(
+        '//api.lytics.io/api/content/recommend/321/user/_uids/123.bonk.override?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+      );
+
+      jasmine.Ajax.requests.mostRecent().respondWith({
+        status: 200,
+        contentType: 'application/json',
+        responseText:
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+      });
+
+      done();
+    }, 200);
   });
 
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
