@@ -3384,7 +3384,7 @@
     // attempt to get value from stored cookie
     userByFieldValue = readCookie(storedCookieName);
 
-    // override everything is key/value have been explicitly set for user
+    // override everything if key/value have been explicitly set for user
     if (
       window.liosetup &&
       window.liosetup.field &&
@@ -4469,14 +4469,14 @@
    * Cancel waiting for a delayed widget
    *
    * @exports cancelDelayedWidget
-   * @params {object} widget
+   * @params {string} widgetKey id of the widget
    */
-  function cancelDelayedWidget (widget) {
-    var delayObj = widgetTracker.delayedWidgets[widget.id];
+  function cancelDelayedWidget (widgetKey) {
+    var delayObj = widgetTracker.delayedWidgets[widgetKey];
 
     if (delayObj) {
       clearTimeout(delayObj);
-      delete widgetTracker.delayedWidgets[widget.id];
+      delete widgetTracker.delayedWidgets[widgetKey];
     }
   }
 
@@ -4506,8 +4506,10 @@
 
     opened.slice(0);
 
-    for (var i = delayed.length; i > -1; i--) {
-      cancelDelayedWidget(delayed[i]);
+    for (var key in delayed) {
+      if (delayed.hasOwnProperty(key)) {
+        cancelDelayedWidget(key);
+      }
     }
 
     resetWidgetTracker(widgetTracker);

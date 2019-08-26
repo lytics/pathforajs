@@ -50,6 +50,52 @@ describe('Pathfora', function () {
     }, 200);
   });
 
+  describe('clearAll', function () {
+    it('should clear delayed widgets', function () {
+      jasmine.clock().install();
+      var delayedWidget = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 1
+        }
+      });
+
+      var delayedWidget2 = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear2',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 2
+        }
+      });
+
+      var delayedWidget3 = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear3',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 4
+        }
+      });
+
+      pathfora.initializeWidgets([delayedWidget, delayedWidget2, delayedWidget3]);
+      pathfora.clearAll();
+
+      jasmine.clock().tick(40000);
+      var widget = $('#' + delayedWidget.id);
+      var widget2 = $('#' + delayedWidget2.id);
+      var widget3 = $('#' + delayedWidget3.id);
+
+      expect(widget[0]).toBeUndefined();
+      expect(widget2[0]).toBeUndefined();
+      expect(widget3[0]).toBeUndefined();
+
+      jasmine.clock().uninstall();
+    });
+  });
+
   // -------------------------
   // IGNORED
   // -------------------------
