@@ -1,11 +1,9 @@
-import resetLegacyTag from '../../../utils/reset-legacy-tag';
+import globalReset from '../../../utils/global-reset';
 import preloadRecommendation from '../../../../src/rollup/widgets/recommendations/preload-recommendation';
 
 describe('preloadRecommendation', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    window.lio = {};
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should execute the callback immediately if recommendation is not needed', function () {

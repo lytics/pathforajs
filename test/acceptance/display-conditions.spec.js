@@ -1,4 +1,4 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  DISPLAY CONDITIONS
@@ -34,9 +34,7 @@ function makeMouseEvent (type, params) {
 
 describe('when setting display conditions', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.clearAll();
-    sessionStorage.clear();
+    globalReset();
   });
 
   it('should show when all manualTrigger widgets are triggered', function () {

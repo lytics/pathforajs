@@ -1,13 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  DISPLAY CONDITIONS LEGACY
 // -------------------------
 describe('when setting display conditions', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.clearAll();
-    sessionStorage.clear();
+    globalReset();
   });
 
   it('should show if before limited amount of impressions', function () {

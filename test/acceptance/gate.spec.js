@@ -1,11 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  GATE
 // -------------------------
 describe('the gate component', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   it('should open gate when the cookie is not set', function (done) {

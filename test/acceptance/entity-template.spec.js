@@ -1,12 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  ENTITY FIELD TEMPLATES
 // -------------------------
 describe('the entity templates', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should replace dynamic templates with entity fields', function (done) {

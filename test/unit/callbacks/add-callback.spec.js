@@ -1,9 +1,9 @@
+import globalReset from '../../utils/global-reset';
+
 describe('addCallback', function () {
   describe('when no tag found', function () {
     beforeEach(function () {
-      window.jstag = null;
-      window.lio = null;
-      pathfora.callbacks = [];
+      globalReset();
     });
 
     it('should fall back and add a callback to the callbacks array', function () {

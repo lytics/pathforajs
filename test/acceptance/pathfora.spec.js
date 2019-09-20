@@ -1,12 +1,7 @@
 import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 'use strict';
-
-resetLegacyTag();
-
-pathfora.utils.saveCookie('seerid', 123);
-pathfora.enableGA = false;
 
 // -------------------------
 // PATHFORA TESTS
@@ -14,10 +9,7 @@ pathfora.enableGA = false;
 
 describe('Pathfora', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should keep focus during a tab cycle in a modal or site gate', function (done) {
@@ -83,7 +75,7 @@ describe('Pathfora', function () {
       pathfora.initializeWidgets([delayedWidget, delayedWidget2, delayedWidget3]);
       pathfora.clearAll();
 
-      jasmine.clock().tick(40000);
+      jasmine.clock().tick(4000);
       var widget = $('#' + delayedWidget.id);
       var widget2 = $('#' + delayedWidget2.id);
       var widget3 = $('#' + delayedWidget3.id);
