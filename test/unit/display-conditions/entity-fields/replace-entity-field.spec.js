@@ -1,9 +1,9 @@
 import replaceEntityField from '../../../../src/rollup/display-conditions/entity-fields/replace-entity-field';
+import globalReset from '../../../utils/global-reset';
 
 describe('replaceEntityField', function () {
   beforeEach(function () {
-    window.jstag = null;
-    window.lio = null;
+    globalReset();
   });
 
   describe('when using legacy tag', function () {

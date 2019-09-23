@@ -1,11 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 // UTIL TESTS
 // -------------------------
 describe('Utils', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   describe('the escapeURI util', function () {

@@ -1,31 +1,17 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 // INLINE PERSONALIZATION TEST
 // -------------------------
 describe('Inline Personalization', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   // -------------------------
   // TRIGGER ELEMENTS
   // -------------------------
   describe('pftrigger elements', function () {
-    beforeEach(function () {
-      window.pathfora.inline.elements = [];
-      window.pathfora.acctid = '';
-      window.pathfora.dateOptions = {};
-      pathfora.clearAll();
-    });
-
-    afterEach(function () {
-      window.pathfora.inline.elements = [];
-      window.pathfora.acctid = '';
-      window.pathfora.dateOptions = {};
-      pathfora.clearAll();
-    });
-
     it('should select to show the first matching element per group', function (done) {
       window.lio = {
         data: {
@@ -172,16 +158,12 @@ describe('Inline Personalization', function () {
   // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
-      sessionStorage.clear();
       pathfora.acctid = 123;
-      pathfora.inline.elements = [];
-      pathfora.dateOptions = {};
       jasmine.Ajax.install();
     });
 
     afterEach(function () {
       jasmine.Ajax.uninstall();
-      pathfora.dateOptions = {};
     });
 
     it('should fill pftype elements with content recommendation data', function (done) {

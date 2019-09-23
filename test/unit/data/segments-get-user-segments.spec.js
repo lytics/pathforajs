@@ -1,14 +1,13 @@
 import getUserSegments from '../../../src/rollup/data/segments/get-user-segments';
+import globalReset from '../../utils/global-reset';
 
 describe('getUserSegments', function () {
-  beforeEach(function () {});
+  beforeEach(function () {
+    globalReset();
+  });
+
 
   describe('when no tag is installed', function () {
-    beforeEach(function () {
-      window.lio = null;
-      window.jstag = null;
-    });
-
     it('should return default segments if nothing is installed', function () {
       var segments = getUserSegments();
       expect(segments).toEqual(['all']);
@@ -16,11 +15,6 @@ describe('getUserSegments', function () {
   });
 
   describe('when legacy tag is installed', function () {
-    beforeEach(function () {
-      window.jstag = null;
-      window.lio = {};
-    });
-
     it('should return default segments when no lio.data object', function () {
       window.lio = {};
 
@@ -66,11 +60,6 @@ describe('getUserSegments', function () {
   });
 
   describe('when current gen tag is installed', function () {
-    beforeEach(function () {
-      window.lio = null;
-      window.jstag = {};
-    });
-
     it('should return default segments when no jstag.getSegments() function', function () {
       window.jstag = {};
 

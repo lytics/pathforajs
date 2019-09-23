@@ -1,12 +1,7 @@
 import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 'use strict';
-
-resetLegacyTag();
-
-pathfora.utils.saveCookie('seerid', 123);
-pathfora.enableGA = false;
 
 // -------------------------
 // PATHFORA TESTS
@@ -14,10 +9,7 @@ pathfora.enableGA = false;
 
 describe('Pathfora', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should keep focus during a tab cycle in a modal or site gate', function (done) {
@@ -48,6 +40,52 @@ describe('Pathfora', function () {
       expect(widget.get(0).contains(document.activeElement)).toBe(true);
       done();
     }, 200);
+  });
+
+  describe('clearAll', function () {
+    it('should clear delayed widgets', function () {
+      jasmine.clock().install();
+      var delayedWidget = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 1
+        }
+      });
+
+      var delayedWidget2 = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear2',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 2
+        }
+      });
+
+      var delayedWidget3 = new pathfora.Message({
+        msg: 'Delayed clear test',
+        id: 'delayed-widget-clear3',
+        layout: 'modal',
+        displayConditions: {
+          showDelay: 4
+        }
+      });
+
+      pathfora.initializeWidgets([delayedWidget, delayedWidget2, delayedWidget3]);
+      pathfora.clearAll();
+
+      jasmine.clock().tick(4000);
+      var widget = $('#' + delayedWidget.id);
+      var widget2 = $('#' + delayedWidget2.id);
+      var widget3 = $('#' + delayedWidget3.id);
+
+      expect(widget[0]).toBeUndefined();
+      expect(widget2[0]).toBeUndefined();
+      expect(widget3[0]).toBeUndefined();
+
+      jasmine.clock().uninstall();
+    });
   });
 
   // -------------------------

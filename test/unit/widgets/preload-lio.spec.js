@@ -1,11 +1,9 @@
-import resetLegacyTag from '../../utils/reset-legacy-tag';
+import globalReset from '../../utils/global-reset';
 import preloadLio from '../../../src/rollup/widgets/preload-lio';
 
 describe('preloadLio', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    window.lio = {};
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should execute the callback immediately if lio is not needed', function (done) {

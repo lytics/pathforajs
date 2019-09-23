@@ -1,14 +1,13 @@
-import resetLegacyTag from '../../utils/reset-legacy-tag';
 import validateOptions from '../../../src/rollup/validation/validate-options';
+import globalReset from '../../utils/global-reset';
 
 describe('validateOptions', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   it('should throw an error priority is invalid', function () {
     var options = { priority: 'bad' };
-
     expect(function () {
       validateOptions(options);
     }).toThrow(new Error('Invalid priority defined in options.'));

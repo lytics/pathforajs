@@ -1,10 +1,9 @@
-import resetLegacyTag from '../../utils/reset-legacy-tag';
+import globalReset from '../../utils/global-reset';
 import validateAccountId from '../../../src/rollup/validation/validate-account-id';
 
 describe('validateAccountId', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.acctid = '';
+    globalReset();
   });
 
   describe('when no tag is installed', function () {

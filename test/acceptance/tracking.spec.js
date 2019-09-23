@@ -1,4 +1,4 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 window.ga = function () {};
 window.ga.getAll = function () {};
@@ -8,7 +8,7 @@ window.ga.getAll = function () {};
 // -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
 
     var gaInstances = [
       {
@@ -27,9 +27,6 @@ describe('the tracking component', function () {
       }
     ];
 
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
     spyOn(window, 'ga');
     spyOn(window.ga, 'getAll').and.returnValue(gaInstances);
     pathfora.enableGA = true;
@@ -40,8 +37,6 @@ describe('the tracking component', function () {
   });
 
   it('should know if users have interacted in the past', function () {
-    localStorage.clear();
-
     var messageBar = new pathfora.Message({
       layout: 'bar',
       id: 'interest-widget1',
@@ -134,7 +129,6 @@ describe('the tracking component', function () {
       jasmine.any(Object)
     );
 
-    pathfora.clearAll();
     jasmine.Ajax.uninstall();
   });
 
@@ -183,7 +177,6 @@ describe('the tracking component', function () {
       jasmine.any(Object)
     );
 
-    pathfora.clearAll();
     jasmine.clock().uninstall();
     jasmine.Ajax.uninstall();
   });
