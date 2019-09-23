@@ -1,9 +1,9 @@
-import resetLegacyTag from '../../../utils/reset-legacy-tag';
 import hasEntityTemplates from '../../../../src/rollup/widgets/has/has-entity-templates';
+import globalReset from '../../../utils/global-reset';
 
 describe('hasEntityTemplates', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   it('should return true if widget has entity templates', function () {

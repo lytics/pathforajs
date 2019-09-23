@@ -1,17 +1,9 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // Prioritized Widget Tests
 describe('Prioritized widgets', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
-    window.lio = {};
-  });
-
-  afterEach(function () {
-    window.lio = {};
+    globalReset();
   });
 
   describe('of type "ordered"', function () {

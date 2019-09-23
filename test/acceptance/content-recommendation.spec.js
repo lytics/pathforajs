@@ -1,23 +1,16 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  CONTENT RECOMMENDATIONS
 // -------------------------
 describe('the content recommendation component', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
     jasmine.Ajax.install();
-    window.lio = {};
-    window.pathfora.dateOptions = {};
-    pathfora.clearAll();
   });
 
   afterEach(function () {
-    window.lio = {};
-    window.liosetup = {};
     jasmine.Ajax.uninstall();
-    window.pathfora.dateOptions = {};
-    window.pathfora.acctid = '';
   });
 
   it('should handle defaults', function (done) {
@@ -254,8 +247,6 @@ describe('the content recommendation component', function () {
           'url("http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg")'
         );
 
-        pathfora.clearAll();
-        pathfora.acctid = '';
         done();
       }, 200);
     }, 100);

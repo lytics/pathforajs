@@ -1,12 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 // A/B TESTING
 // -------------------------
 describe('when performing AB testing', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should select only one A/B Test group to show', function () {

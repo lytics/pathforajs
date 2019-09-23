@@ -1,12 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 // TARGETING
 // -------------------------
 describe('when targeting users', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should distinguish newcomers, subscribers and common users', function (done) {
@@ -82,8 +81,6 @@ describe('when targeting users', function () {
       expect(notOpenedC.length).toBe(0);
       expect(universalWidget.hasClass('opened')).toBeTruthy();
       expect(widgetB.hasClass('opened')).toBeTruthy();
-
-      pathfora.clearAll();
       done();
     }, 200);
   });
@@ -137,7 +134,6 @@ describe('when targeting users', function () {
     setTimeout(function () {
       expect(widgetB.hasClass('opened')).toBeTruthy();
       expect(widgetA.length).toBe(0);
-      pathfora.clearAll();
       done();
     }, 200);
   });
@@ -190,7 +186,6 @@ describe('when targeting users', function () {
     setTimeout(function () {
       expect(widgetA.hasClass('opened')).toBeTruthy();
       expect(widgetB.hasClass('opened')).toBeTruthy();
-      pathfora.clearAll();
       done();
     }, 200);
   });

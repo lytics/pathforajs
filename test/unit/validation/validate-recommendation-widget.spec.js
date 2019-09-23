@@ -1,9 +1,9 @@
-import resetLegacyTag from '../../utils/reset-legacy-tag';
 import validateRecommendationWidget from '../../../src/rollup/validation/validate-recommendation-widget';
+import globalReset from '../../utils/global-reset';
 
 describe('validateRecommendationWidget', function () {
   beforeEach(function () {
-    resetLegacyTag();
+    globalReset();
   });
 
   it('should throw an error it has the wrong layout type', function () {

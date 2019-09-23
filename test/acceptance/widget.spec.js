@@ -1,15 +1,12 @@
 import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 //  WIDGET TESTS
 // -------------------------
 describe('Widgets', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
+    globalReset();
   });
 
   // -------------------------
@@ -104,7 +101,6 @@ describe('Widgets', function () {
 
     setTimeout(function () {
       expect(widget.hasClass('opened')).toBeTruthy();
-      pathfora.clearAll();
       done();
     }, 200);
   });
@@ -153,7 +149,6 @@ describe('Widgets', function () {
 
       setTimeout(function () {
         expect($('#' + openedWidget.id).length).toEqual(1);
-        pathfora.clearAll();
         done();
       }, 200);
     }, 500);
@@ -275,7 +270,6 @@ describe('Widgets', function () {
     };
 
     expect(missingParams).toThrow(new Error('Config object is missing'));
-    pathfora.clearAll();
   });
 
   it('should not show branding assets unless set otherwise', function () {
@@ -1090,8 +1084,6 @@ describe('Widgets', function () {
             formStatesWidget.formStates.error.cancelAction.name
         })
       );
-      pathfora.clearAll();
-
       done();
     }, 600);
   });
@@ -1305,8 +1297,6 @@ describe('Widgets', function () {
   // -------------------------
 
   it('should be able to hide and show fields based on config', function () {
-    pathfora.clearAll();
-
     var formfields = new pathfora.Form({
       id: 'sample-form',
       msg: 'subscription',

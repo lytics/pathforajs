@@ -1,9 +1,11 @@
 import inSegment from '../../../src/rollup/data/segments/in-segment';
+import globalReset from '../../utils/global-reset';
 
 describe('inSegment', function () {
   describe('when is legacy', function () {
     beforeEach(function () {
-      window.jstag = null;
+      globalReset();
+
       window.lio = {
         data: {
           segments: ['one', 'fish', 'two', 'fish']

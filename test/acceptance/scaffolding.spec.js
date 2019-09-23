@@ -1,14 +1,11 @@
-import resetLegacyTag from '../utils/reset-legacy-tag';
+import globalReset from '../utils/global-reset';
 
 // -------------------------
 // SCAFFOLDING
 // -------------------------
 describe('when building a scaffolding component', function () {
   beforeEach(function () {
-    resetLegacyTag();
-    localStorage.clear();
-    sessionStorage.clear();
-    pathfora.clearAll();
+    globalReset();
   });
 
   it('should create an empty widget config with empty target and inverse arrays ready for construction', function () {
