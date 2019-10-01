@@ -174,7 +174,7 @@ recommendContent is a public method that makes a request to the Lytics content r
 
 ## triggerWidgets
 
-triggerWidgets is a helper method for widgets with the [manualTrigger](/display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathora.triggerWidgets` has been called. This method similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with javascript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
+triggerWidgets is a helper method for widgets with the [manualTrigger](/display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathfora.triggerWidgets` has been called. This method similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with javascript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
 
 <table>
   <thead>
