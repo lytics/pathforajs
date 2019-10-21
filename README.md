@@ -66,6 +66,8 @@ Pathfora uses [NPM](https://docs.npmjs.com/) for package management, [rollup](ht
 
 Install Dependencies:
 
+Note: Node v12 is not compatiable with the current set of dependencies. See https://github.com/gulpjs/gulp/issues/2324
+
 ```sh
 $ npm install --global gulp-cli
 $ npm install
