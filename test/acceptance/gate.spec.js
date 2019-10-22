@@ -32,7 +32,7 @@ describe('the gate component', function () {
       msg: 'Submit this widget to access the website.'
     });
 
-    pathfora.utils.saveCookie('PathforaUnlocked_' + gate.id, true);
+    pathfora.utils.write('PathforaUnlocked_' + gate.id, true);
 
     pathfora.initializeWidgets([gate]);
 

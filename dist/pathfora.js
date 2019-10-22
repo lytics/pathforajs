@@ -381,6 +381,51 @@
     return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
   }
 
+  /** @module pathfora/utils/decode-safe */
+
+  /**
+   * Try decoding a string, return original string
+   * if the decode fails.
+   *
+   * @exports decodeSafe
+   * @params {string} s
+   * @returns {string} decoded
+   */
+  function decodeSafe (s) {
+    try {
+      return decodeURIComponent(s);
+    } catch (e) {
+      return s;
+    }
+  }
+
+  /** @module pathfora/utils/cookie/read-cookie */
+
+  /**
+   * Get the value of a cookie
+   *
+   * @exports readCookie
+   * @params {string} name
+   * @returns {string}
+   */
+  function readCookie (name) {
+    var cookies = document$1.cookie,
+        findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
+
+    // legacy - check for cookie names that haven't been escaped
+    if (findCookieRegexp == null) {
+      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
+    }
+
+    if (findCookieRegexp != null) {
+      var val = findCookieRegexp.pop();
+
+      return decodeSafe(val);
+    }
+
+    return null;
+  }
+
   /** @module pathfora/utils/cookie/save-cookie */
 
   /**
@@ -422,6 +467,61 @@
     saveCookie(name, '', date);
   }
 
+  function safeJsonParse (json) {
+    try {
+      return JSON.parse(json);
+    } catch (e) {
+      // recover
+    }
+  }
+
+  var expiringLocalStorage = {
+    getItem: function (key) {
+      var value = safeJsonParse(localStorage.getItem(key));
+
+      if (value && value.expiresOn) {
+        if (Date.parse(value.expiresOn) < Date.now()) {
+          localStorage.removeItem(key);
+          return null;
+        }
+        return value.payload || value;
+      }
+      return localStorage.getItem(key);
+    },
+
+    setItem: function (key, payload, expiresOn) {
+      if (!expiresOn) {
+        expiresOn = new Date();
+        expiresOn.setDate(expiresOn.getDate() + 365);
+      }
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          payload: '' + payload,
+          expiresOn: expiresOn.toISOString()
+        })
+      );
+    },
+
+    removeItem: function (key) {
+      localStorage.removeItem(key);
+    },
+
+    ttl: function (key, payload, milliseconds) {
+      if (milliseconds !== +milliseconds) {
+        throw new Error('milliseconds must be a number!');
+      }
+      var date = new Date();
+
+      date.setMilliseconds(date.getMilliseconds() + milliseconds);
+      this.setItem(key, payload, date);
+    }
+  };
+
+  function write (key, value, expiration) {
+    expiringLocalStorage.setItem(key, value, expiration);
+  }
+
   /** @module pathfora/utils/is-not-encoded */
 
   /**
@@ -437,55 +537,6 @@
     } catch (e) {
       return false;
     }
-  }
-
-  /** @module pathfora/utils/decode-safe */
-
-  /**
-   * Try decoding a string, return original string
-   * if the decode fails.
-   *
-   * @exports decodeSafe
-   * @params {string} s
-   * @returns {string} decoded
-   */
-  function decodeSafe (s) {
-    try {
-      return decodeURIComponent(s);
-    } catch (e) {
-      return s;
-    }
-  }
-
-  /** @module pathfora/utils/cookie/read-cookie */
-
-  /**
-   * Get the value of a cookie
-   *
-   * @exports readCookie
-   * @params {string} name
-   * @returns {string}
-   */
-  function readCookie (name) {
-    var cookies = document$1.cookie,
-        findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
-
-    // legacy - check for cookie names that haven't been escaped
-    if (!findCookieRegexp) {
-      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
-    } else {
-      var val = findCookieRegexp.pop();
-
-      // update any legacy cookies that haven't been encoded
-      if (isNotEncoded(val)) {
-        deleteCookie(name);
-        saveCookie(name, val);
-      }
-
-      return decodeSafe(val);
-    }
-
-    return null;
   }
 
   /** @module pathfora/utils/cookie/update-legacy-cookies */
@@ -518,29 +569,17 @@
     var cookieFunc = function (c) {
       var split = c.trim().split('=');
 
-
       if (split.length === 2) {
         var name = split[0];
         var val = split[1];
-        if (isNotEncoded(val)) {
-          deleteCookie(name);
-          saveCookie(name, val);
-        }
 
-        // prevent double encoding bug
-        try {
-          if (decodeURIComponent(val) !== decodeURIComponent(decodeURIComponent(val))) {
-            deleteCookie(name);
-            saveCookie(name, decodeURIComponent(decodeURIComponent(val)));
-          }
-        } catch (e) {
-          // recover
-        }
+        write(name, decodeSafe(val));
       }
     };
 
     var sessionFunc = function (c) {
       var val = sessionStorage.getItem(c);
+
       if (isNotEncoded(val)) {
         sessionStorage.removeItem(c);
         sessionStorage.setItem(encodeURIComponent(c), encodeURIComponent(val));
@@ -551,6 +590,26 @@
       document$1.cookie.split(';').filter(filterFunc).forEach(cookieFunc);
       Object.keys(sessionStorage).filter(filterFunc).forEach(sessionFunc);
     }
+  }
+
+  function read (key) {
+    var item = expiringLocalStorage.getItem(key);
+
+    if (item == null) {
+      item = readCookie(key);
+
+      if (item != null) {
+        deleteCookie(key);
+        expiringLocalStorage.setItem(key, item);
+      }
+    }
+
+    return item;
+  }
+
+  function erase (key) {
+    expiringLocalStorage.removeItem(key);
+    deleteCookie(key);
   }
 
   /** @module pathfora/utils/scaffold/init-scaffold */
@@ -852,6 +911,7 @@
 
   /** @module pathfora/utils */
 
+
   /**
    * Object containing utility functions
    *
@@ -869,6 +929,12 @@
     saveCookie: saveCookie,
     deleteCookie: deleteCookie,
     updateLegacyCookies: updateLegacyCookies,
+
+    // persist
+    read: read,
+    write: write,
+    erase: erase,
+    store: expiringLocalStorage,
 
     // scaffold
     initWidgetScaffold: initWidgetScaffold,
@@ -936,10 +1002,10 @@
    * @exports initializePageViews
    */
   function initializePageViews () {
-    var cookie = readCookie(PF_PAGEVIEWS),
+    var cookie = read(PF_PAGEVIEWS),
         date = new Date();
     date.setDate(date.getDate() + 365);
-    saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+    write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
   }
 
   /** @module pathfora/display-conditions/impressions/impressions-checker */
@@ -960,7 +1026,7 @@
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
         sessionImpressionsForAllWidgets = 0,
-        total = readCookie(id),
+        total = read(id),
         now = Date.now();
 
     // retain backwards compatibility if using legacy method of:
@@ -1163,7 +1229,7 @@
       }
 
       if (action === 'unlock') {
-        saveCookie(PREFIX_UNLOCK + widget.id, true, widget.expiration);
+        write(PREFIX_UNLOCK + widget.id, true, widget.expiration);
       }
 
       break;
@@ -1222,7 +1288,7 @@
         totalImpressions,
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
-        total = readCookie(id),
+        total = read(id),
         now = Date.now();
 
     if (!sessionImpressions) {
@@ -1239,7 +1305,7 @@
     }
 
     sessionStorage.setItem(id, sessionImpressions);
-    saveCookie(
+    write(
       id,
       Math.min(totalImpressions, 9998) + '|' + now,
       widget.expiration
@@ -1432,7 +1498,7 @@
 
   function updateActionCookie (name, expiration) {
     var ct,
-        val = readCookie(name),
+        val = read(name),
         duration = Date.now();
 
     if (val) {
@@ -1442,7 +1508,7 @@
       ct = 1;
     }
 
-    saveCookie(name, ct + '|' + duration, expiration);
+    write(name, ct + '|' + duration, expiration);
   }
 
   /** @module pathfora/widgets/actions/buton-action */
@@ -2784,6 +2850,7 @@
    * @exports showWidget
    * @params {object} widget
    */
+
   function showWidget (w) {
     var openWidget = function (widget) {
       // FIXME Change to Array#filter and Array#length
@@ -3838,7 +3905,7 @@
    * @returns {boolean}
    */
   function pageVisitsChecker (pageVisitsRequired) {
-    return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
+    return (read(PF_PAGEVIEWS) >= pageVisitsRequired);
   }
 
   /** @module pathfora/display-conditions/hide-after-action-checker */
@@ -3856,9 +3923,9 @@
     var parts,
         valid = true,
         now = Date.now(),
-        confirm = readCookie(PREFIX_CONFIRM + widget.id),
-        cancel = readCookie(PREFIX_CANCEL + widget.id),
-        closed = readCookie(PREFIX_CLOSE + widget.id);
+        confirm = read(PREFIX_CONFIRM + widget.id),
+        cancel = read(PREFIX_CANCEL + widget.id),
+        closed = read(PREFIX_CLOSE + widget.id);
 
     if (hideAfterActionConstraints.confirm && confirm) {
       parts = confirm.split('|');
@@ -4372,7 +4439,7 @@
 
     if (
       (widget.type === 'sitegate' &&
-        readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+        read(PREFIX_UNLOCK + widget.id) === 'true') ||
       widget.hiddenViaABTests === true
     ) {
       return;
@@ -4636,7 +4703,7 @@
   function initializeABTesting (abTests) {
     abTests.forEach(function (abTest) {
       var abTestingType = abTest.type,
-          userAbTestingValue = readCookie(abTest.cookieId),
+          userAbTestingValue = read(abTest.cookieId),
           userAbTestingGroup = 0,
           date = new Date();
 
@@ -4646,7 +4713,7 @@
 
       // NOTE Always update the cookie to get the new exp date.
       date.setDate(date.getDate() + 365);
-      saveCookie(abTest.cookieId, userAbTestingValue, date);
+      write(abTest.cookieId, userAbTestingValue, date);
 
       // NOTE Determine visible group for the user
       var i = 0;

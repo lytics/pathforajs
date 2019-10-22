@@ -57,6 +57,7 @@ describe('when setting display conditions', function () {
     });
 
     pathfora.initializeWidgets([customWidget, customWidget2]);
+
     var widget1 = $('#' + customWidget.id);
     var widget2 = $('#' + customWidget2.id);
     expect(widget1.length).toBe(0);

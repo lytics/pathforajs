@@ -4,8 +4,8 @@
 import { PF_PAGEVIEWS } from '../../globals/config';
 
 // utils
-import readCookie from '../../utils/cookies/read-cookie';
-import saveCookie from '../../utils/cookies/save-cookie';
+import read from '../../utils/persist/read';
+import write from '../../utils/persist/write';
 
 /**
  * Track and update the number of pageviews
@@ -13,8 +13,8 @@ import saveCookie from '../../utils/cookies/save-cookie';
  * @exports initializePageViews
  */
 export default function initializePageViews () {
-  var cookie = readCookie(PF_PAGEVIEWS),
+  var cookie = read(PF_PAGEVIEWS),
       date = new Date();
   date.setDate(date.getDate() + 365);
-  saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+  write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
 }
