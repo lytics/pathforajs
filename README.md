@@ -62,15 +62,15 @@ There are 4 types of modules and 5 layouts currently supported.
 [See contribution notes](CONTRIBUTION.md)
 
 ## Development
-Pathfora uses [NPM](https://docs.npmjs.com/) for package management, [rollup](https://github.com/rollup/rollup) as a module bundler, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
+Pathfora uses [yarn](https://yarnpkg.com) for package management, [rollup](https://github.com/rollup/rollup) as a module bundler, and [Gulp](https://github.com/gulpjs/gulp) to manage build tasks.
 
 Install Dependencies:
 
 Note: Node v12 is not compatiable with the current set of dependencies. See https://github.com/gulpjs/gulp/issues/2324
 
 ```sh
-$ npm install --global gulp-cli
-$ npm install
+$ yarn global add gulp-cli
+$ yarn install
 ```
 
 Gulp tasks:
@@ -94,15 +94,15 @@ Gulp tasks:
   }
   ```
 
-Useful NPM scripts:
+Useful scripts:
 
-- **`npm test`** - builds and activates Karma test runner on PhantomJS.
+- **`yarn test`** - builds and activates Karma test runner on PhantomJS.
 
-- **`npm run clean`** - removes files from the `./dist` folder for a clean build.
+- **`yarn run clean`** - removes files from the `./dist` folder for a clean build.
 
-- **`npm run build:prod`** - sets `NODE_ENV` to `production` and builds minified files in `./dist` folder.
+- **`yarn run build:prod`** - sets `NODE_ENV` to `production` and builds minified files in `./dist` folder.
 
-- **`npm run prod`** - run tests, clean and rebuild the `/dist` folder. This is built on top of the `gulp build`
+- **`yarn run prod`** - run tests, clean and rebuild the `/dist` folder. This is built on top of the `gulp build`
 command. Important to know that this sets the `NODE_ENV` to `production`, removing instabul instrumentation for code coverage. Currently, this is the default command used for our Travis CI.
 
 ### Documentation
@@ -128,7 +128,7 @@ Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework,
 
 Running tests:
 ``` sh
-$ npm test
+$ yarn run test
 ```
 
 ## License
