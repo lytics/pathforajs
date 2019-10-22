@@ -41,8 +41,6 @@ export default function clearAll () {
     }
   });
 
-  opened.slice(0);
-
   for (var key in delayed) {
     if (delayed.hasOwnProperty(key)) {
       cancelDelayedWidget(key);
