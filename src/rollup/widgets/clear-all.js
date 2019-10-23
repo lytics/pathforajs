@@ -9,6 +9,7 @@ import {
 import resetDataObject from '../globals/reset-data-object';
 import resetWidgetTracker from '../globals/reset-widget-tracker';
 import resetDefaultProps from '../globals/reset-default-props';
+import eventHub from '../utils/event-hub';
 
 // dom
 import document from '../dom/document';
@@ -46,6 +47,8 @@ export default function clearAll () {
       cancelDelayedWidget(key);
     }
   }
+
+  eventHub.removeAll();
 
   resetWidgetTracker(widgetTracker);
   resetDataObject(pathforaDataObject);

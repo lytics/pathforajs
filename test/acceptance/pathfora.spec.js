@@ -86,6 +86,72 @@ describe('Pathfora', function () {
 
       jasmine.clock().uninstall();
     });
+
+    describe('event handlers', function () {
+      it('should remove window-bound scroll event handlers', function () {
+        var addEventListenerSpy = spyOn(window, 'addEventListener');
+        var removeEventListenerSpy = spyOn(window, 'removeEventListener');
+
+        var scrollWidget = new pathfora.Subscription({
+          msg: 'Fake scroll widget',
+          id: 'fake-scroll-widget',
+          displayConditions: {
+            scrollPercentageToDisplay: 20
+          }
+        });
+
+        pathfora.initializeWidgets([scrollWidget]);
+
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          'scroll',
+          jasmine.any(Function)
+        );
+
+        pathfora.clearAll();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledWith(
+          'scroll',
+          jasmine.any(Function)
+        );
+      });
+
+      it('should remove document-bound mouse(move|out) event handlers', function () {
+        var addEventListenerSpy = spyOn(document, 'addEventListener');
+        var removeEventListenerSpy = spyOn(document, 'removeEventListener');
+
+        var exitIntentWidget = new pathfora.Subscription({
+          msg: 'Fake exit-intent widget',
+          id: 'fake-exit-intent-widget',
+          displayConditions: {
+            showOnExitIntent: true
+          }
+        });
+
+        pathfora.initializeWidgets([exitIntentWidget]);
+
+        expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
+        expect(document.addEventListener.calls.argsFor(0)).toEqual([
+          'mousemove',
+          jasmine.any(Function)
+        ]);
+        expect(document.addEventListener.calls.argsFor(1)).toEqual([
+          'mouseout',
+          jasmine.any(Function)
+        ]);
+
+        pathfora.clearAll();
+
+        expect(removeEventListenerSpy).toHaveBeenCalledTimes(2);
+        expect(document.removeEventListener.calls.argsFor(0)).toEqual([
+          'mousemove',
+          jasmine.any(Function)
+        ]);
+        expect(document.removeEventListener.calls.argsFor(1)).toEqual([
+          'mouseout',
+          jasmine.any(Function)
+        ]);
+      });
+    });
   });
 
   // -------------------------

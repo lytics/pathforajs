@@ -1,5 +1,7 @@
 /** @module pathfora/display-conditions/init-exit-intent */
 
+import eventHub from '../utils/event-hub';
+
 // dom
 import document from '../dom/document';
 
@@ -44,8 +46,8 @@ export default function initializeExitIntent (widget) {
         if (valid) {
           validateWatchers(widget, function () {
             if (typeof document.addEventListener === 'function') {
-              document.removeEventListener('mousemove', widget.exitIntentListener);
-              document.removeEventListener('mouseout', widget.exitIntentTrigger);
+              eventHub.remove(document, 'mousemove', widget.exitIntentListener);
+              eventHub.remove(document, 'mouseout', widget.exitIntentTrigger);
             } else {
               document.onmousemove = null;
               document.onmouseout = null;
@@ -59,8 +61,8 @@ export default function initializeExitIntent (widget) {
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
     if (typeof document.addEventListener === 'function') {
-      document.addEventListener('mousemove', widget.exitIntentListener, false);
-      document.addEventListener('mouseout', widget.exitIntentTrigger, false);
+      eventHub.add(document, 'mousemove', widget.exitIntentListener);
+      eventHub.add(document, 'mouseout', widget.exitIntentTrigger);
     } else {
       document.onmousemove = widget.exitIntentListener;
       document.onmouseout = widget.exitIntentTrigger;

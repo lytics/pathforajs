@@ -4138,6 +4138,29 @@
     return false;
   }
 
+  var handlers = [];
+
+  var eventHub = {
+    add: function (target, type, listener) {
+      target.addEventListener(type, listener);
+      handlers.push({
+        target: target,
+        type: type,
+        listener: listener
+      });
+    },
+    remove: function (target, type, listener) {
+      target.removeEventListener(type, listener);
+    },
+    removeAll: function () {
+      var hub = this;
+      handlers.forEach(function (h) {
+        hub.remove(h.target, h.type, h.listener);
+      });
+      handlers = [];
+    }
+  };
+
   /** @module pathfora/display-conditions/init-exit-intent */
 
   /**
@@ -4178,8 +4201,8 @@
           if (valid) {
             validateWatchers(widget, function () {
               if (typeof document$1.addEventListener === 'function') {
-                document$1.removeEventListener('mousemove', widget.exitIntentListener);
-                document$1.removeEventListener('mouseout', widget.exitIntentTrigger);
+                eventHub.remove(document$1, 'mousemove', widget.exitIntentListener);
+                eventHub.remove(document$1, 'mouseout', widget.exitIntentTrigger);
               } else {
                 document$1.onmousemove = null;
                 document$1.onmouseout = null;
@@ -4193,8 +4216,8 @@
 
       // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
       if (typeof document$1.addEventListener === 'function') {
-        document$1.addEventListener('mousemove', widget.exitIntentListener, false);
-        document$1.addEventListener('mouseout', widget.exitIntentTrigger, false);
+        eventHub.add(document$1, 'mousemove', widget.exitIntentListener);
+        eventHub.add(document$1, 'mouseout', widget.exitIntentTrigger);
       } else {
         document$1.onmousemove = widget.exitIntentListener;
         document$1.onmouseout = widget.exitIntentTrigger;
@@ -4265,7 +4288,7 @@
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
     if (typeof window.addEventListener === 'function') {
-      window.addEventListener('scroll', widget.scrollListener, false);
+      eventHub.add(window, 'scroll', widget.scrollListener);
     } else {
       window.onscroll = widget.scrollListener;
     }
@@ -4504,13 +4527,13 @@
       }
     });
 
-    opened.slice(0);
-
     for (var key in delayed) {
       if (delayed.hasOwnProperty(key)) {
         cancelDelayedWidget(key);
       }
     }
+
+    eventHub.removeAll();
 
     resetWidgetTracker(widgetTracker);
     resetDataObject(pathforaDataObject);
