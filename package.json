@@ -19,7 +19,7 @@
     "less": "^3.9.0"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "eslint": "^6.5.1",
     "gh-pages": "^2.0.1",
     "gulp": "^3.9.1",
     "gulp-browserify": "^0.5.1",
