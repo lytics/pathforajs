@@ -1,3 +1,6 @@
+var PAYLOAD_KEY = '$';
+var EXPIRES_KEY = '@';
+
 function safeJsonParse (json) {
   try {
     return JSON.parse(json);
@@ -10,12 +13,12 @@ export default {
   getItem: function (key) {
     var value = safeJsonParse(localStorage.getItem(key));
 
-    if (value && value.expiresOn) {
-      if (Date.parse(value.expiresOn) < Date.now()) {
+    if (value && value[EXPIRES_KEY]) {
+      if (Date.parse(value[EXPIRES_KEY]) < Date.now()) {
         localStorage.removeItem(key);
         return null;
       }
-      return value.payload || value;
+      return value[PAYLOAD_KEY] || value;
     }
     return localStorage.getItem(key);
   },
@@ -25,13 +28,13 @@ export default {
       expiresOn = new Date();
       expiresOn.setDate(expiresOn.getDate() + 365);
     }
-    localStorage.setItem(
-      key,
-      JSON.stringify({
-        payload: '' + payload,
-        expiresOn: expiresOn.toISOString()
-      })
-    );
+
+    var record = {};
+
+    record[PAYLOAD_KEY] = '' + payload;
+    record[EXPIRES_KEY] = expiresOn;
+
+    localStorage.setItem(key, JSON.stringify(record));
   },
 
   removeItem: function (key) {

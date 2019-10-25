@@ -13,8 +13,7 @@ import write from '../../utils/persist/write';
  * @exports initializePageViews
  */
 export default function initializePageViews () {
-  var cookie = read(PF_PAGEVIEWS),
-      date = new Date();
-  date.setDate(date.getDate() + 365);
-  write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+  var cookie = read(PF_PAGEVIEWS);
+
+  write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1);
 }

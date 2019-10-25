@@ -1,5 +1,5 @@
 describe('`expiringLocalStorage` util', function () {
-  const expiringLocalStorage = pathfora.utils.store;
+  var expiringLocalStorage = pathfora.utils.store;
 
   afterEach(function () {
     localStorage.removeItem('foo');
@@ -7,35 +7,29 @@ describe('`expiringLocalStorage` util', function () {
 
   describe('the `setItem` method', function () {
     describe('when an expiration date is not passed', function () {
-      it('should throw default to one year', function () {
+      it('should default to one year', function () {
         expiringLocalStorage.setItem('foo', 'plop');
 
-        const date = new Date();
+        var date = new Date();
         date.setDate(date.getDate() + 365);
+        var dateStr = date.toISOString();
 
-        expect(JSON.parse(localStorage.getItem('foo')).expiresOn).toMatch(
-          new RegExp(
-            '^' +
-              date.getFullYear() +
-              '-' +
-              (date.getMonth() + 1) +
-              '-' +
-              date.getDate()
-          )
+        expect(JSON.parse(localStorage.getItem('foo'))['@']).toMatch(
+          new RegExp('^' + dateStr.substr(0, 10))
         );
       });
     });
 
     describe('when an expiration date is passed', function () {
       it('should wrap the value in a { payload, expiresOn } tuple and serialize it to localStorage', function () {
-        const expiresOn = new Date('December 17, 1995 03:24:00');
+        var expiresOn = new Date('December 17, 1995 03:24:00');
 
         expiringLocalStorage.setItem('foo', 'wow', expiresOn);
-        const tuple = JSON.parse(localStorage.getItem('foo'));
+        var tuple = JSON.parse(localStorage.getItem('foo'));
 
         expect(tuple).toEqual({
-          payload: 'wow',
-          expiresOn: expiresOn.toISOString()
+          $: 'wow',
+          '@': expiresOn.toISOString()
         });
       });
     });
