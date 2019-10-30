@@ -85,6 +85,26 @@ describe('`expiringLocalStorage` util', function () {
         expect(expiringLocalStorage.getItem('foo')).toBe(null);
       });
     });
+
+    it('should extend the expiration date upon read', function (done) {
+      function getExpiration () {
+        return Date.parse(JSON.parse(localStorage.getItem('foo'))['@']);
+      }
+
+      expiringLocalStorage.setItem('foo', 'womp');
+
+      var exp1 = getExpiration();
+
+      setTimeout(function () {
+        try {
+          expiringLocalStorage.getItem('foo');
+          expect(getExpiration()).toBeGreaterThan(exp1);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      }, 200);
+    });
   });
 
   describe('the `getItem` method', function () {

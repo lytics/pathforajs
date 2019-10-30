@@ -480,16 +480,21 @@
 
   var expiringLocalStorage = {
     getItem: function (key) {
-      var value = safeJsonParse(localStorage.getItem(key));
+      var textValue = localStorage.getItem(key);
+      var value = safeJsonParse(textValue);
 
-      if (value && value[EXPIRES_KEY]) {
+      if (value && EXPIRES_KEY in value) {
         if (Date.parse(value[EXPIRES_KEY]) < Date.now()) {
           localStorage.removeItem(key);
           return null;
         }
-        return value[PAYLOAD_KEY] || value;
+        if (PAYLOAD_KEY in value) {
+          // Extend the expiration date:
+          this.setItem(key, value[PAYLOAD_KEY]);
+          return value[PAYLOAD_KEY];
+        }
       }
-      return localStorage.getItem(key);
+      return textValue;
     },
 
     setItem: function (key, payload, expiresOn) {
