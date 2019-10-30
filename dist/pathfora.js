@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.1.5',
+  var PF_VERSION = '1.1.6',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -4157,7 +4157,7 @@
       handlers.forEach(function (h) {
         hub.remove(h.target, h.type, h.listener);
       });
-      handlers = [];
+      handlers.length = 0;
     }
   };
 
