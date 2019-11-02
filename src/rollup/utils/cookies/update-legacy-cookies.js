@@ -17,6 +17,7 @@ import {
 
 // utils
 import write from '../persist/write';
+import deleteCookie from '../cookies/delete-cookie';
 import isNotEncoded from '../is-not-encoded';
 import decodeSafe from '../decode-safe';
 
@@ -52,6 +53,7 @@ export default function updateLegacyCookies () {
       var name = split[0];
       var val = split[1];
 
+      deleteCookie(name);
       write(name, decodeSafe(val));
     }
   };

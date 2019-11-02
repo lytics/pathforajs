@@ -581,6 +581,7 @@
         var name = split[0];
         var val = split[1];
 
+        deleteCookie(name);
         write(name, decodeSafe(val));
       }
     };

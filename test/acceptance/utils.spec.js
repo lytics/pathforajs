@@ -81,11 +81,27 @@ describe('Utils', function () {
   });
 
   describe('updateLegacyCookies', function () {
+    var setCookie = function (cname, cvalue, ttl) {
+      var expires = 'expires=' + (ttl || 0);
+      document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+    };
+
+    var getCookie = function (cname) {
+      var name = cname + '=';
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return '';
+    };
+
     it('should encode legacy Pathfora cookies', function () {
-      var setCookie = function (cname, cvalue) {
-        var expires = 'expires=0';
-        document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
-      };
 
       setCookie('PathforaImpressions_2', '1|293847239874932871');
       sessionStorage.setItem('PathforaRecommend_2', '{"somejson": "here"}');
@@ -102,6 +118,14 @@ describe('Utils', function () {
       expect(pathfora.utils.read('PathforaImpressions_3')).toEqual(
         '%badval%'
       );
+    });
+
+    it('should migrate existing cookies to localStorage', function () {
+      expect(pathfora.utils.read('PathforaImpressions_2')).toBe(null);
+      setCookie('PathforaImpressions_2', 'test');
+      pathfora.utils.updateLegacyCookies();
+      expect(getCookie('PathforaImpressions_2')).toBe('');
+      expect(pathfora.utils.read('PathforaImpressions_2')).toBe('test');
     });
   });
 });
