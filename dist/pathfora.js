@@ -478,23 +478,27 @@
     }
   }
 
+  function isExpired (record) {
+    return Date.parse(record[EXPIRES_KEY]) < Date.now();
+  }
+
   var expiringLocalStorage = {
     getItem: function (key) {
-      var textValue = localStorage.getItem(key);
-      var value = safeJsonParse(textValue);
+      var serialized = localStorage.getItem(key);
+      var record = safeJsonParse(serialized);
 
-      if (value && EXPIRES_KEY in value) {
-        if (Date.parse(value[EXPIRES_KEY]) < Date.now()) {
+      if (record && EXPIRES_KEY in record) {
+        if (isExpired(record)) {
           localStorage.removeItem(key);
           return null;
         }
-        if (PAYLOAD_KEY in value) {
+        if (PAYLOAD_KEY in record) {
           // Extend the expiration date:
-          this.setItem(key, value[PAYLOAD_KEY]);
-          return value[PAYLOAD_KEY];
+          this.setItem(key, record[PAYLOAD_KEY]);
+          return record[PAYLOAD_KEY];
         }
       }
-      return textValue;
+      return serialized;
     },
 
     setItem: function (key, payload, expiresOn) {
@@ -522,7 +526,19 @@
       var date = new Date();
 
       date.setMilliseconds(date.getMilliseconds() + milliseconds);
+
       this.setItem(key, payload, date);
+    },
+
+    removeExpiredItems: function () {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var record = safeJsonParse(localStorage.getItem(key));
+
+        if (record && isExpired(record)) {
+          localStorage.removeItem(key);
+        }
+      }
     }
   };
 
@@ -5231,6 +5247,7 @@
     link.setAttribute('href', CSS_URL);
 
     this.utils.updateLegacyCookies();
+    this.utils.store.removeExpiredItems();
 
     head.appendChild(link);
   };

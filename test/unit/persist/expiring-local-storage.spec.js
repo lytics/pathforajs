@@ -1,9 +1,9 @@
+import globalReset from '../../utils/global-reset';
+
 describe('`expiringLocalStorage` util', function () {
   var expiringLocalStorage = pathfora.utils.store;
 
-  afterEach(function () {
-    localStorage.removeItem('foo');
-  });
+  beforeEach(globalReset);
 
   describe('the `setItem` method', function () {
     describe('when an expiration date is not passed', function () {
@@ -113,6 +113,21 @@ describe('`expiringLocalStorage` util', function () {
       expect(localStorage.foo).toBe('tada');
       expiringLocalStorage.removeItem('foo');
       expect(localStorage.getItem('foo')).toBe(null);
+    });
+  });
+
+  describe('the `removeExpiredItems` method', function () {
+    it('should cull any expired records from localStorage', function () {
+      expiringLocalStorage.ttl('current', 'test', 10000);
+      expiringLocalStorage.ttl('expired', 'test', -10000);
+
+      expect(localStorage.getItem('current')).not.toBe(null);
+      expect(localStorage.getItem('expired')).not.toBe(null);
+
+      pathfora.utils.store.removeExpiredItems();
+
+      expect(localStorage.getItem('current')).not.toBe(null);
+      expect(localStorage.getItem('expired')).toBe(null);
     });
   });
 });

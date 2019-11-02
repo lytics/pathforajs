@@ -125,6 +125,7 @@ var Pathfora = function () {
   link.setAttribute('href', CSS_URL);
 
   this.utils.updateLegacyCookies();
+  this.utils.store.removeExpiredItems();
 
   head.appendChild(link);
 };
