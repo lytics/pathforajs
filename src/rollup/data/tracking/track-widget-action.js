@@ -5,7 +5,7 @@ import { PREFIX_UNLOCK, pathforaDataObject } from '../../globals/config';
 
 // utils
 import reportData from '../request/report-data';
-import saveCookie from '../../utils/cookies/save-cookie';
+import write from '../../utils/persist/write';
 import hasClass from '../../utils/class/has-class';
 
 /**
@@ -111,7 +111,7 @@ export default function trackWidgetAction (action, widget, htmlElement) {
     }
 
     if (action === 'unlock') {
-      saveCookie(PREFIX_UNLOCK + widget.id, true, widget.expiration);
+      write(PREFIX_UNLOCK + widget.id, true, widget.expiration);
     }
 
     break;

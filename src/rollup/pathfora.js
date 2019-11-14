@@ -58,6 +58,11 @@ import initializeInline from './inline/init-inline';
  * @class {function} Pathfora
  */
 var Pathfora = function () {
+  // feature detections
+  if (!('localStorage' in window) || !('sessionStorage' in window)) {
+    throw new Error('The Pathfora SDK requires the Web Storage API!');
+  }
+
   // globals
   this.version = PF_VERSION;
   this.callbacks = [];
@@ -120,6 +125,7 @@ var Pathfora = function () {
   link.setAttribute('href', CSS_URL);
 
   this.utils.updateLegacyCookies();
+  this.utils.store.removeExpiredItems();
 
   head.appendChild(link);
 };

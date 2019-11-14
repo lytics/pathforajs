@@ -30,7 +30,7 @@ import document from '../dom/document';
 
 // utils
 import addClass from '../utils/class/add-class';
-import readCookie from '../utils/cookies/read-cookie';
+import read from '../utils/persist/read';
 
 /**
  * Determine if a widget should be shown based on display
@@ -54,7 +54,7 @@ export default function initializeWidget (widget, options) {
 
   if (
     (widget.type === 'sitegate' &&
-      readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+      read(PREFIX_UNLOCK + widget.id) === 'true') ||
     widget.hiddenViaABTests === true
   ) {
     return;

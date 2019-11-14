@@ -4,7 +4,7 @@
 import { PREFIX_IMPRESSION } from '../../globals/config';
 
 // utils
-import readCookie from '../../utils/cookies/read-cookie';
+import read from '../../utils/persist/read';
 
 /**
  * Check if the widget has met the impressions
@@ -22,7 +22,7 @@ export default function impressionsChecker (impressionConstraints, widget) {
       id = PREFIX_IMPRESSION + widget.id,
       sessionImpressions = ~~sessionStorage.getItem(id),
       sessionImpressionsForAllWidgets = 0,
-      total = readCookie(id),
+      total = read(id),
       now = Date.now();
 
   // retain backwards compatibility if using legacy method of:

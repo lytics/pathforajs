@@ -58,7 +58,7 @@ describe('when setting display conditions', function () {
 
   it('should show if impression buffer met', function () {
     var widgetId = 'legacyImpressionWidget3';
-    pathfora.utils.saveCookie(
+    pathfora.utils.write(
       'PathforaImpressions_' + widgetId,
       '2|' + Date.now()
     );
@@ -87,7 +87,7 @@ describe('when setting display conditions', function () {
 
   it('should not show if impression buffer not met', function () {
     var widgetId = 'legacyImpressionWidget3';
-    pathfora.utils.saveCookie(
+    pathfora.utils.write(
       'PathforaImpressions_' + widgetId,
       '2|' + Date.now()
     );
@@ -115,7 +115,7 @@ describe('when setting display conditions', function () {
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
   it('should accept and parse impression cookies with comma values', function () {
     var widgetId = 'impressionComma';
-    pathfora.utils.saveCookie(
+    pathfora.utils.write(
       'PathforaImpressions_' + widgetId,
       '2,' + Date.now()
     );
@@ -205,11 +205,11 @@ describe('when setting display conditions', function () {
   });
 
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
-  it('should accept and parse hideAfterAction cookies with comma values', function () {
+  it('should accept and parse hideAfterAction records with comma values', function () {
     var widgetId = 'hideAfterActionComma';
-    pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '2,' + Date.now());
-    pathfora.utils.saveCookie('PathforaCancel_' + widgetId, '1,' + Date.now());
-    pathfora.utils.saveCookie('PathforaClosed_' + widgetId, '1,' + Date.now());
+    pathfora.utils.write('PathforaConfirm_' + widgetId, '2,' + Date.now());
+    pathfora.utils.write('PathforaCancel_' + widgetId, '1,' + Date.now());
+    pathfora.utils.write('PathforaClosed_' + widgetId, '1,' + Date.now());
 
     var form = new pathfora.Form({
       id: widgetId,
@@ -242,7 +242,7 @@ describe('when setting display conditions', function () {
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
   it('should accept and parse impression cookies with comma values', function () {
     var widgetId = 'impressionComma';
-    pathfora.utils.saveCookie(
+    pathfora.utils.write(
       'PathforaImpressions_' + widgetId,
       '2,' + Date.now()
     );

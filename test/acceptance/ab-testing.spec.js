@@ -82,7 +82,8 @@ describe('when performing AB testing', function () {
 
   it('should show the second group if the cookie value is < 0.5', function () {
     var id = 'ab-3';
-    pathfora.utils.saveCookie('PathforaTest_' + id, 0.2164252290967852);
+
+    pathfora.utils.write('PathforaTest_' + id, 0.2164252290967852);
 
     var widgetA = new pathfora.Message({
       id: 'ab-widget3-a',
