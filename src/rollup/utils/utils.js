@@ -11,6 +11,12 @@ import saveCookie from './cookies/save-cookie';
 import deleteCookie from './cookies/delete-cookie';
 import updateLegacyCookies from './cookies/update-legacy-cookies';
 
+// persist
+import expiringLocalStorage from './persist/expiring-local-storage';
+import read from './persist/read';
+import write from './persist/write';
+import erase from './persist/erase';
+
 // scaffold
 import initWidgetScaffold from './scaffold/init-scaffold';
 import insertWidget from './scaffold/insert-widget';
@@ -30,6 +36,7 @@ import emailValid from './email-valid';
 import decodeSafe from './decode-safe';
 import isNotEncoded from './is-not-encoded';
 
+
 /**
  * Object containing utility functions
  *
@@ -47,6 +54,12 @@ export var utils = {
   saveCookie: saveCookie,
   deleteCookie: deleteCookie,
   updateLegacyCookies: updateLegacyCookies,
+
+  // persist
+  read: read,
+  write: write,
+  erase: erase,
+  store: expiringLocalStorage,
 
   // scaffold
   initWidgetScaffold: initWidgetScaffold,

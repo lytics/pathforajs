@@ -16,9 +16,10 @@ import {
 } from '../../globals/config';
 
 // utils
-import deleteCookie from './delete-cookie';
-import saveCookie from './save-cookie';
+import write from '../persist/write';
+import deleteCookie from '../cookies/delete-cookie';
 import isNotEncoded from '../is-not-encoded';
+import decodeSafe from '../decode-safe';
 
 /**
  * Update legacy cookies to
@@ -48,29 +49,18 @@ export default function updateLegacyCookies () {
   var cookieFunc = function (c) {
     var split = c.trim().split('=');
 
-
     if (split.length === 2) {
       var name = split[0];
       var val = split[1];
-      if (isNotEncoded(val)) {
-        deleteCookie(name);
-        saveCookie(name, val);
-      }
 
-      // prevent double encoding bug
-      try {
-        if (decodeURIComponent(val) !== decodeURIComponent(decodeURIComponent(val))) {
-          deleteCookie(name);
-          saveCookie(name, decodeURIComponent(decodeURIComponent(val)));
-        }
-      } catch (e) {
-        // recover
-      }
+      deleteCookie(name);
+      write(name, decodeSafe(val));
     }
   };
 
   var sessionFunc = function (c) {
     var val = sessionStorage.getItem(c);
+
     if (isNotEncoded(val)) {
       sessionStorage.removeItem(c);
       sessionStorage.setItem(encodeURIComponent(c), encodeURIComponent(val));

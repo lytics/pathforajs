@@ -27,6 +27,7 @@ import widgetResizeListener from './widget-resize-listener';
  * @exports showWidget
  * @params {object} widget
  */
+
 export default function showWidget (w) {
   var openWidget = function (widget) {
     // FIXME Change to Array#filter and Array#length

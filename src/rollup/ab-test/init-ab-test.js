@@ -4,8 +4,8 @@
 import { pathforaDataObject } from '../globals/config';
 
 // utils
-import saveCookie from '../utils/cookies/save-cookie';
-import readCookie from '../utils/cookies/read-cookie';
+import write from '../utils/persist/write';
+import read from '../utils/persist/read';
 
 /**
  * Initialized A/B test from user config
@@ -16,7 +16,7 @@ import readCookie from '../utils/cookies/read-cookie';
 export default function initializeABTesting (abTests) {
   abTests.forEach(function (abTest) {
     var abTestingType = abTest.type,
-        userAbTestingValue = readCookie(abTest.cookieId),
+        userAbTestingValue = read(abTest.cookieId),
         userAbTestingGroup = 0,
         date = new Date();
 
@@ -26,7 +26,7 @@ export default function initializeABTesting (abTests) {
 
     // NOTE Always update the cookie to get the new exp date.
     date.setDate(date.getDate() + 365);
-    saveCookie(abTest.cookieId, userAbTestingValue, date);
+    write(abTest.cookieId, userAbTestingValue, date);
 
     // NOTE Determine visible group for the user
     var i = 0;
