@@ -4,9 +4,6 @@
 import document from '../../dom/document';
 import window from '../../dom/window';
 
-// display conditions
-import removeWatcher from '../watchers/remove-watcher';
-
 /**
  * Setup watcher for displayWhenElementVisible
  * display condition
@@ -16,7 +13,7 @@ import removeWatcher from '../watchers/remove-watcher';
  * @params {object} widget
  * @returns {object} watcher
  */
-export default function registerElementWatcher (selector, widget) {
+export default function registerElementWatcher (selector) {
   var watcher = {
     elem: document.querySelector(selector),
 
@@ -25,7 +22,6 @@ export default function registerElementWatcher (selector, widget) {
           scrolledToBottom = window.innerHeight + scrollTop >= document.body.offsetHeight;
 
       if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-        removeWatcher(watcher, widget);
         return true;
       }
       return false;
