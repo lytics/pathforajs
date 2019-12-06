@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.0',
+  var PF_VERSION = '1.2.1',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -3007,12 +3007,12 @@
 
   /** @module pathfora/display-conditions/watchers/validate-watchers */
 
-  function validateWatchers (widget, cb) {
+  function validateWatchers (widget, cb, e) {
     var valid = true;
 
     for (var key in widget.watchers) {
       if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-        valid = widget.valid && widget.watchers[key].check();
+        valid = valid && widget.valid && widget.watchers[key].check(e);
       }
     }
 
@@ -3024,6 +3024,7 @@
       showWidget(widget);
       widget.valid = false;
       cb();
+      widget.watchers = [];
 
       return true;
     }
@@ -4229,6 +4230,47 @@
     return false;
   }
 
+  /** @module pathfora/display-conditions/exit-intent/register-exit-intent-watcher */
+
+  /**
+   * Setup watcher for showOnExitIntent
+   * display condition
+   *
+   * @exports registerExitIntentWatcher
+   * @params {string} selector
+   * @params {object} widget
+   * @returns {object} watcher
+   */
+  function registerExitIntentWatcher () {
+    var watcher = {
+      positions: [],
+      check: function (e) {
+        if (e != null) {
+          var from = e.relatedTarget || e.toElement;
+
+          // When there is registered movement and leaving the root element
+          if (watcher.positions.length > 1 && (!from || from.nodeName === 'HTML')) {
+
+            var y = watcher.positions[watcher.positions.length - 1].y;
+            var py = watcher.positions[watcher.positions.length - 2].y;
+            var ySpeed = Math.abs(y - py);
+
+            watcher.positions = [];
+
+            // Did the cursor move up?
+            // Is it reasonable to believe that it left the top of the page, given the position and the speed?
+            if (y - ySpeed <= 50 && y < py) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    };
+
+    return watcher;
+  }
+
   var handlers = [];
 
   var eventHub = {
@@ -4261,48 +4303,28 @@
    * @params {object} widget
    * @returns {boolean}
    */
-  function initializeExitIntent (widget) {
-    var positions = [];
+  function initializeExitIntent (widget, watcher) {
     if (!widget.exitIntentListener) {
       widget.exitIntentListener = function (e) {
-        positions.push({
+        watcher.positions.push({
           x: e.clientX,
           y: e.clientY
         });
-        if (positions.length > 30) {
-          positions.shift();
+        if (watcher.positions.length > 30) {
+          watcher.positions.shift();
         }
       };
 
       widget.exitIntentTrigger = function (e) {
-        var from = e.relatedTarget || e.toElement;
-
-        // When there is registered movement and leaving the root element
-        if (positions.length > 1 && (!from || from.nodeName === 'HTML')) {
-          var valid;
-
-          var y = positions[positions.length - 1].y;
-          var py = positions[positions.length - 2].y;
-          var ySpeed = Math.abs(y - py);
-
-          // Did the cursor move up?
-          // Is it reasonable to believe that it left the top of the page, given the position and the speed?
-          valid = widget.valid && y - ySpeed <= 50 && y < py;
-
-          if (valid) {
-            validateWatchers(widget, function () {
-              if (typeof document$1.addEventListener === 'function') {
-                eventHub.remove(document$1, 'mousemove', widget.exitIntentListener);
-                eventHub.remove(document$1, 'mouseout', widget.exitIntentTrigger);
-              } else {
-                document$1.onmousemove = null;
-                document$1.onmouseout = null;
-              }
-            });
+        validateWatchers(widget, function () {
+          if (typeof document$1.removeEventListener === 'function') {
+            eventHub.remove(document$1, 'mousemove', widget.exitIntentListener);
+            eventHub.remove(document$1, 'mouseout', widget.exitIntentTrigger);
+          } else {
+            document$1.onmousemove = null;
+            document$1.onmouseout = null;
           }
-
-          positions = [];
-        }
+        }, e);
       };
 
       // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
@@ -4315,16 +4337,7 @@
       }
     }
     return true;
-  }
 
-  /** @module pathfora/display-conditions/watchers/remove-watcher */
-
-  function removeWatcher (watcher, widget) {
-    for (var key in widget.watchers) {
-      if (widget.watchers.hasOwnProperty(key) && watcher === widget.watchers[key]) {
-        widget.watchers.splice(key, 1);
-      }
-    }
   }
 
   /** @module pathfora/display-conditions/scroll/register-element-watcher */
@@ -4338,7 +4351,7 @@
    * @params {object} widget
    * @returns {object} watcher
    */
-  function registerElementWatcher (selector, widget) {
+  function registerElementWatcher (selector) {
     var watcher = {
       elem: document$1.querySelector(selector),
 
@@ -4347,7 +4360,6 @@
             scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
 
         if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-          removeWatcher(watcher, widget);
           return true;
         }
         return false;
@@ -4370,7 +4382,7 @@
     widget.scrollListener = function () {
       validateWatchers(widget, function () {
         if (typeof window.addEventListener === 'function') {
-          window.removeEventListener('scroll', widget.scrollListener);
+          eventHub.remove(window, 'scroll', widget.scrollListener);
         } else {
           window.onscroll = null;
         }
@@ -4397,7 +4409,7 @@
    * @params {object} widget
    * @returns {object} watcher
    */
-  function registerPositionWatcher (percent, widget) {
+  function registerPositionWatcher (percent) {
     var watcher = {
       check: function () {
         var height = Math.max(document$1.body.scrollHeight, document$1.body.offsetHeight, document$1.documentElement.clientHeight, document$1.documentElement.scrollHeight, document$1.documentElement.offsetHeight),
@@ -4405,7 +4417,6 @@
             offset = document$1.documentElement.scrollTop || document$1.body.scrollTop;
 
         if (offset >= positionInPixels) {
-          removeWatcher(watcher, widget);
           return true;
         }
         return false;
@@ -4429,7 +4440,6 @@
     var watcher = {
       check: function () {
         if (value && widgetTracker.triggeredWidgets[widget.id] || widgetTracker.triggeredWidgets['*']) {
-          removeWatcher(watcher, widget);
           return true;
         }
         return false;
@@ -4525,13 +4535,14 @@
 
     // display conditions based on page interaction
     if (condition.showOnExitIntent) {
-      initializeExitIntent(widget);
+      watcher = registerExitIntentWatcher();
+      widget.watchers.push(watcher);
+      initializeExitIntent(widget, watcher);
     }
 
     if (condition.displayWhenElementVisible) {
       watcher = registerElementWatcher(
-        condition.displayWhenElementVisible,
-        widget
+        condition.displayWhenElementVisible
       );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
@@ -4539,8 +4550,7 @@
 
     if (condition.scrollPercentageToDisplay) {
       watcher = registerPositionWatcher(
-        condition.scrollPercentageToDisplay,
-        widget
+        condition.scrollPercentageToDisplay
       );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
