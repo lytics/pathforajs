@@ -19,7 +19,7 @@ export default function initializeScrollWatchers (widget) {
   widget.scrollListener = function () {
     validateWatchers(widget, function () {
       if (typeof window.addEventListener === 'function') {
-        window.removeEventListener('scroll', widget.scrollListener);
+        eventHub.remove(window, 'scroll', widget.scrollListener);
       } else {
         window.onscroll = null;
       }

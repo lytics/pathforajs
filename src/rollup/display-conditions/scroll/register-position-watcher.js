@@ -3,9 +3,6 @@
 // dom
 import document from '../../dom/document';
 
-// display conditions
-import removeWatcher from '../watchers/remove-watcher';
-
 /**
  * Setup watcher for scrollPercentageToDisplay
  * display condition
@@ -15,7 +12,7 @@ import removeWatcher from '../watchers/remove-watcher';
  * @params {object} widget
  * @returns {object} watcher
  */
-export default function registerPositionWatcher (percent, widget) {
+export default function registerPositionWatcher (percent) {
   var watcher = {
     check: function () {
       var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
@@ -23,7 +20,6 @@ export default function registerPositionWatcher (percent, widget) {
           offset = document.documentElement.scrollTop || document.body.scrollTop;
 
       if (offset >= positionInPixels) {
-        removeWatcher(watcher, widget);
         return true;
       }
       return false;
