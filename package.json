@@ -30,7 +30,7 @@
     "gulp-open": "^3.0.1",
     "gulp-rename": "^1.4.0",
     "gulp-replace": "^1.0.0",
-    "gulp-shell": "^0.6.5",
+    "gulp-shell": "^0.7.1",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.7",
     "html-minifier": "^4.0.0",
