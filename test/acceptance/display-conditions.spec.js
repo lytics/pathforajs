@@ -37,6 +37,39 @@ describe('when setting display conditions', function () {
     globalReset();
   });
 
+  it('should consider scrollPercentagetoDisplay', function (done) {
+    $(document.body).append(
+      '<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>'
+    );
+
+    var subscription = new pathfora.Message({
+      layout: 'modal',
+      id: 'scrollModal',
+      headline: 'Heyyyy!',
+      msg: 'You have scrolled far, nice work.',
+      okMessage: 'Sure, whatever',
+      okShow: true,
+      displayConditions: {
+        scrollPercentageToDisplay: 50
+      }
+    });
+    pathfora.initializeWidgets([subscription]);
+
+    var widget = $('#' + subscription.id);
+    expect(widget.length).toBe(0);
+
+    var height = $(document.body).height();
+    window.scroll(0, height);
+
+    setTimeout(function () {
+      widget = $('#' + subscription.id);
+      expect(widget.length).toBe(1);
+
+      $('#height-element').remove();
+      done();
+    }, 100);
+  });
+
   it('should show when all manualTrigger widgets are triggered', function () {
     var customWidget = new pathfora.Message({
       msg: 'custom trigger test',
