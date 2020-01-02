@@ -6,7 +6,7 @@ node_js:
 addons:
   chrome: stable
 script:
-- npm run prod
+- yarn run prod
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 before_install:

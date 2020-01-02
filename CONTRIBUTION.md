@@ -28,7 +28,7 @@ Below is an example PR written in markdown.
 
 !["Pull Requests"](https://s3-us-west-2.amazonaws.com/pros-lytics/screenshots/issue261_pr_markdown.png)
 
-PathforaJS leverages Travis CI for continuous integration. As a result, existing tests will run against all the PRs and all branches pushed up to the repo. PRs will not get reviewed until CI is green. Still, it is advisable to run `npm test` on your local branch before creating a PR.
+PathforaJS leverages Travis CI for continuous integration. As a result, existing tests will run against all the PRs and all branches pushed up to the repo. PRs will not get reviewed until CI is green. Still, it is advisable to run `yarn test` on your local branch before creating a PR.
 
 Below is an example of a stale PR, with failing Travis CI. Click the `Details` link to see what's going on with Travis CI.
 
