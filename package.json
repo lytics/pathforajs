@@ -10,10 +10,6 @@
   "bugs": {
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
-  "devEngines": {
-    "node": "8.x",
-    "npm": "5.x"
-  },
   "devDependencies": {
     "eslint": "^6.8.0",
     "gh-pages": "^2.0.1",
@@ -56,10 +52,10 @@
     "test": "gulp build && karma start --single-run",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
-    "prod": "npm run test && npm run clean && npm run build:prod",
+    "prod": "yarn run test && yarn run clean && yarn run build:prod",
     "lint": "eslint src/**/*.js test/**/*.js",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "yarn run lint -- --fix",
     "docs": "jsdoc src/pathfora.js -d docs",
-    "docs:publish": "npm run docs && gh-pages -d docs"
+    "docs:publish": "yarn run docs && gh-pages -d docs"
   }
 }
