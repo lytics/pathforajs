@@ -24,7 +24,7 @@
     "gulp-flatmap": "^1.0.2",
     "gulp-less": "^4.0.1",
     "gulp-open": "^3.0.1",
-    "gulp-rename": "^1.4.0",
+    "gulp-rename": "^2.0.0",
     "gulp-replace": "^1.0.0",
     "gulp-shell": "^0.7.1",
     "gulp-uglify": "^3.0.2",
