@@ -70,6 +70,39 @@ describe('when setting display conditions', function () {
     }, 100);
   });
 
+  it('should correctly calculate scroll percentage when scroll offset cannot be greater than scroll position', function (done) {
+    $(document.body).append(
+      '<div id=\'height-element\' style=\'height:800px; display:block;\'>Test</div>'
+    );
+
+    var subscription = new pathfora.Message({
+      layout: 'modal',
+      id: 'scrollModal',
+      headline: 'Heyyyy!',
+      msg: 'You have scrolled far, nice work.',
+      okMessage: 'Sure, whatever',
+      okShow: true,
+      displayConditions: {
+        scrollPercentageToDisplay: 30
+      }
+    });
+    pathfora.initializeWidgets([subscription]);
+
+    var widget = $('#' + subscription.id);
+    expect(widget.length).toBe(0);
+
+    var height = $(document.body).height();
+    window.scroll(0, height / 2);
+
+    setTimeout(function () {
+      widget = $('#' + subscription.id);
+      expect(widget.length).toBe(1);
+
+      $('#height-element').remove();
+      done();
+    }, 100);
+  });
+
   it('should show when all manualTrigger widgets are triggered', function () {
     var customWidget = new pathfora.Message({
       msg: 'custom trigger test',

@@ -15,14 +15,17 @@ import document from '../../dom/document';
 export default function registerPositionWatcher (percent) {
   var watcher = {
     check: function () {
-      var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
-          positionInPixels = height * (percent / 100),
-          offset = document.documentElement.scrollTop || document.body.scrollTop;
+      /* istanbul ignore next */
+      var scrollingElement = document.documentElement.scrollHeight > document.body.scrollHeight
+            ? document.documentElement
+            : document.body,
+          scrollTop = scrollingElement.scrollTop,
+          scrollHeight = scrollingElement.scrollHeight,
+          clientHeight = scrollingElement.clientHeight,
+          percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-      if (offset >= positionInPixels) {
-        return true;
-      }
-      return false;
+      // if NaN, will always return `false`
+      return percentageScrolled >= percent;
     }
   };
 
