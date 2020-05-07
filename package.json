@@ -44,7 +44,7 @@
     "less": "^3.9.0",
     "karma-rollup-preprocessor": "^7.0.2",
     "phantomjs-prebuilt": "^2.1.16",
-    "rollup": "^1.27.14",
+    "rollup": "^2.8.2",
     "rollup-plugin-istanbul": "^2.0.1",
     "walk": "^2.3.14"
   },
