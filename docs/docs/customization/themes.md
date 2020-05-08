@@ -1,4 +1,4 @@
-Pathfora has two basic built-in color themes: light (default if no theme is set) and dark. Furthermore, the user can set their own custom colors for any element of the module within the javascript configuration. For more advanced color and style customization you can [add your own CSS](/customization/css.md).
+Pathfora has two basic built-in color themes: light (default if no theme is set) and dark. Furthermore, the user can set their own custom colors for any element of the module within the javascript configuration. For more advanced color and style customization you can [add your own CSS](/customization/css).
 
 ## theme
 Set the color scheme of the module. This can be a predefined theme or indicate that the module should have custom colors.

@@ -1,4 +1,4 @@
-Pathfora modules can have up to two action buttons "confirm" and "cancel". You can set custom text for these buttons as well as select to hide one or both of them. See the [callbacks](/callbacks.md) section for how to add javascript callbacks on these buttons.
+Pathfora modules can have up to two action buttons "confirm" and "cancel". You can set custom text for these buttons as well as select to hide one or both of them. See the [callbacks](/callbacks) section for how to add javascript callbacks on these buttons.
 
 ## okShow
 
