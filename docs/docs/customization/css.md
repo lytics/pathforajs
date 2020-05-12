@@ -1,8 +1,8 @@
-Pathfora is built to be entirely customizable for developers. With the javascript config alone you can [change the colors](/customization/themes) of any element of the module. But, to make your module fully fit the look and feel of your site you can add custom CSS.
+Pathfora is built to be entirely customizable for developers. With the javascript config alone you can [change the colors](../themes) of any element of the module. But, to make your module fully fit the look and feel of your site you can add custom CSS.
 
 ## Key Class Names
 
-The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the containing div surrounding the content, but for [modal](/layouts/modal) and [gate](/types/gate) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
+The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the containing div surrounding the content, but for [modal](../../layouts/modal) and [gate](../../types/gate) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
 
 **Subclasses of `pf-widget`:**
 
@@ -28,7 +28,7 @@ Within the `pf-widget` div most key elements are assigned class names. Form comp
 | `pf-widget-btn` | general class for all buttons |
 | `pf-widget-ok` | "Confirm" button |
 | `pf-widget-cancel` | "Cancel" button |
-| `pf-widget-img` | image element for modules of [variant 2](/layouts/modal#variant)
+| `pf-widget-img` | image element for modules of [variant 2](../../layouts/modal#variant)
 
 To see these classes in action, you can view the html [templates](https://github.com/lytics/pathforajs/tree/master/src/templates) that will be rendered on your website. This is the html that gets minified, and added to a div with the class `pf-widget`. That div then gets added to the DOM of your website.
 

@@ -17,7 +17,7 @@ pathfora.initializeWidgets([moduleA]);
 
 ## ABTest
 
-Pathfora has a special configuration method for A/B Testing. This configuration is then used as a parameter for [initializeABTesting](/api/methods/#initializeabtesting).
+Pathfora has a special configuration method for A/B Testing. This configuration is then used as a parameter for [initializeABTesting](../api/methods/#initializeabtesting).
 
 <table>
   <thead>
@@ -61,7 +61,7 @@ In the example below roughly half of all users will be shown a gated form (A) an
 
 
 ## With Audience Targeting
-A/B Testing can be combined with [audience targeting](targeting) to divide an audience into a 50/50 split. 
+A/B Testing can be combined with [audience targeting](../targeting) to divide an audience into a 50/50 split. 
 
 In the example below module "A" will be displayed to roughly half of the users in the `smt_new` audience, while the other half of the audience will be shown module "B".
 
