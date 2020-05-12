@@ -25,7 +25,7 @@ pathfora.customData.name = 'Jon Snow';
 
 For example, if a user submits a form on your website asking for their info and you would like to immediately use this data in a module, you can add it to the customData object before initializing the widget and use an entity field template.
 
-If the data isn't present for the user viewing the modal there are a couple options available to control the behavior of the module. By default if there is no fallback defined for the field, pathfora will prevent the module from being displayed for visitors who lack the necessary fields. This behavior can be changed with the [showOnMissingFields](/display_conditions.md#showonmissingfields) display condition.
+If the data isn't present for the user viewing the modal there are a couple options available to control the behavior of the module. By default if there is no fallback defined for the field, pathfora will prevent the module from being displayed for visitors who lack the necessary fields. This behavior can be changed with the [showOnMissingFields](/display_conditions#showonmissingfields) display condition.
 
 # Defining a Fallback (default) Value
 

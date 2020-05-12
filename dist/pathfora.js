@@ -4412,14 +4412,17 @@
   function registerPositionWatcher (percent) {
     var watcher = {
       check: function () {
-        var height = Math.max(document$1.body.scrollHeight, document$1.body.offsetHeight, document$1.documentElement.clientHeight, document$1.documentElement.scrollHeight, document$1.documentElement.offsetHeight),
-            positionInPixels = height * (percent / 100),
-            offset = document$1.documentElement.scrollTop || document$1.body.scrollTop;
+        /* istanbul ignore next */
+        var scrollingElement = document$1.documentElement.scrollHeight > document$1.body.scrollHeight
+              ? document$1.documentElement
+              : document$1.body,
+            scrollTop = scrollingElement.scrollTop,
+            scrollHeight = scrollingElement.scrollHeight,
+            clientHeight = scrollingElement.clientHeight,
+            percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-        if (offset >= positionInPixels) {
-          return true;
-        }
-        return false;
+        // if NaN, will always return `false`
+        return percentageScrolled >= percent;
       }
     };
 
