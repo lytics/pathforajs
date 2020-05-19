@@ -1,6 +1,6 @@
 An inline module can be inserted into an existing `<div>` element on your page. This allows you to render personalized messages and forms anywhere on your page.
 
-**Note:** inline modules do not support the close or cancel option. Clicking the confirm button will trigger [success state](/customization/form#success) for form or subscription modules, but we recommend setting a [custom callback](/callbacks) for the confirm button of a inline message module.
+**Note:** inline modules do not support the close or cancel option. Clicking the confirm button will trigger [success state](../../customization/form#success) for form or subscription modules, but we recommend setting a [custom callback](../../callbacks) for the confirm button of a inline message module.
 
 ## position
 

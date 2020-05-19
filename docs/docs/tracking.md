@@ -10,7 +10,7 @@ As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/p
 | `pf-widget-layout` | string | layout of the module |
 | `pf-widget-variant` | int | variant of the module |
 | `pf-widget-event` | string | name of the event (see below) |
-| `pf-widget-action` | string | custom tracking names for button click events as defined in [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) |
+| `pf-widget-action` | string | custom tracking names for button click events as defined in [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) |
 | `pf-form-username` | string | user submitted value of "name" field on module |
 | `pf-form-title` | string | user submitted value of "title" field on module |
 | `pf-form-email` | string | user submitted value of "email" field on module |
@@ -90,4 +90,4 @@ If this flag is enabled, pathfora will send event data from the modules on your 
 | eventCategory | string | Lytics |
 | eventAction | string | [id of module] : [event name] |
 
-The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) settings this will override the event name for those actions.
+The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) settings this will override the event name for those actions.

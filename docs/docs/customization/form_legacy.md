@@ -1,8 +1,8 @@
-Pathfora now supports fully customizable [form elements](/types/form). This doc outlines the customization options for deprecated forms including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
+Pathfora now supports fully customizable [form elements](../../types/form). This doc outlines the customization options for deprecated forms including hiding specific input fields, setting placeholder text, and selecting which fields are required for the user to submit the form.
 
 ## fields
 
-Select which fields should be a part of the module's form. By default, a [form](/types/form) module has the name, email, title, and message fields. And a [gate](/types/form) module has the name, email, company, and title fields. 
+Select which fields should be a part of the module's form. By default, a [form](../../types/form) module has the name, email, title, and message fields. And a [gate](../../types/form) module has the name, email, company, and title fields. 
 
 <table>
   <thead>

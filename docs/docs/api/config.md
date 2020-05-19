@@ -1,4 +1,4 @@
-For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as a second, optional argument to [initializeWidgets](/api/methods#initializewidgets).
+For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as a second, optional argument to [initializeWidgets](../methods#initializewidgets).
 
 ``` javascript
 var config = {
