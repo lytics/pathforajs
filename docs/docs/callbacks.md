@@ -1,7 +1,7 @@
 All actions taken for clicking a button, submitting a form, and other such events support optional javascript callback settings.
 
 ## confirmAction
-Set a [tracking name](/tracking.md) and javascript callback for a "confirm" button click event.
+Set a [tracking name](../tracking) and javascript callback for a "confirm" button click event.
 
 <table>
   <thead>
@@ -72,7 +72,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "confirm" butt
 <pre data-src="../examples/src/callbacks/confirmAction.js"></pre>
 
 ## cancelAction
-Set a [tracking name](/tracking.md) and javascript callback for a "cancel" button click event.
+Set a [tracking name](../tracking) and javascript callback for a "cancel" button click event.
 
 <table>
   <thead>
@@ -133,7 +133,7 @@ Set a [tracking name](/tracking.md) and javascript callback for a "cancel" butto
 <pre data-src="../examples/src/callbacks/cancelAction.js"></pre>
 
 ## closeAction
-Set a [tracking name](/tracking.md) and javascript callback for a "close" button click event.
+Set a [tracking name](../tracking) and javascript callback for a "close" button click event.
 
 <table>
   <thead>
@@ -256,7 +256,7 @@ Javascript callback function on loading the module, triggered when the module is
 
 
 ## onClick
-Javascript callback function **for [button layouts](/layouts/button.md) only** on click of the button widget.
+Javascript callback function **for [button layouts](../layouts/button) only** on click of the button widget.
 
 <table>
   <thead>

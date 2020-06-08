@@ -82,7 +82,7 @@ displayConditions: {
 ```
 
 ## showOnMissingFields
-By default, a module will be hidden if tried to include an [entity field](customization/entity_fields.md) that the user does not have. showOnMissingFields can override this beahvior.
+By default, a module will be hidden if tried to include an [entity field](../customization/entity_fields) that the user does not have. showOnMissingFields can override this beahvior.
 
 <table>
   <thead>
@@ -539,7 +539,7 @@ displayConditions: {
 
 ## manualTrigger
 
-Control when a module is triggered with javascript. Use this displayCondition in conjunction with the [triggerWidgets](api/methods.md#triggerWidgets).
+Control when a module is triggered with javascript. Use this displayCondition in conjunction with the [triggerWidgets](../api/methods#triggerWidgets).
 
 <table>
   <thead>
