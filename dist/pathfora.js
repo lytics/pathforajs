@@ -4398,6 +4398,32 @@
     return true;
   }
 
+  /**
+  * Based on https://github.com/cgygd/scrolling-element
+  */
+
+  var element = null;
+
+  /* istanbul ignore next */
+  function getScrollingElement () {
+    if (element) {
+      return element;
+    }
+    if (document.body.scrollTop) {
+      // speed up if scrollTop > 0
+      return (element = document.body);
+    }
+    var iframe = document.createElement('iframe');
+    iframe.style.height = '1px';
+    document.documentElement.appendChild(iframe);
+    var doc = iframe.contentWindow.document;
+    doc.write('<!DOCTYPE html><div style="height:9999em">x</div>');
+    doc.close();
+    var isCompliant = doc.documentElement.scrollHeight > doc.body.scrollHeight;
+    iframe.parentNode.removeChild(iframe);
+    return (element = isCompliant ? document.documentElement : document.body);
+  }
+
   /** @module pathfora/display-conditions/scroll/register-position-watcher */
 
   /**
@@ -4413,9 +4439,7 @@
     var watcher = {
       check: function () {
         /* istanbul ignore next */
-        var scrollingElement = document$1.documentElement.scrollHeight > document$1.body.scrollHeight
-              ? document$1.documentElement
-              : document$1.body,
+        var scrollingElement = document$1.scrollingElement || getScrollingElement(),
             scrollTop = scrollingElement.scrollTop,
             scrollHeight = scrollingElement.scrollHeight,
             clientHeight = scrollingElement.clientHeight,

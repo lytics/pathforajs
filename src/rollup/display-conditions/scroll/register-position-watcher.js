@@ -3,6 +3,8 @@
 // dom
 import document from '../../dom/document';
 
+import getScrollingElement from '../../utils/get-scrolling-element';
+
 /**
  * Setup watcher for scrollPercentageToDisplay
  * display condition
@@ -16,9 +18,7 @@ export default function registerPositionWatcher (percent) {
   var watcher = {
     check: function () {
       /* istanbul ignore next */
-      var scrollingElement = document.documentElement.scrollHeight > document.body.scrollHeight
-            ? document.documentElement
-            : document.body,
+      var scrollingElement = document.scrollingElement || getScrollingElement(),
           scrollTop = scrollingElement.scrollTop,
           scrollHeight = scrollingElement.scrollHeight,
           clientHeight = scrollingElement.clientHeight,
