@@ -511,4 +511,40 @@ describe('the tracking component', function () {
 
     jasmine.Ajax.uninstall();
   });
+
+  it('should call censorTrackingKeys with widget.censorTrackingKeys when defined', function (done) {
+    var formModal = new pathfora.Form({
+      layout: 'modal',
+      id: 'tracking-widget-censored',
+      msg: 'Form modal - report test',
+      censorTrackingKeys: [/pf-form-/]
+    });
+
+    pathfora.initializeWidgets([formModal]);
+
+    var widget = $('#' + formModal.id);
+
+    setTimeout(function () {
+      var form = widget.find('form');
+      form.find('input[type=text]').val('test');
+      form.find('input[name~=email]').val('webmaster@example.com');
+
+      spyOn(jstag, 'send');
+      form.find('button[type=submit]').click();
+
+      setTimeout(function () {
+        expect(jstag.send).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            'pf-widget-event': 'submit'
+          })
+        );
+        expect(jstag.send).not.toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            'pf-form-email': 'webmaster@example.com'
+          })
+        );
+        done();
+      }, 100);
+    }, 200);
+  });
 });
