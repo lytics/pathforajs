@@ -154,5 +154,5 @@ export default function trackWidgetAction (action, widget, htmlElement) {
   }
 
   params['pf-widget-event'] = action;
-  reportData(params);
+  reportData(params, widget);
 }
