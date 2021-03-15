@@ -48,3 +48,29 @@ Positition of the button module relative to the browser window.
 ![Position Button Modules](../examples/img/layouts/button/positions.png)
 
 <pre data-src="../../examples/src/layouts/button/positions.js"></pre>
+
+## positionSelector
+
+Optionally define the DOM selector of the parent element you would like to insert the module into an element besides the document body.
+
+**Note**: Because buttons use the `position: fixed` css rule your button may or may not "appear" within your selected element, so while the HTML for your button will be inserted into the DOM element defined by `positionSelector` it will appear fixed and full width on the page.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>positionSelector</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>selector</td>
+    <td>Javascript selector of an existing div on the page where the module should appear.</td>
+  </tr>
+</table>
+
+<h3>Custom Position - <a href="../../examples/preview/layouts/button/positionSelector.html" target="_blank">Live Preview</a></h3>
+
+<pre data-src="../../examples/src/layouts/button/positionSelector.js"></pre>

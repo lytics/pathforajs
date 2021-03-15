@@ -1,0 +1,13 @@
+.overlay {
+  width: 80%;
+  min-height: 80%;
+  height: 80%;
+  border: 1px dotted black;
+  display: block;
+  position: relative;
+  margin: auto;
+}
+
+html, body {
+  height: 100%;
+}
