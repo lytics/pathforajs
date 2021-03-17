@@ -1,18 +1,24 @@
 /** @module pathfora/data/request/report-data */
 
 import window from '../../dom/window';
+import censorTrackingKeys from '../../utils/censor-tracking-keys';
 
 /**
  * Send data object to Lytics and GA
  *
  * @exports reportData
  * @params {object} data
+ * @widget {object}
  */
-export default function reportData (data) {
+export default function reportData (data, widget) {
   var gaLabel, trackers;
 
   if (typeof jstag === 'object') {
-    window.jstag.send(data);
+    window.jstag.send(
+      widget.censorTrackingKeys
+        ? censorTrackingKeys(data, widget.censorTrackingKeys)
+        : data
+    );
   } else {
     // NOTE Cannot find Lytics tag, reporting disabled
   }

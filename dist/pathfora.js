@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.4',
+  var PF_VERSION = '1.2.5',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -1112,6 +1112,28 @@
     return valid;
   }
 
+  /**
+   * Censor an object by its keys, by comparing against an array of strings and/or regexps. In the case of strings,
+   * only exact matches are censored. For non-strings, if the object's test method returns true, the key will be censored.
+   *
+   * @param {object} data the data to censor
+   * @param {obejct} keysToReject an array of strings or regexps to censor the data by preparatory to sending
+   */
+  function censorTrackingKeys (data, keysToReject) {
+    return Object.keys(data)
+      .filter(function (key) {
+        return !keysToReject.some(function (keyToReject) {
+          return typeof keyToReject === 'string'
+            ? key === keyToReject
+            : keyToReject.test(key);
+        });
+      })
+      .reduce(function (memo, key) {
+        memo[key] = data[key];
+        return memo;
+      }, {});
+  }
+
   /** @module pathfora/data/request/report-data */
 
   /**
@@ -1119,12 +1141,17 @@
    *
    * @exports reportData
    * @params {object} data
+   * @widget {object}
    */
-  function reportData (data) {
+  function reportData (data, widget) {
     var gaLabel, trackers;
 
     if (typeof jstag === 'object') {
-      window.jstag.send(data);
+      window.jstag.send(
+        widget.censorTrackingKeys
+          ? censorTrackingKeys(data, widget.censorTrackingKeys)
+          : data
+      );
     }
 
     if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
@@ -1296,7 +1323,7 @@
     }
 
     params['pf-widget-event'] = action;
-    reportData(params);
+    reportData(params, widget);
   }
 
   /** @module pathfora/display-conditions/impressions/increment-impressions */
@@ -1381,7 +1408,11 @@
       break;
     }
 
-    if (choices.indexOf(config.position) === -1) ;
+    if (choices.length && choices.indexOf(config.position) === -1) {
+      throw new Error(
+        config.position + ' is not a valid position for ' + config.layout
+      );
+    }
   }
 
   /** @module pathfora/widgets/setup-widget-position */
@@ -1773,8 +1804,6 @@
           }
         };
       }
-      break;
-    default:
       break;
     }
 
@@ -2890,13 +2919,23 @@
       // increment impressions for widget regardless of display condition need(s)
       incrementImpressions(widget);
 
-      var node = createWidgetHtml(widget);
+      var node;
+
+      try {
+        node = createWidgetHtml(widget);
+      } catch (error) {
+        widgetTracker.openedWidgets.pop();
+        throw new Error(error);
+      }
 
       if (widget.pushDown) {
         addClass(document$1.querySelector('.pf-push-down'), 'opened');
       }
 
-      if (widget.config.layout !== 'inline') {
+      if (
+        widget.config.positionSelector == null &&
+        widget.config.layout !== 'inline'
+      ) {
         document$1.body.appendChild(node);
 
         if (widget.layout === 'modal' || widget.type === 'sitegate') {
@@ -2925,15 +2964,16 @@
           }
         }
       } else {
-        var hostNode = document$1.querySelector(widget.config.position);
+        // support legacy inline layout used position as selector.
+        var selector = widget.config.positionSelector == null
+          ? widget.config.position : widget.config.positionSelector;
+        var hostNode = document$1.querySelector(selector);
 
         if (hostNode) {
           hostNode.appendChild(node);
         } else {
           widgetTracker.openedWidgets.pop();
-          throw new Error(
-            'Inline widget could not be initialized in ' + widget.config.position
-          );
+          throw new Error('Widget could not be initialized in ' + selector);
         }
       }
 
@@ -4039,9 +4079,6 @@
       if (Object.keys(matchQuery).length !== Object.keys(query).length) {
         return false;
       }
-      break;
-
-    default:
       break;
     }
 
