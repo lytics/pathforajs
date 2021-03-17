@@ -27,6 +27,7 @@ import widgetResizeListener from './widget-resize-listener';
  * @exports showWidget
  * @params {object} widget
  */
+
 export default function showWidget (w) {
   var openWidget = function (widget) {
     // FIXME Change to Array#filter and Array#length
@@ -42,13 +43,23 @@ export default function showWidget (w) {
     // increment impressions for widget regardless of display condition need(s)
     incrementImpressions(widget);
 
-    var node = createWidgetHtml(widget);
+    var node;
+
+    try {
+      node = createWidgetHtml(widget);
+    } catch (error) {
+      widgetTracker.openedWidgets.pop();
+      throw new Error(error);
+    }
 
     if (widget.pushDown) {
       addClass(document.querySelector('.pf-push-down'), 'opened');
     }
 
-    if (widget.config.layout !== 'inline') {
+    if (
+      widget.config.positionSelector == null &&
+      widget.config.layout !== 'inline'
+    ) {
       document.body.appendChild(node);
 
       if (widget.layout === 'modal' || widget.type === 'sitegate') {
@@ -77,15 +88,16 @@ export default function showWidget (w) {
         }
       }
     } else {
-      var hostNode = document.querySelector(widget.config.position);
+      // support legacy inline layout used position as selector.
+      var selector = widget.config.positionSelector == null
+        ? widget.config.position : widget.config.positionSelector;
+      var hostNode = document.querySelector(selector);
 
       if (hostNode) {
         hostNode.appendChild(node);
       } else {
         widgetTracker.openedWidgets.pop();
-        throw new Error(
-          'Inline widget could not be initialized in ' + widget.config.position
-        );
+        throw new Error('Widget could not be initialized in ' + selector);
       }
     }
 

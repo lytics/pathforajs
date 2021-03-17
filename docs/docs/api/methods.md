@@ -98,15 +98,15 @@ Each module type that Pathfora supports has its own configuration method, which 
 
 We cover each of these type configuration methods and their parameters in individual type sections below.
 
-- [Message](/types/message.md)
-- [Form](/types/form.md)
-- [Subscription](/types/subscription.md)
-- [Gate](/types/gate.md)
+- [Message](../../types/message)
+- [Form](../../types/form)
+- [Subscription](../../types/subscription)
+- [Gate](../../types/gate)
 
 
 ## initializeABTesting
 
-This method is used to initialize [A/B Tests](/ab_testing.md) modules. If you're creating an A/B test scenario this should always be called **before** the `initializeWidgets` method.
+This method is used to initialize [A/B Tests](/ab_testing) modules. If you're creating an A/B test scenario this should always be called **before** the `initializeWidgets` method.
 
 <table>
   <thead>
@@ -129,7 +129,7 @@ This method is used to initialize [A/B Tests](/ab_testing.md) modules. If you're
 
 ### A/B Test Configuration Method
 
-A/B Tests have their own configuration method `ABTest`. We cover this configuration in detail in the [A/B Testing](/ab_testing.md) section of this documentation.
+A/B Tests have their own configuration method `ABTest`. We cover this configuration in detail in the [A/B Testing](/ab_testing) section of this documentation.
 
 
 ## recommendContent
@@ -158,7 +158,7 @@ recommendContent is a public method that makes a request to the Lytics content r
   <tr>
     <td>params</td>
     <td>object</td>
-    <td>object containing query params to call the <a href="https://www.getlytics.com/developers/rest-api#content-recommendation">recommendation API</a> with</td>
+    <td>object containing query params to call the <a href="https://learn.lytics.com/documentation/developer/api-docs/content#content-recommendation">recommendation API</a> with</td>
   </tr>
   <tr>
     <td>id</td>
@@ -174,7 +174,7 @@ recommendContent is a public method that makes a request to the Lytics content r
 
 ## triggerWidgets
 
-triggerWidgets is a helper method for widgets with the [manualTrigger](/display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathfora.triggerWidgets` has been called. This method is similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with JavaScript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
+triggerWidgets is a helper method for widgets with the [manualTrigger](../../display_conditions.md#manualTrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathfora.triggerWidgets` has been called. This method is similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with JavaScript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
 
 <table>
   <thead>

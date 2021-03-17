@@ -37,6 +37,72 @@ describe('when setting display conditions', function () {
     globalReset();
   });
 
+  it('should consider scrollPercentagetoDisplay', function (done) {
+    $(document.body).append(
+      '<div id=\'height-element\' style=\'height:10000px; display:block;\'>Test</div>'
+    );
+
+    var subscription = new pathfora.Message({
+      layout: 'modal',
+      id: 'scrollModal',
+      headline: 'Heyyyy!',
+      msg: 'You have scrolled far, nice work.',
+      okMessage: 'Sure, whatever',
+      okShow: true,
+      displayConditions: {
+        scrollPercentageToDisplay: 50
+      }
+    });
+    pathfora.initializeWidgets([subscription]);
+
+    var widget = $('#' + subscription.id);
+    expect(widget.length).toBe(0);
+
+    var height = $(document.body).height();
+    window.scroll(0, height);
+
+    setTimeout(function () {
+      widget = $('#' + subscription.id);
+      expect(widget.length).toBe(1);
+
+      $('#height-element').remove();
+      done();
+    }, 100);
+  });
+
+  it('should correctly calculate scroll percentage when scroll offset cannot be greater than scroll position', function (done) {
+    $(document.body).append(
+      '<div id=\'height-element\' style=\'height:800px; display:block;\'>Test</div>'
+    );
+
+    var subscription = new pathfora.Message({
+      layout: 'modal',
+      id: 'scrollModal',
+      headline: 'Heyyyy!',
+      msg: 'You have scrolled far, nice work.',
+      okMessage: 'Sure, whatever',
+      okShow: true,
+      displayConditions: {
+        scrollPercentageToDisplay: 30
+      }
+    });
+    pathfora.initializeWidgets([subscription]);
+
+    var widget = $('#' + subscription.id);
+    expect(widget.length).toBe(0);
+
+    var height = $(document.body).height();
+    window.scroll(0, height / 2);
+
+    setTimeout(function () {
+      widget = $('#' + subscription.id);
+      expect(widget.length).toBe(1);
+
+      $('#height-element').remove();
+      done();
+    }, 100);
+  });
+
   it('should show when all manualTrigger widgets are triggered', function () {
     var customWidget = new pathfora.Message({
       msg: 'custom trigger test',
@@ -57,6 +123,7 @@ describe('when setting display conditions', function () {
     });
 
     pathfora.initializeWidgets([customWidget, customWidget2]);
+
     var widget1 = $('#' + customWidget.id);
     var widget2 = $('#' + customWidget2.id);
     expect(widget1.length).toBe(0);
@@ -1158,70 +1225,130 @@ describe('when setting display conditions', function () {
       document.dispatchEvent(evt);
     }
 
-    beforeEach(function () {
-      subscription = new pathfora.Message({
-        layout: 'modal',
-        id: id,
-        headline: "Don't leave yet!",
-        msg: 'Please, anything but that.',
-        theme: 'dark',
-        okMessage: 'Sure, whatever',
-        okShow: true,
-        displayConditions: {
-          showOnExitIntent: true
-        }
+    describe('by itself', function () {
+      beforeEach(function () {
+        subscription = new pathfora.Message({
+          layout: 'modal',
+          id: id,
+          headline: "Don't leave yet!",
+          msg: 'Please, anything but that.',
+          theme: 'dark',
+          okMessage: 'Sure, whatever',
+          okShow: true,
+          displayConditions: {
+            showOnExitIntent: true
+          }
+        });
+        pathfora.initializeWidgets([subscription]);
       });
-      pathfora.initializeWidgets([subscription]);
+
+      it('should not show immediately', function () {
+        expect($('#' + id).length).toBe(0);
+      });
+
+      it('should not be triggered when the mouse exits from the left', function () {
+        moveTo(500, 500);
+        moveTo(300, 500);
+        moveTo(100, 500);
+        exit();
+
+        expect($('#' + id).length).toBe(0);
+      });
+
+      it('should not be triggered when the mouse exits from the right', function () {
+        moveTo(500, 500);
+        moveTo(800, 500);
+        moveTo(1000, 500);
+        exit();
+
+        expect($('#' + id).length).toBe(0);
+      });
+
+      it('should not be triggered when the mouse exits from the bottom', function () {
+        moveTo(500, 500);
+        moveTo(500, 800);
+        moveTo(500, 1000);
+        exit();
+
+        expect($('#' + id).length).toBe(0);
+      });
+
+      it('should not be triggered when the mouse is moving down before exiting, even if exiting near the top of the screen', function () {
+        moveTo(500, 10);
+        moveTo(800, 20);
+        moveTo(1000, 30);
+        exit();
+
+        expect($('#' + id).length).toBe(0);
+      });
+
+      it('should be triggered when the mouse is moving up and exits from the top', function () {
+        moveTo(500, 200);
+        moveTo(500, 150);
+        moveTo(500, 100);
+        moveTo(500, 0);
+        exit();
+
+        expect($('#' + id).length).toBe(1);
+      });
     });
 
-    it('should not show immediately', function () {
-      expect($('#' + id).length).toBe(0);
-    });
+    describe('with scrollPercentageToDisplay', function () {
+      beforeEach(function () {
+        $(document.body).append(
+          "<div id='height-element' style='height:10000px; display:block;'>Test</div>"
+        );
 
-    it('should not be triggered when the mouse exits from the left', function () {
-      moveTo(500, 500);
-      moveTo(300, 500);
-      moveTo(100, 500);
-      exit();
+        window.scroll(0, 0);
 
-      expect($('#' + id).length).toBe(0);
-    });
+        subscription = new pathfora.Message({
+          layout: 'modal',
+          id: id,
+          headline: "Don't leave yet!",
+          msg: 'Please, anything but that.',
+          theme: 'dark',
+          okMessage: 'Sure, whatever',
+          okShow: true,
+          displayConditions: {
+            scrollPercentageToDisplay: 50,
+            showOnExitIntent: true
+          }
+        });
+        pathfora.initializeWidgets([subscription]);
+      });
 
-    it('should not be triggered when the mouse exits from the right', function () {
-      moveTo(500, 500);
-      moveTo(800, 500);
-      moveTo(1000, 500);
-      exit();
+      afterEach(function () {
+        $('#height-element').remove();
+      });
 
-      expect($('#' + id).length).toBe(0);
-    });
+      it('should not be triggered until all display conditions are met (exitIntent)', function () {
+        moveTo(500, 200);
+        moveTo(500, 150);
+        moveTo(500, 100);
+        moveTo(500, 0);
+        exit();
 
-    it('should not be triggered when the mouse exits from the bottom', function () {
-      moveTo(500, 500);
-      moveTo(500, 800);
-      moveTo(500, 1000);
-      exit();
+        expect($('#' + id).length).toBe(0);
+      });
 
-      expect($('#' + id).length).toBe(0);
-    });
+      it('should not be triggered until all display conditions are met (scroll)', function () {
+        var height = $(document.body).height();
+        window.scroll(0, height);
+        expect($('#' + id).length).toBe(0);
+      });
 
-    it('should not be triggered when the mouse is moving down before exiting, even if exiting near the top of the screen', function () {
-      moveTo(500, 10);
-      moveTo(800, 20);
-      moveTo(1000, 30);
-      exit();
+      it('should show once all watcher conditions are met', function () {
+        var height = $(document.body).height();
+        window.scroll(0, height);
 
-      expect($('#' + id).length).toBe(0);
-    });
+        moveTo(500, 200);
+        moveTo(500, 150);
+        moveTo(500, 100);
+        moveTo(500, 0);
+        exit();
 
-    it('should be triggered when the mouse is moving up and exits from the top', function () {
-      moveTo(500, 200);
-      moveTo(500, 150);
-      moveTo(500, 100);
-      moveTo(500, 0);
-      exit();
-
-      expect($('#' + id).length).toBe(1);
+        expect($('#' + id).length).toBe(1);
+      });
     });
   });
 

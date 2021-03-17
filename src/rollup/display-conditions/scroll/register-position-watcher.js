@@ -3,8 +3,7 @@
 // dom
 import document from '../../dom/document';
 
-// display conditions
-import removeWatcher from '../watchers/remove-watcher';
+import getScrollingElement from '../../utils/get-scrolling-element';
 
 /**
  * Setup watcher for scrollPercentageToDisplay
@@ -15,18 +14,18 @@ import removeWatcher from '../watchers/remove-watcher';
  * @params {object} widget
  * @returns {object} watcher
  */
-export default function registerPositionWatcher (percent, widget) {
+export default function registerPositionWatcher (percent) {
   var watcher = {
     check: function () {
-      var height = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight),
-          positionInPixels = height * (percent / 100),
-          offset = document.documentElement.scrollTop || document.body.scrollTop;
+      /* istanbul ignore next */
+      var scrollingElement = document.scrollingElement || getScrollingElement(),
+          scrollTop = scrollingElement.scrollTop,
+          scrollHeight = scrollingElement.scrollHeight,
+          clientHeight = scrollingElement.clientHeight,
+          percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-      if (offset >= positionInPixels) {
-        removeWatcher(watcher, widget);
-        return true;
-      }
-      return false;
+      // if NaN, will always return `false`
+      return percentageScrolled >= percent;
     }
   };
 

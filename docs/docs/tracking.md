@@ -1,5 +1,38 @@
 Pathfora can send tracking events and the user data submitted to Lytics and Google Analytics. As long as your tags are all set up in the correct order, module data will be sent Lytics automatically. Below we will look at which data fields are sent in detail and their formats.
 
+## censorTrackingKeys
+
+This option exposes the capability to censor keys from payloads sent into Lytics. Any keys included as strings, or matching patterns as regular expressions that should be omitted from all payloads.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>censorTrackingKeys</code>  array of string and/or regular expressions</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>array of strings</td>
+    <td>keys which match any of the strings exactly will be censored from any payloads sent to Lytics</td>
+  </tr>
+  <tr>
+    <td>array of regular expressions</td>
+    <td>any key which matches any of the regular expression patterns will be censored from any payloads sent to Lytics</td>
+  </tr>
+</table>
+
+``` javascript
+// help ensure compliance with industry-specific PII regulations by censoring form data,
+var widget = new pathfora.Form({
+  // other configuration options elided
+  censorTrackingKeys: [/pf-form/]
+});
+```
+
 ## Lytics
 As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). The following raw data fields can be sent to Lytics by Pathfora.
 
@@ -10,7 +43,7 @@ As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/p
 | `pf-widget-layout` | string | layout of the module |
 | `pf-widget-variant` | int | variant of the module |
 | `pf-widget-event` | string | name of the event (see below) |
-| `pf-widget-action` | string | custom tracking names for button click events as defined in [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) |
+| `pf-widget-action` | string | custom tracking names for button click events as defined in [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) |
 | `pf-form-username` | string | user submitted value of "name" field on module |
 | `pf-form-title` | string | user submitted value of "title" field on module |
 | `pf-form-email` | string | user submitted value of "email" field on module |
@@ -29,7 +62,7 @@ As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/p
       <th>Behavior</th>
     </tr>
   </thead>
-  
+
   <tr>
     <td>show</td>
     <td>module was displayed to the user</td>
@@ -90,4 +123,4 @@ If this flag is enabled, pathfora will send event data from the modules on your 
 | eventCategory | string | Lytics |
 | eventAction | string | [id of module] : [event name] |
 
-The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](/callbacks/#confirmaction) or [cancelAction](/callbacks/#cancelaction) settings this will override the event name for those actions.
+The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) settings this will override the event name for those actions.

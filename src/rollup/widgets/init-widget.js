@@ -8,7 +8,8 @@ import hideAfterActionChecker from '../display-conditions/hide-after-action-chec
 import urlChecker from '../display-conditions/url-contains/url-checker';
 import metaChecker from '../display-conditions/meta-checker';
 import impressionsChecker from '../display-conditions/impressions/impressions-checker';
-import initializeExitIntent from '../display-conditions/init-exit-intent';
+import registerExitIntentWatcher from '../display-conditions/exit-intent/register-exit-intent-watcher';
+import initializeExitIntent from '../display-conditions/exit-intent/init-exit-intent';
 import registerElementWatcher from '../display-conditions/scroll/register-element-watcher';
 import initializeScrollWatchers from '../display-conditions/scroll/init-scroll-watchers';
 import registerPositionWatcher from '../display-conditions/scroll/register-position-watcher';
@@ -30,7 +31,7 @@ import document from '../dom/document';
 
 // utils
 import addClass from '../utils/class/add-class';
-import readCookie from '../utils/cookies/read-cookie';
+import read from '../utils/persist/read';
 
 /**
  * Determine if a widget should be shown based on display
@@ -54,7 +55,7 @@ export default function initializeWidget (widget, options) {
 
   if (
     (widget.type === 'sitegate' &&
-      readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+      read(PREFIX_UNLOCK + widget.id) === 'true') ||
     widget.hiddenViaABTests === true
   ) {
     return;
@@ -116,13 +117,14 @@ export default function initializeWidget (widget, options) {
 
   // display conditions based on page interaction
   if (condition.showOnExitIntent) {
-    initializeExitIntent(widget);
+    watcher = registerExitIntentWatcher();
+    widget.watchers.push(watcher);
+    initializeExitIntent(widget, watcher);
   }
 
   if (condition.displayWhenElementVisible) {
     watcher = registerElementWatcher(
-      condition.displayWhenElementVisible,
-      widget
+      condition.displayWhenElementVisible
     );
     widget.watchers.push(watcher);
     initializeScrollWatchers(widget);
@@ -130,8 +132,7 @@ export default function initializeWidget (widget, options) {
 
   if (condition.scrollPercentageToDisplay) {
     watcher = registerPositionWatcher(
-      condition.scrollPercentageToDisplay,
-      widget
+      condition.scrollPercentageToDisplay
     );
     widget.watchers.push(watcher);
     initializeScrollWatchers(widget);

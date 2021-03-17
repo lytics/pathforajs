@@ -1,34 +1,32 @@
 An inline module can be inserted into an existing `<div>` element on your page. This allows you to render personalized messages and forms anywhere on your page.
 
-**Note:** inline modules do not support the close or cancel option. Clicking the confirm button will trigger [success state](/customization/form.md#success) for form or subscription modules, but we recommend setting a [custom callback](/callbacks.md) for the confirm button of a inline message module.
+**Note:** inline modules do not support the close or cancel option. Clicking the confirm button will trigger [success state](../../customization/form#success) for form or subscription modules, but we recommend setting a [custom callback](../../callbacks) for the confirm button of a inline message module.
 
-## position
+## positionSelector
 
-Position determines the HTML element that should contain the inline module.
+Define the DOM selector of the parent element you would like to insert the module into.
 
 <table>
   <thead>
     <tr>
-      <td colspan="2" align="center"><code>position</code> string</td>
+      <td colspan="2" align="center"><code>positionSelector</code> string</td>
     </tr>
     <tr>
       <th>Value</th>
       <th>Behavior</th>
     </tr>
   </thead>
-  
   <tr>
     <td>selector</td>
     <td>Javascript selector of an existing div on the page where the module should appear.</td>
   </tr>
 </table>
 
-<h3>Positions - <a href="../../examples/preview/layouts/inline/positions.html" target="_blank">Live Preview</a></h3>
+<h3>Custom Position - <a href="../../examples/preview/layouts/inline/positionSelector.html" target="_blank">Live Preview</a></h3>
 
-![Position Inline Modules](../examples/img/layouts/inline/positions.png)
+![Position Inline Modules](../examples/img/layouts/inline/positionSelector.png)
 
-<pre data-src="../../examples/src/layouts/inline/positions.js"></pre>
-
+<pre data-src="../../examples/src/layouts/inline/positionSelector.js"></pre>
 
 ## variant
 

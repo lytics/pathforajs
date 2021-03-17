@@ -43,7 +43,9 @@ export default function validateWidgetPosition (widget, config) {
     break;
   }
 
-  if (choices.indexOf(config.position) === -1) {
-    // NOTE config.position + ' is not valid position for ' + config.layout
+  if (choices.length && choices.indexOf(config.position) === -1) {
+    throw new Error(
+      config.position + ' is not a valid position for ' + config.layout
+    );
   }
 }

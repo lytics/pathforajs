@@ -1,7 +1,7 @@
 /** @module pathfora/widgets/actions/update-action-cookie */
 
-import saveCookie from '../../utils/cookies/save-cookie';
-import readCookie from '../../utils/cookies/read-cookie';
+import write from '../../utils/persist/write';
+import read from '../../utils/persist/read';
 
 /**
  * Increase the value count of the actions
@@ -14,7 +14,7 @@ import readCookie from '../../utils/cookies/read-cookie';
 
 export default function updateActionCookie (name, expiration) {
   var ct,
-      val = readCookie(name),
+      val = read(name),
       duration = Date.now();
 
   if (val) {
@@ -24,5 +24,5 @@ export default function updateActionCookie (name, expiration) {
     ct = 1;
   }
 
-  saveCookie(name, ct + '|' + duration, expiration);
+  write(name, ct + '|' + duration, expiration);
 }

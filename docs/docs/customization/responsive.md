@@ -1,4 +1,4 @@
-By default, all Pathfora modules have a responsive design which will scale for screen size and device. Larger modules such as [gate](/types/gate.md) or [modals](/layouts/modal.md) will likely take up the full screen space on a mobile device. Smaller modules such as [bar](/layouts/bar.md) and [slideout](/layouts/slideout.md) will fit completely within a mobile screen if the content is short enough, and scroll otherwise. The responsive behavior can be turned off if you would not like to show your modules on smaller screen sizes.
+By default, all Pathfora modules have a responsive design which will scale for screen size and device. Larger modules such as [gate](../../types/gate) or [modals](../../layouts/modal) will likely take up the full screen space on a mobile device. Smaller modules such as [bar](../../layouts/bar) and [slideout](../../layouts/slideout) will fit completely within a mobile screen if the content is short enough, and scroll otherwise. The responsive behavior can be turned off if you would not like to show your modules on smaller screen sizes.
 
 ## responsive
 

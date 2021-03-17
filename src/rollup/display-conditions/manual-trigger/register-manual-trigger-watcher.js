@@ -3,9 +3,6 @@
 // globals
 import { widgetTracker } from '../../globals/config';
 
-// display conditions
-import removeWatcher from '../watchers/remove-watcher';
-
 /**
  * Begin watching for a custom javascript trigger
  *
@@ -18,7 +15,6 @@ export default function registerManualTriggerWatcher (value, widget) {
   var watcher = {
     check: function () {
       if (value && widgetTracker.triggeredWidgets[widget.id] || widgetTracker.triggeredWidgets['*']) {
-        removeWatcher(watcher, widget);
         return true;
       }
       return false;

@@ -2,7 +2,7 @@ A slideout is a medium module which slides from either side into the window. Thi
 
 ## position
 
-Positition of the slideout module relative to the browser window.
+Position of the slideout module relative to the browser window.
 
 <table>
   <thead>
@@ -47,6 +47,33 @@ Positition of the slideout module relative to the browser window.
 ![Position Slideout Modules](../examples/img/layouts/slideout/positions.png)
 
 <pre data-src="../../examples/src/layouts/slideout/positions.js"></pre>
+
+## positionSelector
+
+Optionally define the DOM selector of the parent element you would like to insert the module into an element besides the document body.
+
+**Note**: Because slideouts use the `position: fixed` css rule your button may or may not "appear" within your selected element, so while the HTML for your slideout will be inserted into the DOM element defined by `positionSelector` it will appear fixed and full width on the page.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>positionSelector</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>selector</td>
+    <td>Javascript selector of an existing div on the page where the module should appear.</td>
+  </tr>
+</table>
+
+<h3>Custom Position - <a href="../../examples/preview/layouts/slideout/positionSelector.html" target="_blank">Live Preview</a></h3>
+
+<pre data-src="../../examples/src/layouts/slideout/positionSelector.js"></pre>
+
 
 
 ## origin

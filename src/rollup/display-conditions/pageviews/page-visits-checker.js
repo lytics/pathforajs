@@ -4,7 +4,7 @@
 import { PF_PAGEVIEWS } from '../../globals/config';
 
 // utils
-import readCookie from '../../utils/cookies/read-cookie';
+import read from '../../utils/persist/read';
 
 /**
  * Check if the pagevisit count meets the requirements
@@ -13,5 +13,5 @@ import readCookie from '../../utils/cookies/read-cookie';
  * @returns {boolean}
  */
 export default function pageVisitsChecker (pageVisitsRequired) {
-  return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
+  return (read(PF_PAGEVIEWS) >= pageVisitsRequired);
 }

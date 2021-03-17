@@ -13,20 +13,20 @@ Next you'll need to set up configuration for your module and initialize it with 
 ## Overview
 Here are a couple sections to get you started on the basics of Pathfora JS. See the navigation in the sidebar for a full list of docs.
 
-- **[API Reference](api/methods.md)** 
+- **[API Reference](api/methods)** 
 > This section acts as a reference for Pathfora's top level functions which will use the module configs you create to deploy modules on your website.
 
-- **[Types](types/message.md)** 
+- **[Types](types/message)** 
 > The type parameter relays information to the layout (see below) related to the type of content being rendered. Pathfora currently supports four types of modules: message, form, subscription and gate.
 
-- **[Layouts](layouts/modal.md)**
+- **[Layouts](layouts/modal)**
 > The layout controls the style (what does the module look like & how does it animate into view). Pathfora currently supports four different layouts for each of the types: modal, slideout, bar, and button.
 
-- **[Audience Targeting](targeting.md)**
+- **[Audience Targeting](targeting)**
 > This section will walk you through how to make your modules truly personalized by targeting them to a specific subset of your users as defined by your Lytics audiences.
 
-- **[Display Conditions](display_conditions.md)**
+- **[Display Conditions](display_conditions)**
 > Display conditions can control when the module is displayed based on the current date, previous actions of the user, current scroll position on the page, and many more settings.
 
-- **[Customization](customization/themes.md)** 
+- **[Customization](customization/themes)** 
 > Here we cover a few of the options for basic to full customization of the settings such as button and field names, color themes, look and feel.

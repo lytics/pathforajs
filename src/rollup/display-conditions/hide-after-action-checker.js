@@ -4,7 +4,7 @@
 import { PREFIX_CONFIRM, PREFIX_CANCEL, PREFIX_CLOSE } from '../globals/config';
 
 // utils
-import readCookie from '../utils/cookies/read-cookie';
+import read from '../utils/persist/read';
 
 /**
  * Check if a widget should be hidden because it meets
@@ -19,9 +19,9 @@ export default function hideAfterActionChecker (hideAfterActionConstraints, widg
   var parts,
       valid = true,
       now = Date.now(),
-      confirm = readCookie(PREFIX_CONFIRM + widget.id),
-      cancel = readCookie(PREFIX_CANCEL + widget.id),
-      closed = readCookie(PREFIX_CLOSE + widget.id);
+      confirm = read(PREFIX_CONFIRM + widget.id),
+      cancel = read(PREFIX_CANCEL + widget.id),
+      closed = read(PREFIX_CLOSE + widget.id);
 
   if (hideAfterActionConstraints.confirm && confirm) {
     parts = confirm.split('|');

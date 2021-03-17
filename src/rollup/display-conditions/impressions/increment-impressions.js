@@ -4,8 +4,8 @@
 import { PREFIX_IMPRESSION } from '../../globals/config';
 
 // utils
-import readCookie from '../../utils/cookies/read-cookie';
-import saveCookie from '../../utils/cookies/save-cookie';
+import read from '../../utils/persist/read';
+import write from '../../utils/persist/write';
 
 /**
  * Increment the impression count for a widget
@@ -18,7 +18,7 @@ export default function incrementImpressions (widget) {
       totalImpressions,
       id = PREFIX_IMPRESSION + widget.id,
       sessionImpressions = ~~sessionStorage.getItem(id),
-      total = readCookie(id),
+      total = read(id),
       now = Date.now();
 
   if (!sessionImpressions) {
@@ -35,7 +35,7 @@ export default function incrementImpressions (widget) {
   }
 
   sessionStorage.setItem(id, sessionImpressions);
-  saveCookie(
+  write(
     id,
     Math.min(totalImpressions, 9998) + '|' + now,
     widget.expiration

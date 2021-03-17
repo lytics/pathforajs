@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.1.5',
+  var PF_VERSION = '1.2.4',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -381,6 +381,51 @@
     return new RegExp('(^| )' + escapeRegex(className) + '( |$)', 'gi').test(DOMNode.className);
   }
 
+  /** @module pathfora/utils/decode-safe */
+
+  /**
+   * Try decoding a string, return original string
+   * if the decode fails.
+   *
+   * @exports decodeSafe
+   * @params {string} s
+   * @returns {string} decoded
+   */
+  function decodeSafe (s) {
+    try {
+      return decodeURIComponent(s);
+    } catch (e) {
+      return s;
+    }
+  }
+
+  /** @module pathfora/utils/cookie/read-cookie */
+
+  /**
+   * Get the value of a cookie
+   *
+   * @exports readCookie
+   * @params {string} name
+   * @returns {string}
+   */
+  function readCookie (name) {
+    var cookies = document$1.cookie,
+        findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
+
+    // legacy - check for cookie names that haven't been escaped
+    if (findCookieRegexp == null) {
+      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
+    }
+
+    if (findCookieRegexp != null) {
+      var val = findCookieRegexp.pop();
+
+      return decodeSafe(val);
+    }
+
+    return null;
+  }
+
   /** @module pathfora/utils/cookie/save-cookie */
 
   /**
@@ -422,6 +467,85 @@
     saveCookie(name, '', date);
   }
 
+  var PAYLOAD_KEY = '$';
+  var EXPIRES_KEY = '@';
+
+  function safeJsonParse (json) {
+    try {
+      return JSON.parse(json);
+    } catch (e) {
+      // recover
+    }
+  }
+
+  function isExpired (record) {
+    return Date.parse(record[EXPIRES_KEY]) < Date.now();
+  }
+
+  var expiringLocalStorage = {
+    getItem: function (key) {
+      var serialized = localStorage.getItem(key);
+      var record = safeJsonParse(serialized);
+
+      if (record && EXPIRES_KEY in record) {
+        if (isExpired(record)) {
+          localStorage.removeItem(key);
+          return null;
+        }
+        if (PAYLOAD_KEY in record) {
+          // Extend the expiration date:
+          this.setItem(key, record[PAYLOAD_KEY]);
+          return record[PAYLOAD_KEY];
+        }
+      }
+      return serialized;
+    },
+
+    setItem: function (key, payload, expiresOn) {
+      if (!expiresOn) {
+        expiresOn = new Date();
+        expiresOn.setDate(expiresOn.getDate() + 365);
+      }
+
+      var record = {};
+
+      record[PAYLOAD_KEY] = '' + payload;
+      record[EXPIRES_KEY] = expiresOn;
+
+      localStorage.setItem(key, JSON.stringify(record));
+    },
+
+    removeItem: function (key) {
+      localStorage.removeItem(key);
+    },
+
+    ttl: function (key, payload, milliseconds) {
+      if (milliseconds !== +milliseconds) {
+        throw new Error('milliseconds must be a number!');
+      }
+      var date = new Date();
+
+      date.setMilliseconds(date.getMilliseconds() + milliseconds);
+
+      this.setItem(key, payload, date);
+    },
+
+    removeExpiredItems: function () {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        var record = safeJsonParse(localStorage.getItem(key));
+
+        if (record && isExpired(record)) {
+          localStorage.removeItem(key);
+        }
+      }
+    }
+  };
+
+  function write (key, value, expiration) {
+    expiringLocalStorage.setItem(key, value, expiration);
+  }
+
   /** @module pathfora/utils/is-not-encoded */
 
   /**
@@ -437,55 +561,6 @@
     } catch (e) {
       return false;
     }
-  }
-
-  /** @module pathfora/utils/decode-safe */
-
-  /**
-   * Try decoding a string, return original string
-   * if the decode fails.
-   *
-   * @exports decodeSafe
-   * @params {string} s
-   * @returns {string} decoded
-   */
-  function decodeSafe (s) {
-    try {
-      return decodeURIComponent(s);
-    } catch (e) {
-      return s;
-    }
-  }
-
-  /** @module pathfora/utils/cookie/read-cookie */
-
-  /**
-   * Get the value of a cookie
-   *
-   * @exports readCookie
-   * @params {string} name
-   * @returns {string}
-   */
-  function readCookie (name) {
-    var cookies = document$1.cookie,
-        findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
-
-    // legacy - check for cookie names that haven't been escaped
-    if (!findCookieRegexp) {
-      findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
-    } else {
-      var val = findCookieRegexp.pop();
-
-      // update any legacy cookies that haven't been encoded
-      if (isNotEncoded(val)) {
-        deleteCookie(name);
-        saveCookie(name, val);
-      }
-
-      return decodeSafe(val);
-    }
-
-    return null;
   }
 
   /** @module pathfora/utils/cookie/update-legacy-cookies */
@@ -518,29 +593,18 @@
     var cookieFunc = function (c) {
       var split = c.trim().split('=');
 
-
       if (split.length === 2) {
         var name = split[0];
         var val = split[1];
-        if (isNotEncoded(val)) {
-          deleteCookie(name);
-          saveCookie(name, val);
-        }
 
-        // prevent double encoding bug
-        try {
-          if (decodeURIComponent(val) !== decodeURIComponent(decodeURIComponent(val))) {
-            deleteCookie(name);
-            saveCookie(name, decodeURIComponent(decodeURIComponent(val)));
-          }
-        } catch (e) {
-          // recover
-        }
+        deleteCookie(name);
+        write(name, decodeSafe(val));
       }
     };
 
     var sessionFunc = function (c) {
       var val = sessionStorage.getItem(c);
+
       if (isNotEncoded(val)) {
         sessionStorage.removeItem(c);
         sessionStorage.setItem(encodeURIComponent(c), encodeURIComponent(val));
@@ -551,6 +615,26 @@
       document$1.cookie.split(';').filter(filterFunc).forEach(cookieFunc);
       Object.keys(sessionStorage).filter(filterFunc).forEach(sessionFunc);
     }
+  }
+
+  function read (key) {
+    var item = expiringLocalStorage.getItem(key);
+
+    if (item == null) {
+      item = readCookie(key);
+
+      if (item != null) {
+        deleteCookie(key);
+        expiringLocalStorage.setItem(key, item);
+      }
+    }
+
+    return item;
+  }
+
+  function erase (key) {
+    expiringLocalStorage.removeItem(key);
+    deleteCookie(key);
   }
 
   /** @module pathfora/utils/scaffold/init-scaffold */
@@ -852,6 +936,7 @@
 
   /** @module pathfora/utils */
 
+
   /**
    * Object containing utility functions
    *
@@ -869,6 +954,12 @@
     saveCookie: saveCookie,
     deleteCookie: deleteCookie,
     updateLegacyCookies: updateLegacyCookies,
+
+    // persist
+    read: read,
+    write: write,
+    erase: erase,
+    store: expiringLocalStorage,
 
     // scaffold
     initWidgetScaffold: initWidgetScaffold,
@@ -936,10 +1027,9 @@
    * @exports initializePageViews
    */
   function initializePageViews () {
-    var cookie = readCookie(PF_PAGEVIEWS),
-        date = new Date();
-    date.setDate(date.getDate() + 365);
-    saveCookie(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1, date);
+    var cookie = read(PF_PAGEVIEWS);
+
+    write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1);
   }
 
   /** @module pathfora/display-conditions/impressions/impressions-checker */
@@ -960,7 +1050,7 @@
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
         sessionImpressionsForAllWidgets = 0,
-        total = readCookie(id),
+        total = read(id),
         now = Date.now();
 
     // retain backwards compatibility if using legacy method of:
@@ -1022,6 +1112,28 @@
     return valid;
   }
 
+  /**
+   * Censor an object by its keys, by comparing against an array of strings and/or regexps. In the case of strings,
+   * only exact matches are censored. For non-strings, if the object's test method returns true, the key will be censored.
+   *
+   * @param {object} data the data to censor
+   * @param {obejct} keysToReject an array of strings or regexps to censor the data by preparatory to sending
+   */
+  function censorTrackingKeys (data, keysToReject) {
+    return Object.keys(data)
+      .filter(function (key) {
+        return !keysToReject.some(function (keyToReject) {
+          return typeof keyToReject === 'string'
+            ? key === keyToReject
+            : keyToReject.test(key);
+        });
+      })
+      .reduce(function (memo, key) {
+        memo[key] = data[key];
+        return memo;
+      }, {});
+  }
+
   /** @module pathfora/data/request/report-data */
 
   /**
@@ -1029,12 +1141,17 @@
    *
    * @exports reportData
    * @params {object} data
+   * @widget {object}
    */
-  function reportData (data) {
+  function reportData (data, widget) {
     var gaLabel, trackers;
 
     if (typeof jstag === 'object') {
-      window.jstag.send(data);
+      window.jstag.send(
+        widget.censorTrackingKeys
+          ? censorTrackingKeys(data, widget.censorTrackingKeys)
+          : data
+      );
     }
 
     if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
@@ -1163,7 +1280,7 @@
       }
 
       if (action === 'unlock') {
-        saveCookie(PREFIX_UNLOCK + widget.id, true, widget.expiration);
+        write(PREFIX_UNLOCK + widget.id, true, widget.expiration);
       }
 
       break;
@@ -1206,7 +1323,7 @@
     }
 
     params['pf-widget-event'] = action;
-    reportData(params);
+    reportData(params, widget);
   }
 
   /** @module pathfora/display-conditions/impressions/increment-impressions */
@@ -1222,7 +1339,7 @@
         totalImpressions,
         id = PREFIX_IMPRESSION + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
-        total = readCookie(id),
+        total = read(id),
         now = Date.now();
 
     if (!sessionImpressions) {
@@ -1239,7 +1356,7 @@
     }
 
     sessionStorage.setItem(id, sessionImpressions);
-    saveCookie(
+    write(
       id,
       Math.min(totalImpressions, 9998) + '|' + now,
       widget.expiration
@@ -1291,7 +1408,11 @@
       break;
     }
 
-    if (choices.indexOf(config.position) === -1) ;
+    if (choices.length && choices.indexOf(config.position) === -1) {
+      throw new Error(
+        config.position + ' is not a valid position for ' + config.layout
+      );
+    }
   }
 
   /** @module pathfora/widgets/setup-widget-position */
@@ -1432,7 +1553,7 @@
 
   function updateActionCookie (name, expiration) {
     var ct,
-        val = readCookie(name),
+        val = read(name),
         duration = Date.now();
 
     if (val) {
@@ -1442,7 +1563,7 @@
       ct = 1;
     }
 
-    saveCookie(name, ct + '|' + duration, expiration);
+    write(name, ct + '|' + duration, expiration);
   }
 
   /** @module pathfora/widgets/actions/buton-action */
@@ -1683,8 +1804,6 @@
           }
         };
       }
-      break;
-    default:
       break;
     }
 
@@ -2784,6 +2903,7 @@
    * @exports showWidget
    * @params {object} widget
    */
+
   function showWidget (w) {
     var openWidget = function (widget) {
       // FIXME Change to Array#filter and Array#length
@@ -2799,13 +2919,23 @@
       // increment impressions for widget regardless of display condition need(s)
       incrementImpressions(widget);
 
-      var node = createWidgetHtml(widget);
+      var node;
+
+      try {
+        node = createWidgetHtml(widget);
+      } catch (error) {
+        widgetTracker.openedWidgets.pop();
+        throw new Error(error);
+      }
 
       if (widget.pushDown) {
         addClass(document$1.querySelector('.pf-push-down'), 'opened');
       }
 
-      if (widget.config.layout !== 'inline') {
+      if (
+        widget.config.positionSelector == null &&
+        widget.config.layout !== 'inline'
+      ) {
         document$1.body.appendChild(node);
 
         if (widget.layout === 'modal' || widget.type === 'sitegate') {
@@ -2834,15 +2964,16 @@
           }
         }
       } else {
-        var hostNode = document$1.querySelector(widget.config.position);
+        // support legacy inline layout used position as selector.
+        var selector = widget.config.positionSelector == null
+          ? widget.config.position : widget.config.positionSelector;
+        var hostNode = document$1.querySelector(selector);
 
         if (hostNode) {
           hostNode.appendChild(node);
         } else {
           widgetTracker.openedWidgets.pop();
-          throw new Error(
-            'Inline widget could not be initialized in ' + widget.config.position
-          );
+          throw new Error('Widget could not be initialized in ' + selector);
         }
       }
 
@@ -2916,12 +3047,12 @@
 
   /** @module pathfora/display-conditions/watchers/validate-watchers */
 
-  function validateWatchers (widget, cb) {
+  function validateWatchers (widget, cb, e) {
     var valid = true;
 
     for (var key in widget.watchers) {
       if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
-        valid = widget.valid && widget.watchers[key].check();
+        valid = valid && widget.valid && widget.watchers[key].check(e);
       }
     }
 
@@ -2933,6 +3064,7 @@
       showWidget(widget);
       widget.valid = false;
       cb();
+      widget.watchers = [];
 
       return true;
     }
@@ -3838,7 +3970,7 @@
    * @returns {boolean}
    */
   function pageVisitsChecker (pageVisitsRequired) {
-    return (readCookie(PF_PAGEVIEWS) >= pageVisitsRequired);
+    return (read(PF_PAGEVIEWS) >= pageVisitsRequired);
   }
 
   /** @module pathfora/display-conditions/hide-after-action-checker */
@@ -3856,9 +3988,9 @@
     var parts,
         valid = true,
         now = Date.now(),
-        confirm = readCookie(PREFIX_CONFIRM + widget.id),
-        cancel = readCookie(PREFIX_CANCEL + widget.id),
-        closed = readCookie(PREFIX_CLOSE + widget.id);
+        confirm = read(PREFIX_CONFIRM + widget.id),
+        cancel = read(PREFIX_CANCEL + widget.id),
+        closed = read(PREFIX_CLOSE + widget.id);
 
     if (hideAfterActionConstraints.confirm && confirm) {
       parts = confirm.split('|');
@@ -3947,9 +4079,6 @@
       if (Object.keys(matchQuery).length !== Object.keys(query).length) {
         return false;
       }
-      break;
-
-    default:
       break;
     }
 
@@ -4138,6 +4267,70 @@
     return false;
   }
 
+  /** @module pathfora/display-conditions/exit-intent/register-exit-intent-watcher */
+
+  /**
+   * Setup watcher for showOnExitIntent
+   * display condition
+   *
+   * @exports registerExitIntentWatcher
+   * @params {string} selector
+   * @params {object} widget
+   * @returns {object} watcher
+   */
+  function registerExitIntentWatcher () {
+    var watcher = {
+      positions: [],
+      check: function (e) {
+        if (e != null) {
+          var from = e.relatedTarget || e.toElement;
+
+          // When there is registered movement and leaving the root element
+          if (watcher.positions.length > 1 && (!from || from.nodeName === 'HTML')) {
+
+            var y = watcher.positions[watcher.positions.length - 1].y;
+            var py = watcher.positions[watcher.positions.length - 2].y;
+            var ySpeed = Math.abs(y - py);
+
+            watcher.positions = [];
+
+            // Did the cursor move up?
+            // Is it reasonable to believe that it left the top of the page, given the position and the speed?
+            if (y - ySpeed <= 50 && y < py) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    };
+
+    return watcher;
+  }
+
+  var handlers = [];
+
+  var eventHub = {
+    add: function (target, type, listener) {
+      target.addEventListener(type, listener);
+      handlers.push({
+        target: target,
+        type: type,
+        listener: listener
+      });
+    },
+    remove: function (target, type, listener) {
+      target.removeEventListener(type, listener);
+    },
+    removeAll: function () {
+      var hub = this;
+      handlers.forEach(function (h) {
+        hub.remove(h.target, h.type, h.listener);
+      });
+      handlers.length = 0;
+    }
+  };
+
   /** @module pathfora/display-conditions/init-exit-intent */
 
   /**
@@ -4147,70 +4340,41 @@
    * @params {object} widget
    * @returns {boolean}
    */
-  function initializeExitIntent (widget) {
-    var positions = [];
+  function initializeExitIntent (widget, watcher) {
     if (!widget.exitIntentListener) {
       widget.exitIntentListener = function (e) {
-        positions.push({
+        watcher.positions.push({
           x: e.clientX,
           y: e.clientY
         });
-        if (positions.length > 30) {
-          positions.shift();
+        if (watcher.positions.length > 30) {
+          watcher.positions.shift();
         }
       };
 
       widget.exitIntentTrigger = function (e) {
-        var from = e.relatedTarget || e.toElement;
-
-        // When there is registered movement and leaving the root element
-        if (positions.length > 1 && (!from || from.nodeName === 'HTML')) {
-          var valid;
-
-          var y = positions[positions.length - 1].y;
-          var py = positions[positions.length - 2].y;
-          var ySpeed = Math.abs(y - py);
-
-          // Did the cursor move up?
-          // Is it reasonable to believe that it left the top of the page, given the position and the speed?
-          valid = widget.valid && y - ySpeed <= 50 && y < py;
-
-          if (valid) {
-            validateWatchers(widget, function () {
-              if (typeof document$1.addEventListener === 'function') {
-                document$1.removeEventListener('mousemove', widget.exitIntentListener);
-                document$1.removeEventListener('mouseout', widget.exitIntentTrigger);
-              } else {
-                document$1.onmousemove = null;
-                document$1.onmouseout = null;
-              }
-            });
+        validateWatchers(widget, function () {
+          if (typeof document$1.removeEventListener === 'function') {
+            eventHub.remove(document$1, 'mousemove', widget.exitIntentListener);
+            eventHub.remove(document$1, 'mouseout', widget.exitIntentTrigger);
+          } else {
+            document$1.onmousemove = null;
+            document$1.onmouseout = null;
           }
-
-          positions = [];
-        }
+        }, e);
       };
 
       // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
       if (typeof document$1.addEventListener === 'function') {
-        document$1.addEventListener('mousemove', widget.exitIntentListener, false);
-        document$1.addEventListener('mouseout', widget.exitIntentTrigger, false);
+        eventHub.add(document$1, 'mousemove', widget.exitIntentListener);
+        eventHub.add(document$1, 'mouseout', widget.exitIntentTrigger);
       } else {
         document$1.onmousemove = widget.exitIntentListener;
         document$1.onmouseout = widget.exitIntentTrigger;
       }
     }
     return true;
-  }
 
-  /** @module pathfora/display-conditions/watchers/remove-watcher */
-
-  function removeWatcher (watcher, widget) {
-    for (var key in widget.watchers) {
-      if (widget.watchers.hasOwnProperty(key) && watcher === widget.watchers[key]) {
-        widget.watchers.splice(key, 1);
-      }
-    }
   }
 
   /** @module pathfora/display-conditions/scroll/register-element-watcher */
@@ -4224,7 +4388,7 @@
    * @params {object} widget
    * @returns {object} watcher
    */
-  function registerElementWatcher (selector, widget) {
+  function registerElementWatcher (selector) {
     var watcher = {
       elem: document$1.querySelector(selector),
 
@@ -4233,7 +4397,6 @@
             scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
 
         if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
-          removeWatcher(watcher, widget);
           return true;
         }
         return false;
@@ -4256,7 +4419,7 @@
     widget.scrollListener = function () {
       validateWatchers(widget, function () {
         if (typeof window.addEventListener === 'function') {
-          window.removeEventListener('scroll', widget.scrollListener);
+          eventHub.remove(window, 'scroll', widget.scrollListener);
         } else {
           window.onscroll = null;
         }
@@ -4265,11 +4428,37 @@
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
     if (typeof window.addEventListener === 'function') {
-      window.addEventListener('scroll', widget.scrollListener, false);
+      eventHub.add(window, 'scroll', widget.scrollListener);
     } else {
       window.onscroll = widget.scrollListener;
     }
     return true;
+  }
+
+  /**
+  * Based on https://github.com/cgygd/scrolling-element
+  */
+
+  var element = null;
+
+  /* istanbul ignore next */
+  function getScrollingElement () {
+    if (element) {
+      return element;
+    }
+    if (document.body.scrollTop) {
+      // speed up if scrollTop > 0
+      return (element = document.body);
+    }
+    var iframe = document.createElement('iframe');
+    iframe.style.height = '1px';
+    document.documentElement.appendChild(iframe);
+    var doc = iframe.contentWindow.document;
+    doc.write('<!DOCTYPE html><div style="height:9999em">x</div>');
+    doc.close();
+    var isCompliant = doc.documentElement.scrollHeight > doc.body.scrollHeight;
+    iframe.parentNode.removeChild(iframe);
+    return (element = isCompliant ? document.documentElement : document.body);
   }
 
   /** @module pathfora/display-conditions/scroll/register-position-watcher */
@@ -4283,18 +4472,18 @@
    * @params {object} widget
    * @returns {object} watcher
    */
-  function registerPositionWatcher (percent, widget) {
+  function registerPositionWatcher (percent) {
     var watcher = {
       check: function () {
-        var height = Math.max(document$1.body.scrollHeight, document$1.body.offsetHeight, document$1.documentElement.clientHeight, document$1.documentElement.scrollHeight, document$1.documentElement.offsetHeight),
-            positionInPixels = height * (percent / 100),
-            offset = document$1.documentElement.scrollTop || document$1.body.scrollTop;
+        /* istanbul ignore next */
+        var scrollingElement = document$1.scrollingElement || getScrollingElement(),
+            scrollTop = scrollingElement.scrollTop,
+            scrollHeight = scrollingElement.scrollHeight,
+            clientHeight = scrollingElement.clientHeight,
+            percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-        if (offset >= positionInPixels) {
-          removeWatcher(watcher, widget);
-          return true;
-        }
-        return false;
+        // if NaN, will always return `false`
+        return percentageScrolled >= percent;
       }
     };
 
@@ -4315,7 +4504,6 @@
     var watcher = {
       check: function () {
         if (value && widgetTracker.triggeredWidgets[widget.id] || widgetTracker.triggeredWidgets['*']) {
-          removeWatcher(watcher, widget);
           return true;
         }
         return false;
@@ -4349,7 +4537,7 @@
 
     if (
       (widget.type === 'sitegate' &&
-        readCookie(PREFIX_UNLOCK + widget.id) === 'true') ||
+        read(PREFIX_UNLOCK + widget.id) === 'true') ||
       widget.hiddenViaABTests === true
     ) {
       return;
@@ -4411,13 +4599,14 @@
 
     // display conditions based on page interaction
     if (condition.showOnExitIntent) {
-      initializeExitIntent(widget);
+      watcher = registerExitIntentWatcher();
+      widget.watchers.push(watcher);
+      initializeExitIntent(widget, watcher);
     }
 
     if (condition.displayWhenElementVisible) {
       watcher = registerElementWatcher(
-        condition.displayWhenElementVisible,
-        widget
+        condition.displayWhenElementVisible
       );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
@@ -4425,8 +4614,7 @@
 
     if (condition.scrollPercentageToDisplay) {
       watcher = registerPositionWatcher(
-        condition.scrollPercentageToDisplay,
-        widget
+        condition.scrollPercentageToDisplay
       );
       widget.watchers.push(watcher);
       initializeScrollWatchers(widget);
@@ -4504,13 +4692,13 @@
       }
     });
 
-    opened.slice(0);
-
     for (var key in delayed) {
       if (delayed.hasOwnProperty(key)) {
         cancelDelayedWidget(key);
       }
     }
+
+    eventHub.removeAll();
 
     resetWidgetTracker(widgetTracker);
     resetDataObject(pathforaDataObject);
@@ -4613,7 +4801,7 @@
   function initializeABTesting (abTests) {
     abTests.forEach(function (abTest) {
       var abTestingType = abTest.type,
-          userAbTestingValue = readCookie(abTest.cookieId),
+          userAbTestingValue = read(abTest.cookieId),
           userAbTestingGroup = 0,
           date = new Date();
 
@@ -4623,7 +4811,7 @@
 
       // NOTE Always update the cookie to get the new exp date.
       date.setDate(date.getDate() + 365);
-      saveCookie(abTest.cookieId, userAbTestingValue, date);
+      write(abTest.cookieId, userAbTestingValue, date);
 
       // NOTE Determine visible group for the user
       var i = 0;
@@ -5066,6 +5254,11 @@
    * @class {function} Pathfora
    */
   var Pathfora = function () {
+    // feature detections
+    if (!('localStorage' in window) || !('sessionStorage' in window)) {
+      throw new Error('The Pathfora SDK requires the Web Storage API!');
+    }
+
     // globals
     this.version = PF_VERSION;
     this.callbacks = [];
@@ -5128,6 +5321,7 @@
     link.setAttribute('href', CSS_URL);
 
     this.utils.updateLegacyCookies();
+    this.utils.store.removeExpiredItems();
 
     head.appendChild(link);
   };

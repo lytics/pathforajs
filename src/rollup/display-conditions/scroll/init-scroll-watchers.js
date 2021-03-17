@@ -1,5 +1,7 @@
 /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
+import eventHub from '../../utils/event-hub';
+
 // dom
 import window from '../../dom/window';
 
@@ -17,7 +19,7 @@ export default function initializeScrollWatchers (widget) {
   widget.scrollListener = function () {
     validateWatchers(widget, function () {
       if (typeof window.addEventListener === 'function') {
-        window.removeEventListener('scroll', widget.scrollListener);
+        eventHub.remove(window, 'scroll', widget.scrollListener);
       } else {
         window.onscroll = null;
       }
@@ -26,7 +28,7 @@ export default function initializeScrollWatchers (widget) {
 
   // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
   if (typeof window.addEventListener === 'function') {
-    window.addEventListener('scroll', widget.scrollListener, false);
+    eventHub.add(window, 'scroll', widget.scrollListener);
   } else {
     window.onscroll = widget.scrollListener;
   }

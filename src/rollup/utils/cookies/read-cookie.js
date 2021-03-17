@@ -5,9 +5,6 @@ import document from '../../dom/document';
 
 // utils
 import escapeRegex from '../escape-regex';
-import saveCookie from './save-cookie';
-import deleteCookie from './delete-cookie';
-import isNotEncoded from '../is-not-encoded';
 import decodeSafe from '../decode-safe';
 
 /**
@@ -22,16 +19,12 @@ export default function readCookie (name) {
       findCookieRegexp = cookies.match('(^|;)\\s*' + encodeURIComponent(escapeRegex(name)) + '\\s*=\\s*([^;]+)');
 
   // legacy - check for cookie names that haven't been escaped
-  if (!findCookieRegexp) {
+  if (findCookieRegexp == null) {
     findCookieRegexp = cookies.match('(^|;)\\s*' + escapeRegex(name) + '\\s*=\\s*([^;]+)');
-  } else {
-    var val = findCookieRegexp.pop();
+  }
 
-    // update any legacy cookies that haven't been encoded
-    if (isNotEncoded(val)) {
-      deleteCookie(name);
-      saveCookie(name, val);
-    }
+  if (findCookieRegexp != null) {
+    var val = findCookieRegexp.pop();
 
     return decodeSafe(val);
   }
