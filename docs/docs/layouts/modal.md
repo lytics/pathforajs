@@ -56,3 +56,27 @@ Define the featured image you would like to use for the module.
 ![Image Slideout Module](../examples/img/layouts/modal/image.png)
 
 <pre data-src="../../examples/src/layouts/modal/image.js"></pre>
+
+## positionSelector
+
+Optionally define the DOM selector of the parent element you would like to insert the module into an element besides the document body.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="2" align="center"><code>positionSelector</code> string</td>
+    </tr>
+    <tr>
+      <th>Value</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>selector</td>
+    <td>Javascript selector of an existing div on the page where the module should appear.</td>
+  </tr>
+</table>
+
+<h3>Custom Position - <a href="../../examples/preview/layouts/modal/positionSelector.html" target="_blank">Live Preview</a></h3>
+
+<pre data-src="../../examples/src/layouts/modal/positionSelector.js"></pre>
