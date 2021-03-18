@@ -1378,7 +1378,7 @@
 
     switch (config.layout) {
     case 'modal':
-      choices = [''];
+      choices = ['', 'middle-center'];
       break;
     case 'slideout':
       choices = [
@@ -1391,7 +1391,7 @@
       ];
       break;
     case 'bar':
-      choices = ['top-absolute', 'top-fixed', 'bottom-fixed'];
+      choices = ['top-absolute', 'top-fixed', 'bottom-fixed', 'top-center', 'bottom-center'];
       break;
     case 'button':
       choices = [
@@ -1409,7 +1409,7 @@
     }
 
     if (choices.length && choices.indexOf(config.position) === -1) {
-      throw new Error(
+      console.warn(
         config.position + ' is not a valid position for ' + config.layout
       );
     }

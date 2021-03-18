@@ -836,7 +836,7 @@ describe('Widgets', function () {
     expect(widget3.hasClass('pf-position-bottom-left')).toBeTruthy();
   });
 
-  it('should error when invalid position', function () {
+  it('should warn when invalid position', function () {
     var w1 = new pathfora.Message({
       msg: 'Widget positioning test',
       layout: 'modal',
@@ -844,9 +844,12 @@ describe('Widgets', function () {
       position: 'customPos'
     });
 
-    expect(function () {
-      pathfora.initializeWidgets([w1]);
-    }).toThrowError(/customPos is not a valid position for modal/);
+    spyOn(console, 'warn');
+    pathfora.initializeWidgets([w1]);
+
+    expect(console.warn).toHaveBeenCalledWith(
+      'customPos is not a valid position for modal'
+    );
   });
 
   it('should error when custom positionSelector does not exist in dom', function () {
@@ -931,7 +934,6 @@ describe('Widgets', function () {
     var inlineCustom = new pathfora.Message({
       headline: 'Inline Widget',
       layout: 'inline',
-      position: 'custom',
       positionSelector: '#a-real-div',
       id: 'inline-2',
       msg: 'inline'
