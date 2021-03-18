@@ -13,7 +13,7 @@ export default function validateWidgetPosition (widget, config) {
 
   switch (config.layout) {
   case 'modal':
-    choices = [''];
+    choices = ['', 'middle-center'];
     break;
   case 'slideout':
     choices = [
