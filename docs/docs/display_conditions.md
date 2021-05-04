@@ -739,7 +739,7 @@ displayConditions: {
 ```
 
 
-## metaConatins
+## metaContains
 
 Only display the module on pages that have meta tags that match the conditions defined.
 
