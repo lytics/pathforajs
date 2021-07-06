@@ -2,7 +2,7 @@ sudo: required
 language: node_js
 dist: trusty
 node_js:
-- 8.16.2
+- 14.17.1
 addons:
   chrome: stable
 script:
