@@ -132,10 +132,10 @@ describe('`expiringLocalStorage` util', function () {
       expect(localStorage.getItem('expired')).toBe(null);
     });
     it('should ignore records that have not been created by this library (i.e. do not have an expiry field)', () => {
-      localStorage.setItem('myCat', 'Tom');
+      localStorage.setItem('myCat', 'Bob');
       pathfora.utils.store.ttl('myDog', 'Jim', -10000);
       pathfora.utils.store.removeExpiredItems();
-      expect(localStorage.getItem('myCat')).toBe('Tom');
+      expect(localStorage.getItem('myCat')).toBe('Bob');
       expect(localStorage.getItem('myDog')).toBe(null);
     });
   });
