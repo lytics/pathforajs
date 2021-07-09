@@ -1,5 +1,7 @@
+import { PF_VERSION } from '../../globals/config';
 var PAYLOAD_KEY = '$';
 var EXPIRES_KEY = '@';
+var PATHFORA_IDENTIFIER = 'PATHFORA';
 
 function safeJsonParse (json) {
   try {
@@ -10,7 +12,10 @@ function safeJsonParse (json) {
 }
 
 function isExpired (record) {
-  return Date.parse(record[EXPIRES_KEY]) < Date.now();
+  return Boolean(record[EXPIRES_KEY]) && Date.parse(record[EXPIRES_KEY]) < Date.now();
+}
+function isCreatedByThisLib (record) {
+  return Boolean(record[PATHFORA_IDENTIFIER]);
 }
 
 export default {
@@ -42,6 +47,7 @@ export default {
 
     record[PAYLOAD_KEY] = '' + payload;
     record[EXPIRES_KEY] = expiresOn;
+    record[PATHFORA_IDENTIFIER] = PF_VERSION; // identify localStorage items created by this lib
 
     localStorage.setItem(key, JSON.stringify(record));
   },
@@ -66,7 +72,7 @@ export default {
       var key = localStorage.key(i);
       var record = safeJsonParse(localStorage.getItem(key));
 
-      if (record && isExpired(record)) {
+      if (record && isCreatedByThisLib(record) && isExpired(record)) {
         localStorage.removeItem(key);
       }
     }
