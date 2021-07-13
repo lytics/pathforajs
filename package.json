@@ -48,8 +48,12 @@
     "rollup-plugin-istanbul": "^2.0.1",
     "walk": "^2.3.14"
   },
+  "resolutions": {
+    "graceful-fs": "^4.2.4"
+  },
   "scripts": {
     "test": "gulp build && karma start --single-run",
+    "test:watch": "gulp build && karma start --watch",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
     "prod": "yarn run test && yarn run clean && yarn run build:prod",

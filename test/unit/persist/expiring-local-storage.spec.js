@@ -1,3 +1,4 @@
+import { PF_VERSION } from '../../../src/rollup/globals/config';
 import globalReset from '../../utils/global-reset';
 
 describe('`expiringLocalStorage` util', function () {
@@ -29,7 +30,8 @@ describe('`expiringLocalStorage` util', function () {
 
         expect(tuple).toEqual({
           $: 'wow',
-          '@': expiresOn.toISOString()
+          '@': expiresOn.toISOString(),
+          'PATHFORA': PF_VERSION
         });
       });
     });
@@ -128,6 +130,13 @@ describe('`expiringLocalStorage` util', function () {
 
       expect(localStorage.getItem('current')).not.toBe(null);
       expect(localStorage.getItem('expired')).toBe(null);
+    });
+    it('should ignore records that have not been created by this library (i.e. do not have an expiry field)', () => {
+      localStorage.setItem('myCat', 'Bob');
+      pathfora.utils.store.ttl('myDog', 'Jim', -10000);
+      pathfora.utils.store.removeExpiredItems();
+      expect(localStorage.getItem('myCat')).toBe('Bob');
+      expect(localStorage.getItem('myDog')).toBe(null);
     });
   });
 });
