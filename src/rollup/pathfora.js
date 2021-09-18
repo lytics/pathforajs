@@ -122,7 +122,7 @@ var Pathfora = function () {
 
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
-  link.setAttribute('href', CSS_URL);
+  link.setAttribute('href', window.PathforaCSS || CSS_URL);
 
   this.utils.updateLegacyCookies();
   this.utils.store.removeExpiredItems();
