@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.7',
+  var PF_VERSION = '1.2.8',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -5323,7 +5323,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', CSS_URL);
+    link.setAttribute('href', window.PathforaCSS || CSS_URL);
 
     this.utils.updateLegacyCookies();
     this.utils.store.removeExpiredItems();
