@@ -1,7 +1,7 @@
 /** @module pathfora/display-conditions/impressions/increment-impressions */
 
 // globals
-import { PREFIX_IMPRESSION } from '../../globals/config';
+import { PREFIX_IMPRESSION, PREFIX_TOTAL_IMPRESSIONS_SINCE } from '../../globals/config';
 
 // utils
 import read from '../../utils/persist/read';
@@ -35,9 +35,15 @@ export default function incrementImpressions (widget) {
   }
 
   sessionStorage.setItem(id, sessionImpressions);
-  write(
-    id,
-    Math.min(totalImpressions, 9998) + '|' + now,
-    widget.expiration
-  );
+  write(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
+
+  // increment the "total since" values for modals with the impressions.global.duration config option
+  for (var i = 0; i < ~~localStorage.length; i++) {
+    var k = localStorage.key(i);
+    if (typeof k !== 'undefined' && k.includes(PREFIX_TOTAL_IMPRESSIONS_SINCE)) {
+      parts = read(k).split('|');
+      totalImpressions = parseInt(parts[0], 10) + 1;
+      write(k, totalImpressions + '|' + parts[1], widget.expiration);
+    }
+  }
 }

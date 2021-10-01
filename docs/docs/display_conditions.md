@@ -297,7 +297,7 @@ displayConditions: {
 
 
 ## impressions
-Hide the module after a certain number of impressions or global impressions across all widgets. The current number of impressions is saved in a cookie `PathforaImpressions_[module id]` to compare against this value.
+Hide the module after a certain number of impressions or global impressions across all widgets. The current number of impressions is saved in localstorage with the key `PathforaImpressions_[module id]` to compare against this value. If you opt to use the `duration` setting for total impressions, an additional localstorage item is populated with the key `PathforaTotalImpressionsSince_[module id]`
 
 <table>
   <thead>
@@ -338,12 +338,23 @@ Hide the module after a certain number of impressions or global impressions acro
   <tr>
     <td>session</td>
     <td>int</td>
-    <td><code>optional</code> count of how many session-based impressions before showing the module</td>
+    <td><code>optional</code> count of how many session-based impressions before hiding the module</td>
   </tr>
   <tr>
     <td>total</td>
     <td>int</td>
-    <td><code>optional</code> (not supported for global) count of how many total (multisession) impressions before showing the module</td>
+    <td><code>optional</code> count of how many total (multisession) impressions before hiding the module</td>
+  </tr>
+    <tr>
+    <td>buffer</td>
+    <td>int</td>
+    <td><code>optional</code> time in seconds between subsequent impressions</td>
+  </tr>
+  </tr>
+    <tr>
+    <td>buffer</td>
+    <td>int</td>
+    <td><code>optional</code> time in seconds before "resetting" the impression count for <code>total</code> values</td>
   </tr>
 </table>
 
@@ -373,6 +384,19 @@ displayConditions: {
 ```
 
 ``` javascript
+// example: hide the module for 24 hours after five impressions
+
+displayConditions: {
+  impressions: {
+    widget: {
+      total: 5
+      duration: 60 * 60  * 24,
+    }
+  }
+}
+```
+
+``` javascript
 // example: hide the module after the second impression in the same session
 // or if it has been seen five times ever
 
@@ -381,6 +405,32 @@ displayConditions: {
     widget: {
       session: 2,
       total: 5
+    }
+  }
+}
+```
+
+``` javascript
+// example: hide the module after two impressions from **any** pathfora modules in the same session
+
+displayConditions: {
+  impressions: {
+    global: {
+      session: 2
+    }
+  }
+}
+```
+
+
+``` javascript
+// example: hide the module for 24 hours after five impressions from **any** pathfora modules
+
+displayConditions: {
+  impressions: {
+    global: {
+      total: 5,
+      duration: 60 * 60  * 24,
     }
   }
 }
