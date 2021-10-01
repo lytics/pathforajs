@@ -382,169 +382,318 @@ describe('when setting display conditions', function () {
     expect(widget.length).toBe(1);
   });
 
-  it('should show if before limited amount of global impressions', function () {
-    var widgetId = 'impressionWidget1';
-    sessionStorage.setItem('PathforaImpressions_AnotherWidget', 0);
-    sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
+  describe('impressions displayCondition', function () {
+    describe('widget level impressions', function () {
+      describe('with the session count set', function () {
+        it('should show if before limited amount of impressions', function () {
+          var widgetId = 'impressionWidget1';
+          sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          global: {
-            session: 1
-          }
-        }
-      }
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                widget: {
+                  session: 1,
+                  total: 5
+                }
+              }
+            }
+          });
+
+          pathfora.initializeWidgets([form]);
+
+          var widget = $('#' + form.id);
+          expect(widget.length).toBe(1);
+        });
+
+        it('should show if impression buffer met', function () {
+          var widgetId = 'impressionWidget3';
+          pathfora.utils.saveCookie(
+            'PathforaImpressions_' + widgetId,
+            '2|' + Date.now()
+          );
+
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                widget: {
+                  session: 3,
+                  buffer: 2
+                }
+              }
+            }
+          });
+
+          setTimeout(function () {
+            pathfora.initializeWidgets([form]);
+
+            var widget = $('#' + form.id);
+            expect(widget.length).toBe(1);
+          }, 3000);
+        });
+
+        it('should not show if impression buffer not met', function () {
+          var widgetId = 'impressionWidget3';
+          pathfora.utils.saveCookie(
+            'PathforaImpressions_' + widgetId,
+            '2|' + Date.now()
+          );
+
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                widget: {
+                  session: 3,
+                  buffer: 60
+                }
+              }
+            }
+          });
+
+          pathfora.initializeWidgets([form]);
+
+          var widget = $('#' + form.id);
+          expect(widget.length).toBe(0);
+        });
+      });
+
+      describe('with the total and session count set', function () {
+        it('should not show if after limited amount of impressions', function () {
+          var widgetId = 'impressionWidget2';
+          sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
+
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                widget: {
+                  session: 1,
+                  total: 5
+                }
+              }
+            }
+          });
+
+          pathfora.initializeWidgets([form]);
+
+          var widget = $('#' + form.id);
+          expect(widget.length).toBe(0);
+        });
+      });
     });
 
-    pathfora.initializeWidgets([form]);
+    describe('global level impressions', function () {
+      describe('with the session count set', function () {
+        it('should show if before limited amount of global impressions', function () {
+          var widgetId = 'impressionWidget1';
+          sessionStorage.setItem('PathforaImpressions_AnotherWidget', 0);
+          sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(1);
-  });
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                global: {
+                  session: 1
+                }
+              }
+            }
+          });
 
-  it('should not show if after limited amount of global impressions', function () {
-    var widgetId = 'impressionWidget2';
-    sessionStorage.setItem('PathforaImpressions_a' + widgetId, 2);
-    sessionStorage.setItem('PathforaImpressions_b' + widgetId, 2);
-    sessionStorage.setItem('PathforaImpressions_c' + widgetId, 2);
+          pathfora.initializeWidgets([form]);
 
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          global: {
-            session: 4
-          }
-        }
-      }
+          var widget = $('#' + form.id);
+          expect(widget.length).toBe(1);
+        });
+
+        it('should not show if after limited amount of global impressions', function () {
+          var widgetId = 'impressionWidget2';
+          sessionStorage.setItem('PathforaImpressions_a' + widgetId, 2);
+          sessionStorage.setItem('PathforaImpressions_b' + widgetId, 2);
+          sessionStorage.setItem('PathforaImpressions_c' + widgetId, 2);
+
+          var form = new pathfora.Form({
+            id: widgetId,
+            msg: 'subscription',
+            headline: 'Header',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                global: {
+                  session: 4
+                }
+              }
+            }
+          });
+
+          pathfora.initializeWidgets([form]);
+
+          var widget = $('#' + form.id);
+          expect(widget.length).toBe(0);
+        });
+      });
+
+      describe('with the total count set', function () {
+        var m1id = 'm1-id',
+            m2id = 'm2-id',
+            m1, m2;
+
+        beforeEach(function () {
+          m1 = new pathfora.Form({
+            id: m1id,
+            msg: 'modal 1',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                global: {
+                  total: 3
+                }
+              }
+            }
+          });
+
+          m2 = new pathfora.Form({
+            id: m2id,
+            msg: 'modal 2',
+            layout: 'slideout',
+            position: 'bottom-left'
+          });
+        });
+
+        afterEach(function () {
+          globalReset();
+        });
+
+        it('should show if before limited amount of global impressions', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaImpressions_' + m2id, '1|' + (now - 3000), m2.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+          expect($('#' + m1.id).length).toBe(1);
+          expect($('#' + m2.id).length).toBe(1);
+        });
+
+        it('should not show if after limited amount of global impressions', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaImpressions_' + m2id, '1|' + (now - 3000), m2.expiration);
+          pathfora.utils.write('PathforaImpressions_' + m1id, '3|' + (now - 3000), m1.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+          expect($('#' + m1.id).length).toBe(0);
+          expect($('#' + m2.id).length).toBe(1);
+        });
+      });
+
+      describe('with the total count set and duration set', function () {
+        var m1id = 'm1-id',
+            m2id = 'm2-id',
+            m1, m2;
+
+        beforeEach(function () {
+          m1 = new pathfora.Form({
+            id: m1id,
+            msg: 'modal 1',
+            layout: 'slideout',
+            position: 'bottom-right',
+            displayConditions: {
+              impressions: {
+                global: {
+                  total: 3,
+                  duration: 60
+                }
+              }
+            }
+          });
+
+          m2 = new pathfora.Form({
+            id: m2id,
+            msg: 'modal 2',
+            layout: 'slideout',
+            position: 'bottom-left'
+          });
+        });
+
+        afterEach(function () {
+          globalReset();
+        });
+
+
+        it('should set and update the since cookie value if duration is set', function () {
+          pathfora.initializeWidgets([m1, m2]);
+
+          expect($('#' + m1.id).length).toBe(1);
+          expect($('#' + m2.id).length).toBe(1);
+
+          expect(pathfora.utils.read('PathforaTotalImpressionsSince_' + m1.id)).toContain('2|');
+        });
+
+        it('should increment the cookie value if duration is set', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaTotalImpressionsSince_' + m1.id, '2|' + (now - 30 * 1000), m1.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+
+          expect($('#' + m1.id).length).toBe(1);
+          expect($('#' + m2.id).length).toBe(1);
+
+          expect(pathfora.utils.read('PathforaTotalImpressionsSince_' + m1.id)).toContain('4|');
+        });
+
+        it('should show if before the duration and total is not met', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaTotalImpressionsSince_' + m1.id, '1|' + (now - 30 * 1000), m1.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+          expect($('#' + m1.id).length).toBe(1);
+          expect($('#' + m2.id).length).toBe(1);
+        });
+
+        it('should not show if before the duration and total met', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaTotalImpressionsSince_' + m1.id, '5|' + (now - 30 * 1000), m1.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+          expect($('#' + m1.id).length).toBe(0);
+          expect($('#' + m2.id).length).toBe(1);
+        });
+
+        it('should show if past the duration and reset the since cookie value', function () {
+          var now = Date.now();
+          pathfora.utils.write('PathforaTotalImpressionsSince_' + m1.id, '5|' + (now - 65 * 1000), m1.expiration);
+
+          pathfora.initializeWidgets([m1, m2]);
+          expect($('#' + m1.id).length).toBe(1);
+          expect($('#' + m2.id).length).toBe(1);
+
+          expect(pathfora.utils.read('PathforaTotalImpressionsSince_' + m1.id)).toContain('2|');
+        });
+      });
     });
-
-    pathfora.initializeWidgets([form]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
-  });
-
-  it('should show if before limited amount of impressions', function () {
-    var widgetId = 'impressionWidget1';
-    sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
-
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          widget: {
-            session: 1,
-            total: 5
-          }
-        }
-      }
-    });
-
-    pathfora.initializeWidgets([form]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(1);
-  });
-
-  it('should not show if after limited amount of impressions', function () {
-    var widgetId = 'impressionWidget2';
-    sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
-
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          widget: {
-            session: 1,
-            total: 5
-          }
-        }
-      }
-    });
-
-    pathfora.initializeWidgets([form]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
-  });
-
-  it('should show if impression buffer met', function () {
-    var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie(
-      'PathforaImpressions_' + widgetId,
-      '2|' + Date.now()
-    );
-
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          widget: {
-            session: 3,
-            buffer: 2
-          }
-        }
-      }
-    });
-
-    setTimeout(function () {
-      pathfora.initializeWidgets([form]);
-
-      var widget = $('#' + form.id);
-      expect(widget.length).toBe(1);
-    }, 3000);
-  });
-
-  it('should not show if impression buffer not met', function () {
-    var widgetId = 'impressionWidget3';
-    pathfora.utils.saveCookie(
-      'PathforaImpressions_' + widgetId,
-      '2|' + Date.now()
-    );
-
-    var form = new pathfora.Form({
-      id: widgetId,
-      msg: 'subscription',
-      headline: 'Header',
-      layout: 'slideout',
-      position: 'bottom-right',
-      displayConditions: {
-        impressions: {
-          widget: {
-            session: 3,
-            buffer: 60
-          }
-        }
-      }
-    });
-
-    pathfora.initializeWidgets([form]);
-
-    var widget = $('#' + form.id);
-    expect(widget.length).toBe(0);
   });
 
   it('should show when the url matches the display conditions', function () {
