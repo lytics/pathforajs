@@ -8,12 +8,13 @@ import resetDataObject from './reset-data-object';
 // ab tests
 import createABTestingModePreset from '../ab-test/create-preset';
 
-export var PF_VERSION = '1.2.7',
+export var PF_VERSION = '1.2.9',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
     PREFIX_UNLOCK = 'PathforaUnlocked_',
     PREFIX_IMPRESSION = 'PathforaImpressions_',
+    PREFIX_TOTAL_IMPRESSIONS_SINCE = 'PathforaTotalImpressionsSince_',
     PREFIX_CONFIRM = 'PathforaConfirm_',
     PREFIX_CANCEL = 'PathforaCancel_',
     PREFIX_CLOSE = 'PathforaClosed_',

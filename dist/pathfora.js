@@ -213,12 +213,13 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.7',
+  var PF_VERSION = '1.2.9',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
       PREFIX_UNLOCK = 'PathforaUnlocked_',
       PREFIX_IMPRESSION = 'PathforaImpressions_',
+      PREFIX_TOTAL_IMPRESSIONS_SINCE = 'PathforaTotalImpressionsSince_',
       PREFIX_CONFIRM = 'PathforaConfirm_',
       PREFIX_CANCEL = 'PathforaCancel_',
       PREFIX_CLOSE = 'PathforaClosed_',
@@ -1051,10 +1052,13 @@
   function impressionsChecker (impressionConstraints, widget) {
     var parts,
         totalImpressions,
-        valid = true,
+        since,
         id = PREFIX_IMPRESSION + widget.id,
+        sinceId = PREFIX_TOTAL_IMPRESSIONS_SINCE + widget.id,
         sessionImpressions = ~~sessionStorage.getItem(id),
         sessionImpressionsForAllWidgets = 0,
+        impressionsForAllWidgets = 0,
+        lastImpressionTimeForAllWidgets = 0,
         total = read(id),
         now = Date.now();
 
@@ -1075,9 +1079,35 @@
       impressionConstraints.widget.buffer = impressionConstraints.buffer;
     }
 
-    // widget specific session total
+    // maintain and overwrite the "total since" value for impressions.global.duration
+    if (impressionConstraints.global.total > 0 && impressionConstraints.global.duration > 0) {
+      since = read(sinceId);
+
+      var resetImpressions = function () {
+        write(
+          sinceId,
+          '0|' + now,
+          widget.expiration
+        );
+      };
+
+      if (!since) {
+        resetImpressions();
+      } else {
+        parts = since.split('|');
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) >= impressionConstraints.global.duration) {
+          resetImpressions();
+        }
+      }
+    }
+
     if (!sessionImpressions) {
       sessionImpressions = 0;
+    }
+
+    // check for impressions.widget.session
+    if (sessionImpressions >= impressionConstraints.widget.session) {
+      return false;
     }
 
     // widget specific historic total
@@ -1087,15 +1117,29 @@
       parts = total.split('|');
       totalImpressions = parseInt(parts[0], 10);
 
-      if (
-        typeof parts[1] !== 'undefined' &&
-        Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.buffer
-      ) {
-        valid = false;
+      // check for impressions.widget.buffer
+      if (typeof parts[1] !== 'undefined') {
+        if (impressionConstraints.widget.buffer > 0 && (Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.buffer)) {
+          return false;
+        }
+
+        // check for impressions.widget.duration
+        if (
+          impressionConstraints.widget.duration > 0 &&
+          totalImpressions % impressionConstraints.widget.total === 0 &&
+          Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.duration
+        ) {
+          return false;
+        }
       }
     }
 
-    // all widget session total
+    // check for impressions.widget.total
+    if (totalImpressions >= impressionConstraints.widget.total && typeof impressionConstraints.widget.duration === 'undefined') {
+      return false;
+    }
+
+    // all widgets session total
     if (impressionConstraints.global.session > 0) {
       for (var i = 0; i < ~~sessionStorage.length; i++) {
         var k = sessionStorage.key(i);
@@ -1106,15 +1150,49 @@
       }
     }
 
-    if (
-      sessionImpressions >= impressionConstraints.widget.session ||
-      totalImpressions >= impressionConstraints.widget.total ||
-      sessionImpressionsForAllWidgets >= impressionConstraints.global.session
-    ) {
-      valid = false;
+    // check for impressions.global.session
+    if (sessionImpressionsForAllWidgets >= impressionConstraints.global.session) {
+      return false;
     }
 
-    return valid;
+    // all widget multi-session total
+    if (impressionConstraints.global.total > 0 || impressionConstraints.global.buffer > 0) {
+      for (var j = 0; j < ~~localStorage.length; j++) {
+        var l = localStorage.key(j);
+        if (typeof l !== 'undefined' && l.includes(PREFIX_IMPRESSION)) {
+          parts = read(l).split('|');
+          totalImpressions = parseInt(parts[0], 10);
+          impressionsForAllWidgets = impressionsForAllWidgets + totalImpressions;
+
+          if (typeof parts[1] !== 'undefined') {
+            lastImpressionTimeForAllWidgets = Math.max(parts[1], lastImpressionTimeForAllWidgets);
+          }
+        }
+      }
+
+      // check for impressions.global.buffer
+      if (lastImpressionTimeForAllWidgets > 0) {
+        if (impressionConstraints.global.buffer > 0 && (Math.abs(lastImpressionTimeForAllWidgets - now) / 1000 < impressionConstraints.global.buffer)) {
+          return false;
+        }
+      }
+    }
+
+    // check for impressions.global.duration
+    if (impressionConstraints.global.duration > 0) {
+      since = read(sinceId);
+      parts = since.split('|');
+      if (parts[0] >= impressionConstraints.global.total) {
+        return false;
+      }
+    }
+
+    // check for impressions.global.total
+    if (impressionsForAllWidgets >= impressionConstraints.global.total && typeof impressionConstraints.global.duration === 'undefined') {
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -1361,11 +1439,17 @@
     }
 
     sessionStorage.setItem(id, sessionImpressions);
-    write(
-      id,
-      Math.min(totalImpressions, 9998) + '|' + now,
-      widget.expiration
-    );
+    write(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
+
+    // increment the "total since" values for modals with the impressions.global.duration config option
+    for (var i = 0; i < ~~localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (typeof k !== 'undefined' && k.includes(PREFIX_TOTAL_IMPRESSIONS_SINCE)) {
+        parts = read(k).split('|');
+        totalImpressions = parseInt(parts[0], 10) + 1;
+        write(k, totalImpressions + '|' + parts[1], widget.expiration);
+      }
+    }
   }
 
   /** @module pathfora/validation/validate-widget-position */
@@ -5323,7 +5407,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', CSS_URL);
+    link.setAttribute('href', window.PathforaCSS || CSS_URL);
 
     this.utils.updateLegacyCookies();
     this.utils.store.removeExpiredItems();
