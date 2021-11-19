@@ -2665,9 +2665,12 @@
         Object.keys(config.placeholders).forEach(function (field) {
           var element = getFormElement(field);
 
-          if (element && typeof element.placeholder !== 'undefined') {
+          if (element == null) {
+            return;
+          }
+          if (typeof element.placeholder !== 'undefined') {
             element.placeholder = config.placeholders[field];
-          } else if (element && typeof element.options !== 'undefined') {
+          } else if (typeof element.options !== 'undefined') {
             element.options[0].innerHTML = config.placeholders[field];
           }
 

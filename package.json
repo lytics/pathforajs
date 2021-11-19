@@ -61,5 +61,8 @@
     "lint:fix": "yarn run lint -- --fix",
     "docs": "jsdoc src/pathfora.js -d docs",
     "docs:publish": "yarn run docs && gh-pages -d docs"
+  },
+  "volta": {
+    "node": "11.15.0"
   }
 }
