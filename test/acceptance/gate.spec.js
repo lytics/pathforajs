@@ -25,6 +25,27 @@ describe('the gate component', function () {
     }, 200);
   });
 
+  it('should should work with showForm: false', function (done) {
+    var gate = new pathfora.SiteGate({
+      id: 'gate-hide-form',
+      headline: 'Gated Site Feature',
+      msg: 'Please agree to the terms to proceed.',
+      showForm: false,
+      okMessage: 'I Agree'
+    });
+
+    expect(() => {
+      pathfora.initializeWidgets([gate]);
+    }).not.toThrow();
+
+    var widget = $('#' + gate.id);
+
+    setTimeout(function () {
+      expect(widget.hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+  });
+
   it('should not gate when the record is already set', function (done) {
     var gate = new pathfora.SiteGate({
       headline: 'Blocking Widget',
