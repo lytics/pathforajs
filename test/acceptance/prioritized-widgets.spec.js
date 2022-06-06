@@ -221,4 +221,33 @@ describe('Prioritized widgets', function () {
       }, 200);
     });
   });
+
+  describe('with unordered priority defined', function () {
+    it('should attempt to initialize widgets asyncronously', function (done) {
+      var messageBar = new pathfora.Message({
+        id: 'messageBar1noPriority',
+        layout: 'bar',
+        msg: 'Welcome to our website {{name}}'
+      });
+      var modal = new pathfora.Message({
+        id: 'modal2noPriority',
+        layout: 'modal',
+        msg: 'Welcome to our website'
+      });
+
+      pathfora.initializeWidgets([messageBar, modal], null, {
+        priority: 'unordered'
+      });
+
+      var widget1 = $('#' + messageBar.id),
+          widget2 = $('#' + modal.id);
+
+      setTimeout(function () {
+        expect(widget1.length).toBe(0);
+        expect(widget2).toBeDefined();
+        expect(widget2.hasClass('opened')).toBeTruthy();
+        done();
+      }, 200);
+    });
+  });
 });
