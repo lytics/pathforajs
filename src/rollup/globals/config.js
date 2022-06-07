@@ -8,7 +8,7 @@ import resetDataObject from './reset-data-object';
 // ab tests
 import createABTestingModePreset from '../ab-test/create-preset';
 
-export var PF_VERSION = '1.2.9',
+export var PF_VERSION = '1.2.11',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -27,7 +27,8 @@ export var PF_VERSION = '1.2.9',
     CSS_URL = '`{{cssurl}}`',
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
     ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
-    OPTIONS_PRIORITY_ORDERED = 'ordered';
+    OPTIONS_PRIORITY_ORDERED = 'ordered',
+    OPTIONS_PRIORITY_UNORDERED = 'unordered';
 
 export var defaultPositions = {
   modal: '',
