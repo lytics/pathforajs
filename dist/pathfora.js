@@ -232,7 +232,8 @@
       CSS_URL = '//c.lytics.io/static/pathfora.min.css',
       ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
       ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
-      OPTIONS_PRIORITY_ORDERED = 'ordered';
+      OPTIONS_PRIORITY_ORDERED = 'ordered',
+      OPTIONS_PRIORITY_UNORDERED = 'unordered';
 
   var defaultPositions = {
     modal: '',
@@ -3406,6 +3407,8 @@
       if (options.priority) {
         switch (options.priority) {
         case OPTIONS_PRIORITY_ORDERED:
+          break;
+        case OPTIONS_PRIORITY_UNORDERED:
           break;
         default:
           throw new Error('Invalid priority defined in options.');
