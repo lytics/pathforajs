@@ -14,11 +14,17 @@ export default function addCallback (cb) {
     cb(window.lio.data);
     return;
   } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
-    // > jstag 3.0.0
-    var entity = window.jstag.getEntity();
-    if (entity.data && entity.data.user) {
-      cb(entity.data.user);
-      return;
+    if ('entityReady' in window.jstag) {
+      window.jstag.entityReady(function (e) {
+        if (e.data && e.data.user) {
+          cb(e.data.user);
+        }
+      });
+    } else {
+      var entity = window.jstag.getEntity();
+      if (entity.data && entity.data.user) {
+        cb(entity.data.user);
+      }
     }
   }
 
