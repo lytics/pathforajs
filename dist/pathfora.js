@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.11',
+  var PF_VERSION = '1.2.12',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -1014,11 +1014,17 @@
       cb(window.lio.data);
       return;
     } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
-      // > jstag 3.0.0
-      var entity = window.jstag.getEntity();
-      if (entity.data && entity.data.user) {
-        cb(entity.data.user);
-        return;
+      if ('entityReady' in window.jstag) {
+        window.jstag.entityReady(function (e) {
+          if (e.data && e.data.user) {
+            cb(e.data.user);
+          }
+        });
+      } else {
+        var entity = window.jstag.getEntity();
+        if (entity.data && entity.data.user) {
+          cb(entity.data.user);
+        }
       }
     }
 
