@@ -127,6 +127,17 @@ export default function constructWidgetActions (widget, config) {
                 field.focus();
               }
             }
+
+            // if a validation pattern exists we can assume its required
+            var pattern = field.getAttribute('enforcePattern');
+            if (pattern) {
+              // validate the regex pattern against the input string
+              var regex = new RegExp(pattern);
+              if (!regex.test(field.value)) {
+                valid = false;
+                addClass(parent, 'invalid');
+              }
+            }
           }
           // legacy support old, non-custom forms
         } else if (field.hasAttribute('data-required')) {

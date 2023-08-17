@@ -1601,6 +1601,138 @@ describe('Widgets', function () {
   });
 
   // -------------------------
+  //  CUSTOM FORM VALIDATION
+  // -------------------------
+
+  it('should not submit the form if custom validation fails', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-4',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'text',
+          placeholder: 'Only 5 Digits Allowed',
+          name: 'postal_code',
+          pattern: '^[0-9]{5}$',
+          required: true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      var form = widget.find('form');
+      var field = form.find('input[name="postal_code"]');
+
+      field.val('notvalid');
+      form.find('.pf-widget-ok').click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var required = widget.find('[data-required=true]');
+      expect(required.length).toBe(customForm.formElements.length);
+
+      for (var i = 0; i < required.length; i++) {
+        var req = required[i].parentNode;
+        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+      }
+
+      done();
+    }, 200);
+  });
+
+  it('should not submit the form if custom validation fails', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-5',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'text',
+          placeholder: 'Only 5 Digits Allowed',
+          name: 'postal_code',
+          pattern: '^[0-9]{5}$',
+          required: true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      var form = widget.find('form');
+      var field = form.find('input[name="postal_code"]');
+
+      field.val('12345');
+      form.find('.pf-widget-ok').click();
+      expect(jstag.send).toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeFalsy();
+
+      var required = widget.find('[data-required=true]');
+      expect(required.length).toBe(customForm.formElements.length);
+
+      for (var i = 0; i < required.length; i++) {
+        var req = required[i].parentNode;
+        expect(req.className.indexOf('invalid') !== -1).toBeFalsy();
+      }
+
+      done();
+    }, 200);
+  });
+
+  it('should add validation parameters if special case of us-postal-code', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-6',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'us-postal-code',
+          placeholder: 'Only 5 Digits Allowed',
+          name: 'postal_code',
+          required: true
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      var form = widget.find('form');
+      var field = form.find('input[name="postal_code"]');
+
+      var pattern = field.attr('enforcePattern');
+      expect(pattern).toBe('^[0-9]{5}$');
+
+      field.val('1234a');
+      form.find('.pf-widget-ok').click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var required = widget.find('[data-required=true]');
+      expect(required.length).toBe(customForm.formElements.length);
+
+      for (var i = 0; i < required.length; i++) {
+        var req = required[i].parentNode;
+        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+      }
+
+      done();
+    }, 200);
+  });
+
+  // -------------------------
   //  IGNORED
   // -------------------------
 

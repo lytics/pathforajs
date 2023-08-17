@@ -1847,6 +1847,17 @@
                   field.focus();
                 }
               }
+
+              // if a validation pattern exists we can assume its required
+              var pattern = field.getAttribute('enforcePattern');
+              if (pattern) {
+                // validate the regex pattern against the input string
+                var regex = new RegExp(pattern);
+                if (!regex.test(field.value)) {
+                  valid = false;
+                  addClass(parent, 'invalid');
+                }
+              }
             }
             // legacy support old, non-custom forms
           } else if (field.hasAttribute('data-required')) {
@@ -2213,6 +2224,11 @@
         content = document$1.createElement('input');
         content.setAttribute('type', 'email');
         break;
+      case 'us-postal-code':
+        content = document$1.createElement('input');
+        content.setAttribute('type', 'text');
+        content.setAttribute('enforcePattern', '^[0-9]{5}$');
+        break;
       case 'text':
       case 'input':
         content = document$1.createElement('input');
@@ -2221,6 +2237,11 @@
       default:
         content = document$1.createElement(elem.type);
         break;
+      }
+
+      // if custom validation is requested ensure that is stored on the element
+      if (elem.pattern) {
+        content.setAttribute('enforcePattern', elem.pattern);
       }
 
       content.setAttribute('name', elem.name);
@@ -2349,6 +2370,7 @@
         break;
 
       // Textarea, Input, & Select
+      case 'us-postal-code':
       case 'textarea':
       case 'input':
       case 'text':

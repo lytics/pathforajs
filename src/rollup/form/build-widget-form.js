@@ -24,6 +24,7 @@ export default function buildWidgetForm (formElements, form) {
       break;
 
     // Textarea, Input, & Select
+    case 'us-postal-code':
     case 'textarea':
     case 'input':
     case 'text':
