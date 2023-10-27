@@ -97,7 +97,6 @@
     "no-delete-var": "error",
     "no-shadow": "error",
     "no-undef-init": "error",
-    "no-undefined": "error",
     "no-use-before-define": "error",
     "global-require": "error",
     "array-bracket-spacing": [

@@ -15,7 +15,10 @@ import addClass from '../utils/class/add-class';
  * @params {object} form
  */
 export default function buildFormElement (elem, form) {
-  var content, i, val, label,
+  var content,
+      i,
+      val,
+      label,
       wrapper = document.createElement('div'),
       isGroup = elem.hasOwnProperty('groupType');
 
@@ -24,7 +27,6 @@ export default function buildFormElement (elem, form) {
     wrapper.className = 'pf-widget-' + elem.type;
     content = document.createElement('div');
   } else {
-
     switch (elem.type) {
     case 'email':
       content = document.createElement('input');
@@ -34,6 +36,10 @@ export default function buildFormElement (elem, form) {
     case 'input':
       content = document.createElement('input');
       content.setAttribute('type', 'text');
+      break;
+    case 'date':
+      content = document.createElement('input');
+      content.setAttribute('type', 'date');
       break;
     default:
       content = document.createElement(elem.type);
@@ -46,6 +52,30 @@ export default function buildFormElement (elem, form) {
     // add row count for textarea
     if (elem.type === 'textarea') {
       content.setAttribute('rows', 5);
+    }
+
+    // add max and min date for date input
+    if (elem.type === 'date') {
+      var today = new Date(),
+          offset = today.getTimezoneOffset(),
+          todayTimezone = new Date(today.getTime() - offset * 60 * 1000),
+          max = elem.maxDate
+            ? elem.maxDate === 'today'
+              ? todayTimezone
+              : new Date(elem.maxDate)
+            : null,
+          min = elem.minDate
+            ? elem.minDate === 'today'
+              ? todayTimezone
+              : new Date(elem.minDate)
+            : null;
+
+      if (max != null) {
+        content.setAttribute('max', max.toISOString().split('T')[0]);
+      }
+      if (min != null) {
+        content.setAttribute('min', min.toISOString().split('T')[0]);
+      }
     }
   }
 
@@ -70,18 +100,20 @@ export default function buildFormElement (elem, form) {
     wrapper.appendChild(label);
   }
 
-  if (elem.required === true) {
+  if (elem.required === true || elem.type === 'date' || elem.type === 'email') {
     addClass(wrapper, 'pf-form-required');
-    content.setAttribute('data-required', 'true');
+    content.setAttribute(
+      elem.required === true ? 'data-required' : 'data-validate',
+      'true'
+    );
 
     if (elem.label) {
       var reqFlag = document.createElement('div');
       reqFlag.className = 'pf-required-flag';
-      reqFlag.innerHTML = 'required';
+      reqFlag.innerHTML = elem.required === true ? 'required' : 'invalid';
 
-      var reqTriange = document.createElement('span');
-      reqFlag.appendChild(reqTriange);
-
+      var reqTriangle = document.createElement('span');
+      reqFlag.appendChild(reqTriangle);
       wrapper.appendChild(reqFlag);
     }
   }
@@ -119,7 +151,9 @@ export default function buildFormElement (elem, form) {
           label.appendChild(document.createTextNode(val.label));
           content.appendChild(label);
         } else {
-          throw new Error(elem.groupType + 'form group values must contain labels');
+          throw new Error(
+            elem.groupType + 'form group values must contain labels'
+          );
         }
       } else if (elem.type === 'select') {
         var option = document.createElement('option');

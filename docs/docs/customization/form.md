@@ -23,7 +23,7 @@ This is a list of form element objects to include in the module's form. The orde
   <tr>
     <td>type</td>
     <td>string</td>
-    <td>type of form element: checkbox-group, radio-group, select, text, email, or textarea</td>
+    <td>type of form element: checkbox-group, radio-group, select, text, email, date, or textarea</td>
   </tr>
   <tr>
     <td>name</td>
@@ -33,7 +33,7 @@ This is a list of form element objects to include in the module's form. The orde
   <tr>
     <td>label</td>
     <td>string</td>
-    <td><code>optional</code> label to give the field context to the user/td>
+    <td><code>optional</code> label to give the field context to the user</td>
   </tr>
   <tr>
     <td>placeholder</td>
@@ -45,8 +45,17 @@ This is a list of form element objects to include in the module's form. The orde
     <td>array</td>
     <td><code>optional</code> list of options for checkbox, radio, or select elements.</td>
   </tr>
+  <tr>
+    <td>minDate</td>
+    <td>string</td>
+    <td><code>optional</code> minimum allowed date the user can select. Can be <code>today</code> or a date formatted <code>mm-dd-yyyy</code> (only applicable when type = date)</td>
+  </tr>
+    <tr>
+    <td>maxDate</td>
+    <td>string</td>
+    <td><code>optional</code> maximum allowed date the user can select. Can be <code>today</code> or a date formatted <code>mm-dd-yyyy</code> (only applicable when type = date)</td>
+  </tr>
 </table>
-
 
 <table>
   <thead>
@@ -77,7 +86,6 @@ This is a list of form element objects to include in the module's form. The orde
 ![Form Fields](../examples/img/customization/form/custom.png)
 
 <pre data-src="../../examples/src/customization/form/custom.js"></pre>
-
 
 ## formStates
 
@@ -171,4 +179,3 @@ Set a custom success or error state message on confirmation to show after the us
 ![Form States](../examples/img/customization/form/formStates.png)
 
 <pre data-src="../../examples/src/customization/form/formStates.js"></pre>
-
