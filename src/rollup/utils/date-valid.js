@@ -1,7 +1,7 @@
 /** @module pathfora/utils/date-valid */
 
 /**
- * Validate that the string is a properly formatted email
+ * Validate that the string is a valid date
  *
  * @exports dateValid
  * @params {string} date
