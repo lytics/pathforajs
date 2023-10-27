@@ -15,6 +15,7 @@ import hasClass from '../../utils/class/has-class';
 import addClass from '../../utils/class/add-class';
 import removeClass from '../../utils/class/remove-class';
 import emailValid from '../../utils/email-valid';
+import dateValid from '../../utils/date-valid';
 
 // form
 import handleFormStates from '../../form/handle-form-states';
@@ -43,7 +44,8 @@ export default function constructWidgetActions (widget, config) {
       widgetOk = widget.querySelector('.pf-widget-ok'),
       widgetCancel = widget.querySelector('.pf-widget-cancel'),
       widgetClose = widget.querySelector('.pf-widget-close'),
-      widgetReco = widget.querySelector('.pf-content-unit');
+      widgetReco = widget.querySelector('.pf-content-unit'),
+      fieldInvalidate;
 
   // Tracking for widgets with a form element
   switch (config.type) {
@@ -79,6 +81,13 @@ export default function constructWidgetActions (widget, config) {
       }
     }
 
+    fieldInvalidate = function (field, count, toFocus) {
+      addClass(field, 'invalid');
+      if (toFocus && count === 0) {
+        toFocus.focus();
+      }
+    };
+
     // Form submit handler
     widgetFormValidate = function (event) {
       event.preventDefault();
@@ -87,14 +96,20 @@ export default function constructWidgetActions (widget, config) {
       var valid = true,
           requiredElements = Array.prototype.slice.call(
             widgetForm.querySelectorAll('[data-required=true]')
-          );
+          ),
+          validatableElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-validate=true]')
+          ),
+          i,
+          field,
+          parent;
 
-      for (var i = 0; i < requiredElements.length; i++) {
-        var field = requiredElements[i];
+      for (i = 0; i < requiredElements.length; i++) {
+        field = requiredElements[i];
 
         if (hasClass(widgetForm, 'pf-custom-form')) {
           if (field.parentNode) {
-            var parent = field.parentNode;
+            parent = field.parentNode;
             removeClass(parent, 'invalid');
 
             if (
@@ -113,35 +128,58 @@ export default function constructWidgetActions (widget, config) {
 
               if (count === 0) {
                 valid = false;
-                addClass(parent, 'invalid');
+                fieldInvalidate(parent);
               }
-            } else if (
-              !field.value ||
-                (field.getAttribute('type') === 'email' &&
-                  !emailValid(field.value))
-            ) {
+            } else if (!field.value) {
               valid = false;
-              addClass(parent, 'invalid');
-
-              if (i === 0) {
-                field.focus();
-              }
+              fieldInvalidate(parent, i, field);
             }
           }
           // legacy support old, non-custom forms
         } else if (field.hasAttribute('data-required')) {
           removeClass(field, 'invalid');
 
+          if (!field.value) {
+            valid = false;
+            fieldInvalidate(field, i, field);
+          }
+        }
+      }
+
+      for (i = 0; i < validatableElements.length; i++) {
+        field = validatableElements[i];
+
+        if (hasClass(widgetForm, 'pf-custom-form')) {
+          if (field.parentNode) {
+            parent = field.parentNode;
+            removeClass(parent, 'invalid');
+
+            if (
+              (field.value !== '' &&
+                  field.getAttribute('type') === 'email' &&
+                  !emailValid(field.value)) ||
+                (field.getAttribute('type') === 'date' &&
+                  !dateValid(
+                    field.value,
+                    field.getAttribute('max'),
+                    field.getAttribute('min')
+                  ))
+            ) {
+              valid = false;
+              fieldInvalidate(parent, i, field);
+            }
+          }
+          // legacy support old, non-custom forms
+        } else if (field.hasAttribute('data-validate')) {
+          removeClass(field, 'invalid');
+
           if (
-            !field.value ||
-              (field.getAttribute('type') === 'email' &&
-                !emailValid(field.value))
+            field.getAttribute('type') === 'email' &&
+              !emailValid(field.value) &&
+              field.value !== ''
           ) {
             valid = false;
-            addClass(field, 'invalid');
-            if (i === 0) {
-              field.focus();
-            }
+            fieldInvalidate(field, i, field);
           }
         }
       }
@@ -227,11 +265,15 @@ export default function constructWidgetActions (widget, config) {
           data = Array.prototype.slice
             .call(widgetForm.querySelectorAll('input, textarea, select'))
             .filter(function (element) {
-              if (element.type && (element.type === 'checkbox' || element.type === 'radio')) {
+              if (
+                element.type &&
+                (element.type === 'checkbox' || element.type === 'radio')
+              ) {
                 return element.checked;
               }
               return true;
-            }).map(function (element) {
+            })
+            .map(function (element) {
               return {
                 name: element.name || element.id,
                 value: element.value

@@ -1600,6 +1600,125 @@ describe('Widgets', function () {
     }, 200);
   });
 
+  it('should not submit the form if fields are invalid', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-3',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'email',
+          placeholder: 'Email',
+          name: 'email'
+        },
+        {
+          type: 'radio-group',
+          label: 'Which ice cream flavors do you like the most?',
+          name: 'ice_cream_flavors',
+          values: [
+            {
+              label: 'Vanilla',
+              value: 'vanilla'
+            },
+            {
+              label: 'Chocolate',
+              value: 'chocolate'
+            },
+            {
+              label: 'Strawberry',
+              value: 'strawberry'
+            }
+          ]
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      widget.find('input[name=email]').val('zkjhfkdjh');
+      widget
+        .find('form')
+        .find('.pf-widget-ok')
+        .click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var invalid = widget.find('[data-validate=true]');
+      expect(invalid.length).toBe(1);
+
+      for (var i = 0; i < invalid.length; i++) {
+        var req = invalid[i].parentNode;
+        expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
+        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+      }
+      done();
+    }, 200);
+  });
+
+  it('should not submit the form if a date field is invalid', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-3',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'date',
+          name: 'birthday',
+          maxDate: 'today',
+          minDate: '01-01-2020'
+        },
+        {
+          type: 'radio-group',
+          label: 'Which ice cream flavors do you like the most?',
+          name: 'ice_cream_flavors',
+          values: [
+            {
+              label: 'Vanilla',
+              value: 'vanilla'
+            },
+            {
+              label: 'Chocolate',
+              value: 'chocolate'
+            },
+            {
+              label: 'Strawberry',
+              value: 'strawberry'
+            }
+          ]
+        }
+      ]
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      widget.find('input[name=birthday]').val('2010-10-10');
+      widget
+        .find('form')
+        .find('.pf-widget-ok')
+        .click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var invalid = widget.find('[data-validate=true]');
+      expect(invalid.length).toBe(1);
+
+      for (var i = 0; i < invalid.length; i++) {
+        var req = invalid[i].parentNode;
+        expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
+        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+      }
+      done();
+    }, 200);
+  });
+
   // -------------------------
   //  IGNORED
   // -------------------------
