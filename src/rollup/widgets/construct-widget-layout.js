@@ -225,7 +225,7 @@ export default function constructWidgetLayout (widget, config) {
 
       buildWidgetForm(config.formElements, form);
     } else {
-      // suport old form functions
+      // support old form functions
       var getFormElement = function (field) {
         if (field === 'name') {
           return widget.querySelector('input[name="username"]');

@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.12',
+  var PF_VERSION = '1.2.13',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -1529,6 +1529,33 @@
     }
   }
 
+  /** @module pathfora/utils/date-valid */
+
+  /**
+   * Validate that the string is a valid date
+   *
+   * @exports dateValid
+   * @params {string} date
+   * @params {string} max
+   * @params {string} min
+   * @returns {boolean} valid
+   */
+  function dateValid (date, max, min) {
+    var selectedDate = new Date(date).getTime(),
+        maxDate = max ? new Date(max).getTime() : undefined,
+        minDate = min ? new Date(min).getTime() : undefined;
+
+    if (max && selectedDate > maxDate) {
+      return false;
+    }
+
+    if (min && selectedDate < minDate) {
+      return false;
+    }
+
+    return true;
+  }
+
   /** @module pathfora/widgets/close-widget */
 
   /**
@@ -1763,7 +1790,8 @@
         widgetOk = widget.querySelector('.pf-widget-ok'),
         widgetCancel = widget.querySelector('.pf-widget-cancel'),
         widgetClose = widget.querySelector('.pf-widget-close'),
-        widgetReco = widget.querySelector('.pf-content-unit');
+        widgetReco = widget.querySelector('.pf-content-unit'),
+        fieldInvalidate;
 
     // Tracking for widgets with a form element
     switch (config.type) {
@@ -1799,6 +1827,13 @@
         }
       }
 
+      fieldInvalidate = function (field, count, toFocus) {
+        addClass(field, 'invalid');
+        if (toFocus && count === 0) {
+          toFocus.focus();
+        }
+      };
+
       // Form submit handler
       widgetFormValidate = function (event) {
         event.preventDefault();
@@ -1807,14 +1842,20 @@
         var valid = true,
             requiredElements = Array.prototype.slice.call(
               widgetForm.querySelectorAll('[data-required=true]')
-            );
+            ),
+            validatableElements = Array.prototype.slice.call(
+              widgetForm.querySelectorAll('[data-validate=true]')
+            ),
+            i,
+            field,
+            parent;
 
-        for (var i = 0; i < requiredElements.length; i++) {
-          var field = requiredElements[i];
+        for (i = 0; i < requiredElements.length; i++) {
+          field = requiredElements[i];
 
           if (hasClass(widgetForm, 'pf-custom-form')) {
             if (field.parentNode) {
-              var parent = field.parentNode;
+              parent = field.parentNode;
               removeClass(parent, 'invalid');
 
               if (
@@ -1833,35 +1874,58 @@
 
                 if (count === 0) {
                   valid = false;
-                  addClass(parent, 'invalid');
+                  fieldInvalidate(parent);
                 }
-              } else if (
-                !field.value ||
-                  (field.getAttribute('type') === 'email' &&
-                    !emailValid(field.value))
-              ) {
+              } else if (!field.value) {
                 valid = false;
-                addClass(parent, 'invalid');
-
-                if (i === 0) {
-                  field.focus();
-                }
+                fieldInvalidate(parent, i, field);
               }
             }
             // legacy support old, non-custom forms
           } else if (field.hasAttribute('data-required')) {
             removeClass(field, 'invalid');
 
+            if (!field.value) {
+              valid = false;
+              fieldInvalidate(field, i, field);
+            }
+          }
+        }
+
+        for (i = 0; i < validatableElements.length; i++) {
+          field = validatableElements[i];
+
+          if (hasClass(widgetForm, 'pf-custom-form')) {
+            if (field.parentNode) {
+              parent = field.parentNode;
+              removeClass(parent, 'invalid');
+
+              if (
+                (field.value !== '' &&
+                    field.getAttribute('type') === 'email' &&
+                    !emailValid(field.value)) ||
+                  (field.getAttribute('type') === 'date' &&
+                    !dateValid(
+                      field.value,
+                      field.getAttribute('max'),
+                      field.getAttribute('min')
+                    ))
+              ) {
+                valid = false;
+                fieldInvalidate(parent, i, field);
+              }
+            }
+            // legacy support old, non-custom forms
+          } else if (field.hasAttribute('data-validate')) {
+            removeClass(field, 'invalid');
+
             if (
-              !field.value ||
-                (field.getAttribute('type') === 'email' &&
-                  !emailValid(field.value))
+              field.getAttribute('type') === 'email' &&
+                !emailValid(field.value) &&
+                field.value !== ''
             ) {
               valid = false;
-              addClass(field, 'invalid');
-              if (i === 0) {
-                field.focus();
-              }
+              fieldInvalidate(field, i, field);
             }
           }
         }
@@ -1945,11 +2009,15 @@
             data = Array.prototype.slice
               .call(widgetForm.querySelectorAll('input, textarea, select'))
               .filter(function (element) {
-                if (element.type && (element.type === 'checkbox' || element.type === 'radio')) {
+                if (
+                  element.type &&
+                  (element.type === 'checkbox' || element.type === 'radio')
+                ) {
                   return element.checked;
                 }
                 return true;
-              }).map(function (element) {
+              })
+              .map(function (element) {
                 return {
                   name: element.name || element.id,
                   value: element.value
@@ -2198,7 +2266,10 @@
    * @params {object} form
    */
   function buildFormElement (elem, form) {
-    var content, i, val, label,
+    var content,
+        i,
+        val,
+        label,
         wrapper = document$1.createElement('div'),
         isGroup = elem.hasOwnProperty('groupType');
 
@@ -2207,7 +2278,6 @@
       wrapper.className = 'pf-widget-' + elem.type;
       content = document$1.createElement('div');
     } else {
-
       switch (elem.type) {
       case 'email':
         content = document$1.createElement('input');
@@ -2217,6 +2287,10 @@
       case 'input':
         content = document$1.createElement('input');
         content.setAttribute('type', 'text');
+        break;
+      case 'date':
+        content = document$1.createElement('input');
+        content.setAttribute('type', 'date');
         break;
       default:
         content = document$1.createElement(elem.type);
@@ -2229,6 +2303,30 @@
       // add row count for textarea
       if (elem.type === 'textarea') {
         content.setAttribute('rows', 5);
+      }
+
+      // add max and min date for date input
+      if (elem.type === 'date') {
+        var today = new Date(),
+            offset = today.getTimezoneOffset(),
+            todayTimezone = new Date(today.getTime() - offset * 60 * 1000),
+            max = elem.maxDate
+              ? elem.maxDate === 'today'
+                ? todayTimezone
+                : new Date(elem.maxDate)
+              : null,
+            min = elem.minDate
+              ? elem.minDate === 'today'
+                ? todayTimezone
+                : new Date(elem.minDate)
+              : null;
+
+        if (max != null) {
+          content.setAttribute('max', max.toISOString().split('T')[0]);
+        }
+        if (min != null) {
+          content.setAttribute('min', min.toISOString().split('T')[0]);
+        }
       }
     }
 
@@ -2253,18 +2351,20 @@
       wrapper.appendChild(label);
     }
 
-    if (elem.required === true) {
+    if (elem.required === true || elem.type === 'date' || elem.type === 'email') {
       addClass(wrapper, 'pf-form-required');
-      content.setAttribute('data-required', 'true');
+      content.setAttribute(
+        elem.required === true ? 'data-required' : 'data-validate',
+        'true'
+      );
 
       if (elem.label) {
         var reqFlag = document$1.createElement('div');
         reqFlag.className = 'pf-required-flag';
-        reqFlag.innerHTML = 'required';
+        reqFlag.innerHTML = elem.required === true ? 'required' : 'invalid';
 
-        var reqTriange = document$1.createElement('span');
-        reqFlag.appendChild(reqTriange);
-
+        var reqTriangle = document$1.createElement('span');
+        reqFlag.appendChild(reqTriangle);
         wrapper.appendChild(reqFlag);
       }
     }
@@ -2302,7 +2402,9 @@
             label.appendChild(document$1.createTextNode(val.label));
             content.appendChild(label);
           } else {
-            throw new Error(elem.groupType + 'form group values must contain labels');
+            throw new Error(
+              elem.groupType + 'form group values must contain labels'
+            );
           }
         } else if (elem.type === 'select') {
           var option = document$1.createElement('option');
@@ -2353,6 +2455,7 @@
       case 'input':
       case 'text':
       case 'email':
+      case 'date':
       case 'select':
         buildFormElement(elem, form);
         break;
@@ -2659,7 +2762,7 @@
 
         buildWidgetForm(config.formElements, form);
       } else {
-        // suport old form functions
+        // support old form functions
         var getFormElement = function (field) {
           if (field === 'name') {
             return widget.querySelector('input[name="username"]');
@@ -2786,7 +2889,9 @@
         close = widget.querySelector('.pf-widget-close'),
         msg = widget.querySelectorAll('.pf-widget-message'),
         headline = widget.querySelectorAll('.pf-widget-headline'),
-        headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
+        headlineLeft = widget.querySelector(
+          '.pf-widget-caption-left .pf-widget-headline'
+        ),
         cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
         okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
         arrow = widget.querySelector('.pf-widget-caption span'),
@@ -2797,36 +2902,61 @@
         branding = widget.querySelector('.branding svg'),
         required = widget.querySelectorAll('.pf-required-flag'),
         requiredAsterisk = widget.querySelectorAll('span.required'),
-        requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
+        requiredInline = widget.querySelectorAll(
+          '[data-required=true]:not(.pf-has-label), [data-validate=true]:not(.pf-has-label)'
+        ),
         body = widget.querySelector('.pf-widget-body');
-
 
     if (colors.background) {
       if (hasClass(widget, 'pf-widget-modal')) {
-        widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
+        widget
+          .querySelector('.pf-widget-content')
+          .style.setProperty('background-color', colors.background, 'important');
       } else {
-        widget.style.setProperty('background-color', colors.background, 'important');
+        widget.style.setProperty(
+          'background-color',
+          colors.background,
+          'important'
+        );
       }
     }
 
     if (colors.fieldBackground) {
       for (i = 0; i < fields.length; i++) {
-        fields[i].style.setProperty('background-color', colors.fieldBackground, 'important');
+        fields[i].style.setProperty(
+          'background-color',
+          colors.fieldBackground,
+          'important'
+        );
       }
     }
 
     if (colors.required) {
       for (i = 0; i < required.length; i++) {
-        required[i].style.setProperty('background-color', colors.required, 'important');
-        required[i].querySelector('span').style.setProperty('border-right-color', colors.required, 'important');
+        required[i].style.setProperty(
+          'background-color',
+          colors.required,
+          'important'
+        );
+        required[i]
+          .querySelector('span')
+          .style.setProperty('border-right-color', colors.required, 'important');
       }
 
       for (i = 0; i < requiredInline.length; i++) {
-        requiredInline[i].style.setProperty('border-color', colors.required, 'important');
+        requiredInline[i].style.setProperty(
+          'border-color',
+          colors.required,
+          'important'
+        );
       }
 
       for (i = 0; i < requiredAsterisk.length; i++) {
-        requiredAsterisk[i].style.setProperty('color', colors.required, 'important');
+        requiredAsterisk[i].style.setProperty(
+          'color',
+          colors.required,
+          'important'
+        );
       }
     }
 
@@ -2841,15 +2971,27 @@
       var contentUnitMetaDescription = contentUnitMeta.querySelector('p');
 
       if (colors.actionBackground) {
-        contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
+        contentUnit.style.setProperty(
+          'background-color',
+          colors.actionBackground,
+          'important'
+        );
       }
 
       if (colors.actionText && contentUnitMetaTitle) {
-        contentUnitMetaTitle.style.setProperty('color', colors.actionText, 'important');
+        contentUnitMetaTitle.style.setProperty(
+          'color',
+          colors.actionText,
+          'important'
+        );
       }
 
       if (colors.text && contentUnitMetaDescription) {
-        contentUnitMetaDescription.style.setProperty('color', colors.text, 'important');
+        contentUnitMetaDescription.style.setProperty(
+          'color',
+          colors.text,
+          'important'
+        );
       }
     }
 
@@ -2882,7 +3024,11 @@
         }
 
         if (colors.cancelBackground) {
-          cancelBtn[i].style.setProperty('background-color', colors.cancelBackground, 'important');
+          cancelBtn[i].style.setProperty(
+            'background-color',
+            colors.cancelBackground,
+            'important'
+          );
         }
       }
     }
@@ -2894,7 +3040,11 @@
         }
 
         if (colors.actionBackground) {
-          okBtn[i].style.setProperty('background-color', colors.actionBackground, 'important');
+          okBtn[i].style.setProperty(
+            'background-color',
+            colors.actionBackground,
+            'important'
+          );
         }
       }
     }

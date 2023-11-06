@@ -28,6 +28,7 @@ export default function buildWidgetForm (formElements, form) {
     case 'input':
     case 'text':
     case 'email':
+    case 'date':
     case 'select':
       buildFormElement(elem, form);
       break;

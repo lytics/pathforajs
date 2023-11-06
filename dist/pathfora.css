@@ -65,6 +65,7 @@
 }
 .pf-widget input[type=text],
 .pf-widget input[type=email],
+.pf-widget input[type=date],
 .pf-widget select,
 .pf-widget textarea {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -81,12 +82,14 @@
 }
 .pf-widget input[type=text]::-webkit-input-placeholder,
 .pf-widget input[type=email]::-webkit-input-placeholder,
+.pf-widget input[type=date]::-webkit-input-placeholder,
 .pf-widget select::-webkit-input-placeholder,
 .pf-widget textarea::-webkit-input-placeholder {
   color: #a9a9a9;
 }
 .pf-widget input[type=text]:-moz-placeholder,
 .pf-widget input[type=email]:-moz-placeholder,
+.pf-widget input[type=date]:-moz-placeholder,
 .pf-widget select:-moz-placeholder,
 .pf-widget textarea:-moz-placeholder {
   /* Firefox 18- */
@@ -94,6 +97,7 @@
 }
 .pf-widget input[type=text]::-moz-placeholder,
 .pf-widget input[type=email]::-moz-placeholder,
+.pf-widget input[type=date]::-moz-placeholder,
 .pf-widget select::-moz-placeholder,
 .pf-widget textarea::-moz-placeholder {
   /* Firefox 19+ */
@@ -101,6 +105,7 @@
 }
 .pf-widget input[type=text]:-ms-input-placeholder,
 .pf-widget input[type=email]:-ms-input-placeholder,
+.pf-widget input[type=date]:-ms-input-placeholder,
 .pf-widget select:-ms-input-placeholder,
 .pf-widget textarea:-ms-input-placeholder {
   color: #a9a9a9;
@@ -122,11 +127,13 @@
 .pf-widget form:not(.pf-custom-form) textarea {
   margin-bottom: 10px;
 }
-.pf-widget form:not(.pf-custom-form) [data-required=true].invalid {
+.pf-widget form:not(.pf-custom-form) [data-required=true].invalid,
+.pf-widget form:not(.pf-custom-form) [data-validate=true].invalid {
   border: 1px solid #f12626;
 }
 .pf-widget input[type=text],
 .pf-widget input[type=email],
+.pf-widget input[type=date],
 .pf-widget select {
   clear: both;
 }
@@ -385,7 +392,9 @@
   position: relative;
 }
 .pf-form div.pf-form-required.invalid [data-required=true]:not(.pf-has-label),
-.pf-sitegate div.pf-form-required.invalid [data-required=true]:not(.pf-has-label) {
+.pf-sitegate div.pf-form-required.invalid [data-required=true]:not(.pf-has-label),
+.pf-form div.pf-form-required.invalid [data-validate=true]:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.invalid [data-validate=true]:not(.pf-has-label) {
   border: 1px solid #f12626;
   margin: -1px;
 }
@@ -502,20 +511,16 @@
 }
 .pf-widget-modal form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type="date"],
 .pf-widget-modal form select,
 .pf-widget-modal form textarea {
   font-size: 16px;
 }
 .pf-widget-modal form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type="date"],
 .pf-widget-modal form select {
   height: 45px;
-}
-.pf-widget-modal form input[type="text"][data-required="active"]:focus,
-.pf-widget-modal form input[type="email"][data-required="active"]:focus,
-.pf-widget-modal form select[data-required="active"]:focus {
-  margin-top: 1px;
-  margin-bottom: 10px;
 }
 .pf-widget-modal.opened .pf-widget-container {
   top: 0;
