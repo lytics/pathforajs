@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.12',
+  var PF_VERSION = '1.2.13',
       PF_LOCALE = 'en-US',
       PF_DATE_OPTIONS = {},
       PREFIX_REC = 'PathforaRecommend_',
@@ -1532,7 +1532,7 @@
   /** @module pathfora/utils/date-valid */
 
   /**
-   * Validate that the string is a properly formatted email
+   * Validate that the string is a valid date
    *
    * @exports dateValid
    * @params {string} date
