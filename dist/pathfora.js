@@ -2729,6 +2729,7 @@
       var widgetImage = document$1.createElement('img');
       widgetImage.src = config.image;
       widgetImage.className = 'pf-widget-img';
+      widgetImage.alt = '';
       if (config.layout === 'button') ; else if (config.layout === 'modal' || config.layout === 'inline') {
         widgetContent.appendChild(widgetImage);
       } else {
