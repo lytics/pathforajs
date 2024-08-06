@@ -142,7 +142,7 @@
 
     [data-required='true'],
     [data-validate='true'] {
-      &.invalid {
+      &.invalid, &.bad-validation {
         border: 1px solid @required;
       }
     }
@@ -458,7 +458,8 @@
   div.pf-form-required {
     position: relative;
 
-    &.invalid {
+    &.invalid,
+    &.bad-validation {
       [data-required='true'],
       [data-validate='true'] {
         &:not(.pf-has-label) {
@@ -474,7 +475,7 @@
     }
 
     &.invalid div.pf-required-flag,
-    &.invalid--validate div.pf-invalid-flag {
+    &.bad-validation div.pf-invalid-flag {
       opacity: 1;
       margin-left: 10px;
     }

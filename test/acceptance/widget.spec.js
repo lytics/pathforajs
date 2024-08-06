@@ -1650,7 +1650,7 @@ describe('Widgets', function () {
       for (var i = 0; i < invalid.length; i++) {
         var req = invalid[i].parentNode;
         expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
-        expect(req.className.indexOf('invalid--validate') !== -1).toBeTruthy();
+        expect(req.className.indexOf('bad-validation') !== -1).toBeTruthy();
       }
 
       // also check required validation
@@ -1664,7 +1664,9 @@ describe('Widgets', function () {
 
       for (var j = 0; j < invalid.length; j++) {
         var reqField = invalid[j].parentNode;
-        expect(reqField.className.indexOf('pf-form-required') !== -1).toBeTruthy();
+        expect(
+          reqField.className.indexOf('pf-form-required') !== -1
+        ).toBeTruthy();
         expect(reqField.className.indexOf('invalid') !== -1).toBeTruthy();
       }
       done();
@@ -1722,7 +1724,7 @@ describe('Widgets', function () {
       for (var i = 0; i < invalid.length; i++) {
         var req = invalid[i].parentNode;
         expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
-        expect(req.className.indexOf('invalid--validate') !== -1).toBeTruthy();
+        expect(req.className.indexOf('bad-validation') !== -1).toBeTruthy();
       }
       done();
     }, 200);

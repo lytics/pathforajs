@@ -128,7 +128,9 @@
   margin-bottom: 10px;
 }
 .pf-widget form:not(.pf-custom-form) [data-required='true'].invalid,
-.pf-widget form:not(.pf-custom-form) [data-validate='true'].invalid {
+.pf-widget form:not(.pf-custom-form) [data-validate='true'].invalid,
+.pf-widget form:not(.pf-custom-form) [data-required='true'].bad-validation,
+.pf-widget form:not(.pf-custom-form) [data-validate='true'].bad-validation {
   border: 1px solid #f12626;
 }
 .pf-widget input[type='text'],
@@ -393,8 +395,12 @@
 }
 .pf-form div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
 .pf-sitegate div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
+.pf-form div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
 .pf-form div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
-.pf-sitegate div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label) {
+.pf-sitegate div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
+.pf-form div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label) {
   border: 1px solid #f12626;
   margin: -1px;
 }
@@ -406,8 +412,8 @@
 }
 .pf-form div.pf-form-required.invalid div.pf-required-flag,
 .pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
-.pf-form div.pf-form-required.invalid--validate div.pf-invalid-flag,
-.pf-sitegate div.pf-form-required.invalid--validate div.pf-invalid-flag {
+.pf-form div.pf-form-required.bad-validation div.pf-invalid-flag,
+.pf-sitegate div.pf-form-required.bad-validation div.pf-invalid-flag {
   opacity: 1;
   margin-left: 10px;
 }

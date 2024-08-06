@@ -259,13 +259,15 @@ export default function constructWidgetLayout(widget, config) {
           }
         });
 
+        // Set validation for email field
+        var emailField = getFormElement('email');
+        if (emailField && emailField.type === 'email') {
+          emailField.setAttribute('data-validate', 'true');
+        }
+
         // Hide fields
         Object.keys(config.fields).forEach(function (field) {
           var element = getFormElement(field);
-
-          if (field === 'email' && config.fields[field] && element) {
-            element.setAttribute('data-validate', 'true');
-          }
 
           if (element && !config.fields[field] && element.parentNode) {
             element.parentNode.removeChild(element);

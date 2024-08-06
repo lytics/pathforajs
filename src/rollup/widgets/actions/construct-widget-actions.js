@@ -150,7 +150,7 @@ export default function constructWidgetActions(widget, config) {
           if (hasClass(widgetForm, 'pf-custom-form')) {
             if (field.parentNode) {
               parent = field.parentNode;
-              removeClass(parent, 'invalid--validate');
+              removeClass(parent, 'bad-validation');
 
               if (
                 (field.value !== '' &&
@@ -164,7 +164,7 @@ export default function constructWidgetActions(widget, config) {
                   ))
               ) {
                 valid = false;
-                addClass(parent, 'invalid--validate');
+                addClass(parent, 'bad-validation');
                 if (field && i === 0) {
                   field.focus();
                 }
@@ -172,7 +172,7 @@ export default function constructWidgetActions(widget, config) {
             }
             // legacy support old, non-custom forms
           } else if (field.hasAttribute('data-validate')) {
-            removeClass(field, 'invalid');
+            removeClass(field, 'bad-validation');
 
             if (
               field.getAttribute('type') === 'email' &&
@@ -180,7 +180,7 @@ export default function constructWidgetActions(widget, config) {
               field.value !== ''
             ) {
               valid = false;
-              addClass(field, 'invalid');
+              addClass(field, 'bad-validation');
               if (field && i === 0) {
                 field.focus();
               }
