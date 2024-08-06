@@ -14,13 +14,15 @@ import addClass from '../utils/class/add-class';
  * @params {object} elem
  * @params {object} form
  */
-export default function buildFormElement (elem, form) {
+export default function buildFormElement(elem, form) {
   var content,
-      i,
-      val,
-      label,
-      wrapper = document.createElement('div'),
-      isGroup = elem.hasOwnProperty('groupType');
+    i,
+    val,
+    label,
+    wrapper = document.createElement('div'),
+    isGroup = elem.hasOwnProperty('groupType'),
+    reqFlag,
+    reqTriangle;
 
   // group elements include: checkbox groups
   if (isGroup) {
@@ -28,22 +30,22 @@ export default function buildFormElement (elem, form) {
     content = document.createElement('div');
   } else {
     switch (elem.type) {
-    case 'email':
-      content = document.createElement('input');
-      content.setAttribute('type', 'email');
-      break;
-    case 'text':
-    case 'input':
-      content = document.createElement('input');
-      content.setAttribute('type', 'text');
-      break;
-    case 'date':
-      content = document.createElement('input');
-      content.setAttribute('type', 'date');
-      break;
-    default:
-      content = document.createElement(elem.type);
-      break;
+      case 'email':
+        content = document.createElement('input');
+        content.setAttribute('type', 'email');
+        break;
+      case 'text':
+      case 'input':
+        content = document.createElement('input');
+        content.setAttribute('type', 'text');
+        break;
+      case 'date':
+        content = document.createElement('input');
+        content.setAttribute('type', 'date');
+        break;
+      default:
+        content = document.createElement(elem.type);
+        break;
     }
 
     content.setAttribute('name', elem.name);
@@ -57,18 +59,18 @@ export default function buildFormElement (elem, form) {
     // add max and min date for date input
     if (elem.type === 'date') {
       var today = new Date(),
-          offset = today.getTimezoneOffset(),
-          todayTimezone = new Date(today.getTime() - offset * 60 * 1000),
-          max = elem.maxDate
-            ? elem.maxDate === 'today'
-              ? todayTimezone
-              : new Date(elem.maxDate)
-            : null,
-          min = elem.minDate
-            ? elem.minDate === 'today'
-              ? todayTimezone
-              : new Date(elem.minDate)
-            : null;
+        offset = today.getTimezoneOffset(),
+        todayTimezone = new Date(today.getTime() - offset * 60 * 1000),
+        max = elem.maxDate
+          ? elem.maxDate === 'today'
+            ? todayTimezone
+            : new Date(elem.maxDate)
+          : null,
+        min = elem.minDate
+          ? elem.minDate === 'today'
+            ? todayTimezone
+            : new Date(elem.minDate)
+          : null;
 
       if (max != null) {
         content.setAttribute('max', max.toISOString().split('T')[0]);
@@ -100,19 +102,31 @@ export default function buildFormElement (elem, form) {
     wrapper.appendChild(label);
   }
 
-  if (elem.required === true || elem.type === 'date' || elem.type === 'email') {
+  if (elem.required === true) {
     addClass(wrapper, 'pf-form-required');
-    content.setAttribute(
-      elem.required === true ? 'data-required' : 'data-validate',
-      'true'
-    );
+    content.setAttribute('data-required', 'true');
 
     if (elem.label) {
-      var reqFlag = document.createElement('div');
+      reqFlag = document.createElement('div');
       reqFlag.className = 'pf-required-flag';
-      reqFlag.innerHTML = elem.required === true ? 'required' : 'invalid';
+      reqFlag.innerHTML = 'required';
 
-      var reqTriangle = document.createElement('span');
+      reqTriangle = document.createElement('span');
+      reqFlag.appendChild(reqTriangle);
+      wrapper.appendChild(reqFlag);
+    }
+  }
+
+  if (elem.type === 'date' || elem.type === 'email') {
+    addClass(wrapper, 'pf-form-required');
+    content.setAttribute('data-validate', 'true');
+
+    if (elem.label) {
+      reqFlag = document.createElement('div');
+      reqFlag.className = 'pf-invalid-flag';
+      reqFlag.innerHTML = 'invalid';
+
+      reqTriangle = document.createElement('span');
       reqFlag.appendChild(reqTriangle);
       wrapper.appendChild(reqFlag);
     }
