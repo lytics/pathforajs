@@ -63,6 +63,7 @@
     "docs:publish": "yarn run docs && gh-pages -d docs"
   },
   "volta": {
-    "node": "11.15.0"
+    "node": "11.15.0",
+    "yarn": "1.22.18"
   }
 }

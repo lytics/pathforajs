@@ -17,13 +17,13 @@ describe('Widgets', function () {
     var w1 = new pathfora.Message({
       msg: 'Duplicate id test1',
       layout: 'modal',
-      id: 'asd'
+      id: 'asd',
     });
 
     var w2 = new pathfora.Form({
       msg: 'Duplcate id test2',
       layout: 'slideout',
-      id: 'asd'
+      id: 'asd',
     });
 
     expect(function () {
@@ -35,13 +35,13 @@ describe('Widgets', function () {
     var messageBar = new pathfora.Message({
       layout: 'bar',
       id: 'global-config-1',
-      msg: 'test'
+      msg: 'test',
     });
 
     var config = {
       generic: {
-        theme: 'light'
-      }
+        theme: 'light',
+      },
     };
 
     pathfora.initializeWidgets([messageBar], config);
@@ -59,13 +59,13 @@ describe('Widgets', function () {
       completedActions: [],
       cancelledActions: [],
       displayedWidgets: [],
-      abTestingGroups: []
+      abTestingGroups: [],
     };
 
     var form = new pathfora.Subscription({
       msg: 'test',
       id: 'clear-widget',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     pathfora.initializeWidgets([form]);
@@ -87,7 +87,7 @@ describe('Widgets', function () {
     var promoWidget = new pathfora.Message({
       layout: 'bar',
       msg: 'Opening widget',
-      id: 'widget-1'
+      id: 'widget-1',
     });
 
     pathfora.initializeWidgets([promoWidget]);
@@ -110,14 +110,14 @@ describe('Widgets', function () {
       layout: 'slideout',
       position: 'right',
       msg: 'Welcome to our test website',
-      id: 'test-id-widget'
+      id: 'test-id-widget',
     });
 
     expect(function () {
       return new pathfora.Message({
         layout: 'slideout',
         position: 'left',
-        msg: 'Welcome to our test website'
+        msg: 'Welcome to our test website',
       });
     }).toThrow(new Error('All widgets must have an id value'));
 
@@ -135,7 +135,7 @@ describe('Widgets', function () {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
       id: 'append-widget',
-      msg: 'test widget'
+      msg: 'test widget',
     });
 
     pathfora.initializeWidgets([openedWidget]);
@@ -158,7 +158,7 @@ describe('Widgets', function () {
     var testWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Close widget test',
-      id: 'close-clear-widget'
+      id: 'close-clear-widget',
     });
 
     pathfora.initializeWidgets([testWidget]);
@@ -184,14 +184,14 @@ describe('Widgets', function () {
       id: 'modal-esc-test',
       layout: 'modal',
       headline: 'Message Title',
-      msg: 'test'
+      msg: 'test',
     });
 
     var gate = new pathfora.SiteGate({
       id: 'modal-esc-test2',
       layout: 'modal',
       headline: 'Message Title',
-      msg: 'test'
+      msg: 'test',
     });
 
     pathfora.initializeWidgets([modal, gate]);
@@ -223,36 +223,36 @@ describe('Widgets', function () {
       id: 'message-test-widget',
       layout: 'slideout',
       headline: 'Message Title',
-      theme: 'custom'
+      theme: 'custom',
     });
 
     var form = new pathfora.Form({
       id: 'form-test-widget',
       layout: 'modal',
       headline: 'Headline Title',
-      theme: 'custom'
+      theme: 'custom',
     });
 
     var subscription = new pathfora.Subscription({
       id: 'subscription-test-widget',
       layout: 'bar',
-      theme: 'custom'
+      theme: 'custom',
     });
 
     pathfora.initializeWidgets([message, form, subscription]);
 
     // test message
     var mwidget = $('#' + message.id),
-        mheadline = mwidget.find('.pf-widget-headline'),
-        mtext = mwidget.find('.pf-widget-message');
+      mheadline = mwidget.find('.pf-widget-headline'),
+      mtext = mwidget.find('.pf-widget-message');
 
     expect(mheadline.html()).not.toEqual('undefined');
     expect(mtext.html()).not.toEqual('undefined');
 
     // test form
     var fwidget = $('#' + form.id),
-        fheadline = fwidget.find('.pf-widget-headline'),
-        ftext = fwidget.find('.pf-widget-message');
+      fheadline = fwidget.find('.pf-widget-headline'),
+      ftext = fwidget.find('.pf-widget-message');
 
     expect(fheadline.html()).not.toEqual('undefined');
     expect(ftext.html()).not.toEqual('undefined');
@@ -277,19 +277,19 @@ describe('Widgets', function () {
       msg: 'test',
       id: 'branding1',
       layout: 'slideout',
-      branding: true
+      branding: true,
     });
 
     var w2 = new pathfora.Message({
       msg: 'test',
       id: 'branding2',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     pathfora.initializeWidgets([w1, w2]);
 
     var widget1 = $('#' + w1.id),
-        widget2 = $('#' + w2.id);
+      widget2 = $('#' + w2.id);
 
     expect(widget1.find('.branding svg').length).toBe(1);
     expect(widget2.find('.branding svg').length).toBe(0);
@@ -300,39 +300,39 @@ describe('Widgets', function () {
       id: 'footer1',
       msg: 'test',
       layout: 'modal',
-      footerText: 'Footer text'
+      footerText: 'Footer text',
     });
 
     var modalNoFooter = new pathfora.Message({
       id: 'footer2',
       msg: 'test',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var slideoutFooter = new pathfora.Message({
       id: 'slidout1',
       msg: 'test',
       layout: 'slideout',
-      footerText: 'Footer text'
+      footerText: 'Footer text',
     });
 
     var slideoutNoFooter = new pathfora.Message({
       id: 'slideout2',
       msg: 'test',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     pathfora.initializeWidgets([
       modalFooter,
       modalNoFooter,
       slideoutFooter,
-      slideoutNoFooter
+      slideoutNoFooter,
     ]);
 
     var modal1 = $('#' + modalFooter.id),
-        modal2 = $('#' + modalNoFooter.id),
-        slideout1 = $('#' + slideoutFooter.id),
-        slideout2 = $('#' + slideoutNoFooter.id);
+      modal2 = $('#' + modalNoFooter.id),
+      slideout1 = $('#' + slideoutFooter.id),
+      slideout2 = $('#' + slideoutNoFooter.id);
     expect(modal1.find('.pf-widget-footer').html()).toEqual('Footer text');
     expect(modal2.find('.pf-widget-footer').html()).toEqual('');
     expect(slideout1.find('.pf-widget-footer').html()).toEqual('Footer text');
@@ -342,8 +342,8 @@ describe('Widgets', function () {
   it('should contain pf-widget-text div for inline and modal layouts', function () {
     var modal = new pathfora.Message({
       id: 'modal',
-      msg:'testmodal',
-      layout: 'modal'
+      msg: 'testmodal',
+      layout: 'modal',
     });
     var div = document.createElement('div');
     div.className = 'some-dom-element';
@@ -352,17 +352,17 @@ describe('Widgets', function () {
       id: 'inline',
       layout: 'inline',
       position: '.some-dom-element',
-      msg: 'testing'
+      msg: 'testing',
     });
     var slideout = new pathfora.Message({
       id: 'slideout',
       msg: 'test',
-      layout: 'slideout'
+      layout: 'slideout',
     });
     pathfora.initializeWidgets([modal, inline, slideout]);
     var modalWidget = $('#' + modal.id),
-        inlineWidget = $('#' + inline.id),
-        slideoutWidget = $('#' + slideout.id);
+      inlineWidget = $('#' + inline.id),
+      slideoutWidget = $('#' + slideout.id);
     expect(modalWidget.find('.pf-widget-text').html()).toBeDefined();
     expect(inlineWidget.find('.pf-widget-text').html()).toBeDefined();
     expect(slideoutWidget.find('.pf-widget-text').html()).toBeUndefined();
@@ -371,10 +371,10 @@ describe('Widgets', function () {
   it('should append pf-widget-img to pf-widget-content for modal and inline layouts', function () {
     var modal = new pathfora.Message({
       id: 'modal',
-      msg:'testmodal',
+      msg: 'testmodal',
       layout: 'modal',
       variant: 2,
-      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
     });
     var div = document.createElement('div');
     div.className = 'some-dom-element';
@@ -385,14 +385,20 @@ describe('Widgets', function () {
       position: '.some-dom-element',
       msg: 'testing',
       variant: 2,
-      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg'
+      image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
     });
     pathfora.initializeWidgets([modal, inline]);
     var modalWidget = $('#' + modal.id),
-        inlineWidget = $('#' + inline.id);
-    expect(modalWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
-    expect(inlineWidget.find('.pf-widget-content').find('img').html()).toBeDefined();
-    expect(modalWidget.find('.pf-widget-text').find('img').html()).toBeUndefined();
+      inlineWidget = $('#' + inline.id);
+    expect(
+      modalWidget.find('.pf-widget-content').find('img').html()
+    ).toBeDefined();
+    expect(
+      inlineWidget.find('.pf-widget-content').find('img').html()
+    ).toBeDefined();
+    expect(
+      modalWidget.find('.pf-widget-text').find('img').html()
+    ).toBeUndefined();
   });
 
   // -------------------------
@@ -405,7 +411,7 @@ describe('Widgets', function () {
       position: 'left',
       msg: 'light button',
       id: 'light-widget',
-      theme: 'light'
+      theme: 'light',
     });
 
     var w2 = new pathfora.Message({
@@ -413,7 +419,7 @@ describe('Widgets', function () {
       position: 'right',
       msg: 'dark button',
       id: 'dark-widget',
-      theme: 'dark'
+      theme: 'dark',
     });
 
     var w3 = new pathfora.Message({
@@ -421,22 +427,22 @@ describe('Widgets', function () {
       position: 'top-left',
       msg: 'custom color button',
       id: 'custom-widget',
-      theme: 'custom'
+      theme: 'custom',
     });
 
     var config = {
       generic: {
         colors: {
-          background: '#fff'
-        }
-      }
+          background: '#fff',
+        },
+      },
     };
 
     pathfora.initializeWidgets([w1, w2, w3], config);
 
     var light = $('#' + w1.id),
-        dark = $('#' + w2.id),
-        custom = $('#' + w3.id);
+      dark = $('#' + w2.id),
+      custom = $('#' + w3.id);
 
     expect(light.hasClass('pf-theme-light')).toBeTruthy();
     expect(dark.hasClass('pf-theme-dark')).toBeTruthy();
@@ -456,7 +462,7 @@ describe('Widgets', function () {
       msg: 'light button',
       id: 'widget-no-theme',
       className: 'widget-no-theme-class',
-      theme: 'none'
+      theme: 'none',
     });
 
     pathfora.initializeWidgets([w1]);
@@ -471,7 +477,7 @@ describe('Widgets', function () {
     var openedWidget = new pathfora.Message({
       layout: 'modal',
       msg: 'Displayed on init',
-      id: 'displayed-on-init'
+      id: 'displayed-on-init',
     });
 
     var closedWidget = new pathfora.Message({
@@ -479,8 +485,8 @@ describe('Widgets', function () {
       msg: 'Hidden on init',
       id: 'hidden-on-init',
       displayConditions: {
-        showOnInit: false
-      }
+        showOnInit: false,
+      },
     });
 
     pathfora.initializeWidgets([openedWidget, closedWidget]);
@@ -495,7 +501,7 @@ describe('Widgets', function () {
       layout: 'modal',
       msg: 'Custom style test',
       headline: 'Hello',
-      theme: 'custom'
+      theme: 'custom',
     });
 
     var config = {
@@ -508,9 +514,9 @@ describe('Widgets', function () {
           actionText: '#ddd',
           actionBackground: '#111',
           cancelText: '#333',
-          cancelBackground: '#eee'
-        }
-      }
+          cancelBackground: '#eee',
+        },
+      },
     };
 
     pathfora.initializeWidgets([modal], config);
@@ -542,7 +548,7 @@ describe('Widgets', function () {
       theme: 'custom',
       colors: {
         required: '#ba00a6',
-        requiredText: '#ebcee8'
+        requiredText: '#ebcee8',
       },
       formElements: [
         {
@@ -553,25 +559,25 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Red',
-              value: 'red'
+              value: 'red',
             },
             {
               label: 'Blue',
-              value: 'blue'
+              value: 'blue',
             },
             {
               label: 'Green',
-              value: 'green'
-            }
-          ]
+              value: 'green',
+            },
+          ],
         },
         {
           type: 'input',
           name: 'name',
           placeholder: 'Your Name',
-          required: true
-        }
-      ]
+          required: true,
+        },
+      ],
     });
 
     pathfora.initializeWidgets([modal]);
@@ -604,8 +610,8 @@ describe('Widgets', function () {
         name: 'Test confirm action',
         callback: function () {
           alert('test confirmation');
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([modal]);
@@ -625,8 +631,8 @@ describe('Widgets', function () {
       confirmAction: {
         callback: function () {
           alert('test confirmation');
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([modal]);
@@ -644,8 +650,8 @@ describe('Widgets', function () {
           { name: 'username', value: 'test name' },
           { name: 'email', value: 'test@example.com' },
           { name: 'title', value: '' },
-          { name: 'message', value: '' }
-        ]
+          { name: 'message', value: '' },
+        ],
       })
     );
   });
@@ -657,37 +663,37 @@ describe('Widgets', function () {
       msg: 'Confirm action test modal',
       formElements: [
         {
-          'type': 'text',
-          'required': true,
-          'label': 'Email Address',
-          'name': 'email'
+          type: 'text',
+          required: true,
+          label: 'Email Address',
+          name: 'email',
         },
         {
-          'type': 'checkbox-group',
-          'required': true,
-          'label': 'Which feeds would you like to subscribe to?',
-          'name': 'subscription_feeds',
-          'values': [
+          type: 'checkbox-group',
+          required: true,
+          label: 'Which feeds would you like to subscribe to?',
+          name: 'subscription_feeds',
+          values: [
             {
-              'label': 'Beauty & Perfumes',
-              'value': 'beauty'
+              label: 'Beauty & Perfumes',
+              value: 'beauty',
             },
             {
-              'label': 'Electronics',
-              'value': 'electronics'
+              label: 'Electronics',
+              value: 'electronics',
             },
             {
-              'label': 'Fashion',
-              'value': 'fashion'
-            }
-          ]
-        }
+              label: 'Fashion',
+              value: 'fashion',
+            },
+          ],
+        },
       ],
       confirmAction: {
         callback: function () {
           alert('test confirmation');
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([modal]);
@@ -703,8 +709,8 @@ describe('Widgets', function () {
       jasmine.objectContaining({
         data: [
           { name: 'email', value: 'test@example.com' },
-          { name: 'subscription_feeds', value: 'fashion' }
-        ]
+          { name: 'subscription_feeds', value: 'fashion' },
+        ],
       })
     );
   });
@@ -719,11 +725,11 @@ describe('Widgets', function () {
         close: false,
         callback: function () {
           // do something
-        }
+        },
       },
       cancelAction: {
-        close: false
-      }
+        close: false,
+      },
     });
 
     pathfora.initializeWidgets([modal]);
@@ -752,8 +758,8 @@ describe('Widgets', function () {
         name: 'Test cancel action',
         callback: function () {
           alert('test cancel');
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([modal]);
@@ -772,8 +778,8 @@ describe('Widgets', function () {
         name: 'Test confirm action',
         callback: function () {
           alert('test confirmation');
-        }
-      }
+        },
+      },
     });
 
     var w2 = new pathfora.Message({
@@ -783,14 +789,14 @@ describe('Widgets', function () {
         name: 'Test cancel action',
         callback: function () {
           alert('test cancel');
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([w1, w2]);
 
     var widgetA = $('#widget-with-action-callback'),
-        widgetB = $('#widget-with-cancel-callback');
+      widgetB = $('#widget-with-cancel-callback');
 
     spyOn(w1.confirmAction, 'callback');
     spyOn(w2.cancelAction, 'callback');
@@ -810,26 +816,26 @@ describe('Widgets', function () {
     var w1 = new pathfora.Message({
       msg: 'button - default pos test',
       id: 'position-widget-1',
-      layout: 'button'
+      layout: 'button',
     });
 
     var w2 = new pathfora.Message({
       msg: 'bar - default pos test',
       id: 'position-widget-2',
-      layout: 'bar'
+      layout: 'bar',
     });
 
     var w3 = new pathfora.Message({
       msg: 'slideout - default pos test',
       id: 'position-widget-3',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     pathfora.initializeWidgets([w1, w2, w3]);
 
     var widget1 = $('#' + w1.id),
-        widget2 = $('#' + w2.id),
-        widget3 = $('#' + w3.id);
+      widget2 = $('#' + w2.id),
+      widget3 = $('#' + w3.id);
 
     expect(widget1.hasClass('pf-position-top-left')).toBeTruthy();
     expect(widget2.hasClass('pf-position-top-absolute')).toBeTruthy();
@@ -841,7 +847,7 @@ describe('Widgets', function () {
       msg: 'Widget positioning test',
       layout: 'modal',
       id: 'region-widget',
-      position: 'customPos'
+      position: 'customPos',
     });
 
     spyOn(console, 'warn');
@@ -857,7 +863,7 @@ describe('Widgets', function () {
       msg: 'Widget positioning test',
       layout: 'modal',
       id: 'custom-position-widget',
-      positionSelector: '.does-not-exist'
+      positionSelector: '.does-not-exist',
     });
 
     expect(function () {
@@ -875,7 +881,7 @@ describe('Widgets', function () {
       layout: 'modal',
       positionSelector: '#overlay',
       id: 'custom-position-modal',
-      msg: 'yay'
+      msg: 'yay',
     });
 
     pathfora.initializeWidgets([inline]);
@@ -899,7 +905,7 @@ describe('Widgets', function () {
       layout: 'inline',
       position: '.a-non-existent-div',
       id: 'inline-1',
-      msg: 'inline'
+      msg: 'inline',
     });
 
     var inlineCustom = new pathfora.Message({
@@ -907,7 +913,7 @@ describe('Widgets', function () {
       layout: 'inline',
       positionSelector: '.a-non-existent-div',
       id: 'inline-2',
-      msg: 'inline'
+      msg: 'inline',
     });
 
     expect(function () {
@@ -928,7 +934,7 @@ describe('Widgets', function () {
       layout: 'inline',
       position: '#a-real-div',
       id: 'inline-1',
-      msg: 'inline'
+      msg: 'inline',
     });
 
     var inlineCustom = new pathfora.Message({
@@ -936,7 +942,7 @@ describe('Widgets', function () {
       layout: 'inline',
       positionSelector: '#a-real-div',
       id: 'inline-2',
-      msg: 'inline'
+      msg: 'inline',
     });
 
     pathfora.initializeWidgets([inline, inlineCustom]);
@@ -970,7 +976,7 @@ describe('Widgets', function () {
             return;
           }
           cb(false);
-        }
+        },
       },
       formStates: {
         success: {
@@ -983,7 +989,7 @@ describe('Widgets', function () {
             name: 'confirm success',
             callback: function () {
               alert('confirm success');
-            }
+            },
           },
           cancelShow: true,
           cancelMessage: 'cancel success',
@@ -991,8 +997,8 @@ describe('Widgets', function () {
             name: 'cancel success',
             callback: function () {
               alert('cancel success');
-            }
-          }
+            },
+          },
         },
         error: {
           headline: 'test',
@@ -1004,7 +1010,7 @@ describe('Widgets', function () {
             name: 'confirm error',
             callback: function () {
               alert('confirm error');
-            }
+            },
           },
           cancelShow: true,
           cancelMessage: 'cancel error',
@@ -1012,15 +1018,15 @@ describe('Widgets', function () {
             name: 'cancel error',
             callback: function () {
               alert('cancel error');
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
     window.pathfora.initializeWidgets([formStatesWidget]);
 
     var widget = $('#' + formStatesWidget.id),
-        form = widget.find('form');
+      form = widget.find('form');
     expect(form.length).toBe(1);
 
     var name = form.find('input[name="username"]');
@@ -1043,7 +1049,7 @@ describe('Widgets', function () {
     );
 
     var success = widget.find('.success-state'),
-        error = widget.find('.error-state');
+      error = widget.find('.error-state');
 
     expect(form.css('display')).toBe('none');
     expect(success.css('display')).toBe('block');
@@ -1080,7 +1086,7 @@ describe('Widgets', function () {
         'pf-widget-variant': '1',
         'pf-widget-event': 'success.confirm',
         'pf-widget-action':
-          formStatesWidget.formStates.success.confirmAction.name
+          formStatesWidget.formStates.success.confirmAction.name,
       })
     );
     pathfora.clearAll();
@@ -1140,7 +1146,7 @@ describe('Widgets', function () {
           'pf-widget-variant': '1',
           'pf-widget-event': 'error.cancel',
           'pf-widget-action':
-            formStatesWidget.formStates.error.cancelAction.name
+            formStatesWidget.formStates.error.cancelAction.name,
         })
       );
       done();
@@ -1159,8 +1165,8 @@ describe('Widgets', function () {
       layout: 'slideout',
       success: {
         msg: 'a custom success message',
-        delay: 2
-      }
+        delay: 2,
+      },
     });
 
     pathfora.initializeWidgets([successForm]);
@@ -1199,8 +1205,8 @@ describe('Widgets', function () {
       layout: 'slideout',
       success: {
         msg: 'a custom success message',
-        delay: 0
-      }
+        delay: 0,
+      },
     });
 
     pathfora.initializeWidgets([successForm2]);
@@ -1249,16 +1255,16 @@ describe('Widgets', function () {
           name: 'test success confirmation',
           callback: function () {
             window.alert('confirmed');
-          }
+          },
         },
         cancelAction: {
           name: 'test success cancelation',
           callback: function () {
             window.alert('canceled');
-          }
+          },
         },
-        delay: 0
-      }
+        delay: 0,
+      },
     });
 
     pathfora.initializeWidgets([successForm3]);
@@ -1292,7 +1298,7 @@ describe('Widgets', function () {
         'pf-widget-layout': 'slideout',
         'pf-widget-variant': '1',
         'pf-widget-event': 'success.confirm',
-        'pf-widget-action': successForm3.success.confirmAction.name
+        'pf-widget-action': successForm3.success.confirmAction.name,
       })
     );
     expect(window.alert).toHaveBeenCalledWith('confirmed');
@@ -1316,7 +1322,7 @@ describe('Widgets', function () {
           'pf-widget-layout': 'slideout',
           'pf-widget-variant': '1',
           'pf-widget-event': 'success.cancel',
-          'pf-widget-action': successForm3.success.cancelAction.name
+          'pf-widget-action': successForm3.success.cancelAction.name,
         })
       );
       expect(window.alert).toHaveBeenCalledWith('canceled');
@@ -1338,14 +1344,14 @@ describe('Widgets', function () {
       msg: 'Custom button text test',
       headline: 'Hello',
       okMessage: 'Confirm Here',
-      cancelMessage: 'Cancel Here'
+      cancelMessage: 'Cancel Here',
     });
 
     pathfora.initializeWidgets([modal]);
 
     var widget = $('#' + modal.id),
-        actionBtn = widget.find('.pf-widget-ok'),
-        cancelBtn = widget.find('.pf-widget-cancel');
+      actionBtn = widget.find('.pf-widget-ok'),
+      cancelBtn = widget.find('.pf-widget-cancel');
 
     expect(actionBtn.html()).toBe('Confirm Here');
     expect(cancelBtn.html()).toBe('Cancel Here');
@@ -1363,12 +1369,12 @@ describe('Widgets', function () {
       layout: 'slideout',
       fields: {
         title: false,
-        username: false
+        username: false,
       },
       required: {
         message: true,
-        email: false
-      }
+        email: false,
+      },
     });
 
     pathfora.initializeWidgets([formfields]);
@@ -1379,9 +1385,8 @@ describe('Widgets', function () {
     for (var elem in theform[0].children) {
       if (typeof theform[0].children[elem].getAttribute !== 'undefined') {
         var inputname = theform[0].children[elem].getAttribute('name'),
-            inputrequired = theform[0].children[elem].getAttribute(
-              'data-required'
-            );
+          inputrequired =
+            theform[0].children[elem].getAttribute('data-required');
 
         if (inputname === 'message') {
           expect(inputrequired).toBe('true');
@@ -1409,7 +1414,7 @@ describe('Widgets', function () {
           type: 'input',
           name: 'name',
           placeholder: 'Your Name',
-          required: true
+          required: true,
         },
         {
           type: 'checkbox-group',
@@ -1418,11 +1423,11 @@ describe('Widgets', function () {
           values: [
             {
               label: 'I agree',
-              value: 'agree'
-            }
-          ]
-        }
-      ]
+              value: 'agree',
+            },
+          ],
+        },
+      ],
     });
 
     pathfora.initializeWidgets([customForm]);
@@ -1432,10 +1437,7 @@ describe('Widgets', function () {
     widget.find('[name=name]').val('my name here');
     spyOn(jstag, 'send');
 
-    widget
-      .find('form')
-      .find('.pf-widget-ok')
-      .click();
+    widget.find('form').find('.pf-widget-ok').click();
 
     expect(jstag.send).toHaveBeenCalledWith(
       jasmine.objectContaining({
@@ -1446,8 +1448,8 @@ describe('Widgets', function () {
         'pf-widget-event': 'submit',
         'pf-custom-form': {
           'terms_agreement': ['agree'],
-          name: 'my name here'
-        }
+          name: 'my name here',
+        },
       })
     );
     done();
@@ -1468,17 +1470,17 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Cat',
-              value: 'cat'
+              value: 'cat',
             },
             {
               label: 'Dog',
-              value: 'dog'
+              value: 'dog',
             },
             {
               label: 'Horse',
-              value: 'horse'
-            }
-          ]
+              value: 'horse',
+            },
+          ],
         },
         {
           type: 'checkbox-group',
@@ -1488,26 +1490,26 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Vanilla',
-              value: 'vanilla'
+              value: 'vanilla',
             },
             {
               label: 'Chocolate',
-              value: 'chocolate'
+              value: 'chocolate',
             },
             {
               label: 'Strawberry',
-              value: 'strawberry'
-            }
-          ]
+              value: 'strawberry',
+            },
+          ],
         },
         {
           type: 'textarea',
           label: 'Comments',
           name: 'comments',
           placeholder: 'Any more comments?',
-          required: true
-        }
-      ]
+          required: true,
+        },
+      ],
     });
 
     pathfora.initializeWidgets([customForm]);
@@ -1550,7 +1552,7 @@ describe('Widgets', function () {
           type: 'input',
           placeholder: "What's your favorite animal?",
           name: 'favorite_animal',
-          required: true
+          required: true,
         },
         {
           type: 'radio-group',
@@ -1560,19 +1562,19 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Vanilla',
-              value: 'vanilla'
+              value: 'vanilla',
             },
             {
               label: 'Chocolate',
-              value: 'chocolate'
+              value: 'chocolate',
             },
             {
               label: 'Strawberry',
-              value: 'strawberry'
-            }
-          ]
-        }
-      ]
+              value: 'strawberry',
+            },
+          ],
+        },
+      ],
     });
 
     pathfora.initializeWidgets([customForm]);
@@ -1581,10 +1583,7 @@ describe('Widgets', function () {
     spyOn(jstag, 'send');
 
     setTimeout(function () {
-      widget
-        .find('form')
-        .find('.pf-widget-ok')
-        .click();
+      widget.find('form').find('.pf-widget-ok').click();
       expect(jstag.send).not.toHaveBeenCalled();
       expect(widget.hasClass('opened')).toBeTruthy();
 
@@ -1609,7 +1608,8 @@ describe('Widgets', function () {
         {
           type: 'email',
           placeholder: 'Email',
-          name: 'email'
+          name: 'email',
+          required: true,
         },
         {
           type: 'radio-group',
@@ -1618,19 +1618,19 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Vanilla',
-              value: 'vanilla'
+              value: 'vanilla',
             },
             {
               label: 'Chocolate',
-              value: 'chocolate'
+              value: 'chocolate',
             },
             {
               label: 'Strawberry',
-              value: 'strawberry'
-            }
-          ]
-        }
-      ]
+              value: 'strawberry',
+            },
+          ],
+        },
+      ],
     });
 
     pathfora.initializeWidgets([customForm]);
@@ -1640,10 +1640,7 @@ describe('Widgets', function () {
 
     setTimeout(function () {
       widget.find('input[name=email]').val('zkjhfkdjh');
-      widget
-        .find('form')
-        .find('.pf-widget-ok')
-        .click();
+      widget.find('form').find('.pf-widget-ok').click();
       expect(jstag.send).not.toHaveBeenCalled();
       expect(widget.hasClass('opened')).toBeTruthy();
 
@@ -1653,7 +1650,24 @@ describe('Widgets', function () {
       for (var i = 0; i < invalid.length; i++) {
         var req = invalid[i].parentNode;
         expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
-        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+        expect(req.className.indexOf('bad-validation') !== -1).toBeTruthy();
+      }
+
+      // also check required validation
+      widget.find('input[name=email]').val('');
+      widget.find('form').find('.pf-widget-ok').click();
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      invalid = widget.find('[data-required=true]');
+      expect(invalid.length).toBe(1);
+
+      for (var j = 0; j < invalid.length; j++) {
+        var reqField = invalid[j].parentNode;
+        expect(
+          reqField.className.indexOf('pf-form-required') !== -1
+        ).toBeTruthy();
+        expect(reqField.className.indexOf('invalid') !== -1).toBeTruthy();
       }
       done();
     }, 200);
@@ -1669,7 +1683,7 @@ describe('Widgets', function () {
           type: 'date',
           name: 'birthday',
           maxDate: 'today',
-          minDate: '01-01-2020'
+          minDate: '01-01-2020',
         },
         {
           type: 'radio-group',
@@ -1678,19 +1692,19 @@ describe('Widgets', function () {
           values: [
             {
               label: 'Vanilla',
-              value: 'vanilla'
+              value: 'vanilla',
             },
             {
               label: 'Chocolate',
-              value: 'chocolate'
+              value: 'chocolate',
             },
             {
               label: 'Strawberry',
-              value: 'strawberry'
-            }
-          ]
-        }
-      ]
+              value: 'strawberry',
+            },
+          ],
+        },
+      ],
     });
 
     pathfora.initializeWidgets([customForm]);
@@ -1700,10 +1714,7 @@ describe('Widgets', function () {
 
     setTimeout(function () {
       widget.find('input[name=birthday]').val('2010-10-10');
-      widget
-        .find('form')
-        .find('.pf-widget-ok')
-        .click();
+      widget.find('form').find('.pf-widget-ok').click();
       expect(jstag.send).not.toHaveBeenCalled();
       expect(widget.hasClass('opened')).toBeTruthy();
 
@@ -1713,7 +1724,7 @@ describe('Widgets', function () {
       for (var i = 0; i < invalid.length; i++) {
         var req = invalid[i].parentNode;
         expect(req.className.indexOf('pf-form-required') !== -1).toBeTruthy();
-        expect(req.className.indexOf('invalid') !== -1).toBeTruthy();
+        expect(req.className.indexOf('bad-validation') !== -1).toBeTruthy();
       }
       done();
     }, 200);
@@ -1742,14 +1753,14 @@ describe('Widgets', function () {
     var w1 = new pathfora.Message({
       msg: 'test warning display',
       id: 'position-widget',
-      layout: 'bar'
+      layout: 'bar',
     });
 
     var w2 = new pathfora.Message({
       msg: 'invalid position test',
       layout: 'bar',
       id: 'wrong-position-2',
-      position: 'wrong-position'
+      position: 'wrong-position',
     });
 
     pathfora.initializeWidgets([w1]);

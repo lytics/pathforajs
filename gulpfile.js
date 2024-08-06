@@ -1,34 +1,35 @@
 'use strict';
 
 const gulp = require('gulp'),
-    less = require('gulp-less'),
-    path = require('path'),
-    uglify = require('gulp-uglify'),
-    cssmin = require('gulp-cssmin'),
-    rename = require('gulp-rename'),
-    replace = require('gulp-replace'),
-    minify = require('html-minifier').minify,
-    env = require('gulp-env'),
-    connect = require('gulp-connect'),
-    walk = require('walk'),
-    fs = require('fs'),
-    handlebars = require('gulp-compile-handlebars'),
-    shell = require('gulp-shell'),
-    rollup = require('rollup'),
-    eslint = require('gulp-eslint'),
-    gutil = require('gulp-util'),
-    istanbul = require('rollup-plugin-istanbul');
+  less = require('gulp-less'),
+  path = require('path'),
+  uglify = require('gulp-uglify'),
+  cssmin = require('gulp-cssmin'),
+  rename = require('gulp-rename'),
+  replace = require('gulp-replace'),
+  minify = require('html-minifier').minify,
+  env = require('gulp-env'),
+  connect = require('gulp-connect'),
+  walk = require('walk'),
+  fs = require('fs'),
+  handlebars = require('gulp-compile-handlebars'),
+  shell = require('gulp-shell'),
+  rollup = require('rollup'),
+  eslint = require('gulp-eslint'),
+  gutil = require('gulp-util'),
+  istanbul = require('rollup-plugin-istanbul');
 
 let TESTAPIURL = '//api.lytics.io',
-    TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
-    EXAMPLESSRC = 'docs/docs/examples/src',
-    EXAMPLESDEST = 'docs/docs/examples/preview',
-    APIURL, CSSURL;
+  TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
+  EXAMPLESSRC = 'docs/docs/examples/src',
+  EXAMPLESDEST = 'docs/docs/examples/preview',
+  APIURL,
+  CSSURL;
 
 // get overrides from .env file
 try {
   env({
-    file: '.env.json'
+    file: '.env.json',
   });
   APIURL = process.env.APIURL || '//api.lytics.io';
   CSSURL = process.env.CSSURL || '//c.lytics.io/static/pathfora.min.css';
@@ -38,17 +39,20 @@ try {
 }
 
 gulp.task('build:styles', function () {
-  gulp.src('src/less/*.less')
-    .pipe(less({
-      paths: [
-        path.join(__dirname, 'less', 'includes')
-      ]
-    }))
+  gulp
+    .src('src/less/*.less')
+    .pipe(
+      less({
+        paths: [path.join(__dirname, 'less', 'includes')],
+      })
+    )
     .pipe(gulp.dest('dist'))
     .pipe(cssmin())
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(
+      rename({
+        suffix: '.min',
+      })
+    )
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
@@ -56,8 +60,8 @@ gulp.task('build:styles', function () {
 // gathers and minifies all the widget templates for inclusion
 const prepareTemplates = function () {
   let templateDirectory = 'src/templates',
-      templates = {},
-      includes = {};
+    templates = {},
+    includes = {};
 
   let options = {
     listeners: {
@@ -74,16 +78,22 @@ const prepareTemplates = function () {
 
         if (stat.name.charAt(0) !== '.') {
           let markup = fs.readFileSync(root + '/' + stat.name, 'utf-8'),
-              file = stat.name.replace('.html', '');
+            file = stat.name.replace('.html', '');
 
           if (dir === 'includes') {
-            includes[file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+            includes[file] = minify(markup, {
+              collapseWhitespace: true,
+              preserveLineBreaks: false,
+            });
           } else {
-            templates[dir][file] = minify(markup, {collapseWhitespace: true, preserveLineBreaks: false });
+            templates[dir][file] = minify(markup, {
+              collapseWhitespace: true,
+              preserveLineBreaks: false,
+            });
           }
         }
-      }
-    }
+      },
+    },
   };
 
   walk.walkSync(templateDirectory, options);
@@ -92,13 +102,13 @@ const prepareTemplates = function () {
   for (let inc in includes) {
     if (includes.hasOwnProperty(inc)) {
       str = str.replace(
-        new RegExp('(\{){2}' + inc + '(\}){2}', 'gm'),
+        new RegExp('({){2}' + inc + '(}){2}', 'gm'),
         includes[inc].replace(/"/g, '\\"')
       );
     }
   }
 
-  return str.replace(/\"/g, '\'');
+  return str.replace(/\"/g, "'");
 };
 
 //Plugins for rollup. Babel, istanbul, etc.
@@ -107,7 +117,7 @@ let rollupPlugins = [];
 if (process.env.NODE_ENV !== 'production') {
   rollupPlugins.push(
     istanbul({
-      exclude: ['test/*.spec.js', 'dist/*.js']
+      exclude: ['test/*.spec.js', 'dist/*.js'],
     })
   );
 }
@@ -115,56 +125,65 @@ if (process.env.NODE_ENV !== 'production') {
 gulp.task('build:rollup', async function () {
   const bundle = await rollup.rollup({
     input: 'src/rollup/pathfora.js',
-    plugins: rollupPlugins
+    plugins: rollupPlugins,
   });
 
   await bundle.write({
     format: 'iife',
     name: 'pathfora',
-    file: 'dist/pathfora.js'
+    file: 'dist/pathfora.js',
   });
 });
 
 // Ensure build:rollup finishes before running build:js
 // by adding it as a dependent job
 gulp.task('build:js', ['build:rollup'], function () {
-  gulp.src('dist/pathfora.js')
+  gulp
+    .src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', '//api.lytics.io'))
     .pipe(replace('`{{cssurl}}`', '//c.lytics.io/static/pathfora.min.css'))
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(
+      rename({
+        suffix: '.min',
+      })
+    )
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
 
 gulp.task('local:js', ['build:rollup'], function () {
-  gulp.src('dist/pathfora.js')
+  gulp
+    .src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', APIURL))
     .pipe(replace('`{{cssurl}}`', CSSURL))
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(
+      rename({
+        suffix: '.min',
+      })
+    )
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
 
 gulp.task('build:testjs', ['build:rollup'], function () {
-  gulp.src('dist/pathfora.js')
+  gulp
+    .src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', TESTAPIURL))
     .pipe(replace('`{{cssurl}`}', TESTCSSURL))
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(
+      rename({
+        suffix: '.min',
+      })
+    )
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
@@ -181,32 +200,34 @@ gulp.task('preview', function () {
   connect.server({
     port: 8080,
     root: '.',
-    livereload: true
+    livereload: true,
   });
 });
 
 const compileExample = function (root, name) {
-  let out, css, proc, html,
-      dest = root.split(EXAMPLESSRC + '/').pop(),
-      contents = {
-        config: '',
-        css: '',
-        html: ''
-      };
-
+  let out,
+    css,
+    proc,
+    html,
+    dest = root.split(EXAMPLESSRC + '/').pop(),
+    contents = {
+      config: '',
+      css: '',
+      html: '',
+    };
 
   switch (name.split('.').pop()) {
-  case 'js':
-    contents.config = fs.readFileSync(root + '/' + name, 'utf8');
-    css = root + '/' + name.replace('.js', '.css');
-    html = root + '/' + name.replace('.js', '.html');
-    out = name.replace('.js', '.html');
-    proc = true;
-    break;
+    case 'js':
+      contents.config = fs.readFileSync(root + '/' + name, 'utf8');
+      css = root + '/' + name.replace('.js', '.css');
+      html = root + '/' + name.replace('.js', '.html');
+      out = name.replace('.js', '.html');
+      proc = true;
+      break;
 
-  default:
-    proc = false;
-    break;
+    default:
+      proc = false;
+      break;
   }
 
   if (proc) {
@@ -224,7 +245,8 @@ const compileExample = function (root, name) {
       // do nothing
     }
 
-    gulp.src(EXAMPLESSRC + '/template.hbs')
+    gulp
+      .src(EXAMPLESSRC + '/template.hbs')
       .pipe(handlebars(contents))
       .pipe(rename(out))
       .pipe(gulp.dest(EXAMPLESDEST + '/' + dest));
@@ -245,22 +267,30 @@ gulp.task('docs:hbs', ['build:rollup'], function () {
     listeners: {
       file: function (root, stat) {
         compileExample(root, stat.name);
-      }
-    }
+      },
+    },
   };
 
   walk.walkSync(EXAMPLESSRC, options);
 });
 
-gulp.task('docs:mkdocs', ['build:rollup'], shell.task([
-  'mkdocs serve'
-], {
-  cwd: 'docs'
-}));
+gulp.task(
+  'docs:mkdocs',
+  ['build:rollup'],
+  shell.task(['mkdocs serve'], {
+    cwd: 'docs',
+  })
+);
 
 gulp.task('lint', ['build:js'], function () {
-  return gulp.src(['src/rollup/**/*.js', 'gulpfile.js', 'test/**/*.js', 'docs/docs/examples/**/*.js'])
-    .pipe(eslint())
+  return gulp
+    .src([
+      'src/rollup/**/*.js',
+      'gulpfile.js',
+      'test/**/*.js',
+      'docs/docs/examples/**/*.js',
+    ])
+    .pipe(eslint({ fix: true }))
     .pipe(eslint.format())
     .pipe(eslint.failAfterError());
 });
