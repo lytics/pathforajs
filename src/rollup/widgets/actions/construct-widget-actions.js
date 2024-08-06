@@ -4,7 +4,7 @@
 import {
   callbackTypes,
   PREFIX_CONFIRM,
-  PREFIX_CLOSE
+  PREFIX_CLOSE,
 } from '../../globals/config';
 
 // dom
@@ -37,63 +37,55 @@ import updateActionCookie from './update-action-cookie';
  * @params {object} widget
  * @params {object} config
  */
-export default function constructWidgetActions (widget, config) {
+export default function constructWidgetActions(widget, config) {
   var widgetOnButtonClick,
-      widgetFormValidate,
-      widgetForm,
-      widgetOk = widget.querySelector('.pf-widget-ok'),
-      widgetCancel = widget.querySelector('.pf-widget-cancel'),
-      widgetClose = widget.querySelector('.pf-widget-close'),
-      widgetReco = widget.querySelector('.pf-content-unit'),
-      fieldInvalidate;
+    widgetFormValidate,
+    widgetForm,
+    widgetOk = widget.querySelector('.pf-widget-ok'),
+    widgetCancel = widget.querySelector('.pf-widget-cancel'),
+    widgetClose = widget.querySelector('.pf-widget-close'),
+    widgetReco = widget.querySelector('.pf-content-unit');
 
   // Tracking for widgets with a form element
   switch (config.type) {
-  case 'form':
-  case 'sitegate':
-  case 'subscription':
-    widgetForm = widget.querySelector('form');
+    case 'form':
+    case 'sitegate':
+    case 'subscription':
+      widgetForm = widget.querySelector('form');
 
-    var onInputChange = function (event) {
-      if (event.target.value && event.target.value.length > 0) {
-        trackWidgetAction('form_start', config, event.target);
-      }
-    };
+      var onInputChange = function (event) {
+        if (event.target.value && event.target.value.length > 0) {
+          trackWidgetAction('form_start', config, event.target);
+        }
+      };
 
-    var onInputFocus = function (event) {
-      trackWidgetAction('focus', config, event.target);
-    };
+      var onInputFocus = function (event) {
+        trackWidgetAction('focus', config, event.target);
+      };
 
-    // Additional tracking for input focus and entering text into the form
-    for (var elem in widgetForm.childNodes) {
-      if (widgetForm.children.hasOwnProperty(elem)) {
-        var child = widgetForm.children[elem];
-        if (
-          typeof child.getAttribute !== 'undefined' &&
+      // Additional tracking for input focus and entering text into the form
+      for (var elem in widgetForm.childNodes) {
+        if (widgetForm.children.hasOwnProperty(elem)) {
+          var child = widgetForm.children[elem];
+          if (
+            typeof child.getAttribute !== 'undefined' &&
             child.getAttribute('name') !== null
-        ) {
-          // Track focus of form elements
-          child.onfocus = onInputFocus;
+          ) {
+            // Track focus of form elements
+            child.onfocus = onInputFocus;
 
-          // Track input to indicate they've begun to interact with the form
-          child.onchange = onInputChange;
+            // Track input to indicate they've begun to interact with the form
+            child.onchange = onInputChange;
+          }
         }
       }
-    }
 
-    fieldInvalidate = function (field, count, toFocus) {
-      addClass(field, 'invalid');
-      if (toFocus && count === 0) {
-        toFocus.focus();
-      }
-    };
+      // Form submit handler
+      widgetFormValidate = function (event) {
+        event.preventDefault();
 
-    // Form submit handler
-    widgetFormValidate = function (event) {
-      event.preventDefault();
-
-      // Validate that the form is filled out correctly
-      var valid = true,
+        // Validate that the form is filled out correctly
+        var valid = true,
           requiredElements = Array.prototype.slice.call(
             widgetForm.querySelectorAll('[data-required=true]')
           ),
@@ -104,58 +96,64 @@ export default function constructWidgetActions (widget, config) {
           field,
           parent;
 
-      for (i = 0; i < requiredElements.length; i++) {
-        field = requiredElements[i];
+        for (i = 0; i < requiredElements.length; i++) {
+          field = requiredElements[i];
 
-        if (hasClass(widgetForm, 'pf-custom-form')) {
-          if (field.parentNode) {
-            parent = field.parentNode;
-            removeClass(parent, 'invalid');
+          if (hasClass(widgetForm, 'pf-custom-form')) {
+            if (field.parentNode) {
+              parent = field.parentNode;
+              removeClass(parent, 'invalid');
 
-            if (
-              hasClass(parent, 'pf-widget-radio-group') ||
+              if (
+                hasClass(parent, 'pf-widget-radio-group') ||
                 hasClass(parent, 'pf-widget-checkbox-group')
-            ) {
-              var inputs = field.querySelectorAll('input');
-              var count = 0;
+              ) {
+                var inputs = field.querySelectorAll('input');
+                var count = 0;
 
-              for (var j = 0; j < inputs.length; j++) {
-                var input = inputs[j];
-                if (input.checked) {
-                  count++;
+                for (var j = 0; j < inputs.length; j++) {
+                  var input = inputs[j];
+                  if (input.checked) {
+                    count++;
+                  }
+                }
+
+                if (count === 0) {
+                  valid = false;
+                  addClass(parent, 'invalid');
+                }
+              } else if (!field.value) {
+                valid = false;
+                addClass(parent, 'invalid');
+                if (field && i === 0) {
+                  field.focus();
                 }
               }
+            }
+            // legacy support old, non-custom forms
+          } else if (field.hasAttribute('data-required')) {
+            removeClass(field, 'invalid');
 
-              if (count === 0) {
-                valid = false;
-                fieldInvalidate(parent);
-              }
-            } else if (!field.value) {
+            if (!field.value) {
               valid = false;
-              fieldInvalidate(parent, i, field);
+              addClass(field, 'invalid');
+              if (field && i === 0) {
+                field.focus();
+              }
             }
           }
-          // legacy support old, non-custom forms
-        } else if (field.hasAttribute('data-required')) {
-          removeClass(field, 'invalid');
-
-          if (!field.value) {
-            valid = false;
-            fieldInvalidate(field, i, field);
-          }
         }
-      }
 
-      for (i = 0; i < validatableElements.length; i++) {
-        field = validatableElements[i];
+        for (i = 0; i < validatableElements.length; i++) {
+          field = validatableElements[i];
 
-        if (hasClass(widgetForm, 'pf-custom-form')) {
-          if (field.parentNode) {
-            parent = field.parentNode;
-            removeClass(parent, 'invalid');
+          if (hasClass(widgetForm, 'pf-custom-form')) {
+            if (field.parentNode) {
+              parent = field.parentNode;
+              removeClass(parent, 'invalid--validate');
 
-            if (
-              (field.value !== '' &&
+              if (
+                (field.value !== '' &&
                   field.getAttribute('type') === 'email' &&
                   !emailValid(field.value)) ||
                 (field.getAttribute('type') === 'date' &&
@@ -164,63 +162,69 @@ export default function constructWidgetActions (widget, config) {
                     field.getAttribute('max'),
                     field.getAttribute('min')
                   ))
-            ) {
-              valid = false;
-              fieldInvalidate(parent, i, field);
+              ) {
+                valid = false;
+                addClass(parent, 'invalid--validate');
+                if (field && i === 0) {
+                  field.focus();
+                }
+              }
             }
-          }
-          // legacy support old, non-custom forms
-        } else if (field.hasAttribute('data-validate')) {
-          removeClass(field, 'invalid');
+            // legacy support old, non-custom forms
+          } else if (field.hasAttribute('data-validate')) {
+            removeClass(field, 'invalid');
 
-          if (
-            field.getAttribute('type') === 'email' &&
+            if (
+              field.getAttribute('type') === 'email' &&
               !emailValid(field.value) &&
               field.value !== ''
-          ) {
-            valid = false;
-            fieldInvalidate(field, i, field);
+            ) {
+              valid = false;
+              addClass(field, 'invalid');
+              if (field && i === 0) {
+                field.focus();
+              }
+            }
           }
         }
-      }
 
-      return valid;
-    };
+        return valid;
+      };
 
-    break;
+      break;
   }
 
   switch (config.layout) {
-  case 'button':
-    if (typeof config.onClick === 'function') {
-      widgetOnButtonClick = function (event) {
-        config.onClick(callbackTypes.CLICK, {
-          widget: widget,
-          config: config,
-          event: event
-        });
-      };
-    }
-    break;
-  case 'modal':
-    if (config.type !== 'sitegate') {
-      config.listeners.escape = {
-        type: 'keydown',
-        target: document,
-        fn: function (event) {
-          event = event || window.event;
-          if (event.keyCode === 27) {
-            trackWidgetAction('close', config);
-            updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
-            closeWidget(widget.id, true);
-            widgetOnModalClose(widget, config, event);
-          }
-        }
-      };
-    }
-    break;
-  default:
-    break;
+    case 'button':
+      if (typeof config.onClick === 'function') {
+        widgetOnButtonClick = function (event) {
+          config.onClick(callbackTypes.CLICK, {
+            widget: widget,
+            config: config,
+            event: event,
+          });
+        };
+      }
+      break;
+    case 'modal':
+      if (config.type !== 'sitegate') {
+        config.listeners.escape = {
+          type: 'keydown',
+          target: document,
+          fn: function (event) {
+            event = event || window.event;
+            if (event.keyCode === 27) {
+              trackWidgetAction('close', config);
+              updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+              closeWidget(widget.id, true);
+              widgetOnModalClose(widget, config, event);
+            }
+          },
+        };
+      }
+      break;
+    default:
+      break;
   }
 
   if (widgetClose) {
@@ -238,21 +242,21 @@ export default function constructWidgetActions (widget, config) {
 
     widgetOk.onclick = function (event) {
       var data,
-          widgetAction,
-          shouldClose = true;
+        widgetAction,
+        shouldClose = true;
 
       // special case for form widgets
       if (typeof widgetFormValidate === 'function') {
         switch (config.type) {
-        case 'form':
-          widgetAction = 'submit';
-          break;
-        case 'subscription':
-          widgetAction = 'subscribe';
-          break;
-        case 'sitegate':
-          widgetAction = 'unlock';
-          break;
+          case 'form':
+            widgetAction = 'submit';
+            break;
+          case 'subscription':
+            widgetAction = 'subscribe';
+            break;
+          case 'sitegate':
+            widgetAction = 'unlock';
+            break;
         }
 
         // validate form input
@@ -276,7 +280,7 @@ export default function constructWidgetActions (widget, config) {
             .map(function (element) {
               return {
                 name: element.name || element.id,
-                value: element.value
+                value: element.value,
               };
             });
 
@@ -287,7 +291,7 @@ export default function constructWidgetActions (widget, config) {
               widget: widget,
               config: config,
               event: event,
-              data: data
+              data: data,
             });
           }
         }
@@ -312,7 +316,7 @@ export default function constructWidgetActions (widget, config) {
           var param = {
             widget: widget,
             config: config,
-            event: event
+            event: event,
           };
 
           // include the data from the form if we have it.
