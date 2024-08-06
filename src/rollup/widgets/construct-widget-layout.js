@@ -190,6 +190,7 @@ export default function constructWidgetLayout(widget, config) {
     var widgetImage = document.createElement('img');
     widgetImage.src = config.image;
     widgetImage.className = 'pf-widget-img';
+    widgetImage.alt = '';
     if (config.layout === 'button') {
       // NOTE Images are not compatible with the button layout
     } else if (config.layout === 'modal' || config.layout === 'inline') {
