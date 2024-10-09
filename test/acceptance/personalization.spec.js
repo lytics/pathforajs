@@ -181,7 +181,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -233,7 +233,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -265,7 +265,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -308,7 +308,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -344,7 +344,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -391,7 +391,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true'
       );
 
       $('[data-pfblock="group1"]').remove();
@@ -417,7 +417,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -450,7 +450,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        '//api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
