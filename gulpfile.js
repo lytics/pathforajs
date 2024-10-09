@@ -31,11 +31,11 @@ try {
   env({
     file: '.env.json',
   });
-  APIURL = process.env.APIURL || '//api.lytics.io';
-  CSSURL = process.env.CSSURL || '//c.lytics.io/static/pathfora.min.css';
+  APIURL = process.env.APIURL || 'https://api.lytics.io';
+  CSSURL = process.env.CSSURL || 'https://c.lytics.io/static/pathfora.min.css';
 } catch (error) {
-  APIURL = '//api.lytics.io';
-  CSSURL = '//c.lytics.io/static/pathfora.min.css';
+  APIURL = 'https://api.lytics.io';
+  CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
 }
 
 gulp.task('build:styles', function () {
