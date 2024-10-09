@@ -140,8 +140,8 @@ gulp.task('build:rollup', async function () {
 gulp.task('build:js', ['build:rollup'], function () {
   gulp
     .src('dist/pathfora.js')
-    .pipe(replace('`{{apiurl}}`', '//api.lytics.io'))
-    .pipe(replace('`{{cssurl}}`', '//c.lytics.io/static/pathfora.min.css'))
+    .pipe(replace('`{{apiurl}}`', 'https://api.lytics.io'))
+    .pipe(replace('`{{cssurl}}`', 'https://api.lytics.io/static/pathfora.min.css'))
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
