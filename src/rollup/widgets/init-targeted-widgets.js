@@ -34,11 +34,65 @@ export default function initializeTargetedWidgets (widgets, options) {
       // handle inclusions
       if (widgets.target) {
         for (i = 0; i < widgets.target.length; i++) {
+
           var target = widgets.target[i];
-          if (segments && segments.indexOf(target.segment) !== -1) {
-            // add the widgets with proper targeting to the master list
-            // ensure we dont overwrite existing widgets in target
+          var pass = true;
+
+          // check to see if the segment based targeting is valid
+          if (segments && segments.indexOf(target.segment) === -1) {
+            pass = false;
+          }
+
+          // check to see if the custom rules are all valid and passing
+          if (widgets.target.rules) {
+            var expressions = {
+              '==': function (a, b) {
+                return a === b;
+              },
+              '!=': function (a, b) {
+                return a !== b;
+              },
+              '>': function (a, b) {
+                return a > b;
+              },
+              '<': function (a, b) {
+                return a < b;
+              },
+              '>=': function (a, b) {
+                return a >= b;
+              },
+              '<=': function (a, b) {
+                return a <= b;
+              },
+              'contains': function (a, b) {
+                return a.indexOf(b) !== -1;
+              },
+              'empty': function (a) {
+                return a === '';
+              },
+              'not empty': function (a) {
+                return a !== '';
+              }
+            };
+
+            for (var key in target.rules) {
+              if (target.rules.hasOwnProperty(key)) {
+                var rule = target.rules[key];
+                if (expressions[rule.expression]) {
+                  if (!expressions[rule.expression](rule.value, options[key])) {
+                    pass = false;
+                  }
+                }
+              }
+            }
+          }
+
+          // add the widgets that pass to the master list
+          if (pass) {
+            console.log('passed, adding widget', target.widgets);
             targetedWidgets = targetedWidgets.concat(target.widgets);
+          } else {
+            console.log('passed, adding widget', target.widgets);
           }
         }
       }
