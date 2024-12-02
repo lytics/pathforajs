@@ -9,7 +9,204 @@
 
   var cov_zm1v9eezm=function(){var path="/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/ab-test/create-preset.js",hash="3fdd3b39b8d3350c9f8d5a8b24bfd89a5147555e",Function=function(){}.constructor,global=new Function('return this')(),gcv="__coverage__",coverageData={path:"/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/ab-test/create-preset.js",statementMap:{"0":{start:{line:11,column:15},end:{line:11,column:17}},"1":{start:{line:13,column:2},end:{line:15,column:3}},"2":{start:{line:14,column:4},end:{line:14,column:30}},"3":{start:{line:17,column:18},end:{line:19,column:4}},"4":{start:{line:18,column:4},end:{line:18,column:25}},"5":{start:{line:22,column:2},end:{line:28,column:3}},"6":{start:{line:23,column:25},end:{line:23,column:38}},"7":{start:{line:25,column:4},end:{line:27,column:7}},"8":{start:{line:26,column:6},end:{line:26,column:38}},"9":{start:{line:30,column:2},end:{line:33,column:4}}},fnMap:{"0":{name:"createABTestingModePreset",decl:{start:{line:10,column:24},end:{line:10,column:49}},loc:{start:{line:10,column:53},end:{line:34,column:1}},line:10},"1":{name:"(anonymous_1)",decl:{start:{line:17,column:32},end:{line:17,column:33}},loc:{start:{line:17,column:56},end:{line:19,column:3}},line:17},"2":{name:"(anonymous_2)",decl:{start:{line:25,column:24},end:{line:25,column:25}},loc:{start:{line:25,column:43},end:{line:27,column:5}},line:25}},branchMap:{"0":{loc:{start:{line:22,column:2},end:{line:28,column:3}},type:"if",locations:[{start:{line:22,column:2},end:{line:28,column:3}},{start:{line:22,column:2},end:{line:28,column:3}}],line:22}},s:{"0":0,"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0},f:{"0":0,"1":0,"2":0},b:{"0":[0,0]},_coverageSchema:"332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"},coverage=global[gcv]||(global[gcv]={});if(coverage[path]&&coverage[path].hash===hash){return coverage[path];}coverageData.hash=hash;return coverage[path]=coverageData;}();function createABTestingModePreset(){cov_zm1v9eezm.f[0]++;var groups=(cov_zm1v9eezm.s[0]++,[]);cov_zm1v9eezm.s[1]++;for(var i=0;i<arguments.length;i++){cov_zm1v9eezm.s[2]++;groups.push(arguments[i]);}var groupsSum=(cov_zm1v9eezm.s[3]++,groups.reduce(function(sum,element){cov_zm1v9eezm.f[1]++;cov_zm1v9eezm.s[4]++;return sum+element;}));cov_zm1v9eezm.s[5]++;if(groupsSum>1){cov_zm1v9eezm.b[0][0]++;var groupsSumRatio=(cov_zm1v9eezm.s[6]++,1/groupsSum);cov_zm1v9eezm.s[7]++;groups=groups.map(function(element){cov_zm1v9eezm.f[2]++;cov_zm1v9eezm.s[8]++;return element*groupsSumRatio;});}else{cov_zm1v9eezm.b[0][1]++;}cov_zm1v9eezm.s[9]++;return {groups:groups,groupsNumber:groups.length};}
 
+<<<<<<< HEAD
   var cov_19efr9pfed=function(){var path='/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/globals/config.js',hash='64af044cccdc187c006e4d4239c2325de4753912',Function=function(){}.constructor,global=new Function('return this')(),gcv='__coverage__',coverageData={path:'/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/globals/config.js',statementMap:{'0':{start:{line:11,column:24},end:{line:11,column:32}},'1':{start:{line:12,column:16},end:{line:12,column:23}},'2':{start:{line:13,column:22},end:{line:13,column:24}},'3':{start:{line:14,column:17},end:{line:14,column:37}},'4':{start:{line:15,column:20},end:{line:15,column:39}},'5':{start:{line:16,column:24},end:{line:16,column:46}},'6':{start:{line:17,column:37},end:{line:17,column:69}},'7':{start:{line:18,column:21},end:{line:18,column:39}},'8':{start:{line:19,column:20},end:{line:19,column:37}},'9':{start:{line:20,column:19},end:{line:20,column:36}},'10':{start:{line:21,column:21},end:{line:21,column:36}},'11':{start:{line:22,column:19},end:{line:22,column:37}},'12':{start:{line:23,column:25},end:{line:23,column:28}},'13':{start:{line:24,column:31},end:{line:24,column:34}},'14':{start:{line:25,column:23},end:{line:25,column:26}},'15':{start:{line:26,column:14},end:{line:26,column:28}},'16':{start:{line:27,column:14},end:{line:27,column:28}},'17':{start:{line:28,column:34},end:{line:28,column:51}},'18':{start:{line:29,column:20},end:{line:29,column:74}},'19':{start:{line:30,column:31},end:{line:30,column:40}},'20':{start:{line:31,column:33},end:{line:31,column:44}},'21':{start:{line:33,column:30},end:{line:38,column:1}},'22':{start:{line:40,column:27},end:{line:49,column:1}},'23':{start:{line:51,column:27},end:{line:51,column:49}},'24':{start:{line:52,column:26},end:{line:52,column:47}},'25':{start:{line:53,column:32},end:{line:53,column:51}},'26':{start:{line:55,column:28},end:{line:59,column:1}},'27':{start:{line:62,column:23},end:{line:62,column:38}}},fnMap:{},branchMap:{},s:{'0':0,'1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0,'9':0,'10':0,'11':0,'12':0,'13':0,'14':0,'15':0,'16':0,'17':0,'18':0,'19':0,'20':0,'21':0,'22':0,'23':0,'24':0,'25':0,'26':0,'27':0},f:{},b:{},_coverageSchema:'332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'},coverage=global[gcv]||(global[gcv]={});if(coverage[path]&&coverage[path].hash===hash){return coverage[path];}coverageData.hash=hash;return coverage[path]=coverageData;}();var PF_VERSION=(cov_19efr9pfed.s[0]++,'1.2.12'),PF_LOCALE=(cov_19efr9pfed.s[1]++,'en-US'),PF_DATE_OPTIONS=(cov_19efr9pfed.s[2]++,{}),PREFIX_REC=(cov_19efr9pfed.s[3]++,'PathforaRecommend_'),PREFIX_UNLOCK=(cov_19efr9pfed.s[4]++,'PathforaUnlocked_'),PREFIX_IMPRESSION=(cov_19efr9pfed.s[5]++,'PathforaImpressions_'),PREFIX_TOTAL_IMPRESSIONS_SINCE=(cov_19efr9pfed.s[6]++,'PathforaTotalImpressionsSince_'),PREFIX_CONFIRM=(cov_19efr9pfed.s[7]++,'PathforaConfirm_'),PREFIX_CANCEL=(cov_19efr9pfed.s[8]++,'PathforaCancel_'),PREFIX_CLOSE=(cov_19efr9pfed.s[9]++,'PathforaClosed_'),PREFIX_AB_TEST=(cov_19efr9pfed.s[10]++,'PathforaTest_'),PF_PAGEVIEWS=(cov_19efr9pfed.s[11]++,'PathforaPageView'),DEFAULT_CHAR_LIMIT=(cov_19efr9pfed.s[12]++,220),DEFAULT_CHAR_LIMIT_STACK=(cov_19efr9pfed.s[13]++,160),WIDTH_BREAKPOINT=(cov_19efr9pfed.s[14]++,650),API_URL=(cov_19efr9pfed.s[15]++,'//api.lytics.io'),CSS_URL=(cov_19efr9pfed.s[16]++,'//c.lytics.io/static/pathfora.min.css'),ENTITY_FIELD_TEMPLATE_REGEX=(cov_19efr9pfed.s[17]++,'\\{{2}.*?\\}{2}'),ENTITY_FIELDS=(cov_19efr9pfed.s[18]++,['msg','headline','image','confirmAction.callback']),OPTIONS_PRIORITY_ORDERED=(cov_19efr9pfed.s[19]++,'ordered'),OPTIONS_PRIORITY_UNORDERED=(cov_19efr9pfed.s[20]++,'unordered');var defaultPositions=(cov_19efr9pfed.s[21]++,{modal:'',slideout:'bottom-left',button:'top-left',bar:'top-absolute'});var callbackTypes=(cov_19efr9pfed.s[22]++,{INIT:'widgetInitialized',LOAD:'widgetLoaded',CLICK:'buttonClicked',FORM_SUBMIT:'formSubmitted',MODAL_OPEN:'modalOpened',MODAL_CLOSE:'modalClosed',MODAL_CONFIRM:'modalConfirm',MODAL_CANCEL:'modalCancel'});var widgetTracker=(cov_19efr9pfed.s[23]++,resetWidgetTracker({}));var defaultProps=(cov_19efr9pfed.s[24]++,resetDefaultProps({}));var pathforaDataObject=(cov_19efr9pfed.s[25]++,resetDataObject({}));var abTestingTypes=(cov_19efr9pfed.s[26]++,{'100':createABTestingModePreset(100),'50/50':createABTestingModePreset(50,50),'80/20':createABTestingModePreset(80,20)});var templates=(cov_19efr9pfed.s[27]++,{
+=======
+    obj.form = {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        name: 'Name',
+        title: 'Title',
+        email: 'Email',
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number',
+        country: 'Country',
+        referralEmail: 'Referral Email'
+      },
+      required: {
+        name: true,
+        email: true
+      },
+      fields: {
+        company: false,
+        phone: false,
+        country: false,
+        referralEmail: false
+      },
+      okMessage: 'Send',
+      okShow: true,
+      cancelMessage: 'Cancel',
+      cancelShow: true
+    };
+
+
+    obj.sitegate = {
+      layout: 'modal',
+      position: '',
+      variant: '1',
+      placeholders: {
+        name: 'Name',
+        title: 'Title',
+        email: 'Email',
+        message: 'Message',
+        company: 'Company',
+        phone: 'Phone Number',
+        country: 'Country',
+        referralEmail: 'Referral Email'
+      },
+      required: {
+        name: true,
+        email: true
+      },
+      fields: {
+        message: false,
+        phone: false,
+        country: false,
+        referralEmail: false
+      },
+      okMessage: 'Submit',
+      okShow: true,
+      cancelShow: false,
+      showForm: true
+    };
+
+    return obj;
+  }
+
+  /** @module pathfora/globals/reset-widget-tracker */
+
+  /**
+   * Reset the widgetTracker to an empty state
+   *
+   * @exports resetDefaultProps
+   * @params {object} obj
+   * @returns {object} obj
+   */
+  function resetWidgetTracker (obj) {
+    obj.delayedWidgets = {};
+    obj.openedWidgets = [];
+    obj.initializedWidgets = [];
+    obj.prioritizedWidgets = [];
+    obj.readyWidgets = [];
+    obj.triggeredWidgets = {};
+
+    return obj;
+  }
+
+  /** @module pathfora/globals/reset-data-object */
+
+  /**
+   * Reset the pathforaDataObject to an empty state
+   *
+   * @exports resetDataObject
+   * @params {object} obj
+   * @returns {object} obj
+   */
+  function resetDataObject (obj) {
+    obj.pageViews = 0;
+    obj.timeSpentOnPage = 0;
+    obj.closedWidgets = [];
+    obj.completedActions = [];
+    obj.cancelledActions = [];
+    obj.displayedWidgets = [];
+    obj.abTestingGroups = [];
+
+    return obj;
+  }
+
+  /* module pathfora/ab-test/create-preset */
+
+  /**
+   * Creates A/B test group distrubutions
+   *
+   * @exports createABTestingModePreset
+   * @params {int} a/b values
+   * @returns {object}
+   */
+  function createABTestingModePreset () {
+    var groups = [];
+
+    for (var i = 0; i < arguments.length; i++) {
+      groups.push(arguments[i]);
+    }
+
+    var groupsSum = groups.reduce(function (sum, element) {
+      return sum + element;
+    });
+
+    // NOTE If groups collapse into a number greater than 1, normalize
+    if (groupsSum > 1) {
+      var groupsSumRatio = 1 / groupsSum;
+
+      groups = groups.map(function (element) {
+        return element * groupsSumRatio;
+      });
+    }
+
+    return {
+      groups: groups,
+      groupsNumber: groups.length
+    };
+  }
+
+  /** @module pathfora/globals/config */
+
+  var PF_VERSION = '1.2.14',
+    PF_LOCALE = 'en-US',
+    PF_DATE_OPTIONS = {},
+    PREFIX_REC = 'PathforaRecommend_',
+    PREFIX_UNLOCK = 'PathforaUnlocked_',
+    PREFIX_IMPRESSION = 'PathforaImpressions_',
+    PREFIX_TOTAL_IMPRESSIONS_SINCE = 'PathforaTotalImpressionsSince_',
+    PREFIX_CONFIRM = 'PathforaConfirm_',
+    PREFIX_CANCEL = 'PathforaCancel_',
+    PREFIX_CLOSE = 'PathforaClosed_',
+    PREFIX_AB_TEST = 'PathforaTest_',
+    PF_PAGEVIEWS = 'PathforaPageView',
+    DEFAULT_CHAR_LIMIT = 220,
+    DEFAULT_CHAR_LIMIT_STACK = 160,
+    WIDTH_BREAKPOINT = 650,
+    API_URL = 'https://api.lytics.io',
+    CSS_URL = 'https://api.lytics.io/static/pathfora.min.css',
+    ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
+    ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
+    OPTIONS_PRIORITY_ORDERED = 'ordered',
+    OPTIONS_PRIORITY_UNORDERED = 'unordered';
+
+  var defaultPositions = {
+    modal: '',
+    slideout: 'bottom-left',
+    button: 'top-left',
+    bar: 'top-absolute',
+  };
+
+  var callbackTypes = {
+    INIT: 'widgetInitialized',
+    LOAD: 'widgetLoaded',
+    CLICK: 'buttonClicked',
+    FORM_SUBMIT: 'formSubmitted',
+    MODAL_OPEN: 'modalOpened',
+    MODAL_CLOSE: 'modalClosed',
+    MODAL_CONFIRM: 'modalConfirm',
+    MODAL_CANCEL: 'modalCancel',
+  };
+
+  var widgetTracker = resetWidgetTracker({});
+  var defaultProps = resetDefaultProps({});
+  var pathforaDataObject = resetDataObject({});
+
+  var abTestingTypes = {
+    100: createABTestingModePreset(100),
+    '50/50': createABTestingModePreset(50, 50),
+    '80/20': createABTestingModePreset(80, 20),
+  };
+
+  /* eslint-disable quotes */
+  var templates = {
+>>>>>>> develop
   'subscription': {
     'bar': '<div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' data-required=\'true\' aria-label=\'Email\'></span></form></div>',
     'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' data-required=\'true\' aria-label=\'Email\'></span></form></div></div></div></div></div></div>',
@@ -261,6 +458,4644 @@
 
   var cov_1jcoxh1l82=function(){var path='/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/inline/init-inline.js',hash='1c1e0c84b7ab51be7faaa13d2f6e84d0e74b3faa',Function=function(){}.constructor,global=new Function('return this')(),gcv='__coverage__',coverageData={path:'/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/inline/init-inline.js',statementMap:{'0':{start:{line:13,column:11},end:{line:13,column:15}},'1':{start:{line:15,column:2},end:{line:20,column:5}},'2':{start:{line:16,column:4},end:{line:19,column:7}},'3':{start:{line:17,column:6},end:{line:17,column:28}},'4':{start:{line:18,column:6},end:{line:18,column:31}}},fnMap:{'0':{name:'initializeInline',decl:{start:{line:12,column:24},end:{line:12,column:40}},loc:{start:{line:12,column:44},end:{line:21,column:1}},line:12},'1':{name:'(anonymous_1)',decl:{start:{line:15,column:18},end:{line:15,column:19}},loc:{start:{line:15,column:30},end:{line:20,column:3}},line:15},'2':{name:'(anonymous_2)',decl:{start:{line:16,column:19},end:{line:16,column:20}},loc:{start:{line:16,column:31},end:{line:19,column:5}},line:16}},branchMap:{},s:{'0':0,'1':0,'2':0,'3':0,'4':0},f:{'0':0,'1':0,'2':0},b:{},_coverageSchema:'332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'},coverage=global[gcv]||(global[gcv]={});if(coverage[path]&&coverage[path].hash===hash){return coverage[path];}coverageData.hash=hash;return coverage[path]=coverageData;}();function initializeInline(){cov_1jcoxh1l82.f[0]++;var pf=(cov_1jcoxh1l82.s[0]++,this);cov_1jcoxh1l82.s[1]++;this.onDOMready(function(){cov_1jcoxh1l82.f[1]++;cov_1jcoxh1l82.s[2]++;pf.addCallback(function(){cov_1jcoxh1l82.f[2]++;cov_1jcoxh1l82.s[3]++;validateAccountId(pf);cov_1jcoxh1l82.s[4]++;pf.inline.procElements();});});}
 
+<<<<<<< HEAD
   var cov_m4v5bk88r=function(){var path='/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/pathfora.js',hash='acfcfc08384d1a13ff2a0b62a3615a368f27d14d',Function=function(){}.constructor,global=new Function('return this')(),gcv='__coverage__',coverageData={path:'/Users/markhayden/go/src/github.com/lytics/pathforajs/src/rollup/pathfora.js',statementMap:{'0':{start:{line:60,column:15},end:{line:131,column:1}},'1':{start:{line:62,column:2},end:{line:64,column:3}},'2':{start:{line:63,column:4},end:{line:63,column:70}},'3':{start:{line:67,column:2},end:{line:67,column:28}},'4':{start:{line:68,column:2},end:{line:68,column:22}},'5':{start:{line:69,column:2},end:{line:69,column:19}},'6':{start:{line:70,column:2},end:{line:70,column:26}},'7':{start:{line:71,column:2},end:{line:71,column:37}},'8':{start:{line:72,column:2},end:{line:72,column:25}},'9':{start:{line:73,column:2},end:{line:73,column:24}},'10':{start:{line:74,column:2},end:{line:74,column:23}},'11':{start:{line:77,column:2},end:{line:77,column:31}},'12':{start:{line:80,column:2},end:{line:80,column:21}},'13':{start:{line:83,column:2},end:{line:83,column:37}},'14':{start:{line:86,column:2},end:{line:86,column:33}},'15':{start:{line:89,column:2},end:{line:89,column:49}},'16':{start:{line:90,column:2},end:{line:90,column:39}},'17':{start:{line:93,column:2},end:{line:93,column:61}},'18':{start:{line:94,column:2},end:{line:94,column:45}},'19':{start:{line:95,column:2},end:{line:95,column:53}},'20':{start:{line:96,column:2},end:{line:96,column:43}},'21':{start:{line:97,column:2},end:{line:97,column:37}},'22':{start:{line:98,column:2},end:{line:98,column:31}},'23':{start:{line:99,column:2},end:{line:99,column:33}},'24':{start:{line:100,column:2},end:{line:100,column:27}},'25':{start:{line:101,column:2},end:{line:101,column:25}},'26':{start:{line:102,column:2},end:{line:102,column:35}},'27':{start:{line:103,column:2},end:{line:103,column:19}},'28':{start:{line:104,column:2},end:{line:104,column:27}},'29':{start:{line:107,column:2},end:{line:107,column:43}},'30':{start:{line:110,column:2},end:{line:110,column:49}},'31':{start:{line:111,column:2},end:{line:111,column:23}},'32':{start:{line:114,column:2},end:{line:114,column:43}},'33':{start:{line:115,column:2},end:{line:115,column:33}},'34':{start:{line:116,column:2},end:{line:116,column:26}},'35':{start:{line:117,column:2},end:{line:117,column:29}},'36':{start:{line:120,column:13},end:{line:120,column:53}},'37':{start:{line:121,column:13},end:{line:121,column:43}},'38':{start:{line:123,column:2},end:{line:123,column:41}},'39':{start:{line:124,column:2},end:{line:124,column:40}},'40':{start:{line:125,column:2},end:{line:125,column:59}},'41':{start:{line:127,column:2},end:{line:127,column:35}},'42':{start:{line:128,column:2},end:{line:128,column:40}},'43':{start:{line:130,column:2},end:{line:130,column:25}},'44':{start:{line:133,column:0},end:{line:133,column:52}}},fnMap:{'0':{name:'(anonymous_0)',decl:{start:{line:60,column:15},end:{line:60,column:16}},loc:{start:{line:60,column:27},end:{line:131,column:1}},line:60}},branchMap:{'0':{loc:{start:{line:62,column:2},end:{line:64,column:3}},type:'if',locations:[{start:{line:62,column:2},end:{line:64,column:3}},{start:{line:62,column:2},end:{line:64,column:3}}],line:62},'1':{loc:{start:{line:62,column:6},end:{line:62,column:66}},type:'binary-expr',locations:[{start:{line:62,column:6},end:{line:62,column:33}},{start:{line:62,column:37},end:{line:62,column:66}}],line:62},'2':{loc:{start:{line:125,column:28},end:{line:125,column:57}},type:'binary-expr',locations:[{start:{line:125,column:28},end:{line:125,column:46}},{start:{line:125,column:50},end:{line:125,column:57}}],line:125},'3':{loc:{start:{line:133,column:18},end:{line:133,column:51}},type:'binary-expr',locations:[{start:{line:133,column:18},end:{line:133,column:33}},{start:{line:133,column:37},end:{line:133,column:51}}],line:133}},s:{'0':0,'1':0,'2':0,'3':0,'4':0,'5':0,'6':0,'7':0,'8':0,'9':0,'10':0,'11':0,'12':0,'13':0,'14':0,'15':0,'16':0,'17':0,'18':0,'19':0,'20':0,'21':0,'22':0,'23':0,'24':0,'25':0,'26':0,'27':0,'28':0,'29':0,'30':0,'31':0,'32':0,'33':0,'34':0,'35':0,'36':0,'37':0,'38':0,'39':0,'40':0,'41':0,'42':0,'43':0,'44':0},f:{'0':0},b:{'0':[0,0],'1':[0,0],'2':[0,0],'3':[0,0]},_coverageSchema:'332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'},coverage=global[gcv]||(global[gcv]={});if(coverage[path]&&coverage[path].hash===hash){return coverage[path];}coverageData.hash=hash;return coverage[path]=coverageData;}();cov_m4v5bk88r.s[0]++;var Pathfora=function(){cov_m4v5bk88r.f[0]++;cov_m4v5bk88r.s[1]++;if((cov_m4v5bk88r.b[1][0]++,!('localStorage'in window))||(cov_m4v5bk88r.b[1][1]++,!('sessionStorage'in window))){cov_m4v5bk88r.b[0][0]++;cov_m4v5bk88r.s[2]++;throw new Error('The Pathfora SDK requires the Web Storage API!');}else{cov_m4v5bk88r.b[0][1]++;}cov_m4v5bk88r.s[3]++;this.version=PF_VERSION;cov_m4v5bk88r.s[4]++;this.callbacks=[];cov_m4v5bk88r.s[5]++;this.acctid='';cov_m4v5bk88r.s[6]++;this.locale=PF_LOCALE;cov_m4v5bk88r.s[7]++;this.dateOptions=PF_DATE_OPTIONS;cov_m4v5bk88r.s[8]++;this.DOMLoaded=false;cov_m4v5bk88r.s[9]++;this.enableGA=false;cov_m4v5bk88r.s[10]++;this.customData={};cov_m4v5bk88r.s[11]++;this.onDOMready=onDOMready;cov_m4v5bk88r.s[12]++;this.utils=utils;cov_m4v5bk88r.s[13]++;this.getDataObject=getDataObject;cov_m4v5bk88r.s[14]++;this.addCallback=addCallback;cov_m4v5bk88r.s[15]++;this.initializePageViews=initializePageViews;cov_m4v5bk88r.s[16]++;this.triggerWidgets=triggerWidgets;cov_m4v5bk88r.s[17]++;this.initializeTargetedWidgets=initializeTargetedWidgets;cov_m4v5bk88r.s[18]++;this.initializeWidgets=initializeWidgets;cov_m4v5bk88r.s[19]++;this.initializeWidgetArray=initializeWidgetArray;cov_m4v5bk88r.s[20]++;this.initializeWidget=initializeWidget;cov_m4v5bk88r.s[21]++;this.previewWidget=previewWidget;cov_m4v5bk88r.s[22]++;this.showWidget=showWidget;cov_m4v5bk88r.s[23]++;this.closeWidget=closeWidget;cov_m4v5bk88r.s[24]++;this.clearAll=clearAll;cov_m4v5bk88r.s[25]++;this.Message=Message;cov_m4v5bk88r.s[26]++;this.Subscription=Subscription;cov_m4v5bk88r.s[27]++;this.Form=Form;cov_m4v5bk88r.s[28]++;this.SiteGate=SiteGate;cov_m4v5bk88r.s[29]++;this.recommendContent=recommendContent;cov_m4v5bk88r.s[30]++;this.initializeABTesting=initializeABTesting;cov_m4v5bk88r.s[31]++;this.ABTest=ABTest;cov_m4v5bk88r.s[32]++;this.initializeInline=initializeInline;cov_m4v5bk88r.s[33]++;this.inline=new Inline(this);cov_m4v5bk88r.s[34]++;this.initializeInline();cov_m4v5bk88r.s[35]++;this.initializePageViews();var head=(cov_m4v5bk88r.s[36]++,document$1.getElementsByTagName('head')[0]),link=(cov_m4v5bk88r.s[37]++,document$1.createElement('link'));cov_m4v5bk88r.s[38]++;link.setAttribute('rel','stylesheet');cov_m4v5bk88r.s[39]++;link.setAttribute('type','text/css');cov_m4v5bk88r.s[40]++;link.setAttribute('href',(cov_m4v5bk88r.b[2][0]++,window.PathforaCSS)||(cov_m4v5bk88r.b[2][1]++,CSS_URL));cov_m4v5bk88r.s[41]++;this.utils.updateLegacyCookies();cov_m4v5bk88r.s[42]++;this.utils.store.removeExpiredItems();cov_m4v5bk88r.s[43]++;head.appendChild(link);};cov_m4v5bk88r.s[44]++;window.pathfora=(cov_m4v5bk88r.b[3][0]++,window.pathfora)||(cov_m4v5bk88r.b[3][1]++,new Pathfora());
+=======
+    // scaffold
+    initWidgetScaffold: initWidgetScaffold,
+    insertWidget: insertWidget,
+
+    // url
+    constructQueries: constructQueries,
+    escapeURI: escapeURI,
+
+    // objects
+    updateObject: updateObject,
+    setObjectValue: setObjectValue,
+    getObjectValue: getObjectValue,
+
+    generateUniqueId: generateUniqueId,
+    escapeRegex: escapeRegex,
+    emailValid: emailValid,
+    decodeSafe: decodeSafe,
+    isNotEncoded: isNotEncoded
+  };
+
+  /** @module pathfora/data/tracking/get-data-object */
+
+  /**
+   * Get the pathfora data object
+   *
+   * @exports getDataObject
+   * @returns {object} pathforaDataObject
+   */
+  function getDataObject () {
+    return pathforaDataObject;
+  }
+
+  /** @module pathfora/callbacks/add-callback */
+
+  /**
+   * Add a function to be called once jstag is loaded
+   *
+   * @exports addCallack
+   * @params {function} cb
+   */
+  function addCallback (cb) {
+    if (window.lio && window.lio.loaded) {
+      // legacy
+      cb(window.lio.data);
+      return;
+    } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      if ('entityReady' in window.jstag) {
+        window.jstag.entityReady(function (e) {
+          if (e.data && e.data.user) {
+            cb(e.data.user);
+          }
+        });
+      } else {
+        var entity = window.jstag.getEntity();
+        if (entity.data && entity.data.user) {
+          cb(entity.data.user);
+        }
+      }
+    }
+
+    // fallback
+    this.callbacks.push(cb);
+  }
+
+  /** @module pathfora/display-conditions/pageviews/init-pageviews */
+
+  /**
+   * Track and update the number of pageviews
+   *
+   * @exports initializePageViews
+   */
+  function initializePageViews () {
+    var cookie = read(PF_PAGEVIEWS);
+
+    write(PF_PAGEVIEWS, Math.min(~~cookie, 9998) + 1);
+  }
+
+  /** @module pathfora/display-conditions/impressions/impressions-checker */
+
+  /**
+   * Check if the widget has met the impressions
+   * display condition.
+   *
+   * @exports impressionsChecker
+   * @params {object} impressionConstraints
+   * @params {object} widget
+   * @params {boolean} valid
+   */
+  function impressionsChecker (impressionConstraints, widget) {
+    var parts,
+        totalImpressions,
+        since,
+        id = PREFIX_IMPRESSION + widget.id,
+        sinceId = PREFIX_TOTAL_IMPRESSIONS_SINCE + widget.id,
+        sessionImpressions = ~~sessionStorage.getItem(id),
+        sessionImpressionsForAllWidgets = 0,
+        impressionsForAllWidgets = 0,
+        lastImpressionTimeForAllWidgets = 0,
+        total = read(id),
+        now = Date.now();
+
+    // retain backwards compatibility if using legacy method of:
+    impressionConstraints.widget = impressionConstraints.widget || {};
+    impressionConstraints.global = impressionConstraints.global || {};
+
+    // migrate impressions.session to impressions.widget.session if not also set
+    if (typeof impressionConstraints.widget.session === 'undefined') {
+      impressionConstraints.widget.session = impressionConstraints.session;
+    }
+    // migrate impressions.total to impressions.widget.total if not also set
+    if (typeof impressionConstraints.widget.total === 'undefined') {
+      impressionConstraints.widget.total = impressionConstraints.total;
+    }
+    // migrate impressions.buffer to impressions.widget.buffer if not also set
+    if (typeof impressionConstraints.widget.buffer === 'undefined') {
+      impressionConstraints.widget.buffer = impressionConstraints.buffer;
+    }
+
+    // maintain and overwrite the "total since" value for impressions.global.duration
+    if (impressionConstraints.global.total > 0 && impressionConstraints.global.duration > 0) {
+      since = read(sinceId);
+
+      var resetImpressions = function () {
+        write(
+          sinceId,
+          '0|' + now,
+          widget.expiration
+        );
+      };
+
+      if (!since) {
+        resetImpressions();
+      } else {
+        parts = since.split('|');
+        if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) >= impressionConstraints.global.duration) {
+          resetImpressions();
+        }
+      }
+    }
+
+    if (!sessionImpressions) {
+      sessionImpressions = 0;
+    }
+
+    // check for impressions.widget.session
+    if (sessionImpressions >= impressionConstraints.widget.session) {
+      return false;
+    }
+
+    // widget specific historic total
+    if (!total) {
+      totalImpressions = 0;
+    } else {
+      parts = total.split('|');
+      totalImpressions = parseInt(parts[0], 10);
+
+      // check for impressions.widget.buffer
+      if (typeof parts[1] !== 'undefined') {
+        if (impressionConstraints.widget.buffer > 0 && (Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.buffer)) {
+          return false;
+        }
+
+        // check for impressions.widget.duration
+        if (
+          impressionConstraints.widget.duration > 0 &&
+          totalImpressions % impressionConstraints.widget.total === 0 &&
+          Math.abs(parts[1] - now) / 1000 < impressionConstraints.widget.duration
+        ) {
+          return false;
+        }
+      }
+    }
+
+    // check for impressions.widget.total
+    if (totalImpressions >= impressionConstraints.widget.total && typeof impressionConstraints.widget.duration === 'undefined') {
+      return false;
+    }
+
+    // all widgets session total
+    if (impressionConstraints.global.session > 0) {
+      for (var i = 0; i < ~~sessionStorage.length; i++) {
+        var k = sessionStorage.key(i);
+        if (typeof k !== 'undefined' && k.includes(PREFIX_IMPRESSION)) {
+          sessionImpressionsForAllWidgets =
+            sessionImpressionsForAllWidgets + ~~sessionStorage.getItem(k);
+        }
+      }
+    }
+
+    // check for impressions.global.session
+    if (sessionImpressionsForAllWidgets >= impressionConstraints.global.session) {
+      return false;
+    }
+
+    // all widget multi-session total
+    if (impressionConstraints.global.total > 0 || impressionConstraints.global.buffer > 0) {
+      for (var j = 0; j < ~~localStorage.length; j++) {
+        var l = localStorage.key(j);
+        if (typeof l !== 'undefined' && l.includes(PREFIX_IMPRESSION)) {
+          parts = read(l).split('|');
+          totalImpressions = parseInt(parts[0], 10);
+          impressionsForAllWidgets = impressionsForAllWidgets + totalImpressions;
+
+          if (typeof parts[1] !== 'undefined') {
+            lastImpressionTimeForAllWidgets = Math.max(parts[1], lastImpressionTimeForAllWidgets);
+          }
+        }
+      }
+
+      // check for impressions.global.buffer
+      if (lastImpressionTimeForAllWidgets > 0) {
+        if (impressionConstraints.global.buffer > 0 && (Math.abs(lastImpressionTimeForAllWidgets - now) / 1000 < impressionConstraints.global.buffer)) {
+          return false;
+        }
+      }
+    }
+
+    // check for impressions.global.duration
+    if (impressionConstraints.global.duration > 0) {
+      since = read(sinceId);
+      parts = since.split('|');
+      if (parts[0] >= impressionConstraints.global.total) {
+        return false;
+      }
+    }
+
+    // check for impressions.global.total
+    if (impressionsForAllWidgets >= impressionConstraints.global.total && typeof impressionConstraints.global.duration === 'undefined') {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Censor an object by its keys, by comparing against an array of strings and/or regexps. In the case of strings,
+   * only exact matches are censored. For non-strings, if the object's test method returns true, the key will be censored.
+   *
+   * @param {object} data the data to censor
+   * @param {obejct} keysToReject an array of strings or regexps to censor the data by preparatory to sending
+   */
+  function censorTrackingKeys (data, keysToReject) {
+    return Object.keys(data)
+      .filter(function (key) {
+        return !keysToReject.some(function (keyToReject) {
+          return typeof keyToReject === 'string'
+            ? key === keyToReject
+            : keyToReject.test(key);
+        });
+      })
+      .reduce(function (memo, key) {
+        memo[key] = data[key];
+        return memo;
+      }, {});
+  }
+
+  /** @module pathfora/data/request/report-data */
+
+  /**
+   * Send data object to Lytics and GA
+   *
+   * @exports reportData
+   * @params {object} data
+   * @widget {object}
+   */
+  function reportData (data, widget) {
+    var gaLabel, trackers;
+
+    if (typeof jstag === 'object') {
+      window.jstag.send(
+        widget.censorTrackingKeys
+          ? censorTrackingKeys(data, widget.censorTrackingKeys)
+          : data
+      );
+    }
+
+    if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
+      gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
+      trackers = window.ga.getAll();
+
+      for (var i = 0; i < trackers.length; i++) {
+        var name = trackers[i].get('name');
+
+        window.ga(
+          name + '.send',
+          'event',
+          'Lytics',
+          data['pf-widget-id'] + ' : ' + gaLabel,
+          '',
+          {
+            nonInteraction: true
+          }
+        );
+      }
+    }
+  }
+
+  /** @module pathfora/data/tracking/track-widget-action */
+
+  /**
+   * Format and track interaction events such as
+   * CTA clicks, form status, etc.
+   *
+   * @exports trackWidgetAction
+   * @params {string} action
+   * @params {object} widget
+   * @params {object} htmlElement
+   */
+  function trackWidgetAction (action, widget, htmlElement) {
+    var child, elem, i;
+
+    var params = {
+      'pf-widget-id': widget.id,
+      'pf-widget-type': widget.type,
+      'pf-widget-layout': widget.layout,
+      'pf-widget-variant': widget.variant
+    };
+
+    if (widget.recommend && widget.content && widget.content.length > 0) {
+      params['pf-widget-content'] = widget.content[0];
+    }
+
+    switch (action) {
+    case 'show':
+      pathforaDataObject.displayedWidgets.push(params);
+      break;
+    case 'close':
+      params['pf-widget-action'] = !!widget.closeAction && widget.closeAction.name || 'close';
+      pathforaDataObject.closedWidgets.push(params);
+      break;
+    case 'confirm':
+      if (htmlElement && hasClass(htmlElement, 'pf-content-unit')) {
+        params['pf-widget-action'] = 'content recommendation';
+      } else {
+        params['pf-widget-action'] = !!widget.confirmAction && widget.confirmAction.name || 'default confirm';
+        pathforaDataObject.completedActions.push(params);
+      }
+      break;
+    case 'cancel':
+      params['pf-widget-action'] = !!widget.cancelAction && widget.cancelAction.name || 'default cancel';
+      pathforaDataObject.cancelledActions.push(params);
+      break;
+    case 'success.confirm':
+      params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+        && !!widget.formStates.success.confirmAction && widget.formStates.success.confirmAction.name || 'success confirm';
+      pathforaDataObject.completedActions.push(params);
+      break;
+    case 'success.cancel':
+      params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.success
+        && !!widget.formStates.success.cancelAction && widget.formStates.success.cancelAction.name || 'success cancel';
+      pathforaDataObject.cancelledActions.push(params);
+      break;
+    case 'error.confirm':
+      params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+        && !!widget.formStates.error.confirmAction && widget.formStates.error.confirmAction.name || 'error confirm';
+      pathforaDataObject.completedActions.push(params);
+      break;
+    case 'error.cancel':
+      params['pf-widget-action'] = !!widget.formStates && !!widget.formStates.error
+        && !!widget.formStates.error.cancelAction && widget.formStates.error.cancelAction.name || 'error cancel';
+      pathforaDataObject.cancelledActions.push(params);
+      break;
+
+    case 'submit':
+    case 'unlock':
+      if (hasClass(htmlElement, 'pf-custom-form')) {
+        params['pf-custom-form'] = {};
+      }
+
+      for (elem in htmlElement.children) {
+        if (htmlElement.children.hasOwnProperty(elem)) {
+          child = htmlElement.children[elem];
+
+          if (hasClass(child, 'pf-widget-radio-group') || hasClass(child, 'pf-widget-checkbox-group')) {
+            var values = [],
+                name = '',
+                inputs = child.querySelectorAll('input');
+
+            for (i = 0; i < inputs.length; i++) {
+              var input = inputs[i];
+              if (input.checked) {
+                name = input.getAttribute('name');
+                values.push(input.value);
+              }
+            }
+
+            if (name !== '') {
+              params['pf-custom-form'][name] = values;
+            }
+          } else if (child && typeof child.getAttribute !== 'undefined' && child.getAttribute('name') !== null) {
+            params['pf-form-' + child.getAttribute('name')] = child.value;
+          } else if (hasClass(htmlElement, 'pf-custom-form') && child && child.querySelector) {
+            var val = child.querySelector('input, select, textarea');
+
+            if (val && typeof val.getAttribute !== 'undefined' && val.getAttribute('name') !== null) {
+              params['pf-custom-form'][val.getAttribute('name')] = val.value;
+            }
+          }
+        }
+      }
+
+      if (action === 'unlock') {
+        write(PREFIX_UNLOCK + widget.id, true, widget.expiration);
+      }
+
+      break;
+    case 'subscribe':
+      params['pf-form-email'] = htmlElement.elements.email.value;
+      break;
+    case 'hover':
+      if (hasClass(htmlElement, 'pf-content-unit')) {
+        params['pf-widget-action'] = 'content recommendation';
+      } else if (hasClass(htmlElement, 'pf-widget-ok')) {
+        if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+          params['pf-widget-action'] = 'success.confirm';
+        } else if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'error-state')) {
+          params['pf-widget-action'] = 'error.confirm';
+        } else {
+          params['pf-widget-action'] = 'confirm';
+        }
+      } else if (hasClass(htmlElement, 'pf-widget-cancel')) {
+        if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'success-state')) {
+          params['pf-widget-action'] = 'success.cancel';
+        } else if (htmlElement.parentElement && hasClass(htmlElement.parentElement, 'error-state')) {
+          params['pf-widget-action'] = 'error.cancel';
+        } else {
+          params['pf-widget-action'] = 'cancel';
+        }
+      } else if (hasClass(htmlElement, 'pf-widget-close')) {
+        params['pf-widget-action'] = 'close';
+      }
+      break;
+    case 'focus':
+      if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+        params['pf-widget-action'] = htmlElement.getAttribute('name');
+      }
+      break;
+    case 'form_start':
+      if (htmlElement && typeof htmlElement.getAttribute !== 'undefined' && htmlElement.getAttribute('name') !== null) {
+        params['pf-widget-action'] = htmlElement.getAttribute('name');
+      }
+      break;
+    }
+
+    params['pf-widget-event'] = action;
+    reportData(params, widget);
+  }
+
+  /** @module pathfora/display-conditions/impressions/increment-impressions */
+
+  /**
+   * Increment the impression count for a widget
+   *
+   * @exports incrementImpressions
+   * @params {object} widget
+   */
+  function incrementImpressions (widget) {
+    var parts,
+        totalImpressions,
+        id = PREFIX_IMPRESSION + widget.id,
+        sessionImpressions = ~~sessionStorage.getItem(id),
+        total = read(id),
+        now = Date.now();
+
+    if (!sessionImpressions) {
+      sessionImpressions = 1;
+    } else {
+      sessionImpressions += 1;
+    }
+
+    if (!total) {
+      totalImpressions = 1;
+    } else {
+      parts = total.split('|');
+      totalImpressions = parseInt(parts[0], 10) + 1;
+    }
+
+    sessionStorage.setItem(id, sessionImpressions);
+    write(id, Math.min(totalImpressions, 9998) + '|' + now, widget.expiration);
+
+    // increment the "total since" values for modals with the impressions.global.duration config option
+    for (var i = 0; i < ~~localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (typeof k !== 'undefined' && k.includes(PREFIX_TOTAL_IMPRESSIONS_SINCE)) {
+        parts = read(k).split('|');
+        totalImpressions = parseInt(parts[0], 10) + 1;
+        write(k, totalImpressions + '|' + parts[1], widget.expiration);
+      }
+    }
+  }
+
+  /** @module pathfora/validation/validate-widget-position */
+
+  /**
+   * Validate that the widget has correct position field
+   * for its layout and type
+   *
+   * @exports validateWidgetPosition
+   * @params {object} widget
+   * @params {object} config
+   */
+  function validateWidgetPosition (widget, config) {
+    var choices;
+
+    switch (config.layout) {
+    case 'modal':
+      choices = ['', 'middle-center'];
+      break;
+    case 'slideout':
+      choices = [
+        'bottom-left',
+        'bottom-right',
+        'left',
+        'right',
+        'top-left',
+        'top-right'
+      ];
+      break;
+    case 'bar':
+      choices = ['top-absolute', 'top-fixed', 'bottom-fixed', 'top-center', 'bottom-center'];
+      break;
+    case 'button':
+      choices = [
+        'left',
+        'right',
+        'top-left',
+        'top-right',
+        'bottom-left',
+        'bottom-right'
+      ];
+      break;
+    case 'inline':
+      choices = [];
+      break;
+    }
+
+    if (choices.length && choices.indexOf(config.position) === -1) {
+      console.warn(
+        config.position + ' is not a valid position for ' + config.layout
+      );
+    }
+  }
+
+  /** @module pathfora/widgets/setup-widget-position */
+
+  /**
+   * Validate that the widget has correct position field,
+   * and choose the default if it does not
+   *
+   * @exports setupWidgetPostion
+   * @params {object} widget
+   * @params {object} config
+   */
+  function setupWidgetPosition (widget, config) {
+    if (config.position) {
+      validateWidgetPosition(widget, config);
+    } else {
+      config.position = defaultPositions[config.layout];
+    }
+  }
+
+  /** @module pathfora/utils/date-valid */
+
+  /**
+   * Validate that the string is a valid date
+   *
+   * @exports dateValid
+   * @params {string} date
+   * @params {string} max
+   * @params {string} min
+   * @returns {boolean} valid
+   */
+  function dateValid (date, max, min) {
+    var selectedDate = new Date(date).getTime(),
+        maxDate = max ? new Date(max).getTime() : undefined,
+        minDate = min ? new Date(min).getTime() : undefined;
+
+    if (max && selectedDate > maxDate) {
+      return false;
+    }
+
+    if (min && selectedDate < minDate) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /** @module pathfora/widgets/close-widget */
+
+  /**
+   * Close a widget and remove it from the dom
+   *
+   * @exports closeWidget
+   * @params {string} id
+   * @params {boolean} noTrack
+   */
+  function closeWidget (id, noTrack) {
+    var i,
+        node = document$1.getElementById(id);
+
+    // FIXME Change to Array#some or Array#filter
+    for (i = 0; i < widgetTracker.openedWidgets.length; i++) {
+      if (widgetTracker.openedWidgets[i].id === id) {
+        if (!noTrack) {
+          trackWidgetAction('close', widgetTracker.openedWidgets[i]);
+        }
+
+        for (var key in widgetTracker.openedWidgets[i].listeners) {
+          if (widgetTracker.openedWidgets[i].listeners.hasOwnProperty(key)) {
+            var val = widgetTracker.openedWidgets[i].listeners[key];
+            val.target.removeEventListener(val.type, val.fn);
+          }
+        }
+
+        widgetTracker.openedWidgets.splice(i, 1);
+        break;
+      }
+    }
+
+    removeClass(node, 'opened');
+
+    if (hasClass(node, 'pf-has-push-down')) {
+      var pushDown = document$1.querySelector('.pf-push-down');
+      if (pushDown) {
+        removeClass(pushDown, 'opened');
+      }
+    }
+
+    // FIXME 500 - magical number
+    setTimeout(function () {
+      if (node && node.parentNode) {
+        node.parentNode.removeChild(node);
+
+        for (i = 0; i < widgetTracker.initializedWidgets.length; i++) {
+          if (widgetTracker.initializedWidgets[i] === id) {
+            widgetTracker.initializedWidgets.splice(i, 1);
+          }
+        }
+      }
+    }, 500);
+  }
+
+  /** @module pathfora/form/handle-form-states */
+
+  /**
+   * Handles showing the success or error state of a form.
+   *
+   * @exports handleFormStates
+   * @params {boolean} successful
+   * @params {object} widget
+   * @params {object} config
+   */
+  function handleFormStates (successful, widget, config) {
+    if (config.formStates) {
+      var delay = 0;
+
+      if (successful) {
+        addClass(widget, 'success');
+        delay = config.formStates.success && typeof config.formStates.success.delay !== 'undefined' ? config.formStates.success.delay * 1000 : 3000;
+      } else {
+        addClass(widget, 'error');
+        delay = config.formStates.error && typeof config.formStates.error.delay !== 'undefined' ? config.formStates.error.delay * 1000 : 3000;
+      }
+
+      if (delay > 0) {
+        setTimeout(function () {
+          closeWidget(widget.id, true);
+        }, delay);
+      }
+    }
+  }
+
+  /** @module pathfora/widgets/actions/widgetOnModalClose */
+
+  /**
+   * Execute the onModalClose callback
+   * if set by the user
+   *
+   * @exports widgetOnModalClose
+   * @params {object} widget
+   * @params {object} config
+   * @params {object} event
+   */
+
+  function widgetOnModalClose (widget, config, event) {
+    if (typeof config.onModalClose === 'function') {
+      config.onModalClose(callbackTypes.MODAL_CLOSE, {
+        widget: widget,
+        config: config,
+        event: event
+      });
+    }
+  }
+
+  /** @module pathfora/widgets/actions/update-action-cookie */
+
+  /**
+   * Increase the value count of the actions
+   * saves as cookies
+   *
+   * @exports updateActionCookie
+   * @params {string} name
+   * @params {object} expiration
+   */
+
+  function updateActionCookie (name, expiration) {
+    var ct,
+        val = read(name),
+        duration = Date.now();
+
+    if (val) {
+      val = val.split('|');
+      ct = Math.min(parseInt(val[0], 10), 9998) + 1;
+    } else {
+      ct = 1;
+    }
+
+    write(name, ct + '|' + duration, expiration);
+  }
+
+  /** @module pathfora/widgets/actions/buton-action */
+
+  /**
+   * Execute any callbacks that were assigned
+   * to a button, and perform tracking
+   *
+   * @exports widgetOnModalClose
+   * @params {object} btn
+   * @params {string} type
+   * @params {object} config
+   * @params {object} widget
+   */
+
+  function buttonAction (btn, type, config, widget) {
+    var prefix, callbackType, action, shouldClose;
+
+    switch (type) {
+    case 'close':
+      prefix = PREFIX_CLOSE;
+      callbackType = callbackTypes.MODAL_CLOSE;
+      action = config.closeAction;
+      shouldClose = true;
+      break;
+    case 'cancel':
+    case 'success.cancel':
+    case 'error.cancel':
+      prefix = PREFIX_CANCEL;
+      action = config.cancelAction;
+      shouldClose = config.layout !== 'inline';
+
+      if (type === 'success.cancel') {
+        action = config.formStates.success.cancelAction;
+      }
+
+      if (type === 'error.cancel') {
+        action = config.formStates.error.cancelAction;
+      }
+
+      break;
+    case 'confirm':
+    case 'success.confirm':
+    case 'error.confirm':
+      prefix = PREFIX_CONFIRM;
+      shouldClose = config.layout !== 'inline';
+
+      if (type === 'success.confirm') {
+        action = config.formStates.success.confirmAction;
+      }
+      if (type === 'error.confirm') {
+        action = config.formStates.error.confirmAction;
+      }
+
+      break;
+    }
+
+    btn.onmouseenter = function (event) {
+      trackWidgetAction('hover', config, event.target);
+    };
+
+    btn.onclick = function (event) {
+      trackWidgetAction(type, config);
+      updateActionCookie(prefix + widget.id, config.expiration);
+
+      if (typeof action === 'object') {
+        if (action.close === false) {
+          shouldClose = false;
+        }
+
+        if (typeof action.callback === 'function') {
+          action.callback(callbackType, {
+            widget: widget,
+            config: config,
+            event: event
+          });
+        }
+      }
+
+      if (shouldClose) {
+        closeWidget(widget.id, true);
+        widgetOnModalClose(widget, config, event);
+      }
+    };
+  }
+
+  /** @module pathfora/widgets/actions/construct-widget-actions */
+
+  /**
+   * Add callbacks and tracking for user interactions
+   * with widgets
+   *
+   * @exports constructWidgetActions
+   * @params {object} widget
+   * @params {object} config
+   */
+  function constructWidgetActions(widget, config) {
+    var widgetOnButtonClick,
+      widgetFormValidate,
+      widgetForm,
+      widgetOk = widget.querySelector('.pf-widget-ok'),
+      widgetCancel = widget.querySelector('.pf-widget-cancel'),
+      widgetClose = widget.querySelector('.pf-widget-close'),
+      widgetReco = widget.querySelector('.pf-content-unit');
+
+    // Tracking for widgets with a form element
+    switch (config.type) {
+      case 'form':
+      case 'sitegate':
+      case 'subscription':
+        widgetForm = widget.querySelector('form');
+
+        var onInputChange = function (event) {
+          if (event.target.value && event.target.value.length > 0) {
+            trackWidgetAction('form_start', config, event.target);
+          }
+        };
+
+        var onInputFocus = function (event) {
+          trackWidgetAction('focus', config, event.target);
+        };
+
+        // Additional tracking for input focus and entering text into the form
+        for (var elem in widgetForm.childNodes) {
+          if (widgetForm.children.hasOwnProperty(elem)) {
+            var child = widgetForm.children[elem];
+            if (
+              typeof child.getAttribute !== 'undefined' &&
+              child.getAttribute('name') !== null
+            ) {
+              // Track focus of form elements
+              child.onfocus = onInputFocus;
+
+              // Track input to indicate they've begun to interact with the form
+              child.onchange = onInputChange;
+            }
+          }
+        }
+
+        // Form submit handler
+        widgetFormValidate = function (event) {
+          event.preventDefault();
+
+          // Validate that the form is filled out correctly
+          var valid = true,
+            requiredElements = Array.prototype.slice.call(
+              widgetForm.querySelectorAll('[data-required=true]')
+            ),
+            validatableElements = Array.prototype.slice.call(
+              widgetForm.querySelectorAll('[data-validate=true]')
+            ),
+            i,
+            field,
+            parent;
+
+          for (i = 0; i < requiredElements.length; i++) {
+            field = requiredElements[i];
+
+            if (hasClass(widgetForm, 'pf-custom-form')) {
+              if (field.parentNode) {
+                parent = field.parentNode;
+                removeClass(parent, 'invalid');
+
+                if (
+                  hasClass(parent, 'pf-widget-radio-group') ||
+                  hasClass(parent, 'pf-widget-checkbox-group')
+                ) {
+                  var inputs = field.querySelectorAll('input');
+                  var count = 0;
+
+                  for (var j = 0; j < inputs.length; j++) {
+                    var input = inputs[j];
+                    if (input.checked) {
+                      count++;
+                    }
+                  }
+
+                  if (count === 0) {
+                    valid = false;
+                    addClass(parent, 'invalid');
+                  }
+                } else if (!field.value) {
+                  valid = false;
+                  addClass(parent, 'invalid');
+                  if (field && i === 0) {
+                    field.focus();
+                  }
+                }
+              }
+              // legacy support old, non-custom forms
+            } else if (field.hasAttribute('data-required')) {
+              removeClass(field, 'invalid');
+
+              if (!field.value) {
+                valid = false;
+                addClass(field, 'invalid');
+                if (field && i === 0) {
+                  field.focus();
+                }
+              }
+            }
+          }
+
+          for (i = 0; i < validatableElements.length; i++) {
+            field = validatableElements[i];
+
+            if (hasClass(widgetForm, 'pf-custom-form')) {
+              if (field.parentNode) {
+                parent = field.parentNode;
+                removeClass(parent, 'bad-validation');
+
+                if (
+                  (field.value !== '' &&
+                    field.getAttribute('type') === 'email' &&
+                    !emailValid(field.value)) ||
+                  (field.getAttribute('type') === 'date' &&
+                    !dateValid(
+                      field.value,
+                      field.getAttribute('max'),
+                      field.getAttribute('min')
+                    ))
+                ) {
+                  valid = false;
+                  addClass(parent, 'bad-validation');
+                  if (field && i === 0) {
+                    field.focus();
+                  }
+                }
+              }
+              // legacy support old, non-custom forms
+            } else if (field.hasAttribute('data-validate')) {
+              removeClass(field, 'bad-validation');
+
+              if (
+                field.getAttribute('type') === 'email' &&
+                !emailValid(field.value) &&
+                field.value !== ''
+              ) {
+                valid = false;
+                addClass(field, 'bad-validation');
+                if (field && i === 0) {
+                  field.focus();
+                }
+              }
+            }
+          }
+
+          return valid;
+        };
+
+        break;
+    }
+
+    switch (config.layout) {
+      case 'button':
+        if (typeof config.onClick === 'function') {
+          widgetOnButtonClick = function (event) {
+            config.onClick(callbackTypes.CLICK, {
+              widget: widget,
+              config: config,
+              event: event,
+            });
+          };
+        }
+        break;
+      case 'modal':
+        if (config.type !== 'sitegate') {
+          config.listeners.escape = {
+            type: 'keydown',
+            target: document,
+            fn: function (event) {
+              event = event || window.event;
+              if (event.keyCode === 27) {
+                trackWidgetAction('close', config);
+                updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+                closeWidget(widget.id, true);
+                widgetOnModalClose(widget, config, event);
+              }
+            },
+          };
+        }
+        break;
+    }
+
+    if (widgetClose) {
+      buttonAction(widgetClose, 'close', config, widget);
+    }
+
+    if (widgetCancel) {
+      buttonAction(widgetCancel, 'cancel', config, widget);
+    }
+
+    if (widgetOk) {
+      widgetOk.onmouseenter = function (event) {
+        trackWidgetAction('hover', config, event.target);
+      };
+
+      widgetOk.onclick = function (event) {
+        var data,
+          widgetAction,
+          shouldClose = true;
+
+        // special case for form widgets
+        if (typeof widgetFormValidate === 'function') {
+          switch (config.type) {
+            case 'form':
+              widgetAction = 'submit';
+              break;
+            case 'subscription':
+              widgetAction = 'subscribe';
+              break;
+            case 'sitegate':
+              widgetAction = 'unlock';
+              break;
+          }
+
+          // validate form input
+          if (!widgetAction || !widgetFormValidate(event)) {
+            return;
+          } else if (widgetForm) {
+            trackWidgetAction(widgetAction, config, widgetForm);
+
+            // get the data submitted to the form
+            data = Array.prototype.slice
+              .call(widgetForm.querySelectorAll('input, textarea, select'))
+              .filter(function (element) {
+                if (
+                  element.type &&
+                  (element.type === 'checkbox' || element.type === 'radio')
+                ) {
+                  return element.checked;
+                }
+                return true;
+              })
+              .map(function (element) {
+                return {
+                  name: element.name || element.id,
+                  value: element.value,
+                };
+              });
+
+            // onSubmit callback should be deprecated,
+            // we keep the cb for backwards compatibility.
+            if (typeof config.onSubmit === 'function') {
+              config.onSubmit(callbackTypes.FORM_SUBMIT, {
+                widget: widget,
+                config: config,
+                event: event,
+                data: data,
+              });
+            }
+          }
+        }
+
+        // track confirm action
+        trackWidgetAction('confirm', config);
+        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+
+        // support onClick callback for button modules
+        if (typeof widgetOnButtonClick === 'function') {
+          widgetOnButtonClick(event);
+        }
+
+        // confirmAction
+        if (typeof config.confirmAction === 'object') {
+          if (config.confirmAction.close === false) {
+            shouldClose = false;
+          }
+
+          if (typeof config.confirmAction.callback === 'function') {
+            var param = {
+              widget: widget,
+              config: config,
+              event: event,
+            };
+
+            // include the data from the form if we have it.
+            if (data) {
+              param.data = data;
+            }
+
+            // if waitForAsyncResponse we will handle the states as part of the callback
+            if (config.confirmAction.waitForAsyncResponse === true) {
+              config.confirmAction.callback(
+                callbackTypes.MODAL_CONFIRM,
+                param,
+                function (successful) {
+                  handleFormStates(successful, widget, config);
+                }
+              );
+              return;
+            } else {
+              config.confirmAction.callback(callbackTypes.MODAL_CONFIRM, param);
+            }
+          }
+        }
+
+        if (shouldClose) {
+          if (
+            config.layout !== 'inline' &&
+            (!config.formStates || !config.formStates.success)
+          ) {
+            closeWidget(widget.id, true);
+            widgetOnModalClose(widget, config, event);
+          } else {
+            // show success state
+            handleFormStates(true, widget, config);
+          }
+        }
+      };
+    }
+
+    if (widgetReco) {
+      widgetReco.onmouseenter = function (event) {
+        trackWidgetAction('hover', config, event.target);
+      };
+
+      widgetReco.onclick = function (event) {
+        trackWidgetAction('confirm', config, event.target);
+        updateActionCookie(PREFIX_CONFIRM + widget.id, config.expiration);
+      };
+    }
+  }
+
+  /** @module pathfora/widgets/recommendation/setup-widget-content-unit */
+
+  /**
+   * Setup HTML for a widget with content recommendations
+   *
+   * @exports setupWidgetContentUnit
+   * @params {object} widget
+   * @params {object} config
+   */
+  function setupWidgetContentUnit (widget, config) {
+    var widgetContentUnit = widget.querySelector('.pf-content-unit'),
+        settings = config.recommend;
+
+    if (config.recommend && config.content) {
+      // Make sure we have content to get
+      if (Object.keys(config.content).length > 0) {
+        // The top recommendation should be default if we couldn't
+        // get one from the api
+        var rec = config.content[0],
+            recImage = document$1.createElement('div'),
+            recMeta = document$1.createElement('div'),
+            recTitle = document$1.createElement('h4'),
+            recDesc = document$1.createElement('p'),
+            recInfo = document$1.createElement('span');
+
+        widgetContentUnit.href = rec.url;
+
+        // image div
+        if (
+          rec.image &&
+          (!settings.display || settings.display.image !== false)
+        ) {
+          recImage.className = 'pf-content-unit-img';
+          recImage.style.backgroundImage = "url('" + rec.image + "')";
+          widgetContentUnit.appendChild(recImage);
+        }
+
+        recMeta.className = 'pf-content-unit-meta';
+
+        // title h4
+        if (
+          rec.title &&
+          (!settings.display || settings.display.title !== false)
+        ) {
+          recTitle.innerHTML = rec.title;
+          recMeta.appendChild(recTitle);
+        }
+
+        if (
+          rec.author &&
+          (settings.display && settings.display.author === true)
+        ) {
+          recInfo.innerHTML = 'by ' + rec.author;
+        }
+
+        if (rec.date && (settings.display && settings.display.date === true)) {
+          var published = new Date(rec.date),
+              locale = settings.display.locale,
+              dateOptions = settings.display.dateOptions;
+
+          if (!locale && window.pathfora && window.pathfora.locale) {
+            locale = window.pathfora.locale;
+          } else if (!locale) {
+            locale = PF_LOCALE;
+          }
+
+          if (!dateOptions && window.pathfora && window.pathfora.dateOptions) {
+            dateOptions = window.pathfora.dateOptions;
+          } else if (!dateOptions) {
+            dateOptions = PF_DATE_OPTIONS;
+          }
+
+          published = published.toLocaleDateString(locale, dateOptions);
+
+          if (!recInfo.innerHTML) {
+            recInfo.innerHTML = published;
+          } else {
+            recInfo.innerHTML += ' | ' + published;
+          }
+        }
+
+        if (recInfo.innerHTML) {
+          recInfo.className = 'pf-content-unit-info';
+          recMeta.appendChild(recInfo);
+        }
+
+        // description p
+        if (
+          rec.description &&
+          (!settings.display || settings.display.description !== false)
+        ) {
+          var desc = rec.description,
+              limit =
+              config.layout === 'modal'
+                ? DEFAULT_CHAR_LIMIT
+                : DEFAULT_CHAR_LIMIT_STACK;
+
+          // set the default character limit for descriptions
+          if (!settings.display) {
+            settings.display = {
+              descriptionLimit: limit
+            };
+          } else if (!settings.display.descriptionLimit) {
+            settings.display.descriptionLimit = limit;
+          }
+
+          if (
+            desc.length > settings.display.descriptionLimit &&
+            settings.display.descriptionLimit !== -1
+          ) {
+            desc = desc.substring(0, settings.display.descriptionLimit);
+            desc = desc.substring(0, desc.lastIndexOf(' ')) + '...';
+          }
+
+          recDesc.innerHTML = desc;
+          recMeta.appendChild(recDesc);
+        }
+
+        widgetContentUnit.appendChild(recMeta);
+      }
+    }
+  }
+
+  /** @module core/set-widget-classname */
+
+  /**
+   * Setup the className for a widget
+   *
+   * @exports setWidgetClassname
+   * @params {object} widget
+   * @params {object} config
+   */
+  function setWidgetClassname (widget, config) {
+    widget.className = [
+      'pf-widget ',
+      'pf-' + config.type,
+      ' pf-widget-' + config.layout,
+      config.position ? ' pf-position-' + config.position : '',
+      config.pushDown ? ' pf-has-push-down' : '',
+      config.origin ? ' pf-origin-' + config.origin : '',
+      ' pf-widget-variant-' + config.variant,
+      config.theme ? ' pf-theme-' + config.theme : '',
+      config.className ? ' ' + config.className : '',
+      config.branding ? ' pf-widget-has-branding' : '',
+      !config.responsive ? ' pf-mobile-hide' : ''
+    ].join('');
+  }
+
+  /** @module pathfora/form/build-form-element */
+
+  /**
+   * Build and insert a custom form element into
+   * the widget's form
+   *
+   * @exports buildFormElement
+   * @params {object} elem
+   * @params {object} form
+   */
+  function buildFormElement(elem, form) {
+    var content,
+      i,
+      val,
+      label,
+      wrapper = document$1.createElement('div'),
+      isGroup = elem.hasOwnProperty('groupType'),
+      reqFlag,
+      reqTriangle;
+
+    // group elements include: checkbox groups
+    if (isGroup) {
+      wrapper.className = 'pf-widget-' + elem.type;
+      content = document$1.createElement('div');
+    } else {
+      switch (elem.type) {
+        case 'email':
+          content = document$1.createElement('input');
+          content.setAttribute('type', 'email');
+          break;
+        case 'text':
+        case 'input':
+          content = document$1.createElement('input');
+          content.setAttribute('type', 'text');
+          break;
+        case 'date':
+          content = document$1.createElement('input');
+          content.setAttribute('type', 'date');
+          break;
+        default:
+          content = document$1.createElement(elem.type);
+          break;
+      }
+
+      content.setAttribute('name', elem.name);
+      content.setAttribute('id', elem.name);
+
+      // add row count for textarea
+      if (elem.type === 'textarea') {
+        content.setAttribute('rows', 5);
+      }
+
+      // add max and min date for date input
+      if (elem.type === 'date') {
+        var today = new Date(),
+          offset = today.getTimezoneOffset(),
+          todayTimezone = new Date(today.getTime() - offset * 60 * 1000),
+          max = elem.maxDate
+            ? elem.maxDate === 'today'
+              ? todayTimezone
+              : new Date(elem.maxDate)
+            : null,
+          min = elem.minDate
+            ? elem.minDate === 'today'
+              ? todayTimezone
+              : new Date(elem.minDate)
+            : null;
+
+        if (max != null) {
+          content.setAttribute('max', max.toISOString().split('T')[0]);
+        }
+        if (min != null) {
+          content.setAttribute('min', min.toISOString().split('T')[0]);
+        }
+      }
+    }
+
+    if (elem.label) {
+      if (isGroup) {
+        label = document$1.createElement('span');
+        label.id = elem.name;
+        content.setAttribute('aria-labelledby', elem.name);
+      } else {
+        label = document$1.createElement('label');
+        label.setAttribute('for', elem.name);
+      }
+
+      label.innerHTML = elem.label;
+      label.className = 'pf-form-label';
+      addClass(content, 'pf-has-label');
+
+      if (elem.required === true) {
+        label.innerHTML += ' <span class="required">*</span>';
+      }
+
+      wrapper.appendChild(label);
+    }
+
+    if (elem.required === true) {
+      addClass(wrapper, 'pf-form-required');
+      content.setAttribute('data-required', 'true');
+
+      if (elem.label) {
+        reqFlag = document$1.createElement('div');
+        reqFlag.className = 'pf-required-flag';
+        reqFlag.innerHTML = 'required';
+
+        reqTriangle = document$1.createElement('span');
+        reqFlag.appendChild(reqTriangle);
+        wrapper.appendChild(reqFlag);
+      }
+    }
+
+    if (elem.type === 'date' || elem.type === 'email') {
+      addClass(wrapper, 'pf-form-required');
+      content.setAttribute('data-validate', 'true');
+
+      if (elem.label) {
+        reqFlag = document$1.createElement('div');
+        reqFlag.className = 'pf-invalid-flag';
+        reqFlag.innerHTML = 'invalid';
+
+        reqTriangle = document$1.createElement('span');
+        reqFlag.appendChild(reqTriangle);
+        wrapper.appendChild(reqFlag);
+      }
+    }
+
+    if (elem.placeholder) {
+      // select element has first option as placeholder
+      if (elem.type === 'select') {
+        var placeholder = document$1.createElement('option');
+        placeholder.setAttribute('value', '');
+        placeholder.innerHTML = elem.placeholder;
+        content.appendChild(placeholder);
+      } else {
+        content.placeholder = elem.placeholder;
+      }
+
+      if (!elem.label) {
+        content.setAttribute('aria-label', elem.placeholder);
+      }
+    }
+
+    if (elem.values) {
+      for (i = 0; i < elem.values.length; i++) {
+        val = elem.values[i];
+
+        if (isGroup) {
+          var input = document$1.createElement('input');
+          input.setAttribute('type', elem.groupType);
+          input.setAttribute('value', val.value);
+          input.setAttribute('name', elem.name);
+
+          if (val.label) {
+            label = document$1.createElement('label');
+            label.className = 'pf-widget-' + elem.groupType;
+            label.appendChild(input);
+            label.appendChild(document$1.createTextNode(val.label));
+            content.appendChild(label);
+          } else {
+            throw new Error(
+              elem.groupType + 'form group values must contain labels'
+            );
+          }
+        } else if (elem.type === 'select') {
+          var option = document$1.createElement('option');
+          option.setAttribute('value', val.value);
+          option.innerHTML = val.label;
+
+          content.appendChild(option);
+        }
+      }
+    }
+
+    wrapper.appendChild(content);
+
+    // make sure we're inserting the new element before the confirm button
+    var btn = form.querySelector('.pf-widget-ok');
+    if (btn) {
+      form.insertBefore(wrapper, btn);
+    } else {
+      form.appendChild(wrapper);
+    }
+  }
+
+  /** @module pathfora/form/build-widget-form */
+
+  /**
+   * Build a custom form on a widget according to the
+   * formElements config provided
+   *
+   * @exports buildWidgetForm
+   * @params {object} formElements
+   * @params {object} form
+   */
+  function buildWidgetForm (formElements, form) {
+    for (var i = 0; i < formElements.length; i++) {
+      var elem = formElements[i];
+
+      switch (elem.type) {
+      // Radio & Checkbox Button Group
+      case 'radio-group':
+      case 'checkbox-group':
+        elem.groupType = elem.type.split('-')[0];
+        buildFormElement(elem, form);
+        delete elem.groupType;
+        break;
+
+      // Textarea, Input, & Select
+      case 'textarea':
+      case 'input':
+      case 'text':
+      case 'email':
+      case 'date':
+      case 'select':
+        buildFormElement(elem, form);
+        break;
+
+      default:
+        throw new Error('unrecognized form element type: ' + elem.type);
+      }
+    }
+  }
+
+  /** @module pathfora/form/construct-form-state */
+
+  /**
+   * Setup html for success or error state of a form module
+   *
+   * @exports constructFormState
+   * @params {object} widget
+   * @params {object} config
+   * @params {string} name
+   */
+  function constructFormState (config, widget, name) {
+    if (!config.formStates) {
+      return;
+    }
+
+    var obj, defaultHeadline, defaultMsg;
+
+    switch (name) {
+    case 'success':
+      obj = config.formStates.success;
+      defaultMsg = 'We have received your submission.';
+      defaultHeadline = 'Thank You';
+      break;
+    case 'error':
+      obj = config.formStates.error;
+      defaultMsg = 'There was an error receiving with your submission.';
+      defaultHeadline = 'Error';
+      break;
+    default:
+      throw new Error('Unrecognized formState: ' + name);
+    }
+
+    var elem = document$1.createElement('div');
+    elem.className = name + '-state';
+
+    var title = document$1.createElement('h2');
+    title.className = 'pf-widget-headline';
+    title.innerHTML = obj.headline || defaultHeadline;
+    elem.appendChild(title);
+
+    var msg = document$1.createElement('div');
+    msg.className = 'pf-widget-message';
+    msg.innerHTML = obj.msg || defaultMsg;
+    elem.appendChild(msg);
+
+    if (obj.okShow) {
+      var ok = document$1.createElement('button');
+      ok.type = 'button';
+      ok.className = 'pf-widget-btn pf-widget-ok';
+      ok.innerHTML = obj.okMessage || 'Confirm';
+      elem.appendChild(ok);
+    }
+
+    if (obj.cancelShow) {
+      var cancel = document$1.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'pf-widget-btn pf-widget-cancel';
+      cancel.innerHTML = obj.cancelMessage || 'Cancel';
+      elem.appendChild(cancel);
+    }
+
+    return elem;
+  }
+
+  /** @module pathfora/widgets/actions/form-state-actions */
+
+  /**
+   * Add callbacks and tracking for confirm and cancel
+   * buttons on the success or error state of a form widget
+   *
+   * @exports formStateActions
+   * @params {object} widget
+   * @params {object} config
+   * @params {name} string
+   */
+  function formStateActions (config, widget, name) {
+    var ok = widget.querySelector('.' + name + '-state .pf-widget-ok'),
+        cancel = widget.querySelector('.' + name + '-state .pf-widget-cancel');
+
+    if (cancel) {
+      buttonAction(cancel, name + '.cancel', config, widget);
+    }
+
+    if (ok) {
+      buttonAction(ok, name + '.confirm', config, widget);
+    }
+  }
+
+  /** @module pathfora/widgets/construct-widget-layout */
+
+  /**
+   * Setup inner html elements for a widget
+   *
+   * @exports constructWidgetLayout
+   * @params {object} widget
+   * @params {object} config
+   */
+  function constructWidgetLayout(widget, config) {
+    var node,
+      child,
+      i,
+      widgetContent = widget.querySelector('.pf-widget-content'),
+      widgetCancel = widget.querySelector('.pf-widget-cancel'),
+      widgetOk = widget.querySelector('.pf-widget-ok'),
+      widgetHeadline = widget.querySelectorAll('.pf-widget-headline'),
+      widgetBody = widget.querySelector('.pf-widget-body'),
+      widgetMessage = widget.querySelector('.pf-widget-message'),
+      widgetFooter = widget.querySelector('.pf-widget-footer');
+
+    if (widgetCancel !== null && !config.cancelShow) {
+      node = widgetCancel;
+
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    }
+
+    if (widgetOk !== null && !config.okShow) {
+      node = widgetOk;
+
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    }
+
+    if (widgetCancel !== null) {
+      widgetCancel.innerHTML = config.cancelMessage;
+    }
+
+    if (widgetOk !== null) {
+      widgetOk.innerHTML = config.okMessage;
+    }
+
+    if (widgetOk && widgetOk.value !== null) {
+      widgetOk.value = config.okMessage;
+    }
+
+    if (widgetCancel && widgetCancel.value !== null) {
+      widgetCancel.value = config.cancelMessage;
+    }
+
+    // Form layouts should have a default success message
+    switch (config.type) {
+      case 'form':
+      case 'subscription':
+      case 'sitegate':
+        switch (config.layout) {
+          case 'modal':
+          case 'slideout':
+          case 'sitegate':
+          case 'inline':
+            if (!config.formStates) {
+              break;
+            }
+
+            // success state
+            if (config.formStates.success) {
+              var success = constructFormState(config, widget, 'success');
+              widgetContent.appendChild(success);
+              formStateActions(config, widget, 'success');
+            }
+
+            // error state
+            if (config.formStates.error) {
+              var error = constructFormState(config, widget, 'error');
+              widgetContent.appendChild(error);
+              formStateActions(config, widget, 'error');
+            }
+
+            break;
+        }
+        break;
+    }
+
+    switch (config.layout) {
+      case 'modal':
+      case 'slideout':
+      case 'sitegate':
+      case 'inline':
+        if (widgetContent && config.branding) {
+          var branding = document$1.createElement('div');
+          branding.className = 'branding';
+          branding.innerHTML = templates.assets.lytics;
+          widgetContent.appendChild(branding);
+        }
+
+        break;
+    }
+
+    switch (config.type) {
+      case 'form':
+        switch (config.layout) {
+          case 'modal':
+          case 'slideout':
+          case 'random':
+          case 'inline':
+            break;
+          default:
+            throw new Error('Invalid widget layout value');
+        }
+        break;
+      case 'subscription':
+        switch (config.layout) {
+          case 'modal':
+          case 'bar':
+          case 'slideout':
+          case 'random':
+          case 'inline':
+            break;
+          default:
+            throw new Error('Invalid widget layout value');
+        }
+        break;
+      case 'message':
+        switch (config.layout) {
+          case 'modal':
+          case 'slideout':
+            break;
+          case 'random':
+          case 'bar':
+          case 'button':
+          case 'inline':
+            break;
+          default:
+            throw new Error('Invalid widget layout value');
+        }
+        break;
+      case 'sitegate':
+        switch (config.layout) {
+          case 'modal':
+            if (config.showForm === false) {
+              node = widget.querySelector('form');
+              child = node.querySelectorAll('input, select, textarea');
+
+              if (node) {
+                for (i = 0; i < child.length; i++) {
+                  node.removeChild(child[i]);
+                }
+
+                child = node.querySelector('.pf-sitegate-clear');
+
+                if (child) {
+                  node.removeChild(child);
+                }
+              }
+            }
+            break;
+          default:
+            throw new Error('Invalid widget layout value');
+        }
+        break;
+    }
+
+    // NOTE Set The headline
+    for (i = widgetHeadline.length - 1; i >= 0; i--) {
+      widgetHeadline[i].innerHTML = config.headline;
+    }
+
+    // NOTE Set the image
+    if (config.image) {
+      var widgetImage = document$1.createElement('img');
+      widgetImage.src = config.image;
+      widgetImage.className = 'pf-widget-img';
+      widgetImage.alt = '';
+      if (config.layout === 'button') ; else if (config.layout === 'modal' || config.layout === 'inline') {
+        widgetContent.appendChild(widgetImage);
+      } else {
+        widgetBody.appendChild(widgetImage);
+      }
+    }
+
+    switch (config.type) {
+      case 'sitegate':
+      case 'form':
+        // Check if custom form is defined
+        if (config.formElements && config.formElements.length) {
+          // remove the existing form fields
+          var form = widget.querySelector('form');
+          addClass(form, 'pf-custom-form');
+          var childName;
+          var arr = form.children;
+
+          for (var k = 0; k < arr.length; k++) {
+            child = arr[k];
+
+            if (typeof child.getAttribute !== 'undefined') {
+              childName = child.getAttribute('name');
+
+              if (childName != null) {
+                form.removeChild(child);
+                k--;
+              }
+            }
+          }
+
+          buildWidgetForm(config.formElements, form);
+        } else {
+          // support old form functions
+          var getFormElement = function (field) {
+            if (field === 'name') {
+              return widget.querySelector('input[name="username"]');
+            }
+
+            return widget.querySelector('form [name="' + field + '"]');
+          };
+
+          // Set placeholders
+          Object.keys(config.placeholders).forEach(function (field) {
+            var element = getFormElement(field);
+
+            if (element == null) {
+              return;
+            }
+            if (typeof element.placeholder !== 'undefined') {
+              element.placeholder = config.placeholders[field];
+            } else if (typeof element.options !== 'undefined') {
+              element.options[0].innerHTML = config.placeholders[field];
+            }
+
+            element.setAttribute('aria-label', config.placeholders[field]);
+          });
+
+          // Set required Fields
+          Object.keys(config.required).forEach(function (field) {
+            var element = getFormElement(field);
+
+            if (element && config.required[field]) {
+              element.setAttribute('data-required', 'true');
+            }
+          });
+
+          // Set validation for email field
+          var emailField = getFormElement('email');
+          if (emailField && emailField.type === 'email') {
+            emailField.setAttribute('data-validate', 'true');
+          }
+
+          // Hide fields
+          Object.keys(config.fields).forEach(function (field) {
+            var element = getFormElement(field);
+
+            if (element && !config.fields[field] && element.parentNode) {
+              element.parentNode.removeChild(element);
+            }
+          });
+
+          // NOTE: collapse half-width inputs
+          Array.prototype.slice
+            .call(widget.querySelectorAll('form .pf-field-half-width'))
+            .forEach(function (element, halfcount) {
+              var parent = element.parentNode,
+                prev = element.previousElementSibling,
+                next = element.nextElementSibling;
+
+              if (parent) {
+                if (element.className.indexOf('pf-field-half-width') !== -1) {
+                  if (halfcount % 2) {
+                    // odd
+                    addClass(element, 'right');
+
+                    if (
+                      !(
+                        prev &&
+                        prev.className.indexOf('pf-field-half-width') !== -1
+                      )
+                    ) {
+                      removeClass(element, 'pf-field-half-width');
+                    }
+                  } else if (
+                    !(
+                      next && next.className.indexOf('pf-field-half-width') !== -1
+                    )
+                  ) {
+                    // even
+                    removeClass(element, 'pf-field-half-width');
+                  }
+                }
+              }
+            });
+        }
+
+        // For select boxes we need to control the color of
+        // the placeholder text
+        var selects = widget.querySelectorAll('select');
+
+        for (i = 0; i < selects.length; i++) {
+          // default class indicates the placeholder text color
+          if (selects[i].value === '') {
+            addClass(selects[i], 'default');
+          }
+
+          selects[i].onchange = function () {
+            if (this.value !== '') {
+              removeClass(this, 'default');
+            } else {
+              addClass(this, 'default');
+            }
+          };
+        }
+
+        break;
+      case 'subscription':
+        widget.querySelector('input').placeholder = config.placeholders.email;
+        break;
+    }
+
+    if (config.msg) {
+      widgetMessage.innerHTML = config.msg;
+    }
+
+    if (config.footerText) {
+      widgetFooter.innerHTML = config.footerText;
+    }
+  }
+
+  /** @module pathfora/widgets/colors/set-custom-colors */
+
+  /**
+   * Set colors for a widget with a custom theme
+   * defined in the config
+   *
+   * @exports setCustomColors
+   * @params {object} widget
+   * @params {object} colors
+   */
+  function setCustomColors (widget, colors) {
+    var i = 0,
+        close = widget.querySelector('.pf-widget-close'),
+        msg = widget.querySelectorAll('.pf-widget-message'),
+        headline = widget.querySelectorAll('.pf-widget-headline'),
+        headlineLeft = widget.querySelector(
+          '.pf-widget-caption-left .pf-widget-headline'
+        ),
+        cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
+        okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
+        arrow = widget.querySelector('.pf-widget-caption span'),
+        arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
+        contentUnit = widget.querySelector('.pf-content-unit'),
+        contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
+        fields = widget.querySelectorAll('input, textarea, select'),
+        branding = widget.querySelector('.branding svg'),
+        required = widget.querySelectorAll('.pf-required-flag'),
+        requiredAsterisk = widget.querySelectorAll('span.required'),
+        requiredInline = widget.querySelectorAll(
+          '[data-required=true]:not(.pf-has-label), [data-validate=true]:not(.pf-has-label)'
+        ),
+        body = widget.querySelector('.pf-widget-body');
+
+    if (colors.background) {
+      if (hasClass(widget, 'pf-widget-modal')) {
+        widget
+          .querySelector('.pf-widget-content')
+          .style.setProperty('background-color', colors.background, 'important');
+      } else {
+        widget.style.setProperty(
+          'background-color',
+          colors.background,
+          'important'
+        );
+      }
+    }
+
+    if (colors.fieldBackground) {
+      for (i = 0; i < fields.length; i++) {
+        fields[i].style.setProperty(
+          'background-color',
+          colors.fieldBackground,
+          'important'
+        );
+      }
+    }
+
+    if (colors.required) {
+      for (i = 0; i < required.length; i++) {
+        required[i].style.setProperty(
+          'background-color',
+          colors.required,
+          'important'
+        );
+        required[i]
+          .querySelector('span')
+          .style.setProperty('border-right-color', colors.required, 'important');
+      }
+
+      for (i = 0; i < requiredInline.length; i++) {
+        requiredInline[i].style.setProperty(
+          'border-color',
+          colors.required,
+          'important'
+        );
+      }
+
+      for (i = 0; i < requiredAsterisk.length; i++) {
+        requiredAsterisk[i].style.setProperty(
+          'color',
+          colors.required,
+          'important'
+        );
+      }
+    }
+
+    if (colors.requiredText) {
+      for (i = 0; i < required.length; i++) {
+        required[i].style.setProperty('color', colors.requiredText, 'important');
+      }
+    }
+
+    if (contentUnit && contentUnitMeta) {
+      var contentUnitMetaTitle = contentUnitMeta.querySelector('h4');
+      var contentUnitMetaDescription = contentUnitMeta.querySelector('p');
+
+      if (colors.actionBackground) {
+        contentUnit.style.setProperty(
+          'background-color',
+          colors.actionBackground,
+          'important'
+        );
+      }
+
+      if (colors.actionText && contentUnitMetaTitle) {
+        contentUnitMetaTitle.style.setProperty(
+          'color',
+          colors.actionText,
+          'important'
+        );
+      }
+
+      if (colors.text && contentUnitMetaDescription) {
+        contentUnitMetaDescription.style.setProperty(
+          'color',
+          colors.text,
+          'important'
+        );
+      }
+    }
+
+    if (close && colors.close) {
+      close.style.setProperty('color', colors.close, 'important');
+    }
+
+    if (headline && colors.headline) {
+      for (i = 0; i < headline.length; i++) {
+        headline[i].style.setProperty('color', colors.headline, 'important');
+      }
+    }
+
+    if (headlineLeft && colors.headline) {
+      headlineLeft.style.setProperty('color', colors.headline, 'important');
+    }
+
+    if (arrow && colors.close) {
+      arrow.style.setProperty('color', colors.close, 'important');
+    }
+
+    if (arrowLeft && colors.close) {
+      arrowLeft.style.setProperty('color', colors.close, 'important');
+    }
+
+    if (cancelBtn) {
+      for (i = 0; i < cancelBtn.length; i++) {
+        if (colors.cancelText) {
+          cancelBtn[i].style.setProperty('color', colors.cancelText, 'important');
+        }
+
+        if (colors.cancelBackground) {
+          cancelBtn[i].style.setProperty(
+            'background-color',
+            colors.cancelBackground,
+            'important'
+          );
+        }
+      }
+    }
+
+    if (okBtn) {
+      for (i = 0; i < okBtn.length; i++) {
+        if (colors.actionText) {
+          okBtn[i].style.setProperty('color', colors.actionText, 'important');
+        }
+
+        if (colors.actionBackground) {
+          okBtn[i].style.setProperty(
+            'background-color',
+            colors.actionBackground,
+            'important'
+          );
+        }
+      }
+    }
+
+    if (colors.text && branding) {
+      branding.style.setProperty('fill', colors.text, 'important');
+    }
+
+    if (msg && colors.text) {
+      for (i = 0; i < msg.length; i++) {
+        msg[i].style.setProperty('color', colors.text, 'important');
+      }
+    }
+
+    if (body && colors.text) {
+      body.style.setProperty('color', colors.text, 'important');
+    }
+  }
+
+  /** @module pathfora/wodgets/colors/setup-widget-colors */
+
+  /**
+   * Determine if the widget has a custom or predefined
+   * theme and setup the colors accordingly
+   *
+   * @exports setupWidgetColors
+   * @params {object} widget
+   * @params {object} config
+   */
+  function setupWidgetColors (widget, config) {
+    switch (config.theme) {
+    case 'custom':
+      if (config.colors) {
+        setCustomColors(widget, config.colors);
+      }
+      break;
+    case 'none':
+      // Do nothing, we will rely on CSS for the colors
+      break;
+    default:
+      if (config.theme) {
+        setCustomColors(widget, defaultProps.generic.themes[config.theme]);
+      }
+      break;
+    }
+  }
+
+  /** @module pathfora/widgets/create-widget-html */
+
+  /**
+   * Call all the necessary functions to construct
+   * the widget html
+   *
+   * @exports createWidgetHtml
+   * @params {object} config
+   * @returns {object} widget
+   */
+  function createWidgetHtml (config) {
+    var widget = document$1.createElement('div');
+
+    widget.innerHTML = templates[config.type][config.layout] || '';
+    widget.id = config.id;
+
+    if (widget.innerHTML === '') {
+      throw new Error('Could not get pathfora template based on type and layout.');
+    }
+
+    setupWidgetPosition(widget, config);
+    constructWidgetActions(widget, config);
+    setupWidgetContentUnit(widget, config);
+    setWidgetClassname(widget, config);
+    constructWidgetLayout(widget, config);
+    setupWidgetColors(widget, config);
+
+    return widget;
+  }
+
+  /** @module pathfora/widgets/widget-resize-listener */
+
+  /**
+   * Adjust widget look and feel on window resize bounds
+   *
+   * @exports widgetResizeListener
+   * @params {object} widget
+   * @params {object} node
+   */
+  function widgetResizeListener (widget, node) {
+    if (widget.layout === 'inline' || widget.layout === 'modal' && widget.recommend) {
+      var rec = node.querySelector('.pf-content-unit');
+      if (rec) {
+        if (node.offsetWidth < WIDTH_BREAKPOINT && !hasClass(rec, 'stack')) {
+          addClass(rec, 'stack');
+        } else if (node.offsetWidth >= WIDTH_BREAKPOINT) {
+          removeClass(rec, 'stack');
+        }
+      }
+    }
+  }
+
+  /** @module pathfora/widgets/show-widget */
+
+  /**
+   * Make the widget visible to the user
+   *
+   * @exports showWidget
+   * @params {object} widget
+   */
+
+  function showWidget (w) {
+    var openWidget = function (widget) {
+      // FIXME Change to Array#filter and Array#length
+      for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
+        if (widgetTracker.openedWidgets[i] === widget) {
+          return;
+        }
+      }
+
+      widgetTracker.openedWidgets.push(widget);
+      trackWidgetAction('show', widget);
+
+      // increment impressions for widget regardless of display condition need(s)
+      incrementImpressions(widget);
+
+      var node;
+
+      try {
+        node = createWidgetHtml(widget);
+      } catch (error) {
+        widgetTracker.openedWidgets.pop();
+        throw new Error(error);
+      }
+
+      if (widget.pushDown) {
+        addClass(document$1.querySelector('.pf-push-down'), 'opened');
+      }
+
+      if (
+        widget.config.positionSelector == null &&
+        widget.config.layout !== 'inline'
+      ) {
+        document$1.body.appendChild(node);
+
+        if (widget.layout === 'modal' || widget.type === 'sitegate') {
+          // ensure that we set focus the the modal for accessibility reasons
+          var focusable = node.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+
+          if (focusable.length) {
+            widget.listeners.tabindex = {
+              type: 'keydown',
+              target: document$1,
+              fn: function (ev) {
+                // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+                if (ev.keyCode === 9) {
+                  if (!node.contains(event.target)) {
+                    ev.preventDefault();
+                    focusable[0].focus();
+                  } else if (ev.target === focusable[focusable.length - 1]) {
+                    ev.preventDefault();
+                    focusable[0].focus();
+                  }
+                }
+              }
+            };
+          }
+        }
+      } else {
+        // support legacy inline layout used position as selector.
+        var selector = widget.config.positionSelector == null
+          ? widget.config.position : widget.config.positionSelector;
+        var hostNode = document$1.querySelector(selector);
+
+        if (hostNode) {
+          hostNode.appendChild(node);
+        } else {
+          widgetTracker.openedWidgets.pop();
+          throw new Error('Widget could not be initialized in ' + selector);
+        }
+      }
+
+      // NOTE wait for appending to DOM to trigger the animation
+      // FIXME 50 - magical number
+      setTimeout(function () {
+        var widgetLoadCallback = widget.config.onLoad;
+
+        addClass(node, 'opened');
+
+        if (typeof widgetLoadCallback === 'function') {
+          widgetLoadCallback(callbackTypes.LOAD, {
+            config: widget,
+            widget: node
+          });
+        }
+        if (
+          widget.config.layout === 'modal' &&
+          typeof widget.config.onModalOpen === 'function'
+        ) {
+          widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
+            config: widget,
+            widget: node
+          });
+        }
+      }, 50);
+
+      if (widget.displayConditions.hideAfter) {
+        setTimeout(function () {
+          closeWidget(widget.id, true);
+        }, widget.displayConditions.hideAfter * 1000);
+      }
+
+      widgetResizeListener(widget, node);
+
+      widget.listeners.resize = {
+        type: 'resize',
+        target: window,
+        fn: function () {
+          widgetResizeListener(widget, node);
+        }
+      };
+
+      for (var key in widget.listeners) {
+        if (widget.listeners.hasOwnProperty(key)) {
+          var val = widget.listeners[key];
+          if (val.target && typeof val.target.addEventListener === 'function') {
+            val.target.addEventListener(val.type, val.fn);
+          }
+        }
+      }
+    };
+
+    var widgetOnInitCallback = w.onInit;
+    if (typeof widgetOnInitCallback === 'function') {
+      widgetOnInitCallback(callbackTypes.INIT, {
+        config: w
+      });
+    }
+
+    // account for showDelay condition
+    if (w.displayConditions && w.displayConditions.showDelay) {
+      widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
+        openWidget(w);
+        document$1.querySelector('.pf-widget-ok').focus();
+      }, w.displayConditions.showDelay * 1000);
+    } else {
+      openWidget(w);
+    }
+  }
+
+  /** @module pathfora/display-conditions/watchers/validate-watchers */
+
+  function validateWatchers (widget, cb, e) {
+    var valid = true;
+
+    for (var key in widget.watchers) {
+      if (widget.watchers.hasOwnProperty(key) && widget.watchers[key] !== null) {
+        valid = valid && widget.valid && widget.watchers[key].check(e);
+      }
+    }
+
+    if (widget.displayConditions.impressions && valid) {
+      valid = impressionsChecker(widget.displayConditions.impressions, widget);
+    }
+
+    if (valid) {
+      showWidget(widget);
+      widget.valid = false;
+      cb();
+      widget.watchers = [];
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /** @module pathfora/display-conditions/manual-trigger/trigger-widget */
+
+  /**
+   * Trigger a single "manualTrigger" widget to be shown
+   *
+   * @exports triggerWidget
+   * @params {object} widget
+   * @returns {boolean}
+   */
+  function triggerWidget (widget) {
+    return validateWatchers(widget, function () {
+      widgetTracker.triggeredWidgets[widget.id] = false;
+
+      // remove from the ready widgets list
+      widgetTracker.readyWidgets.some(function (w, i) {
+        if (w.id === widget.id) {
+          widgetTracker.readyWidgets.splice(i, 1);
+          return true;
+        }
+      });
+    });
+  }
+
+  /** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
+
+  /**
+   * Public method to trigger a widget that has already been
+   * initialized and have the "manualTrigger" display condition
+   *
+   * @exports triggerWidgets
+   * @params {array} widgetIds
+   */
+  function triggerWidgets (widgetIds) {
+    var i, valid;
+
+    // no widget ids provided, trigger all ready widgets
+    if (typeof widgetIds === 'undefined') {
+      widgetTracker.triggeredWidgets['*'] = true;
+
+      for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+        valid = triggerWidget(widgetTracker.readyWidgets[i]);
+        if (valid) {
+          i--;
+        }
+      }
+
+    // trigger all widget ids provided
+    } else {
+      widgetIds.forEach(function (id) {
+        if (widgetTracker.triggeredWidgets[id] !== false) {
+          widgetTracker.triggeredWidgets[id] = true;
+        }
+
+        for (i = 0; i < widgetTracker.readyWidgets.length; i++) {
+          valid = triggerWidget(widgetTracker.readyWidgets[i]);
+          if (valid) {
+            i--;
+          }
+        }
+      });
+    }
+  }
+
+  /** @module pathfora/data/segments/get-user-segments */
+
+  /**
+   * Get a list of Lytics segments for the user
+   *
+   * @exports getUserSegments
+   * @returns {array} segments
+   */
+  function getUserSegments () {
+    if (window.lio && window.lio.data && window.lio.data.segments) {
+      // legacy
+      return window.lio.data.segments;
+    } else if (window.jstag && typeof window.jstag.getSegments === 'function') {
+      // > jstag 3.0.0
+      return window.jstag.getSegments();
+    } else {
+      // fallback
+      return ['all'];
+    }
+  }
+
+  /** @module pathfora/validation/validate-widgets-object */
+
+  /**
+   * Validate that object provided to initializeWidgets
+   * is either an array of widgets or a targeting object
+   * targetting object containing widgets.
+   *
+   * @exports validateWidgetsObject
+   * @params {object} widgets
+   */
+  function validateWidgetsObject (widgets) {
+    if (widgets.target) {
+      widgets.common = widgets.common || [];
+
+      for (var i = 0; i < widgets.target.length; i++) {
+        if (!widgets.target[i].segment) {
+          throw new Error('All targeted widgets should have segment specified');
+        } else if (widgets.target[i].segment === '*') {
+          widgets.common = widgets.common.concat(widgets.target[i].widgets);
+          widgets.target.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  /** @module pathfora/validation/validate-account-id */
+
+  /**
+   * Validate and set the Lytics account Id
+   *
+   * @exports validateAccountId
+   * @params {object} pf
+   */
+  function validateAccountId (pf) {
+    var acctid;
+
+    // in the legacy javascript tag < 2.0, there is an lio object surfaced that holds the account id.
+    // in > 3.0 this lio object is only available for backwards compatibility and not the main source
+    // of truth. we should be getting the cid that is passed to the config, which is an array, by default
+    // we can assume the first cid in the array is the one to be used for personalization and such.
+    if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
+      if (window.lio && window.lio.account) {
+        // tag is legacy
+        acctid = window.lio.account.id;
+      } else if (
+        // tag is current gen
+        window.jstag &&
+        window.jstag.config &&
+        window.jstag.config.cid &&
+        window.jstag.config.cid.length > 0
+      ) {
+        acctid = window.jstag.config.cid[0];
+      } else {
+        throw new Error('Could not get account id from Lytics Javascript tag.');
+      }
+
+      // make sure we have a valid acctid before setting
+      if (!!acctid) {
+        pf.acctid = acctid;
+      } else {
+        throw new Error('Lytics Javascript tag returned an empty account id.');
+      }
+    }
+  }
+
+  /** @module pathfora/widgets/init-targeted-widgets */
+
+  /**
+   * Initialize widgets which are targeted by segments.
+   *
+   * @exports initializeWidgets
+   * @params {object} widgets
+   * @params {object} options
+   */
+  function initializeTargetedWidgets (widgets, options) {
+    var pf = this,
+        i;
+
+    validateWidgetsObject(widgets);
+
+    if (widgets.common) {
+      pf.initializeWidgetArray(widgets.common, options);
+    }
+
+    // NOTE Target sensitive widgets
+    if (widgets.target || widgets.exclude) {
+      pf.addCallback(function () {
+        validateAccountId(pf);
+        var targetedWidgets = [],
+            segments = getUserSegments();
+
+        // handle inclusions
+        if (widgets.target) {
+          for (i = 0; i < widgets.target.length; i++) {
+            var target = widgets.target[i];
+            if (segments && segments.indexOf(target.segment) !== -1) {
+              // add the widgets with proper targeting to the master list
+              // ensure we dont overwrite existing widgets in target
+              targetedWidgets = targetedWidgets.concat(target.widgets);
+            }
+          }
+        }
+
+        // handle exclusions
+        if (widgets.exclude) {
+          for (i = 0; i < widgets.exclude.length; i++) {
+            var exclude = widgets.exclude[i];
+            if (segments && segments.indexOf(exclude.segment) !== -1) {
+              // we found a match, ensure the corresponding segment(s) are not in the
+              // targetted widgets array
+              for (var x = 0; x < targetedWidgets.length; x++) {
+                for (var y = 0; y < exclude.widgets.length; y++) {
+                  if (targetedWidgets[x] === exclude.widgets[y]) {
+                    targetedWidgets.splice(x, 1);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (targetedWidgets.length) {
+          pf.initializeWidgetArray(targetedWidgets, options);
+        } else if (widgets.inverse) {
+          pf.initializeWidgetArray(widgets.inverse, options);
+        }
+      });
+    }
+  }
+
+  /** @module pathfora/data/tracking/track-time-on-page */
+
+  /**
+   * Record the amount of time the user has spent
+   * on the current page
+   *
+   * @exports trackTimeOnPage
+   */
+  function trackTimeOnPage () {
+    setInterval(function () {
+      pathforaDataObject.timeSpentOnPage += 1;
+    }, 1000);
+  }
+
+  /** @module pathfora/validation/validate-options */
+
+  /**
+   * Validate and set the Lytics account Id
+   *
+   * @exports validateAccountId
+   * @params {object} pf
+   */
+  function validateOptions (options) {
+    if (options) {
+      // validate priority
+      if (options.priority) {
+        switch (options.priority) {
+        case OPTIONS_PRIORITY_ORDERED:
+          break;
+        case OPTIONS_PRIORITY_UNORDERED:
+          break;
+        default:
+          throw new Error('Invalid priority defined in options.');
+        }
+      }
+    }
+  }
+
+  /** @module pathfora/widgets/init-widgets */
+
+  /**
+   * Public method used to initialize widgets once
+   * the individual configs have been created
+   *
+   * @exports initializeWidgets
+   * @params {object} widgets
+   * @params {object} config
+   * @params {object} options
+   */
+  function initializeWidgets (widgets, config, options) {
+    var pf = this;
+    trackTimeOnPage();
+    // support legacy initialize function where we passed account id as
+    // a second parameter and config as third
+    if (typeof config === 'string') {
+      if (options) {
+        config = options;
+        options = null;
+      } else {
+        config = null;
+      }
+    }
+
+    if (!widgets) {
+      throw new Error('Initialize called with no widgets');
+    }
+
+    validateOptions(options);
+
+    if (config) {
+      updateObject(defaultProps, config);
+    }
+
+    if (Array.isArray(widgets)) {
+      pf.initializeWidgetArray(widgets, options);
+    } else {
+      pf.initializeTargetedWidgets(widgets, options);
+    }
+  }
+
+  /** @module pathfora/widgets/has/has-recommend */
+
+  /**
+   * Check if the widget has recommendations.
+   *
+   * @exports hasRecommend
+   * @params {object} widget
+   * @returns {bool} hasRecommend
+   */
+  function hasRecommend (widget) {
+    return widget.recommend && Object.keys(widget.recommend).length !== 0;
+  }
+
+  /** @module pathfora/widgets/has/has-entity-templates */
+
+  /**
+   * Check if the widget has entity field templates
+   *
+   * @exports hasEntityTemplates
+   * @params {object} widget
+   * @returns {bool} hasEntityTemplates
+   */
+  function hasEntityTemplates (widget) {
+    for (var j = 0; j < ENTITY_FIELDS.length; j++) {
+      var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+          fieldValue = getObjectValue(widget, ENTITY_FIELDS[j]);
+
+      // convert functions to a string
+      if (typeof fieldValue === 'function') {
+        fieldValue = fieldValue.toString();
+      }
+
+      if (typeof fieldValue === 'string') {
+        if (regex.test(fieldValue)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  /** @module pathfora/widgets/preload-lio */
+
+  /**
+   * Check if the widget needs lio to be loaded, if so
+   * wait for the callback, otherwise continue execution.
+   *
+   * @exports preloadLio
+   * @params {object} widget
+   * @params {object} pf
+   * @params {function} cb
+   */
+  function preloadLio (widget, pf, cb) {
+    if (hasRecommend(widget) || hasEntityTemplates(widget)) {
+      pf.addCallback(function () {
+        validateAccountId(pf);
+        cb();
+      });
+    } else {
+      cb();
+    }
+  }
+
+  /** @module pathfora/data/request/get-data */
+
+  /**
+   * Make an http GET request
+   *
+   * @exports getData
+   * @params {string} url
+   * @params {function} onSuccess
+   * @params {function} onError
+   */
+  function getData (url, onSuccess, onError) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        onSuccess(xhr.responseText);
+      } else if (xhr.readyState === 4) {
+        onError(xhr.responseText);
+      }
+    };
+
+    xhr.open('GET', url);
+    xhr.send();
+  }
+
+  /** @module pathfora/recommendations/recommend-content */
+
+
+  /**
+   * Make the request to the Lytics content recommendation API
+   * and return a list of recommended documents
+   *
+   * @exports recommendContent
+   * @params {string} accountId
+   * @params {object} params
+   * @params {string} id
+   * @params {function} callback
+   */
+  function recommendContent (accountId, params, id, callback) {
+    // Recommendation API:
+    // https://www.getlytics.com/developers/rest-api#content-recommendation
+
+    // ensure that the callback arg is a function
+    if (typeof callback !== 'function') {
+      console.warn('Could not make recommendation - missing callback function.');
+      return;
+    }
+
+    // if we have the recommendation response cached in session storage
+    // use that instead of making a new API request
+    var storedRec = sessionStorage.getItem(PREFIX_REC + id);
+
+    if (typeof storedRec === 'string' && params.visited !== false) {
+      var rec;
+
+      try {
+        rec = JSON.parse(decodeSafe(storedRec));
+      } catch (e) {
+        console.warn('Could not parse json stored response:' + e);
+      }
+
+      if (rec && rec.data) {
+        // special case: shuffle param
+        if (params.shuffle === true) {
+          rec.data.shift();
+        }
+
+        if (rec.data.length > 0) {
+          sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(rec.data)));
+          callback(rec.data);
+        }
+        return;
+      }
+    }
+
+    // becuase you can override the base cookiename as well as field name/value we need to account for those
+    var storedCookieName = 'seerid';
+    var userByFieldName = '_uids';
+    var userByFieldValue;
+
+    // check for custom cookie name in jstag config
+    if (window.jstag && window.jstag.config && window.jstag.config.cookie !== '') {
+      storedCookieName = window.jstag.config.cookie;
+    }
+
+    // attempt to get value from stored cookie
+    userByFieldValue = readCookie(storedCookieName);
+
+    // override everything if key/value have been explicitly set for user
+    if (
+      window.liosetup &&
+      window.liosetup.field &&
+      window.liosetup.field !== '' &&
+      window.liosetup.value &&
+      window.liosetup.value !== ''
+    ) {
+      userByFieldName = window.liosetup.field;
+      userByFieldValue = window.liosetup.value;
+    }
+
+    // ensure we have required params
+    if (!userByFieldName && !userByFieldValue) {
+      console.warn('Could not determine BY field and value from config');
+      callback([]);
+    }
+
+    var recommendParts = [
+      API_URL,
+      'api',
+      'content',
+      'recommend',
+      accountId,
+      'user',
+      userByFieldName,
+      userByFieldValue
+    ];
+
+    var ql = params.ql,
+        ast = params.ast,
+        display = params.display;
+
+    delete params.ql;
+    delete params.ast;
+    delete params.display;
+
+    var queries = constructQueries(params);
+
+    params.display = display;
+
+    if (!params.contentsegment) {
+      // Special case for Adhoc Segments
+      if (ql && ql.raw || ast) {
+        if (queries.length > 0) {
+          queries += '&';
+        } else {
+          queries += '?';
+        }
+
+        // Filter QL
+        if (ql && ql.raw) {
+          queries += 'ql=' + ql.raw;
+
+        // Segment JSON (usually segment AST)
+        } else {
+          var contentSegment = {table: 'content', ast: ast};
+          queries += 'contentsegments=[' + encodeURIComponent(JSON.stringify(contentSegment)) + ']';
+        }
+      }
+    }
+
+    var recommendUrl = recommendParts.join('/') + queries;
+
+    getData(recommendUrl, function (json) {
+      var resp;
+
+      try {
+        resp = JSON.parse(json);
+      } catch (e) {
+        console.warn('Could not parse json response:' + e);
+        callback([]);
+        return;
+      }
+
+      if (resp.data && resp.data.length > 0) {
+        // append a protocol for urls that are absolute
+        for (var i = 0; i < resp.data.length; i++) {
+          var url = resp.data[i].url;
+          if (url) {
+            var split = url.split('/')[0].split('.');
+            if (split.length > 1) {
+              resp.data[i].url = 'http://' + url;
+            }
+          }
+        }
+
+        // set the session storage.
+        sessionStorage.setItem(PREFIX_REC + id, encodeURIComponent(JSON.stringify(resp)));
+
+        callback(resp.data);
+      } else {
+        callback([]);
+      }
+    }, function () {
+      callback([]);
+    });
+  }
+
+  /** @module pathfora/widgets/recommendation/set-widget-recommendation */
+
+  /**
+   * Make the call to get the recommendations then
+   * handle assigning it to the widget.
+   *
+   * @exports setWidgetContent
+   * @params {object} accountId
+   * @params {object} widget
+   * @params {function} cb
+   */
+
+  function setWidgetContent (accountId, widget, cb) {
+    var params = widget.recommend;
+
+    if (params && params.collection) {
+      params.contentsegment = widget.recommend.collection;
+      delete params.collection;
+    }
+
+    recommendContent(accountId, params, widget.id, function (resp) {
+      // if we get a response from the recommend api put it as the first
+      // element in the content object this replaces any default content
+      if (resp[0]) {
+        var content = resp[0];
+        widget.content = [
+          {
+            title: content.title,
+            description: content.description,
+            url: content.url,
+            image: content.primary_image,
+            date: content.created,
+            author: content.author
+          }
+        ];
+      }
+
+      // if we didn't get a valid response from the api, we check if a default
+      // exists and use that as our content piece instead
+      if (!widget.content) {
+        throw new Error('Could not get recommendation and no default defined');
+      }
+
+      cb();
+    });
+  }
+
+  /** @module pathfora/validation/validate-recommendation-widget */
+
+  /**
+   * Validate that a recommendation widget
+   * is using the correct type and layout
+   *
+   * @exports validateRecommendationWidget
+   * @params {object} widget
+   */
+  function validateRecommendationWidget (widget) {
+    // validate
+    if (widget.type !== 'message') {
+      throw new Error('Unsupported widget type for content recommendation');
+    }
+
+    if (
+      widget.layout !== 'slideout' &&
+      widget.layout !== 'modal' &&
+      widget.layout !== 'inline'
+    ) {
+      throw new Error('Unsupported layout for content recommendation');
+    }
+
+    if (widget.content && widget.content[0] && !widget.content[0].default) {
+      throw new Error('Cannot define recommended content unless it is a default');
+    }
+  }
+
+  /** @module pathfora/widgets/recommendation/preload-recommendation */
+
+  /**
+   * Check if the widget needs recommendations to be loaded, if so
+   * wait for the callback, otherwise continue execution.
+   *
+   * @exports preloadRecommendation
+   * @params {object} widget
+   * @params {object} pf
+   * @params {function} cb
+   */
+  function preloadRecommendation (widget, pf, cb) {
+    if (hasRecommend(widget)) {
+      validateRecommendationWidget(widget);
+      setWidgetContent(pf.acctid, widget, cb);
+    } else {
+      cb();
+    }
+  }
+
+  /** @module pathfora/widgets/initialize-widget-array */
+
+  /**
+   * Given an array of widgets, begin off the initialization
+   * process for each
+   *
+   * @exports initializeWidgetArray
+   * @params {array} array
+   */
+  function initializeWidgetArray (array, options) {
+    var pf = this;
+    widgetTracker.prioritizedWidgets = [];
+
+    var initWidget = function (widgetArray, index, initOptions) {
+      if (index >= widgetArray.length) {
+        return;
+      }
+
+      var widget = widgetArray[index],
+          defaults = defaultProps[widget.type],
+          globals = defaultProps.generic;
+
+      updateObject(widget, globals);
+      updateObject(widget, defaults);
+      updateObject(widget, widget.config);
+
+      if (widgetTracker.initializedWidgets.indexOf(widget.id) < 0) {
+        widgetTracker.initializedWidgets.push(widget.id);
+      } else {
+        throw new Error('Cannot add two widgets with the same id');
+      }
+
+      // retain support for old "success" field
+      if (widget.success) {
+        if (!widget.formStates) {
+          widget.formStates = {};
+        }
+
+        if (!widget.formStates.success) {
+          widget.formStates.success = widget.success;
+        }
+      }
+
+      preloadLio(widget, pf, function () {
+        preloadRecommendation(widget, pf, function () {
+          pf.initializeWidget(widget, initOptions);
+          if (initOptions && initOptions.priority === OPTIONS_PRIORITY_ORDERED) {
+            if (
+              widgetTracker.prioritizedWidgets.length &&
+              widgetTracker.prioritizedWidgets[0].id === widget.id
+            ) {
+              return;
+            }
+
+            initWidget(widgetArray, index + 1, initOptions);
+          }
+        });
+      });
+
+      if (!initOptions || initOptions.priority !== OPTIONS_PRIORITY_ORDERED) {
+        initWidget(widgetArray, index + 1, initOptions);
+      }
+    };
+
+    initWidget(array, 0, options);
+  }
+
+  /** @module pathfora/display-conditions/replace-entity-field */
+
+  /**
+   * Fill in the data for a entity field template in
+   * a widgets text field
+   *
+   * @exports replaceEntityField
+   * @params {object} widget
+   * @params {string} fieldName
+   * @params {array} found
+   * @returns {boolean}
+   */
+  function replaceEntityField (
+    widget,
+    fieldName,
+    found,
+    customData
+  ) {
+    if (!found || !found.length) {
+      return true;
+    }
+
+    var fnParams,
+        fn,
+        currentVal = getObjectValue(widget, fieldName),
+        isFn = false;
+
+    // special case if the field is a function, convert it to a string first
+    if (typeof currentVal === 'function') {
+      fn = currentVal.toString();
+      currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
+      fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+      isFn = true;
+    }
+
+    // for each template found...
+    for (var f = 0; f < found.length; f++) {
+      // parse the field name
+      var foundval = found[f].slice(2).slice(0, -2),
+          parts = foundval.split('|'),
+          def = '';
+
+      // get the default (fallback) value
+      if (parts.length > 1) {
+        def = parts[1].trim();
+      }
+
+      // check for subfields if the value is an object
+      var split = parts[0].trim().split('.');
+
+      // get entity data from tag
+      var dataval;
+
+      // for the legacy tag < 3.0, there is a lio object surfaced. within this object lives the personalization
+      // data. however, in current gen tag > 3.0 we have a getEntity() method that should be used as the source
+      // of truth, the returned data model is slightly different in that it supports the full personalization
+      // api vs the legacy entity api that only returns segment and user field info.
+      if (window.lio && window.lio.data) {
+        dataval = window.lio.data;
+        // tag is legacy
+      } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+        // tag is current gen
+        var entity = window.jstag.getEntity();
+        if (entity && entity.data && entity.data.user) {
+          dataval = entity.data.user;
+        }
+      }
+
+      var s;
+      for (s = 0; s < split.length; s++) {
+        if (typeof dataval !== 'undefined') {
+          dataval = dataval[split[s]];
+        }
+      }
+
+      // if we couldn't find the data in question on the lytics jstag, check customData provided
+      if (typeof dataval === 'undefined') {
+        dataval = customData;
+
+        for (s = 0; s < split.length; s++) {
+          if (typeof dataval !== 'undefined') {
+            dataval = dataval[split[s]];
+          }
+        }
+      }
+
+      var val;
+
+      // replace the template with the lytics data value
+      if (typeof dataval !== 'undefined') {
+        val = currentVal.replace(found[f], dataval);
+        // if there's no default and we should error
+      } else if (
+        (!def || def.length === 0) &&
+        widget.displayConditions.showOnMissingFields !== true
+      ) {
+        return false;
+        // replace with the default option, or empty string if not found
+      } else {
+        val = currentVal.replace(found[f], def);
+      }
+
+      setObjectValue(widget, fieldName, val);
+      currentVal = val;
+    }
+
+    // if the value is a function, convert it back from a string
+    if (isFn) {
+      if (fnParams) {
+        fn = new Function(fnParams.join(','), getObjectValue(widget, fieldName));
+      } else {
+        fn = new Function(getObjectValue(widget, fieldName));
+      }
+
+      setObjectValue(widget, fieldName, fn);
+    }
+
+    return true;
+  }
+
+  /** @module pathfora/display-conditions/entity-fields/entity-field-checker */
+
+  /**
+   * Evaluate all fields on the list provided and check
+   * if there are any entity templates that need to be
+   * replaced.
+   *
+   * @exports entityFieldChecker
+   * @params {array} fields
+   * @params {object} widget
+   * @params {function} cb
+   */
+  function entityFieldChecker (widget, customData) {
+    var found,
+        valid = true;
+
+    for (var i = 0; i < ENTITY_FIELDS.length; i++) {
+      var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
+          fieldValue = getObjectValue(widget, ENTITY_FIELDS[i]);
+
+      // convert functions to a string
+      if (typeof fieldValue === 'function') {
+        fieldValue = fieldValue.toString();
+      }
+
+      if (typeof fieldValue === 'string') {
+        found = fieldValue.match(regex);
+
+        if (found && found.length > 0) {
+          valid =
+            valid &&
+            replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
+        }
+      }
+    }
+
+    return valid;
+  }
+
+  /** @module pathfora/display-conditions/date-checker */
+
+  /**
+   * Check if the current date fits within the
+   * date displayConditions for the widget
+   *
+   * @exports dateChecker
+   * @params {object} date
+   * @returns {boolean}
+   */
+  function dateChecker (date) {
+    var valid = true,
+        today = Date.now();
+
+    if (date.start_at && today < new Date(date.start_at).getTime()) {
+      valid = false;
+    }
+
+    if (date.end_at && today > new Date(date.end_at).getTime()) {
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  /** @module pathfora/display-conditions/pageviews/page-visits-checker */
+
+  /**
+   * Check if the pagevisit count meets the requirements
+   *
+   * @exports pageVisitsChecker
+   * @returns {boolean}
+   */
+  function pageVisitsChecker (pageVisitsRequired) {
+    return (read(PF_PAGEVIEWS) >= pageVisitsRequired);
+  }
+
+  /** @module pathfora/display-conditions/hide-after-action-checker */
+
+  /**
+   * Check if a widget should be hidden because it meets
+   * a hideAfterAction display condition
+   *
+   * @exports hideAfterActionChecker
+   * @params {object} hideAfterActionConstraints
+   * @params {string} widget
+   * @returns {boolean}
+   */
+  function hideAfterActionChecker (hideAfterActionConstraints, widget) {
+    var parts,
+        valid = true,
+        now = Date.now(),
+        confirm = read(PREFIX_CONFIRM + widget.id),
+        cancel = read(PREFIX_CANCEL + widget.id),
+        closed = read(PREFIX_CLOSE + widget.id);
+
+    if (hideAfterActionConstraints.confirm && confirm) {
+      parts = confirm.split('|');
+
+      if (parseInt(parts[0], 10) >= hideAfterActionConstraints.confirm.hideCount) {
+        valid = false;
+      }
+
+      if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.confirm.duration) {
+        valid = false;
+      }
+    }
+
+    if (hideAfterActionConstraints.cancel && cancel) {
+      parts = cancel.split('|');
+
+      if (parseInt(parts[0], 10) >= hideAfterActionConstraints.cancel.hideCount) {
+        valid = false;
+      }
+
+      if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.cancel.duration) {
+        valid = false;
+      }
+    }
+
+    if (hideAfterActionConstraints.closed && closed) {
+      parts = closed.split('|');
+
+      if (parseInt(parts[0], 10) >= hideAfterActionConstraints.closed.hideCount) {
+        valid = false;
+      }
+
+      if (typeof parts[1] !== 'undefined' && (Math.abs(parts[1] - now) / 1000) < hideAfterActionConstraints.closed.duration) {
+        valid = false;
+      }
+    }
+
+    return valid;
+  }
+
+  /** @module pathfora/display-conditions/url-contains/parse-query */
+
+  /**
+   * Convert key/value queries from a URL into an object
+   *
+   * @exports parseQuery
+   * @params {string} url
+   * @returns {object} query
+   */
+  function parseQuery (url) {
+    var query = {},
+        pieces = escapeURI(url, { keepEscaped: true }).split('?');
+
+    if (pieces.length > 1) {
+      pieces = pieces[1].split('&');
+
+      for (var i = 0; i < pieces.length; i++) {
+        var pair = pieces[i].split('=');
+
+        if (pair.length > 1) {
+          // NOTE We should not account for the preview id
+          if (pair[0] !== 'lytics_variation_preview_id') {
+            query[pair[0]] = pair[1];
+          }
+        }
+      }
+    }
+
+    return query;
+  }
+
+  /** @module pathfora/display-conditions/url-contains/compare-queries */
+
+  /**
+   * Check if urls contain matching query params
+   *
+   * @exports compareQueries
+   * @params {object} query
+   * @params {object} matchQuery
+   * @params {string} rule
+   * @returns {boolean}
+   */
+  function compareQueries (query, matchQuery, rule) {
+    switch (rule) {
+    case 'exact':
+      if (Object.keys(matchQuery).length !== Object.keys(query).length) {
+        return false;
+      }
+      break;
+    }
+
+    for (var key in matchQuery) {
+      if (matchQuery.hasOwnProperty(key) && matchQuery[key] !== query[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /** @module pathfora/display-conditions/url-contains/phrase-checker */
+
+  /**
+   * Evaluate if the current URL matches a single urlContains
+   * rule provided
+   *
+   * @exports phraseChecker
+   * @params {object} phrase
+   * @params {string} url
+   * @params {string} simpleurl
+   * @params {object} queries
+   * @returns {boolean}
+   */
+  function phraseChecker (phrase, url, simpleurl, queries) {
+    var valid = false;
+
+    // legacy match allows for an array of strings, check if we are legacy or current object approach
+    switch (typeof phrase) {
+    case 'string':
+      if (url.indexOf(escapeURI(phrase.split('?')[0], { keepEscaped: true })) !== -1) {
+        valid = compareQueries(queries, parseQuery(phrase), 'substring');
+      }
+      break;
+
+    case 'object':
+      if (phrase.match && phrase.value) {
+        var phraseValue = escapeURI(phrase.value, { keepEscaped: true });
+
+        switch (phrase.match) {
+        // simple match
+        case 'simple':
+          if (simpleurl.slice(-1) === '/') {
+            simpleurl = simpleurl.slice(0, -1);
+          }
+
+          if (phrase.value.slice(-1) === '/') {
+            phrase.value = phrase.value.slice(0, -1);
+          }
+
+          if (simpleurl === phrase.value) {
+            valid = true;
+          }
+          break;
+
+        // exact match
+        case 'exact':
+          if (url.split('?')[0].replace(/\/$/, '') === phraseValue.split('?')[0].replace(/\/$/, '')) {
+            valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+          }
+          break;
+
+        // regex
+        case 'regex':
+          var re = new RegExp(phrase.value);
+
+          if (re.test(url)) {
+            valid = true;
+          }
+          break;
+
+        // string match (default)
+        default:
+          if (url.indexOf(phraseValue.split('?')[0]) !== -1) {
+            valid = compareQueries(queries, parseQuery(phraseValue), phrase.match);
+          }
+          break;
+        }
+
+      } else {
+        console.log('invalid display conditions');
+      }
+      break;
+
+    default:
+      console.log('invalid display conditions');
+      break;
+    }
+
+    return valid;
+  }
+
+  /** @module pathfora/display-conditions/url-contains/url-checker */
+
+  /**
+   * Evaluate if the current URL matches the rules defined
+   * by the urlContains display condition
+   *
+   * @exports urlChecker
+   * @params {array} phrases
+   * @returns {boolean}
+   */
+  function urlChecker (phrases) {
+    var url = escapeURI(window.location.href, { keepEscaped: true }),
+        simpleurl = window.location.hostname + window.location.pathname,
+        queries = parseQuery(url),
+        valid = false,
+        excludeValid = false,
+        matchCt = 0,
+        excludeCt = 0;
+
+    if (!(phrases instanceof Array)) {
+      phrases = Object.keys(phrases).map(function (key) {
+        return phrases[key];
+      });
+    }
+
+    // array of urlContains params is an "OR" list, so if any are true evaluate valid to true
+    if (phrases.indexOf('*') === -1) {
+      phrases.forEach(function (phrase) {
+        if (phrase.exclude) {
+          excludeValid = phraseChecker(phrase, url, simpleurl, queries) || excludeValid;
+          excludeCt++;
+        } else {
+          valid = phraseChecker(phrase, url, simpleurl, queries) || valid;
+          matchCt++;
+        }
+      });
+    } else {
+      valid = true;
+    }
+
+    if (matchCt === 0) {
+      return !excludeValid;
+    }
+
+    if (excludeCt === 0) {
+      return valid;
+    }
+
+    return valid && !excludeValid;
+  }
+
+  /** @module pathfora/display-conditions/meta-checker */
+
+  /**
+   * Check if the current page contains the meta
+   * tag and value provided
+   *
+   * @exports metaChecker
+   * @params {array} phrases
+   * @returns {boolean}
+   */
+  function metaChecker (phrases) {
+    var meta = document$1.querySelectorAll('meta');
+
+    for (var j = 0; j < phrases.length; j++) {
+      var rule = phrases[j],
+          phraseValid = false;
+
+      for (var i = 0; i < meta.length; i++) {
+        for (var key in rule) {
+          if (rule.hasOwnProperty(key)) {
+            var val = meta[i].getAttribute(key);
+
+            if (!val || val !== rule[key]) {
+              phraseValid = false;
+              break;
+            } else {
+              phraseValid = true;
+            }
+          }
+        }
+
+        if (phraseValid) {
+          break;
+        }
+      }
+
+      if (phraseValid) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /** @module pathfora/display-conditions/exit-intent/register-exit-intent-watcher */
+
+  /**
+   * Setup watcher for showOnExitIntent
+   * display condition
+   *
+   * @exports registerExitIntentWatcher
+   * @params {string} selector
+   * @params {object} widget
+   * @returns {object} watcher
+   */
+  function registerExitIntentWatcher () {
+    var watcher = {
+      positions: [],
+      check: function (e) {
+        if (e != null) {
+          var from = e.relatedTarget || e.toElement;
+
+          // When there is registered movement and leaving the root element
+          if (watcher.positions.length > 1 && (!from || from.nodeName === 'HTML')) {
+
+            var y = watcher.positions[watcher.positions.length - 1].y;
+            var py = watcher.positions[watcher.positions.length - 2].y;
+            var ySpeed = Math.abs(y - py);
+
+            watcher.positions = [];
+
+            // Did the cursor move up?
+            // Is it reasonable to believe that it left the top of the page, given the position and the speed?
+            if (y - ySpeed <= 50 && y < py) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    };
+
+    return watcher;
+  }
+
+  var handlers = [];
+
+  var eventHub = {
+    add: function (target, type, listener) {
+      target.addEventListener(type, listener);
+      handlers.push({
+        target: target,
+        type: type,
+        listener: listener
+      });
+    },
+    remove: function (target, type, listener) {
+      target.removeEventListener(type, listener);
+    },
+    removeAll: function () {
+      var hub = this;
+      handlers.forEach(function (h) {
+        hub.remove(h.target, h.type, h.listener);
+      });
+      handlers.length = 0;
+    }
+  };
+
+  /** @module pathfora/display-conditions/init-exit-intent */
+
+  /**
+   * Setup exitIntent for a widget
+   *
+   * @exports initExitIntent
+   * @params {object} widget
+   * @returns {boolean}
+   */
+  function initializeExitIntent (widget, watcher) {
+    if (!widget.exitIntentListener) {
+      widget.exitIntentListener = function (e) {
+        watcher.positions.push({
+          x: e.clientX,
+          y: e.clientY
+        });
+        if (watcher.positions.length > 30) {
+          watcher.positions.shift();
+        }
+      };
+
+      widget.exitIntentTrigger = function (e) {
+        validateWatchers(widget, function () {
+          if (typeof document$1.removeEventListener === 'function') {
+            eventHub.remove(document$1, 'mousemove', widget.exitIntentListener);
+            eventHub.remove(document$1, 'mouseout', widget.exitIntentTrigger);
+          } else {
+            document$1.onmousemove = null;
+            document$1.onmouseout = null;
+          }
+        }, e);
+      };
+
+      // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
+      if (typeof document$1.addEventListener === 'function') {
+        eventHub.add(document$1, 'mousemove', widget.exitIntentListener);
+        eventHub.add(document$1, 'mouseout', widget.exitIntentTrigger);
+      } else {
+        document$1.onmousemove = widget.exitIntentListener;
+        document$1.onmouseout = widget.exitIntentTrigger;
+      }
+    }
+    return true;
+
+  }
+
+  /** @module pathfora/display-conditions/scroll/register-element-watcher */
+
+  /**
+   * Setup watcher for displayWhenElementVisible
+   * display condition
+   *
+   * @exports registerElementWatcher
+   * @params {string} selector
+   * @params {object} widget
+   * @returns {object} watcher
+   */
+  function registerElementWatcher (selector) {
+    var watcher = {
+      elem: document$1.querySelector(selector),
+
+      check: function () {
+        var scrollTop = document$1.body.scrollTop || document$1.documentElement.scrollTop,
+            scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
+
+        if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
+          return true;
+        }
+        return false;
+      }
+    };
+
+    return watcher;
+  }
+
+  /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
+
+  /**
+   * Add event listener for scroll display conditions
+   *
+   * @exports initializeScrollWatchers
+   * @params {object} widget
+   * @returns {boolean}
+   */
+  function initializeScrollWatchers (widget) {
+    widget.scrollListener = function () {
+      validateWatchers(widget, function () {
+        if (typeof window.addEventListener === 'function') {
+          eventHub.remove(window, 'scroll', widget.scrollListener);
+        } else {
+          window.onscroll = null;
+        }
+      });
+    };
+
+    // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
+    if (typeof window.addEventListener === 'function') {
+      eventHub.add(window, 'scroll', widget.scrollListener);
+    } else {
+      window.onscroll = widget.scrollListener;
+    }
+    return true;
+  }
+
+  /**
+  * Based on https://github.com/cgygd/scrolling-element
+  */
+
+  var element = null;
+
+  /* istanbul ignore next */
+  function getScrollingElement () {
+    if (element) {
+      return element;
+    }
+    if (document.body.scrollTop) {
+      // speed up if scrollTop > 0
+      return (element = document.body);
+    }
+    var iframe = document.createElement('iframe');
+    iframe.style.height = '1px';
+    document.documentElement.appendChild(iframe);
+    var doc = iframe.contentWindow.document;
+    doc.write('<!DOCTYPE html><div style="height:9999em">x</div>');
+    doc.close();
+    var isCompliant = doc.documentElement.scrollHeight > doc.body.scrollHeight;
+    iframe.parentNode.removeChild(iframe);
+    return (element = isCompliant ? document.documentElement : document.body);
+  }
+
+  /** @module pathfora/display-conditions/scroll/register-position-watcher */
+
+  /**
+   * Setup watcher for scrollPercentageToDisplay
+   * display condition
+   *
+   * @exports registerPositionWatcher
+   * @params {int} percent
+   * @params {object} widget
+   * @returns {object} watcher
+   */
+  function registerPositionWatcher (percent) {
+    var watcher = {
+      check: function () {
+        /* istanbul ignore next */
+        var scrollingElement = document$1.scrollingElement || getScrollingElement(),
+            scrollTop = scrollingElement.scrollTop,
+            scrollHeight = scrollingElement.scrollHeight,
+            clientHeight = scrollingElement.clientHeight,
+            percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
+
+        // if NaN, will always return `false`
+        return percentageScrolled >= percent;
+      }
+    };
+
+    return watcher;
+  }
+
+  /** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
+
+  /**
+   * Begin watching for a custom javascript trigger
+   *
+   * @exports registerManualTriggerWatcher
+   * @params {object} widget
+   * @params {boolean} value
+   * @returns {object} watcher
+   */
+  function registerManualTriggerWatcher (value, widget) {
+    var watcher = {
+      check: function () {
+        if (value && widgetTracker.triggeredWidgets[widget.id] || widgetTracker.triggeredWidgets['*']) {
+          return true;
+        }
+        return false;
+      }
+    };
+
+    return watcher;
+  }
+
+  /** @module pathfora/widgets/init-widget */
+
+  /**
+   * Determine if a widget should be shown based on display
+   * conditions, and if so show the widget
+   *
+   * @exports initializeWidget
+   * @params {object} widget
+   * @returns {bool} shown
+   */
+  function initializeWidget (widget, options) {
+    var watcher,
+        condition = widget.displayConditions,
+        pf = this;
+
+    widget.watchers = [];
+    widget.listeners = [];
+
+    // NOTE Default cookie expiration is one year from now
+    widget.expiration = new Date();
+    widget.expiration.setDate(widget.expiration.getDate() + 365);
+
+    if (
+      (widget.type === 'sitegate' &&
+        read(PREFIX_UNLOCK + widget.id) === 'true') ||
+      widget.hiddenViaABTests === true
+    ) {
+      return;
+    }
+
+    if (widget.pushDown) {
+      if (
+        widget.layout === 'bar' &&
+        (widget.position === 'top-fixed' || widget.position === 'top-absolute')
+      ) {
+        addClass(document$1.querySelector(widget.pushDown), 'pf-push-down');
+      } else {
+        throw new Error(
+          'Only top positioned bar widgets may have a pushDown property'
+        );
+      }
+    }
+
+    // entity fields
+    widget.valid = widget.valid && entityFieldChecker(widget, pf.customData);
+
+    // display conditions based on page load
+    if (condition.date) {
+      widget.valid = widget.valid && dateChecker(condition.date);
+    }
+
+    if (condition.pageVisits) {
+      widget.valid = widget.valid && pageVisitsChecker(condition.pageVisits);
+    }
+
+    if (condition.hideAfterAction) {
+      widget.valid =
+        widget.valid && hideAfterActionChecker(condition.hideAfterAction, widget);
+    }
+
+    if (condition.urlContains) {
+      widget.valid = widget.valid && urlChecker(condition.urlContains);
+    }
+
+    if (condition.metaContains) {
+      widget.valid = widget.valid && metaChecker(condition.metaContains);
+    }
+
+    widget.valid = widget.valid && condition.showOnInit;
+
+    if (condition.impressions) {
+      widget.valid =
+        widget.valid && impressionsChecker(condition.impressions, widget);
+    }
+
+    // if it's valid at this point, add it to the priority list
+    if (
+      widget.valid &&
+      options &&
+      options.priority === OPTIONS_PRIORITY_ORDERED
+    ) {
+      widgetTracker.prioritizedWidgets.push(widget);
+    }
+
+    // display conditions based on page interaction
+    if (condition.showOnExitIntent) {
+      watcher = registerExitIntentWatcher();
+      widget.watchers.push(watcher);
+      initializeExitIntent(widget, watcher);
+    }
+
+    if (condition.displayWhenElementVisible) {
+      watcher = registerElementWatcher(
+        condition.displayWhenElementVisible
+      );
+      widget.watchers.push(watcher);
+      initializeScrollWatchers(widget);
+    }
+
+    if (condition.scrollPercentageToDisplay) {
+      watcher = registerPositionWatcher(
+        condition.scrollPercentageToDisplay
+      );
+      widget.watchers.push(watcher);
+      initializeScrollWatchers(widget);
+    }
+
+    if (condition.manualTrigger) {
+      watcher = registerManualTriggerWatcher(condition.manualTrigger, widget);
+      widget.watchers.push(watcher);
+      widgetTracker.readyWidgets.push(widget);
+
+      // if we've already triggered the widget
+      // before initializing lets initialize right away
+      triggerWidget(widget);
+    }
+
+    if (widget.watchers.length === 0 && !condition.showOnExitIntent) {
+      if (widget.valid) {
+        showWidget(widget);
+      }
+    }
+  }
+
+  /** @module pathfora/widgets/preview-widget */
+
+  /**
+   * Create a minimal widget for a preview
+   *
+   * @exports previewWidget
+   * @params {object} widget
+   * @returns {object}
+   */
+  function previewWidget (widget) {
+    widget.id = generateUniqueId();
+    return createWidgetHtml(widget);
+  }
+
+  /** @module pathfora/display-conditions/cancel-delayed-widget */
+
+  /**
+   * Cancel waiting for a delayed widget
+   *
+   * @exports cancelDelayedWidget
+   * @params {string} widgetKey id of the widget
+   */
+  function cancelDelayedWidget (widgetKey) {
+    var delayObj = widgetTracker.delayedWidgets[widgetKey];
+
+    if (delayObj) {
+      clearTimeout(delayObj);
+      delete widgetTracker.delayedWidgets[widgetKey];
+    }
+  }
+
+  /** @module pathfora/widgets/clear-all */
+
+  /**
+   * Close all widgets and reset all settings to default
+   *
+   * @exports clearAll
+   */
+  function clearAll () {
+    var opened = widgetTracker.openedWidgets,
+        delayed = widgetTracker.delayedWidgets;
+
+    opened.forEach(function (widget) {
+      var element = document$1.getElementById(widget.id);
+      removeClass(element, 'opened');
+      element.parentNode.removeChild(element);
+
+      for (var key in widget.listeners) {
+        if (widget.listeners.hasOwnProperty(key)) {
+          var val = widget.listeners[key];
+          val.target.removeEventListener(val.type, val.fn);
+        }
+      }
+    });
+
+    for (var key in delayed) {
+      if (delayed.hasOwnProperty(key)) {
+        cancelDelayedWidget(key);
+      }
+    }
+
+    eventHub.removeAll();
+
+    resetWidgetTracker(widgetTracker);
+    resetDataObject(pathforaDataObject);
+    resetDefaultProps(defaultProps);
+    this.callbacks = [];
+    this.acctid = '';
+  }
+
+  /** @module pathfora/widgets/prepare-widget */
+
+  /**
+   * Validate that a widget is correctly set up
+   *
+   * @exports prepareWidget
+   * @params {string} type
+   * @params {object} config
+   * @returns {object}
+   */
+  function prepareWidget (type, config) {
+    var widget = {
+      valid: true,
+      type: type
+    };
+
+    if (!config) {
+      throw new Error('Config object is missing');
+    }
+
+    widget.config = config;
+
+    if (!config.id) {
+      throw new Error('All widgets must have an id value');
+    }
+
+    widget.id = config.id;
+
+    return widget;
+  }
+
+  /** @module pathfora/widgets/message */
+
+  /**
+   * Public method to create a widget of type message
+   *
+   * @exports Message
+   * @params {object} config
+   * @returns {object}
+   */
+  function Message (config) {
+    return prepareWidget('message', config);
+  }
+
+  /** @module pathfora/widgets/subscription */
+
+  /**
+   * Public method to create a widget of type subscription
+   *
+   * @exports Subscription
+   * @params {object} config
+   * @returns {object}
+   */
+  function Subscription (config) {
+    return prepareWidget('subscription', config);
+  }
+
+  /** @module pathfora/widgets/form */
+
+  /**
+   * Public method to create a widget of type form
+   *
+   * @exports Form
+   * @params {object} config
+   * @returns {object}
+   */
+  function Form (config) {
+    return prepareWidget('form', config);
+  }
+
+  /** @module pathfora/widgets/site-gate */
+
+  /**
+   * Public method to create a widget of type site gate
+   *
+   * @exports SiteGate
+   * @params {object} config
+   * @returns {object}
+   */
+  function SiteGate (config) {
+    return prepareWidget('sitegate', config);
+  }
+
+  /** @module pathfora/ab-test/init-ab-test */
+
+  /**
+   * Initialized A/B test from user config
+   *
+   * @exports initializeABTesting
+   * @params {object} abTests
+   */
+  function initializeABTesting (abTests) {
+    abTests.forEach(function (abTest) {
+      var abTestingType = abTest.type,
+          userAbTestingValue = read(abTest.cookieId),
+          userAbTestingGroup = 0,
+          date = new Date();
+
+      if (!userAbTestingValue) {
+        userAbTestingValue = Math.random();
+      }
+
+      // NOTE Always update the cookie to get the new exp date.
+      date.setDate(date.getDate() + 365);
+      write(abTest.cookieId, userAbTestingValue, date);
+
+      // NOTE Determine visible group for the user
+      var i = 0;
+      while (i < 1) {
+        i += abTestingType.groups[userAbTestingGroup];
+
+        if (userAbTestingValue <= i) {
+          break;
+        }
+
+        userAbTestingGroup++;
+      }
+
+      // NOTE Notify widgets about their proper AB groups
+      abTest.groups.forEach(function (group, index) {
+        group.forEach(function (widget) {
+          if (typeof widget.abTestingGroup === 'undefined') {
+            widget.abTestingGroup = index;
+            widget.hiddenViaABTests = userAbTestingGroup === index;
+          } else {
+            throw new Error('Widget #' + widget.config.id + ' is defined in more than one AB test.');
+          }
+        });
+      });
+
+      if (typeof pathforaDataObject.abTestingGroups[abTest.id] !== 'undefined') {
+        throw new Error('AB test with ID=' + abTest.id + ' has been already defined.');
+      }
+
+      pathforaDataObject.abTestingGroups[abTest.id] = userAbTestingGroup;
+    });
+  }
+
+  /** @module pathfora/ab-test/prepare-ab-test */
+
+  /**
+   * Prepares A/B test user config for use
+   *
+   * @exports initializeABTesting
+   * @params {object} abTests
+   */
+  function prepareABTest (config) {
+    var test = {};
+
+    if (!config) {
+      throw new Error('Config object is missing');
+    }
+
+    test.id = config.id;
+    test.cookieId = PREFIX_AB_TEST + config.id;
+    test.groups = config.groups;
+
+    if (!abTestingTypes[config.type]) {
+      throw new Error('Unknown AB testing type: ' + config.type);
+    }
+
+    test.type = abTestingTypes[config.type];
+
+    return test;
+  }
+
+  /** @module pathfora/ab-test/ab-test */
+
+  /**
+   * Public wrapper method for prepareABTest
+   *
+   * @exports ABTest
+   * @param {object} config
+   * @returns {object}
+   */
+  function ABTest (config) {
+    return prepareABTest(config);
+  }
+
+  /** @module pathfora/inline/prep-elements */
+
+  /**
+   * Build a list of all elements to be personalized
+   *
+   * @exports prepElements
+   * @params {string} attr
+   * @returns {object} dataElements
+   */
+  function prepElements (attr) {
+    var dataElements = {},
+        elements = document$1.querySelectorAll('[' + attr + ']');
+
+    this.elements = this.elements.concat(elements);
+
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].getAttribute(attr) !== null) {
+        var theElement = elements[i];
+
+        switch (attr) {
+        // CASE: Segment triggered elements
+        case 'data-pftrigger':
+          var group = theElement.getAttribute('data-pfgroup');
+
+          if (!group) {
+            group = 'default';
+          }
+
+          if (!dataElements[group]) {
+            dataElements[group] = [];
+          }
+
+          dataElements[group].push({
+            elem: theElement,
+            displayType: theElement.style.display,
+            group: group,
+            trigger: theElement.getAttribute('data-pftrigger')
+          });
+          break;
+
+        // CASE: Content recommendation elements
+        case 'data-pfrecommend':
+          var recommend = theElement.getAttribute('data-pfrecommend'),
+              block = theElement.getAttribute('data-pfblock'),
+              shuffle = false;
+
+          if (!block) {
+            block = 'default';
+          }
+
+          if (!recommend) {
+            recommend = 'default';
+          }
+
+          if (!dataElements[recommend]) {
+            dataElements[recommend] = {
+              blocks: []
+            };
+          }
+
+          if (theElement.hasAttribute('data-pfshuffle')) {
+            shuffle = theElement.getAttribute('data-pfshuffle') === 'true';
+          }
+
+          if (!dataElements[recommend].shuffle) {
+            dataElements[recommend].shuffle = shuffle;
+          }
+
+          dataElements[recommend].blocks.push({
+            elem: theElement,
+            displayType: theElement.style.display,
+            block: block,
+            recommend: recommend,
+            shuffle: shuffle,
+            title: theElement.querySelector('[data-pftype="title"]'),
+            image: theElement.querySelector('[data-pftype="image"]'),
+            description: theElement.querySelector('[data-pftype="description"]'),
+            url: theElement.querySelector('[data-pftype="url"]'),
+            published: theElement.querySelector('[data-pftype="published"]'),
+            author: theElement.querySelector('[data-pftype="author"]')
+          });
+          break;
+        }
+      }
+    }
+    return dataElements;
+  }
+
+  /** @module pathfora/inline/proc-elements */
+
+  /**
+   * Kick off the personalization process for inline trigger fields
+   * and inline content recommendations
+   *
+   * @exports procElements
+   */
+  function procElements () {
+    var attrs = ['data-pftrigger', 'data-pfrecommend'],
+        inline = this,
+        count = 0;
+
+    var cb = function (elements) {
+      count++;
+      // After we have processed all elements, proc defaults
+      if (count === Object.keys(elements).length) {
+        inline.setDefaultRecommend(elements);
+      }
+    };
+
+    attrs.forEach(function (attr) {
+      var elements = inline.prepElements(attr);
+
+      for (var key in elements) {
+        if (elements.hasOwnProperty(key)) {
+
+          switch (attr) {
+          // CASE: Segment triggered elements
+          case 'data-pftrigger':
+            inline.procTriggerElements(elements[key], key);
+            break;
+
+          // CASE: Content recommendation elements
+          case 'data-pfrecommend':
+            if (typeof inline.parent.acctid !== 'undefined' && inline.parent.acctid === '') {
+              throw new Error('Could not get account id from Lytics Javascript tag.');
+            }
+
+            inline.procRecommendElements(elements[key], key, elements[key].shuffle, function () {
+              cb(elements);
+            });
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  /** @module pathfora/inline/proc-recommend-elements */
+
+  /**
+   * Make recommendation and fill in the appropriate inline
+   * recommendation elements
+   *
+   * @exports procRecommendElements
+   * @params {object} blocks
+   * @params {string} rec
+   * @params {function} cb
+   */
+  function procRecommendElements (val, rec, shuffle, cb) {
+    var inline = this;
+
+    if (rec !== 'default') {
+      // call the recommendation API using the url pattern urlPattern as a filter
+      var params = {
+        contentsegment: rec
+      };
+
+      if (shuffle) {
+        params.shuffle = shuffle;
+      }
+
+      recommendContent(inline.parent.acctid, params, rec, function (resp) {
+        val.blocks.forEach(function (elems, idx) {
+
+          // loop through the results as we loop
+          // through each element with a common liorecommend value
+          if (resp[idx]) {
+            var content = resp[idx];
+
+            if (elems.title) {
+              elems.title.innerHTML = content.title;
+            }
+
+            // if attribute is on image element
+            if (elems.image) {
+              if (typeof elems.image.src !== 'undefined') {
+                elems.image.src = content.primary_image;
+              // if attribute is on container element, set the background
+              } else {
+                elems.image.style.backgroundImage = 'url("' + content.primary_image + '")';
+              }
+            }
+
+            // set the description
+            if (elems.description) {
+              elems.description.innerHTML = content.description;
+            }
+
+            // if attribute is on an a (link) element
+            if (elems.url) {
+              if (typeof elems.url.href !== 'undefined') {
+                elems.url.href = content.url;
+              // if attribute is on container element
+              } else {
+                elems.url.innerHTML = content.url;
+              }
+            }
+
+            // set the date published
+            if (elems.published && content.created) {
+              var published = new Date(content.created);
+              elems.published.innerHTML = published.toLocaleDateString(inline.parent.locale, inline.parent.dateOptions);
+            }
+
+            // set the author
+            if (elems.author) {
+              elems.author.innerHTML = content.author;
+            }
+
+            elems.elem.removeAttribute('data-pfrecommend');
+            elems.elem.setAttribute('data-pfmodified', 'true');
+            inline.preppedElements[elems.block] = elems;
+          } else {
+            return;
+          }
+        });
+        cb();
+      });
+    } else {
+      val.blocks.forEach(function (block) {
+        inline.defaultElements[block.block] = block;
+      });
+      cb();
+    }
+  }
+
+  /** @module pathfora/data/segments/in-segment */
+
+  /**
+   * Check if the user is a member of a segment
+   *
+   * @exports inSegment
+   * @params {string} match
+   * @returns {boolean} membership
+   */
+  function inSegment (match) {
+    return (getUserSegments().indexOf(match) !== -1);
+  }
+
+  /** @module pathfora/inline/proc-trigger-elements */
+
+  /**
+   * Show/hide trigger elements in a group based on
+   * Lytics segment membership
+   *
+   * @exports procTriggerElements
+   * @params {object} elems
+   * @params {string} group
+   */
+  function procTriggerElements (elems, group) {
+    var matched = false,
+        defaultEl = {};
+
+    for (var i = 0; i < elems.length; i++) {
+      var elem = elems[i];
+
+      // if we find a match show that and prevent others from showing in same group
+      if (inSegment(elem.trigger) && !matched) {
+        elem.elem.removeAttribute('data-pftrigger');
+        elem.elem.setAttribute('data-pfmodified', 'true');
+        this.preppedElements[group] = elem;
+
+        if (group !== 'default') {
+          matched = true;
+          continue;
+        }
+      }
+
+      // if this is the default save it
+      if (elem.trigger === 'default') {
+        defaultEl = elem;
+      }
+    }
+
+    // if nothing matched show default
+    if (!matched && group !== 'default' && defaultEl.elem) {
+      defaultEl.elem.removeAttribute('data-pftrigger');
+      defaultEl.elem.setAttribute('data-pfmodified', 'true');
+      this.preppedElements[group] = defaultEl;
+    }
+  }
+
+  /** @module pathfora/inline/set-default-recommend */
+
+  /**
+   * Show the default "recommendation" if we received
+   * a bad response from the API
+   *
+   * @exports setDefaultRecommend
+   */
+  function setDefaultRecommend () {
+    // check the default elements
+    for (var block in this.defaultElements) {
+      // If we already have an element prepped for this block, don't show the default
+      if (this.defaultElements.hasOwnProperty(block) && !this.preppedElements.hasOwnProperty(block)) {
+        var def = this.defaultElements[block];
+        def.elem.removeAttribute('data-pfrecommend');
+        def.elem.setAttribute('data-pfmodified', 'true');
+        this.preppedElements[block] = def;
+      }
+    }
+  }
+
+  /** @module pathfora/inline/inline */
+
+
+  /**
+   * Creates a new instance of inline personalization
+   *
+   * @exports Inline
+   * @class {function} Inline
+   * @params {object} pf
+   */
+  function Inline (pf) {
+    this.elements = [];
+    this.preppedElements = [];
+    this.defaultElements = [];
+    this.parent = pf;
+
+    this.prepElements = prepElements;
+    this.procElements = procElements;
+    this.procRecommendElements = procRecommendElements;
+    this.procTriggerElements = procTriggerElements;
+    this.setDefaultRecommend = setDefaultRecommend;
+
+    // for our automatic element handling we need to ensure they are all hidden by default
+    var css = '[data-pftrigger], [data-pfrecommend]{ display: none; }',
+        style = document$1.createElement('style');
+
+    style.type = 'text/css';
+
+    if (style.styleSheet) { // handle ie
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document$1.createTextNode(css));
+    }
+
+    document$1.getElementsByTagName('head')[0].appendChild(style);
+  }
+
+  /** @module pathfora/inline/init-inline */
+
+  /**
+   * Once the dom is ready and Lytics jstag is
+   * loaded initialize inline personalization
+   *
+   * @exports initializeInline
+   */
+  function initializeInline () {
+    var pf = this;
+
+    this.onDOMready(function () {
+      pf.addCallback(function () {
+        validateAccountId(pf);
+        pf.inline.procElements();
+      });
+    });
+  }
+
+  /** @module pathfora */
+
+  /**
+   * Creates a new Pathfora instance
+   *
+   * @exports Pathfora
+   * @class {function} Pathfora
+   */
+  var Pathfora = function () {
+    // feature detections
+    if (!('localStorage' in window) || !('sessionStorage' in window)) {
+      throw new Error('The Pathfora SDK requires the Web Storage API!');
+    }
+
+    // globals
+    this.version = PF_VERSION;
+    this.callbacks = [];
+    this.acctid = '';
+    this.locale = PF_LOCALE;
+    this.dateOptions = PF_DATE_OPTIONS;
+    this.DOMLoaded = false;
+    this.enableGA = false;
+    this.customData = {};
+
+    // dom
+    this.onDOMready = onDOMready;
+
+    // utils
+    this.utils = utils;
+
+    // data
+    this.getDataObject = getDataObject;
+
+    // callbacks
+    this.addCallback = addCallback;
+
+    // display conditions
+    this.initializePageViews = initializePageViews;
+    this.triggerWidgets = triggerWidgets;
+
+    // widgets
+    this.initializeTargetedWidgets = initializeTargetedWidgets;
+    this.initializeWidgets = initializeWidgets;
+    this.initializeWidgetArray = initializeWidgetArray;
+    this.initializeWidget = initializeWidget;
+    this.previewWidget = previewWidget;
+    this.showWidget = showWidget;
+    this.closeWidget = closeWidget;
+    this.clearAll = clearAll;
+    this.Message = Message;
+    this.Subscription = Subscription;
+    this.Form = Form;
+    this.SiteGate = SiteGate;
+
+    // recommendations
+    this.recommendContent = recommendContent;
+
+    // ab tests
+    this.initializeABTesting = initializeABTesting;
+    this.ABTest = ABTest;
+
+    // inline
+    this.initializeInline = initializeInline;
+    this.inline = new Inline(this);
+    this.initializeInline();
+    this.initializePageViews();
+
+    // add pathfora css
+    var head = document$1.getElementsByTagName('head')[0],
+        link = document$1.createElement('link');
+
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', window.PathforaCSS || CSS_URL);
+
+    this.utils.updateLegacyCookies();
+    this.utils.store.removeExpiredItems();
+
+    head.appendChild(link);
+  };
+
+  window.pathfora = window.pathfora || new Pathfora();
+>>>>>>> develop
 
 }());

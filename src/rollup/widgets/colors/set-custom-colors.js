@@ -15,7 +15,9 @@ export default function setCustomColors (widget, colors) {
       close = widget.querySelector('.pf-widget-close'),
       msg = widget.querySelectorAll('.pf-widget-message'),
       headline = widget.querySelectorAll('.pf-widget-headline'),
-      headlineLeft = widget.querySelector('.pf-widget-caption-left .pf-widget-headline'),
+      headlineLeft = widget.querySelector(
+        '.pf-widget-caption-left .pf-widget-headline'
+      ),
       cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
       okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
       arrow = widget.querySelector('.pf-widget-caption span'),
@@ -26,36 +28,61 @@ export default function setCustomColors (widget, colors) {
       branding = widget.querySelector('.branding svg'),
       required = widget.querySelectorAll('.pf-required-flag'),
       requiredAsterisk = widget.querySelectorAll('span.required'),
-      requiredInline = widget.querySelectorAll('[data-required=true]:not(.pf-has-label)'),
+      requiredInline = widget.querySelectorAll(
+        '[data-required=true]:not(.pf-has-label), [data-validate=true]:not(.pf-has-label)'
+      ),
       body = widget.querySelector('.pf-widget-body');
-
 
   if (colors.background) {
     if (hasClass(widget, 'pf-widget-modal')) {
-      widget.querySelector('.pf-widget-content').style.setProperty('background-color', colors.background, 'important');
+      widget
+        .querySelector('.pf-widget-content')
+        .style.setProperty('background-color', colors.background, 'important');
     } else {
-      widget.style.setProperty('background-color', colors.background, 'important');
+      widget.style.setProperty(
+        'background-color',
+        colors.background,
+        'important'
+      );
     }
   }
 
   if (colors.fieldBackground) {
     for (i = 0; i < fields.length; i++) {
-      fields[i].style.setProperty('background-color', colors.fieldBackground, 'important');
+      fields[i].style.setProperty(
+        'background-color',
+        colors.fieldBackground,
+        'important'
+      );
     }
   }
 
   if (colors.required) {
     for (i = 0; i < required.length; i++) {
-      required[i].style.setProperty('background-color', colors.required, 'important');
-      required[i].querySelector('span').style.setProperty('border-right-color', colors.required, 'important');
+      required[i].style.setProperty(
+        'background-color',
+        colors.required,
+        'important'
+      );
+      required[i]
+        .querySelector('span')
+        .style.setProperty('border-right-color', colors.required, 'important');
     }
 
     for (i = 0; i < requiredInline.length; i++) {
-      requiredInline[i].style.setProperty('border-color', colors.required, 'important');
+      requiredInline[i].style.setProperty(
+        'border-color',
+        colors.required,
+        'important'
+      );
     }
 
     for (i = 0; i < requiredAsterisk.length; i++) {
-      requiredAsterisk[i].style.setProperty('color', colors.required, 'important');
+      requiredAsterisk[i].style.setProperty(
+        'color',
+        colors.required,
+        'important'
+      );
     }
   }
 
@@ -70,15 +97,27 @@ export default function setCustomColors (widget, colors) {
     var contentUnitMetaDescription = contentUnitMeta.querySelector('p');
 
     if (colors.actionBackground) {
-      contentUnit.style.setProperty('background-color', colors.actionBackground, 'important');
+      contentUnit.style.setProperty(
+        'background-color',
+        colors.actionBackground,
+        'important'
+      );
     }
 
     if (colors.actionText && contentUnitMetaTitle) {
-      contentUnitMetaTitle.style.setProperty('color', colors.actionText, 'important');
+      contentUnitMetaTitle.style.setProperty(
+        'color',
+        colors.actionText,
+        'important'
+      );
     }
 
     if (colors.text && contentUnitMetaDescription) {
-      contentUnitMetaDescription.style.setProperty('color', colors.text, 'important');
+      contentUnitMetaDescription.style.setProperty(
+        'color',
+        colors.text,
+        'important'
+      );
     }
   }
 
@@ -111,7 +150,11 @@ export default function setCustomColors (widget, colors) {
       }
 
       if (colors.cancelBackground) {
-        cancelBtn[i].style.setProperty('background-color', colors.cancelBackground, 'important');
+        cancelBtn[i].style.setProperty(
+          'background-color',
+          colors.cancelBackground,
+          'important'
+        );
       }
     }
   }
@@ -123,7 +166,11 @@ export default function setCustomColors (widget, colors) {
       }
 
       if (colors.actionBackground) {
-        okBtn[i].style.setProperty('background-color', colors.actionBackground, 'important');
+        okBtn[i].style.setProperty(
+          'background-color',
+          colors.actionBackground,
+          'important'
+        );
       }
     }
   }

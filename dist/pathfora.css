@@ -11,7 +11,7 @@
 /* Default widget styles */
 .pf-widget {
   z-index: 9999;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   visibility: hidden;
   opacity: 0;
   text-align: left;
@@ -63,11 +63,12 @@
 .pf-widget .pf-content-unit {
   display: none;
 }
-.pf-widget input[type=text],
-.pf-widget input[type=email],
+.pf-widget input[type='text'],
+.pf-widget input[type='email'],
+.pf-widget input[type='date'],
 .pf-widget select,
 .pf-widget textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   border-radius: 3px;
   font-size: 14px;
   width: 100%;
@@ -79,28 +80,32 @@
   -moz-box-sizing: border-box;
   -webkit-sizing: border-box;
 }
-.pf-widget input[type=text]::-webkit-input-placeholder,
-.pf-widget input[type=email]::-webkit-input-placeholder,
+.pf-widget input[type='text']::-webkit-input-placeholder,
+.pf-widget input[type='email']::-webkit-input-placeholder,
+.pf-widget input[type='date']::-webkit-input-placeholder,
 .pf-widget select::-webkit-input-placeholder,
 .pf-widget textarea::-webkit-input-placeholder {
   color: #a9a9a9;
 }
-.pf-widget input[type=text]:-moz-placeholder,
-.pf-widget input[type=email]:-moz-placeholder,
+.pf-widget input[type='text']:-moz-placeholder,
+.pf-widget input[type='email']:-moz-placeholder,
+.pf-widget input[type='date']:-moz-placeholder,
 .pf-widget select:-moz-placeholder,
 .pf-widget textarea:-moz-placeholder {
   /* Firefox 18- */
   color: #a9a9a9;
 }
-.pf-widget input[type=text]::-moz-placeholder,
-.pf-widget input[type=email]::-moz-placeholder,
+.pf-widget input[type='text']::-moz-placeholder,
+.pf-widget input[type='email']::-moz-placeholder,
+.pf-widget input[type='date']::-moz-placeholder,
 .pf-widget select::-moz-placeholder,
 .pf-widget textarea::-moz-placeholder {
   /* Firefox 19+ */
   color: #a9a9a9;
 }
-.pf-widget input[type=text]:-ms-input-placeholder,
-.pf-widget input[type=email]:-ms-input-placeholder,
+.pf-widget input[type='text']:-ms-input-placeholder,
+.pf-widget input[type='email']:-ms-input-placeholder,
+.pf-widget input[type='date']:-ms-input-placeholder,
 .pf-widget select:-ms-input-placeholder,
 .pf-widget textarea:-ms-input-placeholder {
   color: #a9a9a9;
@@ -116,17 +121,21 @@
 .pf-widget select.default {
   color: #a9a9a9;
 }
-.pf-widget form:not(.pf-custom-form) input[type=text],
-.pf-widget form:not(.pf-custom-form) input[type=email],
+.pf-widget form:not(.pf-custom-form) input[type='text'],
+.pf-widget form:not(.pf-custom-form) input[type='email'],
 .pf-widget form:not(.pf-custom-form) select,
 .pf-widget form:not(.pf-custom-form) textarea {
   margin-bottom: 10px;
 }
-.pf-widget form:not(.pf-custom-form) [data-required=true].invalid {
+.pf-widget form:not(.pf-custom-form) [data-required='true'].invalid,
+.pf-widget form:not(.pf-custom-form) [data-validate='true'].invalid,
+.pf-widget form:not(.pf-custom-form) [data-required='true'].bad-validation,
+.pf-widget form:not(.pf-custom-form) [data-validate='true'].bad-validation {
   border: 1px solid #f12626;
 }
-.pf-widget input[type=text],
-.pf-widget input[type=email],
+.pf-widget input[type='text'],
+.pf-widget input[type='email'],
+.pf-widget input[type='date'],
 .pf-widget select {
   clear: both;
 }
@@ -319,8 +328,8 @@
   display: block;
   margin: 0 auto;
 }
-.pf-subscription form input[type=text],
-.pf-subscription form input[type=email] {
+.pf-subscription form input[type='text'],
+.pf-subscription form input[type='email'] {
   width: 100%;
   margin-bottom: 1px;
 }
@@ -384,27 +393,37 @@
 .pf-sitegate div.pf-form-required {
   position: relative;
 }
-.pf-form div.pf-form-required.invalid [data-required=true]:not(.pf-has-label),
-.pf-sitegate div.pf-form-required.invalid [data-required=true]:not(.pf-has-label) {
+.pf-form div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
+.pf-form div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
+.pf-form div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
+.pf-form div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label) {
   border: 1px solid #f12626;
   margin: -1px;
 }
 .pf-form div.pf-form-required.pf-widget-radio-group,
 .pf-sitegate div.pf-form-required.pf-widget-radio-group,
-.pf-form div.pf-form-required.pf-widget-checkbox-group [data-required=true],
-.pf-sitegate div.pf-form-required.pf-widget-checkbox-group [data-required=true] {
+.pf-form div.pf-form-required.pf-widget-checkbox-group [data-required='true'],
+.pf-sitegate div.pf-form-required.pf-widget-checkbox-group [data-required='true'] {
   border-radius: 3px;
 }
 .pf-form div.pf-form-required.invalid div.pf-required-flag,
-.pf-sitegate div.pf-form-required.invalid div.pf-required-flag {
+.pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
+.pf-form div.pf-form-required.bad-validation div.pf-invalid-flag,
+.pf-sitegate div.pf-form-required.bad-validation div.pf-invalid-flag {
   opacity: 1;
   margin-left: 10px;
 }
 .pf-form div.pf-form-required div.pf-required-flag,
-.pf-sitegate div.pf-form-required div.pf-required-flag {
+.pf-sitegate div.pf-form-required div.pf-required-flag,
+.pf-form div.pf-form-required div.pf-invalid-flag,
+.pf-sitegate div.pf-form-required div.pf-invalid-flag {
   font-size: 12px;
   font-weight: bold;
-  position: relative;
+  position: absolute;
   padding: 3px 7px;
   display: inline;
   width: auto;
@@ -415,7 +434,9 @@
   opacity: 0;
 }
 .pf-form div.pf-form-required div.pf-required-flag span,
-.pf-sitegate div.pf-form-required div.pf-required-flag span {
+.pf-sitegate div.pf-form-required div.pf-required-flag span,
+.pf-form div.pf-form-required div.pf-invalid-flag span,
+.pf-sitegate div.pf-form-required div.pf-invalid-flag span {
   position: absolute;
   width: 0;
   height: 0;
@@ -502,20 +523,16 @@
 }
 .pf-widget-modal form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type="date"],
 .pf-widget-modal form select,
 .pf-widget-modal form textarea {
   font-size: 16px;
 }
 .pf-widget-modal form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-modal form input[type="date"],
 .pf-widget-modal form select {
   height: 45px;
-}
-.pf-widget-modal form input[type="text"][data-required="active"]:focus,
-.pf-widget-modal form input[type="email"][data-required="active"]:focus,
-.pf-widget-modal form select[data-required="active"]:focus {
-  margin-top: 1px;
-  margin-bottom: 10px;
 }
 .pf-widget-modal.opened .pf-widget-container {
   top: 0;

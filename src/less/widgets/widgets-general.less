@@ -12,7 +12,7 @@
 @required: #f12626;
 
 .pf-box-shadow {
-  box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
+  box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
 }
 
 .pf-hidden {
@@ -22,7 +22,7 @@
 /* Default widget styles */
 .pf-widget {
   z-index: 9999;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   visibility: hidden;
   opacity: 0;
   text-align: left;
@@ -36,7 +36,6 @@
   .pf-widget-body {
     color: @text;
   }
-
 
   .pf-widget-footer {
     font-size: 12px;
@@ -61,7 +60,12 @@
     text-decoration: none;
   }
 
-  h2, p, input, a, textarea, select {
+  h2,
+  p,
+  input,
+  a,
+  textarea,
+  select {
     margin: 0;
     padding: 0;
     border: 0;
@@ -78,17 +82,18 @@
     display: none;
   }
 
-  input[type=text],
-  input[type=email],
+  input[type='text'],
+  input[type='email'],
+  input[type='date'],
   select,
   textarea {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     border-radius: 3px;
     font-size: 14px;
     width: 100%;
     padding: 10px 15px;
     background: white;
-    box-shadow:inset 0px 1px 1px rgba(0,0,0,0.2);
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2);
     position: relative;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -98,11 +103,13 @@
       color: @placeholder;
     }
 
-    &:-moz-placeholder { /* Firefox 18- */
+    &:-moz-placeholder {
+      /* Firefox 18- */
       color: @placeholder;
     }
 
-    &::-moz-placeholder {  /* Firefox 19+ */
+    &::-moz-placeholder {
+      /* Firefox 19+ */
       color: @placeholder;
     }
 
@@ -117,7 +124,7 @@
     appearance: none;
 
     &::-ms-expand {
-      display:none;
+      display: none;
     }
 
     &.default {
@@ -126,19 +133,24 @@
   }
 
   form:not(.pf-custom-form) {
-    input[type=text],
-    input[type=email],
-    select, textarea {
+    input[type='text'],
+    input[type='email'],
+    select,
+    textarea {
       margin-bottom: 10px;
     }
 
-    [data-required=true].invalid {
-      border: 1px solid @required;
+    [data-required='true'],
+    [data-validate='true'] {
+      &.invalid, &.bad-validation {
+        border: 1px solid @required;
+      }
     }
   }
 
-  input[type=text],
-  input[type=email],
+  input[type='text'],
+  input[type='email'],
+  input[type='date'],
   select {
     clear: both;
   }
@@ -169,7 +181,7 @@
     margin-bottom: 2px;
 
     &.pf-widget-ok {
-      box-shadow: 0px 1px 1px rgba(0,0,0,.2);
+      box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
       color: @actionText;
       background-color: @actionBackground;
     }
@@ -217,26 +229,31 @@
       width: 120px;
 
       .mobile({
-        right: -8px;
-      });
+      right: -8px;
+    });
     }
   }
 
-  .success-state, .error-state {
+  .success-state,
+  .error-state {
     display: none;
   }
 
   &.success {
     transition: opacity 0.3s;
 
-    .pf-widget-headline, .pf-widget-message, form {
+    .pf-widget-headline,
+    .pf-widget-message,
+    form {
       display: none;
     }
 
     .success-state {
       display: block;
 
-      .pf-widget-headline, .pf-widget-message, form {
+      .pf-widget-headline,
+      .pf-widget-message,
+      form {
         display: block;
       }
     }
@@ -245,14 +262,18 @@
   &.error {
     transition: opacity 0.3s;
 
-    .pf-widget-headline, .pf-widget-message, form {
+    .pf-widget-headline,
+    .pf-widget-message,
+    form {
       display: none;
     }
 
     .error-state {
       display: block;
 
-      .pf-widget-headline, .pf-widget-message, form {
+      .pf-widget-headline,
+      .pf-widget-message,
+      form {
         display: block;
       }
     }
@@ -368,8 +389,8 @@
     display: block;
     margin: 0 auto;
 
-    input[type=text],
-    input[type=email] {
+    input[type='text'],
+    input[type='email'] {
       width: 100%;
       margin-bottom: 1px;
     }
@@ -388,9 +409,10 @@
   }
 }
 
-
-.pf-form, .pf-sitegate {
-  input, select {
+.pf-form,
+.pf-sitegate {
+  input,
+  select {
     &.pf-field-half-width {
       width: 49%;
       display: block;
@@ -419,7 +441,8 @@
     font-weight: bold;
   }
 
-  .pf-widget-radio, .pf-widget-checkbox {
+  .pf-widget-radio,
+  .pf-widget-checkbox {
     display: block;
     padding: 4px;
 
@@ -435,32 +458,39 @@
   div.pf-form-required {
     position: relative;
 
-    &.invalid {
-      [data-required=true]:not(.pf-has-label) {
-        border: 1px solid @required;
-        margin: -1px;
+    &.invalid,
+    &.bad-validation {
+      [data-required='true'],
+      [data-validate='true'] {
+        &:not(.pf-has-label) {
+          border: 1px solid @required;
+          margin: -1px;
+        }
       }
     }
 
-    &.pf-widget-radio-group, &.pf-widget-checkbox-group [data-required=true] {
+    &.pf-widget-radio-group,
+    &.pf-widget-checkbox-group [data-required='true'] {
       border-radius: 3px;
     }
 
-    &.invalid div.pf-required-flag {
+    &.invalid div.pf-required-flag,
+    &.bad-validation div.pf-invalid-flag {
       opacity: 1;
       margin-left: 10px;
     }
 
-    div.pf-required-flag {
+    div.pf-required-flag,
+    div.pf-invalid-flag {
       font-size: 12px;
       font-weight: bold;
-      position: relative;
+      position: absolute;
       padding: 3px 7px;
       display: inline;
       width: auto;
       color: white;
       background-color: @required;
-      box-shadow: 0 4px 4px -4px rgba(0,0,0,.5);
+      box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
       margin-left: 5px;
       opacity: 0;
 
@@ -483,8 +513,10 @@
   }
 }
 
-.pf-form.pf-widget-slideout, .pf-sitegate.pf-widget-slideout {
-  input, select {
+.pf-form.pf-widget-slideout,
+.pf-sitegate.pf-widget-slideout {
+  input,
+  select {
     &.pf-field-half-width {
       width: 48%;
     }
