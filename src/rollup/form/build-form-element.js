@@ -37,7 +37,9 @@ export default function buildFormElement(elem, form) {
       case 'us-postal-code':
         content = document.createElement('input');
         content.setAttribute('type', 'text');
-        content.setAttribute('enforcePattern', '^[0-9]{5}$');
+        if (!elem.pattern) {
+          elem.pattern = '^[0-9]{5}$';
+        }
         break;
       case 'text':
       case 'input':
@@ -125,6 +127,11 @@ export default function buildFormElement(elem, form) {
       reqFlag.appendChild(reqTriangle);
       wrapper.appendChild(reqFlag);
     }
+  }
+
+  if (elem.pattern) {
+    content.setAttribute('data-validate', 'true');
+    addClass(wrapper, 'pf-form-required-validation');
   }
 
   if (elem.type === 'date' || elem.type === 'email') {

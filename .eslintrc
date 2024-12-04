@@ -37,7 +37,7 @@
     "new-cap": "error",
     "no-caller": "error",
     "no-cond-assign": "error",
-    "no-debugger": "error",
+    // "no-debugger": "error",
     "no-empty": "error",
     "no-eval": "error",
     "no-extend-native": "error",

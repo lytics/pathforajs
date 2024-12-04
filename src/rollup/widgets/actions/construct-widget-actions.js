@@ -85,16 +85,16 @@ export default function constructWidgetActions(widget, config) {
         event.preventDefault();
 
         // Validate that the form is filled out correctly
-        var valid = true,
-          requiredElements = Array.prototype.slice.call(
-            widgetForm.querySelectorAll('[data-required=true]')
-          ),
-          validatableElements = Array.prototype.slice.call(
-            widgetForm.querySelectorAll('[data-validate=true]')
-          ),
-          i,
-          field,
-          parent;
+        var valid = true;
+        var requiredElements = Array.prototype.slice.call(
+          widgetForm.querySelectorAll('[data-required=true]')
+        );
+        var validatableElements = Array.prototype.slice.call(
+          widgetForm.querySelectorAll('[data-validate=true]')
+        );
+        var i;
+        var field;
+        var parent;
 
         for (i = 0; i < requiredElements.length; i++) {
           field = requiredElements[i];
@@ -141,21 +141,12 @@ export default function constructWidgetActions(widget, config) {
                 field.focus();
               }
             }
-
-            // if a validation pattern exists we can assume its required
-            var pattern = field.getAttribute('enforcePattern');
-            if (pattern) {
-              // validate the regex pattern against the input string
-              var regex = new RegExp(pattern);
-              if (!regex.test(field.value)) {
-                valid = false;
-                addClass(parent, 'invalid');
-              }
-            }
           }
         }
 
         for (i = 0; i < validatableElements.length; i++) {
+          var meetsPattern = true;
+
           field = validatableElements[i];
 
           if (hasClass(widgetForm, 'pf-custom-form')) {
@@ -163,18 +154,41 @@ export default function constructWidgetActions(widget, config) {
               parent = field.parentNode;
               removeClass(parent, 'bad-validation');
 
+              // handle email type
               if (
-                (field.value !== '' &&
-                  field.getAttribute('type') === 'email' &&
-                  !emailValid(field.value)) ||
-                (field.getAttribute('type') === 'date' &&
-                  !dateValid(
-                    field.value,
-                    field.getAttribute('max'),
-                    field.getAttribute('min')
-                  ))
+                field.value !== '' &&
+                field.getAttribute('type') === 'email' &&
+                !emailValid(field.value)
               ) {
                 valid = false;
+                meetsPattern = false;
+              }
+
+              // handle date type
+              if (
+                field.getAttribute('type') === 'date' &&
+                !dateValid(
+                  field.value,
+                  field.getAttribute('max'),
+                  field.getAttribute('min')
+                )
+              ) {
+                valid = false;
+                meetsPattern = false;
+              }
+
+              // handle custom validation if a validation pattern exists
+              var pattern = field.getAttribute('enforcePattern');
+              if (pattern && field.value.length > 0) {
+                // validate the regex pattern against the input string
+                var regex = new RegExp(pattern);
+                if (!regex.test(field.value)) {
+                  valid = false;
+                  meetsPattern = false;
+                }
+              }
+
+              if (!meetsPattern) {
                 addClass(parent, 'bad-validation');
                 if (field && i === 0) {
                   field.focus();
