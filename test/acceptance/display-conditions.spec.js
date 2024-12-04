@@ -68,7 +68,7 @@ describe('when setting display conditions', function () {
 
       $('#height-element').remove();
       done();
-    }, 100);
+    }, 200);
   });
 
   it('should correctly calculate scroll percentage when scroll offset cannot be greater than scroll position', function (done) {

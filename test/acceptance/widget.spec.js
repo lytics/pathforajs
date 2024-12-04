@@ -1776,6 +1776,61 @@ describe('Widgets', function () {
     }, 500);
   });
 
+  it('should not submit the form if only 1 of 2 fields pass validation', function (done) {
+    var customForm = new pathfora.Form({
+      id: 'custom-form-4',
+      msg: 'custom form',
+      layout: 'slideout',
+      formElements: [
+        {
+          type: 'text',
+          placeholder: '6 Digits zbzbzb',
+          name: 'custom_field_1',
+          pattern: '^[zb]{6}$',
+        },
+        {
+          type: 'text',
+          placeholder: 'Only 5 Digits Allowed',
+          name: 'custom_field_2',
+          pattern: '^[0-9]{5}$',
+        },
+      ],
+    });
+
+    pathfora.initializeWidgets([customForm]);
+
+    var widget = $('#' + customForm.id);
+    spyOn(jstag, 'send');
+
+    setTimeout(function () {
+      var form = widget.find('form');
+
+      var field1 = form.find('input[name="custom_field_1"]');
+      field1.val('notvalid');
+
+      var field2 = form.find('input[name="custom_field_2"]');
+      field2.val('12345');
+
+      form.find('.pf-widget-ok').trigger('click');
+
+      expect(jstag.send).not.toHaveBeenCalled();
+      expect(widget.hasClass('opened')).toBeTruthy();
+
+      var validationRequirement = widget.find('[data-validate=true]');
+      expect(validationRequirement.length).toBe(customForm.formElements.length);
+
+      // expect field1 to be invalid
+      var req = validationRequirement[0].parentNode;
+      expect(req.className.indexOf('bad-validation') !== -1).toBeTruthy();
+
+      // expect field2 to be valid
+      req = validationRequirement[1].parentNode;
+      expect(req.className.indexOf('bad-validation') !== -1).toBeFalsy();
+
+      done();
+    }, 500);
+  });
+
   it('should submit the form if custom validation passes', function (done) {
     var customForm = new pathfora.Form({
       id: 'custom-form-5',
