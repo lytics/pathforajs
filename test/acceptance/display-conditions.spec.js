@@ -42,6 +42,8 @@ describe('when setting display conditions', function () {
     $(document.body).append(
       "<div id='height-element' style='height:800px; display:block;'>Test</div>"
     );
+    var height = $(document.body).height();
+    window.scroll(0, height);
 
     var subscription = new pathfora.Message({
       layout: 'modal',
@@ -58,9 +60,6 @@ describe('when setting display conditions', function () {
 
     var widget = $('#' + subscription.id);
     expect(widget.length).toBe(0);
-
-    var height = $(document.body).height();
-    window.scroll(0, height);
 
     setTimeout(function () {
       widget = $('#' + subscription.id);
