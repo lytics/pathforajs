@@ -1,39 +1,39 @@
 site_name: PathforaJS SDK
-pages:
-  - Pathfora JS: 'index.md'
+nav:
+  - Pathfora JS: "index.md"
   - Modules:
-    - API Reference:
-      - Methods: 'api/methods.md'
-      - Generalized Configuration: 'api/config.md'
-    - Types:
-      - Message: 'types/message.md'
-      - Form: 'types/form.md'
-      - Subscription: 'types/subscription.md'
-      - Gate: 'types/gate.md'
-    - Layouts:
-      - Modal: 'layouts/modal.md'
-      - Slideout: 'layouts/slideout.md'
-      - Bar: 'layouts/bar.md'
-      - Button: 'layouts/button.md'
-      - Inline: 'layouts/inline.md'
-    - Customization:
-      - Action Buttons: 'customization/buttons.md'
-      - Color Themes: 'customization/themes.md'
-      - Custom CSS: 'customization/css.md'
-      - Form Elements: 'customization/form.md'
-      - Form Schema Builder: 'customization/form_builder.md'
-      - Form Elements (Legacy): 'customization/form_legacy.md'
-      - Responsive Styles: 'customization/responsive.md'
-      - Entity Fields: 'customization/entity_fields.md'
-    - A/B Testing: 'ab_testing.md'
-    - Audience Targeting: 'targeting.md'
-    - Callbacks: 'callbacks.md'
-    - Content Recommendations: 'content_recommend.md'
-    - Display Conditions: 'display_conditions.md'
-    - Tracking: 'tracking.md'
+      - API Reference:
+          - Methods: "api/methods.md"
+          - Generalized Configuration: "api/config.md"
+      - Types:
+          - Message: "types/message.md"
+          - Form: "types/form.md"
+          - Subscription: "types/subscription.md"
+          - Gate: "types/gate.md"
+      - Layouts:
+          - Modal: "layouts/modal.md"
+          - Slideout: "layouts/slideout.md"
+          - Bar: "layouts/bar.md"
+          - Button: "layouts/button.md"
+          - Inline: "layouts/inline.md"
+      - Customization:
+          - Action Buttons: "customization/buttons.md"
+          - Color Themes: "customization/themes.md"
+          - Custom CSS: "customization/css.md"
+          - Form Elements: "customization/form.md"
+          - Form Schema Builder: "customization/form_builder.md"
+          - Form Elements (Legacy): "customization/form_legacy.md"
+          - Responsive Styles: "customization/responsive.md"
+          - Entity Fields: "customization/entity_fields.md"
+      - A/B Testing: "ab_testing.md"
+      - Audience Targeting: "targeting.md"
+      - Callbacks: "callbacks.md"
+      - Content Recommendations: "content_recommend.md"
+      - Display Conditions: "display_conditions.md"
+      - Tracking: "tracking.md"
   - Inline Personalization:
-    - Element Toggle: 'toggle.md'
-    - Inline Content Recommendations: 'inline_content.md'
+      - Element Toggle: "toggle.md"
+      - Inline Content Recommendations: "inline_content.md"
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
   - assets/pre.js

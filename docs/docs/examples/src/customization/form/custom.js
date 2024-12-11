@@ -7,52 +7,58 @@ var form = new pathfora.Form({
   theme: 'custom',
   formElements: [
     {
-      'type': 'text',
-      'name': 'name',
-      'label': 'Your Name',
-      'placeholder': 'Your Name',
-      'required': true
+      type: 'text',
+      name: 'name',
+      label: 'Your Name',
+      placeholder: 'Your Name',
+      required: true,
     },
     {
-      'type': 'select',
-      'label': 'What\'s your favorite animal?',
-      'placeholder': 'Select an animal...',
-      'name': 'favorite_animal',
-      'required': true,
-      'values': [
+      type: 'text',
+      placeholder: 'Only 5 Digits Allowed',
+      name: 'postal_code',
+      pattern: '^[0-9]{5}$',
+    },
+    {
+      type: 'select',
+      label: "What's your favorite animal?",
+      placeholder: 'Select an animal...',
+      name: 'favorite_animal',
+      required: true,
+      values: [
         {
           label: 'Cat',
-          value: 'cat'
+          value: 'cat',
         },
         {
           label: 'Dog',
-          value: 'dog'
+          value: 'dog',
         },
         {
           label: 'Horse',
-          value: 'horse'
-        }
-      ]
+          value: 'horse',
+        },
+      ],
     },
     {
       type: 'radio-group',
-      label: 'What\'s your favorite color?',
+      label: "What's your favorite color?",
       name: 'favorite_color',
       required: true,
       values: [
         {
           label: 'Red',
-          value: 'red'
+          value: 'red',
         },
         {
           label: 'Blue',
-          value: 'blue'
+          value: 'blue',
         },
         {
           label: 'Green',
-          value: 'green'
-        }
-      ]
+          value: 'green',
+        },
+      ],
     },
     {
       type: 'checkbox-group',
@@ -62,25 +68,25 @@ var form = new pathfora.Form({
       values: [
         {
           label: 'Vanilla',
-          value: 'vanilla'
+          value: 'vanilla',
         },
         {
           label: 'Chocolate',
-          value: 'chocolate'
+          value: 'chocolate',
         },
         {
           label: 'Strawberry',
-          value: 'strawberry'
-        }
-      ]
+          value: 'strawberry',
+        },
+      ],
     },
     {
       type: 'textarea',
       label: 'Comments',
       name: 'comments',
-      placeholder: 'Any more comments?'
-    }
-  ]
+      placeholder: 'Any more comments?',
+    },
+  ],
 });
 
 var form2 = new pathfora.Form({
@@ -94,7 +100,7 @@ var form2 = new pathfora.Form({
       type: 'text',
       name: 'name',
       placeholder: 'Your Name',
-      required: true
+      required: true,
     },
     {
       type: 'checkbox-group',
@@ -103,11 +109,11 @@ var form2 = new pathfora.Form({
       values: [
         {
           label: 'I agree',
-          value: 'agree'
-        }
-      ]
-    }
-  ]
+          value: 'agree',
+        },
+      ],
+    },
+  ],
 });
 
 window.pathfora.initializeWidgets([form, form2]);

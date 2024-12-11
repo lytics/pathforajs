@@ -390,37 +390,59 @@
   margin-top: 7px;
 }
 .pf-form div.pf-form-required,
-.pf-sitegate div.pf-form-required {
+.pf-sitegate div.pf-form-required,
+.pf-form div.pf-form-required-validation,
+.pf-sitegate div.pf-form-required-validation {
   position: relative;
 }
 .pf-form div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
 .pf-sitegate div.pf-form-required.invalid [data-required='true']:not(.pf-has-label),
+.pf-form div.pf-form-required-validation.invalid [data-required='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required-validation.invalid [data-required='true']:not(.pf-has-label),
 .pf-form div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
 .pf-sitegate div.pf-form-required.bad-validation [data-required='true']:not(.pf-has-label),
+.pf-form div.pf-form-required-validation.bad-validation [data-required='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required-validation.bad-validation [data-required='true']:not(.pf-has-label),
 .pf-form div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
 .pf-sitegate div.pf-form-required.invalid [data-validate='true']:not(.pf-has-label),
+.pf-form div.pf-form-required-validation.invalid [data-validate='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required-validation.invalid [data-validate='true']:not(.pf-has-label),
 .pf-form div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label),
-.pf-sitegate div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label) {
+.pf-sitegate div.pf-form-required.bad-validation [data-validate='true']:not(.pf-has-label),
+.pf-form div.pf-form-required-validation.bad-validation [data-validate='true']:not(.pf-has-label),
+.pf-sitegate div.pf-form-required-validation.bad-validation [data-validate='true']:not(.pf-has-label) {
   border: 1px solid #f12626;
   margin: -1px;
 }
 .pf-form div.pf-form-required.pf-widget-radio-group,
 .pf-sitegate div.pf-form-required.pf-widget-radio-group,
+.pf-form div.pf-form-required-validation.pf-widget-radio-group,
+.pf-sitegate div.pf-form-required-validation.pf-widget-radio-group,
 .pf-form div.pf-form-required.pf-widget-checkbox-group [data-required='true'],
-.pf-sitegate div.pf-form-required.pf-widget-checkbox-group [data-required='true'] {
+.pf-sitegate div.pf-form-required.pf-widget-checkbox-group [data-required='true'],
+.pf-form div.pf-form-required-validation.pf-widget-checkbox-group [data-required='true'],
+.pf-sitegate div.pf-form-required-validation.pf-widget-checkbox-group [data-required='true'] {
   border-radius: 3px;
 }
 .pf-form div.pf-form-required.invalid div.pf-required-flag,
 .pf-sitegate div.pf-form-required.invalid div.pf-required-flag,
+.pf-form div.pf-form-required-validation.invalid div.pf-required-flag,
+.pf-sitegate div.pf-form-required-validation.invalid div.pf-required-flag,
 .pf-form div.pf-form-required.bad-validation div.pf-invalid-flag,
-.pf-sitegate div.pf-form-required.bad-validation div.pf-invalid-flag {
+.pf-sitegate div.pf-form-required.bad-validation div.pf-invalid-flag,
+.pf-form div.pf-form-required-validation.bad-validation div.pf-invalid-flag,
+.pf-sitegate div.pf-form-required-validation.bad-validation div.pf-invalid-flag {
   opacity: 1;
   margin-left: 10px;
 }
 .pf-form div.pf-form-required div.pf-required-flag,
 .pf-sitegate div.pf-form-required div.pf-required-flag,
+.pf-form div.pf-form-required-validation div.pf-required-flag,
+.pf-sitegate div.pf-form-required-validation div.pf-required-flag,
 .pf-form div.pf-form-required div.pf-invalid-flag,
-.pf-sitegate div.pf-form-required div.pf-invalid-flag {
+.pf-sitegate div.pf-form-required div.pf-invalid-flag,
+.pf-form div.pf-form-required-validation div.pf-invalid-flag,
+.pf-sitegate div.pf-form-required-validation div.pf-invalid-flag {
   font-size: 12px;
   font-weight: bold;
   position: absolute;
@@ -435,8 +457,12 @@
 }
 .pf-form div.pf-form-required div.pf-required-flag span,
 .pf-sitegate div.pf-form-required div.pf-required-flag span,
+.pf-form div.pf-form-required-validation div.pf-required-flag span,
+.pf-sitegate div.pf-form-required-validation div.pf-required-flag span,
 .pf-form div.pf-form-required div.pf-invalid-flag span,
-.pf-sitegate div.pf-form-required div.pf-invalid-flag span {
+.pf-sitegate div.pf-form-required div.pf-invalid-flag span,
+.pf-form div.pf-form-required-validation div.pf-invalid-flag span,
+.pf-sitegate div.pf-form-required-validation div.pf-invalid-flag span {
   position: absolute;
   width: 0;
   height: 0;
@@ -448,7 +474,9 @@
   border-right: 6px solid #f12626;
 }
 .pf-form div.pf-form-required span.required,
-.pf-sitegate div.pf-form-required span.required {
+.pf-sitegate div.pf-form-required span.required,
+.pf-form div.pf-form-required-validation span.required,
+.pf-sitegate div.pf-form-required-validation span.required {
   color: #f12626;
 }
 .pf-form.pf-widget-slideout input.pf-field-half-width,
