@@ -17,6 +17,10 @@ export default function validateWidgetsObject(widgets) {
         throw new Error(
           'All targeted widgets should have segment or rule function specified'
         );
+      } else if (widgets.target[i].segment && widgets.target[i].rule) {
+        throw new Error(
+          'Widget cannot have both segment and rule function specified'
+        );
       } else if (widgets.target[i].segment === '*') {
         widgets.common = widgets.common.concat(widgets.target[i].widgets);
         widgets.target.splice(i, 1);

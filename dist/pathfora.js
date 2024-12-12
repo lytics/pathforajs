@@ -1059,8 +1059,14 @@
     inFlowStep: function (id, version, step) {
       return function (data) {
         var flows = data._flow;
-        var flowKey = `${id}-${version}`;
+        var flowKey = id + '-' + version;
         return !!(flows && flows[flowKey] && flows[flowKey].step === step);
+      };
+    },
+
+    inSegment: function (segment) {
+      return function (data) {
+        return data.segments.indexOf(segment) !== -1;
       };
     },
   };
@@ -1896,16 +1902,16 @@
           event.preventDefault();
 
           // Validate that the form is filled out correctly
-          var valid = true,
-            requiredElements = Array.prototype.slice.call(
-              widgetForm.querySelectorAll('[data-required=true]')
-            ),
-            validatableElements = Array.prototype.slice.call(
-              widgetForm.querySelectorAll('[data-validate=true]')
-            ),
-            i,
-            field,
-            parent;
+          var valid = true;
+          var requiredElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-required=true]')
+          );
+          var validatableElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-validate=true]')
+          );
+          var i;
+          var field;
+          var parent;
 
           for (i = 0; i < requiredElements.length; i++) {
             field = requiredElements[i];
@@ -1956,6 +1962,8 @@
           }
 
           for (i = 0; i < validatableElements.length; i++) {
+            var meetsPattern = true;
+
             field = validatableElements[i];
 
             if (hasClass(widgetForm, 'pf-custom-form')) {
@@ -1963,18 +1971,41 @@
                 parent = field.parentNode;
                 removeClass(parent, 'bad-validation');
 
+                // handle email type
                 if (
-                  (field.value !== '' &&
-                    field.getAttribute('type') === 'email' &&
-                    !emailValid(field.value)) ||
-                  (field.getAttribute('type') === 'date' &&
-                    !dateValid(
-                      field.value,
-                      field.getAttribute('max'),
-                      field.getAttribute('min')
-                    ))
+                  field.value !== '' &&
+                  field.getAttribute('type') === 'email' &&
+                  !emailValid(field.value)
                 ) {
                   valid = false;
+                  meetsPattern = false;
+                }
+
+                // handle date type
+                if (
+                  field.getAttribute('type') === 'date' &&
+                  !dateValid(
+                    field.value,
+                    field.getAttribute('max'),
+                    field.getAttribute('min')
+                  )
+                ) {
+                  valid = false;
+                  meetsPattern = false;
+                }
+
+                // handle custom validation if a validation pattern exists
+                var pattern = field.getAttribute('enforcePattern');
+                if (pattern && field.value.length > 0) {
+                  // validate the regex pattern against the input string
+                  var regex = new RegExp(pattern);
+                  if (!regex.test(field.value)) {
+                    valid = false;
+                    meetsPattern = false;
+                  }
+                }
+
+                if (!meetsPattern) {
                   addClass(parent, 'bad-validation');
                   if (field && i === 0) {
                     field.focus();
@@ -2354,6 +2385,13 @@
           content = document$1.createElement('input');
           content.setAttribute('type', 'email');
           break;
+        case 'us-postal-code':
+          content = document$1.createElement('input');
+          content.setAttribute('type', 'text');
+          if (!elem.pattern) {
+            elem.pattern = '^[0-9]{5}$';
+          }
+          break;
         case 'text':
         case 'input':
           content = document$1.createElement('input');
@@ -2366,6 +2404,11 @@
         default:
           content = document$1.createElement(elem.type);
           break;
+      }
+
+      // if custom validation is requested ensure that is stored on the element
+      if (elem.pattern) {
+        content.setAttribute('enforcePattern', elem.pattern);
       }
 
       content.setAttribute('name', elem.name);
@@ -2435,6 +2478,11 @@
         reqFlag.appendChild(reqTriangle);
         wrapper.appendChild(reqFlag);
       }
+    }
+
+    if (elem.pattern) {
+      content.setAttribute('data-validate', 'true');
+      addClass(wrapper, 'pf-form-required-validation');
     }
 
     if (elem.type === 'date' || elem.type === 'email') {
@@ -2534,6 +2582,7 @@
         break;
 
       // Textarea, Input, & Select
+      case 'us-postal-code':
       case 'textarea':
       case 'input':
       case 'text':
@@ -3513,6 +3562,10 @@
         if (!widgets.target[i].segment && !widgets.target[i].rule) {
           throw new Error(
             'All targeted widgets should have segment or rule function specified'
+          );
+        } else if (widgets.target[i].segment && widgets.target[i].rule) {
+          throw new Error(
+            'Widget cannot have both segment and rule function specified'
           );
         } else if (widgets.target[i].segment === '*') {
           widgets.common = widgets.common.concat(widgets.target[i].widgets);

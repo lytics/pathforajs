@@ -23,7 +23,7 @@ This is a list of form element objects to include in the module's form. The orde
   <tr>
     <td>type</td>
     <td>string</td>
-    <td>type of form element: checkbox-group, radio-group, select, text, email, date, or textarea</td>
+    <td>type of form element: checkbox-group, radio-group, select, text, email, us-postal-code, date, or textarea</td>
   </tr>
   <tr>
     <td>name</td>
@@ -54,6 +54,11 @@ This is a list of form element objects to include in the module's form. The orde
     <td>maxDate</td>
     <td>string</td>
     <td><code>optional</code> maximum allowed date the user can select. Can be <code>today</code> or a date formatted <code>mm-dd-yyyy</code> (only applicable when type = date)</td>
+  </tr>
+  <tr>
+    <td>pattern</td>
+    <td>string</td>
+    <td><code>optional</code> a valid regular expression that the input value must match before form submission<br/>for example <code>^[0-9]{5}$</code></td>
   </tr>
 </table>
 

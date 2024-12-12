@@ -313,6 +313,24 @@ describe('pathfora helper rule functions', function () {
     });
   });
 
+  describe('inSegment', function () {
+    it('should return true if the user is in the segment', function () {
+      var rule = pathfora.rules.inSegment('test');
+      var data = {
+        segments: ['test', 'other'],
+      };
+      expect(rule(data)).toBeTruthy();
+    });
+
+    it('should return false otherwise', function () {
+      var rule = pathfora.rules.inSegment('test');
+      var data = {
+        segments: ['other'],
+      };
+      expect(rule(data)).toBeFalsy();
+    });
+  });
+
   describe('includes', function () {
     it('should return true value in array', function () {
       var rule = pathfora.rules.includes('channels', 'ads');

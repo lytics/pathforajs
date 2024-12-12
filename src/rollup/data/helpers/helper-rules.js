@@ -57,8 +57,14 @@ var helperRules = {
   inFlowStep: function (id, version, step) {
     return function (data) {
       var flows = data._flow;
-      var flowKey = `${id}-${version}`;
+      var flowKey = id + '-' + version;
       return !!(flows && flows[flowKey] && flows[flowKey].step === step);
+    };
+  },
+
+  inSegment: function (segment) {
+    return function (data) {
+      return data.segments.indexOf(segment) !== -1;
     };
   },
 };
