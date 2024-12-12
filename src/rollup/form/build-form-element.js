@@ -34,6 +34,13 @@ export default function buildFormElement(elem, form) {
         content = document.createElement('input');
         content.setAttribute('type', 'email');
         break;
+      case 'us-postal-code':
+        content = document.createElement('input');
+        content.setAttribute('type', 'text');
+        if (!elem.pattern) {
+          elem.pattern = '^[0-9]{5}$';
+        }
+        break;
       case 'text':
       case 'input':
         content = document.createElement('input');
@@ -46,6 +53,11 @@ export default function buildFormElement(elem, form) {
       default:
         content = document.createElement(elem.type);
         break;
+    }
+
+    // if custom validation is requested ensure that is stored on the element
+    if (elem.pattern) {
+      content.setAttribute('enforcePattern', elem.pattern);
     }
 
     content.setAttribute('name', elem.name);
@@ -115,6 +127,11 @@ export default function buildFormElement(elem, form) {
       reqFlag.appendChild(reqTriangle);
       wrapper.appendChild(reqFlag);
     }
+  }
+
+  if (elem.pattern) {
+    content.setAttribute('data-validate', 'true');
+    addClass(wrapper, 'pf-form-required-validation');
   }
 
   if (elem.type === 'date' || elem.type === 'email') {

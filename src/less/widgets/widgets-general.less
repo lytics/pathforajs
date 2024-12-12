@@ -142,7 +142,8 @@
 
     [data-required='true'],
     [data-validate='true'] {
-      &.invalid, &.bad-validation {
+      &.invalid,
+      &.bad-validation {
         border: 1px solid @required;
       }
     }
@@ -455,7 +456,8 @@
     margin-top: 7px;
   }
 
-  div.pf-form-required {
+  div.pf-form-required,
+  div.pf-form-required-validation {
     position: relative;
 
     &.invalid,

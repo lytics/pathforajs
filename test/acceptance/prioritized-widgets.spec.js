@@ -172,7 +172,7 @@ describe('Prioritized widgets', function () {
         expect(widget2.length).toBe(0);
 
         expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-          '//api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
+          'https://api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
         );
 
         jasmine.Ajax.requests.mostRecent().respondWith({

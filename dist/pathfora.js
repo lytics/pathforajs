@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.14',
+  var PF_VERSION = '1.2.15',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -228,8 +228,8 @@
     DEFAULT_CHAR_LIMIT = 220,
     DEFAULT_CHAR_LIMIT_STACK = 160,
     WIDTH_BREAKPOINT = 650,
-    API_URL = '//api.lytics.io',
-    CSS_URL = '//c.lytics.io/static/pathfora.min.css',
+    API_URL = 'https://api.lytics.io',
+    CSS_URL = 'https://api.lytics.io/static/pathfora.min.css',
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
     ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
     OPTIONS_PRIORITY_ORDERED = 'ordered',
@@ -1000,6 +1000,77 @@
     return pathforaDataObject;
   }
 
+  /** @module pathfora/data/helpers/helper-rules */
+
+  /**
+   * Generic helper rules for widget targeting
+   *
+   * @exports helperRules
+   */
+  var helperRules = {
+    includes: function (key, value) {
+      return function (data) {
+        return data[key].includes(value);
+      };
+    },
+
+    excludes: function (key, value) {
+      return function (data) {
+        return !data[key].includes(value);
+      };
+    },
+
+    eq: function (key, value) {
+      return function (data) {
+        return data[key] === value;
+      };
+    },
+
+    notEq: function (key, value) {
+      return function (data) {
+        return data[key] !== value;
+      };
+    },
+
+    gt: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) > value;
+      };
+    },
+
+    gte: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) >= value;
+      };
+    },
+
+    lt: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) < value;
+      };
+    },
+
+    lte: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) <= value;
+      };
+    },
+
+    inFlowStep: function (id, version, step) {
+      return function (data) {
+        var flows = data._flow;
+        var flowKey = id + '-' + version;
+        return !!(flows && flows[flowKey] && flows[flowKey].step === step);
+      };
+    },
+
+    inSegment: function (segment) {
+      return function (data) {
+        return data.segments.indexOf(segment) !== -1;
+      };
+    },
+  };
+
   /** @module pathfora/callbacks/add-callback */
 
   /**
@@ -1008,7 +1079,7 @@
    * @exports addCallack
    * @params {function} cb
    */
-  function addCallback (cb) {
+  function addCallback(cb) {
     if (window.lio && window.lio.loaded) {
       // legacy
       cb(window.lio.data);
@@ -1831,16 +1902,16 @@
           event.preventDefault();
 
           // Validate that the form is filled out correctly
-          var valid = true,
-            requiredElements = Array.prototype.slice.call(
-              widgetForm.querySelectorAll('[data-required=true]')
-            ),
-            validatableElements = Array.prototype.slice.call(
-              widgetForm.querySelectorAll('[data-validate=true]')
-            ),
-            i,
-            field,
-            parent;
+          var valid = true;
+          var requiredElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-required=true]')
+          );
+          var validatableElements = Array.prototype.slice.call(
+            widgetForm.querySelectorAll('[data-validate=true]')
+          );
+          var i;
+          var field;
+          var parent;
 
           for (i = 0; i < requiredElements.length; i++) {
             field = requiredElements[i];
@@ -1891,6 +1962,8 @@
           }
 
           for (i = 0; i < validatableElements.length; i++) {
+            var meetsPattern = true;
+
             field = validatableElements[i];
 
             if (hasClass(widgetForm, 'pf-custom-form')) {
@@ -1898,18 +1971,41 @@
                 parent = field.parentNode;
                 removeClass(parent, 'bad-validation');
 
+                // handle email type
                 if (
-                  (field.value !== '' &&
-                    field.getAttribute('type') === 'email' &&
-                    !emailValid(field.value)) ||
-                  (field.getAttribute('type') === 'date' &&
-                    !dateValid(
-                      field.value,
-                      field.getAttribute('max'),
-                      field.getAttribute('min')
-                    ))
+                  field.value !== '' &&
+                  field.getAttribute('type') === 'email' &&
+                  !emailValid(field.value)
                 ) {
                   valid = false;
+                  meetsPattern = false;
+                }
+
+                // handle date type
+                if (
+                  field.getAttribute('type') === 'date' &&
+                  !dateValid(
+                    field.value,
+                    field.getAttribute('max'),
+                    field.getAttribute('min')
+                  )
+                ) {
+                  valid = false;
+                  meetsPattern = false;
+                }
+
+                // handle custom validation if a validation pattern exists
+                var pattern = field.getAttribute('enforcePattern');
+                if (pattern && field.value.length > 0) {
+                  // validate the regex pattern against the input string
+                  var regex = new RegExp(pattern);
+                  if (!regex.test(field.value)) {
+                    valid = false;
+                    meetsPattern = false;
+                  }
+                }
+
+                if (!meetsPattern) {
                   addClass(parent, 'bad-validation');
                   if (field && i === 0) {
                     field.focus();
@@ -2289,6 +2385,13 @@
           content = document$1.createElement('input');
           content.setAttribute('type', 'email');
           break;
+        case 'us-postal-code':
+          content = document$1.createElement('input');
+          content.setAttribute('type', 'text');
+          if (!elem.pattern) {
+            elem.pattern = '^[0-9]{5}$';
+          }
+          break;
         case 'text':
         case 'input':
           content = document$1.createElement('input');
@@ -2301,6 +2404,11 @@
         default:
           content = document$1.createElement(elem.type);
           break;
+      }
+
+      // if custom validation is requested ensure that is stored on the element
+      if (elem.pattern) {
+        content.setAttribute('enforcePattern', elem.pattern);
       }
 
       content.setAttribute('name', elem.name);
@@ -2370,6 +2478,11 @@
         reqFlag.appendChild(reqTriangle);
         wrapper.appendChild(reqFlag);
       }
+    }
+
+    if (elem.pattern) {
+      content.setAttribute('data-validate', 'true');
+      addClass(wrapper, 'pf-form-required-validation');
     }
 
     if (elem.type === 'date' || elem.type === 'email') {
@@ -2469,6 +2582,7 @@
         break;
 
       // Textarea, Input, & Select
+      case 'us-postal-code':
       case 'textarea':
       case 'input':
       case 'text':
@@ -3440,16 +3554,30 @@
    * @exports validateWidgetsObject
    * @params {object} widgets
    */
-  function validateWidgetsObject (widgets) {
+  function validateWidgetsObject(widgets) {
     if (widgets.target) {
       widgets.common = widgets.common || [];
 
       for (var i = 0; i < widgets.target.length; i++) {
-        if (!widgets.target[i].segment) {
-          throw new Error('All targeted widgets should have segment specified');
+        if (!widgets.target[i].segment && !widgets.target[i].rule) {
+          throw new Error(
+            'All targeted widgets should have segment or rule function specified'
+          );
+        } else if (widgets.target[i].segment && widgets.target[i].rule) {
+          throw new Error(
+            'Widget cannot have both segment and rule function specified'
+          );
         } else if (widgets.target[i].segment === '*') {
           widgets.common = widgets.common.concat(widgets.target[i].widgets);
           widgets.target.splice(i, 1);
+        }
+      }
+    }
+
+    if (widgets.exclude) {
+      for (var j = 0; j < widgets.exclude.length; j++) {
+        if (!widgets.exclude[j].segment) {
+          throw new Error('All excluded widgets should have segment specified');
         }
       }
     }
@@ -3504,9 +3632,9 @@
    * @params {object} widgets
    * @params {object} options
    */
-  function initializeTargetedWidgets (widgets, options) {
+  function initializeTargetedWidgets(widgets, options) {
     var pf = this,
-        i;
+      i;
 
     validateWidgetsObject(widgets);
 
@@ -3516,18 +3644,31 @@
 
     // NOTE Target sensitive widgets
     if (widgets.target || widgets.exclude) {
-      pf.addCallback(function () {
+      pf.addCallback(function (fields) {
         validateAccountId(pf);
         var targetedWidgets = [],
-            segments = getUserSegments();
+          segments = getUserSegments();
 
         // handle inclusions
         if (widgets.target) {
           for (i = 0; i < widgets.target.length; i++) {
             var target = widgets.target[i];
-            if (segments && segments.indexOf(target.segment) !== -1) {
+            if (
+              target.segment &&
+              segments &&
+              segments.indexOf(target.segment) !== -1
+            ) {
               // add the widgets with proper targeting to the master list
               // ensure we dont overwrite existing widgets in target
+              targetedWidgets = targetedWidgets.concat(target.widgets);
+            }
+            // a rule function is allowed with targeting
+            if (
+              target.rule &&
+              typeof target.rule === 'function' &&
+              fields &&
+              target.rule(fields)
+            ) {
               targetedWidgets = targetedWidgets.concat(target.widgets);
             }
           }
@@ -3609,7 +3750,7 @@
    * @params {object} config
    * @params {object} options
    */
-  function initializeWidgets (widgets, config, options) {
+  function initializeWidgets(widgets, config, options) {
     var pf = this;
     trackTimeOnPage();
     // support legacy initialize function where we passed account id as
@@ -4748,19 +4889,19 @@
    * @params {object} widget
    * @returns {object} watcher
    */
-  function registerPositionWatcher (percent) {
+  function registerPositionWatcher(percent) {
     var watcher = {
       check: function () {
         /* istanbul ignore next */
         var scrollingElement = document$1.scrollingElement || getScrollingElement(),
-            scrollTop = scrollingElement.scrollTop,
-            scrollHeight = scrollingElement.scrollHeight,
-            clientHeight = scrollingElement.clientHeight,
-            percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
+          scrollTop = scrollingElement.scrollTop,
+          scrollHeight = scrollingElement.scrollHeight,
+          clientHeight = scrollingElement.clientHeight,
+          percentageScrolled = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
         // if NaN, will always return `false`
         return percentageScrolled >= percent;
-      }
+      },
     };
 
     return watcher;
@@ -5553,6 +5694,7 @@
 
     // data
     this.getDataObject = getDataObject;
+    this.rules = helperRules;
 
     // callbacks
     this.addCallback = addCallback;
@@ -5590,7 +5732,7 @@
 
     // add pathfora css
     var head = document$1.getElementsByTagName('head')[0],
-        link = document$1.createElement('link');
+      link = document$1.createElement('link');
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');

@@ -1,17 +1,19 @@
 Pathfora gains power by seamlessly integrating with [Lytics](http://www.getlytics.com/) for real-time user identification. This allows for precise audience targeting with each module. Setting this up in Pathfora requires an object with certain targeting rules as the first parameter to [initializeWidgets](../api/methods#initializewidgets).
 
-``` javascript
+```javascript
 var modules = {
-  target: [{
-    segment: 'smt_name',
-    widgets: [module]
-  }]
+  target: [
+    {
+      segment: 'smt_name',
+      widgets: [module],
+    },
+  ],
 };
 
 pathfora.initializeWidgets(modules);
 ```
 
-For audience targeting, it is required that you load the [Lytics Javascript Tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of. If you do not load this tag for targeted modules they will never initialize. 
+For audience targeting, it is required that you load the [Lytics Javascript Tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of. If you do not load this tag for targeted modules they will never initialize.
 
 ## Setup Your Audiences
 
@@ -57,16 +59,39 @@ A list of rules assigning modules to audiences.
     <td>API access ID of the Lytics audience</td>
   </tr>
   <tr>
+    <td>rule</td>
+    <td>function</td>
+    <td>A function that returns true or false based on if the module should show or not</td>
+  </tr>
+  <tr>
     <td>widgets</td>
     <td>array</td>
-    <td>list of modulels to show the users in the audience</td>
+    <td>list of modules to show the users in the audience</td>
   </tr>
 </table>
 
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>rule</code>function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>data</td>
+    <td>object</td>
+    <td>the user data returned from Lytics</td>
+  </tr>
+</table>
 
 ### Single Target Audience - High Value Users
 
-``` javascript
+```javascript
 // example: show a bar module to all users in the `high_value_users` audience promoting new products
 
 var module = new pathfora.Message({
@@ -79,24 +104,25 @@ var module = new pathfora.Message({
     name: 'targeted_bar_confirm',
     callback: function () {
       window.location.pathname = '/new-products';
-    }
-  }
+    },
+  },
 });
 
 var modules = {
-  target: [{
-    segment: 'high_value_users', // API Access ID for your Lytics audience
-    widgets: [module]
-  }]
+  target: [
+    {
+      segment: 'high_value_users', // API Access ID for your Lytics audience
+      widgets: [module],
+    },
+  ],
 };
 
 pathfora.initializeWidgets(modules);
 ```
 
-
 ### Multiple Target Audiences - New vs. Returning
 
-``` javascript
+```javascript
 // example: change messaging of module for new vs returning users
 
 var newModule = new pathfora.Message({
@@ -106,7 +132,7 @@ var newModule = new pathfora.Message({
   headline: 'Welcome',
   msg: 'You must be new here! Please take a look at our guide for new users.',
   cancelShow: false,
-  okMessage: 'View Guide'
+  okMessage: 'View Guide',
 });
 
 var returningModule = new pathfora.Message({
@@ -116,28 +142,55 @@ var returningModule = new pathfora.Message({
   headline: 'Welcome Back',
   msg: 'Thanks for coming back, why not check out our blog for the newest updates?',
   cancelShow: false,
-  okMessage: 'View Blog'
+  okMessage: 'View Blog',
 });
 
 var modules = {
-  target: [{
-    segment: 'new_users', // API Access ID for your Lytics audience
-    widgets: [newModule]
-  },
-  {
-    segment: 'returning', // API Access ID for your Lytics audience
-    widgets: [returningModule]
-  }]
+  target: [
+    {
+      segment: 'new_users', // API Access ID for your Lytics audience
+      widgets: [newModule],
+    },
+    {
+      segment: 'returning', // API Access ID for your Lytics audience
+      widgets: [returningModule],
+    },
+  ],
 };
 
 pathfora.initializeWidgets(modules);
+```
 
+### User Attribute targeting
+
+```javascript
+// example: show if user is from the US using the visit_country user field
+
+var newModule = new pathfora.Message({
+  id: 'us_slidout',
+  layout: 'slideout',
+  position: 'bottom-right',
+  headline: 'Welcome',
+  msg: 'Greatings from America',
+});
+
+var modules = {
+  target: [
+    {
+      rule: function (data) {
+        return data.visit_country === 'US';
+      },
+      widgets: [newModule],
+    },
+  ],
+};
+
+pathfora.initializeWidgets(modules);
 ```
 
 ## inverse
 
 Target all users who are not a part of any of the audiences in the defined targeting rules.
-
 
 <table>
   <thead>
@@ -156,7 +209,7 @@ Target all users who are not a part of any of the audiences in the defined targe
   <tr>
 </table>
 
-``` javascript
+```javascript
 // example: show a feedback form module to all users that are known (has email)
 // and a subsciption module to everyone else
 
@@ -164,7 +217,7 @@ var subscriptionModule = new pathfora.Subscription({
   id: 'sign_up_module',
   layout: 'modal',
   headline: 'Sign Up',
-  msg: 'We want to send you updates, sign up now!'
+  msg: 'We want to send you updates, sign up now!',
 });
 
 var feedbackModule = new pathfora.Message({
@@ -176,16 +229,18 @@ var feedbackModule = new pathfora.Message({
     name: false,
     email: false,
     title: false,
-    message: true
-  }
+    message: true,
+  },
 });
 
 var modules = {
-  target: [{
-    segment: 'known', // API Access ID for your Lytics audience
-    widgets: [feedbackModule]
-  }],
-  inverse: [subscriptionModule]
+  target: [
+    {
+      segment: 'known', // API Access ID for your Lytics audience
+      widgets: [feedbackModule],
+    },
+  ],
+  inverse: [subscriptionModule],
 };
 
 pathfora.initializeWidgets(modules);

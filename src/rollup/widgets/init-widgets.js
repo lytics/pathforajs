@@ -21,7 +21,7 @@ import validateOptions from '../validation/validate-options';
  * @params {object} config
  * @params {object} options
  */
-export default function initializeWidgets (widgets, config, options) {
+export default function initializeWidgets(widgets, config, options) {
   var pf = this;
   trackTimeOnPage();
   // support legacy initialize function where we passed account id as

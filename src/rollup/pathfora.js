@@ -5,7 +5,7 @@ import {
   PF_VERSION,
   PF_LOCALE,
   PF_DATE_OPTIONS,
-  CSS_URL
+  CSS_URL,
 } from './globals/config';
 
 // dom
@@ -18,6 +18,7 @@ import { utils } from './utils/utils';
 
 // data
 import getDataObject from './data/tracking/get-data-object';
+import helperRules from './data/helpers/helper-rules';
 
 // callbacks
 import addCallback from './callbacks/add-callback';
@@ -81,6 +82,7 @@ var Pathfora = function () {
 
   // data
   this.getDataObject = getDataObject;
+  this.rules = helperRules;
 
   // callbacks
   this.addCallback = addCallback;
@@ -118,7 +120,7 @@ var Pathfora = function () {
 
   // add pathfora css
   var head = document.getElementsByTagName('head')[0],
-      link = document.createElement('link');
+    link = document.createElement('link');
 
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
