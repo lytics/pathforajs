@@ -14,9 +14,9 @@ import validateAccountId from '../validation/validate-account-id';
  * @params {object} widgets
  * @params {object} options
  */
-export default function initializeTargetedWidgets (widgets, options) {
+export default function initializeTargetedWidgets(widgets, options) {
   var pf = this,
-      i;
+    i;
 
   validateWidgetsObject(widgets);
 
@@ -26,18 +26,31 @@ export default function initializeTargetedWidgets (widgets, options) {
 
   // NOTE Target sensitive widgets
   if (widgets.target || widgets.exclude) {
-    pf.addCallback(function () {
+    pf.addCallback(function (fields) {
       validateAccountId(pf);
       var targetedWidgets = [],
-          segments = getUserSegments();
+        segments = getUserSegments();
 
       // handle inclusions
       if (widgets.target) {
         for (i = 0; i < widgets.target.length; i++) {
           var target = widgets.target[i];
-          if (segments && segments.indexOf(target.segment) !== -1) {
+          if (
+            target.segment &&
+            segments &&
+            segments.indexOf(target.segment) !== -1
+          ) {
             // add the widgets with proper targeting to the master list
             // ensure we dont overwrite existing widgets in target
+            targetedWidgets = targetedWidgets.concat(target.widgets);
+          }
+          // a rule function is allowed with targeting
+          if (
+            target.rule &&
+            typeof target.rule === 'function' &&
+            fields &&
+            target.rule(fields)
+          ) {
             targetedWidgets = targetedWidgets.concat(target.widgets);
           }
         }

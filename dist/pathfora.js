@@ -1000,6 +1000,77 @@
     return pathforaDataObject;
   }
 
+  /** @module pathfora/data/helpers/helper-rules */
+
+  /**
+   * Generic helper rules for widget targeting
+   *
+   * @exports helperRules
+   */
+  var helperRules = {
+    includes: function (key, value) {
+      return function (data) {
+        return data[key].includes(value);
+      };
+    },
+
+    excludes: function (key, value) {
+      return function (data) {
+        return !data[key].includes(value);
+      };
+    },
+
+    eq: function (key, value) {
+      return function (data) {
+        return data[key] === value;
+      };
+    },
+
+    notEq: function (key, value) {
+      return function (data) {
+        return data[key] !== value;
+      };
+    },
+
+    gt: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) > value;
+      };
+    },
+
+    gte: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) >= value;
+      };
+    },
+
+    lt: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) < value;
+      };
+    },
+
+    lte: function (key, value) {
+      return function (data) {
+        return parseInt(data[key], 10) <= value;
+      };
+    },
+
+    inFlowStep: function (id, version, step) {
+      return function (data) {
+        var flows = data._flow;
+        var flowKey = id + '-' + version;
+        return !!(flows && flows[flowKey] && flows[flowKey].step === step);
+      };
+    },
+
+    inSegment: function (segment) {
+      return function (data) {
+        return data.segments.indexOf(segment) !== -1;
+      };
+    },
+  };
+
   /** @module pathfora/callbacks/add-callback */
 
   /**
@@ -1008,7 +1079,7 @@
    * @exports addCallack
    * @params {function} cb
    */
-  function addCallback (cb) {
+  function addCallback(cb) {
     if (window.lio && window.lio.loaded) {
       // legacy
       cb(window.lio.data);
@@ -3483,16 +3554,30 @@
    * @exports validateWidgetsObject
    * @params {object} widgets
    */
-  function validateWidgetsObject (widgets) {
+  function validateWidgetsObject(widgets) {
     if (widgets.target) {
       widgets.common = widgets.common || [];
 
       for (var i = 0; i < widgets.target.length; i++) {
-        if (!widgets.target[i].segment) {
-          throw new Error('All targeted widgets should have segment specified');
+        if (!widgets.target[i].segment && !widgets.target[i].rule) {
+          throw new Error(
+            'All targeted widgets should have segment or rule function specified'
+          );
+        } else if (widgets.target[i].segment && widgets.target[i].rule) {
+          throw new Error(
+            'Widget cannot have both segment and rule function specified'
+          );
         } else if (widgets.target[i].segment === '*') {
           widgets.common = widgets.common.concat(widgets.target[i].widgets);
           widgets.target.splice(i, 1);
+        }
+      }
+    }
+
+    if (widgets.exclude) {
+      for (var j = 0; j < widgets.exclude.length; j++) {
+        if (!widgets.exclude[j].segment) {
+          throw new Error('All excluded widgets should have segment specified');
         }
       }
     }
@@ -3547,9 +3632,9 @@
    * @params {object} widgets
    * @params {object} options
    */
-  function initializeTargetedWidgets (widgets, options) {
+  function initializeTargetedWidgets(widgets, options) {
     var pf = this,
-        i;
+      i;
 
     validateWidgetsObject(widgets);
 
@@ -3559,18 +3644,31 @@
 
     // NOTE Target sensitive widgets
     if (widgets.target || widgets.exclude) {
-      pf.addCallback(function () {
+      pf.addCallback(function (fields) {
         validateAccountId(pf);
         var targetedWidgets = [],
-            segments = getUserSegments();
+          segments = getUserSegments();
 
         // handle inclusions
         if (widgets.target) {
           for (i = 0; i < widgets.target.length; i++) {
             var target = widgets.target[i];
-            if (segments && segments.indexOf(target.segment) !== -1) {
+            if (
+              target.segment &&
+              segments &&
+              segments.indexOf(target.segment) !== -1
+            ) {
               // add the widgets with proper targeting to the master list
               // ensure we dont overwrite existing widgets in target
+              targetedWidgets = targetedWidgets.concat(target.widgets);
+            }
+            // a rule function is allowed with targeting
+            if (
+              target.rule &&
+              typeof target.rule === 'function' &&
+              fields &&
+              target.rule(fields)
+            ) {
               targetedWidgets = targetedWidgets.concat(target.widgets);
             }
           }
@@ -3652,7 +3750,7 @@
    * @params {object} config
    * @params {object} options
    */
-  function initializeWidgets (widgets, config, options) {
+  function initializeWidgets(widgets, config, options) {
     var pf = this;
     trackTimeOnPage();
     // support legacy initialize function where we passed account id as
@@ -5596,6 +5694,7 @@
 
     // data
     this.getDataObject = getDataObject;
+    this.rules = helperRules;
 
     // callbacks
     this.addCallback = addCallback;
@@ -5633,7 +5732,7 @@
 
     // add pathfora css
     var head = document$1.getElementsByTagName('head')[0],
-        link = document$1.createElement('link');
+      link = document$1.createElement('link');
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');

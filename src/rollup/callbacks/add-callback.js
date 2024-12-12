@@ -8,7 +8,7 @@ import window from '../dom/window';
  * @exports addCallack
  * @params {function} cb
  */
-export default function addCallback (cb) {
+export default function addCallback(cb) {
   if (window.lio && window.lio.loaded) {
     // legacy
     cb(window.lio.data);
