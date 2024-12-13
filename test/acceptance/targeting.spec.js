@@ -291,7 +291,7 @@ describe('pathfora helper rule functions', function () {
     it('should return true if the user is in the step', function () {
       var rule = pathfora.rules.inFlowStep('test', 0, 230);
       var data = {
-        _flow: {
+        _flows: {
           'test-0': {
             step: 230,
           },
@@ -303,7 +303,7 @@ describe('pathfora helper rule functions', function () {
     it('should return false otherwise', function () {
       var rule = pathfora.rules.inFlowStep('test', 26, 230);
       var data = {
-        _flow: {
+        _flows: {
           'test-1': {
             step: 230,
           },

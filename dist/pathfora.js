@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.15',
+  var PF_VERSION = '1.2.16',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -1058,7 +1058,7 @@
 
     inFlowStep: function (id, version, step) {
       return function (data) {
-        var flows = data._flow;
+        var flows = data._flows;
         var flowKey = id + '-' + version;
         return !!(flows && flows[flowKey] && flows[flowKey].step === step);
       };
