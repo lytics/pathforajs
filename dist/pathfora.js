@@ -1058,7 +1058,7 @@
 
     inFlowStep: function (id, version, step) {
       return function (data) {
-        var flows = data._flow;
+        var flows = data._flows;
         var flowKey = id + '-' + version;
         return !!(flows && flows[flowKey] && flows[flowKey].step === step);
       };
