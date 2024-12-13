@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.15',
+  var PF_VERSION = '1.2.16',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
