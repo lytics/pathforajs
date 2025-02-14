@@ -11,15 +11,15 @@ describe('Prioritized widgets', function () {
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
         layout: 'bar',
-        msg: 'Welcome to our website'
+        msg: 'Welcome to our website',
       });
       var modal = new pathfora.Message({
         id: 'modal2',
-        layout: 'modal'
+        layout: 'modal',
       });
 
       pathfora.initializeWidgets([messageBar, modal], null, {
-        priority: 'ordered'
+        priority: 'ordered',
       });
 
       var widget1 = $('#' + messageBar.id);
@@ -41,13 +41,13 @@ describe('Prioritized widgets', function () {
         layout: 'bar',
         msg: 'Welcome to our website',
         displayConditions: {
-          pageVisits: 3
-        }
+          pageVisits: 3,
+        },
       });
 
       var modal = new pathfora.Message({
         id: 'modal2',
-        layout: 'modal'
+        layout: 'modal',
       });
 
       var anotherMessageBar = new pathfora.Message({
@@ -55,27 +55,27 @@ describe('Prioritized widgets', function () {
         layout: 'bar',
         msg: 'Welcome to our website',
         displayConditions: {
-          pageVisits: 1
-        }
+          pageVisits: 1,
+        },
       });
 
       var anotherModal = new pathfora.Message({
         id: 'anotherModal',
-        layout: 'modal'
+        layout: 'modal',
       });
 
       pathfora.initializeWidgets([messageBar, modal], null, {
-        priority: 'ordered'
+        priority: 'ordered',
       });
 
       pathfora.initializeWidgets([anotherMessageBar, anotherModal], null, {
-        priority: 'ordered'
+        priority: 'ordered',
       });
 
       var widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id),
-          widget3 = $('#' + anotherMessageBar.id),
-          widget4 = $('#' + anotherModal.id);
+        widget2 = $('#' + modal.id),
+        widget3 = $('#' + anotherMessageBar.id),
+        widget4 = $('#' + anotherModal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
@@ -93,20 +93,20 @@ describe('Prioritized widgets', function () {
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
         layout: 'bar',
-        msg: 'Welcome to our website {{name}}'
+        msg: 'Welcome to our website {{name}}',
       });
       var modal = new pathfora.Message({
         id: 'modal2',
         layout: 'modal',
-        msg: 'Welcome to our website'
+        msg: 'Welcome to our website',
       });
 
       pathfora.initializeWidgets([messageBar, modal], null, {
-        priority: 'ordered'
+        priority: 'ordered',
       });
 
       var widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id);
+        widget2 = $('#' + modal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
@@ -114,12 +114,12 @@ describe('Prioritized widgets', function () {
 
         window.lio = {
           data: {
-            name: 'Sarah'
+            name: 'Sarah',
           },
           account: {
-            id: '321'
+            id: '321',
           },
-          loaded: true
+          loaded: true,
         };
         expect(pathfora.callbacks.length).toBe(1);
         pathfora.callbacks[0]();
@@ -140,15 +140,15 @@ describe('Prioritized widgets', function () {
 
       window.lio = {
         account: {
-          id: '321'
+          id: '321',
         },
-        loaded: true
+        loaded: true,
       };
 
       var messageBar = new pathfora.Message({
         id: 'messageBar1',
         layout: 'bar',
-        msg: 'Welcome to our website'
+        msg: 'Welcome to our website',
       });
       var modal = new pathfora.Message({
         id: 'recommendation-modal',
@@ -156,30 +156,30 @@ describe('Prioritized widgets', function () {
         variant: 3,
         layout: 'modal',
         recommend: {
-          collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09'
-        }
+          collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09',
+        },
       });
 
       pathfora.initializeWidgets([modal, messageBar], null, {
-        priority: 'ordered'
+        priority: 'ordered',
       });
 
       var widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id);
+        widget2 = $('#' + modal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
         expect(widget2.length).toBe(0);
 
         expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-          'https://api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
+          'https://c.lytics.io/api/content/recommend/321/user/_uids/123?contentsegment=bb5ecbeadb9e572d66cd83d62d3dcd09'
         );
 
         jasmine.Ajax.requests.mostRecent().respondWith({
           status: 200,
           contentType: 'application/json',
           responseText:
-            '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+            '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
         });
 
         setTimeout(function () {
@@ -200,18 +200,18 @@ describe('Prioritized widgets', function () {
       var messageBar = new pathfora.Message({
         id: 'messageBar1noPriority',
         layout: 'bar',
-        msg: 'Welcome to our website {{name}}'
+        msg: 'Welcome to our website {{name}}',
       });
       var modal = new pathfora.Message({
         id: 'modal2noPriority',
         layout: 'modal',
-        msg: 'Welcome to our website'
+        msg: 'Welcome to our website',
       });
 
       pathfora.initializeWidgets([messageBar, modal]);
 
       var widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id);
+        widget2 = $('#' + modal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
@@ -227,20 +227,20 @@ describe('Prioritized widgets', function () {
       var messageBar = new pathfora.Message({
         id: 'messageBar1noPriority',
         layout: 'bar',
-        msg: 'Welcome to our website {{name}}'
+        msg: 'Welcome to our website {{name}}',
       });
       var modal = new pathfora.Message({
         id: 'modal2noPriority',
         layout: 'modal',
-        msg: 'Welcome to our website'
+        msg: 'Welcome to our website',
       });
 
       pathfora.initializeWidgets([messageBar, modal], null, {
-        priority: 'unordered'
+        priority: 'unordered',
       });
 
       var widget1 = $('#' + messageBar.id),
-          widget2 = $('#' + modal.id);
+        widget2 = $('#' + modal.id);
 
       setTimeout(function () {
         expect(widget1.length).toBe(0);
