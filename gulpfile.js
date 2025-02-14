@@ -19,7 +19,7 @@ const gulp = require('gulp'),
   gutil = require('gulp-util'),
   istanbul = require('rollup-plugin-istanbul');
 
-let TESTAPIURL = '//api.lytics.io',
+let TESTAPIURL = '//c.lytics.io',
   TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
   EXAMPLESSRC = 'docs/docs/examples/src',
   EXAMPLESDEST = 'docs/docs/examples/preview',
@@ -31,10 +31,10 @@ try {
   env({
     file: '.env.json',
   });
-  APIURL = process.env.APIURL || 'https://api.lytics.io';
+  APIURL = process.env.APIURL || 'https://c.lytics.io';
   CSSURL = process.env.CSSURL || 'https://c.lytics.io/static/pathfora.min.css';
 } catch (error) {
-  APIURL = 'https://api.lytics.io';
+  APIURL = 'https://c.lytics.io';
   CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
 }
 
@@ -140,8 +140,10 @@ gulp.task('build:rollup', async function () {
 gulp.task('build:js', ['build:rollup'], function () {
   gulp
     .src('dist/pathfora.js')
-    .pipe(replace('`{{apiurl}}`', 'https://api.lytics.io'))
-    .pipe(replace('`{{cssurl}}`', 'https://api.lytics.io/static/pathfora.min.css'))
+    .pipe(replace('`{{apiurl}}`', 'https://c.lytics.io'))
+    .pipe(
+      replace('`{{cssurl}}`', 'https://c.lytics.io/static/pathfora.min.css')
+    )
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))
