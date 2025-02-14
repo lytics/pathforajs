@@ -18,9 +18,9 @@ describe('the content recommendation component', function () {
 
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     pathfora.acctid = 321;
@@ -32,23 +32,23 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
-        }
-      }
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content',
+        },
+      },
     });
 
     pathfora.initializeWidgets([sampleModal]);
 
     setTimeout(function () {
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+        'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       done();
@@ -60,9 +60,9 @@ describe('the content recommendation component', function () {
 
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     window.liosetup = window.liosetup || {};
@@ -77,23 +77,23 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
-        }
-      }
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content',
+        },
+      },
     });
 
     pathfora.initializeWidgets([sampleModal]);
 
     setTimeout(function () {
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/customField/customValue?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+        'https://c.lytics.io/api/content/recommend/321/user/customField/customValue?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       done();
@@ -106,9 +106,9 @@ describe('the content recommendation component', function () {
 
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     pathfora.acctid = 321;
@@ -120,23 +120,23 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
-        }
-      }
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content',
+        },
+      },
     });
 
     pathfora.initializeWidgets([sampleModal]);
 
     setTimeout(function () {
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/_uids/123.bonk.override?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+        'https://c.lytics.io/api/content/recommend/321/user/_uids/123.bonk.override?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       done();
@@ -146,9 +146,9 @@ describe('the content recommendation component', function () {
   it('should show recommendations returned from the api and default content if there is an error', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var modal = new pathfora.Message({
@@ -158,9 +158,9 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content'
-        }
-      }
+          raw: 'FILTER AND(url LIKE "www.example.com/*") FROM content',
+        },
+      },
     });
 
     var defaultModal = new pathfora.Message({
@@ -175,27 +175,27 @@ describe('the content recommendation component', function () {
           title: 'Default Title',
           description: 'Default description',
           image:
-            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
-        }
+            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+        },
       ],
       recommend: {
         ql: {
-          raw: '*'
-        }
-      }
+          raw: '*',
+        },
+      },
     });
 
     // Should show default
     pathfora.initializeWidgets([defaultModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+      'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       status: 400,
       contentType: 'application/json',
       responseText:
-        '{"data": null,"message": "No such account id","status": 400}'
+        '{"data": null,"message": "No such account id","status": 400}',
     });
 
     pathfora.acctid = 321;
@@ -204,14 +204,14 @@ describe('the content recommendation component', function () {
     pathfora.initializeWidgets([modal]);
     setTimeout(function () {
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
+        'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=FILTER AND(url LIKE "www.example.com/*") FROM content'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       var widget = $('#' + modal.id);
@@ -224,9 +224,9 @@ describe('the content recommendation component', function () {
         expect(widget2.hasClass('opened')).toBeTruthy();
 
         var href = widget.find('.pf-content-unit').attr('href'),
-            desc = widget.find('.pf-content-unit p').text(),
-            img = widget.find('.pf-content-unit-img').css('background-image'),
-            title = widget.find('.pf-content-unit h4').text();
+          desc = widget.find('.pf-content-unit p').text(),
+          img = widget.find('.pf-content-unit-img').css('background-image'),
+          title = widget.find('.pf-content-unit h4').text();
 
         expect(title).toBe('Example Title');
         expect(href).toBe('http://www.example.com/1');
@@ -255,9 +255,9 @@ describe('the content recommendation component', function () {
   it('should throw errors if default content is improperly defined', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var errorModal = new pathfora.Message({
@@ -267,9 +267,9 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: '*'
-        }
-      }
+          raw: '*',
+        },
+      },
     });
 
     var errorModal2 = new pathfora.Message({
@@ -279,9 +279,9 @@ describe('the content recommendation component', function () {
       layout: 'button',
       recommend: {
         ql: {
-          raw: '*'
-        }
-      }
+          raw: '*',
+        },
+      },
     });
 
     var errorModal3 = new pathfora.Message({
@@ -291,8 +291,8 @@ describe('the content recommendation component', function () {
       layout: 'slideout',
       recommend: {
         ql: {
-          raw: '*'
-        }
+          raw: '*',
+        },
       },
       content: [
         {
@@ -300,23 +300,23 @@ describe('the content recommendation component', function () {
           title: 'Default Title',
           description: 'Default description',
           image:
-            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg'
-        }
-      ]
+            'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+        },
+      ],
     });
 
     // Should error since there is no default defined
     expect(function () {
       pathfora.initializeWidgets([errorModal]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+        'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 400,
         contentType: 'application/json',
         responseText:
-          '{"data": null,"message": "No such account id","status": 400}'
+          '{"data": null,"message": "No such account id","status": 400}',
       });
     }).toThrow(
       new Error('Could not get recommendation and no default defined')
@@ -331,14 +331,14 @@ describe('the content recommendation component', function () {
     expect(function () {
       pathfora.initializeWidgets([errorModal3]);
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+        'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
     }).toThrow(
       new Error('Cannot define recommended content unless it is a default')
@@ -350,9 +350,9 @@ describe('the content recommendation component', function () {
   it('should accept segment AST definition', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var astModal = new pathfora.Message({
@@ -364,24 +364,24 @@ describe('the content recommendation component', function () {
         ast: {
           args: [
             {
-              ident: 'author'
-            }
+              ident: 'author',
+            },
           ],
-          op: 'exists'
-        }
-      }
+          op: 'exists',
+        },
+      },
     });
 
     pathfora.initializeWidgets([astModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      'https://api.lytics.io/api/content/recommend/321/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]'
+      'https://c.lytics.io/api/content/recommend/321/user/_uids/123?contentsegments=[%7B%22table%22%3A%22content%22%2C%22ast%22%3A%7B%22args%22%3A%5B%7B%22ident%22%3A%22author%22%7D%5D%2C%22op%22%3A%22exists%22%7D%7D]'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       status: 200,
       contentType: 'application/json',
       responseText:
-        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
     });
 
     var widget = $('#' + astModal.id);
@@ -395,9 +395,9 @@ describe('the content recommendation component', function () {
   it('should not append protocol to relative urls', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var relativeModal = new pathfora.Message({
@@ -407,21 +407,21 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: '*'
-        }
-      }
+          raw: '*',
+        },
+      },
     });
 
     pathfora.initializeWidgets([relativeModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+      'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       status: 200,
       contentType: 'application/json',
       responseText:
-        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
     });
 
     var widget = $('#' + relativeModal.id);
@@ -439,9 +439,9 @@ describe('the content recommendation component', function () {
 
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var displayModal = new pathfora.Message({
@@ -451,7 +451,7 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: '*'
+          raw: '*',
         },
         display: {
           author: true,
@@ -460,29 +460,29 @@ describe('the content recommendation component', function () {
           dateOptions: {
             month: 'long',
             day: 'numeric',
-            year: 'numeric'
-          }
-        }
-      }
+            year: 'numeric',
+          },
+        },
+      },
     });
 
     pathfora.initializeWidgets([displayModal]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+      'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       status: 200,
       contentType: 'application/json',
       responseText:
-        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}',
     });
 
     var widget = $('#' + displayModal.id);
     expect(widget).toBeDefined();
 
     var info = widget.find('.pf-content-unit-meta span.pf-content-unit-info'),
-        desc = widget.find('.pf-content-unit-meta p');
+      desc = widget.find('.pf-content-unit-meta p');
 
     expect(info.html()).toBe('by Test Example | January 1, 2017');
     expect(desc.html().length < 103).toBeTruthy();
@@ -494,25 +494,25 @@ describe('the content recommendation component', function () {
       layout: 'modal',
       recommend: {
         ql: {
-          raw: '*'
+          raw: '*',
         },
         display: {
           image: false,
-          description: false
-        }
-      }
+          description: false,
+        },
+      },
     });
 
     pathfora.initializeWidgets([displayModal2]);
     expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-      'https://api.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
+      'https://c.lytics.io/api/content/recommend/321/user/_uids/123?ql=*'
     );
 
     jasmine.Ajax.requests.mostRecent().respondWith({
       status: 200,
       contentType: 'application/json',
       responseText:
-        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}'
+        '{"data":[{"url": "this/is/a/path","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false, "author": "Test Example", "created": "2017-01-01T12:22:13.283199021Z"}]}',
     });
 
     widget = $('#' + displayModal2.id);
@@ -531,9 +531,9 @@ describe('the content recommendation component', function () {
   it('should display a recommendation modal even if missing a description', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var modal = new pathfora.Message({
@@ -550,18 +550,18 @@ describe('the content recommendation component', function () {
         cancelText: '#bbb',
         close: '#bbb',
         headline: '#d35145',
-        text: '#d35145'
+        text: '#d35145',
       },
       recommend: {
-        collection: 'blah'
+        collection: 'blah',
       },
       content: [
         {
           url: 'https://www.getlytics.com/blog/post/know_your_data',
           title: 'test',
-          default: true
-        }
-      ]
+          default: true,
+        },
+      ],
     });
     window.pathfora.initializeWidgets([modal]);
 
@@ -569,7 +569,7 @@ describe('the content recommendation component', function () {
       status: 500,
       contentType: 'application/json',
       responseText:
-        '{"data": null,"message": "Internal Server Error","status": 400}'
+        '{"data": null,"message": "Internal Server Error","status": 400}',
     });
 
     var widget = $('#' + modal.id);
@@ -583,9 +583,9 @@ describe('the content recommendation component', function () {
   it('should set the colors specified to the content recommendation modal', function (done) {
     window.lio = {
       account: {
-        id: '321'
+        id: '321',
       },
-      loaded: true
+      loaded: true,
     };
 
     var modal = new pathfora.Message({
@@ -602,19 +602,19 @@ describe('the content recommendation component', function () {
         cancelText: '#bbb',
         close: '#bbb',
         headline: '#53f442',
-        text: '#d35145'
+        text: '#d35145',
       },
       recommend: {
-        collection: 'blah'
+        collection: 'blah',
       },
       content: [
         {
           url: 'https://www.getlytics.com/blog/post/know_your_data',
           title: 'test',
           description: 'sample test content description',
-          default: true
-        }
-      ]
+          default: true,
+        },
+      ],
     });
     window.pathfora.initializeWidgets([modal]);
 
@@ -622,13 +622,13 @@ describe('the content recommendation component', function () {
       status: 500,
       contentType: 'application/json',
       responseText:
-        '{"data": null,"message": "Internal Server Error","status": 400}'
+        '{"data": null,"message": "Internal Server Error","status": 400}',
     });
 
     setTimeout(function () {
       var widget = $('#' + modal.id),
-          title = widget.find('.pf-content-unit-meta h4'),
-          description = widget.find('.pf-content-unit-meta p');
+        title = widget.find('.pf-content-unit-meta h4'),
+        description = widget.find('.pf-content-unit-meta p');
       expect(title.css('color')).toBe('rgb(83, 244, 66)');
       expect(description.css('color')).toBe('rgb(211, 81, 69)');
       done();

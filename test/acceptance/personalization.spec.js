@@ -15,12 +15,12 @@ describe('Inline Personalization', function () {
     it('should select to show the first matching element per group', function (done) {
       window.lio = {
         data: {
-          segments: ['all', 'high_value', 'email', 'smt_new']
+          segments: ['all', 'high_value', 'email', 'smt_new'],
         },
         account: {
-          id: '0'
+          id: '0',
         },
-        loaded: true
+        loaded: true,
       };
 
       $(document.body).append(
@@ -38,9 +38,9 @@ describe('Inline Personalization', function () {
       window.pathfora.inline.procElements();
 
       var grp1hide = $('[data-pfgroup="testgrp"][data-pftrigger]'),
-          grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
-          grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
-          grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
+        grp2hide = $('[data-pfgroup="testgrp2"][data-pftrigger]'),
+        grp1show = $('[data-pfgroup="testgrp"][data-pfmodified="true"]'),
+        grp2show = $('[data-pfgroup="testgrp2"][data-pfmodified="true"]');
 
       expect(grp1show.length).toBe(1);
       expect(grp2show.length).toBe(1);
@@ -61,12 +61,12 @@ describe('Inline Personalization', function () {
     it('should select to show the default if none of the triggers match', function (done) {
       window.lio = {
         data: {
-          segments: ['all', 'email']
+          segments: ['all', 'email'],
         },
         account: {
-          id: '0'
+          id: '0',
         },
-        loaded: true
+        loaded: true,
       };
 
       $(document.body).append(
@@ -78,7 +78,7 @@ describe('Inline Personalization', function () {
       window.pathfora.inline.procElements();
 
       var def = $('[data-pfmodified="true"]'),
-          hidden = $('[data-pftrigger]');
+        hidden = $('[data-pftrigger]');
 
       expect(def.length).toBe(1);
       expect(def.text()).toBe('Default');
@@ -94,12 +94,12 @@ describe('Inline Personalization', function () {
     it('should not interfere with pathfora targeting', function (done) {
       window.lio = {
         data: {
-          segments: ['all', 'portlanders', 'email']
+          segments: ['all', 'portlanders', 'email'],
         },
         account: {
-          id: '0'
+          id: '0',
         },
-        loaded: true
+        loaded: true,
       };
 
       $(document.body).append(
@@ -111,32 +111,32 @@ describe('Inline Personalization', function () {
       var testModule = new pathfora.Message({
         id: '9ec53f71a1514339bb1552280ae76682',
         layout: 'slideout',
-        msg: 'show this to people with an email'
+        msg: 'show this to people with an email',
       });
 
       var testModule2 = new pathfora.Message({
         id: 'ba6a6df43f774d769058950969b07a16',
         layout: 'slideout',
-        msg: 'show this to people without an email'
+        msg: 'show this to people without an email',
       });
 
       var widgets = {
         target: [
           {
             segment: 'email',
-            widgets: [testModule]
-          }
+            widgets: [testModule],
+          },
         ],
-        inverse: [testModule2]
+        inverse: [testModule2],
       };
 
       pathfora.initializeWidgets(widgets);
       window.pathfora.inline.procElements();
 
       var shown = $('[data-pfmodified="true"]'),
-          hidden = $('[data-pftrigger]'),
-          w1 = $('#' + testModule.id),
-          w2 = $('#' + testModule2.id);
+        hidden = $('[data-pftrigger]'),
+        w1 = $('#' + testModule.id),
+        w2 = $('#' + testModule2.id);
 
       expect(shown.length).toBe(1);
       expect(shown.text()).toBe('Portlander');
@@ -181,24 +181,24 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","created": "2013-03-13T06:21:00Z","author": "Test User","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       var rec = $('[data-pfmodified="true"]'),
-          recImage = rec.find('[data-pftype="image"]'),
-          recUrl = rec.find('[data-pftype="url"]'),
-          recTitle = rec.find('[data-pftype="title"]'),
-          recDesc = rec.find('[data-pftype="description"]'),
-          recDate = rec.find('[data-pftype="published"]'),
-          recAuthor = rec.find('[data-pftype="author"]'),
-          def = $('[data-pfrecommend="default"]');
+        recImage = rec.find('[data-pftype="image"]'),
+        recUrl = rec.find('[data-pftype="url"]'),
+        recTitle = rec.find('[data-pftype="title"]'),
+        recDesc = rec.find('[data-pftype="description"]'),
+        recDate = rec.find('[data-pftype="published"]'),
+        recAuthor = rec.find('[data-pftype="author"]'),
+        def = $('[data-pfrecommend="default"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -233,18 +233,18 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=bad_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 400,
         contentType: 'application/json',
         responseText:
-          '{"data": null,"message": "No such account id","status": 400}'
+          '{"data": null,"message": "No such account id","status": 400}',
       });
 
       var def = $('[data-pfmodified="true"]'),
-          bad = $('[data-pfrecommend="bad_collection"]');
+        bad = $('[data-pfrecommend="bad_collection"]');
 
       expect(def.length).toBe(1);
       expect(def.css('display')).toBe('block');
@@ -265,19 +265,19 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       var rec = $('[data-pfmodified="true"]'),
-          recImage = rec.find('[data-pftype="image"]'),
-          recUrl = rec.find('[data-pftype="url"]');
+        recImage = rec.find('[data-pftype="image"]'),
+        recUrl = rec.find('[data-pftype="url"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -296,7 +296,7 @@ describe('Inline Personalization', function () {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
       };
 
       $(document.body).append(
@@ -308,18 +308,18 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","created": "2016-10-08T01:24:04.23095283Z","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       var rec = $('[data-pfmodified="true"]'),
-          recPublished = rec.find('[data-pftype="published"]');
+        recPublished = rec.find('[data-pftype="published"]');
 
       expect(rec.length).toBe(1);
       expect(rec.css('display')).toBe('block');
@@ -344,7 +344,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
@@ -352,23 +352,23 @@ describe('Inline Personalization', function () {
         contentType: 'application/json',
         responseText:
           '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false},' +
-          '{"url": "www.example.com/2","title": "Another Example Title","description": "An second example description","primary_image": "image2.jpg","confidence": 0.23334,"visited": false}]}'
+          '{"url": "www.example.com/2","title": "Another Example Title","description": "An second example description","primary_image": "image2.jpg","confidence": 0.23334,"visited": false}]}',
       });
 
       var recs = $('[data-pfmodified="true"]');
       expect(recs.length).toBe(2);
 
       var rec1 = $(recs[0]),
-          rec1Title = rec1.find('[data-pftype="title"]'),
-          rec1Url = rec1.find('[data-pftype="url"]');
+        rec1Title = rec1.find('[data-pftype="title"]'),
+        rec1Url = rec1.find('[data-pftype="url"]');
 
       expect(rec1.css('display')).toBe('block');
       expect(rec1Title.text()).toBe('Example Title');
       expect(rec1Url.attr('href')).toBe('http://www.example.com/1');
 
       var rec2 = $(recs[1]),
-          rec2Title = rec2.find('[data-pftype="title"]'),
-          rec2Url = rec2.find('[data-pftype="url"]');
+        rec2Title = rec2.find('[data-pftype="title"]'),
+        rec2Url = rec2.find('[data-pftype="url"]');
 
       expect(rec2.css('display')).toBe('block');
       expect(rec2Title.text()).toBe('Another Example Title');
@@ -391,7 +391,7 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection2&shuffle=true'
       );
 
       $('[data-pfblock="group1"]').remove();
@@ -401,11 +401,11 @@ describe('Inline Personalization', function () {
     it('should not conflict with segment trigger groups', function (done) {
       window.lio = {
         data: {
-          segments: ['all', 'high_value', 'email', 'smt_new']
+          segments: ['all', 'high_value', 'email', 'smt_new'],
         },
         account: {
-          id: '0'
-        }
+          id: '0',
+        },
       };
 
       $(document.body).append(
@@ -417,14 +417,14 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data": null,"message": "No such account id","status": 400}'
+          '{"data": null,"message": "No such account id","status": 400}',
       });
 
       var elems = $('[data-pfmodified="true"]');
@@ -450,14 +450,14 @@ describe('Inline Personalization', function () {
 
       pathfora.inline.procElements();
       expect(jasmine.Ajax.requests.mostRecent().url).toBe(
-        'https://api.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
+        'https://c.lytics.io/api/content/recommend/123/user/_uids/123?contentsegment=my_collection'
       );
 
       jasmine.Ajax.requests.mostRecent().respondWith({
         status: 200,
         contentType: 'application/json',
         responseText:
-          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+          '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
       });
 
       elems = $('[data-pfmodified="true"]');

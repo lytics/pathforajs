@@ -213,7 +213,7 @@
 
   /** @module pathfora/globals/config */
 
-  var PF_VERSION = '1.2.16',
+  var PF_VERSION = '1.2.17',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -228,8 +228,8 @@
     DEFAULT_CHAR_LIMIT = 220,
     DEFAULT_CHAR_LIMIT_STACK = 160,
     WIDTH_BREAKPOINT = 650,
-    API_URL = 'https://api.lytics.io',
-    CSS_URL = 'https://api.lytics.io/static/pathfora.min.css',
+    API_URL = 'https://c.lytics.io',
+    CSS_URL = 'https://c.lytics.io/static/pathfora.min.css',
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
     ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
     OPTIONS_PRIORITY_ORDERED = 'ordered',
