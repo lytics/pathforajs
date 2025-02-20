@@ -1174,6 +1174,54 @@ describe('when setting display conditions', function () {
     window.history.pushState({}, '', window.location.pathname);
   });
 
+  it('should not ignore "?" if there are no queries', function () {
+    window.history.pushState({}, '', '/context.html');
+
+    var queryTest1 = new pathfora.Form({
+      id: 'query-test1',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html?',
+          },
+          {
+            match: 'exact',
+            value: 'http://localhost:9876/context.html/?',
+          },
+        ],
+      },
+    });
+
+    var queryTest2 = new pathfora.Form({
+      id: 'query-test2',
+      headline: 'Header',
+      layout: 'slideout',
+      displayConditions: {
+        urlContains: [
+          {
+            match: 'substring',
+            value: 'context.html?',
+          },
+          {
+            match: 'exact',
+            value: 'context.html/?',
+          },
+        ],
+      },
+    });
+
+    pathfora.initializeWidgets([queryTest1, queryTest2]);
+
+    var widget = $('#' + queryTest1.id);
+    expect(widget.length).toBe(0);
+
+    widget = $('#' + queryTest2.id);
+    expect(widget.length).toBe(0);
+  });
+
   it('should ignore "lytics_variation_preview_id" query in comparison', function () {
     window.history.pushState(
       {},
