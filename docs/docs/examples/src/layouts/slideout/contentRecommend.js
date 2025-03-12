@@ -6,19 +6,21 @@ var module = new pathfora.Message({
   variant: 3,
   recommend: {
     rank: 'popular',
-    collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09'
+    collection: 'fd98201f51523a59fd28d422a667281b',
   },
   content: [
     {
-      url: 'https://www.getlytics.com/blog/post/look_at_lytics_predictive',
-      title: 'A Look at Lytics Predictive Scoring',
-      description: 'Lytics behavioral scores probably won\'t replace your existing marketing segmentation. But, they will definitely make it better. Read this article if you\'re curious about how behavioral scoring can improve your marketing precision.',
-      image: 'https://www.getlytics.com/img/blog/posts/look_at_lytics_predictive/look_at_lytics_predictive-bg.gif',
-      default: true
-    }
+      url: 'https://www.lytics.com/blog/personalization-with-precision-the-next-era-of-cpg-marketing/',
+      title: 'Personalization with precision: The next era of CPG marketing',
+      description:
+        'Marketing for mass appeal is a relic of traditional CPG engagement strategies — especially when we know better (and can do better). Modern businesses already have the data they need to personalize with context, more easily, and more meaningfully than has ever been possible.',
+      image:
+        'https://s3.us-east-2.amazonaws.com/lytics.com/wp-content/uploads/2023/07/17231530/precise_personalization_cpgs.jpg',
+      default: true,
+    },
   ],
   cancelShow: false,
-  okShow: false
+  okShow: false,
 });
 
 pathfora.initializeWidgets([module]);

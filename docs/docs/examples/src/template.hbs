@@ -1,22 +1,46 @@
-<!DOCTYPE html>
 <html>
-<head>
-<title>Pathfora Example</title>
-<link href='https://fonts.googleapis.com/css?family=Roboto:400' rel='stylesheet' type='text/css'>
-<style>
-{{{css}}}
-</style>
-</head>
+  <head>
+    <title>Pathfora Example</title>
+    <link
+      href='https://fonts.googleapis.com/css?family=Roboto:400'
+      rel='stylesheet'
+      type='text/css'
+    />
+    <style>
+      {{{css}}}
+    </style>
+  </head>
 
-<body class="example">
+  <body class='example'>
 
-{{{html}}}
+    {{{html}}}
 
-<script src="https://c.lytics.io/api/tag/0d47e6304d12858905b4f111090a68a1/lio.js"></script>
-<script src="https://c.lytics.io/static/pathfora.min.js"></script>
-<script>
-{{{config}}}
-</script>
+    <script type='text/javascript'>
+      !(function () { 'use strict'; var o = window.jstag || (window.jstag = {}),
+      r = []; function n(e) { o[e] = function () { for (var n =
+      arguments.length, t = new Array(n), i = 0; i < n; i++) t[i] =
+      arguments[i]; r.push([e, t]); }; } n('send'), n('mock'), n('identify'),
+      n('pageView'), n('unblock'), n('getid'), n('setid'), n('loadEntity'),
+      n('getEntity'), n('on'), n('once'), n('call'), (o.loadScript = function
+      (n, t, i) { var e = document.createElement('script'); (e.async = !0),
+      (e.src = n), (e.onload = t), (e.onerror = i); var o =
+      document.getElementsByTagName('script')[0], r = (o && o.parentNode) ||
+      document.head || document.body, c = o || r.lastChild; return null != c ?
+      r.insertBefore(e, c) : r.appendChild(e), this; }), (o.init = function n(t)
+      { return ( (this.config = t), this.loadScript(t.src, function () { if
+      (o.init === n) throw new Error('Load error!'); o.init(o.config), (function
+      () { for (var n = 0; n < r.length; n++) { var t = r[n][0], i = r[n][1];
+      o[t].apply(o, i); } r = void 0; })(); }), this ); }); })(); jstag.init({
+      src:
+      'https://c.lytics.io/api/tag/ea48c631489b0c19dd62ee5b40acca4b/latest.min.js',
+      stream: 'pathfora', pageAnalysis: { dataLayerPull: { disabled: true, }, },
+      });
+    </script>
+    <script>
+      jstag.on('pathfora.install.done', function () {
+      {{{config}}}
+      });
+    </script>
 
-</body>
+  </body>
 </html>

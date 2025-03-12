@@ -1,6 +1,6 @@
 Beyond it's modules, the Pathfora library can also show or hide inline content based on audience membership. With a little bit of HTML and some specially named attributes you can begin seemlessly personalizing the content of your website to fit targetted audiences.
 
-``` html
+```html
 <!-- This content will show to first-time visitors -->
 <div data-pfgroup="my-personalized-group" data-pftrigger="new_user">
   You must be new here! Please take a look at our guide for new users.
@@ -12,16 +12,16 @@ Beyond it's modules, the Pathfora library can also show or hide inline content b
 </div>
 ```
 
-You must load the [Lytics Javascript Tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/) to toggle elements based on audience membership. Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of and will select which elements to show/hide based on this list.
-
+You must load the [Lytics Javascript Tag](https://docs.lytics.com/docs/lytics-javascript-tag) to toggle elements based on audience membership. Pathfora interacts with this tag to retrieve the a list of Lytics audiences that the user is a member of and will select which elements to show/hide based on this list.
 
 ## Setup Your Audiences
+
 You will need to have at least one audience built in Lytics that you want to target with a module. Make sure that you have API access enabled for the audience, and have entered an ID. You will use this id as the value of the `data-pftrigger` attribute.
 
 <img class="full" src="../assets/api_access.jpg" alt="Lytics Audience API Acess">
 
-
 ## Attributes
+
 Each toggleable piece of content should have a surrounding container HTML element. This element can be of any type and must have the following two attributes.
 
 <table>
@@ -57,7 +57,10 @@ Additionally, if the user is not a member of one of these audiences you can crea
 **Note:** Pathfora loads some CSS to hide the toggle elements before selecting which element to show. Because the js library will load after the body of the page, you may see a flicker of html elements when the page is first loaded. To prevent this, you can add the following line of CSS to the stylesheet of your website:
 
 ```css
-[data-pftrigger], [data-pfrecommend]{ display: none; }
+[data-pftrigger],
+[data-pfrecommend] {
+  display: none;
+}
 ```
 
 <h3>Content Element Toggle - <a href="../examples/preview/inline/toggle.html" target="_blank">Live Preview</a></h3>
