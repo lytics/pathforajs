@@ -6,19 +6,22 @@ var module = new pathfora.Message({
   variant: 3,
   recommend: {
     visited: false,
-    collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09'
+    collection: 'fd98201f51523a59fd28d422a667281b',
   },
   content: [
     {
-      url: 'https://www.getlytics.com/blog/post/know_your_data',
-      title: 'Are You Making the Most of Your First-Party Data?',
-      description: 'Making sense of your first-party data can lead to killer remarketing advantages. Learn more about how the data you collect already can supercharge your ad campaign performance.',
-      image: 'https://www.getlytics.com/img/blog/posts/know_your_data/know_your_data-bg.jpg',
-      default: true
-    }
+      url: 'https://www.lytics.com/blog/adapting-to-a-post-third-party-cookie-world-navigating-the-shift-with-third-party-data-and-dynamic-consumer-identity-strategies/',
+      title:
+        'Adapting to a post-third-party cookie world: Navigating the shift with third-party data and dynamic consumer identity strategies',
+      description:
+        'In 2024, the digital landscape is undergoing significant transformation due to the phase-out of third-party cookies, which were once central to tracking consumer behavior across various online platforms. This shift necessitates the adoption of new technologies and strategies for maintaining a comprehensive view of consumer activities and preferences.',
+      image:
+        'https://s3.us-east-2.amazonaws.com/lytics.com/wp-content/uploads/2024/03/04232206/article-adapting_post_third_party_cookie_world-1-MAINTITLE.jpg',
+      default: true,
+    },
   ],
   cancelShow: false,
-  okShow: false
+  okShow: false,
 });
 
 pathfora.initializeWidgets([module]);

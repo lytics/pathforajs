@@ -25,32 +25,32 @@ This option exposes the capability to censor keys from payloads sent into Lytics
   </tr>
 </table>
 
-``` javascript
+```javascript
 // help ensure compliance with industry-specific PII regulations by censoring form data,
 var widget = new pathfora.Form({
   // other configuration options elided
-  censorTrackingKeys: [/pf-form/]
+  censorTrackingKeys: [/pf-form/],
 });
 ```
 
 ## Lytics
-As long as your [Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics JavaScript tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration). The following raw data fields can be sent to Lytics by Pathfora.
 
-| Attribute | Type | Value |
-|---|---|---|
-| `pf-widget-id` | string | id of the module set in the config |
-| `pf-widget-type` | string | type of the module |
-| `pf-widget-layout` | string | layout of the module |
-| `pf-widget-variant` | int | variant of the module |
-| `pf-widget-event` | string | name of the event (see below) |
-| `pf-widget-action` | string | custom tracking names for button click events as defined in [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) |
-| `pf-form-username` | string | user submitted value of "name" field on module |
-| `pf-form-title` | string | user submitted value of "title" field on module |
-| `pf-form-email` | string | user submitted value of "email" field on module |
-| `pf-form-message` | string | user submitted value of "message" field on module |
-| `pf-form-company` | string | user submitted value of "company" field on module |
-| `pf-form-phone` | string | user submitted value of "phone number" field on module |
+As long as your [Lytics JavaScript tag](https://docs.lytics.com/docs/lytics-javascript-tag) is loaded before the Pathfora tag, all event data and data collected from modules with user input will be sent to the the stream [configured in your Lytics JavaScript tag](https://docs.lytics.com/docs/lytics-javascript-tag). The following raw data fields can be sent to Lytics by Pathfora.
 
+| Attribute           | Type   | Value                                                                                                                                                  |
+| ------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pf-widget-id`      | string | id of the module set in the config                                                                                                                     |
+| `pf-widget-type`    | string | type of the module                                                                                                                                     |
+| `pf-widget-layout`  | string | layout of the module                                                                                                                                   |
+| `pf-widget-variant` | int    | variant of the module                                                                                                                                  |
+| `pf-widget-event`   | string | name of the event (see below)                                                                                                                          |
+| `pf-widget-action`  | string | custom tracking names for button click events as defined in [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) |
+| `pf-form-username`  | string | user submitted value of "name" field on module                                                                                                         |
+| `pf-form-title`     | string | user submitted value of "title" field on module                                                                                                        |
+| `pf-form-email`     | string | user submitted value of "email" field on module                                                                                                        |
+| `pf-form-message`   | string | user submitted value of "message" field on module                                                                                                      |
+| `pf-form-company`   | string | user submitted value of "company" field on module                                                                                                      |
+| `pf-form-phone`     | string | user submitted value of "phone number" field on module                                                                                                 |
 
 <table>
   <thead>
@@ -109,18 +109,19 @@ To verify that the event data fields are being sent properly to Lytics, you can 
 
 By default these fields are available as user fields so that you can use them in the creation of segments. If you need help using these fields or would like to map the user fields differently please contact your customer success representative `success@getlytics.com`.
 
-
 ## Google Analytics
 
 To enable this data to be sent to Google Analytics set the `enableGA` flag before loading any module configs in your code:
-``` js
+
+```js
 window.pathfora.enableGA = true;
 ```
+
 If this flag is enabled, pathfora will send event data from the modules on your website to your Google Analytics account as long as it has access to the `ga` function. This requires that you have the [analytics.js snippet](https://developers.google.com/analytics/devguides/collection/analyticsjs/) on your website loaded before the Pathfora tag. An event sent to Google Analytics by Pathfora will use the following attributes for [event tracking](https://developers.google.com/analytics/devguides/collection/analyticsjs/events#overview):
 
-| Attribute | Type | Value |
-|---|---|---|
-| eventCategory | string | Lytics |
-| eventAction | string | [id of module] : [event name] |
+| Attribute     | Type   | Value                         |
+| ------------- | ------ | ----------------------------- |
+| eventCategory | string | Lytics                        |
+| eventAction   | string | [id of module] : [event name] |
 
 The `[event name]` signifier in eventAction will match the event names for the `pf-widget-event` field [sent to Lytics](#lytics). However, if you've defined custom names in the [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) settings this will override the event name for those actions.

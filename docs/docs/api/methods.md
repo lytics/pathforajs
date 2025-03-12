@@ -1,6 +1,5 @@
 This document will walk you through the methods of the `pathfora` class that will be used to help you deploy your modules. The rest of the SDK documentation will walk you through how to customize your module's configuration, and provide code examples to show you these methods in context.
 
-
 ## initializeWidgets
 
 This method is used to initialize any modules built with Pathfora. It kicks off all the heavy lifting that needs to be done to render the modules on the page based on their configuration settings.
@@ -34,7 +33,6 @@ This method is used to initialize any modules built with Pathfora. It kicks off 
   </tr>
 </table>
 
-
 <table>
   <thead>
     <tr>
@@ -57,7 +55,6 @@ This method is used to initialize any modules built with Pathfora. It kicks off 
 ### Type Configuration Methods
 
 Each module type that Pathfora supports has its own configuration method, which accepts a single object as a parameter. This object should include the configuration settings for the module, the following keys are common across all module configuration types.
-
 
 <table>
   <thead>
@@ -93,16 +90,12 @@ Each module type that Pathfora supports has its own configuration method, which 
   </tr>
 </table>
 
-
-
-
 We cover each of these type configuration methods and their parameters in individual type sections below.
 
 - [Message](../../types/message)
 - [Form](../../types/form)
 - [Subscription](../../types/subscription)
 - [Gate](../../types/gate)
-
 
 ## initializeABTesting
 
@@ -131,7 +124,6 @@ This method is used to initialize [A/B Tests](/ab_testing) modules. If you're cr
 
 A/B Tests have their own configuration method `ABTest`. We cover this configuration in detail in the [A/B Testing](/ab_testing) section of this documentation.
 
-
 ## recommendContent
 
 recommendContent is a public method that makes a request to the Lytics content recommendation API and returns a list of recommended documents for the user. These results are also placed in session storage to reduce the number of calls to the API on subsequent page loads.
@@ -158,7 +150,7 @@ recommendContent is a public method that makes a request to the Lytics content r
   <tr>
     <td>params</td>
     <td>object</td>
-    <td>object containing query params to call the <a href="https://learn.lytics.com/documentation/developer/api-docs/content#content-recommendation">recommendation API</a> with</td>
+    <td>object containing query params to call the <a href="https://docs.lytics.com/reference/public-content-recommendation">recommendation API</a> with</td>
   </tr>
   <tr>
     <td>id</td>
@@ -174,7 +166,7 @@ recommendContent is a public method that makes a request to the Lytics content r
 
 ## triggerWidgets
 
-triggerWidgets is a helper method for widgets with the [manualTrigger](../../display_conditions#manualtrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and  `pathfora.triggerWidgets` has been called. This method is similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with JavaScript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
+triggerWidgets is a helper method for widgets with the [manualTrigger](../../display_conditions#manualtrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and `pathfora.triggerWidgets` has been called. This method is similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with JavaScript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
 
 <table>
   <thead>
