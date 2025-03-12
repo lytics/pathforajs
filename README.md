@@ -29,7 +29,7 @@ There are 4 types of modules and 5 layouts currently supported.
 
 ## General Usage
 
-1. Add [Lytics tracking tag](https://learn.lytics.com/understanding/product-docs/lytics-javascript-tag/configuration) to your website, and import pathfora.js file.
+1. Add [Lytics tracking tag](https://docs.lytics.com/docs/lytics-javascript-tag) to your website, and import pathfora.js file.
 
 ```html
 <!-- Pathfora Tag -->
