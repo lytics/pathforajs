@@ -4217,6 +4217,7 @@
     }
 
     var fnParams,
+      fnParamsString,
         fn,
         currentVal = getObjectValue(widget, fieldName),
         isFn = false;
@@ -4225,7 +4226,10 @@
     if (typeof currentVal === 'function') {
       fn = currentVal.toString();
       currentVal = fn.substring(fn.indexOf('{') + 1, fn.lastIndexOf('}')); // body of the function
-      fnParams = fn.match(/(function.+\()(.+(?=\)))(.+$)/); // get the function param names
+      fnParamsString = fn.match(/function[^(]*\(([^)]*)\)/)[1]; // get the function param names
+      if (fnParamsString !== "") {
+        fnParams = fnParamsString.split(/\W+/);
+      }
       isFn = true;
     }
 
