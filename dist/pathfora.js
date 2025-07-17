@@ -151,6 +151,7 @@
     obj.prioritizedWidgets = [];
     obj.readyWidgets = [];
     obj.triggeredWidgets = {};
+    obj.dependentDataWidgets = [];
 
     return obj;
   }
@@ -233,7 +234,10 @@
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
     ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
     OPTIONS_PRIORITY_ORDERED = 'ordered',
-    OPTIONS_PRIORITY_UNORDERED = 'unordered';
+    OPTIONS_PRIORITY_UNORDERED = 'unordered',
+    DEPENDENT_DATA_ENTITY_FIELD = 'entityField',
+    DEPENDENT_DATA_SEGMENT = 'segment';
+
 
   var defaultPositions = {
     modal: '',
@@ -942,7 +946,6 @@
   }
 
   /** @module pathfora/utils */
-
 
   /**
    * Object containing utility functions
@@ -3623,6 +3626,105 @@
     }
   }
 
+  /** @module pathfora/widgets/set-dependent-data */
+
+
+  /**
+   * Set the dependent data fields on a widget.
+   *
+   * @exports setDependentData
+   * @params {object} widgets
+   */
+  function setDependentData(widgets) {
+
+    var i, j;
+
+    var setSegmentData = function(widgetList, segments) {
+      var dataWidgets = widgetTracker.dependentDataWidgets;
+      var k = 0;
+
+      for (k = 0; k < widgetList.length; k++) {
+        var widget = widgetList[k];
+        if (!dataWidgets[widget.id]) {
+          dataWidgets[widget.id] = {};
+        }
+
+        if (segments.length > 0) {
+          if (!dataWidgets[widget.id][DEPENDENT_DATA_SEGMENT]) {
+            dataWidgets[widget.id][DEPENDENT_DATA_SEGMENT] = segments;
+          } else {
+            dataWidgets[widget.id][DEPENDENT_DATA_SEGMENT].concat(segments);
+          }
+        }
+      }
+
+      widgetTracker.dependentDataWidgets = dataWidgets;
+    };
+
+    var setRuleData = function(widgetList, rule) {
+      var dataWidgets = widgetTracker.dependentDataWidgets;
+      var k = 0;
+
+      for (k = 0; k < widgetList.length; k++) {
+        var widget = widgetList[k];
+        if (!dataWidgets[widget.id]) {
+          dataWidgets[widget.id] = {};
+        }
+
+        if (rule && typeof rule === 'function') {
+          // currently we consider all fields to be dependent if a rule function is provided
+          // since there isn't a way to know which fields are actually used in a custom function
+          dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ["*"];
+        }
+      }
+
+      widgetTracker.dependentDataWidgets =dataWidgets;
+    };
+
+    // set dependent data for target widgets
+    if (widgets.target) {
+    for (i = 0; i < widgets.target.length; i++) {
+      var target = widgets.target[i];
+      setSegmentData(target.widgets, [target.segment]);
+      setRuleData(target.widgets, target.rule);
+    }
+  }
+
+    // set dependent data for exclude widgets
+    if (widgets.exclude) {
+    for (i = 0; i < widgets.exclude.length; i++) {
+      var exclude = widgets.exclude[i];
+      setSegmentData(exclude.widgets, [exclude.segment]);
+    }
+  }
+
+    // set dependent data for inverse widgets
+    if (widgets.inverse) {
+    for (i = 0; i < widgets.inverse.length; i++) {
+      var segments = [];
+      if (widgets.target) {
+      for (j = 0; j < widgets.target.length; j++) {
+        var targetInverse = widgets.target[j];
+        if (targetInverse.segment) {
+          segments.push(targetInverse.segment);
+        }
+      }
+    }
+    
+
+    if (widgets.exclude) {
+      for (j = 0; j < widgets.exclude.length; j++) {
+        var excludeInverse = widgets.exclude[j];
+        if (excludeInverse.segment) {
+          segments.push(excludeInverse.segment);
+        }
+      }
+    }
+
+    setSegmentData(widgets.inverse[i], segments);
+  }}
+  }
+
   /** @module pathfora/widgets/init-targeted-widgets */
 
   /**
@@ -3642,6 +3744,9 @@
       pf.initializeWidgetArray(widgets.common, options);
     }
 
+    // set dependent data on widgets
+    setDependentData(widgets);
+
     // NOTE Target sensitive widgets
     if (widgets.target || widgets.exclude) {
       pf.addCallback(function (fields) {
@@ -3653,6 +3758,7 @@
         if (widgets.target) {
           for (i = 0; i < widgets.target.length; i++) {
             var target = widgets.target[i];
+
             if (
               target.segment &&
               segments &&
@@ -4332,7 +4438,8 @@
    */
   function entityFieldChecker (widget, customData) {
     var found,
-        valid = true;
+        valid = true,
+        dependentData = [];
 
     for (var i = 0; i < ENTITY_FIELDS.length; i++) {
       var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
@@ -4347,11 +4454,28 @@
         found = fieldValue.match(regex);
 
         if (found && found.length > 0) {
+          for (var j = 0; j < found.length; j++) {
+            if (!dependentData.includes(found[j])) {
+              var foundval = found[j].slice(2).slice(0, -2),
+                  parts = foundval.split('|');
+
+              dependentData.push(parts[0].trim());
+            }
+          }
+
+
           valid =
             valid &&
             replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
         }
       }
+    }
+
+    if (dependentData.length > 0) {
+      if (!widgetTracker.dependentDataWidgets[widget.id]) {
+        widgetTracker.dependentDataWidgets[widget.id] = {};
+      }
+      widgetTracker.dependentDataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = dependentData;
     }
 
     return valid;
@@ -5086,6 +5210,61 @@
     return createWidgetHtml(widget);
   }
 
+  /** @module pathfora/widgets/clear-widget */
+
+  /**
+   * Clear specific widgets from DOM and clean up their resources
+   *
+   * @exports clearWidget
+   * @param {Array} widgets - Array of widget objects to clear
+   */
+  function clearWidget (widgets) {
+    if (!Array.isArray(widgets)) {
+      console.warn('clearWidget: widgets must be an array');
+      return;
+    }
+
+    var opened = widgetTracker.openedWidgets,
+        widgetsToRemove = [];
+
+    // Find widgets to remove from opened widgets
+    opened.forEach(function (widget, index) {
+      if (widgets.indexOf(widget) !== -1) {
+        widgetsToRemove.push({ widget: widget, index: index });
+      }
+    });
+
+    // Remove widgets from DOM and clean up listeners
+    widgetsToRemove.forEach(function (item) {
+      var widget = item.widget;
+      var element = document$1.getElementById(widget.id);
+      
+      if (element) {
+        removeClass(element, 'opened');
+        if (element.parentNode) {
+          element.parentNode.removeChild(element);
+        }
+      }
+
+      // Clean up event listeners
+      for (var key in widget.listeners) {
+        if (widget.listeners.hasOwnProperty(key)) {
+          var val = widget.listeners[key];
+          val.target.removeEventListener(val.type, val.fn);
+        }
+      }
+    });
+
+    // Remove widgets from openedWidgets array (in reverse order to maintain indices)
+    widgetsToRemove.sort(function (a, b) {
+      return b.index - a.index;
+    }).forEach(function (item) {
+      opened.splice(item.index, 1);
+    });
+
+    return widgetsToRemove;
+  }
+
   /** @module pathfora/display-conditions/cancel-delayed-widget */
 
   /**
@@ -5103,6 +5282,29 @@
     }
   }
 
+  /** @module pathfora/widgets/cancel-delayed-widgets */
+
+  /**
+   * Cancel delayed widgets by their IDs
+   *
+   * @exports cancelDelayedWidgets
+   * @param {Array} widgetIds - Array of widget IDs to cancel
+   */
+  function cancelDelayedWidgets (widgetIds) {
+    if (!Array.isArray(widgetIds)) {
+      console.warn('cancelDelayedWidgets: widgetIds must be an array');
+      return;
+    }
+
+    var delayed = widgetTracker.delayedWidgets;
+
+    widgetIds.forEach(function (id) {
+      if (delayed.hasOwnProperty(id)) {
+        cancelDelayedWidget(id);
+      }
+    });
+  }
+
   /** @module pathfora/widgets/clear-all */
 
   /**
@@ -5114,24 +5316,12 @@
     var opened = widgetTracker.openedWidgets,
         delayed = widgetTracker.delayedWidgets;
 
-    opened.forEach(function (widget) {
-      var element = document$1.getElementById(widget.id);
-      removeClass(element, 'opened');
-      element.parentNode.removeChild(element);
+    // Clear all opened widgets
+    clearWidget(opened);
 
-      for (var key in widget.listeners) {
-        if (widget.listeners.hasOwnProperty(key)) {
-          var val = widget.listeners[key];
-          val.target.removeEventListener(val.type, val.fn);
-        }
-      }
-    });
-
-    for (var key in delayed) {
-      if (delayed.hasOwnProperty(key)) {
-        cancelDelayedWidget(key);
-      }
-    }
+    // Cancel all delayed widgets
+    var delayedIds = Object.keys(delayed);
+    cancelDelayedWidgets(delayedIds);
 
     eventHub.removeAll();
 
@@ -5140,6 +5330,37 @@
     resetDefaultProps(defaultProps);
     this.callbacks = [];
     this.acctid = '';
+  }
+
+  /** @module pathfora/widgets/clear-by-id */
+
+  /**
+   * Close specific widgets by their IDs and clean up their resources
+   *
+   * @exports clearById
+   * @param {Array} widgetIds - Array of widget IDs to clear
+   */
+  function clearById (widgetIds) {
+    if (!Array.isArray(widgetIds)) {
+      console.warn('clearById: widgetIds must be an array');
+      return;
+    }
+
+    var opened = widgetTracker.openedWidgets,
+        widgetsToRemove = [];
+
+    // Find widgets to remove from opened widgets
+    opened.forEach(function (widget) {
+      if (widgetIds.indexOf(widget.id) !== -1) {
+        widgetsToRemove.push(widget);
+      }
+    });
+
+    // Clear the found widgets
+    clearWidget(widgetsToRemove);
+
+    // Cancel delayed widgets that match the IDs
+    cancelDelayedWidgets(widgetIds);
   }
 
   /** @module pathfora/widgets/prepare-widget */
@@ -5223,6 +5444,18 @@
    */
   function SiteGate (config) {
     return prepareWidget('sitegate', config);
+  }
+
+  /** @module pathfora/widgets/get-widget-dependencies */
+
+  /**
+   * Return a list of all widgets that have dependent data
+   *
+   * @exports getWidgetDependencies
+   * @returns {array}
+   */
+  function getWidgetDependencies () {
+    return widgetTracker.dependentDataWidgets;
   }
 
   /** @module pathfora/ab-test/init-ab-test */
@@ -5730,10 +5963,12 @@
     this.showWidget = showWidget;
     this.closeWidget = closeWidget;
     this.clearAll = clearAll;
+    this.clearById = clearById;
     this.Message = Message;
     this.Subscription = Subscription;
     this.Form = Form;
     this.SiteGate = SiteGate;
+    this.getWidgetDependencies = getWidgetDependencies;
 
     // recommendations
     this.recommendContent = recommendContent;

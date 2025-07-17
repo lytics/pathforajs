@@ -3,7 +3,9 @@
 // globals
 import {
   ENTITY_FIELD_TEMPLATE_REGEX,
-  ENTITY_FIELDS
+  ENTITY_FIELDS,
+  DEPENDENT_DATA_ENTITY_FIELD,
+  widgetTracker
 } from '../../globals/config';
 
 // utils
@@ -24,7 +26,8 @@ import replaceEntityField from './replace-entity-field';
  */
 export default function entityFieldChecker (widget, customData) {
   var found,
-      valid = true;
+      valid = true,
+      dependentData = [];
 
   for (var i = 0; i < ENTITY_FIELDS.length; i++) {
     var regex = new RegExp(ENTITY_FIELD_TEMPLATE_REGEX, 'g'),
@@ -39,11 +42,28 @@ export default function entityFieldChecker (widget, customData) {
       found = fieldValue.match(regex);
 
       if (found && found.length > 0) {
+        for (var j = 0; j < found.length; j++) {
+          if (!dependentData.includes(found[j])) {
+            var foundval = found[j].slice(2).slice(0, -2),
+                parts = foundval.split('|');
+
+            dependentData.push(parts[0].trim());
+          }
+        }
+
+
         valid =
           valid &&
           replaceEntityField(widget, ENTITY_FIELDS[i], found, customData);
       }
     }
+  }
+
+  if (dependentData.length > 0) {
+    if (!widgetTracker.dependentDataWidgets[widget.id]) {
+      widgetTracker.dependentDataWidgets[widget.id] = {};
+    }
+    widgetTracker.dependentDataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = dependentData;
   }
 
   return valid;

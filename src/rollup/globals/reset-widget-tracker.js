@@ -14,6 +14,7 @@ export default function resetWidgetTracker (obj) {
   obj.prioritizedWidgets = [];
   obj.readyWidgets = [];
   obj.triggeredWidgets = {};
+  obj.dependentDataWidgets = [];
 
   return obj;
 }

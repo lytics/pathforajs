@@ -189,6 +189,70 @@ describe('when targeting users by segment', function () {
       done();
     }, 200);
   });
+
+  it('should return widgets with targeting segments via getWidgetDependencies', function () {
+    window.lio = {
+      data: {
+        segments: ['a', 'b'],
+      },
+      account: {
+        id: '0',
+      },
+    };
+
+    window.lio.loaded = true;
+
+    var messageA = new pathfora.Message({
+      id: 'test-dependency-01',
+      msg: 'A',
+      layout: 'modal',
+    });
+
+    var messageB = new pathfora.Message({
+      id: 'test-dependency-02',
+      msg: 'B',
+      layout: 'modal',
+    });
+
+    var messageC = new pathfora.Message({
+      id: 'test-dependency-03',
+      msg: 'C',
+      layout: 'modal',
+    });
+
+    var widgets = {
+      target: [
+        {
+          segment: 'a',
+          widgets: [messageA],
+        },
+        {
+          segment: 'b',
+          widgets: [messageB],
+        },
+      ],
+      exclude: [
+        {
+          segment: 'c',
+          widgets: [messageC],
+        },
+      ],
+    };
+
+    pathfora.initializeWidgets(widgets);
+
+    var dependencies = pathfora.getWidgetDependencies();
+
+    // Verify that widgets with targeting segments are tracked
+    expect(dependencies[messageA.id]).toBeDefined();
+    expect(dependencies[messageA.id].segment).toEqual(['a']);
+
+    expect(dependencies[messageB.id]).toBeDefined();
+    expect(dependencies[messageB.id].segment).toEqual(['b']);
+
+    expect(dependencies[messageC.id]).toBeDefined();
+    expect(dependencies[messageC.id].segment).toEqual(['c']);
+  });
 });
 
 // -------------------------
@@ -279,6 +343,60 @@ describe('when targeting users by attributes', function () {
       expect(c.hasClass('opened')).toBeTruthy();
       done();
     }, 200);
+  });
+
+  it('should return widgets with attribute targeting via getWidgetDependencies', function () {
+    window.jstag.getEntity = function () {
+      return {
+        data: {
+          user: {
+            user_id: '123',
+            isBot: false,
+          },
+        },
+      };
+    };
+    window.jstag.config.cid = '123';
+
+    var messageB = new pathfora.Message({
+      id: 'test-attr-dependency-02',
+      msg: 'B',
+      layout: 'modal',
+    });
+
+    var messageC = new pathfora.Message({
+      id: 'test-attr-dependency-03',
+      msg: 'C',
+      layout: 'modal',
+    });
+
+    var widgets = {
+      target: [
+        {
+          rule: function (data) {
+            return data.user_id === '123';
+          },
+          widgets: [messageB],
+        },
+        {
+          rule: function (data) {
+            return data.isBot === false;
+          },
+          widgets: [messageC],
+        },
+      ],
+    };
+
+    pathfora.initializeWidgets(widgets);
+
+    var dependencies = pathfora.getWidgetDependencies();
+
+    // Verify that widgets with rule-based targeting are tracked
+    expect(dependencies[messageB.id]).toBeDefined();
+    expect(dependencies[messageB.id].entityField).toEqual(['*']);
+
+    expect(dependencies[messageC.id]).toBeDefined();
+    expect(dependencies[messageC.id].entityField).toEqual(['*']);
   });
 });
 
