@@ -11,14 +11,9 @@ import resetWidgetTracker from '../globals/reset-widget-tracker';
 import resetDefaultProps from '../globals/reset-default-props';
 import eventHub from '../utils/event-hub';
 
-// dom
-import document from '../dom/document';
-
-// utils
-import removeClass from '../utils/class/remove-class';
-
-// display conditions
-import cancelDelayedWidget from '../display-conditions/cancel-delayed-widget';
+// widgets
+import clearWidget from './clear-widget';
+import cancelDelayedWidgets from './cancel-delayed-widgets';
 
 /**
  * Close all widgets and reset all settings to default
@@ -29,24 +24,12 @@ export default function clearAll () {
   var opened = widgetTracker.openedWidgets,
       delayed = widgetTracker.delayedWidgets;
 
-  opened.forEach(function (widget) {
-    var element = document.getElementById(widget.id);
-    removeClass(element, 'opened');
-    element.parentNode.removeChild(element);
+  // Clear all opened widgets
+  clearWidget(opened);
 
-    for (var key in widget.listeners) {
-      if (widget.listeners.hasOwnProperty(key)) {
-        var val = widget.listeners[key];
-        val.target.removeEventListener(val.type, val.fn);
-      }
-    }
-  });
-
-  for (var key in delayed) {
-    if (delayed.hasOwnProperty(key)) {
-      cancelDelayedWidget(key);
-    }
-  }
+  // Cancel all delayed widgets
+  var delayedIds = Object.keys(delayed);
+  cancelDelayedWidgets(delayedIds);
 
   eventHub.removeAll();
 

@@ -36,10 +36,12 @@ import previewWidget from './widgets/preview-widget';
 import showWidget from './widgets/show-widget';
 import closeWidget from './widgets/close-widget';
 import clearAll from './widgets/clear-all';
+import clearById from './widgets/clear-by-id';
 import Message from './widgets/message';
 import Subscription from './widgets/subscription';
 import Form from './widgets/form';
 import SiteGate from './widgets/site-gate';
+import getWidgetDependencies from './widgets/get-widget-dependencies';
 
 // recommendations
 import recommendContent from './recommendations/recommend-content';
@@ -100,10 +102,12 @@ var Pathfora = function () {
   this.showWidget = showWidget;
   this.closeWidget = closeWidget;
   this.clearAll = clearAll;
+  this.clearById = clearById;
   this.Message = Message;
   this.Subscription = Subscription;
   this.Form = Form;
   this.SiteGate = SiteGate;
+  this.getWidgetDependencies = getWidgetDependencies;
 
   // recommendations
   this.recommendContent = recommendContent;

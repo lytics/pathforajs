@@ -164,4 +164,67 @@ describe('the entity templates', function () {
       done();
     }, 200);
   });
+
+  it('should return widgets with entity templates via getWidgetDependencies', function () {
+    window.lio = {
+      data: {
+        userName: 'John',
+        userEmail: 'john@example.com',
+        promoCode: 'SAVE20'
+      },
+      account: {
+        id: '0'
+      }
+    };
+
+    window.lio.loaded = true;
+
+    var templateWidget1 = new pathfora.Message({
+      id: 'template-dependency-01',
+      layout: 'modal',
+      headline: 'Hello {{userName}}!',
+      msg: 'Welcome back!'
+    });
+
+    var templateWidget2 = new pathfora.Form({
+      id: 'template-dependency-02',
+      layout: 'slideout',
+      headline: 'Special offer for {{userEmail}}',
+      msg: 'Use code {{promoCode}} for savings!'
+    });
+
+    var templateWidget3 = new pathfora.Message({
+      id: 'template-dependency-03',
+      layout: 'modal',
+      headline: 'Hi there!',
+      msg: 'Contact us at {{contactEmail | support@example.com}} for help.',
+      confirmAction: {
+        name: 'confirm',
+        callback: function () {
+          window.trackingUrl = 'https://analytics.com/track?user={{userName}}&promo={{promoCode}}';
+        }
+      }
+    });
+
+    pathfora.initializeWidgets([
+      templateWidget1,
+      templateWidget2,
+      templateWidget3
+    ]);
+
+    var dependencies = pathfora.getWidgetDependencies();
+
+    // Verify that widgets with entity templates are tracked
+    expect(dependencies[templateWidget1.id]).toBeDefined();
+    expect(dependencies[templateWidget1.id].entityField).toContain('userName');
+
+    expect(dependencies[templateWidget2.id]).toBeDefined();
+    expect(dependencies[templateWidget2.id].entityField).toContain('userEmail');
+    expect(dependencies[templateWidget2.id].entityField).toContain('promoCode');
+
+    expect(dependencies[templateWidget3.id]).toBeDefined();
+    expect(dependencies[templateWidget3.id].entityField).toContain('contactEmail');
+    expect(dependencies[templateWidget3.id].entityField).toContain('userName');
+    expect(dependencies[templateWidget3.id].entityField).toContain('promoCode');
+  });
 });

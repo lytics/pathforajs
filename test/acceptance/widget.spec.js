@@ -83,6 +83,119 @@ describe('Widgets', function () {
     }, 200);
   });
 
+  it('should be able to clear specific widgets by their IDs', function (done) {
+    var widget1 = new pathfora.Message({
+      msg: 'Widget 1',
+      id: 'clear-by-id-1',
+      layout: 'modal',
+    });
+
+    var widget2 = new pathfora.Message({
+      msg: 'Widget 2',
+      id: 'clear-by-id-2',
+      layout: 'slideout',
+    });
+
+    var widget3 = new pathfora.Message({
+      msg: 'Widget 3',
+      id: 'clear-by-id-3',
+      layout: 'bar',
+    });
+
+    pathfora.initializeWidgets([widget1, widget2, widget3]);
+
+    var element1 = $('#' + widget1.id);
+    var element2 = $('#' + widget2.id);
+    var element3 = $('#' + widget3.id);
+
+    setTimeout(function () {
+      // All widgets should be opened initially
+      expect(element1.hasClass('opened')).toBeTruthy();
+      expect(element2.hasClass('opened')).toBeTruthy();
+      expect(element3.hasClass('opened')).toBeTruthy();
+
+      // Clear only widget1 and widget3
+      pathfora.clearById(['clear-by-id-1', 'clear-by-id-3']);
+
+      setTimeout(function () {
+        // Widget1 and widget3 should be closed and removed from DOM
+        expect(element1.hasClass('opened')).toBeFalsy();
+        expect($('#' + widget1.id).length).toBe(0);
+        expect(element3.hasClass('opened')).toBeFalsy();
+        expect($('#' + widget3.id).length).toBe(0);
+
+        // Widget2 should still be opened
+        expect(element2.hasClass('opened')).toBeTruthy();
+        expect($('#' + widget2.id).length).toBe(1);
+
+        // Clear widget2 as well
+        pathfora.clearById(['clear-by-id-2']);
+
+        setTimeout(function () {
+          // All widgets should now be closed and removed
+          expect($('#' + widget1.id).length).toBe(0);
+          expect($('#' + widget2.id).length).toBe(0);
+          expect($('#' + widget3.id).length).toBe(0);
+          done();
+        }, 200);
+      }, 200);
+    }, 200);
+  });
+
+  it('should handle clearById with invalid input gracefully', function (done) {
+    var widget = new pathfora.Message({
+      msg: 'Test widget',
+      id: 'invalid-input-test',
+      layout: 'modal',
+    });
+
+    pathfora.initializeWidgets([widget]);
+
+    // Test with non-array input
+    spyOn(console, 'warn');
+    pathfora.clearById('not-an-array');
+    
+    expect(console.warn).toHaveBeenCalledWith('clearById: widgetIds must be an array');
+
+    // Widget should still be opened
+    setTimeout(function () {
+      expect($('#' + widget.id).hasClass('opened')).toBeTruthy();
+      done();
+    }, 200);
+  });
+
+  it('should handle clearById with non-existent widget IDs', function (done) {
+    var widget = new pathfora.Message({
+      msg: 'Test widget',
+      id: 'existing-widget',
+      layout: 'modal',
+    });
+
+    pathfora.initializeWidgets([widget]);
+
+    var element = $('#' + widget.id);
+
+    setTimeout(function () {
+      expect(element.hasClass('opened')).toBeTruthy();
+
+      // Try to clear non-existent widget IDs
+      pathfora.clearById(['non-existent-1', 'non-existent-2']);
+
+      // Existing widget should still be opened
+      expect(element.hasClass('opened')).toBeTruthy();
+      expect($('#' + widget.id).length).toBe(1);
+
+      // Clear the existing widget
+      pathfora.clearById(['existing-widget']);
+
+      setTimeout(function () {
+        expect(element.hasClass('opened')).toBeFalsy();
+        expect($('#' + widget.id).length).toBe(0);
+        done();
+      }, 200);
+    }, 200);
+  });
+
   it('should be able to be displayed on document', function (done) {
     var promoWidget = new pathfora.Message({
       layout: 'bar',

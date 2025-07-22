@@ -36,7 +36,6 @@ import emailValid from './email-valid';
 import decodeSafe from './decode-safe';
 import isNotEncoded from './is-not-encoded';
 
-
 /**
  * Object containing utility functions
  *
