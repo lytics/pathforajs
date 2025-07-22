@@ -6,6 +6,7 @@ import getUserSegments from '../data/segments/get-user-segments';
 // validation
 import validateWidgetsObject from '../validation/validate-widgets-object';
 import validateAccountId from '../validation/validate-account-id';
+import setDependentData from './set-dependent-data';
 
 /**
  * Initialize widgets which are targeted by segments.
@@ -24,6 +25,9 @@ export default function initializeTargetedWidgets(widgets, options) {
     pf.initializeWidgetArray(widgets.common, options);
   }
 
+  // set dependent data on widgets
+  setDependentData(widgets);
+
   // NOTE Target sensitive widgets
   if (widgets.target || widgets.exclude) {
     pf.addCallback(function (fields) {
@@ -35,6 +39,7 @@ export default function initializeTargetedWidgets(widgets, options) {
       if (widgets.target) {
         for (i = 0; i < widgets.target.length; i++) {
           var target = widgets.target[i];
+
           if (
             target.segment &&
             segments &&
