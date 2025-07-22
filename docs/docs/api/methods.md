@@ -164,6 +164,49 @@ recommendContent is a public method that makes a request to the Lytics content r
   </tr>
 </table>
 
+## clearAll
+
+clearAll is a public method that clears every widget that has been opened/initialized by pathfora on the current page. This will remove any opened widgets from the DOM. No parameters are required to call this function.
+
+## clearById
+
+clearById is a public method that clears all widgets based on the IDs passed to this function. Similarly to clearAll, it also removes any opened widgets from the DOM.
+
+<table>
+  <thead>
+    <tr>
+      <td colspan="3" align="center"><code>clearById</code> function</td>
+    </tr>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>widgetIds</td>
+    <td>array</td>
+    <td><code>optional</code> list of ids of widgets to clear.</td>
+  </tr>
+</table>
+
+## getWidgetDependencies
+
+getWidgetDependencies returns a list of widgets that utilize any data returned by the Lytics JavaScript Tag. This includes widgets utilizing [Audience Targeting and User Attribute Targeting](https://lytics.github.io/pathforadocs/targeting/), [Entity Field Templates](https://lytics.github.io/pathforadocs/customization/entity_fields/). The response contains the specific data fields utilized by the widget. If we don't have context of what data is used (such as a custom targeting function), the data list for that widget returns `"*"` to indicate any fields may be utilized. No parameters are required to call this function. Here is an example response from this function:
+
+```
+[
+  "widget-id-1": {
+    "segment": ["smt_new"],
+    "entityField": ["name"]
+  },
+  "widget-id-2": {
+    "entityField": ["*"]
+  }
+]
+```
+
 ## triggerWidgets
 
 triggerWidgets is a helper method for widgets with the [manualTrigger](../../display_conditions#manualtrigger) displayCondition. Widgets with this condition will not display until all other display conditions are met, and `pathfora.triggerWidgets` has been called. This method is similar to `initializeWidgets`, in that it is useful when you want to trigger a module on a custom event with JavaScript. However with `triggerWidgets` you don't need to pass in widget object thus you can call this method even before the config has been defined.
@@ -186,3 +229,4 @@ triggerWidgets is a helper method for widgets with the [manualTrigger](../../dis
     <td><code>optional</code> list of ids of widgets to display, if empty this method will trigger all widgets with the <a href="../../display_conditions#manualtrigger">manualTrigger</a> displayCondition</td>
   </tr>
 </table>
+```

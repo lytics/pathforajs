@@ -61,5 +61,4 @@ export default function clearWidget (widgets) {
     opened.splice(item.index, 1);
   });
 
-  return widgetsToRemove;
 } 
