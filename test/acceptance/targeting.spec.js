@@ -431,6 +431,24 @@ describe('pathfora helper rule functions', function () {
     });
   });
 
+  describe('inFlow', function () {
+    it('should return true if the user is in the flow', function () {
+      var rule = pathfora.rules.inFlow('test_slug');
+      var data = {
+        flows_step_slugs: { '12345': 'test_slug', '67890': 'test_slug_2' },
+      };
+      expect(rule(data)).toBeTruthy();
+    });
+
+    it('should return false otherwise', function () {
+      var rule = pathfora.rules.inFlow('test_slug');
+      var data = {
+        flows_step_slugs: { '67890': 'test_slug_2' },
+      };
+      expect(rule(data)).toBeFalsy();
+    });
+  });
+
   describe('inSegment', function () {
     it('should return true if the user is in the segment', function () {
       var rule = pathfora.rules.inSegment('test');
