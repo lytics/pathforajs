@@ -6,32 +6,31 @@ The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For m
 
 **Subclasses of `pf-widget`:**
 
-| Class Name | Use |
-|---|---|
-| `pf-[type]` | select modules by type |
-| `pf-widget-[layout]` | select modules by layout |
-| `pf-position-[position]` | select modules by position |  
-| `pf-widget-variant-[variant]` | select modules by variant |
-| `opened` | added once the module becomes visiable to the user, can be used for changing the transition animation |
+| Class Name                    | Use                                                                                                   |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `pf-[type]`                   | select modules by type                                                                                |
+| `pf-widget-[layout]`          | select modules by layout                                                                              |
+| `pf-position-[position]`      | select modules by position                                                                            |
+| `pf-widget-variant-[variant]` | select modules by variant (legacy)                                                                    |
+| `opened`                      | added once the module becomes visiable to the user, can be used for changing the transition animation |
 
 Within the `pf-widget` div most key elements are assigned class names. Form components are nested in a `<form>` element and should be selected and styled by element type.
 
 **Key Classes:**
 
-| Class Name | Element |
-|---|---|
-| `pf-widget-content` | second container div inside `pf-widget` (for modal and gate layouts this will the the box surrounding the actual module content) |
-| `pf-widget-text` | third container div inside `pf-widget` for modals, gates, and inline layouts (it contains the text: headline and message/form) |
-| `pf-widget-headline` | `<h2>` headline text |
-| `pf-widget-message` | `<p>` containing widget message text |  
-| `pf-widget-close` | "x" icon to close the modal |
-| `pf-widget-btn` | general class for all buttons |
-| `pf-widget-ok` | "Confirm" button |
-| `pf-widget-cancel` | "Cancel" button |
-| `pf-widget-img` | image element for modules of [variant 2](../../layouts/modal#variant)
+| Class Name           | Element                                                                                                                          |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `pf-widget-content`  | second container div inside `pf-widget` (for modal and gate layouts this will the the box surrounding the actual module content) |
+| `pf-widget-text`     | third container div inside `pf-widget` for modals, gates, and inline layouts (it contains the text: headline and message/form)   |
+| `pf-widget-headline` | `<h2>` headline text                                                                                                             |
+| `pf-widget-message`  | `<p>` containing widget message text                                                                                             |
+| `pf-widget-close`    | "x" icon to close the modal                                                                                                      |
+| `pf-widget-btn`      | general class for all buttons                                                                                                    |
+| `pf-widget-ok`       | "Confirm" button                                                                                                                 |
+| `pf-widget-cancel`   | "Cancel" button                                                                                                                  |
+| `pf-widget-img`      | image element for modules that have images                                                                                       |
 
 To see these classes in action, you can view the html [templates](https://github.com/lytics/pathforajs/tree/master/src/templates) that will be rendered on your website. This is the html that gets minified, and added to a div with the class `pf-widget`. That div then gets added to the DOM of your website.
-
 
 ## Custom Class Name
 
@@ -43,7 +42,7 @@ var module = new pathfora.Subscription({
   className: 'sign-up-newsletter',
   layout: 'modal',
   headline: 'Sign Up!',
-  msg: 'Submit this form to get updates'
+  msg: 'Submit this form to get updates',
 });
 
 pathfora.initializeWidgets([module]);
@@ -59,14 +58,13 @@ pathfora.initializeWidgets([module]);
 
 <pre data-src="../../examples/src/customization/css/custom.js"></pre>
 
-
 ### CSS
 
 <pre data-src="../../examples/src/customization/css/custom.css"></pre>
 
 ### SASS/LESS
 
-``` css
+```css
 .pf-widget {
   &.pf-twitter-module {
     background-color: #4a4a4a;
@@ -86,7 +84,8 @@ pathfora.initializeWidgets([module]);
       font-size: 28px;
     }
 
-    .pf-widget-close, .pf-widget-headline {
+    .pf-widget-close,
+    .pf-widget-headline {
       color: #39aec0;
     }
 

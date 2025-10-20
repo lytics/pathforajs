@@ -1,11 +1,10 @@
 Instead of hand selecting content to show an audience, you can can create a module that will suggest content at a individual level, based on the viewer's content affinities in Lytics.
 
-**Note**: only [Message](../types/message) modules using a [slideout](../layouts/slideout), [modal](../layouts/modal) or [modal](../layouts/inline) layout and a [variant](../layouts/modal#variant) of `3` support content recommendations.
+**Note**: only [Message](../types/message) modules using a [slideout](../layouts/slideout), [modal](../layouts/modal) or [modal](../layouts/inline) layout support content recommendations.
 
 ## recommend
 
 Recommend controls any parameters necessary for making a content suggestions to a user using the Lytics content recommendation API.
-
 
 <table>
   <thead>
@@ -57,7 +56,7 @@ Recommend controls any parameters necessary for making a content suggestions to 
 
 </table>
 
-** You can get the id of the content collection from the url of that collection in the Lytics App.
+\*\* You can get the id of the content collection from the url of that collection in the Lytics App.
 
 <img class="full" src="../assets/content_collection_id.jpg" alt="Content Collection API from url">
 
@@ -122,7 +121,6 @@ Recommend controls any parameters necessary for making a content suggestions to 
   </tr>
 </table>
 
-
 ## content
 
 Content acts as a backfill/helper for the [recommend key](#recommend). If the content recommendation API cannot return a recommendation for the user (if they don't have any content affinity data or an error occurs), a default document may be provided.
@@ -185,7 +183,6 @@ Content acts as a backfill/helper for the [recommend key](#recommend). If the co
 <pre data-src="../examples/src/layouts/modal/contentRecommend.js"></pre>
 
 <h3>Content Recommendation Slideout - <a href="../examples/preview/layouts/slideout/contentRecommend.html" target="_blank">Live Preview</a></h3>
-
 
 ![Content Recommendation Modal Module](examples/img/layouts/slideout/contentRecommend.png)
 

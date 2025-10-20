@@ -65,7 +65,7 @@ var helperRules = {
   inFlow: function (key) {
     return function (data) {
       var activeSteps = data.flows_step_slugs || {};
-      const personalizationKeys = Object.values(activeSteps).flat();
+      var personalizationKeys = Object.values(activeSteps).flat();
       return personalizationKeys.includes(key);
     };
   },

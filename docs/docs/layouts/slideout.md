@@ -41,7 +41,6 @@ Position of the slideout module relative to the browser window.
   </tr>
 </table>
 
-
 <h3>Positions - <a href="../../examples/preview/layouts/slideout/positions.html" target="_blank">Live Preview</a></h3>
 
 ![Position Slideout Modules](../examples/img/layouts/slideout/positions.png)
@@ -74,8 +73,6 @@ Optionally define the DOM selector of the parent element you would like to inser
 
 <pre data-src="../../examples/src/layouts/slideout/positionSelector.js"></pre>
 
-
-
 ## origin
 
 Origin is the direction from which the the module will slide in.
@@ -105,46 +102,13 @@ Origin is the direction from which the the module will slide in.
   </tr>
 </table>
 
-
 <h3>Bottom - <a href="../../examples/preview/layouts/slideout/origin.html" target="_blank">Live Preview</a></h3>
 
 <pre data-src="../../examples/src/layouts/slideout/origin.js"></pre>
 
-
-## variant
-
-Variant determines any extra content that may be used by the module.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="2" align="center"><code>variant</code> int</td>
-    </tr>
-    <tr>
-      <th>Value</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-  
-  <tr>
-    <td>1</td>
-    <td><code>default</code> text-only-module</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>module includes an image</td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>module includes a <a href="../../content_recommend">content recommendation</a></td>
-  </tr>
-</table>
-
 ## image
 
 Define the featured image you would like to use for the module.
-
-**Note:** This setting is only valid for modules with a variant value of 2.
 
 <table>
   <thead>
@@ -162,7 +126,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-<h3>Image (variant 2) - <a href="../../examples/preview/layouts/slideout/image.html" target="_blank">Live Preview</a></h3>
+<h3>Image - <a href="../../examples/preview/layouts/slideout/image.html" target="_blank">Live Preview</a></h3>
 
 ![Image Slideout Module](../examples/img/layouts/slideout/image.png)
 
