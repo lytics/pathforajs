@@ -89,7 +89,7 @@ As long as your [Lytics JavaScript tag](https://docs.lytics.com/docs/lytics-java
   </tr>
   <tr>
     <td>unlock</td>
-    <td>user submitted information from a <a href="../types/gate">gate module</a></td>
+    <td>user submitted information from a <a href="../layout/gate">gate module</a></td>
   </tr>
   <tr>
     <td>hover</td>

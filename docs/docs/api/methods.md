@@ -95,7 +95,6 @@ We cover each of these type configuration methods and their parameters in indivi
 - [Message](../../types/message)
 - [Form](../../types/form)
 - [Subscription](../../types/subscription)
-- [Gate](../../types/gate)
 
 ## initializeABTesting
 

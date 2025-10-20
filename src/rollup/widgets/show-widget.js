@@ -28,7 +28,7 @@ import widgetResizeListener from './widget-resize-listener';
  * @params {object} widget
  */
 
-export default function showWidget (w) {
+export default function showWidget(w) {
   var openWidget = function (widget) {
     // FIXME Change to Array#filter and Array#length
     for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
@@ -62,7 +62,7 @@ export default function showWidget (w) {
     ) {
       document.body.appendChild(node);
 
-      if (widget.layout === 'modal' || widget.type === 'sitegate') {
+      if (widget.layout === 'modal' || widget.layout === 'gate') {
         // ensure that we set focus the the modal for accessibility reasons
         var focusable = node.querySelectorAll(
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -83,14 +83,16 @@ export default function showWidget (w) {
                   focusable[0].focus();
                 }
               }
-            }
+            },
           };
         }
       }
     } else {
       // support legacy inline layout used position as selector.
-      var selector = widget.config.positionSelector == null
-        ? widget.config.position : widget.config.positionSelector;
+      var selector =
+        widget.config.positionSelector == null
+          ? widget.config.position
+          : widget.config.positionSelector;
       var hostNode = document.querySelector(selector);
 
       if (hostNode) {
@@ -111,7 +113,7 @@ export default function showWidget (w) {
       if (typeof widgetLoadCallback === 'function') {
         widgetLoadCallback(callbackTypes.LOAD, {
           config: widget,
-          widget: node
+          widget: node,
         });
       }
       if (
@@ -120,7 +122,7 @@ export default function showWidget (w) {
       ) {
         widget.config.onModalOpen(callbackTypes.MODAL_OPEN, {
           config: widget,
-          widget: node
+          widget: node,
         });
       }
     }, 50);
@@ -138,7 +140,7 @@ export default function showWidget (w) {
       target: window,
       fn: function () {
         widgetResizeListener(widget, node);
-      }
+      },
     };
 
     for (var key in widget.listeners) {
@@ -154,7 +156,7 @@ export default function showWidget (w) {
   var widgetOnInitCallback = w.onInit;
   if (typeof widgetOnInitCallback === 'function') {
     widgetOnInitCallback(callbackTypes.INIT, {
-      config: w
+      config: w,
     });
   }
 

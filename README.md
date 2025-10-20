@@ -17,7 +17,6 @@ There are 4 types of modules and 5 layouts currently supported.
 - **Message** - Module with a simple text message.
 - **Form** - Module with a form to capture user information, can contain fields for `name`, `email`, `title` and `message`.
 - **Subscription** - Module with a single input field, `email`.
-- **Gate** - Module which gates the page behind it, the user cannot view the page until they enter information into the gate form. Can contain form fields for `name`, `email`, `organization`, `title`.
 
 **Modules are displayed in one of following layouts:**
 
@@ -26,6 +25,7 @@ There are 4 types of modules and 5 layouts currently supported.
 - **Bar** - A thin module which appears at the top or bottom of the browser window.
 - **Button** - A small module which only allows for a short call to action and a single click action.
 - **Inline** - A module which can be inserted into an existing div on a page.
+- **Gate** - Module which gates the page behind it - essentailly the same as the Modal layout without the "x" button, so the user must interact with the gate content to dismiss it.
 
 ## General Usage
 

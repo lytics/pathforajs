@@ -2,7 +2,7 @@ Pathfora now supports fully customizable [form elements](../../types/form). This
 
 ## fields
 
-Select which fields should be a part of the module's form. By default, a [form](../../types/form) module has the name, email, title, and message fields. And a [gate](../../types/form) module has the name, email, company, and title fields. 
+Select which fields should be a part of the module's form. By default, a [form](../../types/form) module has the name, email, title, and message fields.
 
 <table>
   <thead>
@@ -112,13 +112,11 @@ Set which fields are required to be filled out by the user to submit the form. B
   </tr>
 </table>
 
-
 <h3>Required Fields - <a href="../../examples/preview/customization/form/required.html" target="_blank">Live Preview</a></h3>
 
 ![Required Form Fields](../examples/img/customization/form/required.png)
 
 <pre data-src="../../examples/src/customization/form/required.js"></pre>
-
 
 ## placeholders
 

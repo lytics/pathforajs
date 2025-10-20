@@ -2,7 +2,7 @@ Pathfora is built to be entirely customizable for developers. With the javascrip
 
 ## Key Class Names
 
-The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the containing div surrounding the content, but for [modal](../../layouts/modal) and [gate](../../types/gate) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
+The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For most modules this will be the containing div surrounding the content, but for [modal](../../layouts/modal) and [gate](../../layouts/gate) modules this div will contain the full-screen overlay behind the module. `pf-widget` has a number of useful subclasses to help select modules by their settings from the javascript config.
 
 **Subclasses of `pf-widget`:**
 
@@ -12,6 +12,8 @@ The outer most `<div>` of all Pathfora modules have the `pf-widget` class. For m
 | `pf-widget-[layout]`          | select modules by layout                                                                              |
 | `pf-position-[position]`      | select modules by position                                                                            |
 | `pf-widget-variant-[variant]` | select modules by variant (legacy)                                                                    |
+| `pf-widget-has-image`         | select modules that have an image                                                                     |
+| `pf-widget-has-recommend      | select modules that have a recommendation                                                             |
 | `opened`                      | added once the module becomes visiable to the user, can be used for changing the transition animation |
 
 Within the `pf-widget` div most key elements are assigned class names. Form components are nested in a `<form>` element and should be selected and styled by element type.

@@ -245,9 +245,11 @@
   display: block;
 }
 /* Variant Styles */
+.pf-widget-has-image .pf-widget-img,
 .pf-widget-variant-2 .pf-widget-img {
   display: block;
 }
+.pf-widget-has-recommend .pf-content-unit,
 .pf-widget-variant-3 .pf-content-unit {
   display: block;
   text-align: left;
@@ -255,69 +257,85 @@
   position: relative;
   background-color: white;
 }
+.pf-widget-has-recommend .pf-content-unit .pf-content-unit-meta,
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta {
   padding: 10px 15px;
 }
+.pf-widget-has-recommend .pf-content-unit .pf-content-unit-meta span.pf-content-unit-info,
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta span.pf-content-unit-info {
   font-size: 12px;
   display: block;
   margin-bottom: 5px;
   color: #444;
 }
+.pf-widget-has-recommend .pf-content-unit .pf-content-unit-meta h4,
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta h4 {
   font-weight: 500;
   margin: 0 0 5px;
   line-height: 1.4;
   color: #444;
 }
+.pf-widget-has-recommend .pf-content-unit .pf-content-unit-meta p,
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-meta p {
   line-height: 1.3;
   color: #888;
 }
+.pf-widget-has-recommend .pf-content-unit .pf-content-unit-img,
 .pf-widget-variant-3 .pf-content-unit .pf-content-unit-img {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack),
 .pf-widget-variant-3 .pf-content-unit:not(.stack) {
   width: 95%;
   margin: 0 auto 30px;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-img,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-img {
   position: absolute;
   display: block;
   height: 100%;
   width: 40%;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-img + .pf-content-unit-meta,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-img + .pf-content-unit-meta {
   width: 60%;
   min-height: 135px;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-meta,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-meta {
   padding: 15px 15px;
   display: block;
   margin: 0 0 0 auto;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-meta span.pf-content-unit-info,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-meta span.pf-content-unit-info {
   font-size: 13px;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-meta h4,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-meta h4 {
   font-size: 18px;
 }
+.pf-widget-has-recommend .pf-content-unit:not(.stack) .pf-content-unit-meta p,
 .pf-widget-variant-3 .pf-content-unit:not(.stack) .pf-content-unit-meta p {
   font-size: 14px;
 }
+.pf-widget-has-recommend .pf-content-unit.stack,
 .pf-widget-variant-3 .pf-content-unit.stack {
   width: 100%;
   display: block;
   text-align: left;
 }
+.pf-widget-has-recommend .pf-content-unit.stack .pf-content-unit-meta h4,
 .pf-widget-variant-3 .pf-content-unit.stack .pf-content-unit-meta h4 {
   font-size: 14px;
 }
+.pf-widget-has-recommend .pf-content-unit.stack .pf-content-unit-meta p,
 .pf-widget-variant-3 .pf-content-unit.stack .pf-content-unit-meta p {
   font-size: 13px;
 }
+.pf-widget-has-recommend .pf-content-unit.stack .pf-content-unit-img,
 .pf-widget-variant-3 .pf-content-unit.stack .pf-content-unit-img {
   width: 100%;
   height: 135px;
@@ -485,7 +503,8 @@
 .pf-sitegate.pf-widget-slideout select.pf-field-half-width {
   width: 48%;
 }
-.pf-widget-modal {
+.pf-widget-modal,
+.pf-widget-gate {
   position: fixed;
   top: 0;
   right: 0;
@@ -498,25 +517,30 @@
   /* Variant Styles */
   /* Type Styles */
 }
-.pf-widget-modal .pf-va-middle {
+.pf-widget-modal .pf-va-middle,
+.pf-widget-gate .pf-va-middle {
   display: table-cell;
   vertical-align: middle;
 }
-.pf-widget-modal .pf-widget-btn {
+.pf-widget-modal .pf-widget-btn,
+.pf-widget-gate .pf-widget-btn {
   font-size: 16px;
   line-height: 45px;
 }
-.pf-widget-modal .pf-widget-footer {
+.pf-widget-modal .pf-widget-footer,
+.pf-widget-gate .pf-widget-footer {
   text-align: center;
 }
-.pf-widget-modal .pf-widget-container {
+.pf-widget-modal .pf-widget-container,
+.pf-widget-gate .pf-widget-container {
   display: table;
   width: 100%;
   height: 100%;
   position: relative;
   top: -100vh;
 }
-.pf-widget-modal .pf-widget-content {
+.pf-widget-modal .pf-widget-content,
+.pf-widget-gate .pf-widget-content {
   background-color: #f1f1f1;
   color: #888;
   width: 100%;
@@ -534,41 +558,61 @@
   transform: translate(-50%, -50%);
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-modal .pf-widget-content {
+  .pf-widget-modal .pf-widget-content,
+  .pf-widget-gate .pf-widget-content {
     padding: 40px 20px;
   }
 }
-.pf-widget-modal .pf-widget-headline {
+.pf-widget-modal .pf-widget-headline,
+.pf-widget-gate .pf-widget-headline {
   font-size: 28px;
 }
-.pf-widget-modal .pf-widget-message {
+.pf-widget-modal .pf-widget-message,
+.pf-widget-gate .pf-widget-message {
   font-size: 18px;
   margin: 0 0 30px 0;
 }
-.pf-widget-modal .pf-widget-body {
+.pf-widget-modal .pf-widget-body,
+.pf-widget-gate .pf-widget-body {
   display: table;
   width: 100%;
 }
 .pf-widget-modal form input[type="text"],
+.pf-widget-gate form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-gate form input[type="email"],
 .pf-widget-modal form input[type="date"],
+.pf-widget-gate form input[type="date"],
 .pf-widget-modal form select,
-.pf-widget-modal form textarea {
+.pf-widget-gate form select,
+.pf-widget-modal form textarea,
+.pf-widget-gate form textarea {
   font-size: 16px;
 }
 .pf-widget-modal form input[type="text"],
+.pf-widget-gate form input[type="text"],
 .pf-widget-modal form input[type="email"],
+.pf-widget-gate form input[type="email"],
 .pf-widget-modal form input[type="date"],
-.pf-widget-modal form select {
+.pf-widget-gate form input[type="date"],
+.pf-widget-modal form select,
+.pf-widget-gate form select {
   height: 45px;
 }
-.pf-widget-modal.opened .pf-widget-container {
+.pf-widget-modal.opened .pf-widget-container,
+.pf-widget-gate.opened .pf-widget-container {
   top: 0;
 }
-.pf-widget-modal.pf-widget-variant-2 .pf-widget-headline {
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-headline,
+.pf-widget-gate.pf-widget-variant-2 .pf-widget-headline,
+.pf-widget-modal.pf-widget-has-image .pf-widget-headline,
+.pf-widget-gate.pf-widget-has-image .pf-widget-headline {
   margin-top: 140px;
 }
-.pf-widget-modal.pf-widget-variant-2 .pf-widget-img {
+.pf-widget-modal.pf-widget-variant-2 .pf-widget-img,
+.pf-widget-gate.pf-widget-variant-2 .pf-widget-img,
+.pf-widget-modal.pf-widget-has-image .pf-widget-img,
+.pf-widget-gate.pf-widget-has-image .pf-widget-img {
   float: none;
   position: absolute;
   top: 20px;
@@ -577,10 +621,12 @@
   width: 140px;
   height: 140px;
 }
-.pf-widget-modal.pf-subscription .pf-widget-btn {
+.pf-widget-modal.pf-subscription .pf-widget-btn,
+.pf-widget-gate.pf-subscription .pf-widget-btn {
   margin-top: 2px;
 }
-.pf-widget-modal.pf-subscription.pf-widget-has-branding span {
+.pf-widget-modal.pf-subscription.pf-widget-has-branding span,
+.pf-widget-gate.pf-subscription.pf-widget-has-branding span {
   margin-bottom: 13px;
 }
 .pf-widget-slideout {
@@ -732,19 +778,26 @@
   right: -20px;
   width: 100px;
 }
+.pf-widget-slideout:not(.pf-widget-has-image) .pf-widget-content .pf-widget-headline,
+.pf-widget-slideout:not(.pf-widget-has-recommend) .pf-widget-content .pf-widget-headline,
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-headline {
   text-align: left;
 }
+.pf-widget-slideout:not(.pf-widget-has-image) .pf-widget-content .pf-widget-message,
+.pf-widget-slideout:not(.pf-widget-has-recommend) .pf-widget-content .pf-widget-message,
 .pf-widget-slideout.pf-widget-variant-1 .pf-widget-content .pf-widget-message {
   text-align: left;
 }
-.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content {
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content,
+.pf-widget-slideout.pf-widget-has-image .pf-widget-content {
   text-align: center;
 }
-.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content .pf-widget-headline {
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-content .pf-widget-headline,
+.pf-widget-slideout.pf-widget-has-image .pf-widget-content .pf-widget-headline {
   margin-top: 110px;
 }
-.pf-widget-slideout.pf-widget-variant-2 .pf-widget-img {
+.pf-widget-slideout.pf-widget-variant-2 .pf-widget-img,
+.pf-widget-slideout.pf-widget-has-image .pf-widget-img {
   width: 100px;
   height: 100px;
   float: none;
@@ -868,7 +921,8 @@
 .pf-widget-bar.opened.pf-position-top-fixed {
   top: 0;
 }
-.pf-widget-bar.pf-widget-variant-2 .pf-widget-img {
+.pf-widget-bar.pf-widget-variant-2 .pf-widget-img,
+.pf-widget-bar.pf-widget-has-image .pf-widget-img {
   height: 35px;
   width: 35px;
   top: 50%;
@@ -876,7 +930,8 @@
   position: absolute;
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-bar.pf-widget-variant-2 .pf-widget-img {
+  .pf-widget-bar.pf-widget-variant-2 .pf-widget-img,
+  .pf-widget-bar.pf-widget-has-image .pf-widget-img {
     display: none;
   }
 }
@@ -994,13 +1049,16 @@
 .pf-widget-inline .pf-widget-btn {
   transition: all 0s;
 }
-.pf-widget-inline.pf-widget-variant-2 .pf-widget-content {
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-content,
+.pf-widget-inline.pf-widget-has-image .pf-widget-content {
   text-align: center;
 }
-.pf-widget-inline.pf-widget-variant-2 .pf-widget-content .pf-widget-headline {
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-content .pf-widget-headline,
+.pf-widget-inline.pf-widget-has-image .pf-widget-content .pf-widget-headline {
   margin-top: 110px;
 }
-.pf-widget-inline.pf-widget-variant-2 .pf-widget-img {
+.pf-widget-inline.pf-widget-variant-2 .pf-widget-img,
+.pf-widget-inline.pf-widget-has-image .pf-widget-img {
   width: 100px;
   height: 100px;
   float: none;
@@ -1015,10 +1073,12 @@
 .pf-widget-inline.pf-subscription.pf-widget-has-branding span {
   margin-bottom: 35px;
 }
-.pf-widget-inline.pf-widget-variant-3 .pf-content-unit {
+.pf-widget-inline.pf-widget-variant-3 .pf-content-unit,
+.pf-widget-inline.pf-widget-has-recommend .pf-content-unit {
   max-width: 650px;
 }
-.pf-widget-inline.pf-widget-variant-3 .pf-content-unit.stack {
+.pf-widget-inline.pf-widget-variant-3 .pf-content-unit.stack,
+.pf-widget-inline.pf-widget-has-recommend .pf-content-unit.stack {
   margin: 0 auto;
   max-width: 400px;
 }
