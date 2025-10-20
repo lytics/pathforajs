@@ -11,12 +11,30 @@ var module = new pathfora.Message({
 pathfora.initializeWidgets([module]);
 ```
 
-## Gate
-
 Gate modules will remain hidden once the user has submitted their information once. A cookie `PathforaUnlocked_[id of module]` is created to save this status so that the user has access to the gated content as long as their cookies persist.
 
-<h3>SiteGate - <a href="../../examples/preview/layouts/gate/gate.html" target="_blank">Live Preview</a></h3>
+## image
 
-![Gate Module](../examples/img/layouts/gate/gate.png)
+Define the featured image you would like to use for the module.
 
-<pre data-src="../../examples/src/layouts/gate/gate.js"></pre>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Type</th>
+      <th>Behavior</th>
+    </tr>
+  </thead>
+  
+  <tr>
+    <td>image</td>
+    <td>string</td>
+    <td>URL of the image to feature</td>
+  </tr>
+</table>
+
+<h3>Image - <a href="../../examples/preview/layouts/gate/image.html" target="_blank">Live Preview</a></h3>
+
+![Image Gate Module](../examples/img/layouts/gate/image.png)
+
+<pre data-src="../../examples/src/layouts/gate/image.js"></pre>

@@ -3,6 +3,7 @@ var module = new pathfora.Form({
   layout: 'gate',
   headline: 'Enter Your Info',
   msg: 'Please enter your information to proceed',
+  image: '../../../../assets/lion.jpg',
 });
 
 pathfora.initializeWidgets([module]);
