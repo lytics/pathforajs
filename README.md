@@ -111,6 +111,8 @@ Useful scripts:
 - **`yarn run prod`** - run tests, clean and rebuild the `/dist` folder. This is built on top of the `gulp build`
   command. Important to know that this sets the `NODE_ENV` to `production`, removing instabul instrumentation for code coverage. Currently, this is the default command used for our Travis CI.
 
+- **`yarn run local`** - run the gulp server to test things locally.
+
 ### Documentation
 
 Documentation for the most recent release is available [here](http://lytics.github.io/pathforadocs/).
