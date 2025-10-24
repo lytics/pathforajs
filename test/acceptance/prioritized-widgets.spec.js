@@ -153,7 +153,6 @@ describe('Prioritized widgets', function () {
       var modal = new pathfora.Message({
         id: 'recommendation-modal',
         msg: 'A',
-        variant: 3,
         layout: 'modal',
         recommend: {
           collection: 'bb5ecbeadb9e572d66cd83d62d3dcd09',

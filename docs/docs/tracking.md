@@ -42,7 +42,7 @@ As long as your [Lytics JavaScript tag](https://docs.lytics.com/docs/lytics-java
 | `pf-widget-id`      | string | id of the module set in the config                                                                                                                     |
 | `pf-widget-type`    | string | type of the module                                                                                                                                     |
 | `pf-widget-layout`  | string | layout of the module                                                                                                                                   |
-| `pf-widget-variant` | int    | variant of the module                                                                                                                                  |
+| `pf-widget-variant` | int    | variant of the module (legacy)                                                                                                                         |
 | `pf-widget-event`   | string | name of the event (see below)                                                                                                                          |
 | `pf-widget-action`  | string | custom tracking names for button click events as defined in [confirmAction](../callbacks/#confirmaction) or [cancelAction](../callbacks/#cancelaction) |
 | `pf-form-username`  | string | user submitted value of "name" field on module                                                                                                         |
@@ -89,7 +89,7 @@ As long as your [Lytics JavaScript tag](https://docs.lytics.com/docs/lytics-java
   </tr>
   <tr>
     <td>unlock</td>
-    <td>user submitted information from a <a href="../types/gate">gate module</a></td>
+    <td>user submitted information from a <a href="../layout/gate">gate module</a></td>
   </tr>
   <tr>
     <td>hover</td>

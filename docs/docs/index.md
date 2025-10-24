@@ -21,11 +21,11 @@ Here are a couple sections to get you started on the basics of Pathfora JS. See 
 
 - **[Types](types/message)**
 
-  > The type parameter relays information to the layout (see below) related to the type of content being rendered. Pathfora currently supports four types of modules: message, form, subscription and gate.
+  > The type parameter relays information to the layout (see below) related to the type of content being rendered. Pathfora currently supports four types of modules: message, form, and subscription.
 
 - **[Layouts](layouts/modal)**
 
-  > The layout controls the style (what does the module look like & how does it animate into view). Pathfora currently supports four different layouts for each of the types: modal, slideout, bar, and button.
+  > The layout controls the style (what does the module look like & how does it animate into view). Pathfora currently supports four different layouts for each of the types: modal, slideout, bar, gate, and button.
 
 - **[Audience Targeting](targeting)**
 

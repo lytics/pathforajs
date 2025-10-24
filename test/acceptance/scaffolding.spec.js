@@ -24,14 +24,13 @@ describe('when building a scaffolding component', function () {
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       okShow: true,
       cancelShow: true,
       theme: 'dark',
       titleField: false,
       nameField: false,
       emailField: false,
-      msgField: false
+      msgField: false,
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester, scaffold);
 
@@ -52,9 +51,8 @@ describe('when building a scaffolding component', function () {
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       okShow: true,
-      theme: 'dark'
+      theme: 'dark',
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester1, scaffold);
 
@@ -64,11 +62,10 @@ describe('when building a scaffolding component', function () {
       msg: 'Sample insert message two.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       theme: 'dark',
       titleField: true,
       nameField: true,
-      emailField: true
+      emailField: true,
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester2, scaffold);
 
@@ -94,9 +91,8 @@ describe('when building a scaffolding component', function () {
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: 1,
       okShow: true,
-      theme: 'dark'
+      theme: 'dark',
     });
 
     pathfora.utils.insertWidget('exclude', 'smt_new', tester1, scaffold);
@@ -107,11 +103,10 @@ describe('when building a scaffolding component', function () {
       msg: 'Sample insert message two.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: 1,
       theme: 'dark',
       titleField: true,
       nameField: true,
-      emailField: true
+      emailField: true,
     });
 
     pathfora.utils.insertWidget('exclude', 'smt_new', tester2, scaffold);

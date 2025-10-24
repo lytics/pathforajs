@@ -28,7 +28,6 @@ describe('the content recommendation component', function () {
     var sampleModal = new pathfora.Message({
       id: 'recommendation-modal-sample1',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -73,7 +72,6 @@ describe('the content recommendation component', function () {
     var sampleModal = new pathfora.Message({
       id: 'recommendation-modal-sample2',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -116,7 +114,6 @@ describe('the content recommendation component', function () {
     var sampleModal = new pathfora.Message({
       id: 'recommendation-modal-sample3',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -154,7 +151,6 @@ describe('the content recommendation component', function () {
     var modal = new pathfora.Message({
       id: 'recommendation-modal',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -166,7 +162,6 @@ describe('the content recommendation component', function () {
     var defaultModal = new pathfora.Message({
       id: 'recommendation-modal2',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       content: [
         {
@@ -263,7 +258,6 @@ describe('the content recommendation component', function () {
     var errorModal = new pathfora.Message({
       id: 'recommendation-modal4',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -275,7 +269,6 @@ describe('the content recommendation component', function () {
     var errorModal2 = new pathfora.Message({
       id: 'recommendation-modal5',
       msg: 'A',
-      variant: 3,
       layout: 'button',
       recommend: {
         ql: {
@@ -287,7 +280,6 @@ describe('the content recommendation component', function () {
     var errorModal3 = new pathfora.Message({
       id: 'recommendation-modal6',
       msg: 'A',
-      variant: 3,
       layout: 'slideout',
       recommend: {
         ql: {
@@ -358,7 +350,6 @@ describe('the content recommendation component', function () {
     var astModal = new pathfora.Message({
       id: 'ast-modal',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ast: {
@@ -403,7 +394,6 @@ describe('the content recommendation component', function () {
     var relativeModal = new pathfora.Message({
       id: 'relative-modal',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -447,7 +437,6 @@ describe('the content recommendation component', function () {
     var displayModal = new pathfora.Message({
       id: 'recDisplayModal',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -490,7 +479,6 @@ describe('the content recommendation component', function () {
     var displayModal2 = new pathfora.Message({
       id: 'recDisplayModal2',
       msg: 'A',
-      variant: 3,
       layout: 'modal',
       recommend: {
         ql: {
@@ -539,7 +527,6 @@ describe('the content recommendation component', function () {
     var modal = new pathfora.Message({
       id: 'modal1',
       layout: 'modal',
-      variant: '3',
       msg: 'test',
       theme: 'custom',
       colors: {
@@ -591,7 +578,6 @@ describe('the content recommendation component', function () {
     var modal = new pathfora.Message({
       id: 'modal1',
       layout: 'modal',
-      variant: '3',
       msg: 'test',
       theme: 'custom',
       colors: {

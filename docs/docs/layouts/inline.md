@@ -28,40 +28,9 @@ Define the DOM selector of the parent element you would like to insert the modul
 
 <pre data-src="../../examples/src/layouts/inline/positionSelector.js"></pre>
 
-## variant
-
-Variant determines any extra content that may be used by the module.
-
-<table>
-  <thead>
-    <tr>
-      <td colspan="2" align="center"><code>variant</code> int</td>
-    </tr>
-    <tr>
-      <th>Value</th>
-      <th>Behavior</th>
-    </tr>
-  </thead>
-  
-  <tr>
-    <td>1</td>
-    <td><code>default</code> text-only-module</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>module includes an image</td>
-  </tr>
-  <tr>
-    <td>3</td>
-     <td>module includes a <a href="../../content_recommend">content recommendation</a></td>
-  </tr>
-</table>
-
 ## image
 
 Define the featured image you would like to use for the module.
-
-**Note:** This setting is only valid for modules with a variant value of 2.
 
 <table>
   <thead>
@@ -79,7 +48,7 @@ Define the featured image you would like to use for the module.
   </tr>
 </table>
 
-<h3>Image (variant 2) - <a href="../../examples/preview/layouts/inline/image.html" target="_blank">Live Preview</a></h3>
+<h3>Image - <a href="../../examples/preview/layouts/inline/image.html" target="_blank">Live Preview</a></h3>
 
 ![Image Inline Module](../examples/img/layouts/inline/image.png)
 

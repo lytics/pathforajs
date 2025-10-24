@@ -56,11 +56,12 @@
     "test:watch": "gulp build && karma start --watch",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
-    "prod": "yarn run test && yarn run clean && yarn run build:prod",
+    "prod": "NODE_ENV=production yarn run test && yarn run clean && yarn run build:prod",
     "lint": "eslint src/**/*.js test/**/*.js",
     "lint:fix": "yarn run lint -- --fix",
     "docs": "jsdoc src/pathfora.js -d docs",
-    "docs:publish": "yarn run docs && gh-pages -d docs"
+    "docs:publish": "yarn run docs && gh-pages -d docs",
+    "local": "NODE_ENV=development gulp"
   },
   "volta": {
     "node": "11.15.0",

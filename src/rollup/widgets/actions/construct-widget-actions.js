@@ -232,21 +232,19 @@ export default function constructWidgetActions(widget, config) {
       }
       break;
     case 'modal':
-      if (config.type !== 'sitegate') {
-        config.listeners.escape = {
-          type: 'keydown',
-          target: document,
-          fn: function (event) {
-            event = event || window.event;
-            if (event.keyCode === 27) {
-              trackWidgetAction('close', config);
-              updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
-              closeWidget(widget.id, true);
-              widgetOnModalClose(widget, config, event);
-            }
-          },
-        };
-      }
+      config.listeners.escape = {
+        type: 'keydown',
+        target: document,
+        fn: function (event) {
+          event = event || window.event;
+          if (event.keyCode === 27) {
+            trackWidgetAction('close', config);
+            updateActionCookie(PREFIX_CLOSE + widget.id, config.expiration);
+            closeWidget(widget.id, true);
+            widgetOnModalClose(widget, config, event);
+          }
+        },
+      };
       break;
     default:
       break;
@@ -274,13 +272,10 @@ export default function constructWidgetActions(widget, config) {
       if (typeof widgetFormValidate === 'function') {
         switch (config.type) {
           case 'form':
-            widgetAction = 'submit';
+            widgetAction = config.layout === 'gate' ? 'unlock' : 'submit';
             break;
           case 'subscription':
             widgetAction = 'subscribe';
-            break;
-          case 'sitegate':
-            widgetAction = 'unlock';
             break;
         }
 

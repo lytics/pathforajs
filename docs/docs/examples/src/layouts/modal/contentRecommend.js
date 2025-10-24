@@ -3,7 +3,6 @@ var module = new pathfora.Message({
   layout: 'modal',
   headline: 'Check This Out!',
   msg: 'Based on your interests we think you will like this content.',
-  variant: 3,
   recommend: {
     visited: false,
     collection: 'fd98201f51523a59fd28d422a667281b',

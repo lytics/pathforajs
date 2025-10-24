@@ -154,8 +154,10 @@ describe('Widgets', function () {
     // Test with non-array input
     spyOn(console, 'warn');
     pathfora.clearById('not-an-array');
-    
-    expect(console.warn).toHaveBeenCalledWith('clearById: widgetIds must be an array');
+
+    expect(console.warn).toHaveBeenCalledWith(
+      'clearById: widgetIds must be an array'
+    );
 
     // Widget should still be opened
     setTimeout(function () {
@@ -302,7 +304,6 @@ describe('Widgets', function () {
 
     var gate = new pathfora.SiteGate({
       id: 'modal-esc-test2',
-      layout: 'modal',
       headline: 'Message Title',
       msg: 'test',
     });
@@ -486,7 +487,6 @@ describe('Widgets', function () {
       id: 'modal',
       msg: 'testmodal',
       layout: 'modal',
-      variant: 2,
       image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
     });
     var div = document.createElement('div');
@@ -497,7 +497,6 @@ describe('Widgets', function () {
       layout: 'inline',
       position: '.some-dom-element',
       msg: 'testing',
-      variant: 2,
       image: 'https://lytics.github.io/pathforadocs/assets/lion.jpg',
     });
     pathfora.initializeWidgets([modal, inline]);
@@ -1196,7 +1195,6 @@ describe('Widgets', function () {
         'pf-widget-id': formStatesWidget.id,
         'pf-widget-type': 'form',
         'pf-widget-layout': 'slideout',
-        'pf-widget-variant': '1',
         'pf-widget-event': 'success.confirm',
         'pf-widget-action':
           formStatesWidget.formStates.success.confirmAction.name,
@@ -1256,7 +1254,6 @@ describe('Widgets', function () {
           'pf-widget-id': formStatesWidget.id,
           'pf-widget-type': 'form',
           'pf-widget-layout': 'slideout',
-          'pf-widget-variant': '1',
           'pf-widget-event': 'error.cancel',
           'pf-widget-action':
             formStatesWidget.formStates.error.cancelAction.name,
@@ -1409,7 +1406,6 @@ describe('Widgets', function () {
         'pf-widget-id': successForm3.id,
         'pf-widget-type': 'subscription',
         'pf-widget-layout': 'slideout',
-        'pf-widget-variant': '1',
         'pf-widget-event': 'success.confirm',
         'pf-widget-action': successForm3.success.confirmAction.name,
       })
@@ -1433,7 +1429,6 @@ describe('Widgets', function () {
           'pf-widget-id': successForm3.id,
           'pf-widget-type': 'subscription',
           'pf-widget-layout': 'slideout',
-          'pf-widget-variant': '1',
           'pf-widget-event': 'success.cancel',
           'pf-widget-action': successForm3.success.cancelAction.name,
         })
@@ -1557,7 +1552,6 @@ describe('Widgets', function () {
         'pf-widget-id': customForm.id,
         'pf-widget-type': 'form',
         'pf-widget-layout': 'slideout',
-        'pf-widget-variant': '1',
         'pf-widget-event': 'submit',
         'pf-custom-form': {
           terms_agreement: ['agree'],

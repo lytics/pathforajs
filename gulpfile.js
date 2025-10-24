@@ -23,19 +23,21 @@ let TESTAPIURL = '//c.lytics.io',
   TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
   EXAMPLESSRC = 'docs/docs/examples/src',
   EXAMPLESDEST = 'docs/docs/examples/preview',
-  APIURL,
-  CSSURL;
-
-// get overrides from .env file
-try {
-  env({
-    file: '.env.json',
-  });
-  APIURL = process.env.APIURL || 'https://c.lytics.io';
-  CSSURL = process.env.CSSURL || 'https://c.lytics.io/static/pathfora.min.css';
-} catch (error) {
-  APIURL = 'https://c.lytics.io';
+  APIURL = 'https://c.lytics.io',
   CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
+
+if (process.env.NODE_ENV !== 'production') {
+  try {
+    env({
+      file: '.env.json',
+    });
+    APIURL = process.env.APIURL || 'https://c.lytics.io';
+    CSSURL =
+      process.env.CSSURL || 'https://c.lytics.io/static/pathfora.min.css';
+  } catch (error) {
+    APIURL = 'https://c.lytics.io';
+    CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
+  }
 }
 
 gulp.task('build:styles', function () {
@@ -141,9 +143,7 @@ gulp.task('build:js', ['build:rollup'], function () {
   gulp
     .src('dist/pathfora.js')
     .pipe(replace('`{{apiurl}}`', 'https://c.lytics.io'))
-    .pipe(
-      replace('`{{cssurl}}`', 'https://c.lytics.io/static/pathfora.min.css')
-    )
+    .pipe(replace('`{{cssurl}}`', CSSURL))
     .pipe(replace('`{{templates}}`', prepareTemplates()))
     .pipe(gulp.dest('dist'))
     .pipe(uglify().on('error', gutil.log))

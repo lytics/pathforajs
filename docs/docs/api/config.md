@@ -1,10 +1,10 @@
 For multiple modules with common elements we can define a configuration to apply to all modules, or all modules of a certain type. Maintaining a common config helps reduce the code repitition and allows you to change settings accross many widgets in one place. A config object can be passed as a second, optional argument to [initializeWidgets](../methods#initializewidgets).
 
-``` javascript
+```javascript
 var config = {
   generic: {
-    theme: 'dark'
-  }
+    theme: 'dark',
+  },
 };
 
 pathfora.initializeWidgets([module, module2], config);
@@ -40,11 +40,6 @@ pathfora.initializeWidgets([module, module2], config);
     <td>subscription</td>
     <td>object</td>
     <td><code>optional</code> setting which should apply to all <b>subscription</b> modules initialized with this config</td>
-  </tr>
-   <tr>
-    <td>sitegate</td>
-    <td>object</td>
-    <td><code>optional</code> setting which should apply to all <b>gate</b> modules initialized with this config</td>
   </tr>
  </table>
 

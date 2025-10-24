@@ -16,15 +16,15 @@ describe('the tracking component', function () {
           if (field === 'name') {
             return 'gtm1';
           }
-        }
+        },
       },
       {
         get: function (field) {
           if (field === 'name') {
             return 'gtm2';
           }
-        }
-      }
+        },
+      },
     ];
 
     spyOn(window, 'ga');
@@ -45,14 +45,14 @@ describe('the tracking component', function () {
         name: 'Test confirm action',
         callback: function () {
           // cb here
-        }
-      }
+        },
+      },
     });
 
     var messageModal = new pathfora.Message({
       layout: 'modal',
       id: 'interest-widget2',
-      msg: 'Message modal - interest test'
+      msg: 'Message modal - interest test',
     });
     pathfora.initializeWidgets([messageBar, messageModal]);
 
@@ -88,13 +88,13 @@ describe('the tracking component', function () {
     jasmine.clock().uninstall();
   });
 
-  it("should report displaying widgets and it's variants", function () {
+  it('should report displaying widgets', function () {
     jasmine.Ajax.install();
 
     var messageBar = new pathfora.Message({
       layout: 'modal',
       msg: 'Message bar - reporting test',
-      id: 'modal-display-report'
+      id: 'modal-display-report',
     });
 
     spyOn(jstag, 'send');
@@ -106,8 +106,7 @@ describe('the tracking component', function () {
         'pf-widget-id': messageBar.id,
         'pf-widget-type': 'message',
         'pf-widget-layout': 'modal',
-        'pf-widget-variant': '1',
-        'pf-widget-event': 'show'
+        'pf-widget-event': 'show',
       })
     );
 
@@ -132,14 +131,14 @@ describe('the tracking component', function () {
     jasmine.Ajax.uninstall();
   });
 
-  it("should report closing widgets and it's variants", function () {
+  it('should report closing widgets', function () {
     jasmine.Ajax.install();
     jasmine.clock().install();
 
     var messageBar = new pathfora.Message({
       layout: 'modal',
       msg: 'Message bar - close reporting',
-      id: 'bar-close-report'
+      id: 'bar-close-report',
     });
 
     pathfora.initializeWidgets([messageBar]);
@@ -154,8 +153,7 @@ describe('the tracking component', function () {
         'pf-widget-id': messageBar.id,
         'pf-widget-type': 'message',
         'pf-widget-layout': 'modal',
-        'pf-widget-variant': '1',
-        'pf-widget-event': 'close'
+        'pf-widget-event': 'close',
       })
     );
 
@@ -192,8 +190,8 @@ describe('the tracking component', function () {
         name: 'action test',
         callback: function () {
           // cb here
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([messageBar]);
@@ -210,7 +208,7 @@ describe('the tracking component', function () {
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
-          'pf-widget-action': 'action test'
+          'pf-widget-action': 'action test',
         })
       );
       done();
@@ -230,8 +228,8 @@ describe('the tracking component', function () {
         name: 'cancel reporting test',
         callback: function () {
           // cb here
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([messageBar]);
@@ -251,7 +249,7 @@ describe('the tracking component', function () {
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'cancel reporting test',
-          'pf-widget-event': 'cancel'
+          'pf-widget-event': 'cancel',
         })
       );
       done();
@@ -264,7 +262,7 @@ describe('the tracking component', function () {
     var messageBar = new pathfora.Message({
       layout: 'modal',
       msg: 'Message modal - form submit reports',
-      id: 'ABCa'
+      id: 'ABCa',
     });
 
     pathfora.initializeWidgets([messageBar]);
@@ -277,8 +275,7 @@ describe('the tracking component', function () {
         'pf-widget-id': messageBar.id,
         'pf-widget-type': 'message',
         'pf-widget-layout': 'modal',
-        'pf-widget-variant': '1',
-        'pf-widget-event': 'close'
+        'pf-widget-event': 'close',
       })
     );
   });
@@ -292,8 +289,8 @@ describe('the tracking component', function () {
         name: 'action test',
         callback: function () {
           // cb here
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([messageBar]);
@@ -330,7 +327,7 @@ describe('the tracking component', function () {
     var messageModal = new pathfora.Message({
       layout: 'modal',
       id: 'tracking-widget3',
-      msg: 'Message modal - report test'
+      msg: 'Message modal - report test',
     });
 
     pathfora.initializeWidgets([messageModal]);
@@ -343,42 +340,33 @@ describe('the tracking component', function () {
       spyOn(jstag, 'send');
       expect(jstag.send).not.toHaveBeenCalled();
 
-      widget
-        .find('.pf-widget-ok')
-        .mouseenter()
-        .mouseleave();
+      widget.find('.pf-widget-ok').mouseenter().mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'confirm',
-          'pf-widget-event': 'hover'
+          'pf-widget-event': 'hover',
         })
       );
 
-      widget
-        .find('.pf-widget-cancel')
-        .mouseenter()
-        .mouseleave();
+      widget.find('.pf-widget-cancel').mouseenter().mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'cancel',
-          'pf-widget-event': 'hover'
+          'pf-widget-event': 'hover',
         })
       );
 
-      widget
-        .find('.pf-widget-close')
-        .mouseenter()
-        .mouseleave();
+      widget.find('.pf-widget-close').mouseenter().mouseleave();
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'close',
-          'pf-widget-event': 'hover'
+          'pf-widget-event': 'hover',
         })
       );
 
@@ -394,7 +382,7 @@ describe('the tracking component', function () {
     var formModal = new pathfora.Form({
       layout: 'modal',
       id: 'tracking-widget4',
-      msg: 'Form modal - report test'
+      msg: 'Form modal - report test',
     });
 
     pathfora.initializeWidgets([formModal]);
@@ -414,7 +402,7 @@ describe('the tracking component', function () {
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'username',
-          'pf-widget-event': 'focus'
+          'pf-widget-event': 'focus',
         })
       );
 
@@ -424,7 +412,7 @@ describe('the tracking component', function () {
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'email',
-          'pf-widget-event': 'focus'
+          'pf-widget-event': 'focus',
         })
       );
 
@@ -434,7 +422,7 @@ describe('the tracking component', function () {
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'message',
-          'pf-widget-event': 'focus'
+          'pf-widget-event': 'focus',
         })
       );
 
@@ -450,7 +438,7 @@ describe('the tracking component', function () {
     var formModal = new pathfora.Form({
       layout: 'modal',
       id: 'tracking-widget5',
-      msg: 'Form modal - report test'
+      msg: 'Form modal - report test',
     });
 
     pathfora.initializeWidgets([formModal]);
@@ -464,45 +452,36 @@ describe('the tracking component', function () {
       spyOn(jstag, 'send');
       expect(jstag.send).not.toHaveBeenCalled();
 
-      form
-        .find('[name="username"]')
-        .val('a')
-        .change();
+      form.find('[name="username"]').val('a').change();
 
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'username',
-          'pf-widget-event': 'form_start'
+          'pf-widget-event': 'form_start',
         })
       );
 
-      form
-        .find('[name="email"]')
-        .val('a')
-        .change();
+      form.find('[name="email"]').val('a').change();
 
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'email',
-          'pf-widget-event': 'form_start'
+          'pf-widget-event': 'form_start',
         })
       );
 
-      form
-        .find('[name="message"]')
-        .val('a')
-        .change();
+      form.find('[name="message"]').val('a').change();
 
       expect(jstag.send).toHaveBeenCalled();
 
       expect(jstag.send).toHaveBeenCalledWith(
         jasmine.objectContaining({
           'pf-widget-action': 'message',
-          'pf-widget-event': 'form_start'
+          'pf-widget-event': 'form_start',
         })
       );
 
@@ -517,7 +496,7 @@ describe('the tracking component', function () {
       layout: 'modal',
       id: 'tracking-widget-censored',
       msg: 'Form modal - report test',
-      censorTrackingKeys: [/pf-form-/]
+      censorTrackingKeys: [/pf-form-/],
     });
 
     pathfora.initializeWidgets([formModal]);
@@ -535,12 +514,12 @@ describe('the tracking component', function () {
       setTimeout(function () {
         expect(jstag.send).toHaveBeenCalledWith(
           jasmine.objectContaining({
-            'pf-widget-event': 'submit'
+            'pf-widget-event': 'submit',
           })
         );
         expect(jstag.send).not.toHaveBeenCalledWith(
           jasmine.objectContaining({
-            'pf-form-email': 'webmaster@example.com'
+            'pf-form-email': 'webmaster@example.com',
           })
         );
         done();

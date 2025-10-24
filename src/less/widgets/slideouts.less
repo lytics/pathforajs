@@ -139,6 +139,8 @@
   }
 
   /* Variant Styles */
+  &:not(.pf-widget-has-image),
+  &:not(.pf-widget-has-recommend),
   &.pf-widget-variant-1 {
     .pf-widget-content {
       .pf-widget-headline {
@@ -151,7 +153,7 @@
     }
   }
 
-  &.pf-widget-variant-2 {
+  &.pf-widget-variant-2, &.pf-widget-has-image {
     .pf-widget-content {
       text-align: center;
 

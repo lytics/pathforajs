@@ -10,8 +10,8 @@ describe('replaceEntityField', function () {
     beforeEach(function () {
       window.lio = {
         data: {
-          promoCode: '8675309'
-        }
+          promoCode: '8675309',
+        },
       };
     });
 
@@ -23,16 +23,15 @@ describe('replaceEntityField', function () {
           id: 'field-widget-1',
           headline: 'Free shipping on your next purchase',
           msg: 'Enter this promo code: {{promoCode}}',
-          layout: 'slideout'
+          layout: 'slideout',
         },
         id: 'field-widget-1',
         headline: 'Free shipping on your next purchase',
         msg: 'Enter this promo code: {{promoCode}}',
         layout: 'slideout',
-        variant: '1',
         displayConditions: {
-          showOnMissingFields: false
-        }
+          showOnMissingFields: false,
+        },
       };
 
       var result = replaceEntityField(widget, 'msg', ['{{promoCode}}'], {});
@@ -49,11 +48,11 @@ describe('replaceEntityField', function () {
           return {
             data: {
               user: {
-                promoCode: '90210'
-              }
-            }
+                promoCode: '90210',
+              },
+            },
           };
-        }
+        },
       };
     });
 
@@ -65,16 +64,15 @@ describe('replaceEntityField', function () {
           id: 'field-widget-1',
           headline: 'Free shipping on your next purchase',
           msg: 'Enter this promo code: {{promoCode}}',
-          layout: 'slideout'
+          layout: 'slideout',
         },
         id: 'field-widget-1',
         headline: 'Free shipping on your next purchase',
         msg: 'Enter this promo code: {{promoCode}}',
         layout: 'slideout',
-        variant: '1',
         displayConditions: {
-          showOnMissingFields: false
-        }
+          showOnMissingFields: false,
+        },
       };
 
       var result = replaceEntityField(widget, 'msg', ['{{promoCode}}'], {});

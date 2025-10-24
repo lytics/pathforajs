@@ -10,31 +10,34 @@ import hasClass from '../../utils/class/has-class';
  * @params {object} widget
  * @params {object} colors
  */
-export default function setCustomColors (widget, colors) {
+export default function setCustomColors(widget, colors) {
   var i = 0,
-      close = widget.querySelector('.pf-widget-close'),
-      msg = widget.querySelectorAll('.pf-widget-message'),
-      headline = widget.querySelectorAll('.pf-widget-headline'),
-      headlineLeft = widget.querySelector(
-        '.pf-widget-caption-left .pf-widget-headline'
-      ),
-      cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
-      okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
-      arrow = widget.querySelector('.pf-widget-caption span'),
-      arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
-      contentUnit = widget.querySelector('.pf-content-unit'),
-      contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
-      fields = widget.querySelectorAll('input, textarea, select'),
-      branding = widget.querySelector('.branding svg'),
-      required = widget.querySelectorAll('.pf-required-flag'),
-      requiredAsterisk = widget.querySelectorAll('span.required'),
-      requiredInline = widget.querySelectorAll(
-        '[data-required=true]:not(.pf-has-label), [data-validate=true]:not(.pf-has-label)'
-      ),
-      body = widget.querySelector('.pf-widget-body');
+    close = widget.querySelector('.pf-widget-close'),
+    msg = widget.querySelectorAll('.pf-widget-message'),
+    headline = widget.querySelectorAll('.pf-widget-headline'),
+    headlineLeft = widget.querySelector(
+      '.pf-widget-caption-left .pf-widget-headline'
+    ),
+    cancelBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-cancel'),
+    okBtn = widget.querySelectorAll('.pf-widget-btn.pf-widget-ok'),
+    arrow = widget.querySelector('.pf-widget-caption span'),
+    arrowLeft = widget.querySelector('.pf-widget-caption-left span'),
+    contentUnit = widget.querySelector('.pf-content-unit'),
+    contentUnitMeta = widget.querySelector('.pf-content-unit-meta'),
+    fields = widget.querySelectorAll('input, textarea, select'),
+    branding = widget.querySelector('.branding svg'),
+    required = widget.querySelectorAll('.pf-required-flag'),
+    requiredAsterisk = widget.querySelectorAll('span.required'),
+    requiredInline = widget.querySelectorAll(
+      '[data-required=true]:not(.pf-has-label), [data-validate=true]:not(.pf-has-label)'
+    ),
+    body = widget.querySelector('.pf-widget-body');
 
   if (colors.background) {
-    if (hasClass(widget, 'pf-widget-modal')) {
+    if (
+      hasClass(widget, 'pf-widget-modal') ||
+      hasClass(widget, 'pf-widget-gate')
+    ) {
       widget
         .querySelector('.pf-widget-content')
         .style.setProperty('background-color', colors.background, 'important');
