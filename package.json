@@ -36,6 +36,7 @@
     "jsdoc": "^4.0.5",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
     "karma-intl-shim": "^1.0.3",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-ajax": "^0.1.12",
@@ -52,6 +53,7 @@
   "scripts": {
     "test": "gulp test && karma start --single-run",
     "test:watch": "gulp test && karma start --watch",
+    "test:coverage": "gulp test && karma start --single-run",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
     "prod": "NODE_ENV=production yarn run test && yarn run clean && yarn run build:prod",

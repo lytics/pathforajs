@@ -22,12 +22,24 @@ module.exports = function (config) {
     preprocessors: {
       'src/rollup/pathfora.js': ['rollup'],
       'test/**/*.spec.js': ['rollup'],
+      'dist/pathfora.js': ['coverage'],
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
+
+    // coverage reporter configuration
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/',
+      reporters: [
+        { type: 'html', subdir: 'html' },
+        { type: 'text-summary' },
+        { type: 'lcovonly', subdir: '.', file: 'lcov.info' },
+      ],
+    },
 
     // web server port
     port: 9876,

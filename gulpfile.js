@@ -23,7 +23,8 @@ let TESTAPIURL = 'https://c.lytics.io',
   EXAMPLESSRC = 'docs/docs/examples/src',
   EXAMPLESDEST = 'docs/docs/examples/preview',
   APIURL = 'https://c.lytics.io',
-  CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
+  CSSURL = 'https://c.lytics.io/static/pathfora.min.css',
+  LOCALCSSURL = './dist/pathfora.min.css';
 
 if (process.env.NODE_ENV !== 'production') {
   try {
@@ -156,7 +157,7 @@ gulp.task(
     return gulp
       .src('dist/pathfora.js')
       .pipe(replace('`{{apiurl}}`', APIURL))
-      .pipe(replace('`{{cssurl}}`', CSSURL))
+      .pipe(replace('`{{cssurl}}`', LOCALCSSURL))
       .pipe(replace('`{{templates}}`', prepareTemplates()))
       .pipe(gulp.dest('dist'))
       .pipe(terser().on('error', gutil.log))
