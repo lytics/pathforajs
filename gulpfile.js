@@ -3,7 +3,7 @@
 const gulp = require('gulp'),
   less = require('gulp-less'),
   path = require('path'),
-  uglify = require('gulp-uglify'),
+  terser = require('gulp-terser'),
   cssmin = require('gulp-cssmin'),
   rename = require('gulp-rename'),
   replace = require('gulp-replace'),
@@ -16,11 +16,10 @@ const gulp = require('gulp'),
   shell = require('gulp-shell'),
   rollup = require('rollup'),
   eslint = require('gulp-eslint'),
-  gutil = require('gulp-util'),
-  istanbul = require('rollup-plugin-istanbul');
+  gutil = require('gulp-util');
 
-let TESTAPIURL = '//c.lytics.io',
-  TESTCSSURL = '//c.lytics.io/static/pathfora.min.css',
+let TESTAPIURL = 'https://c.lytics.io',
+  TESTCSSURL = 'https://c.lytics.io/static/pathfora.min.css',
   EXAMPLESSRC = 'docs/docs/examples/src',
   EXAMPLESDEST = 'docs/docs/examples/preview',
   APIURL = 'https://c.lytics.io',
@@ -41,7 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 gulp.task('build:styles', function () {
-  gulp
+  return gulp
     .src('src/less/*.less')
     .pipe(
       less({
@@ -113,16 +112,8 @@ const prepareTemplates = function () {
   return str.replace(/\"/g, "'");
 };
 
-//Plugins for rollup. Babel, istanbul, etc.
+//Plugins for rollup. Babel, etc.
 let rollupPlugins = [];
-
-if (process.env.NODE_ENV !== 'production') {
-  rollupPlugins.push(
-    istanbul({
-      exclude: ['test/*.spec.js', 'dist/*.js'],
-    })
-  );
-}
 
 gulp.task('build:rollup', async function () {
   const bundle = await rollup.rollup({
@@ -139,71 +130,77 @@ gulp.task('build:rollup', async function () {
 
 // Ensure build:rollup finishes before running build:js
 // by adding it as a dependent job
-gulp.task('build:js', ['build:rollup'], function () {
-  gulp
-    .src('dist/pathfora.js')
-    .pipe(replace('`{{apiurl}}`', 'https://c.lytics.io'))
-    .pipe(replace('`{{cssurl}}`', CSSURL))
-    .pipe(replace('`{{templates}}`', prepareTemplates()))
-    .pipe(gulp.dest('dist'))
-    .pipe(uglify().on('error', gutil.log))
-    .pipe(
-      rename({
-        suffix: '.min',
-      })
-    )
-    .pipe(gulp.dest('dist'))
-    .pipe(connect.reload());
-});
+gulp.task(
+  'build:js',
+  gulp.series('build:rollup', function () {
+    return gulp
+      .src('dist/pathfora.js')
+      .pipe(replace('`{{apiurl}}`', 'https://c.lytics.io'))
+      .pipe(replace('`{{cssurl}}`', CSSURL))
+      .pipe(replace('`{{templates}}`', prepareTemplates()))
+      .pipe(gulp.dest('dist'))
+      .pipe(terser().on('error', gutil.log))
+      .pipe(
+        rename({
+          suffix: '.min',
+        })
+      )
+      .pipe(gulp.dest('dist'))
+      .pipe(connect.reload());
+  })
+);
 
-gulp.task('local:js', ['build:rollup'], function () {
-  gulp
-    .src('dist/pathfora.js')
-    .pipe(replace('`{{apiurl}}`', APIURL))
-    .pipe(replace('`{{cssurl}}`', CSSURL))
-    .pipe(replace('`{{templates}}`', prepareTemplates()))
-    .pipe(gulp.dest('dist'))
-    .pipe(uglify().on('error', gutil.log))
-    .pipe(
-      rename({
-        suffix: '.min',
-      })
-    )
-    .pipe(gulp.dest('dist'))
-    .pipe(connect.reload());
-});
+gulp.task(
+  'local:js',
+  gulp.series('build:rollup', function () {
+    return gulp
+      .src('dist/pathfora.js')
+      .pipe(replace('`{{apiurl}}`', APIURL))
+      .pipe(replace('`{{cssurl}}`', CSSURL))
+      .pipe(replace('`{{templates}}`', prepareTemplates()))
+      .pipe(gulp.dest('dist'))
+      .pipe(terser().on('error', gutil.log))
+      .pipe(
+        rename({
+          suffix: '.min',
+        })
+      )
+      .pipe(gulp.dest('dist'))
+      .pipe(connect.reload());
+  })
+);
 
-gulp.task('build:testjs', ['build:rollup'], function () {
-  gulp
-    .src('dist/pathfora.js')
-    .pipe(replace('`{{apiurl}}`', TESTAPIURL))
-    .pipe(replace('`{{cssurl}`}', TESTCSSURL))
-    .pipe(replace('`{{templates}}`', prepareTemplates()))
-    .pipe(gulp.dest('dist'))
-    .pipe(uglify().on('error', gutil.log))
-    .pipe(
-      rename({
-        suffix: '.min',
-      })
-    )
-    .pipe(gulp.dest('dist'))
-    .pipe(connect.reload());
-});
+gulp.task(
+  'build:testjs',
+  gulp.series('build:rollup', function () {
+    return gulp
+      .src('dist/pathfora.js')
+      .pipe(replace('`{{apiurl}}`', TESTAPIURL))
+      .pipe(replace('`{{cssurl}`}', TESTCSSURL))
+      .pipe(replace('`{{templates}}`', prepareTemplates()))
+      .pipe(gulp.dest('dist'))
+      .pipe(connect.reload());
+  })
+);
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*', ['build:styles', 'build:rollup', 'build:js']);
+  return gulp.watch(
+    'src/**/*',
+    gulp.series('build:styles', 'build:rollup', 'build:js')
+  );
 });
 
 gulp.task('local:watch', function () {
-  gulp.watch('src/**/*', ['build:local']);
+  return gulp.watch('src/**/*', gulp.series('build:local'));
 });
 
-gulp.task('preview', function () {
+gulp.task('preview', function (done) {
   connect.server({
     port: 8080,
     root: '.',
     livereload: true,
   });
+  done();
 });
 
 const compileExample = function (root, name) {
@@ -255,52 +252,75 @@ const compileExample = function (root, name) {
   }
 };
 
-gulp.task('docs:watch', ['build:rollup'], function () {
-  gulp.watch('docs/docs/examples/src/**/*', function (event) {
-    let p = path.relative(process.cwd(), event.path);
-    let root = p.substring(0, p.lastIndexOf('/') + 1);
-    let name = p.substring(p.lastIndexOf('/') + 1, p.length);
-    compileExample(root, name);
-  });
-});
-
-gulp.task('docs:hbs', ['build:rollup'], function () {
-  let options = {
-    listeners: {
-      file: function (root, stat) {
-        compileExample(root, stat.name);
-      },
-    },
-  };
-
-  walk.walkSync(EXAMPLESSRC, options);
-});
-
 gulp.task(
-  'docs:mkdocs',
-  ['build:rollup'],
-  shell.task(['mkdocs serve'], {
-    cwd: 'docs',
+  'docs:watch',
+  gulp.series('build:rollup', function () {
+    return gulp.watch('docs/docs/examples/src/**/*', function (done) {
+      compileExample('.', '.');
+      done();
+    });
   })
 );
 
-gulp.task('lint', ['build:js'], function () {
-  return gulp
-    .src([
-      'src/rollup/**/*.js',
-      'gulpfile.js',
-      'test/**/*.js',
-      'docs/docs/examples/**/*.js',
-    ])
-    .pipe(eslint({ fix: true }))
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-});
+gulp.task(
+  'docs:hbs',
+  gulp.series('build:rollup', function (done) {
+    let options = {
+      listeners: {
+        file: function (root, stat) {
+          compileExample(root, stat.name);
+        },
+      },
+    };
 
-gulp.task('test', ['build:styles', 'build:rollup', 'build:testjs']);
-gulp.task('build:local', ['build:styles', 'build:rollup', 'local:js']);
-gulp.task('build:docs', ['docs:hbs', 'docs:mkdocs']);
-gulp.task('build', ['build:styles', 'build:rollup', 'build:js', 'lint']);
-gulp.task('local', ['build:local', 'preview', 'local:watch']);
-gulp.task('docs', ['build:local', 'build:docs', 'preview', 'docs:watch']);
-gulp.task('default', ['build', 'preview', 'watch']);
+    walk.walkSync(EXAMPLESSRC, options);
+    done();
+  })
+);
+
+gulp.task(
+  'docs:mkdocs',
+  gulp.series(
+    'build:rollup',
+    shell.task(['mkdocs serve'], {
+      cwd: 'docs',
+    })
+  )
+);
+
+gulp.task(
+  'lint',
+  gulp.series('build:js', function () {
+    return gulp
+      .src([
+        'src/rollup/**/*.js',
+        'gulpfile.js',
+        'test/**/*.js',
+        'docs/docs/examples/**/*.js',
+      ])
+      .pipe(eslint({ fix: true }))
+      .pipe(eslint.format())
+      .pipe(eslint.failAfterError());
+  })
+);
+
+gulp.task('test', gulp.parallel('build:styles', 'build:testjs'));
+gulp.task('build:local', gulp.parallel('build:styles', 'local:js'));
+gulp.task('build:docs', gulp.parallel('docs:hbs', 'docs:mkdocs'));
+gulp.task(
+  'build',
+  gulp.series(gulp.parallel('build:styles', 'build:js'), 'lint')
+);
+gulp.task(
+  'local',
+  gulp.series('build:local', gulp.parallel('preview', 'local:watch'))
+);
+gulp.task(
+  'docs',
+  gulp.series(
+    'build:local',
+    'build:docs',
+    gulp.parallel('preview', 'docs:watch')
+  )
+);
+gulp.task('default', gulp.series('build', gulp.parallel('preview', 'watch')));
