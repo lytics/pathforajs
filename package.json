@@ -11,8 +11,10 @@
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
     "gh-pages": "^6.3.0",
+    "globals": "^16.5.0",
     "gulp": "^5.0.1",
     "gulp-browserify": "^0.5.1",
     "gulp-compile-handlebars": "^0.6.1",

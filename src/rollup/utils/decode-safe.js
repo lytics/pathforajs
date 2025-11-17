@@ -11,7 +11,7 @@
 export default function decodeSafe (s) {
   try {
     return decodeURIComponent(s);
-  } catch (e) {
+  } catch {
     return s;
   }
 }

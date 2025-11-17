@@ -405,7 +405,7 @@
   function decodeSafe (s) {
     try {
       return decodeURIComponent(s);
-    } catch (e) {
+    } catch {
       return s;
     }
   }
@@ -577,7 +577,7 @@
   function isNotEncoded (s) {
     try {
       return decodeURIComponent(s) === s && encodeURIComponent(s) !== s;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -3782,11 +3782,11 @@
         if (rule && typeof rule === 'function') {
           // currently we consider all fields to be dependent if a rule function is provided
           // since there isn't a way to know which fields are actually used in a custom function
-          dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ["*"];
+          dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ['*'];
         }
       }
 
-      widgetTracker.dependentDataWidgets =dataWidgets;
+      widgetTracker.dependentDataWidgets = dataWidgets;
     };
 
     // set dependent data for target widgets
@@ -3818,7 +3818,7 @@
         }
       }
     }
-    
+
 
     if (widgets.exclude) {
       for (j = 0; j < widgets.exclude.length; j++) {
@@ -3830,7 +3830,8 @@
     }
 
     setSegmentData(widgets.inverse[i], segments);
-  }}
+  }
+  }
   }
 
   /** @module pathfora/widgets/init-targeted-widgets */
@@ -5367,7 +5368,7 @@
     widgetsToRemove.forEach(function (item) {
       var widget = item.widget;
       var element = document$1.getElementById(widget.id);
-      
+
       if (element) {
         removeClass(element, 'opened');
         if (element.parentNode) {

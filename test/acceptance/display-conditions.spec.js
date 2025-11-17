@@ -7,7 +7,7 @@ function makeMouseEvent(type, params) {
   var evt;
   try {
     evt = new MouseEvent(type, params);
-  } catch (e) {
+  } catch {
     evt = document.createEvent('MouseEvents');
     params = params || {};
     evt.initMouseEvent(

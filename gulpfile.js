@@ -15,7 +15,6 @@ const gulp = require('gulp'),
   handlebars = require('gulp-compile-handlebars'),
   shell = require('gulp-shell'),
   rollup = require('rollup'),
-  eslint = require('gulp-eslint'),
   gutil = require('gulp-util');
 
 let TESTAPIURL = 'https://c.lytics.io',
@@ -34,7 +33,7 @@ if (process.env.NODE_ENV !== 'production') {
     APIURL = process.env.APIURL || 'https://c.lytics.io';
     CSSURL =
       process.env.CSSURL || 'https://c.lytics.io/static/pathfora.min.css';
-  } catch (error) {
+  } catch {
     APIURL = 'https://c.lytics.io';
     CSSURL = 'https://c.lytics.io/static/pathfora.min.css';
   }
@@ -234,14 +233,14 @@ const compileExample = function (root, name) {
     try {
       fs.statSync(css);
       contents.css = fs.readFileSync(css, 'utf8');
-    } catch (err) {
+    } catch {
       // do nothing
     }
 
     try {
       fs.statSync(html);
       contents.html = fs.readFileSync(html, 'utf8');
-    } catch (err) {
+    } catch {
       // do nothing
     }
 
@@ -291,18 +290,12 @@ gulp.task(
 
 gulp.task(
   'lint',
-  gulp.series('build:js', function () {
-    return gulp
-      .src([
-        'src/rollup/**/*.js',
-        'gulpfile.js',
-        'test/**/*.js',
-        'docs/docs/examples/**/*.js',
-      ])
-      .pipe(eslint({ fix: true }))
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError());
-  })
+  gulp.series(
+    'build:js',
+    shell.task([
+      'eslint --fix src/rollup/**/*.js gulpfile.js test/**/*.js docs/docs/examples/**/*.js',
+    ])
+  )
 );
 
 gulp.task('test', gulp.parallel('build:styles', 'build:testjs'));
