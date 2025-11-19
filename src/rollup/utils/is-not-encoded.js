@@ -10,7 +10,7 @@
 export default function isNotEncoded (s) {
   try {
     return decodeURIComponent(s) === s && encodeURIComponent(s) !== s;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

@@ -49,11 +49,11 @@ export default function setDependentData(widgets) {
       if (rule && typeof rule === 'function') {
         // currently we consider all fields to be dependent if a rule function is provided
         // since there isn't a way to know which fields are actually used in a custom function
-        dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ["*"];
+        dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ['*'];
       }
     }
 
-    widgetTracker.dependentDataWidgets =dataWidgets;
+    widgetTracker.dependentDataWidgets = dataWidgets;
   };
 
   // set dependent data for target widgets
@@ -85,7 +85,7 @@ export default function setDependentData(widgets) {
       }
     }
   }
-  
+
 
   if (widgets.exclude) {
     for (j = 0; j < widgets.exclude.length; j++) {
@@ -97,5 +97,6 @@ export default function setDependentData(widgets) {
   }
 
   setSegmentData(widgets.inverse[i], segments);
-}}
+}
+}
 }

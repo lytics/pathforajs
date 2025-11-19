@@ -37,7 +37,7 @@ export default function clearWidget (widgets) {
   widgetsToRemove.forEach(function (item) {
     var widget = item.widget;
     var element = document.getElementById(widget.id);
-    
+
     if (element) {
       removeClass(element, 'opened');
       if (element.parentNode) {
@@ -61,4 +61,4 @@ export default function clearWidget (widgets) {
     opened.splice(item.index, 1);
   });
 
-} 
+}

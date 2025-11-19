@@ -210,6 +210,7 @@
 
   /** @module pathfora/globals/config */
 
+
   var PF_VERSION = '1.2.20',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
@@ -249,9 +250,7 @@
     FORM_SUBMIT: 'formSubmitted',
     MODAL_OPEN: 'modalOpened',
     MODAL_CLOSE: 'modalClosed',
-    MODAL_CONFIRM: 'modalConfirm',
-    MODAL_CANCEL: 'modalCancel',
-  };
+    MODAL_CONFIRM: 'modalConfirm'};
 
   var widgetTracker = resetWidgetTracker({});
   var defaultProps = resetDefaultProps({});
@@ -298,11 +297,15 @@
 
   /** @module pathfora/dom/window */
 
+  var window$1 = window;
+
   /** @module pathfora/dom/document */
 
-  var document$1 = window.document;
+
+  var document$1 = window$1.document;
 
   /** @module pathfora/dom/on-dom-ready */
+
 
   function onDOMready (fn) {
     var handler,
@@ -338,6 +341,7 @@
 
   /** @module pathfora/utils/class/remove-class */
 
+
   /**
    * Remove a class from an HTML element
    *
@@ -356,6 +360,7 @@
 
   /** @module pathfora/utils/class/add-class */
 
+
   /**
    * Add a class to an HTML element
    *
@@ -373,6 +378,7 @@
   }
 
   /** @module pathfora/utils/class/has-class */
+
 
   /**
    * Check if an HTML element has a class
@@ -399,12 +405,13 @@
   function decodeSafe (s) {
     try {
       return decodeURIComponent(s);
-    } catch (e) {
+    } catch {
       return s;
     }
   }
 
   /** @module pathfora/utils/cookie/read-cookie */
+
 
   /**
    * Get the value of a cookie
@@ -433,6 +440,7 @@
 
   /** @module pathfora/utils/cookie/save-cookie */
 
+
   /**
    * Set the value of a cookie
    *
@@ -460,6 +468,7 @@
   }
 
   /** @module pathfora/utils/cookie/delete-cookie */
+
 
   /**
    * Delete a cookie
@@ -568,12 +577,13 @@
   function isNotEncoded (s) {
     try {
       return decodeURIComponent(s) === s && encodeURIComponent(s) !== s;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
 
   /** @module pathfora/utils/cookie/update-legacy-cookies */
+
 
   /**
    * Update legacy cookies to
@@ -946,6 +956,7 @@
 
   /** @module pathfora/utils */
 
+
   /**
    * Object containing utility functions
    *
@@ -991,6 +1002,7 @@
   };
 
   /** @module pathfora/data/tracking/get-data-object */
+
 
   /**
    * Get the pathfora data object
@@ -1083,6 +1095,7 @@
 
   /** @module pathfora/callbacks/add-callback */
 
+
   /**
    * Add a function to be called once jstag is loaded
    *
@@ -1090,19 +1103,19 @@
    * @params {function} cb
    */
   function addCallback(cb) {
-    if (window.lio && window.lio.loaded) {
+    if (window$1.lio && window$1.lio.loaded) {
       // legacy
-      cb(window.lio.data);
+      cb(window$1.lio.data);
       return;
-    } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
-      if ('entityReady' in window.jstag) {
-        window.jstag.entityReady(function (e) {
+    } else if (window$1.jstag && typeof window$1.jstag.getEntity === 'function') {
+      if ('entityReady' in window$1.jstag) {
+        window$1.jstag.entityReady(function (e) {
           if (e.data && e.data.user) {
             cb(e.data.user);
           }
         });
       } else {
-        var entity = window.jstag.getEntity();
+        var entity = window$1.jstag.getEntity();
         if (entity.data && entity.data.user) {
           cb(entity.data.user);
         }
@@ -1114,6 +1127,7 @@
   }
 
   /** @module pathfora/display-conditions/pageviews/init-pageviews */
+
 
   /**
    * Track and update the number of pageviews
@@ -1127,6 +1141,7 @@
   }
 
   /** @module pathfora/display-conditions/impressions/impressions-checker */
+
 
   /**
    * Check if the widget has met the impressions
@@ -1307,6 +1322,7 @@
 
   /** @module pathfora/data/request/report-data */
 
+
   /**
    * Send data object to Lytics and GA
    *
@@ -1318,21 +1334,21 @@
     var gaLabel, trackers;
 
     if (typeof jstag === 'object') {
-      window.jstag.send(
+      window$1.jstag.send(
         widget.censorTrackingKeys
           ? censorTrackingKeys(data, widget.censorTrackingKeys)
           : data
       );
     }
 
-    if (window.pathfora.enableGA === true && typeof window.ga === 'function' && typeof window.ga.getAll === 'function') {
+    if (window$1.pathfora.enableGA === true && typeof window$1.ga === 'function' && typeof window$1.ga.getAll === 'function') {
       gaLabel = data['pf-widget-action'] || data['pf-widget-event'];
-      trackers = window.ga.getAll();
+      trackers = window$1.ga.getAll();
 
       for (var i = 0; i < trackers.length; i++) {
         var name = trackers[i].get('name');
 
-        window.ga(
+        window$1.ga(
           name + '.send',
           'event',
           'Lytics',
@@ -1347,6 +1363,7 @@
   }
 
   /** @module pathfora/data/tracking/track-widget-action */
+
 
   /**
    * Format and track interaction events such as
@@ -1556,6 +1573,7 @@
 
   /** @module pathfora/display-conditions/impressions/increment-impressions */
 
+
   /**
    * Increment the impression count for a widget
    *
@@ -1651,6 +1669,7 @@
 
   /** @module pathfora/widgets/setup-widget-position */
 
+
   /**
    * Validate that the widget has correct position field,
    * and choose the default if it does not
@@ -1695,6 +1714,7 @@
   }
 
   /** @module pathfora/widgets/close-widget */
+
 
   /**
    * Close a widget and remove it from the dom
@@ -1751,6 +1771,7 @@
 
   /** @module pathfora/form/handle-form-states */
 
+
   /**
    * Handles showing the success or error state of a form.
    *
@@ -1781,6 +1802,7 @@
 
   /** @module pathfora/widgets/actions/widgetOnModalClose */
 
+
   /**
    * Execute the onModalClose callback
    * if set by the user
@@ -1802,6 +1824,7 @@
   }
 
   /** @module pathfora/widgets/actions/update-action-cookie */
+
 
   /**
    * Increase the value count of the actions
@@ -1828,6 +1851,7 @@
   }
 
   /** @module pathfora/widgets/actions/buton-action */
+
 
   /**
    * Execute any callbacks that were assigned
@@ -1912,6 +1936,7 @@
   }
 
   /** @module pathfora/widgets/actions/construct-widget-actions */
+
 
   /**
    * Add callbacks and tracking for user interactions
@@ -2271,6 +2296,7 @@
 
   /** @module pathfora/widgets/recommendation/setup-widget-content-unit */
 
+
   /**
    * Setup HTML for a widget with content recommendations
    *
@@ -2329,14 +2355,14 @@
               locale = settings.display.locale,
               dateOptions = settings.display.dateOptions;
 
-          if (!locale && window.pathfora && window.pathfora.locale) {
-            locale = window.pathfora.locale;
+          if (!locale && window$1.pathfora && window$1.pathfora.locale) {
+            locale = window$1.pathfora.locale;
           } else if (!locale) {
             locale = PF_LOCALE;
           }
 
-          if (!dateOptions && window.pathfora && window.pathfora.dateOptions) {
-            dateOptions = window.pathfora.dateOptions;
+          if (!dateOptions && window$1.pathfora && window$1.pathfora.dateOptions) {
+            dateOptions = window$1.pathfora.dateOptions;
           } else if (!dateOptions) {
             dateOptions = PF_DATE_OPTIONS;
           }
@@ -2421,6 +2447,7 @@
   }
 
   /** @module pathfora/form/build-form-element */
+
 
   /**
    * Build and insert a custom form element into
@@ -2625,6 +2652,7 @@
 
   /** @module pathfora/form/build-widget-form */
 
+
   /**
    * Build a custom form on a widget according to the
    * formElements config provided
@@ -2664,6 +2692,7 @@
   }
 
   /** @module pathfora/form/construct-form-state */
+
 
   /**
    * Setup html for success or error state of a form module
@@ -2729,6 +2758,7 @@
 
   /** @module pathfora/widgets/actions/form-state-actions */
 
+
   /**
    * Add callbacks and tracking for confirm and cancel
    * buttons on the success or error state of a form widget
@@ -2752,6 +2782,7 @@
   }
 
   /** @module pathfora/widgets/construct-widget-layout */
+
 
   /**
    * Setup inner html elements for a widget
@@ -3079,6 +3110,7 @@
 
   /** @module pathfora/widgets/colors/set-custom-colors */
 
+
   /**
    * Set colors for a widget with a custom theme
    * defined in the config
@@ -3272,6 +3304,7 @@
 
   /** @module pathfora/wodgets/colors/setup-widget-colors */
 
+
   /**
    * Determine if the widget has a custom or predefined
    * theme and setup the colors accordingly
@@ -3299,6 +3332,7 @@
   }
 
   /** @module pathfora/widgets/create-widget-html */
+
 
   /**
    * Call all the necessary functions to construct
@@ -3330,6 +3364,7 @@
 
   /** @module pathfora/widgets/widget-resize-listener */
 
+
   /**
    * Adjust widget look and feel on window resize bounds
    *
@@ -3351,6 +3386,7 @@
   }
 
   /** @module pathfora/widgets/show-widget */
+
 
   /**
    * Make the widget visible to the user
@@ -3468,7 +3504,7 @@
 
       widget.listeners.resize = {
         type: 'resize',
-        target: window,
+        target: window$1,
         fn: function () {
           widgetResizeListener(widget, node);
         },
@@ -3504,6 +3540,7 @@
 
   /** @module pathfora/display-conditions/watchers/validate-watchers */
 
+
   function validateWatchers (widget, cb, e) {
     var valid = true;
 
@@ -3531,6 +3568,7 @@
 
   /** @module pathfora/display-conditions/manual-trigger/trigger-widget */
 
+
   /**
    * Trigger a single "manualTrigger" widget to be shown
    *
@@ -3553,6 +3591,7 @@
   }
 
   /** @module pathfora/display-conditions/manual-trigger/trigger-widgets */
+
 
   /**
    * Public method to trigger a widget that has already been
@@ -3594,6 +3633,7 @@
 
   /** @module pathfora/data/segments/get-user-segments */
 
+
   /**
    * Get a list of Lytics segments for the user
    *
@@ -3601,12 +3641,12 @@
    * @returns {array} segments
    */
   function getUserSegments () {
-    if (window.lio && window.lio.data && window.lio.data.segments) {
+    if (window$1.lio && window$1.lio.data && window$1.lio.data.segments) {
       // legacy
-      return window.lio.data.segments;
-    } else if (window.jstag && typeof window.jstag.getSegments === 'function') {
+      return window$1.lio.data.segments;
+    } else if (window$1.jstag && typeof window$1.jstag.getSegments === 'function') {
       // > jstag 3.0.0
-      return window.jstag.getSegments();
+      return window$1.jstag.getSegments();
     } else {
       // fallback
       return ['all'];
@@ -3654,6 +3694,7 @@
 
   /** @module pathfora/validation/validate-account-id */
 
+
   /**
    * Validate and set the Lytics account Id
    *
@@ -3668,17 +3709,17 @@
     // of truth. we should be getting the cid that is passed to the config, which is an array, by default
     // we can assume the first cid in the array is the one to be used for personalization and such.
     if (typeof pf.acctid === 'undefined' || pf.acctid === '') {
-      if (window.lio && window.lio.account) {
+      if (window$1.lio && window$1.lio.account) {
         // tag is legacy
-        acctid = window.lio.account.id;
+        acctid = window$1.lio.account.id;
       } else if (
         // tag is current gen
-        window.jstag &&
-        window.jstag.config &&
-        window.jstag.config.cid &&
-        window.jstag.config.cid.length > 0
+        window$1.jstag &&
+        window$1.jstag.config &&
+        window$1.jstag.config.cid &&
+        window$1.jstag.config.cid.length > 0
       ) {
-        acctid = window.jstag.config.cid[0];
+        acctid = window$1.jstag.config.cid[0];
       } else {
         throw new Error('Could not get account id from Lytics Javascript tag.');
       }
@@ -3693,6 +3734,7 @@
   }
 
   /** @module pathfora/widgets/set-dependent-data */
+
 
 
   /**
@@ -3740,11 +3782,11 @@
         if (rule && typeof rule === 'function') {
           // currently we consider all fields to be dependent if a rule function is provided
           // since there isn't a way to know which fields are actually used in a custom function
-          dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ["*"];
+          dataWidgets[widget.id][DEPENDENT_DATA_ENTITY_FIELD] = ['*'];
         }
       }
 
-      widgetTracker.dependentDataWidgets =dataWidgets;
+      widgetTracker.dependentDataWidgets = dataWidgets;
     };
 
     // set dependent data for target widgets
@@ -3776,7 +3818,7 @@
         }
       }
     }
-    
+
 
     if (widgets.exclude) {
       for (j = 0; j < widgets.exclude.length; j++) {
@@ -3788,10 +3830,12 @@
     }
 
     setSegmentData(widgets.inverse[i], segments);
-  }}
+  }
+  }
   }
 
   /** @module pathfora/widgets/init-targeted-widgets */
+
 
   /**
    * Initialize widgets which are targeted by segments.
@@ -3875,6 +3919,7 @@
 
   /** @module pathfora/data/tracking/track-time-on-page */
 
+
   /**
    * Record the amount of time the user has spent
    * on the current page
@@ -3888,6 +3933,7 @@
   }
 
   /** @module pathfora/validation/validate-options */
+
 
   /**
    * Validate and set the Lytics account Id
@@ -3912,6 +3958,7 @@
   }
 
   /** @module pathfora/widgets/init-widgets */
+
 
   /**
    * Public method used to initialize widgets once
@@ -3968,6 +4015,7 @@
 
   /** @module pathfora/widgets/has/has-entity-templates */
 
+
   /**
    * Check if the widget has entity field templates
    *
@@ -3996,6 +4044,7 @@
   }
 
   /** @module pathfora/widgets/preload-lio */
+
 
   /**
    * Check if the widget needs lio to be loaded, if so
@@ -4043,6 +4092,7 @@
   }
 
   /** @module pathfora/recommendations/recommend-content */
+
 
 
   /**
@@ -4206,6 +4256,7 @@
 
   /** @module pathfora/widgets/recommendation/set-widget-recommendation */
 
+
   /**
    * Make the call to get the recommendations then
    * handle assigning it to the widget.
@@ -4281,6 +4332,7 @@
 
   /** @module pathfora/widgets/recommendation/preload-recommendation */
 
+
   /**
    * Check if the widget needs recommendations to be loaded, if so
    * wait for the callback, otherwise continue execution.
@@ -4300,6 +4352,7 @@
   }
 
   /** @module pathfora/widgets/initialize-widget-array */
+
 
   /**
    * Given an array of widgets, begin off the initialization
@@ -4368,6 +4421,7 @@
 
   /** @module pathfora/display-conditions/replace-entity-field */
 
+
   /**
    * Fill in the data for a entity field template in
    * a widgets text field
@@ -4427,12 +4481,12 @@
       // data. however, in current gen tag > 3.0 we have a getEntity() method that should be used as the source
       // of truth, the returned data model is slightly different in that it supports the full personalization
       // api vs the legacy entity api that only returns segment and user field info.
-      if (window.lio && window.lio.data) {
-        dataval = window.lio.data;
+      if (window$1.lio && window$1.lio.data) {
+        dataval = window$1.lio.data;
         // tag is legacy
-      } else if (window.jstag && typeof window.jstag.getEntity === 'function') {
+      } else if (window$1.jstag && typeof window$1.jstag.getEntity === 'function') {
         // tag is current gen
-        var entity = window.jstag.getEntity();
+        var entity = window$1.jstag.getEntity();
         if (entity && entity.data && entity.data.user) {
           dataval = entity.data.user;
         }
@@ -4491,6 +4545,7 @@
   }
 
   /** @module pathfora/display-conditions/entity-fields/entity-field-checker */
+
 
   /**
    * Evaluate all fields on the list provided and check
@@ -4574,6 +4629,7 @@
 
   /** @module pathfora/display-conditions/pageviews/page-visits-checker */
 
+
   /**
    * Check if the pagevisit count meets the requirements
    *
@@ -4585,6 +4641,7 @@
   }
 
   /** @module pathfora/display-conditions/hide-after-action-checker */
+
 
   /**
    * Check if a widget should be hidden because it meets
@@ -4643,6 +4700,7 @@
   }
 
   /** @module pathfora/display-conditions/url-contains/parse-query */
+
 
   /**
    * Convert key/value queries from a URL into an object
@@ -4703,6 +4761,7 @@
   }
 
   /** @module pathfora/display-conditions/url-contains/phrase-checker */
+
 
   /**
    * Evaluate if the current URL matches a single urlContains
@@ -4799,6 +4858,7 @@
 
   /** @module pathfora/display-conditions/url-contains/url-checker */
 
+
   /**
    * Evaluate if the current URL matches the rules defined
    * by the urlContains display condition
@@ -4849,6 +4909,7 @@
   }
 
   /** @module pathfora/display-conditions/meta-checker */
+
 
   /**
    * Check if the current page contains the meta
@@ -4958,6 +5019,7 @@
 
   /** @module pathfora/display-conditions/init-exit-intent */
 
+
   /**
    * Setup exitIntent for a widget
    *
@@ -5004,6 +5066,7 @@
 
   /** @module pathfora/display-conditions/scroll/register-element-watcher */
 
+
   /**
    * Setup watcher for displayWhenElementVisible
    * display condition
@@ -5019,9 +5082,9 @@
 
       check: function () {
         var scrollTop = document$1.body.scrollTop || document$1.documentElement.scrollTop,
-            scrolledToBottom = window.innerHeight + scrollTop >= document$1.body.offsetHeight;
+            scrolledToBottom = window$1.innerHeight + scrollTop >= document$1.body.offsetHeight;
 
-        if (watcher.elem.offsetTop - window.innerHeight / 2 <= scrollTop || scrolledToBottom) {
+        if (watcher.elem.offsetTop - window$1.innerHeight / 2 <= scrollTop || scrolledToBottom) {
           return true;
         }
         return false;
@@ -5033,6 +5096,7 @@
 
   /** @module pathfora/display-conditions/scroll/init-scroll-watchers */
 
+
   /**
    * Add event listener for scroll display conditions
    *
@@ -5043,19 +5107,19 @@
   function initializeScrollWatchers (widget) {
     widget.scrollListener = function () {
       validateWatchers(widget, function () {
-        if (typeof window.addEventListener === 'function') {
-          eventHub.remove(window, 'scroll', widget.scrollListener);
+        if (typeof window$1.addEventListener === 'function') {
+          eventHub.remove(window$1, 'scroll', widget.scrollListener);
         } else {
-          window.onscroll = null;
+          window$1.onscroll = null;
         }
       });
     };
 
     // FUTURE Discuss https://www.npmjs.com/package/ie8 polyfill
-    if (typeof window.addEventListener === 'function') {
-      eventHub.add(window, 'scroll', widget.scrollListener);
+    if (typeof window$1.addEventListener === 'function') {
+      eventHub.add(window$1, 'scroll', widget.scrollListener);
     } else {
-      window.onscroll = widget.scrollListener;
+      window$1.onscroll = widget.scrollListener;
     }
     return true;
   }
@@ -5088,6 +5152,7 @@
 
   /** @module pathfora/display-conditions/scroll/register-position-watcher */
 
+
   /**
    * Setup watcher for scrollPercentageToDisplay
    * display condition
@@ -5117,6 +5182,7 @@
 
   /** @module pathfora/display-conditions/manual-trigger/register-manual-trigger-watcher */
 
+
   /**
    * Begin watching for a custom javascript trigger
    *
@@ -5139,6 +5205,7 @@
   }
 
   /** @module pathfora/widgets/init-widget */
+
 
   /**
    * Determine if a widget should be shown based on display
@@ -5259,6 +5326,7 @@
 
   /** @module pathfora/widgets/preview-widget */
 
+
   /**
    * Create a minimal widget for a preview
    *
@@ -5272,6 +5340,7 @@
   }
 
   /** @module pathfora/widgets/clear-widget */
+
 
   /**
    * Clear specific widgets from DOM and clean up their resources
@@ -5299,7 +5368,7 @@
     widgetsToRemove.forEach(function (item) {
       var widget = item.widget;
       var element = document$1.getElementById(widget.id);
-      
+
       if (element) {
         removeClass(element, 'opened');
         if (element.parentNode) {
@@ -5327,6 +5396,7 @@
 
   /** @module pathfora/display-conditions/cancel-delayed-widget */
 
+
   /**
    * Cancel waiting for a delayed widget
    *
@@ -5343,6 +5413,7 @@
   }
 
   /** @module pathfora/widgets/cancel-delayed-widgets */
+
 
   /**
    * Cancel delayed widgets by their IDs
@@ -5366,6 +5437,7 @@
   }
 
   /** @module pathfora/widgets/clear-all */
+
 
   /**
    * Close all widgets and reset all settings to default
@@ -5393,6 +5465,7 @@
   }
 
   /** @module pathfora/widgets/clear-by-id */
+
 
   /**
    * Close specific widgets by their IDs and clean up their resources
@@ -5490,6 +5563,7 @@
 
   /** @module pathfora/widgets/message */
 
+
   /**
    * Public method to create a widget of type message
    *
@@ -5502,6 +5576,7 @@
   }
 
   /** @module pathfora/widgets/subscription */
+
 
   /**
    * Public method to create a widget of type subscription
@@ -5516,6 +5591,7 @@
 
   /** @module pathfora/widgets/form */
 
+
   /**
    * Public method to create a widget of type form
    *
@@ -5528,6 +5604,7 @@
   }
 
   /** @module pathfora/widgets/site-gate */
+
 
   /**
    * Public method to create a widget of type site gate
@@ -5542,6 +5619,7 @@
 
   /** @module pathfora/widgets/get-widget-dependencies */
 
+
   /**
    * Return a list of all widgets that have dependent data
    *
@@ -5553,6 +5631,7 @@
   }
 
   /** @module pathfora/ab-test/init-ab-test */
+
 
   /**
    * Initialized A/B test from user config
@@ -5609,6 +5688,7 @@
 
   /** @module pathfora/ab-test/prepare-ab-test */
 
+
   /**
    * Prepares A/B test user config for use
    *
@@ -5637,6 +5717,7 @@
 
   /** @module pathfora/ab-test/ab-test */
 
+
   /**
    * Public wrapper method for prepareABTest
    *
@@ -5649,6 +5730,7 @@
   }
 
   /** @module pathfora/inline/prep-elements */
+
 
   /**
    * Build a list of all elements to be personalized
@@ -5787,6 +5869,7 @@
 
   /** @module pathfora/inline/proc-recommend-elements */
 
+
   /**
    * Make recommendation and fill in the appropriate inline
    * recommendation elements
@@ -5876,6 +5959,7 @@
 
   /** @module pathfora/data/segments/in-segment */
 
+
   /**
    * Check if the user is a member of a segment
    *
@@ -5888,6 +5972,7 @@
   }
 
   /** @module pathfora/inline/proc-trigger-elements */
+
 
   /**
    * Show/hide trigger elements in a group based on
@@ -5954,6 +6039,7 @@
   /** @module pathfora/inline/inline */
 
 
+
   /**
    * Creates a new instance of inline personalization
    *
@@ -5990,6 +6076,7 @@
 
   /** @module pathfora/inline/init-inline */
 
+
   /**
    * Once the dom is ready and Lytics jstag is
    * loaded initialize inline personalization
@@ -6009,6 +6096,7 @@
 
   /** @module pathfora */
 
+
   /**
    * Creates a new Pathfora instance
    *
@@ -6017,7 +6105,7 @@
    */
   var Pathfora = function () {
     // feature detections
-    if (!('localStorage' in window) || !('sessionStorage' in window)) {
+    if (!('localStorage' in window$1) || !('sessionStorage' in window$1)) {
       throw new Error('The Pathfora SDK requires the Web Storage API!');
     }
 
@@ -6083,7 +6171,7 @@
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
-    link.setAttribute('href', window.PathforaCSS || CSS_URL);
+    link.setAttribute('href', window$1.PathforaCSS || CSS_URL);
 
     this.utils.updateLegacyCookies();
     this.utils.store.removeExpiredItems();
@@ -6091,6 +6179,6 @@
     head.appendChild(link);
   };
 
-  window.pathfora = window.pathfora || new Pathfora();
+  window$1.pathfora = window$1.pathfora || new Pathfora();
 
-}());
+})();
