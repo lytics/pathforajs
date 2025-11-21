@@ -1,4 +1,10 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createFormWidget,
+  createSubscriptionWidget,
+  createSiteGateWidget
+} from '../utils/test-helpers';
 
 // -------------------------
 // INLINE PERSONALIZATION TEST
@@ -108,13 +114,13 @@ describe('Inline Personalization', function () {
           '<div data-pfgroup="testgrp" data-pftrigger="email">Has Email</div>'
       );
 
-      var testModule = new pathfora.Message({
+      var testModule = createMessageWidget({
         id: '9ec53f71a1514339bb1552280ae76682',
         layout: 'slideout',
         msg: 'show this to people with an email',
       });
 
-      var testModule2 = new pathfora.Message({
+      var testModule2 = createMessageWidget({
         id: 'ba6a6df43f774d769058950969b07a16',
         layout: 'slideout',
         msg: 'show this to people without an email',

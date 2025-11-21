@@ -1,4 +1,10 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createFormWidget,
+  createSubscriptionWidget,
+  createSiteGateWidget
+} from '../utils/test-helpers';
 
 // -------------------------
 // A/B TESTING
@@ -9,13 +15,13 @@ describe('when performing AB testing', function () {
   });
 
   it('should select only one A/B Test group to show', function () {
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget1-a',
       msg: 'A',
       layout: 'slideout'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget1-b',
       msg: 'B',
       layout: 'slideout'
@@ -35,25 +41,25 @@ describe('when performing AB testing', function () {
   });
 
   it('should show all widgets in an A/B test group', function () {
-    var widget1A = new pathfora.Message({
+    var widget1A = createMessageWidget({
       id: 'ab-widget2-1a',
       msg: 'A',
       layout: 'slideout'
     });
 
-    var widget2A = new pathfora.Message({
+    var widget2A = createMessageWidget({
       id: 'ab-widget2-2a',
       msg: 'A',
       layout: 'slideout'
     });
 
-    var widget1B = new pathfora.Message({
+    var widget1B = createMessageWidget({
       id: 'ab-widget2-1b',
       msg: 'B',
       layout: 'slideout'
     });
 
-    var widget2B = new pathfora.Message({
+    var widget2B = createMessageWidget({
       id: 'ab-widget2-2b',
       msg: 'B',
       layout: 'slideout'
@@ -85,13 +91,13 @@ describe('when performing AB testing', function () {
 
     pathfora.utils.write('PathforaTest_' + id, 0.2164252290967852);
 
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget3-a',
       msg: 'A',
       layout: 'modal'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget3-b',
       msg: 'B',
       layout: 'modal'
@@ -116,13 +122,13 @@ describe('when performing AB testing', function () {
     var id = 'ab-4';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.7077720651868731);
 
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget4-a',
       msg: 'A',
       layout: 'modal'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget4-b',
       msg: 'B',
       layout: 'modal'
@@ -145,13 +151,13 @@ describe('when performing AB testing', function () {
   });
 
   it('should allow multiple A/B tests per page', function () {
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget5-a',
       msg: 'A',
       layout: 'modal'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget5-b',
       msg: 'B',
       layout: 'modal'
@@ -163,13 +169,13 @@ describe('when performing AB testing', function () {
       groups: [[widgetA], [widgetB]]
     });
 
-    var widgetC = new pathfora.Message({
+    var widgetC = createMessageWidget({
       id: 'ab-widget6-c',
       msg: 'C',
       layout: 'modal'
     });
 
-    var widgetD = new pathfora.Message({
+    var widgetD = createMessageWidget({
       id: 'ab-widget6-d',
       msg: 'D',
       layout: 'modal'
@@ -205,13 +211,13 @@ describe('when performing AB testing', function () {
 
     window.lio.loaded = true;
 
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget10-a',
       layout: 'slideout',
       msg: 'A'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget10-b',
       layout: 'slideout',
       msg: 'B'
@@ -243,7 +249,7 @@ describe('when performing AB testing', function () {
     var id = 'ab-11';
     pathfora.utils.saveCookie('PathforaTest_' + id, 0.7077720651868731);
 
-    var widget = new pathfora.Message({
+    var widget = createMessageWidget({
       id: 'ab-widget11-a',
       msg: 'A',
       layout: 'slideout'
@@ -263,7 +269,7 @@ describe('when performing AB testing', function () {
   });
 
   it('should not allow a widget to be used in more than one A/B test', function () {
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget8-a',
       msg: 'A',
       layout: 'slideout'
@@ -291,13 +297,13 @@ describe('when performing AB testing', function () {
   });
 
   it('should not allow a widget to be used in more than one A/B test', function () {
-    var widgetA = new pathfora.Message({
+    var widgetA = createMessageWidget({
       id: 'ab-widget9-a',
       msg: 'A',
       layout: 'slideout'
     });
 
-    var widgetB = new pathfora.Message({
+    var widgetB = createMessageWidget({
       id: 'ab-widget9-b',
       msg: 'B',
       layout: 'slideout'

@@ -1,4 +1,10 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createFormWidget,
+  createSubscriptionWidget,
+  createSiteGateWidget
+} from '../utils/test-helpers';
 
 // -------------------------
 //  ENTITY FIELD TEMPLATES
@@ -25,28 +31,28 @@ describe('the entity templates', function () {
       customField: 'test'
     };
 
-    var fieldWidget1 = new pathfora.Message({
+    var fieldWidget1 = createMessageWidget({
       id: 'field-widget-1',
       layout: 'slideout',
       headline: 'Free shipping on your next purchase',
       msg: 'Enter this promo code: {{promoCode}}'
     });
 
-    var fieldWidget2 = new pathfora.Form({
+    var fieldWidget2 = createFormWidget({
       id: 'field-widget-2',
       layout: 'slideout',
       headline: '{{email | no email provided}}',
       msg: 'Sign up with your email.'
     });
 
-    var fieldWidget3 = new pathfora.Form({
+    var fieldWidget3 = createFormWidget({
       id: 'field-widget-3',
       layout: 'slideout',
       headline: 'Hi {{name}}',
       msg: 'Sign up with your email.'
     });
 
-    var fieldWidget4 = new pathfora.Form({
+    var fieldWidget4 = createFormWidget({
       id: 'field-widget-4',
       layout: 'slideout',
       headline: 'Hi {{name}}',
@@ -56,28 +62,28 @@ describe('the entity templates', function () {
       }
     });
 
-    var fieldWidget5 = new pathfora.Form({
+    var fieldWidget5 = createFormWidget({
       id: 'field-widget-5',
       layout: 'slideout',
       headline: 'Welcome',
       msg: 'Welcome {{name | No Name}}!'
     });
 
-    var fieldWidget6 = new pathfora.Form({
+    var fieldWidget6 = createFormWidget({
       id: 'field-widget-6',
       layout: 'slideout',
       headline: 'Welcome',
       msg: 'Welcome {{myUrl | https://www.google.com/}}!'
     });
 
-    var fieldWidget7 = new pathfora.Form({
+    var fieldWidget7 = createFormWidget({
       id: 'field-widget-7',
       layout: 'slideout',
       headline: 'Welcome',
       msg: 'Welcome {{customField | fail}}!'
     });
 
-    var fieldWidget8 = new pathfora.Form({
+    var fieldWidget8 = createFormWidget({
       id: 'fieldWidget8',
       layout: 'slideout',
       headline: 'Welcome',
@@ -87,7 +93,7 @@ describe('the entity templates', function () {
       }
     });
 
-    var fieldWidget9 = new pathfora.Message({
+    var fieldWidget9 = createMessageWidget({
       id: 'fieldWidget9',
       layout: 'slideout',
       headline: 'Welcome',
@@ -179,21 +185,21 @@ describe('the entity templates', function () {
 
     window.lio.loaded = true;
 
-    var templateWidget1 = new pathfora.Message({
+    var templateWidget1 = createMessageWidget({
       id: 'template-dependency-01',
       layout: 'modal',
       headline: 'Hello {{userName}}!',
       msg: 'Welcome back!'
     });
 
-    var templateWidget2 = new pathfora.Form({
+    var templateWidget2 = createFormWidget({
       id: 'template-dependency-02',
       layout: 'slideout',
       headline: 'Special offer for {{userEmail}}',
       msg: 'Use code {{promoCode}} for savings!'
     });
 
-    var templateWidget3 = new pathfora.Message({
+    var templateWidget3 = createMessageWidget({
       id: 'template-dependency-03',
       layout: 'modal',
       headline: 'Hi there!',

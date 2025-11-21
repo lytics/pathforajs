@@ -1,4 +1,10 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createFormWidget,
+  createSubscriptionWidget,
+  createSiteGateWidget
+} from '../utils/test-helpers';
 
 // -------------------------
 //  DISPLAY CONDITIONS LEGACY
@@ -12,7 +18,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'legacyImpressionWidget1';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -36,7 +42,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'legacyImpressionWidget2';
     sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -63,7 +69,7 @@ describe('when setting display conditions', function () {
       '2|' + Date.now()
     );
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -92,7 +98,7 @@ describe('when setting display conditions', function () {
       '2|' + Date.now()
     );
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -120,7 +126,7 @@ describe('when setting display conditions', function () {
       '2,' + Date.now()
     );
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -144,7 +150,7 @@ describe('when setting display conditions', function () {
         id2 = 'multiple-conditions-2',
         id3 = 'multiple-conditions-3';
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -157,7 +163,7 @@ describe('when setting display conditions', function () {
       }
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -170,7 +176,7 @@ describe('when setting display conditions', function () {
       }
     });
 
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -211,7 +217,7 @@ describe('when setting display conditions', function () {
     pathfora.utils.write('PathforaCancel_' + widgetId, '1,' + Date.now());
     pathfora.utils.write('PathforaClosed_' + widgetId, '1,' + Date.now());
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -247,7 +253,7 @@ describe('when setting display conditions', function () {
       '2,' + Date.now()
     );
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',

@@ -1,4 +1,10 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createFormWidget,
+  createSubscriptionWidget,
+  createSiteGateWidget
+} from '../utils/test-helpers';
 
 // -------------------------
 //  CONTENT RECOMMENDATIONS
@@ -25,7 +31,7 @@ describe('the content recommendation component', function () {
 
     pathfora.acctid = 321;
 
-    var sampleModal = new pathfora.Message({
+    var sampleModal = createMessageWidget({
       id: 'recommendation-modal-sample1',
       msg: 'A',
       layout: 'modal',
@@ -69,7 +75,7 @@ describe('the content recommendation component', function () {
     window.liosetup.value = 'customValue';
     pathfora.acctid = 321;
 
-    var sampleModal = new pathfora.Message({
+    var sampleModal = createMessageWidget({
       id: 'recommendation-modal-sample2',
       msg: 'A',
       layout: 'modal',
@@ -111,7 +117,7 @@ describe('the content recommendation component', function () {
 
     pathfora.acctid = 321;
 
-    var sampleModal = new pathfora.Message({
+    var sampleModal = createMessageWidget({
       id: 'recommendation-modal-sample3',
       msg: 'A',
       layout: 'modal',
@@ -148,7 +154,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var modal = new pathfora.Message({
+    var modal = createMessageWidget({
       id: 'recommendation-modal',
       msg: 'A',
       layout: 'modal',
@@ -159,7 +165,7 @@ describe('the content recommendation component', function () {
       },
     });
 
-    var defaultModal = new pathfora.Message({
+    var defaultModal = createMessageWidget({
       id: 'recommendation-modal2',
       msg: 'A',
       layout: 'modal',
@@ -255,7 +261,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var errorModal = new pathfora.Message({
+    var errorModal = createMessageWidget({
       id: 'recommendation-modal4',
       msg: 'A',
       layout: 'modal',
@@ -266,7 +272,7 @@ describe('the content recommendation component', function () {
       },
     });
 
-    var errorModal2 = new pathfora.Message({
+    var errorModal2 = createMessageWidget({
       id: 'recommendation-modal5',
       msg: 'A',
       layout: 'button',
@@ -277,7 +283,7 @@ describe('the content recommendation component', function () {
       },
     });
 
-    var errorModal3 = new pathfora.Message({
+    var errorModal3 = createMessageWidget({
       id: 'recommendation-modal6',
       msg: 'A',
       layout: 'slideout',
@@ -347,7 +353,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var astModal = new pathfora.Message({
+    var astModal = createMessageWidget({
       id: 'ast-modal',
       msg: 'A',
       layout: 'modal',
@@ -391,7 +397,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var relativeModal = new pathfora.Message({
+    var relativeModal = createMessageWidget({
       id: 'relative-modal',
       msg: 'A',
       layout: 'modal',
@@ -434,7 +440,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var displayModal = new pathfora.Message({
+    var displayModal = createMessageWidget({
       id: 'recDisplayModal',
       msg: 'A',
       layout: 'modal',
@@ -476,7 +482,7 @@ describe('the content recommendation component', function () {
     expect(info.html()).toBe('by Test Example | January 1, 2017');
     expect(desc.html().length < 103).toBeTruthy();
 
-    var displayModal2 = new pathfora.Message({
+    var displayModal2 = createMessageWidget({
       id: 'recDisplayModal2',
       msg: 'A',
       layout: 'modal',
@@ -524,7 +530,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var modal = new pathfora.Message({
+    var modal = createMessageWidget({
       id: 'modal1',
       layout: 'modal',
       msg: 'test',
@@ -575,7 +581,7 @@ describe('the content recommendation component', function () {
       loaded: true,
     };
 
-    var modal = new pathfora.Message({
+    var modal = createMessageWidget({
       id: 'modal1',
       layout: 'modal',
       msg: 'test',
