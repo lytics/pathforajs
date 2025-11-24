@@ -135,7 +135,7 @@ gulp.task(
   gulp.series('build:rollup', function () {
     return gulp
       .src('dist/pathfora.js')
-      .pipe(replace('`{{apiurl}}`', 'https://c.lytics.io'))
+      .pipe(replace('`{{apiurl}}`', APIURL))
       .pipe(replace('`{{cssurl}}`', CSSURL))
       .pipe(replace('`{{templates}}`', prepareTemplates()))
       .pipe(gulp.dest('dist'))
@@ -176,7 +176,7 @@ gulp.task(
     return gulp
       .src('dist/pathfora.js')
       .pipe(replace('`{{apiurl}}`', TESTAPIURL))
-      .pipe(replace('`{{cssurl}`}', TESTCSSURL))
+      .pipe(replace('`{{cssurl}}`', TESTCSSURL))
       .pipe(replace('`{{templates}}`', prepareTemplates()))
       .pipe(gulp.dest('dist'))
       .pipe(connect.reload());
