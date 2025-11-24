@@ -4,12 +4,8 @@ import {
   setupLioMock,
   expectWidgetVisible,
   expectWidgetHidden,
-  waitForWidget
 } from '../utils/test-helpers';
 
-// -------------------------
-// SEGMENTS
-// -------------------------
 describe('when targeting users by segment', function () {
   beforeEach(function () {
     globalReset();
@@ -230,9 +226,6 @@ describe('when targeting users by segment', function () {
   });
 });
 
-// -------------------------
-// ATTRIBUTES
-// -------------------------
 describe('when targeting users by attributes', function () {
   beforeEach(function () {
     globalReset();
@@ -410,7 +403,7 @@ describe('pathfora helper rule functions', function () {
     it('should return true if the user is in the flow', function () {
       var rule = pathfora.rules.inFlow('test_slug');
       var data = {
-        flows_step_slugs: { '12345': 'test_slug', '67890': 'test_slug_2' },
+        flows_step_slugs: { 12345: 'test_slug', 67890: 'test_slug_2' },
       };
       expect(rule(data)).toBeTruthy();
     });
@@ -418,7 +411,7 @@ describe('pathfora helper rule functions', function () {
     it('should return false otherwise', function () {
       var rule = pathfora.rules.inFlow('test_slug');
       var data = {
-        flows_step_slugs: { '67890': 'test_slug_2' },
+        flows_step_slugs: { 67890: 'test_slug_2' },
       };
       expect(rule(data)).toBeFalsy();
     });

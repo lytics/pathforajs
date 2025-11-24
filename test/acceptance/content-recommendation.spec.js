@@ -1,14 +1,6 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  CONTENT RECOMMENDATIONS
-// -------------------------
 describe('the content recommendation component', function () {
   beforeEach(function () {
     globalReset();

@@ -2,18 +2,10 @@ import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
 import globalReset from '../utils/global-reset';
 import {
   createMessageWidget,
-  createFormWidget,
   createSubscriptionWidget,
-  createSiteGateWidget
 } from '../utils/test-helpers';
 
-('use strict');
-
-// -------------------------
-// PATHFORA TESTS
-// -------------------------
-
-describe('Pathfora', function () {
+describe('pathfora', function () {
   beforeEach(function () {
     globalReset();
   });

@@ -227,7 +227,7 @@
     DEFAULT_CHAR_LIMIT_STACK = 160,
     WIDTH_BREAKPOINT = 650,
     API_URL = 'https://c.lytics.io',
-    CSS_URL = '`{{cssurl}}`',
+    CSS_URL = 'https://c.lytics.io/static/pathfora.min.css',
     ENTITY_FIELD_TEMPLATE_REGEX = '\\{{2}.*?\\}{2}',
     ENTITY_FIELDS = ['msg', 'headline', 'image', 'confirmAction.callback'],
     OPTIONS_PRIORITY_ORDERED = 'ordered',

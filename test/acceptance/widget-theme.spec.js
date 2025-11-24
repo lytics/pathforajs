@@ -1,22 +1,10 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  expectWidgetTheme
-} from '../utils/test-helpers';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  WIDGET THEME/COLOR TESTS
-// -------------------------
-describe('Widgets', function () {
+describe('widget themes', function () {
   beforeEach(function () {
     globalReset();
   });
-
-  // -------------------------
-  //  COLORS/THEME
-  // -------------------------
 
   it('should have correct theme configuration', function () {
     var w1 = createMessageWidget({
@@ -209,5 +197,4 @@ describe('Widgets', function () {
     var input = widget.find('input[data-required=true]:not(.pf-has-label)');
     expect(input.css('border-color')).toBe('rgb(186, 0, 166)');
   });
-
 });

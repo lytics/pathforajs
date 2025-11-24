@@ -1,22 +1,11 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// -------------------------
-// INLINE PERSONALIZATION TEST
-// -------------------------
-describe('Inline Personalization', function () {
+describe('inline personalization', function () {
   beforeEach(function () {
     globalReset();
   });
 
-  // -------------------------
-  // TRIGGER ELEMENTS
-  // -------------------------
   describe('pftrigger elements', function () {
     it('should select to show the first matching element per group', function (done) {
       window.lio = {
@@ -159,9 +148,6 @@ describe('Inline Personalization', function () {
     });
   });
 
-  // -------------------------
-  // RECOMMENDATION ELEMENTS
-  // -------------------------
   describe('pfrecommend elements', function () {
     beforeEach(function () {
       pathfora.acctid = 123;

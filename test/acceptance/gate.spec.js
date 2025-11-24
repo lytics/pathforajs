@@ -2,12 +2,9 @@ import globalReset from '../utils/global-reset';
 import {
   createSiteGateWidget,
   expectWidgetVisible,
-  expectWidgetClosed
+  expectWidgetClosed,
 } from '../utils/test-helpers';
 
-// -------------------------
-//  GATE
-// -------------------------
 describe('the gate component', function () {
   beforeEach(function () {
     globalReset();
@@ -17,7 +14,7 @@ describe('the gate component', function () {
     var gate = createSiteGateWidget({
       headline: 'Blocking Widget',
       id: 'sitegate-widget-1',
-      msg: 'Submit this widget to access the website.'
+      msg: 'Submit this widget to access the website.',
     });
 
     pathfora.initializeWidgets([gate]);
@@ -34,7 +31,7 @@ describe('the gate component', function () {
       headline: 'Gated Site Feature',
       msg: 'Please agree to the terms to proceed.',
       showForm: false,
-      okMessage: 'I Agree'
+      okMessage: 'I Agree',
     });
 
     expect(() => {
@@ -51,7 +48,7 @@ describe('the gate component', function () {
     var gate = createSiteGateWidget({
       headline: 'Blocking Widget',
       id: 'sitegate-widget-2',
-      msg: 'Submit this widget to access the website.'
+      msg: 'Submit this widget to access the website.',
     });
 
     pathfora.utils.write('PathforaUnlocked_' + gate.id, true);

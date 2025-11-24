@@ -4,15 +4,13 @@ import {
   setupTrackingSpy,
   confirmWidget,
   closeWidget,
-  expectTrackingEvent
+  expectTrackingEvent,
+  createFormWidget,
 } from '../utils/test-helpers';
 
 window.ga = function () {};
 window.ga.getAll = function () {};
 
-// -------------------------
-// TRACKING
-// -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
     globalReset();
@@ -106,7 +104,7 @@ describe('the tracking component', function () {
 
     expectTrackingEvent(messageBar.id, 'show', null, {
       'pf-widget-type': 'message',
-      'pf-widget-layout': 'modal'
+      'pf-widget-layout': 'modal',
     });
 
     expect(window.ga).toHaveBeenCalledWith(
@@ -149,7 +147,7 @@ describe('the tracking component', function () {
 
     expectTrackingEvent(messageBar.id, 'close', null, {
       'pf-widget-type': 'message',
-      'pf-widget-layout': 'modal'
+      'pf-widget-layout': 'modal',
     });
 
     expect(window.ga).toHaveBeenCalledWith(

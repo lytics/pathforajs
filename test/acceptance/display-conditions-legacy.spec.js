@@ -1,15 +1,7 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  DISPLAY CONDITIONS LEGACY
-// -------------------------
-describe('when setting display conditions', function () {
+describe('when setting legacy display conditions', function () {
   beforeEach(function () {
     globalReset();
   });
@@ -27,9 +19,9 @@ describe('when setting display conditions', function () {
       displayConditions: {
         impressions: {
           session: 1,
-          total: 5
-        }
-      }
+          total: 5,
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);
@@ -51,9 +43,9 @@ describe('when setting display conditions', function () {
       displayConditions: {
         impressions: {
           session: 1,
-          total: 5
-        }
-      }
+          total: 5,
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);
@@ -64,10 +56,7 @@ describe('when setting display conditions', function () {
 
   it('should show if impression buffer met', function () {
     var widgetId = 'legacyImpressionWidget3';
-    pathfora.utils.write(
-      'PathforaImpressions_' + widgetId,
-      '2|' + Date.now()
-    );
+    pathfora.utils.write('PathforaImpressions_' + widgetId, '2|' + Date.now());
 
     var form = createFormWidget({
       id: widgetId,
@@ -78,9 +67,9 @@ describe('when setting display conditions', function () {
       displayConditions: {
         impressions: {
           session: 3,
-          buffer: 2
-        }
-      }
+          buffer: 2,
+        },
+      },
     });
 
     setTimeout(function () {
@@ -93,10 +82,7 @@ describe('when setting display conditions', function () {
 
   it('should not show if impression buffer not met', function () {
     var widgetId = 'legacyImpressionWidget3';
-    pathfora.utils.write(
-      'PathforaImpressions_' + widgetId,
-      '2|' + Date.now()
-    );
+    pathfora.utils.write('PathforaImpressions_' + widgetId, '2|' + Date.now());
 
     var form = createFormWidget({
       id: widgetId,
@@ -107,9 +93,9 @@ describe('when setting display conditions', function () {
       displayConditions: {
         impressions: {
           session: 3,
-          buffer: 60
-        }
-      }
+          buffer: 60,
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);
@@ -121,10 +107,7 @@ describe('when setting display conditions', function () {
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
   it('should accept and parse impression cookies with comma values', function () {
     var widgetId = 'impressionComma';
-    pathfora.utils.write(
-      'PathforaImpressions_' + widgetId,
-      '2,' + Date.now()
-    );
+    pathfora.utils.write('PathforaImpressions_' + widgetId, '2,' + Date.now());
 
     var form = createFormWidget({
       id: widgetId,
@@ -134,9 +117,9 @@ describe('when setting display conditions', function () {
       position: 'bottom-right',
       displayConditions: {
         impressions: {
-          total: 2
-        }
-      }
+          total: 2,
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);
@@ -147,8 +130,8 @@ describe('when setting display conditions', function () {
 
   it('should consider multiple display conditions and watchers', function (done) {
     var id = 'multiple-conditions',
-        id2 = 'multiple-conditions-2',
-        id3 = 'multiple-conditions-3';
+      id2 = 'multiple-conditions-2',
+      id3 = 'multiple-conditions-3';
 
     var form = createFormWidget({
       msg: 'subscription',
@@ -157,10 +140,10 @@ describe('when setting display conditions', function () {
       id: id,
       displayConditions: {
         impressions: {
-          session: 3
+          session: 3,
         },
-        manualTrigger: true
-      }
+        manualTrigger: true,
+      },
     });
 
     var form2 = createFormWidget({
@@ -170,10 +153,10 @@ describe('when setting display conditions', function () {
       id: id2,
       displayConditions: {
         impressions: {
-          session: 1
+          session: 1,
         },
-        manualTrigger: true
-      }
+        manualTrigger: true,
+      },
     });
 
     var form3 = createFormWidget({
@@ -183,10 +166,10 @@ describe('when setting display conditions', function () {
       id: id3,
       displayConditions: {
         impressions: {
-          session: 3
+          session: 3,
         },
-        manualTrigger: true
-      }
+        manualTrigger: true,
+      },
     });
     sessionStorage.setItem('PathforaImpressions_' + id, 2);
     sessionStorage.setItem('PathforaImpressions_' + id2, 2);
@@ -227,16 +210,16 @@ describe('when setting display conditions', function () {
         hideAfterAction: {
           confirm: {
             hideCount: 3,
-            duration: 1440
+            duration: 1440,
           },
           cancel: {
-            hideCount: 1
+            hideCount: 1,
           },
           closed: {
-            duration: 30
-          }
-        }
-      }
+            duration: 30,
+          },
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);
@@ -248,10 +231,7 @@ describe('when setting display conditions', function () {
   // NOTE Retain support for cookies with comma - can remove on 5/2/2016
   it('should accept and parse impression cookies with comma values', function () {
     var widgetId = 'impressionComma';
-    pathfora.utils.write(
-      'PathforaImpressions_' + widgetId,
-      '2,' + Date.now()
-    );
+    pathfora.utils.write('PathforaImpressions_' + widgetId, '2,' + Date.now());
 
     var form = createFormWidget({
       id: widgetId,
@@ -262,10 +242,10 @@ describe('when setting display conditions', function () {
       displayConditions: {
         impressions: {
           widget: {
-            total: 2
-          }
-        }
-      }
+            total: 2,
+          },
+        },
+      },
     });
 
     pathfora.initializeWidgets([form]);

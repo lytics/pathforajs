@@ -2,20 +2,13 @@ import globalReset from '../utils/global-reset';
 import {
   createMessageWidget,
   createFormWidget,
-  createSubscriptionWidget
+  createSubscriptionWidget,
 } from '../utils/test-helpers';
 
-// -------------------------
-//  WIDGET FORM TESTS
-// -------------------------
-describe('Widgets', function () {
+describe('forms', function () {
   beforeEach(function () {
     globalReset();
   });
-
-  // -------------------------
-  //  FORM STATES
-  // -------------------------
 
   it('should show success or error state if waitForAsyncResponse is set', function (done) {
     var formStatesWidget = createFormWidget({
@@ -966,5 +959,4 @@ describe('Widgets', function () {
       done();
     }, 500);
   });
-
 });

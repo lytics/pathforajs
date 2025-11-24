@@ -1,19 +1,10 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget
-} from '../utils/test-helpers';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  WIDGET POSITION & INLINE TESTS
-// -------------------------
-describe('Widgets', function () {
+describe('widget position', function () {
   beforeEach(function () {
     globalReset();
   });
-
-  // -------------------------
-  //  POSITION
-  // -------------------------
 
   it('should use default position if no position is specified', function () {
     var w1 = createMessageWidget({
@@ -160,5 +151,4 @@ describe('Widgets', function () {
       done();
     }, 200);
   });
-
 });

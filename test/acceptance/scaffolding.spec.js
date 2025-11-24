@@ -1,9 +1,6 @@
 import globalReset from '../utils/global-reset';
 import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-// SCAFFOLDING
-// -------------------------
 describe('when building a scaffolding component', function () {
   beforeEach(function () {
     globalReset();

@@ -1,13 +1,7 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// Prioritized Widget Tests
-describe('Prioritized widgets', function () {
+describe('prioritized widgets', function () {
   beforeEach(function () {
     globalReset();
   });

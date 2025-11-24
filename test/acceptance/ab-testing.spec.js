@@ -1,15 +1,7 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// -------------------------
-// A/B TESTING
-// -------------------------
-describe('when performing AB testing', function () {
+describe('a/b testing', function () {
   beforeEach(function () {
     globalReset();
   });
@@ -18,19 +10,19 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget1-a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget1-b',
       msg: 'B',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-1',
       type: '50/50',
-      groups: [[widgetA], [widgetB]]
+      groups: [[widgetA], [widgetB]],
     });
 
     pathfora.initializeABTesting([ab]);
@@ -44,31 +36,34 @@ describe('when performing AB testing', function () {
     var widget1A = createMessageWidget({
       id: 'ab-widget2-1a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var widget2A = createMessageWidget({
       id: 'ab-widget2-2a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var widget1B = createMessageWidget({
       id: 'ab-widget2-1b',
       msg: 'B',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var widget2B = createMessageWidget({
       id: 'ab-widget2-2b',
       msg: 'B',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-2',
       type: '50/50',
-      groups: [[widget1A, widget2A], [widget1B, widget2B]]
+      groups: [
+        [widget1A, widget2A],
+        [widget1B, widget2B],
+      ],
     });
 
     pathfora.initializeABTesting([ab]);
@@ -79,10 +74,7 @@ describe('when performing AB testing', function () {
 
     var first = w.first();
     expect(first.find('.pf-widget-message').text()).toEqual(
-      first
-        .next()
-        .find('.pf-widget-message')
-        .text()
+      first.next().find('.pf-widget-message').text()
     );
   });
 
@@ -94,26 +86,26 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget3-a',
       msg: 'A',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget3-b',
       msg: 'B',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var ab = new pathfora.ABTest({
       id: id,
       type: '50/50',
-      groups: [[widgetA], [widgetB]]
+      groups: [[widgetA], [widgetB]],
     });
 
     pathfora.initializeABTesting([ab]);
     pathfora.initializeWidgets([widgetA, widgetB]);
 
     var wB = $('#' + widgetB.id),
-        wA = $('#' + widgetA.id);
+      wA = $('#' + widgetA.id);
     expect(wB.length).toBe(1);
     expect(wA.length).toBe(0);
   });
@@ -125,26 +117,26 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget4-a',
       msg: 'A',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget4-b',
       msg: 'B',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var ab = new pathfora.ABTest({
       id: id,
       type: '50/50',
-      groups: [[widgetA], [widgetB]]
+      groups: [[widgetA], [widgetB]],
     });
 
     pathfora.initializeABTesting([ab]);
     pathfora.initializeWidgets([widgetA, widgetB]);
 
     var wB = $('#' + widgetB.id),
-        wA = $('#' + widgetA.id);
+      wA = $('#' + widgetA.id);
 
     expect(wA.length).toBe(1);
     expect(wB.length).toBe(0);
@@ -154,45 +146,45 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget5-a',
       msg: 'A',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget5-b',
       msg: 'B',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-5',
       type: '50/50',
-      groups: [[widgetA], [widgetB]]
+      groups: [[widgetA], [widgetB]],
     });
 
     var widgetC = createMessageWidget({
       id: 'ab-widget6-c',
       msg: 'C',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var widgetD = createMessageWidget({
       id: 'ab-widget6-d',
       msg: 'D',
-      layout: 'modal'
+      layout: 'modal',
     });
 
     var ab2 = new pathfora.ABTest({
       id: 'ab-6',
       type: '50/50',
-      groups: [[widgetC], [widgetD]]
+      groups: [[widgetC], [widgetD]],
     });
 
     pathfora.initializeABTesting([ab, ab2]);
     pathfora.initializeWidgets([widgetA, widgetB, widgetC, widgetD]);
 
     var w = $('[id*="ab-widget"]'),
-        w5 = $('[id*="ab-widget5"]'),
-        w6 = $('[id*="ab-widget6"]');
+      w5 = $('[id*="ab-widget5"]'),
+      w6 = $('[id*="ab-widget6"]');
 
     expect(w.length).toBe(2);
     expect(w5.length).toBe(1);
@@ -202,11 +194,11 @@ describe('when performing AB testing', function () {
   it('should handle A/B Tests in conjunction with audience targeting', function () {
     window.lio = {
       data: {
-        segments: ['all', 'smt_new']
+        segments: ['all', 'smt_new'],
       },
       account: {
-        id: '0'
-      }
+        id: '0',
+      },
     };
 
     window.lio.loaded = true;
@@ -214,28 +206,28 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget10-a',
       layout: 'slideout',
-      msg: 'A'
+      msg: 'A',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget10-b',
       layout: 'slideout',
-      msg: 'B'
+      msg: 'B',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-10',
       type: '50/50',
-      groups: [[widgetA], [widgetB]]
+      groups: [[widgetA], [widgetB]],
     });
 
     var widgets = {
       target: [
         {
           segment: 'smt_new',
-          widgets: [widgetA, widgetB]
-        }
-      ]
+          widgets: [widgetA, widgetB],
+        },
+      ],
     };
 
     pathfora.initializeABTesting([ab]);
@@ -252,13 +244,13 @@ describe('when performing AB testing', function () {
     var widget = createMessageWidget({
       id: 'ab-widget11-a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-11',
       type: '80/20',
-      groups: [[], [widget]]
+      groups: [[], [widget]],
     });
 
     pathfora.initializeABTesting([ab]);
@@ -272,19 +264,19 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget8-a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-7',
       type: '50/50',
-      groups: [[widgetA], []]
+      groups: [[widgetA], []],
     });
 
     var ab2 = new pathfora.ABTest({
       id: 'ab-8',
       type: '50/50',
-      groups: [[widgetA], []]
+      groups: [[widgetA], []],
     });
 
     expect(function () {
@@ -300,25 +292,25 @@ describe('when performing AB testing', function () {
     var widgetA = createMessageWidget({
       id: 'ab-widget9-a',
       msg: 'A',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var widgetB = createMessageWidget({
       id: 'ab-widget9-b',
       msg: 'B',
-      layout: 'slideout'
+      layout: 'slideout',
     });
 
     var ab = new pathfora.ABTest({
       id: 'ab-9',
       type: '50/50',
-      groups: [[widgetA], []]
+      groups: [[widgetA], []],
     });
 
     var ab2 = new pathfora.ABTest({
       id: 'ab-9',
       type: '50/50',
-      groups: [[widgetB], []]
+      groups: [[widgetB], []],
     });
 
     expect(function () {

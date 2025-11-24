@@ -1,14 +1,6 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget,
-  createSubscriptionWidget,
-  createSiteGateWidget
-} from '../utils/test-helpers';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  DISPLAY CONDITIONS
-// -------------------------
 function makeMouseEvent(type, params) {
   var evt;
   try {

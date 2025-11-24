@@ -7,20 +7,14 @@ import {
   expectWidgetVisible,
   expectWidgetHidden,
   expectWidgetClosed,
-  expectWidgetTheme
+  expectWidgetTheme,
+  createSiteGateWidget,
 } from '../utils/test-helpers';
 
-// -------------------------
-//  WIDGET TESTS
-// -------------------------
-describe('Widgets', function () {
+describe('widgets', function () {
   beforeEach(function () {
     globalReset();
   });
-
-  // -------------------------
-  //  GENERAL
-  // -------------------------
 
   it('should not allow to register 2 widgets with the same id', function () {
     var w1 = createMessageWidget({
@@ -512,5 +506,4 @@ describe('Widgets', function () {
       modalWidget.find('.pf-widget-text').find('img').html()
     ).toBeUndefined();
   });
-
 });

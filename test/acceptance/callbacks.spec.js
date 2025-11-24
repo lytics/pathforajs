@@ -1,22 +1,12 @@
 import globalReset from '../utils/global-reset';
-import {
-  createMessageWidget,
-  createFormWidget
-} from '../utils/test-helpers';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  WIDGET CALLBACK TESTS
-// -------------------------
-describe('Widgets', function () {
+describe('callbacks', function () {
   beforeEach(function () {
     globalReset();
   });
 
-  // -------------------------
-  //  CALLBACKS
-  // -------------------------
-
-  it('should trigger callback function after pressing action button', function () {
+  it('should trigger after pressing action button', function () {
     var modal = createMessageWidget({
       id: 'confirm-action-test',
       layout: 'modal',
@@ -38,7 +28,7 @@ describe('Widgets', function () {
     expect(modal.confirmAction.callback).toHaveBeenCalled();
   });
 
-  it('should trigger callback function after pressing action with form data.', function () {
+  it('should trigger after pressing action with form data.', function () {
     var modal = createFormWidget({
       id: 'confirm-action-form-test',
       layout: 'modal',
@@ -71,7 +61,7 @@ describe('Widgets', function () {
     );
   });
 
-  it('should trigger callback function after pressing action with custom form data.', function () {
+  it('should trigger after pressing action with custom form data.', function () {
     var modal = createFormWidget({
       id: 'custom-confirm-action-test',
       layout: 'modal',
@@ -185,7 +175,7 @@ describe('Widgets', function () {
     expect(modal.cancelAction.callback).toHaveBeenCalled();
   });
 
-  it("shouldn't fire submit callbacks on cancel, and cancel callbacks on submit", function () {
+  it("shouldn't fire submit function on cancel, and cancel functions on submit", function () {
     var w1 = createMessageWidget({
       id: 'widget-with-action-callback',
       msg: 'Cancel action negative test',
@@ -222,5 +212,4 @@ describe('Widgets', function () {
     widgetB.find('.pf-widget-ok').click();
     expect(w2.cancelAction.callback).not.toHaveBeenCalled();
   });
-
 });
