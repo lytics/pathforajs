@@ -1,15 +1,3 @@
-// ============================================================================
-// Test Helpers for PathforaJS
-// ============================================================================
-// This file contains helper functions to reduce repetition in tests by
-// providing common patterns for widget creation, setup, assertions, and more.
-// ============================================================================
-// Note: pathfora is available as a global variable in the test environment
-
-// ============================================================================
-// WIDGET FACTORY HELPERS
-// ============================================================================
-
 /**
  * Create a Message widget with default test configuration
  * @param {Object} overrides - Properties to override defaults
@@ -20,7 +8,7 @@ export function createMessageWidget(overrides = {}) {
     id: 'test-message-' + Date.now() + Math.random(),
     msg: 'Test message',
     layout: 'modal',
-    headline: 'Test Headline'
+    headline: 'Test Headline',
   };
   return new pathfora.Message({ ...defaults, ...overrides });
 }
@@ -35,7 +23,7 @@ export function createFormWidget(overrides = {}) {
     id: 'test-form-' + Date.now() + Math.random(),
     msg: 'Test form message',
     layout: 'modal',
-    headline: 'Test Form'
+    headline: 'Test Form',
   };
   return new pathfora.Form({ ...defaults, ...overrides });
 }
@@ -50,7 +38,7 @@ export function createSubscriptionWidget(overrides = {}) {
     id: 'test-subscription-' + Date.now() + Math.random(),
     msg: 'Subscribe to our newsletter',
     layout: 'slideout',
-    headline: 'Stay Updated'
+    headline: 'Stay Updated',
   };
   return new pathfora.Subscription({ ...defaults, ...overrides });
 }
@@ -64,7 +52,7 @@ export function createSiteGateWidget(overrides = {}) {
   const defaults = {
     id: 'test-gate-' + Date.now() + Math.random(),
     headline: 'Welcome!',
-    msg: 'Please provide your email to continue'
+    msg: 'Please provide your email to continue',
   };
   return new pathfora.SiteGate({ ...defaults, ...overrides });
 }
@@ -82,27 +70,27 @@ export function createFormElements(type = 'basic', customFields = []) {
         type: 'input',
         name: 'name',
         placeholder: 'Your Name',
-        required: true
+        required: true,
       },
       {
         type: 'email',
         name: 'email',
         placeholder: 'Email Address',
-        required: true
-      }
+        required: true,
+      },
     ],
     complex: [
       {
         type: 'input',
         name: 'name',
         placeholder: 'Your Name',
-        required: true
+        required: true,
       },
       {
         type: 'email',
         name: 'email',
         placeholder: 'Email Address',
-        required: true
+        required: true,
       },
       {
         type: 'radio-group',
@@ -112,8 +100,8 @@ export function createFormElements(type = 'basic', customFields = []) {
         values: [
           { label: 'Red', value: 'red' },
           { label: 'Blue', value: 'blue' },
-          { label: 'Green', value: 'green' }
-        ]
+          { label: 'Green', value: 'green' },
+        ],
       },
       {
         type: 'checkbox-group',
@@ -122,11 +110,11 @@ export function createFormElements(type = 'basic', customFields = []) {
         values: [
           { label: 'Technology', value: 'tech' },
           { label: 'Design', value: 'design' },
-          { label: 'Marketing', value: 'marketing' }
-        ]
-      }
+          { label: 'Marketing', value: 'marketing' },
+        ],
+      },
     ],
-    custom: customFields
+    custom: customFields,
   };
 
   return formElements[type] || formElements.basic;
@@ -140,34 +128,35 @@ export function createFormElements(type = 'basic', customFields = []) {
  * @param {Object} overrides - Additional widget properties
  * @returns {Object} Widget instance with callbacks
  */
-export function createWidgetWithCallbacks(WidgetConstructor, confirmCallback, cancelCallback, overrides = {}) {
+export function createWidgetWithCallbacks(
+  WidgetConstructor,
+  confirmCallback,
+  cancelCallback,
+  overrides = {}
+) {
   const config = {
     id: 'test-widget-callbacks-' + Date.now() + Math.random(),
     msg: 'Test message with callbacks',
     layout: 'modal',
-    ...overrides
+    ...overrides,
   };
 
   if (confirmCallback) {
     config.confirmAction = {
       name: 'Test confirm action',
-      callback: confirmCallback
+      callback: confirmCallback,
     };
   }
 
   if (cancelCallback) {
     config.cancelAction = {
       name: 'Test cancel action',
-      callback: cancelCallback
+      callback: cancelCallback,
     };
   }
 
   return new WidgetConstructor(config);
 }
-
-// ============================================================================
-// SETUP AND MOCKING HELPERS
-// ============================================================================
 
 /**
  * Setup Lytics lio object with test data
@@ -175,16 +164,20 @@ export function createWidgetWithCallbacks(WidgetConstructor, confirmCallback, ca
  * @param {string} accountId - Account ID
  * @param {Object} additionalData - Additional data to merge into lio.data
  */
-export function setupLioMock(segments = ['all'], accountId = '0', additionalData = {}) {
+export function setupLioMock(
+  segments = ['all'],
+  accountId = '0',
+  additionalData = {}
+) {
   window.lio = {
     data: {
       segments: segments,
-      ...additionalData
+      ...additionalData,
     },
     account: {
-      id: accountId
+      id: accountId,
     },
-    loaded: true
+    loaded: true,
   };
 }
 
@@ -197,8 +190,8 @@ export function setupJstagMock(userData = {}, cid = '123') {
   window.jstag.getEntity = function () {
     return {
       data: {
-        user: userData
-      }
+        user: userData,
+      },
     };
   };
   window.jstag.config.cid = cid;
@@ -222,23 +215,21 @@ export function mockRecommendationResponse(recommendations = []) {
     url: 'www.example.com/1',
     title: 'Example Title',
     description: 'An example description',
-    primary_image: 'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
+    primary_image:
+      'http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg',
     confidence: 0.499,
-    visited: false
+    visited: false,
   };
 
-  const data = recommendations.length > 0 ? recommendations : [defaultRecommendation];
+  const data =
+    recommendations.length > 0 ? recommendations : [defaultRecommendation];
 
   return {
     status: 200,
     contentType: 'application/json',
-    responseText: JSON.stringify({ data: data })
+    responseText: JSON.stringify({ data: data }),
   };
 }
-
-// ============================================================================
-// ASSERTION HELPERS
-// ============================================================================
 
 /**
  * Assert that a widget is visible in the DOM
@@ -275,11 +266,16 @@ export function expectWidgetClosed(widgetId) {
  * @param {string} eventName - Optional action name
  * @param {Object} additionalProps - Additional properties to check
  */
-export function expectTrackingEvent(widgetId, eventType, eventName = null, additionalProps = {}) {
+export function expectTrackingEvent(
+  widgetId,
+  eventType,
+  eventName = null,
+  additionalProps = {}
+) {
   const expected = {
     'pf-widget-id': widgetId,
     'pf-widget-event': eventType,
-    ...additionalProps
+    ...additionalProps,
   };
 
   if (eventName) {
@@ -365,17 +361,17 @@ export function expectFormFields(widgetId, fieldCounts) {
   }
 
   if (fieldCounts.radios !== undefined) {
-    expect(form.find('input[type="radio"]').length).toBeGreaterThanOrEqual(fieldCounts.radios);
+    expect(form.find('input[type="radio"]').length).toBeGreaterThanOrEqual(
+      fieldCounts.radios
+    );
   }
 
   if (fieldCounts.checkboxes !== undefined) {
-    expect(form.find('input[type="checkbox"]').length).toBeGreaterThanOrEqual(fieldCounts.checkboxes);
+    expect(form.find('input[type="checkbox"]').length).toBeGreaterThanOrEqual(
+      fieldCounts.checkboxes
+    );
   }
 }
-
-// ============================================================================
-// ASYNC TESTING HELPERS
-// ============================================================================
 
 /**
  * Wait for widget to be rendered in the DOM
@@ -384,7 +380,7 @@ export function expectFormFields(widgetId, fieldCounts) {
  * @returns {Promise} Promise that resolves with jQuery element
  */
 export function waitForWidget(widgetId, delay = 200) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve($('#' + widgetId));
     }, delay);
@@ -424,7 +420,7 @@ export function waitFor(condition, timeout = 1000, interval = 50) {
  * @returns {Promise} Promise that resolves after delay
  */
 export function initializeAndWait(widgets, config = null, delay = 200) {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (config) {
       pathfora.initializeWidgets(widgets, config);
     } else {
@@ -448,11 +444,13 @@ export function fillForm(widgetId, formData) {
   const widget = $('#' + widgetId);
   const form = widget.find('form');
 
-  Object.keys(formData).forEach(name => {
+  Object.keys(formData).forEach((name) => {
     const field = form.find('[name="' + name + '"]');
     if (field.attr('type') === 'checkbox' || field.attr('type') === 'radio') {
       // For radio/checkbox, check the one with matching value
-      form.find('[name="' + name + '"][value="' + formData[name] + '"]').prop('checked', true);
+      form
+        .find('[name="' + name + '"][value="' + formData[name] + '"]')
+        .prop('checked', true);
     } else {
       field.val(formData[name]);
     }
