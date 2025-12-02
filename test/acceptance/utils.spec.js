@@ -1,9 +1,6 @@
 import globalReset from '../utils/global-reset';
 
-// -------------------------
-// UTIL TESTS
-// -------------------------
-describe('Utils', function () {
+describe('utils', function () {
   beforeEach(function () {
     globalReset();
   });
@@ -37,8 +34,8 @@ describe('Utils', function () {
 
     it('should not double-encode URIs', function () {
       var unescaped = 'http://www.getlytics.com/?foo=a b c&bar=d e f',
-          escapedOnce = escapeURI(unescaped, { keepEscaped: true }),
-          escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
+        escapedOnce = escapeURI(unescaped, { keepEscaped: true }),
+        escapedTwice = escapeURI(escapedOnce, { keepEscaped: true });
 
       expect(escapedTwice).toBe(escapedOnce);
     });
@@ -51,7 +48,7 @@ describe('Utils', function () {
       var params = {
         key: 'value',
         anotherkey: true,
-        athirdkey: 1
+        athirdkey: 1,
       };
 
       var expected = '?key=value&anotherkey=true&athirdkey=1';
@@ -63,7 +60,7 @@ describe('Utils', function () {
       var params = {
         foo: 'value',
         bar: [1, 2, 3],
-        baz: ['test']
+        baz: ['test'],
       };
 
       var expected = '?foo=value&bar[]=1&bar[]=2&bar[]=3&baz[]=test';
@@ -102,7 +99,6 @@ describe('Utils', function () {
     };
 
     it('should encode legacy Pathfora cookies', function () {
-
       setCookie('PathforaImpressions_2', '1|293847239874932871');
       sessionStorage.setItem('PathforaRecommend_2', '{"somejson": "here"}');
       setCookie('PathforaImpressions_3', '%badval%');
@@ -115,9 +111,7 @@ describe('Utils', function () {
       expect(sessionStorage.getItem('PathforaRecommend_2')).toEqual(
         '%7B%22somejson%22%3A%20%22here%22%7D'
       );
-      expect(pathfora.utils.read('PathforaImpressions_3')).toEqual(
-        '%badval%'
-      );
+      expect(pathfora.utils.read('PathforaImpressions_3')).toEqual('%badval%');
     });
 
     it('should migrate existing cookies to localStorage', function () {
@@ -126,6 +120,25 @@ describe('Utils', function () {
       pathfora.utils.updateLegacyCookies();
       expect(getCookie('PathforaImpressions_2')).toBe('');
       expect(pathfora.utils.read('PathforaImpressions_2')).toBe('test');
+    });
+  });
+
+  describe('culling expired localStorage on init', function () {
+    beforeEach(globalReset);
+
+    it('should cull expired records from localStorage eagerly on init', function () {
+      var Pathfora = pathfora.constructor;
+
+      pathfora.utils.store.ttl('expired', 'bonk', -10000);
+      pathfora.utils.store.ttl('current', 'bonk', 10000);
+
+      expect(localStorage.getItem('expired')).not.toBe(null);
+      expect(localStorage.getItem('current')).not.toBe(null);
+
+      new Pathfora();
+
+      expect(localStorage.getItem('expired')).toBe(null);
+      expect(localStorage.getItem('current')).not.toBe(null);
     });
   });
 });

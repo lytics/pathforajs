@@ -1,19 +1,19 @@
 import globalReset from '../utils/global-reset';
+import { createMessageWidget } from '../utils/test-helpers';
 
-// Prioritized Widget Tests
-describe('Prioritized widgets', function () {
+describe('prioritized widgets', function () {
   beforeEach(function () {
     globalReset();
   });
 
   describe('of type "ordered"', function () {
     it('should only show the first valid widget', function (done) {
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1',
         layout: 'bar',
         msg: 'Welcome to our website',
       });
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'modal2',
         layout: 'modal',
       });
@@ -36,7 +36,7 @@ describe('Prioritized widgets', function () {
     it('should account for display conditions when determining priority', function (done) {
       pathfora.utils.saveCookie('PathforaPageView', 2);
 
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1',
         layout: 'bar',
         msg: 'Welcome to our website',
@@ -45,12 +45,12 @@ describe('Prioritized widgets', function () {
         },
       });
 
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'modal2',
         layout: 'modal',
       });
 
-      var anotherMessageBar = new pathfora.Message({
+      var anotherMessageBar = createMessageWidget({
         id: 'anotherMessageBar',
         layout: 'bar',
         msg: 'Welcome to our website',
@@ -59,7 +59,7 @@ describe('Prioritized widgets', function () {
         },
       });
 
-      var anotherModal = new pathfora.Message({
+      var anotherModal = createMessageWidget({
         id: 'anotherModal',
         layout: 'modal',
       });
@@ -90,12 +90,12 @@ describe('Prioritized widgets', function () {
 
     it('should work with entity field templates regardless of load time', function (done) {
       window.lio = {};
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1',
         layout: 'bar',
         msg: 'Welcome to our website {{name}}',
       });
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'modal2',
         layout: 'modal',
         msg: 'Welcome to our website',
@@ -145,12 +145,12 @@ describe('Prioritized widgets', function () {
         loaded: true,
       };
 
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1',
         layout: 'bar',
         msg: 'Welcome to our website',
       });
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'recommendation-modal',
         msg: 'A',
         layout: 'modal',
@@ -196,12 +196,12 @@ describe('Prioritized widgets', function () {
 
   describe('with no priority defined', function () {
     it('should attempt to initialize widgets asyncronously', function (done) {
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1noPriority',
         layout: 'bar',
         msg: 'Welcome to our website {{name}}',
       });
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'modal2noPriority',
         layout: 'modal',
         msg: 'Welcome to our website',
@@ -223,12 +223,12 @@ describe('Prioritized widgets', function () {
 
   describe('with unordered priority defined', function () {
     it('should attempt to initialize widgets asyncronously', function (done) {
-      var messageBar = new pathfora.Message({
+      var messageBar = createMessageWidget({
         id: 'messageBar1noPriority',
         layout: 'bar',
         msg: 'Welcome to our website {{name}}',
       });
-      var modal = new pathfora.Message({
+      var modal = createMessageWidget({
         id: 'modal2noPriority',
         layout: 'modal',
         msg: 'Welcome to our website',

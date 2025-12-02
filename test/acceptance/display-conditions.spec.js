@@ -1,8 +1,6 @@
 import globalReset from '../utils/global-reset';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  DISPLAY CONDITIONS
-// -------------------------
 function makeMouseEvent(type, params) {
   var evt;
   try {
@@ -45,7 +43,7 @@ describe('when setting display conditions', function () {
     var height = $(document.body).height();
     window.scroll(0, height);
 
-    var subscription = new pathfora.Message({
+    var subscription = createMessageWidget({
       layout: 'modal',
       id: 'scrollModal',
       headline: 'Heyyyy!',
@@ -76,7 +74,7 @@ describe('when setting display conditions', function () {
       "<div id='height-element' style='height:800px; display:block;'>Test</div>"
     );
 
-    var subscription = new pathfora.Message({
+    var subscription = createMessageWidget({
       layout: 'modal',
       id: 'scrollModal',
       headline: 'Heyyyy!',
@@ -105,7 +103,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show when all manualTrigger widgets are triggered', function () {
-    var customWidget = new pathfora.Message({
+    var customWidget = createMessageWidget({
       msg: 'custom trigger test',
       id: 'custom-widget',
       layout: 'modal',
@@ -114,7 +112,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var customWidget2 = new pathfora.Message({
+    var customWidget2 = createMessageWidget({
       msg: 'custom trigger test2',
       id: 'custom-widget2',
       layout: 'modal',
@@ -141,7 +139,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show all manualTrigger widgets on initialization if they have already been triggered', function () {
-    var customWidget3 = new pathfora.Message({
+    var customWidget3 = createMessageWidget({
       msg: 'custom trigger test3',
       id: 'custom-widget3',
       layout: 'modal',
@@ -155,7 +153,7 @@ describe('when setting display conditions', function () {
     var widget = $('#' + customWidget3.id);
     expect(widget.length).toBe(1);
 
-    var customWidget4 = new pathfora.Message({
+    var customWidget4 = createMessageWidget({
       msg: 'custom trigger test4',
       id: 'custom-widget4',
       layout: 'modal',
@@ -173,7 +171,7 @@ describe('when setting display conditions', function () {
 
   it('should be able to show after specified time', function () {
     jasmine.clock().install();
-    var delayedWidget = new pathfora.Message({
+    var delayedWidget = createMessageWidget({
       msg: 'Delayed widget test',
       id: 'delayed-widget',
       layout: 'modal',
@@ -196,7 +194,7 @@ describe('when setting display conditions', function () {
 
   it('should not show when page views requirement has not been reached', function () {
     pathfora.utils.saveCookie('PathforaPageView', 0);
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       id: 'page-view-widget-1',
       headline: 'Header',
@@ -214,7 +212,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show when page views requirement has been reached', function () {
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       id: 'page-view-widget-2',
@@ -237,7 +235,7 @@ describe('when setting display conditions', function () {
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       id: 'date-widget-1',
@@ -262,7 +260,7 @@ describe('when setting display conditions', function () {
     limitDate.setMonth(1);
     limitDate.setFullYear(2016);
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -285,7 +283,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'hideAfterActionWidget1';
     pathfora.utils.saveCookie('PathforaClosed_' + widgetId, '1|' + Date.now());
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -310,7 +308,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'hideAfterActionWidget2';
     pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '1|' + Date.now());
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -338,7 +336,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'hideAfterActionWidget3';
     pathfora.utils.saveCookie('PathforaCancel_' + widgetId, '2|' + Date.now());
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -362,7 +360,7 @@ describe('when setting display conditions', function () {
     var widgetId = 'hideAfterActionWidget4';
     pathfora.utils.saveCookie('PathforaConfirm_' + widgetId, '2|' + Date.now());
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       id: widgetId,
       msg: 'subscription',
       headline: 'Header',
@@ -390,7 +388,7 @@ describe('when setting display conditions', function () {
           var widgetId = 'impressionWidget1';
           sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -419,7 +417,7 @@ describe('when setting display conditions', function () {
             '2|' + Date.now()
           );
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -450,7 +448,7 @@ describe('when setting display conditions', function () {
             '2|' + Date.now()
           );
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -478,7 +476,7 @@ describe('when setting display conditions', function () {
           var widgetId = 'impressionWidget2';
           sessionStorage.setItem('PathforaImpressions_' + widgetId, 2);
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -509,7 +507,7 @@ describe('when setting display conditions', function () {
           sessionStorage.setItem('PathforaImpressions_AnotherWidget', 0);
           sessionStorage.setItem('PathforaImpressions_' + widgetId, 0);
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -536,7 +534,7 @@ describe('when setting display conditions', function () {
           sessionStorage.setItem('PathforaImpressions_b' + widgetId, 2);
           sessionStorage.setItem('PathforaImpressions_c' + widgetId, 2);
 
-          var form = new pathfora.Form({
+          var form = createFormWidget({
             id: widgetId,
             msg: 'subscription',
             headline: 'Header',
@@ -565,7 +563,7 @@ describe('when setting display conditions', function () {
           m2;
 
         beforeEach(function () {
-          m1 = new pathfora.Form({
+          m1 = createFormWidget({
             id: m1id,
             msg: 'modal 1',
             layout: 'slideout',
@@ -579,7 +577,7 @@ describe('when setting display conditions', function () {
             },
           });
 
-          m2 = new pathfora.Form({
+          m2 = createFormWidget({
             id: m2id,
             msg: 'modal 2',
             layout: 'slideout',
@@ -630,7 +628,7 @@ describe('when setting display conditions', function () {
           m2;
 
         beforeEach(function () {
-          m1 = new pathfora.Form({
+          m1 = createFormWidget({
             id: m1id,
             msg: 'modal 1',
             layout: 'slideout',
@@ -645,7 +643,7 @@ describe('when setting display conditions', function () {
             },
           });
 
-          m2 = new pathfora.Form({
+          m2 = createFormWidget({
             id: m2id,
             msg: 'modal 2',
             layout: 'slideout',
@@ -733,7 +731,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show when the url matches the display conditions', function () {
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -744,7 +742,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -764,7 +762,7 @@ describe('when setting display conditions', function () {
   });
 
   it("should not show when the url doesn't match the display conditions", function () {
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -782,7 +780,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show respect excluded matching rule', function () {
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -819,7 +817,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show using simple match', function () {
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: '88ee86cf72b44e67bf758cc743ac1a5d',
       msg: 'subscription',
       headline: 'Header',
@@ -835,7 +833,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: 'a793b7352c3346e493573a6827be7815',
       msg: 'subscription',
       headline: 'Header',
@@ -861,7 +859,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show using exact match', function () {
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: 'e71c5416ac7345bcba8c5330d14c4a2e',
       msg: 'subscription',
       headline: 'Header',
@@ -877,7 +875,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: '3ef7653e7f5f4889a0f2f860a679639a',
       msg: 'subscription',
       headline: 'Header',
@@ -902,7 +900,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show using string match', function () {
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: '3044aae3e5ad463fbd868a626a7998ca',
       msg: 'subscription',
       headline: 'Header',
@@ -918,7 +916,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: 'd66ec2855d284cb2b6ce3edd3c756a1b',
       msg: 'subscription',
       headline: 'Header',
@@ -934,7 +932,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       id: 'f3ededaa19fd4301b066b4da5758e16a',
       msg: 'subscription',
       headline: 'Header',
@@ -963,7 +961,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should show using regex match', function () {
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: '87a84e6f0d5d480595eebaf5de76693f',
       msg: 'subscription',
       headline: 'Header',
@@ -978,7 +976,7 @@ describe('when setting display conditions', function () {
         ],
       },
     });
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: '3ecbf9717fef4f7c80b2bbc70193ab64',
       msg: 'subscription',
       headline: 'Header',
@@ -993,7 +991,7 @@ describe('when setting display conditions', function () {
         ],
       },
     });
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       id: 'e9890969538c49d4ba9c7f516215fa61',
       msg: 'subscription',
       headline: 'Header',
@@ -1008,7 +1006,7 @@ describe('when setting display conditions', function () {
         ],
       },
     });
-    var form4 = new pathfora.Form({
+    var form4 = createFormWidget({
       id: 'ad547747786249ae8ba9e1cc3f5b86cf',
       msg: 'subscription',
       headline: 'Header',
@@ -1041,7 +1039,7 @@ describe('when setting display conditions', function () {
   it('should ignore trailing slashes for the exact match rule', function () {
     window.history.pushState({}, '', '/test/');
 
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: 'e71c5416ac7345bcba8c5330d14c4a2e',
       msg: 'subscription',
       headline: 'Header',
@@ -1056,7 +1054,7 @@ describe('when setting display conditions', function () {
         ],
       },
     });
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: '3ef7653e7f5f4889a0f2f860a679639a',
       msg: 'subscription',
       headline: 'Header',
@@ -1085,7 +1083,7 @@ describe('when setting display conditions', function () {
   it('should ignore trailing slashes in the simple match rule', function () {
     window.history.pushState({}, '', '/test/');
 
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: 'simple-match1',
       msg: 'subscription',
       headline: 'Header',
@@ -1101,7 +1099,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: 'simple-match2',
       msg: 'subscription',
       headline: 'Header',
@@ -1131,7 +1129,7 @@ describe('when setting display conditions', function () {
   it('should ignore order of query params for exact rule', function () {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1');
 
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: 'f41a595548c54321a4e12b613c466159',
       msg: 'subscription',
       headline: 'Header',
@@ -1147,7 +1145,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: 'ef2848a4949d4474b3a5d12ba1017eb7',
       msg: 'subscription',
       headline: 'Header',
@@ -1177,7 +1175,7 @@ describe('when setting display conditions', function () {
   it('should not ignore "?" if there are no queries', function () {
     window.history.pushState({}, '', '/context.html');
 
-    var queryTest1 = new pathfora.Form({
+    var queryTest1 = createFormWidget({
       id: 'query-test1',
       headline: 'Header',
       layout: 'slideout',
@@ -1195,7 +1193,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var queryTest2 = new pathfora.Form({
+    var queryTest2 = createFormWidget({
       id: 'query-test2',
       headline: 'Header',
       layout: 'slideout',
@@ -1229,7 +1227,7 @@ describe('when setting display conditions', function () {
       '/context.html?bar=2&foo=1&lytics_variation_preview_id=7b26ca56afb84669bba0bf0810ec459f'
     );
 
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: '7b26ca56afb84669bba0bf0810ec459f',
       msg: 'subscription',
       headline: 'Header',
@@ -1256,7 +1254,7 @@ describe('when setting display conditions', function () {
   it('should ignore order of query params and extra params for string rule', function () {
     window.history.pushState({}, '', '/context.html?bar=2&foo=1&baz=3');
 
-    var form1 = new pathfora.Form({
+    var form1 = createFormWidget({
       id: '339f97d11af84630add78cfd39da1105',
       msg: 'subscription',
       headline: 'Header',
@@ -1272,7 +1270,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       id: 'f8cc3cdf8a1c4532a1ebbc1e7af453b1',
       msg: 'subscription',
       headline: 'Header',
@@ -1283,7 +1281,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       id: '6372bf4e1acc45d695b45a8656dd19ec',
       msg: 'subscription',
       headline: 'Header',
@@ -1294,7 +1292,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form4 = new pathfora.Form({
+    var form4 = createFormWidget({
       id: '9c353546a52843f9868ca1b3a1012f6e',
       msg: 'subscription',
       headline: 'Header',
@@ -1328,7 +1326,7 @@ describe('when setting display conditions', function () {
   });
 
   it('should consider multiple display conditions', function () {
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       id: 'display-widget-1',
@@ -1339,7 +1337,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       id: 'display-widget-2',
@@ -1350,7 +1348,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       id: 'display-widget-3',
@@ -1373,7 +1371,7 @@ describe('when setting display conditions', function () {
       id2 = 'multiple-conditions-2',
       id3 = 'multiple-conditions-3';
 
-    var form = new pathfora.Form({
+    var form = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -1388,7 +1386,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form2 = new pathfora.Form({
+    var form2 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -1403,7 +1401,7 @@ describe('when setting display conditions', function () {
       },
     });
 
-    var form3 = new pathfora.Form({
+    var form3 = createFormWidget({
       msg: 'subscription',
       headline: 'Header',
       layout: 'slideout',
@@ -1460,7 +1458,7 @@ describe('when setting display conditions', function () {
 
     describe('by itself', function () {
       beforeEach(function () {
-        subscription = new pathfora.Message({
+        subscription = createMessageWidget({
           layout: 'modal',
           id: id,
           headline: "Don't leave yet!",
@@ -1535,7 +1533,7 @@ describe('when setting display conditions', function () {
 
         window.scroll(0, 0);
 
-        subscription = new pathfora.Message({
+        subscription = createMessageWidget({
           layout: 'modal',
           id: id,
           headline: "Don't leave yet!",
@@ -1591,7 +1589,7 @@ describe('when setting display conditions', function () {
     var modal;
 
     beforeEach(function () {
-      modal = new pathfora.Message({
+      modal = createMessageWidget({
         layout: 'modal',
         id: id,
         headline: 'This will show...',

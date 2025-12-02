@@ -1,8 +1,6 @@
 import globalReset from '../utils/global-reset';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-//  ENTITY FIELD TEMPLATES
-// -------------------------
 describe('the entity templates', function () {
   beforeEach(function () {
     globalReset();
@@ -12,82 +10,82 @@ describe('the entity templates', function () {
     window.lio = {
       data: {
         promoCode: '123FREE',
-        email: 'fake@gmail.com'
+        email: 'fake@gmail.com',
       },
       account: {
-        id: '0'
-      }
+        id: '0',
+      },
     };
 
     window.lio.loaded = true;
 
     pathfora.customData = {
-      customField: 'test'
+      customField: 'test',
     };
 
-    var fieldWidget1 = new pathfora.Message({
+    var fieldWidget1 = createMessageWidget({
       id: 'field-widget-1',
       layout: 'slideout',
       headline: 'Free shipping on your next purchase',
-      msg: 'Enter this promo code: {{promoCode}}'
+      msg: 'Enter this promo code: {{promoCode}}',
     });
 
-    var fieldWidget2 = new pathfora.Form({
+    var fieldWidget2 = createFormWidget({
       id: 'field-widget-2',
       layout: 'slideout',
       headline: '{{email | no email provided}}',
-      msg: 'Sign up with your email.'
+      msg: 'Sign up with your email.',
     });
 
-    var fieldWidget3 = new pathfora.Form({
+    var fieldWidget3 = createFormWidget({
       id: 'field-widget-3',
       layout: 'slideout',
       headline: 'Hi {{name}}',
-      msg: 'Sign up with your email.'
+      msg: 'Sign up with your email.',
     });
 
-    var fieldWidget4 = new pathfora.Form({
+    var fieldWidget4 = createFormWidget({
       id: 'field-widget-4',
       layout: 'slideout',
       headline: 'Hi {{name}}',
       msg: 'Sign up with your email.',
       displayConditions: {
-        showOnMissingFields: true
-      }
+        showOnMissingFields: true,
+      },
     });
 
-    var fieldWidget5 = new pathfora.Form({
+    var fieldWidget5 = createFormWidget({
       id: 'field-widget-5',
       layout: 'slideout',
       headline: 'Welcome',
-      msg: 'Welcome {{name | No Name}}!'
+      msg: 'Welcome {{name | No Name}}!',
     });
 
-    var fieldWidget6 = new pathfora.Form({
+    var fieldWidget6 = createFormWidget({
       id: 'field-widget-6',
       layout: 'slideout',
       headline: 'Welcome',
-      msg: 'Welcome {{myUrl | https://www.google.com/}}!'
+      msg: 'Welcome {{myUrl | https://www.google.com/}}!',
     });
 
-    var fieldWidget7 = new pathfora.Form({
+    var fieldWidget7 = createFormWidget({
       id: 'field-widget-7',
       layout: 'slideout',
       headline: 'Welcome',
-      msg: 'Welcome {{customField | fail}}!'
+      msg: 'Welcome {{customField | fail}}!',
     });
 
-    var fieldWidget8 = new pathfora.Form({
+    var fieldWidget8 = createFormWidget({
       id: 'fieldWidget8',
       layout: 'slideout',
       headline: 'Welcome',
       msg: 'my {{data | string}} will get {{data2}} defaulted wrong',
       displayConditions: {
-        showOnMissingFields: true
-      }
+        showOnMissingFields: true,
+      },
     });
 
-    var fieldWidget9 = new pathfora.Message({
+    var fieldWidget9 = createMessageWidget({
       id: 'fieldWidget9',
       layout: 'slideout',
       headline: 'Welcome',
@@ -97,8 +95,8 @@ describe('the entity templates', function () {
         callback: function () {
           window.customvar =
             'https://www.google.com/?promo={{promoCode}}&email={{email}}';
-        }
-      }
+        },
+      },
     });
 
     pathfora.initializeWidgets([
@@ -110,7 +108,7 @@ describe('the entity templates', function () {
       fieldWidget6,
       fieldWidget7,
       fieldWidget8,
-      fieldWidget9
+      fieldWidget9,
     ]);
 
     var w1 = $('#' + fieldWidget1.id);
@@ -170,30 +168,30 @@ describe('the entity templates', function () {
       data: {
         userName: 'John',
         userEmail: 'john@example.com',
-        promoCode: 'SAVE20'
+        promoCode: 'SAVE20',
       },
       account: {
-        id: '0'
-      }
+        id: '0',
+      },
     };
 
     window.lio.loaded = true;
 
-    var templateWidget1 = new pathfora.Message({
+    var templateWidget1 = createMessageWidget({
       id: 'template-dependency-01',
       layout: 'modal',
       headline: 'Hello {{userName}}!',
-      msg: 'Welcome back!'
+      msg: 'Welcome back!',
     });
 
-    var templateWidget2 = new pathfora.Form({
+    var templateWidget2 = createFormWidget({
       id: 'template-dependency-02',
       layout: 'slideout',
       headline: 'Special offer for {{userEmail}}',
-      msg: 'Use code {{promoCode}} for savings!'
+      msg: 'Use code {{promoCode}} for savings!',
     });
 
-    var templateWidget3 = new pathfora.Message({
+    var templateWidget3 = createMessageWidget({
       id: 'template-dependency-03',
       layout: 'modal',
       headline: 'Hi there!',
@@ -201,15 +199,16 @@ describe('the entity templates', function () {
       confirmAction: {
         name: 'confirm',
         callback: function () {
-          window.trackingUrl = 'https://analytics.com/track?user={{userName}}&promo={{promoCode}}';
-        }
-      }
+          window.trackingUrl =
+            'https://analytics.com/track?user={{userName}}&promo={{promoCode}}';
+        },
+      },
     });
 
     pathfora.initializeWidgets([
       templateWidget1,
       templateWidget2,
-      templateWidget3
+      templateWidget3,
     ]);
 
     var dependencies = pathfora.getWidgetDependencies();
@@ -223,7 +222,9 @@ describe('the entity templates', function () {
     expect(dependencies[templateWidget2.id].entityField).toContain('promoCode');
 
     expect(dependencies[templateWidget3.id]).toBeDefined();
-    expect(dependencies[templateWidget3.id].entityField).toContain('contactEmail');
+    expect(dependencies[templateWidget3.id].entityField).toContain(
+      'contactEmail'
+    );
     expect(dependencies[templateWidget3.id].entityField).toContain('userName');
     expect(dependencies[templateWidget3.id].entityField).toContain('promoCode');
   });

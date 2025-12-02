@@ -1,11 +1,16 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  setupTrackingSpy,
+  confirmWidget,
+  closeWidget,
+  expectTrackingEvent,
+  createFormWidget,
+} from '../utils/test-helpers';
 
 window.ga = function () {};
 window.ga.getAll = function () {};
 
-// -------------------------
-// TRACKING
-// -------------------------
 describe('the tracking component', function () {
   beforeEach(function () {
     globalReset();
@@ -37,7 +42,7 @@ describe('the tracking component', function () {
   });
 
   it('should know if users have interacted in the past', function () {
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'bar',
       id: 'interest-widget1',
       msg: 'Message bar  - interest test',
@@ -49,7 +54,7 @@ describe('the tracking component', function () {
       },
     });
 
-    var messageModal = new pathfora.Message({
+    var messageModal = createMessageWidget({
       layout: 'modal',
       id: 'interest-widget2',
       msg: 'Message modal - interest test',
@@ -61,12 +66,8 @@ describe('the tracking component', function () {
     expect(completedActions).toBe(0);
     expect(closedWidgets).toBe(0);
 
-    $('#' + messageBar.id)
-      .find('.pf-widget-ok')
-      .click();
-    $('#' + messageModal.id)
-      .find('.pf-widget-close')
-      .click();
+    confirmWidget(messageBar.id);
+    closeWidget(messageModal.id);
 
     completedActions = pathfora.getDataObject().completedActions.length;
     closedWidgets = pathfora.getDataObject().closedWidgets.length;
@@ -91,24 +92,20 @@ describe('the tracking component', function () {
   it('should report displaying widgets', function () {
     jasmine.Ajax.install();
 
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       msg: 'Message bar - reporting test',
       id: 'modal-display-report',
     });
 
-    spyOn(jstag, 'send');
+    setupTrackingSpy();
 
     pathfora.initializeWidgets([messageBar]);
 
-    expect(jstag.send).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        'pf-widget-id': messageBar.id,
-        'pf-widget-type': 'message',
-        'pf-widget-layout': 'modal',
-        'pf-widget-event': 'show',
-      })
-    );
+    expectTrackingEvent(messageBar.id, 'show', null, {
+      'pf-widget-type': 'message',
+      'pf-widget-layout': 'modal',
+    });
 
     expect(window.ga).toHaveBeenCalledWith(
       'gtm1.send',
@@ -135,7 +132,7 @@ describe('the tracking component', function () {
     jasmine.Ajax.install();
     jasmine.clock().install();
 
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       msg: 'Message bar - close reporting',
       id: 'bar-close-report',
@@ -143,19 +140,15 @@ describe('the tracking component', function () {
 
     pathfora.initializeWidgets([messageBar]);
 
-    spyOn(jstag, 'send');
-    $('.pf-widget-close').click();
+    setupTrackingSpy();
+    closeWidget(messageBar.id);
 
     jasmine.clock().tick(1000);
 
-    expect(jstag.send).toHaveBeenCalledWith(
-      jasmine.objectContaining({
-        'pf-widget-id': messageBar.id,
-        'pf-widget-type': 'message',
-        'pf-widget-layout': 'modal',
-        'pf-widget-event': 'close',
-      })
-    );
+    expectTrackingEvent(messageBar.id, 'close', null, {
+      'pf-widget-type': 'message',
+      'pf-widget-layout': 'modal',
+    });
 
     expect(window.ga).toHaveBeenCalledWith(
       'gtm1.send',
@@ -182,7 +175,7 @@ describe('the tracking component', function () {
   it('should report completed actions to Lytics API', function (done) {
     jasmine.Ajax.install();
 
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       id: 'tracking-widget1',
       msg: 'Message modal - action report test',
@@ -220,7 +213,7 @@ describe('the tracking component', function () {
   it('should report cancelled actions to Lytics API', function (done) {
     jasmine.Ajax.install();
 
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       id: 'tracking-widget2',
       msg: 'Message modal - cancel report test',
@@ -259,7 +252,7 @@ describe('the tracking component', function () {
   });
 
   it('should report submitting forms, with form data', function () {
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       msg: 'Message modal - form submit reports',
       id: 'ABCa',
@@ -281,7 +274,7 @@ describe('the tracking component', function () {
   });
 
   it('should report to Google Analytics API, when available', function (done) {
-    var messageBar = new pathfora.Message({
+    var messageBar = createMessageWidget({
       layout: 'modal',
       id: 'ga-widget',
       msg: 'Message modal - ga test',
@@ -324,7 +317,7 @@ describe('the tracking component', function () {
   it('should report hover actions to Lytics API', function (done) {
     jasmine.Ajax.install();
 
-    var messageModal = new pathfora.Message({
+    var messageModal = createMessageWidget({
       layout: 'modal',
       id: 'tracking-widget3',
       msg: 'Message modal - report test',
@@ -379,7 +372,7 @@ describe('the tracking component', function () {
   it('should report form focus actions to Lytics API', function (done) {
     jasmine.Ajax.install();
 
-    var formModal = new pathfora.Form({
+    var formModal = createFormWidget({
       layout: 'modal',
       id: 'tracking-widget4',
       msg: 'Form modal - report test',
@@ -435,7 +428,7 @@ describe('the tracking component', function () {
   it('should report form started actions to Lytics API', function (done) {
     jasmine.Ajax.install();
 
-    var formModal = new pathfora.Form({
+    var formModal = createFormWidget({
       layout: 'modal',
       id: 'tracking-widget5',
       msg: 'Form modal - report test',
@@ -492,7 +485,7 @@ describe('the tracking component', function () {
   });
 
   it('should call censorTrackingKeys with widget.censorTrackingKeys when defined', function (done) {
-    var formModal = new pathfora.Form({
+    var formModal = createFormWidget({
       layout: 'modal',
       id: 'tracking-widget-censored',
       msg: 'Form modal - report test',

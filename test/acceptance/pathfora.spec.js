@@ -1,19 +1,17 @@
 import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown.js';
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  createSubscriptionWidget,
+} from '../utils/test-helpers';
 
-('use strict');
-
-// -------------------------
-// PATHFORA TESTS
-// -------------------------
-
-describe('Pathfora', function () {
+describe('pathfora', function () {
   beforeEach(function () {
     globalReset();
   });
 
   it('should keep focus during a tab cycle in a modal or site gate', function (done) {
-    var modal = new pathfora.Message({
+    var modal = createMessageWidget({
       msg: 'msg',
       id: 'tab-cycle-test',
       layout: 'modal',
@@ -45,7 +43,7 @@ describe('Pathfora', function () {
   describe('clearAll', function () {
     it('should clear delayed widgets', function () {
       jasmine.clock().install();
-      var delayedWidget = new pathfora.Message({
+      var delayedWidget = createMessageWidget({
         msg: 'Delayed clear test',
         id: 'delayed-widget-clear',
         layout: 'modal',
@@ -54,7 +52,7 @@ describe('Pathfora', function () {
         },
       });
 
-      var delayedWidget2 = new pathfora.Message({
+      var delayedWidget2 = createMessageWidget({
         msg: 'Delayed clear test',
         id: 'delayed-widget-clear2',
         layout: 'modal',
@@ -63,7 +61,7 @@ describe('Pathfora', function () {
         },
       });
 
-      var delayedWidget3 = new pathfora.Message({
+      var delayedWidget3 = createMessageWidget({
         msg: 'Delayed clear test',
         id: 'delayed-widget-clear3',
         layout: 'modal',
@@ -96,7 +94,7 @@ describe('Pathfora', function () {
         var addEventListenerSpy = spyOn(window, 'addEventListener');
         var removeEventListenerSpy = spyOn(window, 'removeEventListener');
 
-        var scrollWidget = new pathfora.Subscription({
+        var scrollWidget = createSubscriptionWidget({
           msg: 'Fake scroll widget',
           id: 'fake-scroll-widget',
           displayConditions: {
@@ -123,7 +121,7 @@ describe('Pathfora', function () {
         var addEventListenerSpy = spyOn(document, 'addEventListener');
         var removeEventListenerSpy = spyOn(document, 'removeEventListener');
 
-        var exitIntentWidget = new pathfora.Subscription({
+        var exitIntentWidget = createSubscriptionWidget({
           msg: 'Fake exit-intent widget',
           id: 'fake-exit-intent-widget',
           displayConditions: {

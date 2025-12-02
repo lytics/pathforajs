@@ -1,44 +1,38 @@
 import globalReset from '../utils/global-reset';
+import {
+  createMessageWidget,
+  setupLioMock,
+  expectWidgetVisible,
+  expectWidgetHidden,
+} from '../utils/test-helpers';
 
-// -------------------------
-// SEGMENTS
-// -------------------------
 describe('when targeting users by segment', function () {
   beforeEach(function () {
     globalReset();
   });
 
   it('should distinguish newcomers, subscribers and common users', function (done) {
-    window.lio = {
-      data: {
-        segments: ['all', 'b'],
-      },
-      account: {
-        id: '0',
-      },
-    };
+    setupLioMock(['all', 'b']);
 
-    window.lio.loaded = true;
-
-    var messageA = new pathfora.Message({
+    var messageA = createMessageWidget({
       id: 'test-bar-01',
       msg: 'A',
       layout: 'modal',
     });
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-bar-02',
       msg: 'B',
       layout: 'modal',
     });
 
-    var messageC = new pathfora.Message({
+    var messageC = createMessageWidget({
       id: 'test-bar-03',
       msg: 'C',
       layout: 'modal',
     });
 
-    var messageD = new pathfora.Message({
+    var messageD = createMessageWidget({
       id: 'test-bar-04',
       msg: 'D',
       layout: 'modal',
@@ -67,43 +61,25 @@ describe('when targeting users by segment', function () {
 
     pathfora.initializeWidgets(widgets);
 
-    var widget = $('#' + messageB.id);
-    expect(widget).toBeDefined();
-
-    var notOpenedA = $('#' + messageA.id);
-    var notOpenedC = $('#' + messageC.id);
-    var widgetB = $('#' + messageB.id);
-    var universalWidget = $('#' + messageD.id);
-
     setTimeout(function () {
-      expect(widget.hasClass('opened')).toBeTruthy();
-      expect(notOpenedA.length).toBe(0);
-      expect(notOpenedC.length).toBe(0);
-      expect(universalWidget.hasClass('opened')).toBeTruthy();
-      expect(widgetB.hasClass('opened')).toBeTruthy();
+      expectWidgetVisible(messageB.id);
+      expectWidgetVisible(messageD.id);
+      expectWidgetHidden(messageA.id);
+      expectWidgetHidden(messageC.id);
       done();
     }, 200);
   });
 
   it('should properly exclude users when their segment membership matches that of the exclude settings', function (done) {
-    window.lio = {
-      data: {
-        segments: ['a', 'b'],
-      },
-      account: {
-        id: '0',
-      },
-    };
+    setupLioMock(['a', 'b']);
 
-    window.lio.loaded = true;
-
-    var messageA = new pathfora.Message({
+    var messageA = createMessageWidget({
       id: 'test-bar-01',
       msg: 'A',
       layout: 'modal',
     });
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-bar-02',
       msg: 'B',
       layout: 'modal',
@@ -126,14 +102,9 @@ describe('when targeting users by segment', function () {
 
     pathfora.initializeWidgets(widgets);
 
-    var widgetA = $('#' + messageA.id),
-      widgetB = $('#' + messageB.id);
-
-    expect(widgetB).toBeDefined();
-
     setTimeout(function () {
-      expect(widgetB.hasClass('opened')).toBeTruthy();
-      expect(widgetA.length).toBe(0);
+      expectWidgetVisible(messageB.id);
+      expectWidgetHidden(messageA.id);
       done();
     }, 200);
   });
@@ -150,13 +121,13 @@ describe('when targeting users by segment', function () {
 
     window.lio.loaded = true;
 
-    var messageA = new pathfora.Message({
+    var messageA = createMessageWidget({
       id: 'test-slideout-01',
       msg: 'A',
       layout: 'slideout',
     });
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-bar-02',
       msg: 'B',
       layout: 'modal',
@@ -202,19 +173,19 @@ describe('when targeting users by segment', function () {
 
     window.lio.loaded = true;
 
-    var messageA = new pathfora.Message({
+    var messageA = createMessageWidget({
       id: 'test-dependency-01',
       msg: 'A',
       layout: 'modal',
     });
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-dependency-02',
       msg: 'B',
       layout: 'modal',
     });
 
-    var messageC = new pathfora.Message({
+    var messageC = createMessageWidget({
       id: 'test-dependency-03',
       msg: 'C',
       layout: 'modal',
@@ -255,9 +226,6 @@ describe('when targeting users by segment', function () {
   });
 });
 
-// -------------------------
-// ATTRIBUTES
-// -------------------------
 describe('when targeting users by attributes', function () {
   beforeEach(function () {
     globalReset();
@@ -276,25 +244,25 @@ describe('when targeting users by attributes', function () {
     };
     window.jstag.config.cid = '123';
 
-    var messageA = new pathfora.Message({
+    var messageA = createMessageWidget({
       id: 'test-bar-01',
       msg: 'A',
       layout: 'modal',
     });
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-bar-02',
       msg: 'B',
       layout: 'modal',
     });
 
-    var messageC = new pathfora.Message({
+    var messageC = createMessageWidget({
       id: 'test-bar-03',
       msg: 'C',
       layout: 'modal',
     });
 
-    var messageD = new pathfora.Message({
+    var messageD = createMessageWidget({
       id: 'test-bar-04',
       msg: 'D',
       layout: 'modal',
@@ -358,13 +326,13 @@ describe('when targeting users by attributes', function () {
     };
     window.jstag.config.cid = '123';
 
-    var messageB = new pathfora.Message({
+    var messageB = createMessageWidget({
       id: 'test-attr-dependency-02',
       msg: 'B',
       layout: 'modal',
     });
 
-    var messageC = new pathfora.Message({
+    var messageC = createMessageWidget({
       id: 'test-attr-dependency-03',
       msg: 'C',
       layout: 'modal',
@@ -435,7 +403,7 @@ describe('pathfora helper rule functions', function () {
     it('should return true if the user is in the flow', function () {
       var rule = pathfora.rules.inFlow('test_slug');
       var data = {
-        flows_step_slugs: { '12345': 'test_slug', '67890': 'test_slug_2' },
+        flows_step_slugs: { 12345: 'test_slug', 67890: 'test_slug_2' },
       };
       expect(rule(data)).toBeTruthy();
     });
@@ -443,7 +411,7 @@ describe('pathfora helper rule functions', function () {
     it('should return false otherwise', function () {
       var rule = pathfora.rules.inFlow('test_slug');
       var data = {
-        flows_step_slugs: { '67890': 'test_slug_2' },
+        flows_step_slugs: { 67890: 'test_slug_2' },
       };
       expect(rule(data)).toBeFalsy();
     });
