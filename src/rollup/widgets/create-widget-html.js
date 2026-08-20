@@ -39,5 +39,25 @@ export default function createWidgetHtml (config) {
   constructWidgetLayout(widget, config);
   setupWidgetColors(widget, config);
 
+  // Slideout templates have no dialog container, so the root element carries the
+  // dialog semantics. Intentionally no aria-modal: a slideout does not block the
+  // page or trap focus, and claiming otherwise would mislead assistive technology.
+  if (config.layout === 'slideout') {
+    var headline = widget.querySelector('.pf-widget-headline');
+    var message = widget.querySelector('.pf-widget-message');
+
+    widget.setAttribute('role', 'dialog');
+
+    if (headline && headline.innerHTML) {
+      headline.id = config.id + '-headline';
+      widget.setAttribute('aria-labelledby', headline.id);
+    }
+
+    if (message && message.innerHTML) {
+      message.id = config.id + '-message';
+      widget.setAttribute('aria-describedby', message.id);
+    }
+  }
+
   return widget;
 }
