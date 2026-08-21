@@ -28,7 +28,7 @@ describe('a/b testing', function () {
     pathfora.initializeABTesting([ab]);
     pathfora.initializeWidgets([widgetA, widgetB]);
 
-    var w = $('[id*="ab-widget1"]');
+    var w = $('.pf-widget[id*="ab-widget1"]');
     expect(w.length).toBe(1);
   });
 
@@ -69,7 +69,7 @@ describe('a/b testing', function () {
     pathfora.initializeABTesting([ab]);
     pathfora.initializeWidgets([widget1A, widget2A, widget1B, widget2B]);
 
-    var w = $('[id*="ab-widget2"]');
+    var w = $('.pf-widget[id*="ab-widget2"]');
     expect(w.length).toBe(2);
 
     var first = w.first();
@@ -182,9 +182,9 @@ describe('a/b testing', function () {
     pathfora.initializeABTesting([ab, ab2]);
     pathfora.initializeWidgets([widgetA, widgetB, widgetC, widgetD]);
 
-    var w = $('[id*="ab-widget"]'),
-      w5 = $('[id*="ab-widget5"]'),
-      w6 = $('[id*="ab-widget6"]');
+    var w = $('.pf-widget[id*="ab-widget"]'),
+      w5 = $('.pf-widget[id*="ab-widget5"]'),
+      w6 = $('.pf-widget[id*="ab-widget6"]');
 
     expect(w.length).toBe(2);
     expect(w5.length).toBe(1);
@@ -233,7 +233,7 @@ describe('a/b testing', function () {
     pathfora.initializeABTesting([ab]);
     pathfora.initializeWidgets(widgets);
 
-    var w = $('[id*="ab-widget10"]');
+    var w = $('.pf-widget[id*="ab-widget10"]');
     expect(w.length).toBe(1);
   });
 
