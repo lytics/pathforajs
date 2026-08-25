@@ -8,7 +8,7 @@ import resetDataObject from './reset-data-object';
 // ab tests
 import createABTestingModePreset from '../ab-test/create-preset';
 
-export var PF_VERSION = '1.2.20',
+export var PF_VERSION = '1.2.21',
   PF_LOCALE = 'en-US',
   PF_DATE_OPTIONS = {},
   PREFIX_REC = 'PathforaRecommend_',
@@ -31,7 +31,6 @@ export var PF_VERSION = '1.2.20',
   OPTIONS_PRIORITY_UNORDERED = 'unordered',
   DEPENDENT_DATA_ENTITY_FIELD = 'entityField',
   DEPENDENT_DATA_SEGMENT = 'segment';
-
 
 export var defaultPositions = {
   modal: '',

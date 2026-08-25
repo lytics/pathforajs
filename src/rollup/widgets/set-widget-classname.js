@@ -7,7 +7,7 @@
  * @params {object} widget
  * @params {object} config
  */
-export default function setWidgetClassname (widget, config) {
+export default function setWidgetClassname(widget, config) {
   widget.className = [
     'pf-widget ',
     'pf-' + config.type,
@@ -15,10 +15,13 @@ export default function setWidgetClassname (widget, config) {
     config.position ? ' pf-position-' + config.position : '',
     config.pushDown ? ' pf-has-push-down' : '',
     config.origin ? ' pf-origin-' + config.origin : '',
-    ' pf-widget-variant-' + config.variant,
+    config.image ? ' pf-widget-has-image pf-widget-variant-2' : '',
+    config.recommend ? ' pf-widget-has-recommend pf-widget-variant-3' : '',
+    !config.image && !config.recommend ? ' pf-widget-variant-1' : '',
+    ' pf-widget-layout-' + config.layout,
     config.theme ? ' pf-theme-' + config.theme : '',
     config.className ? ' ' + config.className : '',
     config.branding ? ' pf-widget-has-branding' : '',
-    !config.responsive ? ' pf-mobile-hide' : ''
+    !config.responsive ? ' pf-mobile-hide' : '',
   ].join('');
 }

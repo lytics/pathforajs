@@ -11,9 +11,11 @@
     "url": "https://github.com/pathfora/pathforajs/issues"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "gh-pages": "^2.0.1",
-    "gulp": "^3.9.1",
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "gh-pages": "^6.3.0",
+    "globals": "^16.5.0",
+    "gulp": "^5.0.1",
     "gulp-browserify": "^0.5.1",
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-concat": "^2.5.2",
@@ -22,48 +24,52 @@
     "gulp-env": "^0.4.0",
     "gulp-eslint": "^6.0.0",
     "gulp-flatmap": "^1.0.2",
-    "gulp-less": "^4.0.1",
+    "gulp-less": "^5.0.0",
     "gulp-open": "^3.0.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-replace": "^1.0.0",
-    "gulp-shell": "^0.7.1",
+    "gulp-rename": "^2.1.0",
+    "gulp-replace": "^1.1.4",
+    "gulp-shell": "^0.8.0",
+    "gulp-terser": "^2.1.0",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.7",
     "html-minifier": "^4.0.0",
-    "jasmine-core": "^3.4.0",
-    "jsdoc": "^3.6.2",
-    "jquery": "^3.4.1",
-    "karma": "^4.4.1",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-coverage": "^2.0.1",
-    "karma-coverage-istanbul-reporter": "^2.0.5",
+    "jasmine-core": "^5.12.1",
+    "jquery": "^3.7.1",
+    "jsdoc": "^4.0.5",
+    "karma": "^6.4.4",
+    "karma-chrome-launcher": "^3.2.0",
+    "karma-coverage": "^2.2.1",
     "karma-intl-shim": "^1.0.3",
-    "karma-jasmine": "^2.0.1",
+    "karma-jasmine": "^5.1.0",
     "karma-jasmine-ajax": "^0.1.12",
     "karma-phantomjs-launcher": "^1.0.0",
-    "less": "^3.9.0",
-    "karma-rollup-preprocessor": "^7.0.2",
+    "karma-rollup-preprocessor": "^7.0.8",
+    "less": "^4.4.2",
     "phantomjs-prebuilt": "^2.1.16",
-    "rollup": "^1.27.14",
-    "rollup-plugin-istanbul": "^2.0.1",
-    "walk": "^2.3.14"
+    "rollup": "^4.53.2",
+    "walk": "^2.3.15"
   },
   "resolutions": {
     "graceful-fs": "^4.2.4"
   },
   "scripts": {
-    "test": "gulp build && karma start --single-run",
-    "test:watch": "gulp build && karma start --watch",
+    "test": "gulp test && karma start --single-run",
+    "test:watch": "gulp test && karma start --watch",
+    "test:coverage": "gulp test && karma start --single-run",
     "clean": "rm -rf ./dist",
     "build:prod": "NODE_ENV=production gulp build",
-    "prod": "yarn run test && yarn run clean && yarn run build:prod",
+    "prod": "NODE_ENV=production yarn run test && yarn run clean && yarn run build:prod",
     "lint": "eslint src/**/*.js test/**/*.js",
     "lint:fix": "yarn run lint -- --fix",
     "docs": "jsdoc src/pathfora.js -d docs",
-    "docs:publish": "yarn run docs && gh-pages -d docs"
+    "docs:publish": "yarn run docs && gh-pages -d docs",
+    "local": "NODE_ENV=development gulp"
   },
   "volta": {
-    "node": "11.15.0",
-    "yarn": "1.22.18"
+    "node": "20.19.1",
+    "yarn": "1.22.22"
+  },
+  "dependencies": {
+    "graceful-fs": "^4.2.11"
   }
 }

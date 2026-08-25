@@ -70,4 +70,4 @@ export default function clearById (widgetIds) {
       delete widgetTracker.dependentDataWidgets[widgetId];
     }
   });
-} 
+}

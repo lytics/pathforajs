@@ -1,12 +1,13 @@
-var moduleA = new pathfora.SiteGate({
+var moduleA = new pathfora.Form({
   id: 'gate-a',
-  msg: 'Please submit your information to continue.'
+  layout: 'gate',
+  msg: 'Please submit your information to continue.',
 });
 
 var moduleB = new pathfora.Form({
   id: 'form-b',
   layout: 'modal',
-  msg: 'Please submit your information.'
+  msg: 'Please submit your information.',
 });
 
 var ab = new pathfora.ABTest({
@@ -14,8 +15,8 @@ var ab = new pathfora.ABTest({
   type: '50/50',
   groups: [
     [moduleA], // modules to be shown to group A (can be left empty to show no modules)
-    [moduleB] // modules to be shown to group B (can be left empty to show no modules)
-  ]
+    [moduleB], // modules to be shown to group B (can be left empty to show no modules)
+  ],
 });
 
 pathfora.initializeABTesting([ab]); // Can define multiple A/B Tests

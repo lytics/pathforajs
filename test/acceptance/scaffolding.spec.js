@@ -1,8 +1,6 @@
 import globalReset from '../utils/global-reset';
+import { createMessageWidget, createFormWidget } from '../utils/test-helpers';
 
-// -------------------------
-// SCAFFOLDING
-// -------------------------
 describe('when building a scaffolding component', function () {
   beforeEach(function () {
     globalReset();
@@ -18,20 +16,19 @@ describe('when building a scaffolding component', function () {
   it('should insert widget into config after building and inserting into scaffold', function () {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
-    var tester = new pathfora.Message({
+    var tester = createMessageWidget({
       id: 'tester123',
       headline: 'Sample Insert',
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       okShow: true,
       cancelShow: true,
       theme: 'dark',
       titleField: false,
       nameField: false,
       emailField: false,
-      msgField: false
+      msgField: false,
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester, scaffold);
 
@@ -46,29 +43,27 @@ describe('when building a scaffolding component', function () {
   it('should insert multiple widgets into config binding to the same segment', function () {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
-    var tester1 = new pathfora.Message({
+    var tester1 = createMessageWidget({
       id: 'tester123',
       headline: 'Sample Insert',
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       okShow: true,
-      theme: 'dark'
+      theme: 'dark',
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester1, scaffold);
 
-    var tester2 = new pathfora.Form({
+    var tester2 = createFormWidget({
       id: 'tester456',
       headline: 'Sample Insert Two',
       msg: 'Sample insert message two.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: '1',
       theme: 'dark',
       titleField: true,
       nameField: true,
-      emailField: true
+      emailField: true,
     });
     pathfora.utils.insertWidget('target', 'smt_new', tester2, scaffold);
 
@@ -88,30 +83,28 @@ describe('when building a scaffolding component', function () {
   it('should insert multiple widgets into config binding to the same segment but excluding', function () {
     var scaffold = pathfora.utils.initWidgetScaffold();
 
-    var tester1 = new pathfora.Message({
+    var tester1 = createMessageWidget({
       id: 'tester123',
       headline: 'Sample Insert',
       msg: 'Sample insert message.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: 1,
       okShow: true,
-      theme: 'dark'
+      theme: 'dark',
     });
 
     pathfora.utils.insertWidget('exclude', 'smt_new', tester1, scaffold);
 
-    var tester2 = new pathfora.Form({
+    var tester2 = createFormWidget({
       id: 'tester456',
       headline: 'Sample Insert Two',
       msg: 'Sample insert message two.',
       layout: 'slideout',
       position: 'bottom-right',
-      variant: 1,
       theme: 'dark',
       titleField: true,
       nameField: true,
-      emailField: true
+      emailField: true,
     });
 
     pathfora.utils.insertWidget('exclude', 'smt_new', tester2, scaffold);

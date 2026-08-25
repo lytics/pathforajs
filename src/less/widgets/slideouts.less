@@ -36,45 +36,41 @@
     text-align: left;
   }
 
-  /* Position Styles */
+  /* Position Styles
+     Widgets sit at their final offsets and are pushed off-screen with the
+     translate property while closed; .opened clears the translate to slide
+     them in. Vertical centering stays on transform so that the animated
+     property is never shared with a static offset. */
+  .slide-transition();
+
   &.pf-position-bottom-left,
   &.pf-position-left,
   &.pf-position-top-left {
-    left: -100%;
+    left: 50px;
+    translate: ~'calc(-100% - 50px)';
 
     .mobile({
       bottom: 0;
+      left: 0;
+      translate: -100%;
     });
-
-    &.pf-origin-bottom {
-      left: 50px;
-
-      .mobile({
-        left: 0;
-      });
-    }
   }
 
   &.pf-position-bottom-right,
   &.pf-position-right,
   &.pf-position-top-right {
     left: auto;
-    right: -100%;
+    right: 50px;
+    translate: ~'calc(100% + 50px)';
 
     .mobile({
       bottom: 0;
+      right: 0;
+      translate: 100%;
     });
-
-    &.pf-origin-bottom {
-      right: 50px;
-
-      .mobile({
-        left: auto;
-        right: 0;
-      });
-    }
   }
 
+  /* Vertically centered variants */
   &.pf-position-left,
   &.pf-position-right {
     bottom: auto;
@@ -93,41 +89,21 @@
   }
 
 
+  /* Bottom origin slides up from the bottom edge instead of in from the side */
   &.pf-origin-bottom {
-    bottom: -100%;
+    bottom: 50px;
+    translate: 0 ~'calc(100% + 50px)';
+
+    .mobile({
+      bottom: 0;
+      translate: 0 100%;
+    });
   }
 
 
   /* Opened State Styles */
   &.opened {
-    &.pf-position-bottom-left,
-    &.pf-position-left,
-    &.pf-position-top-left {
-      left: 50px;
-
-      .mobile({
-        left: 0;
-      });
-    }
-
-    &.pf-position-bottom-right,
-    &.pf-position-right,
-    &.pf-position-top-right {
-      right: 50px;
-
-      .mobile({
-        right: 0;
-        left: auto;
-      });
-    }
-
-    &.pf-origin-bottom {
-      bottom: 50px;
-
-      .mobile({
-        bottom: 0;
-      });
-    }
+    translate: 0;
   }
 
   .branding {
@@ -139,6 +115,8 @@
   }
 
   /* Variant Styles */
+  &:not(.pf-widget-has-image),
+  &:not(.pf-widget-has-recommend),
   &.pf-widget-variant-1 {
     .pf-widget-content {
       .pf-widget-headline {
@@ -151,7 +129,7 @@
     }
   }
 
-  &.pf-widget-variant-2 {
+  &.pf-widget-variant-2, &.pf-widget-has-image {
     .pf-widget-content {
       text-align: center;
 

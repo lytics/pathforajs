@@ -76,7 +76,7 @@ export default function constructWidgetLayout(widget, config) {
       switch (config.layout) {
         case 'modal':
         case 'slideout':
-        case 'sitegate':
+        case 'gate':
         case 'inline':
           if (!config.formStates) {
             break;
@@ -104,7 +104,7 @@ export default function constructWidgetLayout(widget, config) {
   switch (config.layout) {
     case 'modal':
     case 'slideout':
-    case 'sitegate':
+    case 'gate':
     case 'inline':
       if (widgetContent && config.branding) {
         var branding = document.createElement('div');
@@ -120,9 +120,9 @@ export default function constructWidgetLayout(widget, config) {
     case 'form':
       switch (config.layout) {
         case 'modal':
-        case 'slideout':
-        case 'random':
+        case 'gate':
         case 'inline':
+        case 'slideout':
           break;
         default:
           throw new Error('Invalid widget layout value');
@@ -131,9 +131,9 @@ export default function constructWidgetLayout(widget, config) {
     case 'subscription':
       switch (config.layout) {
         case 'modal':
+        case 'gate':
         case 'bar':
         case 'slideout':
-        case 'random':
         case 'inline':
           break;
         default:
@@ -144,9 +144,8 @@ export default function constructWidgetLayout(widget, config) {
       switch (config.layout) {
         case 'modal':
         case 'slideout':
-          break;
-        case 'random':
         case 'bar':
+        case 'gate':
         case 'button':
         case 'inline':
           break;
@@ -156,7 +155,7 @@ export default function constructWidgetLayout(widget, config) {
       break;
     case 'sitegate':
       switch (config.layout) {
-        case 'modal':
+        case 'gate':
           if (config.showForm === false) {
             node = widget.querySelector('form');
             child = node.querySelectorAll('input, select, textarea');

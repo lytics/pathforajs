@@ -8,7 +8,7 @@ describe('preloadRecommendation', function () {
 
   it('should execute the callback immediately if recommendation is not needed', function () {
     var widget = {},
-        cb = jasmine.createSpy();
+      cb = jasmine.createSpy();
 
     preloadRecommendation(widget, pathfora, cb);
     expect(cb).toHaveBeenCalled();
@@ -18,8 +18,8 @@ describe('preloadRecommendation', function () {
     var widget = {
       type: 'form',
       recommend: {
-        collection: 'blah'
-      }
+        collection: 'blah',
+      },
     };
 
     var cb = jasmine.createSpy();
@@ -37,20 +37,19 @@ describe('preloadRecommendation', function () {
 
     window.lio = {
       account: {
-        id: 0
-      }
+        id: 0,
+      },
     };
 
     pathfora.acctid = 0;
 
     var widget = {
       type: 'message',
-      variant: 3,
       layout: 'modal',
       recommend: {
         collection: 'blah',
-        visited: false
-      }
+        visited: false,
+      },
     };
 
     var cb = jasmine.createSpy();
@@ -62,7 +61,7 @@ describe('preloadRecommendation', function () {
       status: 200,
       contentType: 'application/json',
       responseText:
-        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}'
+        '{"data":[{"url": "www.example.com/1","title": "Example Title","description": "An example description","primary_image": "http://images.all-free-download.com/images/graphiclarge/blue_envelope_icon_vector_281117.jpg","confidence": 0.499,"visited": false}]}',
     });
 
     expect(cb).toHaveBeenCalled();

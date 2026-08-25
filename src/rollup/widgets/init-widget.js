@@ -23,7 +23,7 @@ import showWidget from './show-widget';
 import {
   widgetTracker,
   PREFIX_UNLOCK,
-  OPTIONS_PRIORITY_ORDERED
+  OPTIONS_PRIORITY_ORDERED,
 } from '../globals/config';
 
 // dom
@@ -41,10 +41,10 @@ import read from '../utils/persist/read';
  * @params {object} widget
  * @returns {bool} shown
  */
-export default function initializeWidget (widget, options) {
+export default function initializeWidget(widget, options) {
   var watcher,
-      condition = widget.displayConditions,
-      pf = this;
+    condition = widget.displayConditions,
+    pf = this;
 
   widget.watchers = [];
   widget.listeners = [];
@@ -54,8 +54,7 @@ export default function initializeWidget (widget, options) {
   widget.expiration.setDate(widget.expiration.getDate() + 365);
 
   if (
-    (widget.type === 'sitegate' &&
-      read(PREFIX_UNLOCK + widget.id) === 'true') ||
+    (widget.layout === 'gate' && read(PREFIX_UNLOCK + widget.id) === 'true') ||
     widget.hiddenViaABTests === true
   ) {
     return;
@@ -123,17 +122,13 @@ export default function initializeWidget (widget, options) {
   }
 
   if (condition.displayWhenElementVisible) {
-    watcher = registerElementWatcher(
-      condition.displayWhenElementVisible
-    );
+    watcher = registerElementWatcher(condition.displayWhenElementVisible);
     widget.watchers.push(watcher);
     initializeScrollWatchers(widget);
   }
 
   if (condition.scrollPercentageToDisplay) {
-    watcher = registerPositionWatcher(
-      condition.scrollPercentageToDisplay
-    );
+    watcher = registerPositionWatcher(condition.scrollPercentageToDisplay);
     widget.watchers.push(watcher);
     initializeScrollWatchers(widget);
   }

@@ -17,6 +17,7 @@
   left: 0;
   right: 0;
   .pf-box-shadow();
+  .slide-transition();
 
   .pf-widget-body {
     margin: 0 20px;
@@ -86,7 +87,8 @@
 
 &.pf-position-top-absolute,
 &.pf-position-top-fixed {
-  top: -50px;
+  top: 0;
+  translate: 0 -100%;
 
   .pf-bar-content {
     padding-top: 0px;
@@ -94,7 +96,8 @@
 }
 
 &.pf-position-bottom-fixed {
-  bottom: -50px;
+  bottom: 0;
+  translate: 0 100%;
 }
 
 &.pf-position-bottom-fixed,
@@ -104,21 +107,15 @@
 
 /* Opened State Styles */
 &.opened {
-  &.pf-position-top-absolute {
-    top: 0;
-  }
-
-  &.pf-position-bottom-fixed {
-    bottom: 0;
-  }
-
+  &.pf-position-top-absolute,
+  &.pf-position-bottom-fixed,
   &.pf-position-top-fixed {
-    top: 0;
+    translate: 0;
   }
 }
 
 /* Variant Styles */
-&.pf-widget-variant-2 {
+&.pf-widget-variant-2, &.pf-widget-has-image {
   .pf-widget-img {
     height: 35px;
     width: 35px;

@@ -6,6 +6,20 @@
   -o-transform:      @string;
 }
 
+/* Mixin for widget entrance/exit animations.
+   Movement is driven by the translate property rather than
+   top/left/right/bottom so it runs on the compositor and is not counted as
+   layout shift (CLS). Transform is deliberately left out of the transition:
+   widgets that are centered with a static transform would otherwise animate
+   from `none` to that transform when the asynchronously loaded stylesheet
+   lands after the .opened class was already applied, and appear to slide in
+   from the wrong edge. */
+.slide-transition(@duration: .3s) {
+  transition: translate @duration ease-in-out,
+              opacity @duration,
+              visibility @duration;
+}
+
 /* Mixin for mobile boundries */
 .mobile(@rules) {
   @media screen and (max-width: 736px) , screen and (max-height: 640px) {

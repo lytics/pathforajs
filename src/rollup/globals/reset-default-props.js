@@ -7,7 +7,7 @@
  * @params {object} obj
  * @returns {object} obj
  */
-export default function resetDefaultProps (obj) {
+export default function resetDefaultProps(obj) {
   obj.generic = {
     className: 'pathfora',
     branding: false,
@@ -22,7 +22,7 @@ export default function resetDefaultProps (obj) {
         actionText: '#fff',
         actionBackground: '#444',
         cancelText: '#888',
-        cancelBackground: '#333'
+        cancelBackground: '#333',
       },
       light: {
         background: '#f1f1f1',
@@ -32,8 +32,8 @@ export default function resetDefaultProps (obj) {
         actionText: '#444',
         actionBackground: '#fff',
         cancelText: '#bbb',
-        cancelBackground: '#f1f1f1'
-      }
+        cancelBackground: '#f1f1f1',
+      },
     },
     displayConditions: {
       showOnInit: true,
@@ -41,37 +41,34 @@ export default function resetDefaultProps (obj) {
       showDelay: 0,
       hideAfter: 0,
       displayWhenElementVisible: '',
-      scrollPercentageToDisplay: 0
-    }
+      scrollPercentageToDisplay: 0,
+    },
   };
 
   obj.message = {
     layout: 'modal',
     position: '',
-    variant: '1',
     okMessage: 'Confirm',
     cancelMessage: 'Cancel',
     okShow: true,
-    cancelShow: true
+    cancelShow: true,
   };
 
   obj.subscription = {
     layout: 'modal',
     position: '',
-    variant: '1',
     placeholders: {
-      email: 'Email'
+      email: 'Email',
     },
     okMessage: 'Confirm',
     cancelMessage: 'Cancel',
     okShow: true,
-    cancelShow: true
+    cancelShow: true,
   };
 
   obj.form = {
     layout: 'modal',
     position: '',
-    variant: '1',
     placeholders: {
       name: 'Name',
       title: 'Title',
@@ -80,29 +77,28 @@ export default function resetDefaultProps (obj) {
       company: 'Company',
       phone: 'Phone Number',
       country: 'Country',
-      referralEmail: 'Referral Email'
+      referralEmail: 'Referral Email',
     },
     required: {
       name: true,
-      email: true
+      email: true,
     },
     fields: {
       company: false,
       phone: false,
       country: false,
-      referralEmail: false
+      referralEmail: false,
     },
     okMessage: 'Send',
     okShow: true,
     cancelMessage: 'Cancel',
-    cancelShow: true
+    cancelShow: true,
   };
 
-
+  // legacy for old sitegate type
   obj.sitegate = {
-    layout: 'modal',
+    layout: 'gate',
     position: '',
-    variant: '1',
     placeholders: {
       name: 'Name',
       title: 'Title',
@@ -111,22 +107,22 @@ export default function resetDefaultProps (obj) {
       company: 'Company',
       phone: 'Phone Number',
       country: 'Country',
-      referralEmail: 'Referral Email'
+      referralEmail: 'Referral Email',
     },
     required: {
       name: true,
-      email: true
+      email: true,
     },
     fields: {
       message: false,
       phone: false,
       country: false,
-      referralEmail: false
+      referralEmail: false,
     },
     okMessage: 'Submit',
     okShow: true,
     cancelShow: false,
-    showForm: true
+    showForm: true,
   };
 
   return obj;
