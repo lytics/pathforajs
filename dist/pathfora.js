@@ -211,7 +211,7 @@
   /** @module pathfora/globals/config */
 
 
-  var PF_VERSION = '1.2.20',
+  var PF_VERSION = '1.2.21',
     PF_LOCALE = 'en-US',
     PF_DATE_OPTIONS = {},
     PREFIX_REC = 'PathforaRecommend_',
@@ -234,7 +234,6 @@
     OPTIONS_PRIORITY_UNORDERED = 'unordered',
     DEPENDENT_DATA_ENTITY_FIELD = 'entityField',
     DEPENDENT_DATA_SEGMENT = 'segment';
-
 
   var defaultPositions = {
     modal: '',
