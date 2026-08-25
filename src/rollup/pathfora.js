@@ -124,7 +124,17 @@ var Pathfora = function () {
 
   // add pathfora css
   var head = document.getElementsByTagName('head')[0],
-    link = document.createElement('link');
+    link = document.createElement('link'),
+    critical = document.createElement('style');
+
+  // The stylesheet above loads asynchronously, so a widget can reach the DOM
+  // before it does. Keep widgets hidden until then, otherwise they render as
+  // an unstyled block in the page flow and reflow into place once the
+  // stylesheet lands.
+  critical.setAttribute('type', 'text/css');
+  critical.appendChild(
+    document.createTextNode('.pf-widget{visibility:hidden;opacity:0}')
+  );
 
   link.setAttribute('rel', 'stylesheet');
   link.setAttribute('type', 'text/css');
@@ -133,6 +143,7 @@ var Pathfora = function () {
   this.utils.updateLegacyCookies();
   this.utils.store.removeExpiredItems();
 
+  head.appendChild(critical);
   head.appendChild(link);
 };
 

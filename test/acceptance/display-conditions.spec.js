@@ -30,18 +30,27 @@ function makeMouseEvent(type, params) {
   return evt;
 }
 
+// specs run in a random order, so any spec that grows the page and scrolls it
+// must put both back afterwards - otherwise a later window.scroll() to the same
+// offset is a no-op and never fires the scroll event the watchers rely on
+function resetScroll() {
+  $('#height-element').remove();
+  $(document.body).css('height', '');
+  window.scroll(0, 0);
+}
+
 describe('when setting display conditions', function () {
   beforeEach(function () {
     globalReset();
   });
 
   it('should consider scrollPercentagetoDisplay', function (done) {
+    // start from the top so scrolling below is guaranteed to fire a scroll event
+    window.scroll(0, 0);
     $(document.body).css('height', '4000px');
     $(document.body).append(
       "<div id='height-element' style='height:800px; display:block;'>Test</div>"
     );
-    var height = $(document.body).height();
-    window.scroll(0, height);
 
     var subscription = createMessageWidget({
       layout: 'modal',
@@ -59,16 +68,20 @@ describe('when setting display conditions', function () {
     var widget = $('#' + subscription.id);
     expect(widget.length).toBe(0);
 
+    var height = $(document.body).height();
+    window.scroll(0, height);
+
     setTimeout(function () {
       widget = $('#' + subscription.id);
       expect(widget.length).toBe(1);
 
-      $('#height-element').remove();
+      resetScroll();
       done();
     }, 200);
   });
 
   it('should correctly calculate scroll percentage when scroll offset cannot be greater than scroll position', function (done) {
+    window.scroll(0, 0);
     $(document.body).css('height', '4000px');
     $(document.body).append(
       "<div id='height-element' style='height:800px; display:block;'>Test</div>"
@@ -97,7 +110,7 @@ describe('when setting display conditions', function () {
       widget = $('#' + subscription.id);
       expect(widget.length).toBe(1);
 
-      $('#height-element').remove();
+      resetScroll();
       done();
     }, 100);
   });
@@ -1550,7 +1563,7 @@ describe('when setting display conditions', function () {
       });
 
       afterEach(function () {
-        $('#height-element').remove();
+        resetScroll();
       });
 
       it('should not be triggered until all display conditions are met (exitIntent)', function () {

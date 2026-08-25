@@ -6167,7 +6167,17 @@
 
     // add pathfora css
     var head = document$1.getElementsByTagName('head')[0],
-      link = document$1.createElement('link');
+      link = document$1.createElement('link'),
+      critical = document$1.createElement('style');
+
+    // The stylesheet above loads asynchronously, so a widget can reach the DOM
+    // before it does. Keep widgets hidden until then, otherwise they render as
+    // an unstyled block in the page flow and reflow into place once the
+    // stylesheet lands.
+    critical.setAttribute('type', 'text/css');
+    critical.appendChild(
+      document$1.createTextNode('.pf-widget{visibility:hidden;opacity:0}')
+    );
 
     link.setAttribute('rel', 'stylesheet');
     link.setAttribute('type', 'text/css');
@@ -6176,6 +6186,7 @@
     this.utils.updateLegacyCookies();
     this.utils.store.removeExpiredItems();
 
+    head.appendChild(critical);
     head.appendChild(link);
   };
 
