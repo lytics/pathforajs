@@ -1,3 +1,11 @@
+/* Mixin for widget entrance/exit animations.
+   Movement is driven by the translate property rather than
+   top/left/right/bottom so it runs on the compositor and is not counted as
+   layout shift (CLS). Transform is deliberately left out of the transition:
+   widgets that are centered with a static transform would otherwise animate
+   from `none` to that transform when the asynchronously loaded stylesheet
+   lands after the .opened class was already applied, and appear to slide in
+   from the wrong edge. */
 /* Mixin for mobile boundries */
 /* Mixin for mobile boundries */
 /* Mixin for left aligned widgets */
@@ -639,7 +647,14 @@
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
-  /* Position Styles */
+  /* Position Styles
+     Widgets sit at their final offsets and are pushed off-screen with the
+     translate property while closed; .opened clears the translate to slide
+     them in. Vertical centering stays on transform so that the animated
+     property is never shared with a static offset. */
+  transition: translate 0.3s ease-in-out, opacity 0.3s, visibility 0.3s;
+  /* Vertically centered variants */
+  /* Bottom origin slides up from the bottom edge instead of in from the side */
   /* Opened State Styles */
   /* Variant Styles */
   /* Type Specific Styles */
@@ -669,51 +684,32 @@
 .pf-widget-slideout.pf-position-bottom-left,
 .pf-widget-slideout.pf-position-left,
 .pf-widget-slideout.pf-position-top-left {
-  left: -100%;
+  left: 50px;
+  translate: calc(-100% - 50px);
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget-slideout.pf-position-bottom-left,
   .pf-widget-slideout.pf-position-left,
   .pf-widget-slideout.pf-position-top-left {
     bottom: 0;
-  }
-}
-.pf-widget-slideout.pf-position-bottom-left.pf-origin-bottom,
-.pf-widget-slideout.pf-position-left.pf-origin-bottom,
-.pf-widget-slideout.pf-position-top-left.pf-origin-bottom {
-  left: 50px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout.pf-position-bottom-left.pf-origin-bottom,
-  .pf-widget-slideout.pf-position-left.pf-origin-bottom,
-  .pf-widget-slideout.pf-position-top-left.pf-origin-bottom {
     left: 0;
+    translate: -100%;
   }
 }
 .pf-widget-slideout.pf-position-bottom-right,
 .pf-widget-slideout.pf-position-right,
 .pf-widget-slideout.pf-position-top-right {
   left: auto;
-  right: -100%;
+  right: 50px;
+  translate: calc(100% + 50px);
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
   .pf-widget-slideout.pf-position-bottom-right,
   .pf-widget-slideout.pf-position-right,
   .pf-widget-slideout.pf-position-top-right {
     bottom: 0;
-  }
-}
-.pf-widget-slideout.pf-position-bottom-right.pf-origin-bottom,
-.pf-widget-slideout.pf-position-right.pf-origin-bottom,
-.pf-widget-slideout.pf-position-top-right.pf-origin-bottom {
-  right: 50px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout.pf-position-bottom-right.pf-origin-bottom,
-  .pf-widget-slideout.pf-position-right.pf-origin-bottom,
-  .pf-widget-slideout.pf-position-top-right.pf-origin-bottom {
-    left: auto;
     right: 0;
+    translate: 100%;
   }
 }
 .pf-widget-slideout.pf-position-left,
@@ -738,40 +734,17 @@
   }
 }
 .pf-widget-slideout.pf-origin-bottom {
-  bottom: -100%;
-}
-.pf-widget-slideout.opened.pf-position-bottom-left,
-.pf-widget-slideout.opened.pf-position-left,
-.pf-widget-slideout.opened.pf-position-top-left {
-  left: 50px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout.opened.pf-position-bottom-left,
-  .pf-widget-slideout.opened.pf-position-left,
-  .pf-widget-slideout.opened.pf-position-top-left {
-    left: 0;
-  }
-}
-.pf-widget-slideout.opened.pf-position-bottom-right,
-.pf-widget-slideout.opened.pf-position-right,
-.pf-widget-slideout.opened.pf-position-top-right {
-  right: 50px;
-}
-@media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout.opened.pf-position-bottom-right,
-  .pf-widget-slideout.opened.pf-position-right,
-  .pf-widget-slideout.opened.pf-position-top-right {
-    right: 0;
-    left: auto;
-  }
-}
-.pf-widget-slideout.opened.pf-origin-bottom {
   bottom: 50px;
+  translate: 0 calc(100% + 50px);
 }
 @media screen and (max-width: 736px), screen and (max-height: 640px) {
-  .pf-widget-slideout.opened.pf-origin-bottom {
+  .pf-widget-slideout.pf-origin-bottom {
     bottom: 0;
+    translate: 0 100%;
   }
+}
+.pf-widget-slideout.opened {
+  translate: 0;
 }
 .pf-widget-slideout .branding svg {
   bottom: -22px;
@@ -838,6 +811,7 @@
   left: 0;
   right: 0;
   box-shadow: 0 4px 4px -4px rgba(0, 0, 0, 0.5);
+  transition: translate 0.3s ease-in-out, opacity 0.3s, visibility 0.3s;
   /* Position Styles */
   /* Opened State Styles */
   /* Variant Styles */
@@ -899,27 +873,25 @@
 }
 .pf-widget-bar.pf-position-top-absolute,
 .pf-widget-bar.pf-position-top-fixed {
-  top: -50px;
+  top: 0;
+  translate: 0 -100%;
 }
 .pf-widget-bar.pf-position-top-absolute .pf-bar-content,
 .pf-widget-bar.pf-position-top-fixed .pf-bar-content {
   padding-top: 0px;
 }
 .pf-widget-bar.pf-position-bottom-fixed {
-  bottom: -50px;
+  bottom: 0;
+  translate: 0 100%;
 }
 .pf-widget-bar.pf-position-bottom-fixed,
 .pf-widget-bar.pf-position-top-fixed {
   position: fixed;
 }
-.pf-widget-bar.opened.pf-position-top-absolute {
-  top: 0;
-}
-.pf-widget-bar.opened.pf-position-bottom-fixed {
-  bottom: 0;
-}
+.pf-widget-bar.opened.pf-position-top-absolute,
+.pf-widget-bar.opened.pf-position-bottom-fixed,
 .pf-widget-bar.opened.pf-position-top-fixed {
-  top: 0;
+  translate: 0;
 }
 .pf-widget-bar.pf-widget-variant-2 .pf-widget-img,
 .pf-widget-bar.pf-widget-has-image .pf-widget-img {
