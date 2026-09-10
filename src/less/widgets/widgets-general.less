@@ -240,9 +240,18 @@
     display: none;
   }
 
-  &.success {
-    transition: opacity 0.3s;
+  /* A revealed state renames the dialog after its own text and takes focus, so
+     that a screen reader reads it out. The container is only ever focused
+     programmatically - never by tabbing - so it needs no focus ring. */
+  .pf-widget-container:focus {
+    outline: none;
+  }
 
+  /* NOTE no transition here: nothing about the state swap changes opacity, and
+     declaring one on the widget root overrides .slide-transition(), which
+     costs slideouts and bars their slide-out animation when the state's delay
+     closes the widget a few seconds later. */
+  &.success {
     .pf-widget-headline,
     .pf-widget-message,
     form {
@@ -261,8 +270,6 @@
   }
 
   &.error {
-    transition: opacity 0.3s;
-
     .pf-widget-headline,
     .pf-widget-message,
     form {
