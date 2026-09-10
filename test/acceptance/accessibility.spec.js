@@ -1,4 +1,5 @@
 import globalReset from '../utils/global-reset';
+import createAndDispatchKeydown from '../utils/create-and-dispatch-keydown';
 import {
   createMessageWidget,
   createFormWidget,
@@ -155,7 +156,7 @@ describe('widget accessibility', function () {
     );
   });
 
-  it('should not leak aria reference ids into widget id lookups', function () {
+  it('should namespace aria reference ids under the widget id', function () {
     var widget = createMessageWidget({
       id: 'a11y-id-scope',
       layout: 'slideout',
@@ -165,6 +166,217 @@ describe('widget accessibility', function () {
 
     pathfora.initializeWidgets([widget]);
 
-    expect($('[id*="a11y-id-scope"]').length).toBe(1);
+    var container = $('#' + widget.id + ' .pf-widget-container');
+
+    expect(container.attr('aria-labelledby')).toBe(
+      'a11y-id-scope-pf-widget-headline',
+    );
+    expect(container.attr('aria-describedby')).toBe(
+      'a11y-id-scope-pf-widget-message',
+    );
+  });
+});
+
+// a widget is visibility: hidden until the `opened` class lands ~50ms after it
+// is appended, and nothing inside a hidden subtree can take focus - so these
+// specs submit only once the widget is really on screen, the way a user would
+function whenOpened(widget, fn) {
+  setTimeout(function () {
+    expect($('#' + widget.id).hasClass('opened')).toBe(true);
+    fn($('#' + widget.id));
+  }, 100);
+}
+
+function submit(widget) {
+  var form = widget.find('form');
+
+  form.find('input[name="username"]').val('test');
+  form.find('input[name="email"]').val('test@example.com');
+  form.find('.pf-widget-ok').click();
+}
+
+describe('form state accessibility', function () {
+  beforeEach(function () {
+    globalReset();
+  });
+
+  it('should describe the dialog by its form, not its success state, before submit', function (done) {
+    var form = createFormWidget({
+      id: 'a11y-state-before-submit',
+      layout: 'slideout',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: { headline: 'Thanks!', msg: 'We got it.', delay: 0 },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      var container = widget.find('.pf-widget-container');
+
+      expect(resolveAriaRef(container, 'aria-labelledby').text()).toBe(
+        HEADLINE,
+      );
+      expect(resolveAriaRef(container, 'aria-describedby').text()).toBe(
+        MESSAGE,
+      );
+      done();
+    });
+  });
+
+  it('should rename the dialog after the success state it reveals', function (done) {
+    var form = createFormWidget({
+      id: 'a11y-success-state',
+      layout: 'slideout',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: { headline: 'Thanks!', msg: 'We got it.', delay: 0 },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      submit(widget);
+
+      expect(widget.hasClass('success')).toBe(true);
+
+      var container = widget.find('.pf-widget-container');
+
+      expect(resolveAriaRef(container, 'aria-labelledby').text()).toBe(
+        'Thanks!',
+      );
+      expect(resolveAriaRef(container, 'aria-describedby').text()).toBe(
+        'We got it.',
+      );
+      done();
+    });
+  });
+
+  it('should rename the dialog after the error state it reveals', function (done) {
+    var form = createFormWidget({
+      id: 'a11y-error-state',
+      layout: 'modal',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      confirmAction: {
+        waitForAsyncResponse: true,
+        callback: function (name, payload, cb) {
+          cb(false);
+        },
+      },
+      formStates: {
+        error: { headline: 'Oops', msg: 'That did not work.', delay: 0 },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      submit(widget);
+
+      expect(widget.hasClass('error')).toBe(true);
+
+      var container = widget.find('.pf-widget-container');
+
+      expect(resolveAriaRef(container, 'aria-labelledby').text()).toBe('Oops');
+      expect(resolveAriaRef(container, 'aria-describedby').text()).toBe(
+        'That did not work.',
+      );
+      done();
+    });
+  });
+
+  it('should move focus to the dialog when a state is revealed', function (done) {
+    var form = createFormWidget({
+      id: 'a11y-state-focus',
+      layout: 'slideout',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: { headline: 'Thanks!', msg: 'We got it.', delay: 0 },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      submit(widget);
+
+      var container = widget.find('.pf-widget-container');
+
+      expect(document.activeElement).toBe(container[0]);
+      done();
+    });
+  });
+
+  it('should announce an inline state as a live region without taking focus', function (done) {
+    var host = document.createElement('div');
+    host.id = 'a11y-inline-host';
+    document.body.appendChild(host);
+
+    var form = createFormWidget({
+      id: 'a11y-inline-state',
+      layout: 'inline',
+      positionSelector: '#a11y-inline-host',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: { headline: 'Thanks!', msg: 'We got it.', delay: 0 },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      submit(widget);
+
+      var state = widget.find('.success-state');
+
+      expect(widget.find('.pf-widget-container').attr('role')).toBeUndefined();
+      expect(state.attr('role')).toBe('status');
+      expect(widget[0].contains(document.activeElement)).toBe(false);
+
+      host.parentNode.removeChild(host);
+      done();
+    });
+  });
+
+  it('should not tab into elements a revealed state has hidden', function (done) {
+    // a gate has no close button, so the first focusable element in the widget
+    // is a form field - which the success state hides
+    var gate = createFormWidget({
+      id: 'a11y-state-tab',
+      layout: 'gate',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: {
+          headline: 'Thanks!',
+          msg: 'We got it.',
+          delay: 0,
+          okShow: true,
+          okMessage: 'Done',
+        },
+      },
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    whenOpened(gate, function (widget) {
+      submit(widget);
+
+      createAndDispatchKeydown(9, document);
+
+      var focused = document.activeElement;
+
+      expect(widget[0].contains(focused)).toBe(true);
+      expect(focused.getClientRects().length).toBeGreaterThan(0);
+      expect(focused).toBe(widget.find('.success-state .pf-widget-ok')[0]);
+      done();
+    });
   });
 });

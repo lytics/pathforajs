@@ -1768,6 +1768,104 @@
     }, 500);
   }
 
+  /** @module pathfora/widgets/describe-widget-container */
+
+  /**
+   * Point a widget container's aria-labelledby/aria-describedby at the headline
+   * and message elements it should be named and described by, giving each one an
+   * id to be referenced by.
+   *
+   * Ids are namespaced under the widget id, which pathfora already guarantees to
+   * be unique, so several widgets open at once cannot collide. A widget holding
+   * more than one headline and message - a form and the success or error state
+   * that replaces it - passes a distinct namespace per set.
+   *
+   * Callers pass null for an element that holds no text: a reference to an empty
+   * or absent element leaves the container unnamed just as surely as no reference
+   * at all, so the reference is cleared instead.
+   *
+   * @exports describeWidgetContainer
+   * @params {object} container
+   * @params {object} headline
+   * @params {object} message
+   * @params {string} namespace
+   */
+  function describeWidgetContainer(
+    container,
+    headline,
+    message,
+    namespace,
+  ) {
+    if (headline) {
+      headline.id = namespace + '-pf-widget-headline';
+    }
+
+    if (message) {
+      message.id = namespace + '-pf-widget-message';
+    }
+
+    // NOTE bar layouts have no headline element at all, so the message is the
+    // only text available to name the container with
+    var name = headline || message,
+      description = headline ? message : null;
+
+    if (name) {
+      container.setAttribute('aria-labelledby', name.id);
+    } else {
+      container.removeAttribute('aria-labelledby');
+    }
+
+    if (description) {
+      container.setAttribute('aria-describedby', description.id);
+    } else {
+      container.removeAttribute('aria-describedby');
+    }
+  }
+
+  /** @module pathfora/form/announce-form-state */
+
+
+  /**
+   * Make a revealed form success or error state perceivable to assistive
+   * technology.
+   *
+   * The state is revealed by CSS alone, which is silent, and the same rules hide
+   * the button the user just activated - so a dialog is renamed after its new
+   * contents and handed focus, which is what gets it read out and keeps a
+   * keyboard user from being dropped back to the top of the page. An inline
+   * widget sits in the page's own flow and should not steal focus, so its state
+   * is announced politely as a live region instead.
+   *
+   * @exports announceFormState
+   * @params {object} widget
+   * @params {string} name
+   */
+  function announceFormState(widget, name) {
+    var state = widget.querySelector('.' + name + '-state'),
+      container = widget.querySelector('.pf-widget-container');
+
+    if (!state || !container) {
+      return;
+    }
+
+    if (container.getAttribute('role') !== 'dialog') {
+      // NOTE role=status carries an implicit aria-atomic, so the headline and
+      // message are read as a single message
+      state.setAttribute('role', 'status');
+      return;
+    }
+
+    describeWidgetContainer(
+      container,
+      state.querySelector('.pf-widget-headline'),
+      state.querySelector('.pf-widget-message'),
+      widget.id + '-' + name,
+    );
+
+    container.setAttribute('tabindex', '-1');
+    container.focus();
+  }
+
   /** @module pathfora/form/handle-form-states */
 
 
@@ -1785,9 +1883,11 @@
 
       if (successful) {
         addClass(widget, 'success');
+        announceFormState(widget, 'success');
         delay = config.formStates.success && typeof config.formStates.success.delay !== 'undefined' ? config.formStates.success.delay * 1000 : 3000;
       } else {
         addClass(widget, 'error');
+        announceFormState(widget, 'error');
         delay = config.formStates.error && typeof config.formStates.error.delay !== 'undefined' ? config.formStates.error.delay * 1000 : 3000;
       }
 
@@ -3109,18 +3209,10 @@
 
   /** @module pathfora/widgets/setup-widget-aria */
 
-  // NOTE ids are handed out from a counter rather than derived from the widget id
-  // so that several widgets open at once cannot collide, and so that nothing
-  // matching a widget id is introduced anywhere else in the document
-  var ariaIdCounter = 0;
 
   /**
    * Give the widget container an accessible name and description by pointing
    * aria-labelledby/aria-describedby at the widget's own headline and message.
-   *
-   * References are only set when the element they point at will actually hold
-   * text - a reference to an empty or absent element leaves the dialog unnamed
-   * just as surely as no reference at all.
    *
    * @exports setupWidgetAria
    * @params {object} widget
@@ -3133,26 +3225,12 @@
       return;
     }
 
-    var headline = config.headline
-        ? widget.querySelector('.pf-widget-headline')
-        : null,
-      message = config.msg ? widget.querySelector('.pf-widget-message') : null,
-      suffix = '-' + ++ariaIdCounter;
-
-    if (headline) {
-      headline.id = 'pf-widget-headline' + suffix;
-      container.setAttribute('aria-labelledby', headline.id);
-
-      if (message) {
-        message.id = 'pf-widget-message' + suffix;
-        container.setAttribute('aria-describedby', message.id);
-      }
-    } else if (message) {
-      // NOTE bar layouts have no headline element at all, so the message is the
-      // only text available to name the dialog with
-      message.id = 'pf-widget-message' + suffix;
-      container.setAttribute('aria-labelledby', message.id);
-    }
+    describeWidgetContainer(
+      container,
+      config.headline ? widget.querySelector('.pf-widget-headline') : null,
+      config.msg ? widget.querySelector('.pf-widget-message') : null,
+      config.id,
+    );
   }
 
   /** @module pathfora/widgets/colors/set-custom-colors */
@@ -3481,29 +3559,47 @@
         document$1.body.appendChild(node);
 
         if (widget.layout === 'modal' || widget.layout === 'gate') {
-          // ensure that we set focus the the modal for accessibility reasons
-          var focusable = node.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          );
+          // NOTE the set is recomputed on every tab rather than captured here:
+          // form widgets swap their form out for a success or error state, so a
+          // set captured at open time would send focus to elements that are
+          // display: none by the time the user tabs. getClientRects is the check
+          // rather than offsetParent, which is null for the position: fixed
+          // widget content of a modal
+          var focusableInWidget = function () {
+            return Array.prototype.filter.call(
+              node.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+              ),
+              function (el) {
+                return el.getClientRects().length > 0;
+              }
+            );
+          };
 
-          if (focusable.length) {
-            widget.listeners.tabindex = {
-              type: 'keydown',
-              target: document$1,
-              fn: function (ev) {
-                // for modal and sitegate widgets we need to limit tab cycle focus to the widget
-                if (ev.keyCode === 9) {
-                  if (!node.contains(event.target)) {
-                    ev.preventDefault();
-                    focusable[0].focus();
-                  } else if (ev.target === focusable[focusable.length - 1]) {
-                    ev.preventDefault();
-                    focusable[0].focus();
-                  }
-                }
-              },
-            };
-          }
+          widget.listeners.tabindex = {
+            type: 'keydown',
+            target: document$1,
+            fn: function (ev) {
+              // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+              if (ev.keyCode !== 9) {
+                return;
+              }
+
+              var focusable = focusableInWidget();
+
+              if (!focusable.length) {
+                return;
+              }
+
+              if (
+                !node.contains(ev.target) ||
+                ev.target === focusable[focusable.length - 1]
+              ) {
+                ev.preventDefault();
+                focusable[0].focus();
+              }
+            },
+          };
         }
       } else {
         // support legacy inline layout used position as selector.
@@ -3582,7 +3678,16 @@
     if (w.displayConditions && w.displayConditions.showDelay) {
       widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
         openWidget(w);
-        document$1.querySelector('.pf-widget-ok').focus();
+
+        // NOTE scoped to this widget, and optional: with several widgets open an
+        // unscoped lookup focuses whichever one comes first in the document, and
+        // a widget configured with okShow: false has no such button at all
+        var node = document$1.getElementById(w.id),
+          ok = node && node.querySelector('.pf-widget-ok');
+
+        if (ok) {
+          ok.focus();
+        }
       }, w.displayConditions.showDelay * 1000);
     } else {
       openWidget(w);

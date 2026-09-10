@@ -63,29 +63,47 @@ export default function showWidget(w) {
       document.body.appendChild(node);
 
       if (widget.layout === 'modal' || widget.layout === 'gate') {
-        // ensure that we set focus the the modal for accessibility reasons
-        var focusable = node.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        // NOTE the set is recomputed on every tab rather than captured here:
+        // form widgets swap their form out for a success or error state, so a
+        // set captured at open time would send focus to elements that are
+        // display: none by the time the user tabs. getClientRects is the check
+        // rather than offsetParent, which is null for the position: fixed
+        // widget content of a modal
+        var focusableInWidget = function () {
+          return Array.prototype.filter.call(
+            node.querySelectorAll(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            ),
+            function (el) {
+              return el.getClientRects().length > 0;
+            }
+          );
+        };
 
-        if (focusable.length) {
-          widget.listeners.tabindex = {
-            type: 'keydown',
-            target: document,
-            fn: function (ev) {
-              // for modal and sitegate widgets we need to limit tab cycle focus to the widget
-              if (ev.keyCode === 9) {
-                if (!node.contains(event.target)) {
-                  ev.preventDefault();
-                  focusable[0].focus();
-                } else if (ev.target === focusable[focusable.length - 1]) {
-                  ev.preventDefault();
-                  focusable[0].focus();
-                }
-              }
-            },
-          };
-        }
+        widget.listeners.tabindex = {
+          type: 'keydown',
+          target: document,
+          fn: function (ev) {
+            // for modal and sitegate widgets we need to limit tab cycle focus to the widget
+            if (ev.keyCode !== 9) {
+              return;
+            }
+
+            var focusable = focusableInWidget();
+
+            if (!focusable.length) {
+              return;
+            }
+
+            if (
+              !node.contains(ev.target) ||
+              ev.target === focusable[focusable.length - 1]
+            ) {
+              ev.preventDefault();
+              focusable[0].focus();
+            }
+          },
+        };
       }
     } else {
       // support legacy inline layout used position as selector.
@@ -164,7 +182,16 @@ export default function showWidget(w) {
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
       openWidget(w);
-      document.querySelector('.pf-widget-ok').focus();
+
+      // NOTE scoped to this widget, and optional: with several widgets open an
+      // unscoped lookup focuses whichever one comes first in the document, and
+      // a widget configured with okShow: false has no such button at all
+      var node = document.getElementById(w.id),
+        ok = node && node.querySelector('.pf-widget-ok');
+
+      if (ok) {
+        ok.focus();
+      }
     }, w.displayConditions.showDelay * 1000);
   } else {
     openWidget(w);
