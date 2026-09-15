@@ -37,14 +37,14 @@
       layouts: ['modal', 'slideout', 'bar', 'gate', 'button', 'inline'],
     },
     {
-      ctor: 'Subscription',
-      type: 'subscription',
-      layouts: ['modal', 'slideout', 'bar', 'gate', 'inline'],
-    },
-    {
       ctor: 'Form',
       type: 'form',
       layouts: ['modal', 'slideout', 'gate', 'inline'],
+    },
+    {
+      ctor: 'Subscription',
+      type: 'subscription',
+      layouts: ['modal', 'slideout', 'bar', 'gate', 'inline'],
     },
   ];
 
