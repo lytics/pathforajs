@@ -302,12 +302,6 @@
           note: 'counts up in PathforaPageView, which Reset clears',
         },
         {
-          key: 'displayConditions.manualTrigger',
-          label: 'manualTrigger',
-          type: 'bool',
-          note: 'use the Trigger button to release it',
-        },
-        {
           key: 'displayConditions.showOnMissingFields',
           label: 'showOnMissingFields',
           type: 'bool',

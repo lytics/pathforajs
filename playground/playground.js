@@ -805,11 +805,6 @@
 
     byId('pg-render').addEventListener('click', renderCurrent);
 
-    byId('pg-trigger').addEventListener('click', function () {
-      stageWindow().pathfora.triggerWidgets();
-      setStatus(describeRendered());
-    });
-
     byId('pg-clear').addEventListener('click', function () {
       clearWidgets();
       setStatus('Cleared');
