@@ -132,6 +132,32 @@ The docs task will walk through every `.js` file in the examples source director
 
 This allows us to keep our source code in one place. Changing a js file in the examples source folder will change the code snippet in the docs and update the example .html file.
 
+### Widget playground
+
+`playground/` is a local page for rendering any widget type and layout, for manual
+QA and for demoing. Start the dev server and open it:
+
+```sh
+$ yarn run local
+```
+
+Then visit [http://localhost:8080/playground/](http://localhost:8080/playground/).
+
+Pick any combination from the sidebar to render it; its config appears in the editor,
+where you can change it and render again. The editor runs as JavaScript in the same
+shape as the examples in `docs/docs/examples/src`, so a snippet from a bug report can
+be pasted in and run as-is.
+
+Two things it handles that are easy to get wrong by hand:
+
+- It sets `window.PathforaCSS` to `/dist/pathfora.min.css` before loading the SDK. The
+  SDK otherwise injects the CDN stylesheet, and that production CSS wins the cascade
+  over your local build - so local CSS changes appear to do nothing, with no error.
+- It clears pathfora's stored state before each render. `pathfora.clearAll()` only
+  resets in-memory trackers, so without this a submitted gate stays unlocked and
+  impression caps stay spent, across renders *and* across reloads. Tick **Keep stored
+  state** when you are deliberately testing impressions or `hideAfterAction`.
+
 ### Testing
 
 Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework, and [Karma](https://github.com/karma-runner/karma/) to run tests. Before running tests, or commiting changes be sure to run `gulp build` instead of `gulp local`, or tests may fail due to mismatching URLs.

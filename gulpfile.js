@@ -293,7 +293,7 @@ gulp.task(
   gulp.series(
     'build:js',
     shell.task([
-      'eslint --fix src/rollup/**/*.js gulpfile.js test/**/*.js docs/docs/examples/**/*.js',
+      'eslint --fix src/rollup/**/*.js gulpfile.js test/**/*.js docs/docs/examples/**/*.js playground/**/*.js',
     ])
   )
 );

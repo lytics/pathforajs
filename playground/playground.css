@@ -1,0 +1,257 @@
+/*
+ * Playground chrome only. Every selector is namespaced pg- so nothing here can
+ * reach into the pf-* markup we are trying to look at.
+ *
+ * Widgets render inside the stage iframe, so there is no z-index contest with
+ * them at all - a bottom-left slideout and a top-fixed bar both land where they
+ * would on a real page instead of underneath this interface.
+ */
+
+:root {
+  --pg-bg: #12151a;
+  --pg-panel: #1a1f27;
+  --pg-line: #2b323d;
+  --pg-text: #e6e9ef;
+  --pg-muted: #939cab;
+  --pg-accent: #4f9cf9;
+  --pg-error: #ff6b6b;
+  --pg-warn: #f5a623;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #23282f;
+  background: #fff;
+}
+
+/* Top bar */
+
+.pg-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 48px;
+  padding: 0 16px;
+  background: var(--pg-bg);
+  color: var(--pg-text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.pg-bar-title {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pg-status {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--pg-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+.pg-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.pg-check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--pg-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pg-bar button {
+  padding: 5px 11px;
+  border: 1px solid var(--pg-line);
+  border-radius: 4px;
+  background: var(--pg-panel);
+  color: var(--pg-text);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pg-bar button:hover {
+  border-color: var(--pg-accent);
+}
+
+/* Shell */
+
+.pg-shell {
+  display: flex;
+  height: 100vh;
+  padding-top: 48px;
+  box-sizing: border-box;
+}
+
+.pg-sidebar {
+  flex: 0 0 220px;
+  width: 220px;
+  overflow-y: auto;
+  padding: 16px;
+  background: var(--pg-bg);
+  color: var(--pg-text);
+  box-sizing: border-box;
+}
+
+.pg-hint {
+  margin: 0 0 16px;
+  color: var(--pg-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pg-group {
+  margin-bottom: 18px;
+}
+
+.pg-group-title {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pg-muted);
+}
+
+.pg-group button {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;
+  padding: 6px 9px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: var(--pg-panel);
+  color: var(--pg-text);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pg-group button:hover {
+  border-color: var(--pg-line);
+}
+
+.pg-group button.is-active {
+  background: var(--pg-accent);
+  color: #fff;
+}
+
+.pg-group button.has-caveat::after {
+  content: '!';
+  float: right;
+  color: var(--pg-warn);
+  font-weight: 700;
+}
+
+.pg-group button.is-active.has-caveat::after {
+  color: #fff;
+}
+
+/* Main column */
+
+.pg-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pg-editor-pane {
+  flex: 0 0 auto;
+  padding: 12px 20px 14px;
+  border-bottom: 1px solid #e2e7ec;
+  background: #f4f6f9;
+}
+
+/* The frame widgets render into. Given the remaining height so a bar or a
+   bottom slideout has somewhere realistic to sit. */
+.pg-stage {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  background: #fff;
+}
+
+.pg-editor-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.pg-editor-head label {
+  font-weight: 600;
+}
+
+.pg-editor-note {
+  color: #6c7480;
+  font-size: 12px;
+}
+
+#pg-editor {
+  display: block;
+  width: 100%;
+  height: 130px;
+  padding: 12px;
+  border: 1px solid #d5dae1;
+  border-radius: 6px;
+  background: #fbfcfd;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 1.55;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+#pg-editor:focus {
+  outline: 2px solid var(--pg-accent);
+  outline-offset: 1px;
+}
+
+.pg-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.pg-primary {
+  padding: 7px 16px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--pg-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pg-error {
+  flex: 1;
+  min-width: 0;
+  color: var(--pg-error);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.pg-error[hidden] {
+  display: none;
+}
