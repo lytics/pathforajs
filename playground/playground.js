@@ -65,6 +65,7 @@
   var mode = 'form';
   var manualSnippet = null;
   var renderTimer = null;
+  var stageStarted = false;
 
   // Forward reference. commit() and the repeating-row controls need to rebuild
   // the form, and buildForm is what creates those controls in the first place.
@@ -250,6 +251,11 @@
       clearStoredState();
     }
 
+    if (!stageWindow().pathfora) {
+      showError('The stage frame has not finished loading the SDK yet.');
+      return;
+    }
+
     // Injected as a script element rather than eval'd so it runs in the stage's
     // own scope. Errors thrown here reach the stage window's error handler,
     // wired up in watchStage, rather than this call stack.
@@ -266,15 +272,24 @@
   /* ---------- snippet ---------- */
 
   function context() {
-    return { type: state.type, layout: state.layout, config: state.config };
+    // config is null until an entry is picked, and gating predicates read
+    // through it - ctx.config.theme and friends must not throw on first paint
+    return {
+      type: state.type,
+      layout: state.layout,
+      config: state.config || {},
+    };
   }
 
   function applies(item) {
     return typeof item.applies !== 'function' || item.applies(context());
   }
 
-
   function buildConfig() {
+    if (!state.config) {
+      return null;
+    }
+
     var config = JSON.parse(JSON.stringify(state.config));
 
     // Drop anything whose control is not currently applicable, so clearing the
@@ -313,7 +328,10 @@
       return manualSnippet;
     }
 
-    return snippetFor(buildConfig());
+    var config = buildConfig();
+
+    // nothing is selected yet on first paint
+    return config ? snippetFor(config) : '';
   }
 
   function syncEditor() {
@@ -519,7 +537,7 @@
           toDisplay(sub, row[sub.key]),
           function (raw) {
             commit(path, sub, raw, false);
-          }
+          },
         );
 
         rowEl.appendChild(labelled(sub, control));
@@ -620,7 +638,7 @@
           toDisplay(field, getPath(state.config, field.key)),
           function (raw) {
             commit(field.key, field, raw, structural);
-          }
+          },
         );
 
         group.appendChild(labelled(field, control));
@@ -678,9 +696,9 @@
       function (button) {
         button.classList.toggle(
           'is-active',
-          button.dataset.key === keyFor(entry.ctor, layout)
+          button.dataset.key === keyFor(entry.ctor, layout),
         );
-      }
+      },
     );
 
     state.ctor = entry.ctor;
@@ -733,6 +751,28 @@
     });
   }
 
+  /**
+   * Runs once, when the stage is genuinely usable.
+   *
+   * readyState is not a trustworthy signal here: a freshly created iframe
+   * reports 'complete' for its own initial blank document, well before
+   * stage.html and the SDK inside it have loaded. Rendering against that gives
+   * "pathfora is not defined". The SDK being present is the real signal.
+   */
+  function stageReady() {
+    if (
+      stageStarted ||
+      !el.stage.contentWindow ||
+      !el.stage.contentWindow.pathfora
+    ) {
+      return;
+    }
+
+    stageStarted = true;
+    watchStage();
+    selectEntry(CATALOGUE[0], CATALOGUE[0].layouts[0]);
+  }
+
   function init() {
     el.catalogue = byId('pg-catalogue');
     el.form = byId('pg-form');
@@ -780,10 +820,19 @@
       setStatus('Cleared ' + clearStoredState() + ' stored key(s)');
     });
 
-    el.stage.addEventListener('load', watchStage);
-
     setMode('form');
-    setStatus('Pick a widget to render');
+
+    // Handle both orders: the iframe may load after this script runs, or it may
+    // have loaded already and never fire another load event.
+    el.stage.addEventListener('load', stageReady);
+
+    var poll = window.setInterval(function () {
+      stageReady();
+
+      if (stageStarted) {
+        window.clearInterval(poll);
+      }
+    }, 50);
   }
 
   init();
