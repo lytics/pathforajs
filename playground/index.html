@@ -16,6 +16,13 @@
           <input type="checkbox" id="pg-preserve" />
           Keep stored state
         </label>
+        <button
+          type="button"
+          id="pg-trigger"
+          title="Release manualTrigger widgets"
+        >
+          Trigger
+        </button>
         <button type="button" id="pg-reset">Reset stored state</button>
         <button type="button" id="pg-clear">Clear widgets</button>
       </span>
@@ -24,20 +31,26 @@
     <div class="pg-shell">
       <aside class="pg-sidebar">
         <p class="pg-hint">
-          Every valid type and layout combination. Picking one loads its config
-          below, where you can edit it and render again.
+          Every valid type and layout combination. Picking one resets the
+          settings alongside it.
         </p>
         <div id="pg-catalogue"></div>
       </aside>
 
-      <main class="pg-main">
-        <section class="pg-editor-pane">
+      <section class="pg-controls">
+        <div class="pg-modes">
+          <button type="button" id="pg-mode-form" class="pg-mode">Form</button>
+          <button type="button" id="pg-mode-config" class="pg-mode">
+            Config
+          </button>
+        </div>
+
+        <div class="pg-form" id="pg-form"></div>
+
+        <div class="pg-editor-pane">
           <div class="pg-editor-head">
             <label for="pg-editor">Config</label>
-            <span class="pg-editor-note"
-              >Runs as JavaScript, same shape as the examples in
-              docs/docs/examples/src</span
-            >
+            <span class="pg-editor-note" id="pg-editor-hint"></span>
           </div>
           <textarea
             id="pg-editor"
@@ -48,24 +61,25 @@
             <button type="button" id="pg-render" class="pg-primary">
               Render
             </button>
-            <span class="pg-error" id="pg-error" role="alert"></span>
           </div>
-        </section>
+          <span class="pg-error" id="pg-error" role="alert"></span>
+        </div>
+      </section>
 
-        <!--
-          Widgets render inside this frame rather than in this page. Otherwise the
-          sidebar covers a bottom-left slideout and the toolbar covers a top-fixed
-          bar, and there is no corner of the chrome that is reliably out of the way.
-        -->
-        <iframe
-          id="pg-stage"
-          class="pg-stage"
-          src="/playground/stage.html"
-          title="Widget stage"
-        ></iframe>
-      </main>
+      <!--
+        Widgets render inside this frame rather than in this page. Otherwise the
+        sidebar covers a bottom-left slideout and the toolbar covers a top-fixed
+        bar, and there is no corner of the chrome that is reliably out of the way.
+      -->
+      <iframe
+        id="pg-stage"
+        class="pg-stage"
+        src="/playground/stage.html"
+        title="Widget stage"
+      ></iframe>
     </div>
 
+    <script src="/playground/fields.js"></script>
     <script src="/playground/playground.js"></script>
   </body>
 </html>

@@ -143,10 +143,16 @@ $ yarn run local
 
 Then visit [http://localhost:8080/playground/](http://localhost:8080/playground/).
 
-Pick any combination from the sidebar to render it; its config appears in the editor,
-where you can change it and render again. The editor runs as JavaScript in the same
-shape as the examples in `docs/docs/examples/src`, so a snippet from a bug report can
-be pasted in and run as-is.
+Pick any combination from the sidebar to render it, then use either mode to configure it:
+
+- **Form** builds the config from controls covering content, buttons, placement, theme
+  and colours, all 14 display conditions, content recommendations and custom form
+  fields. Controls only appear where the option actually applies, which keeps you away
+  from the combinations that throw - `footerText` on a bar, a `position` on a gate, a
+  `pushDown` on a bar that is not top-positioned.
+- **Config** is the generated JavaScript, editable by hand. It is the same shape as the
+  examples in `docs/docs/examples/src`, so a snippet from a bug report can be pasted in
+  and run as-is. Switching back to Form regenerates the config from the controls.
 
 Two things it handles that are easy to get wrong by hand:
 
@@ -157,6 +163,15 @@ Two things it handles that are easy to get wrong by hand:
   resets in-memory trackers, so without this a submitted gate stays unlocked and
   impression caps stay spent, across renders *and* across reloads. Tick **Keep stored
   state** when you are deliberately testing impressions or `hideAfterAction`.
+
+Content recommendations render their default document rather than a real recommendation,
+because the playground stubs the Lytics account - the docs note their own examples behave
+the same way. Note that `setupWidgetContentUnit` needs both `recommend` and `content`, so
+a default document on its own renders nothing.
+
+`SiteGate` is deliberately absent: it is deprecated, and its confirm button is dead code
+because `construct-widget-actions.js` never assigns it a `widgetAction`. Use `Form` with
+layout `gate` instead.
 
 ### Testing
 
