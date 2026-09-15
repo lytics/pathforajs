@@ -168,12 +168,6 @@
           applies: layoutIn(['modal', 'slideout', 'gate']),
           note: 'throws on bar, button and inline - no footer element',
         },
-        {
-          key: 'branding',
-          label: 'branding',
-          type: 'bool',
-          applies: layoutIn(['modal', 'slideout', 'gate', 'inline']),
-        },
         { key: 'className', label: 'className', type: 'text' },
         { key: 'responsive', label: 'responsive', type: 'bool' },
       ],
