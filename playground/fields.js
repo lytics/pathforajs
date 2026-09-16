@@ -600,6 +600,9 @@
           key: 'targetSegment',
           label: 'show to segment',
           type: 'datalist',
+          // reveals the exclude field below. Only rebuilds the form once the
+          // value settles on change, not on every keystroke.
+          structural: true,
           optionsFor: function () {
             return [{ value: '*', label: 'everyone' }].concat(
               MANAGED_AUDIENCES
@@ -614,10 +617,15 @@
           optionsFor: function () {
             return MANAGED_AUDIENCES;
           },
-          note:
-            'subtracts from the segment above. On its own it matches nothing ' +
-            'and the widget never renders - initTargetedWidgets only removes ' +
-            'exclusions from the widgets a target already matched.',
+          // Hidden until there is something to subtract from:
+          // initTargetedWidgets only removes exclusions from the widgets a
+          // target already matched, so on its own an exclusion matches nothing
+          // and the widget never renders. Confirmed against the SDK, not
+          // assumed.
+          applies: function (ctx) {
+            return Boolean(ctx.config.targetSegment);
+          },
+          note: 'subtracts from the segment above',
         },
       ],
     },
