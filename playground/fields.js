@@ -115,6 +115,22 @@
     { value: 'ly_reporting_frequent_users', label: 'Frequent Users' },
   ];
 
+  // The Lytics managed content collections on the same demo account. Hardcoded
+  // for the same reason as the audiences above - reading them live would mean
+  // keeping an API key somewhere. Free text is still accepted.
+  var MANAGED_COLLECTIONS = [
+    {
+      value: 'default_recommendations',
+      label: 'Default Recommendation Collection',
+    },
+    { value: 'all_documents', label: 'All Documents' },
+    { value: 'all_documents_with_images', label: 'Documents With Images' },
+    {
+      value: 'recently_classified_documents',
+      label: 'Recently Classified Documents',
+    },
+  ];
+
   // Valid positions per layout, from validate-widget-position.js. Gate and
   // inline are absent on purpose - gate throws, inline uses positionSelector.
   var POSITIONS = {
@@ -476,7 +492,15 @@
         'renders; with the tag on, the recommendation API is called for real ' +
         'and the default is the fallback.',
       fields: [
-        { key: 'recommend.collection', label: 'collection', type: 'text' },
+        {
+          key: 'recommend.collection',
+          label: 'collection',
+          type: 'datalist',
+          optionsFor: function () {
+            return MANAGED_COLLECTIONS;
+          },
+          note: "the account's Lytics managed collections, or type any slug",
+        },
         {
           key: 'recommend.rollups',
           label: 'rollups',

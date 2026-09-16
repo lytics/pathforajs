@@ -176,7 +176,9 @@ network-free for anyone just checking a layout. With it on:
   a target already matched, so an exclusion on its own matches nothing. The
   exclude field only appears once a "show to" segment is set, for that reason.
 - Content recommendations call the recommendation API for real, with the `content`
-  default document as the fallback. Without the tag there is no account to call, so the
+  default document as the fallback. The collection field suggests the account's
+  Lytics managed collections, hardcoded alongside the audiences in
+  `playground/fields.js`; any other slug can be typed in. Without the tag there is no account to call, so the
   default is all you see. Either way `setupWidgetContentUnit` needs both `recommend` and
   `content` set, so a default document on its own renders nothing.
 
