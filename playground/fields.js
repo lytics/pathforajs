@@ -480,6 +480,7 @@
 
     {
       title: 'Content recommendation',
+      requiresTag: true,
       applies: every([
         typeIs('message'),
         layoutIn(['modal', 'slideout', 'inline']),
@@ -612,6 +613,7 @@
     },
     {
       title: 'Audience',
+      requiresTag: true,
       intro:
         'Targeted widgets go in through the object form of initializeWidgets, ' +
         'and the segment is matched against the visitor\'s own memberships - ' +

@@ -835,6 +835,15 @@
       heading.textContent = section.title;
       group.appendChild(heading);
 
+      if (section.requiresTag && !el.tag.checked) {
+        var warn = document.createElement('p');
+        warn.className = 'pg-section-warn';
+        warn.textContent =
+          'Needs the Lytics tag. Switch it on in the toolbar - without it ' +
+          'there is no account to call and no profile to match against.';
+        group.appendChild(warn);
+      }
+
       if (section.intro) {
         var intro = document.createElement('p');
         intro.className = 'pg-section-intro';
@@ -1038,7 +1047,13 @@
 
     if (!state.config) {
       selectEntry(CATALOGUE[0], CATALOGUE[0].layouts[0]);
+      return;
     }
+
+    // the stage was reloaded under an existing selection - keep it, and render
+    // straight into the fresh frame rather than asking for another reload
+    buildForm();
+    run(currentSnippet());
   }
 
   function init() {
@@ -1081,7 +1096,6 @@
       // reloaded rather than having the tag injected into a live page
       stageStarted = false;
       tagWaits = 0;
-      state.config = null;
       setStatus(on ? 'Loading the Lytics tag…' : 'Reloading without the tag…');
       el.stage.src = '/playground/stage.html' + (on ? '?tag=1' : '');
     });
