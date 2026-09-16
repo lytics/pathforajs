@@ -712,6 +712,7 @@
           },
         );
 
+        control.setAttribute('data-pg-key', path);
         rowEl.appendChild(labelled(sub, control));
       });
 
@@ -758,8 +759,54 @@
     return wrap;
   }
 
+  /** Where the caret and the scroll position were, so a rebuild can put them back */
+  function formFocus() {
+    var active = document.activeElement;
+    var holder = active && active.closest ? active.closest('[data-pg-key]') : null;
+    var caret = null;
+
+    if (active && typeof active.selectionStart === 'number') {
+      caret = active.selectionStart;
+    }
+
+    return {
+      scroll: el.form.scrollTop,
+      key: holder ? holder.getAttribute('data-pg-key') : null,
+      caret: caret,
+    };
+  }
+
+  function restoreFormFocus(saved) {
+    el.form.scrollTop = saved.scroll;
+
+    if (!saved.key) {
+      return;
+    }
+
+    var holder = el.form.querySelector('[data-pg-key="' + saved.key + '"]');
+
+    if (!holder) {
+      return;
+    }
+
+    var input = holder.matches('input, select, textarea')
+      ? holder
+      : holder.querySelector('input, select, textarea');
+
+    if (!input) {
+      return;
+    }
+
+    input.focus();
+
+    if (saved.caret !== null && typeof input.setSelectionRange === 'function') {
+      input.setSelectionRange(saved.caret, saved.caret);
+    }
+  }
+
   function buildForm() {
     var form = el.form;
+    var saved = formFocus();
 
     form.innerHTML = '';
 
@@ -803,22 +850,25 @@
           return;
         }
 
-        var structural = Boolean(
-          field.structural || field.type === 'select' || field.type === 'bool'
-        );
         var control = makeControl(
           field,
           toDisplay(field, getPath(state.config, field.key)),
-          function (raw) {
-            commit(field.key, field, raw, structural);
+          function (raw, isStructural) {
+            // makeControl says whether this particular event is structural:
+            // false while typing, true once the value settles. Ignoring it
+            // rebuilt the form on every keystroke.
+            commit(field.key, field, raw, Boolean(isStructural));
           },
         );
 
+        control.setAttribute('data-pg-key', field.key);
         group.appendChild(labelled(field, control));
       });
 
       form.appendChild(group);
     });
+
+    restoreFormFocus(saved);
   }
 
   rebuildForm = buildForm;
