@@ -15,6 +15,8 @@
   --pg-muted: #939cab;
   --pg-accent: #4f9cf9;
   --pg-error: #ff6b6b;
+  --pg-sidebar-w: 190px;
+  --pg-controls-w: 360px;
 }
 
 body {
@@ -48,16 +50,37 @@ body {
   white-space: nowrap;
 }
 
-/* Sits at the far left, directly above the panels it collapses */
-.pg-bar .pg-panels-toggle {
+/* A handle on the seam between the panels and the stage, so it reads as
+   belonging to the panels rather than to the toolbar. Rides to the window edge
+   when they collapse. */
+.pg-panels-toggle {
+  position: fixed;
+  top: 50%;
+  left: calc(var(--pg-sidebar-w) + var(--pg-controls-w));
+  z-index: 5;
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 54px;
   padding: 0;
-  margin-right: -6px;
+  border: 1px solid var(--pg-line);
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+  background: var(--pg-bg);
+  color: var(--pg-muted);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: left 0.15s ease;
+}
+
+.pg-panels-toggle:hover {
+  color: var(--pg-text);
+  background: var(--pg-panel);
+}
+
+.pg-collapsed .pg-panels-toggle {
+  left: 0;
 }
 
 .pg-panels-toggle svg {
@@ -119,8 +142,8 @@ body {
 }
 
 .pg-sidebar {
-  flex: 0 0 190px;
-  width: 190px;
+  flex: 0 0 var(--pg-sidebar-w);
+  width: var(--pg-sidebar-w);
   padding: 16px;
   overflow-y: auto;
   background: var(--pg-bg);

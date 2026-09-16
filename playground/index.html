@@ -9,31 +9,6 @@
 
   <body>
     <header class="pg-bar">
-      <button
-        type="button"
-        id="pg-panels"
-        class="pg-panels-toggle"
-        aria-expanded="true"
-        aria-label="Hide panels"
-        title="Hide panels"
-      >
-        <svg
-          viewBox="0 0 16 16"
-          width="14"
-          height="14"
-          aria-hidden="true"
-          focusable="false"
-        >
-          <path
-            d="M10 3 L5 8 L10 13"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
       <span class="pg-bar-title">Pathfora playground</span>
       <span class="pg-status" id="pg-status">Loading…</span>
       <span class="pg-bar-actions">
@@ -83,6 +58,32 @@
           <span class="pg-error" id="pg-error" role="alert"></span>
         </div>
       </section>
+
+      <button
+        type="button"
+        id="pg-panels"
+        class="pg-panels-toggle"
+        aria-expanded="true"
+        aria-label="Hide panels"
+        title="Hide panels"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M10 3 L5 8 L10 13"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
 
       <!--
         Widgets render inside this frame rather than in this page. Otherwise the
