@@ -94,6 +94,7 @@
   var stageStarted = false;
   var tagWaits = 0;
   var pendingSnippet = null;
+  var entityFields = [];
 
   // Forward reference. commit() and the repeating-row controls need to rebuild
   // the form, and buildForm is what creates those controls in the first place.
@@ -315,6 +316,7 @@
       type: state.type,
       layout: state.layout,
       config: state.config || {},
+      fields: entityFields,
     };
   }
 
@@ -350,6 +352,9 @@
     // Playground-only controls, not part of a widget config
     delete config.targetSegment;
     delete config.excludeSegment;
+    delete config.attributeField;
+    delete config.attributeOp;
+    delete config.attributeValue;
 
     // simulateSubmit is a playground-only control - turn it into the async
     // confirmAction that drives the success and error states
@@ -372,20 +377,47 @@
    * only returns anything real once the Lytics tag is loaded.
    */
   function initCall() {
-    var segment = state.config && state.config.targetSegment;
-    var excluded = state.config && state.config.excludeSegment;
+    var config = state.config || {};
+    var segment = config.targetSegment;
+    var excluded = config.excludeSegment;
+    var attribute = config.attributeField;
+    var targets = [];
     var parts = [];
 
-    if (!segment && !excluded) {
+    if (!segment && !excluded && !attribute) {
       return 'pathfora.initializeWidgets([widget]);';
     }
 
     if (segment) {
-      parts.push(
-        '  target: [{ segment: ' +
-          JSON.stringify(segment) +
-          ', widgets: [widget] }]'
+      targets.push(
+        '{ segment: ' + JSON.stringify(segment) + ', widgets: [widget] }'
       );
+    }
+
+    if (attribute) {
+      var op = config.attributeOp || 'eq';
+      var raw = config.attributeValue;
+      // gt/gte/lt/lte parseInt the attribute, so the operand has to be a number
+      var operand =
+        ['gt', 'gte', 'lt', 'lte'].indexOf(op) === -1
+          ? JSON.stringify(raw === undefined ? '' : raw)
+          : Number(raw) || 0;
+
+      targets.push(
+        '{ rule: pathfora.rules.' +
+          op +
+          '(' +
+          JSON.stringify(attribute) +
+          ', ' +
+          operand +
+          '), widgets: [widget] }'
+      );
+    }
+
+    // one target list, not one key per entry - and segment and rule cannot
+    // share an entry, validateWidgetsObject throws if they do
+    if (targets.length) {
+      parts.push('  target: [\n    ' + targets.join(',\n    ') + '\n  ]');
     }
 
     if (excluded) {
@@ -435,7 +467,10 @@
 
   function isTargeted() {
     return Boolean(
-      state.config && (state.config.targetSegment || state.config.excludeSegment)
+      state.config &&
+        (state.config.targetSegment ||
+          state.config.excludeSegment ||
+          state.config.attributeField)
     );
   }
 
@@ -810,9 +845,38 @@
     }
   }
 
+  /**
+   * Keys on the visitor's Lytics profile, for the attribute suggestions.
+   *
+   * addCallback hands a rule `e.data.user`, so that - not the top level of the
+   * entity, which is just { user, errors } - is what an attribute rule reads.
+   * The legacy lio shape puts the same fields at the top of data.
+   */
+  function readEntityFields() {
+    var win = stageWindow();
+
+    try {
+      if (win.jstag && typeof win.jstag.getEntity === 'function') {
+        var data = (win.jstag.getEntity() || {}).data;
+
+        if (data) {
+          return Object.keys(data.user || data);
+        }
+      }
+    } catch (entityError) {
+      window.console.debug('getEntity: ' + entityError.message);
+    }
+
+    return [];
+  }
+
   function buildForm() {
     var form = el.form;
     var saved = formFocus();
+
+    // read once per rebuild rather than per field, since context() is called
+    // for every applies() check
+    entityFields = readEntityFields();
 
     form.innerHTML = '';
 

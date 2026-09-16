@@ -615,12 +615,13 @@
       title: 'Audience',
       requiresTag: true,
       intro:
-        'Targeted widgets go in through the object form of initializeWidgets, ' +
-        'and the segment is matched against the visitor\'s own memberships - ' +
-        'so this only does anything with the Lytics tag switched on. Without ' +
-        'it the only segment that matches is "all". Targeting a segment the ' +
-        'visitor is not in is sometimes the point: the widget then correctly ' +
-        'renders nothing.',
+        'Targeted widgets go in through the object form of initializeWidgets. ' +
+        'A segment is matched against the visitor\'s own memberships, an ' +
+        'attribute against a field on their profile; setting both targets ' +
+        'either, since pathfora ORs the entries in a target list. Both need ' +
+        'the Lytics tag, since without it there is no profile to match ' +
+        'against. Targeting something the visitor does not match is sometimes ' +
+        'the point: the widget then correctly renders nothing.',
       fields: [
         {
           key: 'targetSegment',
@@ -652,6 +653,46 @@
             return Boolean(ctx.config.targetSegment);
           },
           note: 'subtracts from the segment above',
+        },
+        {
+          key: 'attributeField',
+          label: 'or attribute',
+          type: 'datalist',
+          // reveals the operator and value below
+          structural: true,
+          optionsFor: function (ctx) {
+            return ctx.fields || [];
+          },
+          note:
+            'a field on the Lytics user profile, e.g. visit_country. ' +
+            'Suggestions are the fields this visitor actually has.',
+        },
+        {
+          key: 'attributeOp',
+          label: 'is',
+          type: 'select',
+          options: [
+            'eq',
+            'notEq',
+            'includes',
+            'excludes',
+            'gt',
+            'gte',
+            'lt',
+            'lte',
+          ],
+          applies: function (ctx) {
+            return Boolean(ctx.config.attributeField);
+          },
+          note: 'gt, gte, lt and lte parse the attribute as an integer',
+        },
+        {
+          key: 'attributeValue',
+          label: 'value',
+          type: 'text',
+          applies: function (ctx) {
+            return Boolean(ctx.config.attributeField);
+          },
         },
       ],
     },
