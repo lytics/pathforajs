@@ -21,18 +21,75 @@
     -->
     <script>
       window.PathforaCSS = '/dist/pathfora.min.css';
-      window.liosetup = {};
-      window.jstag = {
-        send: function () {},
-        config: { cookie: 'seerid', cid: ['playground'] },
-      };
-      // loaded:true matters - addCallback only fires synchronously when it is
-      // set, so without it targeted widgets queue a callback that never runs
-      window.lio = {
-        loaded: true,
-        account: { id: 'playground' },
-        data: { segments: ['all'] },
-      };
+    </script>
+
+    <!--
+      The playground is network-free by default. Loading this page with ?tag=1
+      swaps the stubs below for the real Lytics tag, against the same demo
+      account the published docs examples use, so audience targeting and content
+      recommendations work for real.
+
+      prettier-ignore so the vendor tag snippet stays byte-identical to the one
+      in docs/docs/examples/src/template.hbs.
+    -->
+    <!-- prettier-ignore -->
+    <script>
+      (function () {
+        var useTag = /[?&]tag=1(&|$)/.test(window.location.search);
+
+        window.pgTagRequested = useTag;
+
+        if (!useTag) {
+          window.liosetup = {};
+          window.jstag = {
+            send: function () {},
+            config: { cookie: 'seerid', cid: ['playground'] }
+          };
+          // loaded:true matters - addCallback only fires synchronously when it
+          // is set, so without it targeted widgets queue a callback that never
+          // runs
+          window.lio = {
+            loaded: true,
+            account: { id: 'playground' },
+            data: { segments: ['all'] }
+          };
+          return;
+        }
+
+        !(function () { 'use strict'; var o = window.jstag || (window.jstag = {}),
+        r = []; function n(e) { o[e] = function () { for (var n =
+        arguments.length, t = new Array(n), i = 0; i < n; i++) t[i] =
+        arguments[i]; r.push([e, t]); }; } n('send'), n('mock'), n('identify'),
+        n('pageView'), n('unblock'), n('getid'), n('setid'), n('loadEntity'),
+        n('getEntity'), n('on'), n('once'), n('call'), (o.loadScript = function
+        (n, t, i) { var e = document.createElement('script'); (e.async = !0),
+        (e.src = n), (e.onload = t), (e.onerror = i); var o =
+        document.getElementsByTagName('script')[0], r = (o && o.parentNode) ||
+        document.head || document.body, c = o || r.lastChild; return null != c ?
+        r.insertBefore(e, c) : r.appendChild(e), this; }), (o.init = function n(t)
+        { return ( (this.config = t), this.loadScript(t.src, function () { if
+        (o.init === n) throw new Error('Load error!'); o.init(o.config), (function
+        () { for (var n = 0; n < r.length; n++) { var t = r[n][0], i = r[n][1];
+        o[t].apply(o, i); } r = void 0; })(); }), this ); }); })();
+
+        jstag.init({
+          src: 'https://c.lytics.io/api/tag/ea48c631489b0c19dd62ee5b40acca4b/latest.min.js',
+          stream: 'pathfora',
+          pageAnalysis: { dataLayerPull: { disabled: true } },
+
+          // publish and preview are the demo account's own experiences - left on
+          // they render real campaigns on top of the widget under test. They are
+          // also what normally asks the tag to install its SDK, so with them off
+          // and install.sdk.lazy left at its default the tag never installs one,
+          // and the local dist/ build stays in charge. Entity preload is left
+          // alone on purpose: the visitor profile is what audience targeting
+          // matches against.
+          pathfora: {
+            publish: { disabled: true },
+            preview: { disabled: true }
+          }
+        });
+      })();
     </script>
 
     <style>
@@ -107,8 +164,11 @@
 
     <script src="/dist/pathfora.js"></script>
     <script>
-      // Skips validateAccountId, which would otherwise throw for targeted widgets
-      pathfora.acctid = 'playground';
+      // With the real tag, validateAccountId reads jstag.config.cid - leave it
+      // alone so the demo account is used. Offline, the lio stub supplies it.
+      if (!window.pgTagRequested) {
+        pathfora.acctid = 'playground';
+      }
     </script>
   </body>
 </html>

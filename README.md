@@ -164,10 +164,23 @@ Two things it handles that are easy to get wrong by hand:
   impression caps stay spent, across renders *and* across reloads. Tick **Keep stored
   state** when you are deliberately testing impressions or `hideAfterAction`.
 
-Content recommendations render their default document rather than a real recommendation,
-because the playground stubs the Lytics account - the docs note their own examples behave
-the same way. Note that `setupWidgetContentUnit` needs both `recommend` and `content`, so
-a default document on its own renders nothing.
+**Lytics tag** in the toolbar swaps the stubs for the real tag, against the same demo
+account the published docs examples use. It is off by default so the playground stays
+network-free for anyone just checking a layout. With it on:
+
+- Audience targeting works - the **Audience** section targets a segment, matched against
+  the visitor's own memberships, with the visitor's current segments offered as
+  suggestions. An exclude subtracts from that match, which is the only thing exclusions
+  do: `initTargetedWidgets` filters the widgets a target already matched, so an exclude
+  on its own is a no-op.
+- Content recommendations call the recommendation API for real, with the `content`
+  default document as the fallback. Without the tag there is no account to call, so the
+  default is all you see. Either way `setupWidgetContentUnit` needs both `recommend` and
+  `content` set, so a default document on its own renders nothing.
+
+The tag is configured with `publish` and `preview` disabled, which stops the demo
+account's own campaigns rendering on top of the widget under test and, as a side effect,
+stops the tag installing its own SDK - so the local `dist/` build stays in charge.
 
 `SiteGate` is deliberately absent: it is deprecated, and its confirm button is dead code
 because `construct-widget-actions.js` never assigns it a `widgetAction`. Use `Form` with

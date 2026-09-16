@@ -408,10 +408,10 @@
       intro:
         'Set at least one recommend option below - setupWidgetContentUnit only ' +
         'runs when recommend and content are both present, so a default ' +
-        'document on its own renders nothing. The playground stubs the Lytics ' +
-        'account, so the API returns no recommendation and the default ' +
-        'document is what you will see. The docs note their own examples ' +
-        'behave the same way.',
+        'document on its own renders nothing. Without the Lytics tag switched ' +
+        'on there is no account to call, so the default document is what ' +
+        'renders; with the tag on, the recommendation API is called for real ' +
+        'and the default is the fallback.',
       fields: [
         { key: 'recommend.collection', label: 'collection', type: 'text' },
         {
@@ -522,6 +522,43 @@
           formStateFields('success', { headline: 'Thank You' })
         )
         .concat(formStateFields('error', { headline: 'Error' })),
+    },
+    {
+      title: 'Audience',
+      intro:
+        'Targeted widgets go in through the object form of initializeWidgets, ' +
+        'and the segment is matched against the visitor\'s own memberships - ' +
+        'so this only does anything with the Lytics tag switched on. Without ' +
+        'it the only segment that matches is "all". Targeting a segment the ' +
+        'visitor is not in is sometimes the point: the widget then correctly ' +
+        'renders nothing.',
+      fields: [
+        {
+          key: 'targetSegment',
+          label: 'show to segment',
+          type: 'datalist',
+          // reveals the exclude field below
+          structural: true,
+          optionsFor: function (ctx) {
+            return ['*'].concat(ctx.segments || []);
+          },
+          note: 'suggestions are the segments this visitor is currently in',
+        },
+        {
+          key: 'excludeSegment',
+          label: 'but not to segment',
+          type: 'datalist',
+          optionsFor: function (ctx) {
+            return ctx.segments || [];
+          },
+          // initTargetedWidgets only subtracts exclusions from the widgets a
+          // target matched, so an exclude on its own does nothing at all
+          applies: function (ctx) {
+            return Boolean(ctx.config.targetSegment);
+          },
+          note: 'subtracts from the segment above',
+        },
+      ],
     },
   ];
 

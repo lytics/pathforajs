@@ -57,6 +57,20 @@
     button: 'top-left',
   };
 
+  // Errors that are a known library quirk rather than something wrong with the
+  // config in front of you. Matched narrowly so genuine failures still surface.
+  var KNOWN_ERRORS = [
+    {
+      match: /Cannot add two widgets with the same id/,
+      note:
+        'Known pathfora issue, not a problem with this config: with the real ' +
+        'tag a targeted widget initialises twice. add-callback.js registers ' +
+        'the callback with jstag.entityReady and then falls through to push it ' +
+        'onto pathfora.callbacks as well, and the tag flushes both. The widget ' +
+        'rendered from the first of the two.',
+    },
+  ];
+
   var INLINE_HOST = '#pg-inline-host';
   var RENDER_DEBOUNCE = 400;
 
@@ -76,6 +90,7 @@
   var manualSnippet = null;
   var renderTimer = null;
   var stageStarted = false;
+  var tagWaits = 0;
 
   // Forward reference. commit() and the repeating-row controls need to rebuild
   // the form, and buildForm is what creates those controls in the first place.
@@ -276,10 +291,38 @@
 
     if (el.error.hidden) {
       setStatus(describeRendered());
+
+      // A targeted widget goes in through addCallback, which defers to
+      // jstag.entityReady - so it is not in the DOM yet when the status above
+      // is read. Look again once the tag has had a chance to answer.
+      window.setTimeout(function () {
+        if (el.error.hidden) {
+          setStatus(describeRendered());
+        }
+      }, 600);
     }
   }
 
   /* ---------- snippet ---------- */
+
+  /** The visitor's own segments, once the real tag has loaded */
+  function stageSegments() {
+    var win = stageWindow();
+
+    try {
+      if (win.jstag && typeof win.jstag.getSegments === 'function') {
+        return win.jstag.getSegments() || [];
+      }
+
+      if (win.lio && win.lio.data && win.lio.data.segments) {
+        return win.lio.data.segments;
+      }
+    } catch (segmentError) {
+      window.console.debug('getSegments: ' + segmentError.message);
+    }
+
+    return [];
+  }
 
   function context() {
     // config is null until an entry is picked, and gating predicates read
@@ -288,6 +331,7 @@
       type: state.type,
       layout: state.layout,
       config: state.config || {},
+      segments: stageSegments(),
     };
   }
 
@@ -320,6 +364,10 @@
       config.content[0].default = true;
     }
 
+    // Playground-only controls, not part of a widget config
+    delete config.targetSegment;
+    delete config.excludeSegment;
+
     // simulateSubmit is a playground-only control - turn it into the async
     // confirmAction that drives the success and error states
     var simulate = config.simulateSubmit;
@@ -335,6 +383,35 @@
     return prune(config);
   }
 
+  /**
+   * Targeted widgets go in through the object form of initializeWidgets rather
+   * than a plain array. The segment is matched against getUserSegments(), which
+   * only returns anything real once the Lytics tag is loaded.
+   */
+  function initCall() {
+    var segment = state.config && state.config.targetSegment;
+    var excluded = state.config && state.config.excludeSegment;
+    var parts;
+
+    if (!segment) {
+      return 'pathfora.initializeWidgets([widget]);';
+    }
+
+    parts = [
+      '  target: [{ segment: ' + JSON.stringify(segment) + ', widgets: [widget] }]',
+    ];
+
+    if (excluded) {
+      parts.push(
+        '  exclude: [{ segment: ' +
+          JSON.stringify(excluded) +
+          ', widgets: [widget] }]'
+      );
+    }
+
+    return 'pathfora.initializeWidgets({\n' + parts.join(',\n') + '\n});';
+  }
+
   function snippetFor(config) {
     var json = JSON.stringify(config, null, 2).replace(
       new RegExp('"' + CALLBACK_SENTINEL + '(success|error)"', 'g'),
@@ -348,7 +425,9 @@
       state.ctor +
       '(' +
       json +
-      ');\n\npathfora.initializeWidgets([widget]);\n'
+      ');\n\n' +
+      initCall() +
+      '\n'
     );
   }
 
@@ -508,6 +587,43 @@
 
       control.appendChild(hex);
       control.appendChild(swatch);
+    } else if (field.type === 'datalist') {
+      // free text, because you may want to target a segment this visitor is not
+      // in, with the visitor's own segments offered as suggestions
+      control = document.createElement('span');
+      control.className = 'pg-datalist';
+
+      var text = document.createElement('input');
+      var list = document.createElement('datalist');
+
+      list.id = 'pg-list-' + field.key.replace(/[^a-z0-9]+/gi, '-');
+      text.type = 'text';
+      text.value = value;
+      text.setAttribute('list', list.id);
+
+      (typeof field.optionsFor === 'function'
+        ? field.optionsFor(context())
+        : field.options || []
+      ).forEach(function (option) {
+        var node = document.createElement('option');
+        node.value = option;
+        list.appendChild(node);
+      });
+
+      text.addEventListener('input', function () {
+        onChange(text.value, false);
+      });
+
+      if (field.structural) {
+        // rebuilding on every keystroke would take the focus out of the field
+        // mid-word, so a gating text field settles on change instead
+        text.addEventListener('change', function () {
+          onChange(text.value, true);
+        });
+      }
+
+      control.appendChild(text);
+      control.appendChild(list);
     } else {
       control = document.createElement('input');
       control.type =
@@ -520,6 +636,12 @@
       control.addEventListener('input', function () {
         onChange(control.value, false);
       });
+
+      if (field.structural) {
+        control.addEventListener('change', function () {
+          onChange(control.value, true);
+        });
+      }
     }
 
     return control;
@@ -660,8 +782,9 @@
           return;
         }
 
-        var structural =
-          field.type === 'select' || field.type === 'bool' ? true : false;
+        var structural = Boolean(
+          field.structural || field.type === 'select' || field.type === 'bool'
+        );
         var control = makeControl(
           field,
           toDisplay(field, getPath(state.config, field.key)),
@@ -775,6 +898,16 @@
    */
   function watchStage() {
     stageWindow().addEventListener('error', function (event) {
+      var known = KNOWN_ERRORS.filter(function (entry) {
+        return entry.match.test(event.message);
+      })[0];
+
+      if (known) {
+        showError(known.note);
+        setStatus(describeRendered());
+        return;
+      }
+
       showError(event.message);
       setStatus('Render failed');
     });
@@ -789,12 +922,27 @@
    * "pathfora is not defined". The SDK being present is the real signal.
    */
   function stageReady() {
-    if (
-      stageStarted ||
-      !el.stage.contentWindow ||
-      !el.stage.contentWindow.pathfora
-    ) {
+    var win = el.stage.contentWindow;
+
+    if (stageStarted || !win || !win.pathfora) {
       return;
+    }
+
+    // With the real tag the account id comes from jstag.config.cid, which only
+    // exists once the tag script has loaded - rendering a targeted widget
+    // before then throws "Could not get account id". Bounded, so a blocked or
+    // offline request cannot leave the playground empty forever.
+    if (
+      win.pgTagRequested &&
+      !(win.jstag && win.jstag.config && win.jstag.config.cid)
+    ) {
+      tagWaits++;
+
+      if (tagWaits < 60) {
+        return;
+      }
+
+      showError('The Lytics tag did not load - targeting will not match.');
     }
 
     stageStarted = true;
@@ -833,6 +981,18 @@
     });
 
     byId('pg-render').addEventListener('click', renderCurrent);
+
+    byId('pg-tag').addEventListener('change', function () {
+      var on = byId('pg-tag').checked;
+
+      // the tag has to be installed before the SDK runs, so the frame is
+      // reloaded rather than having the tag injected into a live page
+      stageStarted = false;
+      tagWaits = 0;
+      state.config = null;
+      setStatus(on ? 'Loading the Lytics tag…' : 'Reloading without the tag…');
+      el.stage.src = '/playground/stage.html' + (on ? '?tag=1' : '');
+    });
 
     byId('pg-panels').addEventListener('click', function () {
       var panels = byId('pg-panels');

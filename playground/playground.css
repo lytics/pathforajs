@@ -305,6 +305,10 @@ body {
   resize: vertical;
 }
 
+.pg-datalist input[type='text'] {
+  width: 100%;
+}
+
 .pg-color {
   display: flex;
   gap: 6px;
