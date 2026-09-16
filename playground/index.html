@@ -9,6 +9,31 @@
 
   <body>
     <header class="pg-bar">
+      <button
+        type="button"
+        id="pg-panels"
+        class="pg-panels-toggle"
+        aria-expanded="true"
+        aria-label="Hide panels"
+        title="Hide panels"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M10 3 L5 8 L10 13"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
       <span class="pg-bar-title">Pathfora playground</span>
       <span class="pg-status" id="pg-status">Loading…</span>
       <span class="pg-bar-actions">
@@ -16,9 +41,6 @@
           <input type="checkbox" id="pg-preserve" />
           Keep stored state
         </label>
-        <button type="button" id="pg-panels" aria-expanded="true">
-          Hide panels
-        </button>
         <button type="button" id="pg-reset">Reset stored state</button>
         <button type="button" id="pg-clear">Clear widgets</button>
       </span>

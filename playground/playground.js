@@ -838,7 +838,11 @@
       var panels = byId('pg-panels');
       var collapsed = document.body.classList.toggle('pg-collapsed');
 
-      panels.textContent = collapsed ? 'Show panels' : 'Hide panels';
+      var label = collapsed ? 'Show panels' : 'Hide panels';
+
+      // the button holds an icon, so the name has to come from the attributes
+      panels.setAttribute('aria-label', label);
+      panels.setAttribute('title', label);
       panels.setAttribute('aria-expanded', String(!collapsed));
     });
 

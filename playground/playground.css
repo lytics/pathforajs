@@ -48,6 +48,26 @@ body {
   white-space: nowrap;
 }
 
+/* Sits at the far left, directly above the panels it collapses */
+.pg-bar .pg-panels-toggle {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin-right: -6px;
+}
+
+.pg-panels-toggle svg {
+  transition: transform 0.15s ease;
+}
+
+.pg-collapsed .pg-panels-toggle svg {
+  transform: rotate(180deg);
+}
+
 .pg-status {
   flex: 1;
   min-width: 0;
