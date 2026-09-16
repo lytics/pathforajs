@@ -1102,6 +1102,19 @@
     stageStarted = true;
     watchStage();
 
+    // The profile arrives after the tag script does, so the attribute
+    // suggestions are empty at this point. entityReady is a real function now
+    // that the tag has loaded - it is not stubbed by the loader snippet - so
+    // rebuild once the profile lands. buildForm keeps scroll and focus, so this
+    // is not disruptive.
+    if (win.pgTagRequested && typeof win.jstag.entityReady === 'function') {
+      win.jstag.entityReady(function () {
+        if (state.config) {
+          buildForm();
+        }
+      });
+    }
+
     if (pendingSnippet) {
       var queued = pendingSnippet;
       pendingSnippet = null;
