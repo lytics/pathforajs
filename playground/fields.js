@@ -600,8 +600,6 @@
           key: 'targetSegment',
           label: 'show to segment',
           type: 'datalist',
-          // reveals the exclude field below
-          structural: true,
           optionsFor: function () {
             return [{ value: '*', label: 'everyone' }].concat(
               MANAGED_AUDIENCES
@@ -616,12 +614,10 @@
           optionsFor: function () {
             return MANAGED_AUDIENCES;
           },
-          // initTargetedWidgets only subtracts exclusions from the widgets a
-          // target matched, so an exclude on its own does nothing at all
-          applies: function (ctx) {
-            return Boolean(ctx.config.targetSegment);
-          },
-          note: 'subtracts from the segment above',
+          note:
+            'subtracts from the segment above. On its own it matches nothing ' +
+            'and the widget never renders - initTargetedWidgets only removes ' +
+            'exclusions from the widgets a target already matched.',
         },
       ],
     },

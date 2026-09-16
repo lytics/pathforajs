@@ -374,15 +374,19 @@
   function initCall() {
     var segment = state.config && state.config.targetSegment;
     var excluded = state.config && state.config.excludeSegment;
-    var parts;
+    var parts = [];
 
-    if (!segment) {
+    if (!segment && !excluded) {
       return 'pathfora.initializeWidgets([widget]);';
     }
 
-    parts = [
-      '  target: [{ segment: ' + JSON.stringify(segment) + ', widgets: [widget] }]',
-    ];
+    if (segment) {
+      parts.push(
+        '  target: [{ segment: ' +
+          JSON.stringify(segment) +
+          ', widgets: [widget] }]'
+      );
+    }
 
     if (excluded) {
       parts.push(
@@ -430,7 +434,9 @@
   }
 
   function isTargeted() {
-    return Boolean(state.config && state.config.targetSegment);
+    return Boolean(
+      state.config && (state.config.targetSegment || state.config.excludeSegment)
+    );
   }
 
   /**

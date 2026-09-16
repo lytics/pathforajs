@@ -173,7 +173,9 @@ network-free for anyone just checking a layout. With it on:
   audiences, hardcoded in `playground/fields.js` so that reading them live does not mean
   storing an API key; any other slug can be typed in. An exclude subtracts from that
   match, which is the only thing exclusions do: `initTargetedWidgets` filters the widgets
-  a target already matched, so an exclude on its own is a no-op.
+  a target already matched. On its own it matches nothing and the widget never
+  renders, which the field says - worth knowing if you are expecting "show to
+  everyone except X".
 - Content recommendations call the recommendation API for real, with the `content`
   default document as the fallback. Without the tag there is no account to call, so the
   default is all you see. Either way `setupWidgetContentUnit` needs both `recommend` and
