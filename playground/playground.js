@@ -63,16 +63,18 @@
     {
       match: /Cannot add two widgets with the same id/,
       note:
-        'Known pathfora issue, not a problem with this config: with the real ' +
-        'tag a targeted widget initialises twice. add-callback.js registers ' +
-        'the callback with jstag.entityReady and then falls through to push it ' +
-        'onto pathfora.callbacks as well, and the tag flushes both. The widget ' +
-        'rendered from the first of the two.',
+        'A targeted widget was rendered while the tag was still starting up, ' +
+        'so it initialised twice - add-callback.js registers the callback with ' +
+        'jstag.entityReady and also pushes it onto pathfora.callbacks, and the ' +
+        'tag drains that queue as it comes up. Harmless, and it does not ' +
+        'happen once the tag has settled. Render again.',
     },
   ];
 
   var INLINE_HOST = '#pg-inline-host';
   var RENDER_DEBOUNCE = 400;
+  // targeted renders reload the stage frame, so they get a longer leash
+  var TARGETED_DEBOUNCE = 900;
 
   // The error form state only fires for a confirmAction with
   // waitForAsyncResponse, which needs a real callback - and a function cannot
@@ -91,6 +93,7 @@
   var renderTimer = null;
   var stageStarted = false;
   var tagWaits = 0;
+  var pendingSnippet = null;
 
   // Forward reference. commit() and the repeating-row controls need to rebuild
   // the form, and buildForm is what creates those controls in the first place.
@@ -446,13 +449,38 @@
     el.editor.value = currentSnippet();
   }
 
+  function isTargeted() {
+    return Boolean(state.config && state.config.targetSegment);
+  }
+
+  /**
+   * A targeted widget reaches the DOM through addCallback. On this account the
+   * entity has no `user` key, so the jstag.entityReady branch never calls back
+   * and the only path that fires is the tag draining pathfora.callbacks - which
+   * it does once, while starting up. Rendering again into the same page
+   * therefore queues a callback nobody will ever drain. Reloading the stage
+   * gives the tag another pass, which is what makes repeat renders work.
+   */
   function renderCurrent() {
-    run(currentSnippet());
+    var snippet = currentSnippet();
+
+    if (isTargeted() && el.tag.checked) {
+      pendingSnippet = snippet;
+      stageStarted = false;
+      tagWaits = 0;
+      el.stage.src = '/playground/stage.html?tag=1&r=' + Date.now();
+      return;
+    }
+
+    run(snippet);
   }
 
   function scheduleRender() {
     window.clearTimeout(renderTimer);
-    renderTimer = window.setTimeout(renderCurrent, RENDER_DEBOUNCE);
+    renderTimer = window.setTimeout(
+      renderCurrent,
+      isTargeted() && el.tag.checked ? TARGETED_DEBOUNCE : RENDER_DEBOUNCE
+    );
   }
 
   /* ---------- form controls ---------- */
@@ -648,6 +676,10 @@
   }
 
   function commit(path, field, raw, structural) {
+    if (!state.config) {
+      return;
+    }
+
     var value = toStored(field, raw);
 
     if (value === undefined) {
@@ -932,6 +964,10 @@
     // exists once the tag script has loaded - rendering a targeted widget
     // before then throws "Could not get account id". Bounded, so a blocked or
     // offline request cannot leave the playground empty forever.
+    // cid only exists once the tag script has loaded. It is not a perfect
+    // signal - the tag is still wiring up its own pathfora integration for a
+    // moment afterwards - but jstag.entityReady is not stubbed by the loader
+    // snippet, so it cannot be called any earlier than this to get a better one.
     if (
       win.pgTagRequested &&
       !(win.jstag && win.jstag.config && win.jstag.config.cid)
@@ -947,7 +983,17 @@
 
     stageStarted = true;
     watchStage();
-    selectEntry(CATALOGUE[0], CATALOGUE[0].layouts[0]);
+
+    if (pendingSnippet) {
+      var queued = pendingSnippet;
+      pendingSnippet = null;
+      run(queued);
+      return;
+    }
+
+    if (!state.config) {
+      selectEntry(CATALOGUE[0], CATALOGUE[0].layouts[0]);
+    }
   }
 
   function init() {
@@ -959,6 +1005,7 @@
     el.status = byId('pg-status');
     el.preserve = byId('pg-preserve');
     el.stage = byId('pg-stage');
+    el.tag = byId('pg-tag');
     el.modeForm = byId('pg-mode-form');
     el.modeConfig = byId('pg-mode-config');
 
@@ -982,8 +1029,8 @@
 
     byId('pg-render').addEventListener('click', renderCurrent);
 
-    byId('pg-tag').addEventListener('change', function () {
-      var on = byId('pg-tag').checked;
+    el.tag.addEventListener('change', function () {
+      var on = el.tag.checked;
 
       // the tag has to be installed before the SDK runs, so the frame is
       // reloaded rather than having the tag injected into a live page
