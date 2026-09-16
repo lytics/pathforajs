@@ -308,25 +308,6 @@
 
   /* ---------- snippet ---------- */
 
-  /** The visitor's own segments, once the real tag has loaded */
-  function stageSegments() {
-    var win = stageWindow();
-
-    try {
-      if (win.jstag && typeof win.jstag.getSegments === 'function') {
-        return win.jstag.getSegments() || [];
-      }
-
-      if (win.lio && win.lio.data && win.lio.data.segments) {
-        return win.lio.data.segments;
-      }
-    } catch (segmentError) {
-      window.console.debug('getSegments: ' + segmentError.message);
-    }
-
-    return [];
-  }
-
   function context() {
     // config is null until an entry is picked, and gating predicates read
     // through it - ctx.config.theme and friends must not throw on first paint
@@ -334,7 +315,6 @@
       type: state.type,
       layout: state.layout,
       config: state.config || {},
-      segments: stageSegments(),
     };
   }
 
@@ -634,7 +614,16 @@
         : field.options || []
       ).forEach(function (option) {
         var node = document.createElement('option');
-        node.value = option;
+
+        // suggestions may be plain slugs or { value, label } pairs
+        if (option && typeof option === 'object') {
+          node.value = option.value;
+          node.label = option.label;
+          node.textContent = option.label;
+        } else {
+          node.value = option;
+        }
+
         list.appendChild(node);
       });
 

@@ -52,6 +52,69 @@
     };
   }
 
+  // The Lytics managed audiences on the demo account the stage's tag points
+  // at (aid 6262), hardcoded because reading them live would mean keeping an
+  // API key somewhere. Free text is still accepted, for a custom audience or
+  // any other account.
+  var MANAGED_AUDIENCES = [
+    { value: 'all', label: 'All' },
+    { value: 'anonymous_profiles', label: 'Anonymous Profiles' },
+    { value: 'anonymous_profiles_30_days', label: 'Anonymous Profiles - 30 days' },
+    { value: 'anonymous_profiles_60_days', label: 'Anonymous Profiles - 60 days' },
+    { value: 'anonymous_profiles_90_days', label: 'Anonymous Profiles - 90 days' },
+    { value: 'default_unhealthy_profiles', label: 'Unhealthy Profiles' },
+    { value: 'smt_new', label: 'Lytics New' },
+    { value: 'smt_active', label: 'Lytics Currently Engaged' },
+    { value: 'smt_power', label: 'Lytics Highly Engaged' },
+    { value: 'smt_inactive', label: 'Lytics Previously Engaged' },
+    { value: 'smt_dormant', label: 'Lytics Disengaged' },
+    { value: 'smt_unscored', label: 'Lytics Unscored' },
+    { value: 'ly_has_visited_web', label: 'Web Activity: Has Visited Web' },
+    { value: 'ly_has_visited_mobile_web', label: 'Web Activity: Has Visited Mobile Web' },
+    { value: 'ly_single_page_visitor', label: 'Web Activity: Single Page Visitor' },
+    { value: 'ly_multi_session_visitor', label: 'Web Activity: Multi Session Visitor' },
+    { value: 'ly_from_email', label: 'Campaign Referral Interactions: Email' },
+    { value: 'ly_from_paid', label: 'Campaign Referral Interactions: Paid' },
+    { value: 'ly_from_social', label: 'Campaign Referral Interactions: Social' },
+    { value: 'ly_uses_desktop', label: 'Browser / OS: Desktop' },
+    { value: 'ly_uses_mobile', label: 'Browser / OS: Mobile' },
+    { value: 'ly_uses_ios', label: 'Browser / OS: iOS' },
+    { value: 'ly_uses_android', label: 'Browser / OS: Android' },
+    { value: 'ly_uses_other', label: 'Browser / OS: Other' },
+    { value: 'ly_us_visitor', label: 'Location: US Visitors' },
+    { value: 'ly_international_visitor', label: 'Location: International Visitors' },
+    { value: 'ly_first_time_visitor', label: 'Engagement: First-time Visitors' },
+    { value: 'ly_repeat_visitor', label: 'Engagement: Repeat Visitors' },
+    { value: 'ly_casual_visitor', label: 'Engagement: Casual Visitors' },
+    { value: 'ly_moderately_engaged_visitor', label: 'Engagement: Moderately Engaged Visitors' },
+    { value: 'ly_deeply_engaged_users', label: 'Engagement: Deeply Engaged Users' },
+    { value: 'ly_known_email', label: 'Email Capture Status: Known Email' },
+    { value: 'ly_unknown_email', label: 'Email Capture Status: Unknown Email' },
+    { value: 'ly_peruser', label: 'Behavior: Perusers' },
+    { value: 'ly_binge_user', label: 'Behavior: Binge Users' },
+    { value: 'ly_at_risk', label: 'Behavior: At Risk Users' },
+    { value: 'ly_infrequent_user', label: 'Behavior: Infrequent Users' },
+    { value: 'ly_moderately_frequent_user', label: 'Behavior: Moderately Frequent Users' },
+    { value: 'ly_frequent_user', label: 'Behavior: Frequent Users' },
+    { value: 'ly_reporting_last_visit_within_day', label: 'Last Visit Within A Day' },
+    { value: 'ly_reporting_last_visit_within_week', label: 'Last Visit Within A Week' },
+    { value: 'ly_reporting_last_visit_within_month', label: 'Last Visit Within A Month' },
+    { value: 'ly_reporting_last_visit_within_3_months', label: 'Last Visit Within 3 Months' },
+    { value: 'ly_reporting_single_page_visitor', label: 'Single Page Visitor' },
+    { value: 'ly_reporting_multi_session_visitor', label: 'Multi Session Visitor' },
+    { value: 'ly_reporting_has_visited_web', label: 'Has Visited Web' },
+    { value: 'ly_reporting_has_visited_mobile_web', label: 'Has Visited Mobile Web' },
+    { value: 'ly_reporting_from_facebook', label: 'Facebook' },
+    { value: 'ly_reporting_from_google', label: 'Google' },
+    { value: 'ly_reporting_from_email', label: 'Email' },
+    { value: 'ly_reporting_from_paid', label: 'Paid' },
+    { value: 'ly_reporting_from_social', label: 'Social' },
+    { value: 'ly_reporting_casual_visitors', label: 'Casual Visitors' },
+    { value: 'ly_reporting_deeply_engaged_users', label: 'Deeply Engaged Users' },
+    { value: 'ly_reporting_infrequent_users', label: 'Infrequent Users' },
+    { value: 'ly_reporting_frequent_users', label: 'Frequent Users' },
+  ];
+
   // Valid positions per layout, from validate-widget-position.js. Gate and
   // inline are absent on purpose - gate throws, inline uses positionSelector.
   var POSITIONS = {
@@ -539,17 +602,19 @@
           type: 'datalist',
           // reveals the exclude field below
           structural: true,
-          optionsFor: function (ctx) {
-            return ['*'].concat(ctx.segments || []);
+          optionsFor: function () {
+            return [{ value: '*', label: 'everyone' }].concat(
+              MANAGED_AUDIENCES
+            );
           },
-          note: 'suggestions are the segments this visitor is currently in',
+          note: 'the account\'s Lytics managed audiences, or type any slug',
         },
         {
           key: 'excludeSegment',
           label: 'but not to segment',
           type: 'datalist',
-          optionsFor: function (ctx) {
-            return ctx.segments || [];
+          optionsFor: function () {
+            return MANAGED_AUDIENCES;
           },
           // initTargetedWidgets only subtracts exclusions from the widgets a
           // target matched, so an exclude on its own does nothing at all

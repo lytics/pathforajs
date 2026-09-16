@@ -169,10 +169,11 @@ account the published docs examples use. It is off by default so the playground 
 network-free for anyone just checking a layout. With it on:
 
 - Audience targeting works - the **Audience** section targets a segment, matched against
-  the visitor's own memberships, with the visitor's current segments offered as
-  suggestions. An exclude subtracts from that match, which is the only thing exclusions
-  do: `initTargetedWidgets` filters the widgets a target already matched, so an exclude
-  on its own is a no-op.
+  the visitor's own memberships. The suggestions are the demo account's Lytics managed
+  audiences, hardcoded in `playground/fields.js` so that reading them live does not mean
+  storing an API key; any other slug can be typed in. An exclude subtracts from that
+  match, which is the only thing exclusions do: `initTargetedWidgets` filters the widgets
+  a target already matched, so an exclude on its own is a no-op.
 - Content recommendations call the recommendation API for real, with the `content`
   default document as the fallback. Without the tag there is no account to call, so the
   default is all you see. Either way `setupWidgetContentUnit` needs both `recommend` and
