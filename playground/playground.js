@@ -60,6 +60,16 @@
   var INLINE_HOST = '#pg-inline-host';
   var RENDER_DEBOUNCE = 400;
 
+  // The error form state only fires for a confirmAction with
+  // waitForAsyncResponse, which needs a real callback - and a function cannot
+  // survive JSON.stringify. So the config carries a sentinel string and
+  // snippetFor swaps it for source on the way out.
+  var CALLBACK_SENTINEL = '__pg_async_';
+  var ASYNC_CALLBACK = {
+    success: 'function (name, payload, done) {\n    done(true);\n  }',
+    error: 'function (name, payload, done) {\n    done(false);\n  }',
+  };
+
   var el = {};
   var state = { ctor: null, type: null, layout: null, config: null };
   var mode = 'form';
@@ -310,15 +320,34 @@
       config.content[0].default = true;
     }
 
+    // simulateSubmit is a playground-only control - turn it into the async
+    // confirmAction that drives the success and error states
+    var simulate = config.simulateSubmit;
+    delete config.simulateSubmit;
+
+    if (simulate) {
+      config.confirmAction = {
+        waitForAsyncResponse: true,
+        callback: CALLBACK_SENTINEL + simulate,
+      };
+    }
+
     return prune(config);
   }
 
   function snippetFor(config) {
+    var json = JSON.stringify(config, null, 2).replace(
+      new RegExp('"' + CALLBACK_SENTINEL + '(success|error)"', 'g'),
+      function (match, outcome) {
+        return ASYNC_CALLBACK[outcome];
+      }
+    );
+
     return (
       'var widget = new pathfora.' +
       state.ctor +
       '(' +
-      JSON.stringify(config, null, 2) +
+      json +
       ');\n\npathfora.initializeWidgets([widget]);\n'
     );
   }

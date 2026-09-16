@@ -46,6 +46,12 @@
     };
   }
 
+  function typeIn(list) {
+    return function (ctx) {
+      return list.indexOf(ctx.type) !== -1;
+    };
+  }
+
   // Valid positions per layout, from validate-widget-position.js. Gate and
   // inline are absent on purpose - gate throws, inline uses positionSelector.
   var POSITIONS = {
@@ -139,6 +145,48 @@
         key: 'displayConditions.hideAfterAction.' + action + '.duration',
         label: action + ' duration (s)',
         type: 'number',
+      },
+    ];
+  }
+
+  function formStateFields(state, defaults) {
+    return [
+      {
+        key: 'formStates.' + state + '.headline',
+        label: state + ' headline',
+        type: 'text',
+        note: 'defaults to "' + defaults.headline + '"',
+      },
+      {
+        key: 'formStates.' + state + '.msg',
+        label: state + ' msg',
+        type: 'textarea',
+      },
+      {
+        key: 'formStates.' + state + '.delay',
+        label: state + ' delay (s)',
+        type: 'number',
+        note: 'defaults to 3; use 0 to keep it open',
+      },
+      {
+        key: 'formStates.' + state + '.okShow',
+        label: state + ' okShow',
+        type: 'bool',
+      },
+      {
+        key: 'formStates.' + state + '.okMessage',
+        label: state + ' okMessage',
+        type: 'text',
+      },
+      {
+        key: 'formStates.' + state + '.cancelShow',
+        label: state + ' cancelShow',
+        type: 'bool',
+      },
+      {
+        key: 'formStates.' + state + '.cancelMessage',
+        label: state + ' cancelMessage',
+        type: 'text',
       },
     ];
   }
@@ -448,6 +496,32 @@
           ],
         },
       ],
+    },
+    {
+      title: 'Form states',
+      applies: every([
+        typeIn(['form', 'subscription']),
+        layoutIn(['modal', 'slideout', 'gate', 'inline']),
+      ]),
+      intro:
+        'Shown after a submit. Bar layouts are excluded because ' +
+        'constructWidgetLayout never builds the state elements for them, so a ' +
+        'bar with formStates just blanks for a few seconds. The error state ' +
+        'only ever fires for a confirmAction with waitForAsyncResponse, which ' +
+        'needs a callback - use the simulate control to see it.',
+      fields: [
+        {
+          key: 'simulateSubmit',
+          label: 'simulate submit outcome',
+          type: 'select',
+          options: ['', 'success', 'error'],
+          note: 'adds a waitForAsyncResponse confirmAction to the config',
+        },
+      ]
+        .concat(
+          formStateFields('success', { headline: 'Thank You' })
+        )
+        .concat(formStateFields('error', { headline: 'Error' })),
     },
   ];
 
