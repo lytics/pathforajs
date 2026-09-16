@@ -392,6 +392,14 @@ body {
   display: none;
 }
 
+/* Collapsed: the stage takes the whole window, for looking at a modal or a
+   gate at something close to real proportions */
+
+.pg-collapsed .pg-sidebar,
+.pg-collapsed .pg-controls {
+  display: none;
+}
+
 /* The frame widgets render into */
 
 .pg-stage {

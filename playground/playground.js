@@ -834,6 +834,14 @@
 
     byId('pg-render').addEventListener('click', renderCurrent);
 
+    byId('pg-panels').addEventListener('click', function () {
+      var panels = byId('pg-panels');
+      var collapsed = document.body.classList.toggle('pg-collapsed');
+
+      panels.textContent = collapsed ? 'Show panels' : 'Hide panels';
+      panels.setAttribute('aria-expanded', String(!collapsed));
+    });
+
     byId('pg-clear').addEventListener('click', function () {
       clearWidgets();
       setStatus('Cleared');
