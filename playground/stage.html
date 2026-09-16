@@ -94,32 +94,43 @@
     </script>
 
     <style>
+      /* Every rule here is an explicit stage- class, never a bare element
+         selector and never inherited typography on body. A widget is a p, an
+         h2 and a few divs, and inline layouts mount inside this page's own
+         markup - so anything looser than this restyles the thing we are trying
+         to look at. A bare `p { max-width: 60ch }` was squashing modal copy. */
+
       body {
         margin: 0;
         padding: 32px;
+        background: #fff;
+      }
+
+      .stage-title {
+        margin: 0 0 12px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+          sans-serif;
+        font-size: 20px;
+        color: #23282f;
+      }
+
+      .stage-copy {
+        max-width: 60ch;
+        margin: 0 0 12px;
         font-family:
           -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
           sans-serif;
         font-size: 14px;
         line-height: 1.6;
         color: #3d444d;
-        background: #fff;
       }
 
-      h1 {
-        margin: 0 0 12px;
-        font-size: 20px;
-        color: #23282f;
-      }
-
-      p {
-        max-width: 60ch;
-      }
-
-      code {
+      .stage-code {
         padding: 1px 5px;
         border-radius: 3px;
         background: #eef1f5;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         font-size: 12.5px;
       }
 
@@ -147,16 +158,16 @@
   </head>
 
   <body>
-    <h1>Example page</h1>
-    <p>
+    <h1 class="stage-title">Example page</h1>
+    <p class="stage-copy">
       This stands in for a customer's page. Widgets render over it exactly as
       they would in the wild — nothing from the playground's own interface
       overlaps this frame.
     </p>
-    <p>
-      The dashed box is the mount point for <code>inline</code> layouts. The
-      filler below gives the page enough height to exercise scroll-based display
-      conditions.
+    <p class="stage-copy">
+      The dashed box is the mount point for
+      <code class="stage-code">inline</code> layouts. The filler below gives the
+      page enough height to exercise scroll-based display conditions.
     </p>
 
     <div id="pg-inline-host" class="stage-inline-host">#pg-inline-host</div>
