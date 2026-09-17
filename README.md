@@ -132,6 +132,64 @@ The docs task will walk through every `.js` file in the examples source director
 
 This allows us to keep our source code in one place. Changing a js file in the examples source folder will change the code snippet in the docs and update the example .html file.
 
+### Widget playground
+
+`playground/` is a local page for rendering any widget type and layout, for manual
+QA and for demoing. Start the dev server and open it:
+
+```sh
+$ yarn run local
+```
+
+Then visit [http://localhost:8080/playground/](http://localhost:8080/playground/).
+
+Pick any combination from the sidebar to render it, then use either mode to configure it:
+
+- **Form** builds the config from controls covering content, buttons, placement, theme
+  and colours, all 14 display conditions, content recommendations and custom form
+  fields. Controls only appear where the option actually applies, which keeps you away
+  from the combinations that throw - `footerText` on a bar, a `position` on a gate, a
+  `pushDown` on a bar that is not top-positioned.
+- **Config** is the generated JavaScript, editable by hand. It is the same shape as the
+  examples in `docs/docs/examples/src`, so a snippet from a bug report can be pasted in
+  and run as-is. Switching back to Form regenerates the config from the controls.
+
+Two things it handles that are easy to get wrong by hand:
+
+- It sets `window.PathforaCSS` to `/dist/pathfora.min.css` before loading the SDK. The
+  SDK otherwise injects the CDN stylesheet, and that production CSS wins the cascade
+  over your local build - so local CSS changes appear to do nothing, with no error.
+- It clears pathfora's stored state before each render. `pathfora.clearAll()` only
+  resets in-memory trackers, so without this a submitted gate stays unlocked and
+  impression caps stay spent, across renders *and* across reloads. Tick **Keep stored
+  state** when you are deliberately testing impressions or `hideAfterAction`.
+
+**Lytics tag** in the toolbar swaps the stubs for the real tag, against the same demo
+account the published docs examples use. It is off by default so the playground stays
+network-free for anyone just checking a layout. With it on:
+
+- Audience targeting works - the **Audience** section targets a segment, matched against
+  the visitor's own memberships. The suggestions are the demo account's Lytics managed
+  audiences, hardcoded in `playground/fields.js` so that reading them live does not mean
+  storing an API key; any other slug can be typed in. An exclude subtracts from that
+  match, which is the only thing exclusions do: `initTargetedWidgets` filters the widgets
+  a target already matched, so an exclusion on its own matches nothing. The
+  exclude field only appears once a "show to" segment is set, for that reason.
+- Content recommendations call the recommendation API for real, with the `content`
+  default document as the fallback. The collection field suggests the account's
+  Lytics managed collections, hardcoded alongside the audiences in
+  `playground/fields.js`; any other slug can be typed in. Without the tag there is no account to call, so the
+  default is all you see. Either way `setupWidgetContentUnit` needs both `recommend` and
+  `content` set, so a default document on its own renders nothing.
+
+The tag is configured with `publish` and `preview` disabled, which stops the demo
+account's own campaigns rendering on top of the widget under test and, as a side effect,
+stops the tag installing its own SDK - so the local `dist/` build stays in charge.
+
+`SiteGate` is deliberately absent: it is deprecated, and its confirm button is dead code
+because `construct-widget-actions.js` never assigns it a `widgetAction`. Use `Form` with
+layout `gate` instead.
+
 ### Testing
 
 Pathfora uses [Jasmine](https://github.com/jasmine/jasmine) as a test framework, and [Karma](https://github.com/karma-runner/karma/) to run tests. Before running tests, or commiting changes be sure to run `gulp build` instead of `gulp local`, or tests may fail due to mismatching URLs.

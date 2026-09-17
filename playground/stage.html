@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playground stage</title>
+
+    <!--
+      Widgets render in here, not in the playground page, so the playground's own
+      sidebar and toolbar can never sit on top of one. A bottom-left slideout and
+      a top-fixed bar both land exactly where they would on a customer's site.
+
+      This block MUST run before dist/pathfora.js loads. window.PathforaCSS is
+      read in the Pathfora constructor, which runs the moment the script is
+      evaluated (src/rollup/pathfora.js:141 and :150) - assigning it afterwards is
+      ignored. Without it the page loads the CDN stylesheet, and that production
+      CSS wins the cascade over anything you just built locally, silently.
+
+      The lio/jstag stubs keep the page from making network calls; they mirror
+      test/utils/global-reset.js.
+    -->
+    <script>
+      window.PathforaCSS = '/dist/pathfora.min.css';
+    </script>
+
+    <!--
+      The playground is network-free by default. Loading this page with ?tag=1
+      swaps the stubs below for the real Lytics tag, against the same demo
+      account the published docs examples use, so audience targeting and content
+      recommendations work for real.
+
+      prettier-ignore so the vendor tag snippet stays byte-identical to the one
+      in docs/docs/examples/src/template.hbs.
+    -->
+    <!-- prettier-ignore -->
+    <script>
+      (function () {
+        var useTag = /[?&]tag=1(&|$)/.test(window.location.search);
+
+        window.pgTagRequested = useTag;
+
+        if (!useTag) {
+          window.liosetup = {};
+          window.jstag = {
+            send: function () {},
+            config: { cookie: 'seerid', cid: ['playground'] }
+          };
+          // loaded:true matters - addCallback only fires synchronously when it
+          // is set, so without it targeted widgets queue a callback that never
+          // runs
+          window.lio = {
+            loaded: true,
+            account: { id: 'playground' },
+            data: { segments: ['all'] }
+          };
+          return;
+        }
+
+        !(function () { 'use strict'; var o = window.jstag || (window.jstag = {}),
+        r = []; function n(e) { o[e] = function () { for (var n =
+        arguments.length, t = new Array(n), i = 0; i < n; i++) t[i] =
+        arguments[i]; r.push([e, t]); }; } n('send'), n('mock'), n('identify'),
+        n('pageView'), n('unblock'), n('getid'), n('setid'), n('loadEntity'),
+        n('getEntity'), n('on'), n('once'), n('call'), (o.loadScript = function
+        (n, t, i) { var e = document.createElement('script'); (e.async = !0),
+        (e.src = n), (e.onload = t), (e.onerror = i); var o =
+        document.getElementsByTagName('script')[0], r = (o && o.parentNode) ||
+        document.head || document.body, c = o || r.lastChild; return null != c ?
+        r.insertBefore(e, c) : r.appendChild(e), this; }), (o.init = function n(t)
+        { return ( (this.config = t), this.loadScript(t.src, function () { if
+        (o.init === n) throw new Error('Load error!'); o.init(o.config), (function
+        () { for (var n = 0; n < r.length; n++) { var t = r[n][0], i = r[n][1];
+        o[t].apply(o, i); } r = void 0; })(); }), this ); }); })();
+
+        jstag.init({
+          src: 'https://c.lytics.io/api/tag/ea48c631489b0c19dd62ee5b40acca4b/latest.min.js',
+          stream: 'pathfora',
+          pageAnalysis: { dataLayerPull: { disabled: true } },
+
+          // publish and preview are the demo account's own experiences - left on
+          // they render real campaigns on top of the widget under test. They are
+          // also what normally asks the tag to install its SDK, so with them off
+          // and install.sdk.lazy left at its default the tag never installs one,
+          // and the local dist/ build stays in charge. Entity preload is left
+          // alone on purpose: the visitor profile is what audience targeting
+          // matches against.
+          pathfora: {
+            publish: { disabled: true },
+            preview: { disabled: true }
+          }
+        });
+
+      })();
+    </script>
+
+    <style>
+      /* Every rule here is an explicit stage- class, never a bare element
+         selector and never inherited typography on body. A widget is a p, an
+         h2 and a few divs, and inline layouts mount inside this page's own
+         markup - so anything looser than this restyles the thing we are trying
+         to look at. A bare `p { max-width: 60ch }` was squashing modal copy. */
+
+      body {
+        margin: 0;
+        padding: 32px;
+        background: #fff;
+      }
+
+      .stage-title {
+        margin: 0 0 12px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+          sans-serif;
+        font-size: 20px;
+        color: #23282f;
+      }
+
+      .stage-copy {
+        max-width: 60ch;
+        margin: 0 0 12px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #3d444d;
+      }
+
+      .stage-code {
+        padding: 1px 5px;
+        border-radius: 3px;
+        background: #eef1f5;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12.5px;
+      }
+
+      .stage-inline-host {
+        margin: 24px 0;
+        padding: 20px;
+        border: 2px dashed #c3cad3;
+        border-radius: 6px;
+        background: #f7f9fb;
+        min-height: 60px;
+        color: #8a929d;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 12px;
+      }
+
+      .stage-filler {
+        height: 1600px;
+        margin-top: 24px;
+        border-top: 1px solid #e6eaef;
+        padding-top: 12px;
+        color: #aab2bd;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1 class="stage-title">Example page</h1>
+    <p class="stage-copy">
+      This stands in for a customer's page. Widgets render over it exactly as
+      they would in the wild — nothing from the playground's own interface
+      overlaps this frame.
+    </p>
+    <p class="stage-copy">
+      The dashed box is the mount point for
+      <code class="stage-code">inline</code> layouts. The filler below gives the
+      page enough height to exercise scroll-based display conditions.
+    </p>
+
+    <div id="pg-inline-host" class="stage-inline-host">#pg-inline-host</div>
+
+    <div class="stage-filler">Scroll area</div>
+
+    <script src="/dist/pathfora.js"></script>
+    <script>
+      // With the real tag, validateAccountId reads jstag.config.cid - leave it
+      // alone so the demo account is used. Offline, the lio stub supplies it.
+      if (!window.pgTagRequested) {
+        pathfora.acctid = 'playground';
+      }
+    </script>
+  </body>
+</html>

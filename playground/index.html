@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pathfora widget playground</title>
+    <link rel="stylesheet" href="/playground/playground.css" />
+  </head>
+
+  <body>
+    <header class="pg-bar">
+      <span class="pg-bar-title">Pathfora playground</span>
+      <span class="pg-status" id="pg-status">Loading…</span>
+      <span class="pg-bar-actions">
+        <label class="pg-check" title="Load the real Lytics tag in the stage">
+          <input type="checkbox" id="pg-tag" />
+          Lytics tag
+        </label>
+        <label class="pg-check">
+          <input type="checkbox" id="pg-preserve" />
+          Keep stored state
+        </label>
+        <button type="button" id="pg-reset">Reset stored state</button>
+        <button type="button" id="pg-clear">Clear widgets</button>
+      </span>
+    </header>
+
+    <div class="pg-shell">
+      <aside class="pg-sidebar">
+        <p class="pg-hint">
+          Every valid type and layout combination. Picking one resets the
+          settings alongside it.
+        </p>
+        <div id="pg-catalogue"></div>
+      </aside>
+
+      <section class="pg-controls">
+        <div class="pg-modes">
+          <button type="button" id="pg-mode-form" class="pg-mode">Form</button>
+          <button type="button" id="pg-mode-config" class="pg-mode">
+            Config
+          </button>
+        </div>
+
+        <div class="pg-form" id="pg-form"></div>
+
+        <div class="pg-editor-pane">
+          <div class="pg-editor-head">
+            <label for="pg-editor">Config</label>
+            <span class="pg-editor-note" id="pg-editor-hint"></span>
+          </div>
+          <textarea
+            id="pg-editor"
+            spellcheck="false"
+            aria-label="Widget configuration"
+          ></textarea>
+          <div class="pg-editor-actions">
+            <button type="button" id="pg-render" class="pg-primary">
+              Render
+            </button>
+          </div>
+          <span class="pg-error" id="pg-error" role="alert"></span>
+        </div>
+      </section>
+
+      <button
+        type="button"
+        id="pg-panels"
+        class="pg-panels-toggle"
+        aria-expanded="true"
+        aria-label="Hide panels"
+        title="Hide panels"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          width="14"
+          height="14"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M10 3 L5 8 L10 13"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+
+      <!--
+        Widgets render inside this frame rather than in this page. Otherwise the
+        sidebar covers a bottom-left slideout and the toolbar covers a top-fixed
+        bar, and there is no corner of the chrome that is reliably out of the way.
+      -->
+      <iframe
+        id="pg-stage"
+        class="pg-stage"
+        src="/playground/stage.html"
+        title="Widget stage"
+      ></iframe>
+    </div>
+
+    <script src="/playground/fields.js"></script>
+    <script src="/playground/playground.js"></script>
+  </body>
+</html>
