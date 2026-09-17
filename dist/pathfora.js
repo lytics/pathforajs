@@ -264,7 +264,7 @@
   /* eslint-disable quotes */
   var templates = {
   'subscription': {
-    'bar': '<div class=\'pf-widget-container\' role=\'dialog\'><div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' data-required=\'true\' aria-label=\'Email\'></span></form></div></div>',
+    'bar': '<div class=\'pf-widget-container\' role=\'region\'><div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' placeholder=\'Email\' data-required=\'true\' aria-label=\'Email\'></span></form></div></div>',
     'gate': '<div class=\'pf-widget-container\' role=\'dialog\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' data-required=\'true\' aria-label=\'Email\'></span></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div></div>',
     'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' data-required=\'true\' aria-label=\'Email\'></span></form></div></div></div></div></div></div>',
     'modal': '<div class=\'pf-widget-container\' role=\'dialog\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <span><input name=\'email\' type=\'email\' data-required=\'true\' aria-label=\'Email\'></span></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div></div>',
@@ -274,7 +274,7 @@
     'gate': '<div class=\'pf-widget-container\' role=\'dialog\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><form><input name=\'username\' type=\'text\' aria-label=\'Name\'> <input name=\'email\' type=\'email\' aria-label=\'Email\'> <input class=\'pf-field-half-width\' name=\'title\' type=\'text\' aria-label=\'Title\'> <input class=\'pf-field-half-width\' name=\'company\' type=\'text\' aria-label=\'Company\'> <input class=\'pf-field-half-width\' name=\'phone\' type=\'text\' aria-label=\'Phone\'> <select class=\'pf-field-half-width\' name=\'country\' aria-label=\'Country\'><option value=\'\'>Country</option><option value=\'AF\'>Afghanistan</option><option value=\'AL\'>Albania</option><option value=\'DZ\'>Algeria</option><option value=\'AS\'>American Samoa</option><option value=\'AD\'>Andorra</option><option value=\'AG\'>Angola</option><option value=\'AI\'>Anguilla</option><option value=\'AG\'>Antigua &amp; Barbuda</option><option value=\'AR\'>Argentina</option><option value=\'AA\'>Armenia</option><option value=\'AW\'>Aruba</option><option value=\'AU\'>Australia</option><option value=\'AT\'>Austria</option><option value=\'AZ\'>Azerbaijan</option><option value=\'BS\'>Bahamas</option><option value=\'BH\'>Bahrain</option><option value=\'BD\'>Bangladesh</option><option value=\'BB\'>Barbados</option><option value=\'BY\'>Belarus</option><option value=\'BE\'>Belgium</option><option value=\'BZ\'>Belize</option><option value=\'BJ\'>Benin</option><option value=\'BM\'>Bermuda</option><option value=\'BT\'>Bhutan</option><option value=\'BO\'>Bolivia</option><option value=\'BL\'>Bonaire</option><option value=\'BA\'>Bosnia &amp; Herzegovina</option><option value=\'BW\'>Botswana</option><option value=\'BR\'>Brazil</option><option value=\'BC\'>British Indian Ocean Ter</option><option value=\'BN\'>Brunei</option><option value=\'BG\'>Bulgaria</option><option value=\'BF\'>Burkina Faso</option><option value=\'BI\'>Burundi</option><option value=\'KH\'>Cambodia</option><option value=\'CM\'>Cameroon</option><option value=\'CA\'>Canada</option><option value=\'IC\'>Canary Islands</option><option value=\'CV\'>Cape Verde</option><option value=\'KY\'>Cayman Islands</option><option value=\'CF\'>Central African Republic</option><option value=\'TD\'>Chad</option><option value=\'CD\'>Channel Islands</option><option value=\'CL\'>Chile</option><option value=\'CN\'>China</option><option value=\'CI\'>Christmas Island</option><option value=\'CS\'>Cocos Island</option><option value=\'CO\'>Colombia</option><option value=\'CC\'>Comoros</option><option value=\'CG\'>Congo</option><option value=\'CK\'>Cook Islands</option><option value=\'CR\'>Costa Rica</option><option value=\'CT\'>Cote D&#39;Ivoire</option><option value=\'HR\'>Croatia</option><option value=\'CU\'>Cuba</option><option value=\'CB\'>Curacao</option><option value=\'CY\'>Cyprus</option><option value=\'CZ\'>Czech Republic</option><option value=\'DK\'>Denmark</option><option value=\'DJ\'>Djibouti</option><option value=\'DM\'>Dominica</option><option value=\'DO\'>Dominican Republic</option><option value=\'TM\'>East Timor</option><option value=\'EC\'>Ecuador</option><option value=\'EG\'>Egypt</option><option value=\'SV\'>El Salvador</option><option value=\'GQ\'>Equatorial Guinea</option><option value=\'ER\'>Eritrea</option><option value=\'EE\'>Estonia</option><option value=\'ET\'>Ethiopia</option><option value=\'FA\'>Falkland Islands</option><option value=\'FO\'>Faroe Islands</option><option value=\'FJ\'>Fiji</option><option value=\'FI\'>Finland</option><option value=\'FR\'>France</option><option value=\'GF\'>French Guiana</option><option value=\'PF\'>French Polynesia</option><option value=\'FS\'>French Southern Ter</option><option value=\'GA\'>Gabon</option><option value=\'GM\'>Gambia</option><option value=\'GE\'>Georgia</option><option value=\'DE\'>Germany</option><option value=\'GH\'>Ghana</option><option value=\'GI\'>Gibraltar</option><option value=\'GB\'>Great Britain</option><option value=\'GR\'>Greece</option><option value=\'GL\'>Greenland</option><option value=\'GD\'>Grenada</option><option value=\'GP\'>Guadeloupe</option><option value=\'GU\'>Guam</option><option value=\'GT\'>Guatemala</option><option value=\'GN\'>Guinea</option><option value=\'GY\'>Guyana</option><option value=\'HT\'>Haiti</option><option value=\'HW\'>Hawaii</option><option value=\'HN\'>Honduras</option><option value=\'HK\'>Hong Kong</option><option value=\'HU\'>Hungary</option><option value=\'IS\'>Iceland</option><option value=\'IN\'>India</option><option value=\'ID\'>Indonesia</option><option value=\'IA\'>Iran</option><option value=\'IQ\'>Iraq</option><option value=\'IR\'>Ireland</option><option value=\'IM\'>Isle of Man</option><option value=\'IL\'>Israel</option><option value=\'IT\'>Italy</option><option value=\'JM\'>Jamaica</option><option value=\'JP\'>Japan</option><option value=\'JO\'>Jordan</option><option value=\'KZ\'>Kazakhstan</option><option value=\'KE\'>Kenya</option><option value=\'KI\'>Kiribati</option><option value=\'NK\'>Korea North</option><option value=\'KS\'>Korea South</option><option value=\'KW\'>Kuwait</option><option value=\'KG\'>Kyrgyzstan</option><option value=\'LA\'>Laos</option><option value=\'LV\'>Latvia</option><option value=\'LB\'>Lebanon</option><option value=\'LS\'>Lesotho</option><option value=\'LR\'>Liberia</option><option value=\'LY\'>Libya</option><option value=\'LI\'>Liechtenstein</option><option value=\'LT\'>Lithuania</option><option value=\'LU\'>Luxembourg</option><option value=\'MO\'>Macau</option><option value=\'MK\'>Macedonia</option><option value=\'MG\'>Madagascar</option><option value=\'MY\'>Malaysia</option><option value=\'MW\'>Malawi</option><option value=\'MV\'>Maldives</option><option value=\'ML\'>Mali</option><option value=\'MT\'>Malta</option><option value=\'MH\'>Marshall Islands</option><option value=\'MQ\'>Martinique</option><option value=\'MR\'>Mauritania</option><option value=\'MU\'>Mauritius</option><option value=\'ME\'>Mayotte</option><option value=\'MX\'>Mexico</option><option value=\'MI\'>Midway Islands</option><option value=\'MD\'>Moldova</option><option value=\'MC\'>Monaco</option><option value=\'MN\'>Mongolia</option><option value=\'MS\'>Montserrat</option><option value=\'MA\'>Morocco</option><option value=\'MZ\'>Mozambique</option><option value=\'MM\'>Myanmar</option><option value=\'NA\'>Nambia</option><option value=\'NU\'>Nauru</option><option value=\'NP\'>Nepal</option><option value=\'AN\'>Netherland Antilles</option><option value=\'NL\'>Netherlands (Holland, Europe)</option><option value=\'NV\'>Nevis</option><option value=\'NC\'>New Caledonia</option><option value=\'NZ\'>New Zealand</option><option value=\'NI\'>Nicaragua</option><option value=\'NE\'>Niger</option><option value=\'NG\'>Nigeria</option><option value=\'NW\'>Niue</option><option value=\'NF\'>Norfolk Island</option><option value=\'NO\'>Norway</option><option value=\'OM\'>Oman</option><option value=\'PK\'>Pakistan</option><option value=\'PW\'>Palau Island</option><option value=\'PS\'>Palestine</option><option value=\'PA\'>Panama</option><option value=\'PG\'>Papua New Guinea</option><option value=\'PY\'>Paraguay</option><option value=\'PE\'>Peru</option><option value=\'PH\'>Philippines</option><option value=\'PO\'>Pitcairn Island</option><option value=\'PL\'>Poland</option><option value=\'PT\'>Portugal</option><option value=\'PR\'>Puerto Rico</option><option value=\'QA\'>Qatar</option><option value=\'ME\'>Republic of Montenegro</option><option value=\'RS\'>Republic of Serbia</option><option value=\'RE\'>Reunion</option><option value=\'RO\'>Romania</option><option value=\'RU\'>Russia</option><option value=\'RW\'>Rwanda</option><option value=\'NT\'>St Barthelemy</option><option value=\'EU\'>St Eustatius</option><option value=\'HE\'>St Helena</option><option value=\'KN\'>St Kitts-Nevis</option><option value=\'LC\'>St Lucia</option><option value=\'MB\'>St Maarten</option><option value=\'PM\'>St Pierre &amp; Miquelon</option><option value=\'VC\'>St Vincent &amp; Grenadines</option><option value=\'SP\'>Saipan</option><option value=\'SO\'>Samoa</option><option value=\'AS\'>Samoa American</option><option value=\'SM\'>San Marino</option><option value=\'ST\'>Sao Tome &amp; Principe</option><option value=\'SA\'>Saudi Arabia</option><option value=\'SN\'>Senegal</option><option value=\'RS\'>Serbia</option><option value=\'SC\'>Seychelles</option><option value=\'SL\'>Sierra Leone</option><option value=\'SG\'>Singapore</option><option value=\'SK\'>Slovakia</option><option value=\'SI\'>Slovenia</option><option value=\'SB\'>Solomon Islands</option><option value=\'OI\'>Somalia</option><option value=\'ZA\'>South Africa</option><option value=\'ES\'>Spain</option><option value=\'LK\'>Sri Lanka</option><option value=\'SD\'>Sudan</option><option value=\'SR\'>Suriname</option><option value=\'SZ\'>Swaziland</option><option value=\'SE\'>Sweden</option><option value=\'CH\'>Switzerland</option><option value=\'SY\'>Syria</option><option value=\'TA\'>Tahiti</option><option value=\'TW\'>Taiwan</option><option value=\'TJ\'>Tajikistan</option><option value=\'TZ\'>Tanzania</option><option value=\'TH\'>Thailand</option><option value=\'TG\'>Togo</option><option value=\'TK\'>Tokelau</option><option value=\'TO\'>Tonga</option><option value=\'TT\'>Trinidad &amp; Tobago</option><option value=\'TN\'>Tunisia</option><option value=\'TR\'>Turkey</option><option value=\'TU\'>Turkmenistan</option><option value=\'TC\'>Turks &amp; Caicos Is</option><option value=\'TV\'>Tuvalu</option><option value=\'UG\'>Uganda</option><option value=\'UA\'>Ukraine</option><option value=\'AE\'>United Arab Emirates</option><option value=\'GB\'>United Kingdom</option><option value=\'US\'>United States of America</option><option value=\'UY\'>Uruguay</option><option value=\'UZ\'>Uzbekistan</option><option value=\'VU\'>Vanuatu</option><option value=\'VS\'>Vatican City State</option><option value=\'VE\'>Venezuela</option><option value=\'VN\'>Vietnam</option><option value=\'VB\'>Virgin Islands (Brit)</option><option value=\'VA\'>Virgin Islands (USA)</option><option value=\'WK\'>Wake Island</option><option value=\'WF\'>Wallis &amp; Futana Is</option><option value=\'YE\'>Yemen</option><option value=\'ZR\'>Zaire</option><option value=\'ZM\'>Zambia</option><option value=\'ZW\'>Zimbabwe</option></select> <input class=\'pf-field-half-width\' name=\'referralEmail\' type=\'text\' aria-label=\'Referral Email\'> <textarea name=\'message\' rows=\'5\' aria-label=\'Message\'></textarea> <button type=\'submit\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></form><div class=\'pf-widget-footer\'></div></div></div></div></div></div></div>'
   },
   'message': {
-    'bar': '<div class=\'pf-widget-container\' role=\'dialog\'><div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><span><button type=\'button\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></span></div></div>',
+    'bar': '<div class=\'pf-widget-container\' role=\'region\'><div class=\'pf-widget-body\'></div><button type=\'button\' class=\'pf-widget-close\' aria-label=\'Close\'>&times;</button><div class=\'pf-bar-content\'><p class=\'pf-widget-message\'></p><span><button type=\'button\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button></span></div></div>',
     'button': '<button type=\'button\' class=\'pf-widget-message pf-widget-ok\'></button>',
     'gate': '<div class=\'pf-widget-container\' role=\'dialog\' aria-modal=\'true\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><button type=\'button\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button> <button type=\'button\' class=\'pf-widget-btn pf-widget-cancel\'>Cancel</button><div class=\'pf-widget-footer\'></div></div></div></div></div></div></div>',
     'inline': '<div class=\'pf-widget-container\'><div class=\'pf-va-middle\'><div class=\'pf-widget-content\'><div class=\'pf-widget-text\'><h2 class=\'pf-widget-headline\'></h2><div class=\'pf-widget-body\'><div class=\'pf-va-middle\'><p class=\'pf-widget-message\'></p><a class=\'pf-content-unit\'></a> <button type=\'button\' class=\'pf-widget-btn pf-widget-ok\'>Confirm</button></div></div></div></div></div></div>',
@@ -1826,6 +1826,19 @@
 
 
   /**
+   * Read the text out of a state element's headline or message.
+   *
+   * @params {object} state
+   * @params {string} selector
+   * @returns {string}
+   */
+  function stateText(state, selector) {
+    var el = state.querySelector(selector);
+
+    return el ? el.textContent || el.innerText || '' : '';
+  }
+
+  /**
    * Make a revealed form success or error state perceivable to assistive
    * technology.
    *
@@ -1833,8 +1846,8 @@
    * the button the user just activated - so a dialog is renamed after its new
    * contents and handed focus, which is what gets it read out and keeps a
    * keyboard user from being dropped back to the top of the page. An inline
-   * widget sits in the page's own flow and should not steal focus, so its state
-   * is announced politely as a live region instead.
+   * widget sits in the page's own flow and should not steal focus, so its text
+   * is copied into the live region built alongside the states instead.
    *
    * @exports announceFormState
    * @params {object} widget
@@ -1849,9 +1862,41 @@
     }
 
     if (container.getAttribute('role') !== 'dialog') {
-      // NOTE role=status carries an implicit aria-atomic, so the headline and
-      // message are read as a single message
-      state.setAttribute('role', 'status');
+      var region = widget.querySelector('.pf-widget-announcement');
+
+      if (!region) {
+        return;
+      }
+
+      // NOTE the headline and message only, never the state's own buttons: the
+      // implicit aria-atomic on role=status means everything in here is read as
+      // one message, and "Thank You. We have received your submission." should
+      // not end in "Confirm Cancel"
+      var announcement = [
+        stateText(state, '.pf-widget-headline'),
+        stateText(state, '.pf-widget-message'),
+      ]
+        .filter(function (text) {
+          return text.length > 0;
+        })
+        .join('. ');
+
+      if (!announcement.length) {
+        return;
+      }
+
+      // NOTE written a tick late, after the class that reveals the state has
+      // been applied and styles have settled: Safari and VoiceOver are the
+      // least forgiving about text that arrives in the same tick as the change
+      // around it
+      setTimeout(function () {
+        while (region.firstChild) {
+          region.removeChild(region.firstChild);
+        }
+
+        region.appendChild(document$1.createTextNode(announcement));
+      }, 0);
+
       return;
     }
 
@@ -2855,6 +2900,35 @@
     return elem;
   }
 
+  /** @module pathfora/form/construct-state-live-region */
+
+
+  /**
+   * Build the empty live region an inline widget announces its form state
+   * through.
+   *
+   * A live region is only reliably announced when it is already rendered and
+   * empty at the moment its text arrives - a region that enters the
+   * accessibility tree with its text already inside is the classic case screen
+   * readers skip. So the region is built with the state elements, well before
+   * either state is revealed, and announceFormState writes into it.
+   *
+   * It is visually hidden rather than display: none, which would take it out of
+   * the accessibility tree along with its announcement, and it holds only the
+   * state's headline and message - role=status carries an implicit aria-atomic,
+   * so anything else in here would be read out with them.
+   *
+   * @exports constructStateLiveRegion
+   */
+  function constructStateLiveRegion() {
+    var region = document$1.createElement('div');
+
+    region.className = 'pf-widget-announcement';
+    region.setAttribute('role', 'status');
+
+    return region;
+  }
+
   /** @module pathfora/widgets/actions/form-state-actions */
 
 
@@ -2960,6 +3034,15 @@
               var error = constructFormState(config, widget, 'error');
               widgetContent.appendChild(error);
               formStateActions(config, widget, 'error');
+            }
+
+            // NOTE an inline widget sits in the page's own flow and must not
+            // steal focus, so it announces its state through a live region
+            // instead - which has to be in the document before the state is
+            // revealed to be announced at all. Every other layout is a dialog
+            // that gets renamed and focused instead, and needs no region.
+            if (config.layout === 'inline') {
+              widgetContent.appendChild(constructStateLiveRegion());
             }
 
             break;
@@ -3525,7 +3608,7 @@
    */
 
   function showWidget(w) {
-    var openWidget = function (widget) {
+    var openWidget = function (widget, onOpened) {
       // FIXME Change to Array#filter and Array#length
       for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
         if (widgetTracker.openedWidgets[i] === widget) {
@@ -3591,6 +3674,17 @@
                 return;
               }
 
+              // NOTE both directions: a trap that only corrects forward Tab
+              // leaks out of the top of the dialog on the first Shift+Tab
+              if (ev.shiftKey) {
+                if (!node.contains(ev.target) || ev.target === focusable[0]) {
+                  ev.preventDefault();
+                  focusable[focusable.length - 1].focus();
+                }
+
+                return;
+              }
+
               if (
                 !node.contains(ev.target) ||
                 ev.target === focusable[focusable.length - 1]
@@ -3623,6 +3717,10 @@
         var widgetLoadCallback = widget.config.onLoad;
 
         addClass(node, 'opened');
+
+        if (typeof onOpened === 'function') {
+          onOpened(node);
+        }
 
         if (typeof widgetLoadCallback === 'function') {
           widgetLoadCallback(callbackTypes.LOAD, {
@@ -3677,17 +3775,22 @@
     // account for showDelay condition
     if (w.displayConditions && w.displayConditions.showDelay) {
       widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
-        openWidget(w);
+        // NOTE the focus waits for the `opened` class rather than running as
+        // soon as the widget is appended: until then the widget is
+        // visibility: hidden, and nothing in a hidden subtree can take focus,
+        // so focusing here was silently doing nothing.
+        //
+        // The lookup is scoped to this widget's own node, and optional: with
+        // several widgets open an unscoped one focuses whichever comes first in
+        // the document, and a widget configured with okShow: false has no such
+        // button at all
+        openWidget(w, function (node) {
+          var ok = node.querySelector('.pf-widget-ok');
 
-        // NOTE scoped to this widget, and optional: with several widgets open an
-        // unscoped lookup focuses whichever one comes first in the document, and
-        // a widget configured with okShow: false has no such button at all
-        var node = document$1.getElementById(w.id),
-          ok = node && node.querySelector('.pf-widget-ok');
-
-        if (ok) {
-          ok.focus();
-        }
+          if (ok) {
+            ok.focus();
+          }
+        });
       }, w.displayConditions.showDelay * 1000);
     } else {
       openWidget(w);

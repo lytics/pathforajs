@@ -240,9 +240,27 @@
     display: none;
   }
 
-  /* A revealed state renames the dialog after its own text and takes focus, so
-     that a screen reader reads it out. The container is only ever focused
-     programmatically - never by tabbing - so it needs no focus ring. */
+  /* The live region an inline widget announces its form state through. It has
+     to stay rendered to stay in the accessibility tree, so it is clipped
+     rather than hidden with display: none or visibility: hidden. */
+  .pf-widget-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Load-bearing, not cosmetic: a revealed state moves focus to the container
+     so a screen reader reads the state out, and when script moves focus while
+     the element losing it matches :focus-visible - a keyboard user pressing
+     Enter on Confirm - the element receiving it matches too. Without this rule
+     Chrome draws outline: auto around the whole full-viewport gate or modal
+     container. Do not remove. */
   .pf-widget-container:focus {
     outline: none;
   }

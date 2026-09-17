@@ -29,7 +29,7 @@ import widgetResizeListener from './widget-resize-listener';
  */
 
 export default function showWidget(w) {
-  var openWidget = function (widget) {
+  var openWidget = function (widget, onOpened) {
     // FIXME Change to Array#filter and Array#length
     for (var i = 0; i < widgetTracker.openedWidgets.length; i++) {
       if (widgetTracker.openedWidgets[i] === widget) {
@@ -95,6 +95,17 @@ export default function showWidget(w) {
               return;
             }
 
+            // NOTE both directions: a trap that only corrects forward Tab
+            // leaks out of the top of the dialog on the first Shift+Tab
+            if (ev.shiftKey) {
+              if (!node.contains(ev.target) || ev.target === focusable[0]) {
+                ev.preventDefault();
+                focusable[focusable.length - 1].focus();
+              }
+
+              return;
+            }
+
             if (
               !node.contains(ev.target) ||
               ev.target === focusable[focusable.length - 1]
@@ -127,6 +138,10 @@ export default function showWidget(w) {
       var widgetLoadCallback = widget.config.onLoad;
 
       addClass(node, 'opened');
+
+      if (typeof onOpened === 'function') {
+        onOpened(node);
+      }
 
       if (typeof widgetLoadCallback === 'function') {
         widgetLoadCallback(callbackTypes.LOAD, {
@@ -181,17 +196,22 @@ export default function showWidget(w) {
   // account for showDelay condition
   if (w.displayConditions && w.displayConditions.showDelay) {
     widgetTracker.delayedWidgets[w.id] = setTimeout(function () {
-      openWidget(w);
+      // NOTE the focus waits for the `opened` class rather than running as
+      // soon as the widget is appended: until then the widget is
+      // visibility: hidden, and nothing in a hidden subtree can take focus,
+      // so focusing here was silently doing nothing.
+      //
+      // The lookup is scoped to this widget's own node, and optional: with
+      // several widgets open an unscoped one focuses whichever comes first in
+      // the document, and a widget configured with okShow: false has no such
+      // button at all
+      openWidget(w, function (node) {
+        var ok = node.querySelector('.pf-widget-ok');
 
-      // NOTE scoped to this widget, and optional: with several widgets open an
-      // unscoped lookup focuses whichever one comes first in the document, and
-      // a widget configured with okShow: false has no such button at all
-      var node = document.getElementById(w.id),
-        ok = node && node.querySelector('.pf-widget-ok');
-
-      if (ok) {
-        ok.focus();
-      }
+        if (ok) {
+          ok.focus();
+        }
+      });
     }, w.displayConditions.showDelay * 1000);
   } else {
     openWidget(w);

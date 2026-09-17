@@ -10,9 +10,11 @@ import {
 var HEADLINE = 'Accessible Headline',
   MESSAGE = 'Accessible message';
 
-// every type/layout combination that renders as a dialog. bar layouts have no
-// headline element, so the message is what names them
-var DIALOGS = [
+// every type/layout combination whose container carries a role and needs a
+// name. bar layouts have no headline element, so the message is what names
+// them, and they are named regions rather than dialogs - a persistent promo
+// bar is not something a user opens, acts on and dismisses
+var CONTAINERS = [
   { type: 'message', layout: 'modal', create: createMessageWidget },
   { type: 'message', layout: 'slideout', create: createMessageWidget },
   { type: 'message', layout: 'bar', create: createMessageWidget },
@@ -52,11 +54,13 @@ describe('widget accessibility', function () {
     globalReset();
   });
 
-  DIALOGS.forEach(function (spec) {
+  CONTAINERS.forEach(function (spec) {
     var label = spec.type + ' ' + spec.layout;
-    var hasHeadline = spec.layout !== 'bar';
+    var isBar = spec.layout === 'bar';
+    var hasHeadline = !isBar;
+    var role = isBar ? 'region' : 'dialog';
 
-    it('should expose the ' + label + ' as a named dialog', function () {
+    it('should expose the ' + label + ' as a named ' + role, function () {
       var widget = spec.create({
         id: 'a11y-' + spec.type + '-' + spec.layout,
         layout: spec.layout,
@@ -68,7 +72,7 @@ describe('widget accessibility', function () {
 
       var container = $('#' + widget.id + ' .pf-widget-container');
       expect(container.length).toBe(1);
-      expect(container.attr('role')).toBe('dialog');
+      expect(container.attr('role')).toBe(role);
 
       var name = resolveAriaRef(container, 'aria-labelledby');
       expect(name).not.toBeNull();
@@ -313,7 +317,7 @@ describe('form state accessibility', function () {
     });
   });
 
-  it('should announce an inline state as a live region without taking focus', function (done) {
+  it('should announce an inline state through a live region that was already rendered and empty', function (done) {
     var host = document.createElement('div');
     host.id = 'a11y-inline-host';
     document.body.appendChild(host);
@@ -322,6 +326,57 @@ describe('form state accessibility', function () {
       id: 'a11y-inline-state',
       layout: 'inline',
       positionSelector: '#a11y-inline-host',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      formStates: {
+        success: {
+          headline: 'Thanks!',
+          msg: 'We got it.',
+          delay: 0,
+          okShow: true,
+          okMessage: 'Done',
+        },
+      },
+    });
+
+    pathfora.initializeWidgets([form]);
+
+    whenOpened(form, function (widget) {
+      var region = widget.find('.pf-widget-announcement');
+
+      // the region has to be in the accessibility tree, and empty, before the
+      // state is revealed - a region that appears already holding its text is
+      // the case screen readers skip
+      expect(region.length).toBe(1);
+      expect(region.attr('role')).toBe('status');
+      expect(region.css('display')).not.toBe('none');
+      expect(region.text()).toBe('');
+
+      submit(widget);
+
+      expect(widget.find('.pf-widget-container').attr('role')).toBeUndefined();
+      expect(widget[0].contains(document.activeElement)).toBe(false);
+
+      setTimeout(function () {
+        // headline and message only: role=status is atomic, so the state's own
+        // Done button must not be read out with them
+        expect(region.text()).toBe('Thanks!. We got it.');
+
+        host.parentNode.removeChild(host);
+        done();
+      }, 10);
+    });
+  });
+
+  it('should not move focus out of an inline widget when a state is revealed', function (done) {
+    var host = document.createElement('div');
+    host.id = 'a11y-inline-focus-host';
+    document.body.appendChild(host);
+
+    var form = createFormWidget({
+      id: 'a11y-inline-focus',
+      layout: 'inline',
+      positionSelector: '#a11y-inline-focus-host',
       headline: HEADLINE,
       msg: MESSAGE,
       formStates: {
@@ -334,11 +389,9 @@ describe('form state accessibility', function () {
     whenOpened(form, function (widget) {
       submit(widget);
 
-      var state = widget.find('.success-state');
-
-      expect(widget.find('.pf-widget-container').attr('role')).toBeUndefined();
-      expect(state.attr('role')).toBe('status');
-      expect(widget[0].contains(document.activeElement)).toBe(false);
+      expect(
+        widget.find('.pf-widget-container').attr('tabindex'),
+      ).toBeUndefined();
 
       host.parentNode.removeChild(host);
       done();
@@ -378,5 +431,156 @@ describe('form state accessibility', function () {
       expect(focused).toBe(widget.find('.success-state .pf-widget-ok')[0]);
       done();
     });
+  });
+});
+
+describe('dialog focus trap', function () {
+  beforeEach(function () {
+    globalReset();
+  });
+
+  // the same set the trap itself computes: everything focusable that a
+  // revealed state has not hidden
+  function focusableIn(widget) {
+    return widget
+      .find(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )
+      .filter(function () {
+        return this.getClientRects().length > 0;
+      });
+  }
+
+  it('should wrap Shift+Tab from the first focusable element to the last', function (done) {
+    var gate = createFormWidget({
+      id: 'a11y-shift-tab-wrap',
+      layout: 'gate',
+      headline: HEADLINE,
+      msg: MESSAGE,
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    whenOpened(gate, function (widget) {
+      var focusable = focusableIn(widget);
+
+      expect(focusable.length).toBeGreaterThan(1);
+
+      focusable[0].focus();
+      createAndDispatchKeydown(9, document, true);
+
+      expect(document.activeElement).toBe(focusable[focusable.length - 1]);
+      done();
+    });
+  });
+
+  it('should pull Shift+Tab from outside the dialog back into it', function (done) {
+    var outside = document.createElement('button');
+    outside.id = 'a11y-shift-tab-outside';
+    document.body.appendChild(outside);
+
+    var gate = createFormWidget({
+      id: 'a11y-shift-tab-outside-widget',
+      layout: 'gate',
+      headline: HEADLINE,
+      msg: MESSAGE,
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    whenOpened(gate, function (widget) {
+      var focusable = focusableIn(widget);
+
+      outside.focus();
+      createAndDispatchKeydown(9, document, true);
+
+      expect(document.activeElement).toBe(focusable[focusable.length - 1]);
+
+      outside.parentNode.removeChild(outside);
+      done();
+    });
+  });
+
+  it('should still wrap Tab forwards from the last focusable element to the first', function (done) {
+    var gate = createFormWidget({
+      id: 'a11y-tab-wrap',
+      layout: 'gate',
+      headline: HEADLINE,
+      msg: MESSAGE,
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    whenOpened(gate, function (widget) {
+      var focusable = focusableIn(widget);
+
+      focusable[focusable.length - 1].focus();
+      createAndDispatchKeydown(9, document);
+
+      expect(document.activeElement).toBe(focusable[0]);
+      done();
+    });
+  });
+});
+
+describe('delayed widget focus', function () {
+  beforeEach(function () {
+    globalReset();
+  });
+
+  // regression: this used to be an unscoped document.querySelector for
+  // .pf-widget-ok, which threw on null for a widget that has no confirm button
+  it('should open a delayed widget that has no confirm button', function (done) {
+    var widget = createMessageWidget({
+      id: 'a11y-delayed-no-ok',
+      layout: 'modal',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      okShow: false,
+      displayConditions: {
+        showDelay: 0.1,
+      },
+    });
+
+    pathfora.initializeWidgets([widget]);
+
+    setTimeout(function () {
+      var node = $('#' + widget.id);
+
+      expect(node.length).toBe(1);
+      expect(node.find('.pf-widget-ok').length).toBe(0);
+      expect(node[0].contains(document.activeElement)).toBe(false);
+      done();
+    }, 250);
+  });
+
+  // regression: the unscoped lookup focused whichever widget came first in the
+  // document, not the one the delay belonged to
+  it('should focus the confirm button of the delayed widget itself', function (done) {
+    var first = createMessageWidget({
+      id: 'a11y-delayed-first',
+      layout: 'modal',
+      headline: HEADLINE,
+      msg: MESSAGE,
+    });
+
+    var delayed = createMessageWidget({
+      id: 'a11y-delayed-second',
+      layout: 'modal',
+      headline: HEADLINE,
+      msg: MESSAGE,
+      displayConditions: {
+        showDelay: 0.1,
+      },
+    });
+
+    pathfora.initializeWidgets([first, delayed]);
+
+    setTimeout(function () {
+      expect(document.activeElement).toBe(
+        $('#' + delayed.id + ' .pf-widget-ok')[0],
+      );
+      done();
+    }, 250);
   });
 });
