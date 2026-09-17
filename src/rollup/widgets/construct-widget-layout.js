@@ -13,6 +13,7 @@ import removeClass from '../utils/class/remove-class';
 // form
 import buildWidgetForm from '../form/build-widget-form';
 import constructFormState from '../form/construct-form-state';
+import constructStateLiveRegion from '../form/construct-state-live-region';
 
 // widgets
 import formStateActions from './actions/form-state-actions';
@@ -94,6 +95,15 @@ export default function constructWidgetLayout(widget, config) {
             var error = constructFormState(config, widget, 'error');
             widgetContent.appendChild(error);
             formStateActions(config, widget, 'error');
+          }
+
+          // NOTE an inline widget sits in the page's own flow and must not
+          // steal focus, so it announces its state through a live region
+          // instead - which has to be in the document before the state is
+          // revealed to be announced at all. Every other layout is a dialog
+          // that gets renamed and focused instead, and needs no region.
+          if (config.layout === 'inline') {
+            widgetContent.appendChild(constructStateLiveRegion());
           }
 
           break;

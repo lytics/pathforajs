@@ -240,9 +240,36 @@
     display: none;
   }
 
-  &.success {
-    transition: opacity 0.3s;
+  /* The live region an inline widget announces its form state through. It has
+     to stay rendered to stay in the accessibility tree, so it is clipped
+     rather than hidden with display: none or visibility: hidden. */
+  .pf-widget-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
+  /* Load-bearing, not cosmetic: a revealed state moves focus to the container
+     so a screen reader reads the state out, and when script moves focus while
+     the element losing it matches :focus-visible - a keyboard user pressing
+     Enter on Confirm - the element receiving it matches too. Without this rule
+     Chrome draws outline: auto around the whole full-viewport gate or modal
+     container. Do not remove. */
+  .pf-widget-container:focus {
+    outline: none;
+  }
+
+  /* NOTE no transition here: nothing about the state swap changes opacity, and
+     declaring one on the widget root overrides .slide-transition(), which
+     costs slideouts and bars their slide-out animation when the state's delay
+     closes the widget a few seconds later. */
+  &.success {
     .pf-widget-headline,
     .pf-widget-message,
     form {
@@ -261,8 +288,6 @@
   }
 
   &.error {
-    transition: opacity 0.3s;
-
     .pf-widget-headline,
     .pf-widget-message,
     form {

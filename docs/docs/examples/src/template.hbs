@@ -30,10 +30,30 @@
       { return ( (this.config = t), this.loadScript(t.src, function () { if
       (o.init === n) throw new Error('Load error!'); o.init(o.config), (function
       () { for (var n = 0; n < r.length; n++) { var t = r[n][0], i = r[n][1];
-      o[t].apply(o, i); } r = void 0; })(); }), this ); }); })(); jstag.init({
-      src:
-      'https://c.lytics.io/api/tag/ea48c631489b0c19dd62ee5b40acca4b/latest.min.js',
-      stream: 'pathfora', pageAnalysis: { dataLayerPull: { disabled: true, }, },
+      o[t].apply(o, i); } r = void 0; })(); }), this ); }); })();
+
+      jstag.init({
+        src: 'https://c.lytics.io/api/tag/ea48c631489b0c19dd62ee5b40acca4b/latest.min.js',
+        stream: 'pathfora',
+        pageAnalysis: { dataLayerPull: { disabled: true } },
+
+        // These examples only demo the Pathfora SDK itself, so opt out of the
+        // personalization features the demo account has turned on server side:
+        //  - `entity.preload` makes the tag fetch the visitor profile on every
+        //    example page load through its iframe transport
+        //    (GET /api/personalize/<cid>/user/_uid/<uid>/iframe).
+        //  - `pathfora.publish`/`pathfora.preview` pull the demo account's
+        //    published experiences and can render real campaigns on top of the
+        //    widget the example is meant to show.
+        // Those two modules are also what normally ask the tag to install the
+        // SDK, so `install.sdk.lazy: false` is required to keep the install
+        // (and the `pathfora.install.done` event below) working without them.
+        entity: { preload: false },
+        pathfora: {
+          install: { sdk: { lazy: false } },
+          publish: { disabled: true },
+          preview: { disabled: true },
+        },
       });
     </script>
     <script>

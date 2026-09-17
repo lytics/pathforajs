@@ -29,6 +29,19 @@
   background-color: #f1f1f1;
   color: #888;
   font-size: 15px;
+  /* The live region an inline widget announces its form state through. It has
+     to stay rendered to stay in the accessibility tree, so it is clipped
+     rather than hidden with display: none or visibility: hidden. */
+  /* Load-bearing, not cosmetic: a revealed state moves focus to the container
+     so a screen reader reads the state out, and when script moves focus while
+     the element losing it matches :focus-visible - a keyboard user pressing
+     Enter on Confirm - the element receiving it matches too. Without this rule
+     Chrome draws outline: auto around the whole full-viewport gate or modal
+     container. Do not remove. */
+  /* NOTE no transition here: nothing about the state swap changes opacity, and
+     declaring one on the widget root overrides .slide-transition(), which
+     costs slideouts and bars their slide-out animation when the state's delay
+     closes the widget a few seconds later. */
 }
 .pf-widget .pf-widget-body {
   color: #888;
@@ -220,8 +233,19 @@
 .pf-widget .error-state {
   display: none;
 }
-.pf-widget.success {
-  transition: opacity 0.3s;
+.pf-widget .pf-widget-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.pf-widget .pf-widget-container:focus {
+  outline: none;
 }
 .pf-widget.success .pf-widget-headline,
 .pf-widget.success .pf-widget-message,
@@ -235,9 +259,6 @@
 .pf-widget.success .success-state .pf-widget-message,
 .pf-widget.success .success-state form {
   display: block;
-}
-.pf-widget.error {
-  transition: opacity 0.3s;
 }
 .pf-widget.error .pf-widget-headline,
 .pf-widget.error .pf-widget-message,

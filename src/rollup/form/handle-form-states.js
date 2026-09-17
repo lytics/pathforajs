@@ -6,6 +6,9 @@ import addClass from '../utils/class/add-class';
 // widgets
 import closeWidget from '../widgets/close-widget';
 
+// form
+import announceFormState from './announce-form-state';
+
 /**
  * Handles showing the success or error state of a form.
  *
@@ -20,9 +23,11 @@ export default function handleFormStates (successful, widget, config) {
 
     if (successful) {
       addClass(widget, 'success');
+      announceFormState(widget, 'success');
       delay = config.formStates.success && typeof config.formStates.success.delay !== 'undefined' ? config.formStates.success.delay * 1000 : 3000;
     } else {
       addClass(widget, 'error');
+      announceFormState(widget, 'error');
       delay = config.formStates.error && typeof config.formStates.error.delay !== 'undefined' ? config.formStates.error.delay * 1000 : 3000;
     }
 
