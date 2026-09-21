@@ -62,6 +62,9 @@
   var KNOWN_ERRORS = [
     {
       match: /Cannot add two widgets with the same id/,
+      // Only a targeted render with the tag on can hit the race, and only the
+      // form guarantees a single widget with a single id - see watchStage
+      onlyWhenFormTargeted: true,
       note:
         'A targeted widget was rendered while the tag was still starting up, ' +
         'so it initialised twice - add-callback.js registers the callback with ' +
@@ -91,14 +94,20 @@
   var mode = 'form';
   var manualSnippet = null;
   var renderTimer = null;
+  var stagePoll = null;
   var stageStarted = false;
+  var stageWanted = null;
   var tagWaits = 0;
+  var tagMissing = false;
   var pendingSnippet = null;
   var entityFields = [];
 
-  // Forward reference. commit() and the repeating-row controls need to rebuild
-  // the form, and buildForm is what creates those controls in the first place.
+  // Forward references. commit() and the repeating-row controls need to
+  // rebuild the form, and buildForm is what creates those controls in the
+  // first place; renderCurrent reloads the stage frame, and the reload has to
+  // re-arm the readiness poll, which lives down beside stageReady.
   var rebuildForm = function () {};
+  var reloadStage = function () {};
 
   function byId(id) {
     return document.getElementById(id);
@@ -324,16 +333,24 @@
     return typeof item.applies !== 'function' || item.applies(context());
   }
 
-  function buildConfig() {
+  /**
+   * The working config with every key whose control is not currently
+   * applicable dropped, so clearing the theme takes its colours with it and
+   * the emitted config never carries a key the current layout would choke on.
+   *
+   * state.config keeps those values - re-revealing a control brings the old
+   * value back - so everything that reads the config as the form presents it
+   * has to come through here, not just the widget builder. Targeting reads it
+   * too: blanking a segment has to take its exclusion with it, or the snippet
+   * ends up excluding against a target that is no longer there.
+   */
+  function applicableConfig() {
     if (!state.config) {
       return null;
     }
 
     var config = JSON.parse(JSON.stringify(state.config));
 
-    // Drop anything whose control is not currently applicable, so clearing the
-    // theme takes its colours with it and the emitted config never carries a
-    // key the current layout would choke on
     window.PlaygroundFields.sections.forEach(function (section) {
       var sectionApplies = applies(section);
 
@@ -343,6 +360,16 @@
         }
       });
     });
+
+    return config;
+  }
+
+  function buildConfig() {
+    var config = applicableConfig();
+
+    if (!config) {
+      return null;
+    }
 
     // validate-recommendation-widget throws unless the default flag is set
     if (config.content && config.content[0]) {
@@ -372,53 +399,92 @@
   }
 
   /**
+   * The source form of the operand handed to a pathfora.rules helper.
+   *
+   * gt/gte/lt/lte parseInt the profile value, so their operand has to be a
+   * number. The rest compare the profile value as it stands - eq and notEq
+   * with ===, includes and excludes through Array/String.includes - so a
+   * numeric or boolean field never matches a quoted operand, and typing 50
+   * into a text input has to come out as 50 rather than "50".
+   */
+  function operandSource(op, raw) {
+    var text = raw === undefined || raw === null ? '' : String(raw);
+
+    if (['gt', 'gte', 'lt', 'lte'].indexOf(op) !== -1) {
+      return String(Number(text) || 0);
+    }
+
+    // only the literals that survive a round trip unchanged, so " 50", "1e3"
+    // and "0x10" stay strings rather than silently becoming something else
+    if (text === 'true' || text === 'false' || String(Number(text)) === text) {
+      return text;
+    }
+
+    return JSON.stringify(text);
+  }
+
+  function ruleSource(op, attribute, raw) {
+    return (
+      'pathfora.rules.' +
+      op +
+      '(' +
+      JSON.stringify(attribute) +
+      ', ' +
+      operandSource(op, raw) +
+      ')'
+    );
+  }
+
+  /**
    * Targeted widgets go in through the object form of initializeWidgets rather
    * than a plain array. The segment is matched against getUserSegments(), which
    * only returns anything real once the Lytics tag is loaded.
    */
   function initCall() {
-    var config = state.config || {};
+    var config = applicableConfig() || {};
     var segment = config.targetSegment;
     var excluded = config.excludeSegment;
     var attribute = config.attributeField;
-    var targets = [];
+    var op = config.attributeOp || 'eq';
+    var value = config.attributeValue;
+    var target;
     var parts = [];
 
-    if (!segment && !excluded && !attribute) {
+    if (!segment && !attribute) {
       return 'pathfora.initializeWidgets([widget]);';
     }
 
-    if (segment) {
-      targets.push(
-        '{ segment: ' + JSON.stringify(segment) + ', widgets: [widget] }'
-      );
+    if (segment && attribute) {
+      // Both conditions ride on a single entry. Two entries would each concat
+      // [widget] onto initializeTargetedWidgets' list, and a visitor matching
+      // both would hand initializeWidgetArray the same widget twice, which
+      // throws "Cannot add two widgets with the same id". A segment and a rule
+      // cannot share an entry either - validateWidgetsObject throws - so the
+      // segment test moves inside the rule as pathfora.rules.inSegment.
+      target =
+        '{\n' +
+        '      rule: function (profile) {\n' +
+        '        return (\n' +
+        '          pathfora.rules.inSegment(' +
+        JSON.stringify(segment) +
+        ')(profile) ||\n' +
+        '          ' +
+        ruleSource(op, attribute, value) +
+        '(profile)\n' +
+        '        );\n' +
+        '      },\n' +
+        '      widgets: [widget]\n' +
+        '    }';
+    } else if (segment) {
+      target =
+        '{ segment: ' + JSON.stringify(segment) + ', widgets: [widget] }';
+    } else {
+      target =
+        '{ rule: ' + ruleSource(op, attribute, value) + ', widgets: [widget] }';
     }
 
-    if (attribute) {
-      var op = config.attributeOp || 'eq';
-      var raw = config.attributeValue;
-      // gt/gte/lt/lte parseInt the attribute, so the operand has to be a number
-      var operand =
-        ['gt', 'gte', 'lt', 'lte'].indexOf(op) === -1
-          ? JSON.stringify(raw === undefined ? '' : raw)
-          : Number(raw) || 0;
-
-      targets.push(
-        '{ rule: pathfora.rules.' +
-          op +
-          '(' +
-          JSON.stringify(attribute) +
-          ', ' +
-          operand +
-          '), widgets: [widget] }'
-      );
-    }
-
-    // one target list, not one key per entry - and segment and rule cannot
-    // share an entry, validateWidgetsObject throws if they do
-    if (targets.length) {
-      parts.push('  target: [\n    ' + targets.join(',\n    ') + '\n  ]');
-    }
+    // one target list, not one key per entry
+    parts.push('  target: [\n    ' + target + '\n  ]');
 
     if (excluded) {
       parts.push(
@@ -466,12 +532,9 @@
   }
 
   function isTargeted() {
-    return Boolean(
-      state.config &&
-        (state.config.targetSegment ||
-          state.config.excludeSegment ||
-          state.config.attributeField)
-    );
+    var config = applicableConfig();
+
+    return Boolean(config && (config.targetSegment || config.attributeField));
   }
 
   /**
@@ -487,9 +550,7 @@
 
     if (isTargeted() && el.tag.checked) {
       pendingSnippet = snippet;
-      stageStarted = false;
-      tagWaits = 0;
-      el.stage.src = '/playground/stage.html?tag=1&r=' + Date.now();
+      reloadStage('/playground/stage.html?tag=1&r=' + Date.now());
       return;
     }
 
@@ -1049,7 +1110,17 @@
   function watchStage() {
     stageWindow().addEventListener('error', function (event) {
       var known = KNOWN_ERRORS.filter(function (entry) {
-        return entry.match.test(event.message);
+        if (!entry.match.test(event.message)) {
+          return false;
+        }
+
+        // A snippet you wrote yourself can genuinely declare the same id
+        // twice, and that has to keep its own message rather than be
+        // explained away as a startup race the form alone is prone to.
+        return (
+          !entry.onlyWhenFormTargeted ||
+          (mode === 'form' && el.tag.checked && isTargeted())
+        );
       })[0];
 
       if (known) {
@@ -1064,6 +1135,33 @@
   }
 
   /**
+   * Setting src does not swap documents there and then, and the outgoing one
+   * still has a pathfora of its own - so the poll can tick in that gap and
+   * take a page that is about to be discarded for the new one, rendering the
+   * widget into nothing. Only the document that was actually asked for counts.
+   */
+  function isRequestedStage(win) {
+    if (!stageWanted) {
+      return true;
+    }
+
+    // the stage is always same-origin, so reading across is safe - mid-swap it
+    // reads as about:blank, which is exactly the case being excluded
+    return (
+      win.location.href === new URL(stageWanted, window.location.href).href
+    );
+  }
+
+  // run() clears the banner before every render, so the tag warning has to go
+  // back up after the snippet has gone in rather than before it
+  function warnIfTagMissing() {
+    if (tagMissing) {
+      showError('The Lytics tag did not load - targeting will not match.');
+      setStatus('Rendered without the tag');
+    }
+  }
+
+  /**
    * Runs once, when the stage is genuinely usable.
    *
    * readyState is not a trustworthy signal here: a freshly created iframe
@@ -1074,7 +1172,7 @@
   function stageReady() {
     var win = el.stage.contentWindow;
 
-    if (stageStarted || !win || !win.pathfora) {
+    if (stageStarted || !win || !win.pathfora || !isRequestedStage(win)) {
       return;
     }
 
@@ -1096,7 +1194,7 @@
         return;
       }
 
-      showError('The Lytics tag did not load - targeting will not match.');
+      tagMissing = true;
     }
 
     stageStarted = true;
@@ -1119,11 +1217,13 @@
       var queued = pendingSnippet;
       pendingSnippet = null;
       run(queued);
+      warnIfTagMissing();
       return;
     }
 
     if (!state.config) {
       selectEntry(CATALOGUE[0], CATALOGUE[0].layouts[0]);
+      warnIfTagMissing();
       return;
     }
 
@@ -1131,7 +1231,37 @@
     // straight into the fresh frame rather than asking for another reload
     buildForm();
     run(currentSnippet());
+    warnIfTagMissing();
   }
+
+  /**
+   * The load event on its own is a single shot, and stageReady bails out of
+   * that shot whenever the tag has not answered yet - so a frame reloaded with
+   * the tag on would sit at "Loading the Lytics tag…" forever with nothing
+   * left to ask again. Every reload re-arms the poll, not just the first one,
+   * which is also what keeps stageReady's bounded wait meaningful.
+   */
+  function armStagePoll() {
+    window.clearInterval(stagePoll);
+
+    stagePoll = window.setInterval(function () {
+      stageReady();
+
+      if (stageStarted) {
+        window.clearInterval(stagePoll);
+        stagePoll = null;
+      }
+    }, 50);
+  }
+
+  reloadStage = function (src) {
+    stageStarted = false;
+    tagWaits = 0;
+    tagMissing = false;
+    stageWanted = src;
+    el.stage.src = src;
+    armStagePoll();
+  };
 
   function init() {
     el.catalogue = byId('pg-catalogue');
@@ -1171,10 +1301,8 @@
 
       // the tag has to be installed before the SDK runs, so the frame is
       // reloaded rather than having the tag injected into a live page
-      stageStarted = false;
-      tagWaits = 0;
       setStatus(on ? 'Loading the Lytics tag…' : 'Reloading without the tag…');
-      el.stage.src = '/playground/stage.html' + (on ? '?tag=1' : '');
+      reloadStage('/playground/stage.html' + (on ? '?tag=1' : ''));
     });
 
     byId('pg-panels').addEventListener('click', function () {
@@ -1203,15 +1331,10 @@
 
     // Handle both orders: the iframe may load after this script runs, or it may
     // have loaded already and never fire another load event.
+    stageWanted = el.stage.getAttribute('src');
     el.stage.addEventListener('load', stageReady);
 
-    var poll = window.setInterval(function () {
-      stageReady();
-
-      if (stageStarted) {
-        window.clearInterval(poll);
-      }
-    }, 50);
+    armStagePoll();
   }
 
   init();

@@ -52,6 +52,15 @@
     };
   }
 
+  // validateWidgetsObject hoists a `segment: '*'` entry into widgets.common,
+  // and initializeTargetedWidgets renders common straight away - before the
+  // targeting callback runs at all. So "everyone" is not a target you can
+  // subtract from or add a condition to: it just renders. The rest of the
+  // Audience controls hide rather than quietly do nothing.
+  function targetsEveryone(ctx) {
+    return ctx.config.targetSegment === '*';
+  }
+
   // The Lytics managed audiences on the demo account the stage's tag points
   // at (aid 6262), hardcoded because reading them live would mean keeping an
   // API key somewhere. Free text is still accepted, for a custom audience or
@@ -617,9 +626,9 @@
       intro:
         'Targeted widgets go in through the object form of initializeWidgets. ' +
         'A segment is matched against the visitor\'s own memberships, an ' +
-        'attribute against a field on their profile; setting both targets ' +
-        'either, since pathfora ORs the entries in a target list. Both need ' +
-        'the Lytics tag, since without it there is no profile to match ' +
+        'attribute against a field on their profile; setting both matches ' +
+        'either, emitted as one target entry whose rule ORs the two. Both ' +
+        'need the Lytics tag, since without it there is no profile to match ' +
         'against. Targeting something the visitor does not match is sometimes ' +
         'the point: the widget then correctly renders nothing.',
       fields: [
@@ -635,7 +644,11 @@
               MANAGED_AUDIENCES
             );
           },
-          note: 'the account\'s Lytics managed audiences, or type any slug',
+          note:
+            'the account\'s Lytics managed audiences, or type any slug. ' +
+            '"everyone" is the literal * segment, which the SDK renders ' +
+            'unconditionally rather than targeting - it leaves nothing for ' +
+            'the controls below to act on, so they hide.',
         },
         {
           key: 'excludeSegment',
@@ -648,9 +661,10 @@
           // initTargetedWidgets only removes exclusions from the widgets a
           // target already matched, so on its own an exclusion matches nothing
           // and the widget never renders. Confirmed against the SDK, not
-          // assumed.
+          // assumed. "everyone" is not such a match either - see
+          // targetsEveryone.
           applies: function (ctx) {
-            return Boolean(ctx.config.targetSegment);
+            return Boolean(ctx.config.targetSegment) && !targetsEveryone(ctx);
           },
           note: 'subtracts from the segment above',
         },
@@ -660,6 +674,9 @@
           type: 'datalist',
           // reveals the operator and value below
           structural: true,
+          applies: function (ctx) {
+            return !targetsEveryone(ctx);
+          },
           optionsFor: function (ctx) {
             return ctx.fields || [];
           },
@@ -682,17 +699,23 @@
             'lte',
           ],
           applies: function (ctx) {
-            return Boolean(ctx.config.attributeField);
+            return !targetsEveryone(ctx) && Boolean(ctx.config.attributeField);
           },
-          note: 'gt, gte, lt and lte parse the attribute as an integer',
+          note:
+            'gt, gte, lt and lte parse the attribute as an integer. includes ' +
+            'and excludes call .includes on it, which throws if this visitor ' +
+            'has no such field - pick one the suggestions offer.',
         },
         {
           key: 'attributeValue',
           label: 'value',
           type: 'text',
           applies: function (ctx) {
-            return Boolean(ctx.config.attributeField);
+            return !targetsEveryone(ctx) && Boolean(ctx.config.attributeField);
           },
+          // eq and notEq compare with ===, so a numeric or boolean profile
+          // field can only ever match an unquoted literal
+          note: 'a bare number or true/false is emitted unquoted, for eq/notEq',
         },
       ],
     },

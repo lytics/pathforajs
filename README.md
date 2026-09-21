@@ -169,12 +169,22 @@ account the published docs examples use. It is off by default so the playground 
 network-free for anyone just checking a layout. With it on:
 
 - Audience targeting works - the **Audience** section targets a segment, matched against
-  the visitor's own memberships. The suggestions are the demo account's Lytics managed
-  audiences, hardcoded in `playground/fields.js` so that reading them live does not mean
-  storing an API key; any other slug can be typed in. An exclude subtracts from that
-  match, which is the only thing exclusions do: `initTargetedWidgets` filters the widgets
-  a target already matched, so an exclusion on its own matches nothing. The
-  exclude field only appears once a "show to" segment is set, for that reason.
+  the visitor's own memberships, an attribute against a field on their profile, or both.
+  The segment suggestions are the demo account's Lytics managed audiences, hardcoded in
+  `playground/fields.js` so that reading them live does not mean storing an API key; any
+  other slug can be typed in. An exclude subtracts from that match, which is the only
+  thing exclusions do: `initTargetedWidgets` filters the widgets a target already
+  matched, so an exclusion on its own matches nothing. The exclude field only appears
+  once a "show to" segment is set, for that reason.
+- "everyone" is the literal `*` segment, and it is not a target at all:
+  `validateWidgetsObject` hoists a `*` entry into `widgets.common`, which
+  `initTargetedWidgets` renders before the targeting callback ever runs. So there is
+  nothing for an exclusion or an attribute to act on, and those controls hide while it
+  is selected.
+- A segment and an attribute together come out as one target entry whose rule ORs
+  `pathfora.rules.inSegment` with the attribute rule, rather than as two entries. Two
+  entries each concat `[widget]`, so a visitor matching both would hand
+  `initializeWidgetArray` the same widget twice and it would throw on the duplicate id.
 - Content recommendations call the recommendation API for real, with the `content`
   default document as the fallback. The collection field suggests the account's
   Lytics managed collections, hardcoded alongside the audiences in
