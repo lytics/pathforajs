@@ -3,6 +3,8 @@ import {
   createSiteGateWidget,
   expectWidgetVisible,
   expectWidgetClosed,
+  confirmWidget,
+  fillAndSubmitForm,
 } from '../utils/test-helpers';
 
 describe('the gate component', function () {
@@ -59,5 +61,57 @@ describe('the gate component', function () {
       expectWidgetClosed(gate.id);
       done();
     }, 200);
+  });
+  it('should unlock and close when the confirm button is clicked', function (done) {
+    var gate = createSiteGateWidget({
+      id: 'sitegate-confirm-unlock',
+      showForm: false,
+      okMessage: 'I Agree',
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    setTimeout(function () {
+      expectWidgetVisible(gate.id);
+      confirmWidget(gate.id);
+
+      expect(pathfora.utils.read('PathforaUnlocked_' + gate.id)).toBe('true');
+
+      setTimeout(function () {
+        expectWidgetClosed(gate.id);
+        done();
+      }, 600);
+    }, 200);
+  });
+
+  it('should unlock once its required fields are filled in', function (done) {
+    var gate = createSiteGateWidget({
+      id: 'sitegate-form-unlock',
+    });
+
+    pathfora.initializeWidgets([gate]);
+
+    setTimeout(function () {
+      confirmWidget(gate.id);
+      expect(pathfora.utils.read('PathforaUnlocked_' + gate.id)).toBeFalsy();
+
+      fillAndSubmitForm(gate.id, {
+        username: 'Ada Lovelace',
+        email: 'ada@example.com',
+      });
+      expect(pathfora.utils.read('PathforaUnlocked_' + gate.id)).toBe('true');
+      done();
+    }, 200);
+  });
+
+  it('should not throw when a position is set on a gate layout', function () {
+    var gate = createSiteGateWidget({
+      id: 'sitegate-position',
+      position: 'middle-center',
+    });
+
+    expect(function () {
+      pathfora.initializeWidgets([gate]);
+    }).not.toThrow();
   });
 });

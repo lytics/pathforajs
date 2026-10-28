@@ -8,8 +8,6 @@
  *   footerText  - construct-widget-layout.js sets widgetFooter.innerHTML with no
  *                 null guard, and bar/button/inline templates have no footer
  *   pushDown    - init-widget.js throws unless the layout is a top-positioned bar
- *   position    - validate-widget-position.js has no case for gate, so it
- *                 dereferences an undefined `choices`
  *   recommend   - validate-recommendation-widget.js throws for any type but
  *                 message, or any layout but modal/slideout/inline
  *
@@ -141,7 +139,7 @@
   ];
 
   // Valid positions per layout, from validate-widget-position.js. Gate and
-  // inline are absent on purpose - gate throws, inline uses positionSelector.
+  // inline are absent on purpose - gate has none, inline uses positionSelector.
   var POSITIONS = {
     modal: ['', 'middle-center'],
     slideout: [
@@ -353,7 +351,7 @@
           applies: function (ctx) {
             return Boolean(POSITIONS[ctx.layout]);
           },
-          note: 'gate has no positions - setting one throws',
+          note: 'gate has no positions',
         },
         {
           key: 'origin',
