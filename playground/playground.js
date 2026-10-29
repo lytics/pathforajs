@@ -27,9 +27,7 @@
 
   // The valid type x layout matrix, per the switch statements in
   // src/rollup/widgets/construct-widget-layout.js. SiteGate is deprecated and
-  // deliberately absent - its confirm button is dead code anyway, because
-  // construct-widget-actions.js never assigns it a widgetAction. Form with
-  // layout "gate" is the working equivalent.
+  // deliberately absent - Form with layout "gate" is its replacement.
   var CATALOGUE = [
     {
       ctor: 'Message',
@@ -48,9 +46,7 @@
     },
   ];
 
-  // Defaults only where the layout accepts a position. Gate is deliberately
-  // absent: validateWidgetPosition has no case for it, so setting one
-  // dereferences an undefined `choices` and throws.
+  // Defaults only where the layout accepts a position. Gate has none.
   var DEFAULT_POSITION = {
     slideout: 'bottom-left',
     bar: 'top-absolute',

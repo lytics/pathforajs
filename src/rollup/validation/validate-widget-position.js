@@ -9,7 +9,7 @@
  * @params {object} config
  */
 export default function validateWidgetPosition (widget, config) {
-  var choices;
+  var choices = [];
 
   switch (config.layout) {
   case 'modal':
@@ -38,6 +38,7 @@ export default function validateWidgetPosition (widget, config) {
       'bottom-right'
     ];
     break;
+  case 'gate':
   case 'inline':
     choices = [];
     break;

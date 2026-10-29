@@ -274,6 +274,9 @@ export default function constructWidgetActions(widget, config) {
           case 'form':
             widgetAction = config.layout === 'gate' ? 'unlock' : 'submit';
             break;
+          case 'sitegate':
+            widgetAction = 'unlock';
+            break;
           case 'subscription':
             widgetAction = 'subscribe';
             break;
