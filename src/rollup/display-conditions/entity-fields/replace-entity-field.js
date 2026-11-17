@@ -7,6 +7,15 @@ import window from '../../dom/window';
 import setObjectValue from '../../utils/objects/set-object-value';
 import getObjectValue from '../../utils/objects/get-object-value';
 
+// display conditions
+import escapeEntityValue from './escape-entity-value';
+
+function constant (s) {
+  return function () {
+    return s;
+  };
+}
+
 /**
  * Fill in the data for a entity field template in
  * a widgets text field
@@ -97,9 +106,16 @@ export default function replaceEntityField (
 
     var val;
 
-    // replace the template with the lytics data value
+    // profile and custom data values are not authored with the widget, so
+    // escape them for the field they are going into
     if (typeof dataval !== 'undefined') {
-      val = currentVal.replace(found[f], dataval);
+      dataval = escapeEntityValue(fieldName, dataval);
+    }
+
+    // replace the template with the lytics data value. a replacer function
+    // keeps "$&" and similar sequences in the value from being expanded
+    if (typeof dataval !== 'undefined') {
+      val = currentVal.replace(found[f], constant(dataval));
       // if there's no default and we should error
     } else if (
       (!def || def.length === 0) &&
@@ -108,7 +124,7 @@ export default function replaceEntityField (
       return false;
       // replace with the default option, or empty string if not found
     } else {
-      val = currentVal.replace(found[f], def);
+      val = currentVal.replace(found[f], constant(def));
     }
 
     setObjectValue(widget, fieldName, val);
